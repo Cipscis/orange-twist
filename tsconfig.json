@@ -1,0 +1,16 @@
+{
+	"include": ["app/assets/js/src/**/*"],
+	"exclude": ["app/assets/js/dist/**/*"],
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"declaration": true,
+		"sourceMap": true,
+		"outDir": "./app/assets/js/dist",
+		"strict": true,
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true
+	}
+}
