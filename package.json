@@ -1,7 +1,7 @@
 {
-	"name": "base-project",
+	"name": "orange-twist",
 	"version": "0.1.0",
-	"description": "This is my base project to use when creating new projects.",
+	"description": "A task management tool designed for my personal style of working.",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -18,7 +18,7 @@
 	"author": "Mark Hanna",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/cipscis/base-project.git"
+		"url": "https://github.com/cipscis/orange-twist.git"
 	},
 	"license": "Hippocratic-2.1",
 	"devDependencies": {
