@@ -1,0 +1,9 @@
+.layout {}
+
+.layout__header {
+	@include layout-wrapper;
+}
+
+.layout__main {
+	@include layout-wrapper;
+}

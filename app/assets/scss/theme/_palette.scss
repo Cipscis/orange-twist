@@ -1,0 +1,199 @@
+////////////////////
+// Colour palette //
+////////////////////
+
+$white: #ffffff;
+$black: #000000;
+
+$grey--offwhite: #eeeeee;
+$grey--light: #d0d0d0;
+$grey--dark: #222222;
+$grey--darker: #111111;
+
+// TODO
+$orange: orange;
+$orange--dark: orangered;
+
+
+////////////////
+// Light mode //
+////////////////
+
+// Supplementary colours
+////////////////////////
+$link-base--light: $orange;
+$accent-base--light: $orange;
+
+// Contrast pairs
+/////////////////
+// AAA 18.1
+$bg-primary--light: $grey--offwhite;
+$col-primary--light: $black;
+
+// AAA 13.62
+$bg-primary--active--light: $grey--light;
+$col-primary--active--light: $black;
+
+// AAA 21
+$bg-secondary--light: $white;
+$col-secondary--light: $black;
+
+// AAA 18.1
+$bg-secondary--active--light: $grey--offwhite;
+$col-secondary--active--light: $black;
+
+// TODO
+// AAA 21
+// $bg-dark--light: $black;
+// $col-dark--light: $white;
+// $accent-dark--light: $cadet-blue;
+// $link-dark--light: $blue--vivid-bright;
+
+
+/// The colours to use in the light colour scheme
+@mixin palette-light {
+	color-scheme: light;
+
+	--bg-primary: #{$bg-primary--light};
+	--col-primary: #{$col-primary--light};
+
+	--bg-primary--active: #{$bg-primary--active--light};
+	--col-primary--active: #{$col-primary--active--light};
+
+	--bg-secondary: #{$bg-secondary--light};
+	--col-secondary: #{$col-secondary--light};
+
+	--bg-secondary--active: #{$bg-secondary--active--light};
+	--col-secondary--active: #{$col-secondary--active--light};
+
+	// --bg-dark: #{$bg-dark--light};
+	// --col-dark: #{$col-dark--light};
+	// --accent-dark: #{$accent-dark--light};
+	// --link-dark: #{$link-dark--light};
+
+	--link-base: #{$link-base--light};
+	--link: var(--link-base);
+
+	--accent-base: #{$accent-base--light};
+	--accent: var(--accent-base);
+}
+
+///////////////
+// Dark mode //
+///////////////
+
+// Supplementary colours
+////////////////////////
+$link-base--dark: $orange--dark;
+$accent-base--dark: $orange--dark;
+
+// Contrast pairs
+/////////////////
+// AAA 18.88
+$bg-primary--dark: $grey--darker;
+$col-primary--dark: $white;
+
+// AAA 15.91
+$bg-primary--active--dark: $grey--dark;
+$col-primary--active--dark: $white;
+
+// AAA 15.91
+$bg-secondary--dark: $grey--dark;
+$col-secondary--dark: $white;
+
+// AAA 18.88
+$bg-secondary--active--dark: $grey--darker;
+$col-secondary--active--dark: $white;
+
+// TODO
+// AAA 21
+// $bg-dark--dark: $black;
+// $col-dark--dark: $white;
+// $accent-dark--dark: $teal;
+// $link-dark--dark: $blue--vivid-bright;
+
+/// The colours to use in the dark colour scheme
+@mixin palette-dark {
+	color-scheme: dark;
+
+	--bg-primary: #{$bg-primary--dark};
+	--col-primary: #{$col-primary--dark};
+
+	--bg-primary--active: #{$bg-primary--active--dark};
+	--col-primary--active: #{$col-primary--active--dark};
+
+	--bg-secondary: #{$bg-secondary--dark};
+	--col-secondary: #{$col-secondary--dark};
+
+	--bg-secondary--active: #{$bg-secondary--active--dark};
+	--col-secondary--active: #{$col-secondary--active--dark};
+
+	// --bg-dark: #{$bg-dark--dark};
+	// --col-dark: #{$col-dark--dark};
+	// --accent-dark: #{$accent-dark--dark};
+	// --link-dark: #{$link-dark--dark};
+
+	--link-base: #{$link-base--dark};
+	--link: var(--link-base);
+
+	--accent-base: #{$accent-base--dark};
+	--accent: var(--accent-base);
+}
+
+////////////////////
+// Palette Mixins //
+////////////////////
+
+/// Standard link styling
+@mixin link {
+	@include use-var(color, --link, $link-base--light);
+
+	text-decoration: underline;
+}
+
+// These "contrast" mixins can be used to apply pairs of background and text colours that have sufficient contrast.
+
+/// The main background/colour pair
+@mixin contrast-primary {
+	@include use-var(background-color, --bg-primary, $bg-primary--light);
+	@include use-var(color, --col-primary, $col-primary--light);
+
+	--accent: var(--accent-base, #{$accent-base--light});
+	--link: var(--link-base, #{$link-base--light});
+}
+
+/// An "active" variant of the main background/colour pair
+@mixin contrast-primary--active {
+	@include use-var(background-color, --bg-primary--active, $bg-primary--active--light);
+	@include use-var(color, --col-primary--active, $col-primary--active--light);
+
+	--accent: var(--accent-base, #{$accent-base--light});
+	--link: var(--link-base, #{$link-base--light});
+}
+
+/// A secondary background-colour pair to contrast with a primary contrast area
+@mixin contrast-secondary {
+	@include use-var(background-color, --bg-secondary, $bg-secondary--light);
+	@include use-var(color, --col-secondary, $col-secondary--light);
+
+	--accent: var(--accent-base, #{$accent-base--light});
+	--link: var(--link-base, #{$link-base--light});
+}
+
+/// An "active" variant of the secondary background/colour pair
+@mixin contrast-secondary--active {
+	@include use-var(background-color, --bg-secondary--active, $bg-secondary--active--light);
+	@include use-var(color, --col-secondary--active, $col-secondary--active--light);
+
+	--accent: var(--accent-base, #{$accent-base--light});
+	--link: var(--link-base, #{$link-base--light});
+}
+
+/// A dark background on both light and dark colour schemes
+// @mixin contrast-dark {
+// 	@include use-var(background-color, --bg-dark, $bg-dark--light);
+// 	@include use-var(color, --col-dark, $col-dark--light);
+
+// 	--accent: var(--accent-dark, #{$accent-dark--light});
+// 	--link: var(--link-dark, #{$link-dark--light});
+// }

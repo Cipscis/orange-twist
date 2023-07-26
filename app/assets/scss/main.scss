@@ -1,5 +1,12 @@
-@import "reset";
+// Scaffolding
+@import "scaffolding";
 
-@import "base";
+// Base
+@import "base/reset";
+@import "base/palette";
+@import "base/typography";
 
-@import "layout";
+// Extendables
+
+// Components
+@import "components/page-layout";
