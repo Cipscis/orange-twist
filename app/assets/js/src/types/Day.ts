@@ -1,6 +1,6 @@
-import { Task } from './Task.js';
+import { TaskReference } from './TaskReference.js';
 
 export type Day = {
 	date: Date;
-	tasks: Task[];
+	tasks: TaskReference[];
 };
