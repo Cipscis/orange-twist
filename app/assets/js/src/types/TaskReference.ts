@@ -1,9 +1,9 @@
 import { TaskStatus } from './TaskStatus.js';
 
-export type Task = {
-	name: string;
+export type TaskReference = {
 	readonly id: number;
 	status: TaskStatus;
+	notes: string[];
 
-	tasks: number[];
+	tasks: TaskReference[];
 };
