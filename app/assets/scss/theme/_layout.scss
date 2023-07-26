@@ -1,0 +1,26 @@
+$layout-max-width: rem(800px);
+$layout-gutter: 1rem;
+
+///////////////////
+// Layout Mixins //
+///////////////////
+
+/// A horizontally centred area with a maximum width
+/// @param {length} $width [$layout-max-width] - The maximum width of the wrapper
+@mixin layout-wrapper-flush($width: $layout-max-width) {
+	max-width: $width;
+	margin-inline: auto;
+}
+
+/// The standard side padding
+@mixin layout-wrapper-gutter() {
+	padding-left: $layout-gutter;
+	padding-right: $layout-gutter;
+}
+
+/// A horizontally centred area with a maximum width and the standard side padding
+/// @param {length} $width [$layout-max-width] - The maximum width of the wrapper
+@mixin layout-wrapper($width: $layout-max-width) {
+	@include layout-wrapper-flush;
+	@include layout-wrapper-gutter;
+}

@@ -1,0 +1,18 @@
+// This file doesn't generate any CSS, but sets up the necessary scaffolding for other SCSS files to use.
+
+// # Tools
+// Tool files contain only mixins and functions, so they will not generate any CSS on their own.
+// These mixins and functions are general purpose, and shouldn't need to change from theme to theme.
+@import "tools/rem";
+@import "tools/use-var";
+
+// # Theme
+// Theme files contain SCSS variables and mixins, so they will not generate any CSS on their own.
+// These mixins are part of the theme.
+@import "theme/breakpoints";
+@import "theme/layout";
+@import "theme/palette";
+@import "theme/typography";
+
+// # Patterns
+// Pattern files contain mixins that are used to generate variations of similar components, like buttons.
