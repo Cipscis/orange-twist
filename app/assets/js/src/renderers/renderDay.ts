@@ -1,6 +1,6 @@
 import { formatDate } from '../formatters/date.js';
 import { Day } from '../types/Day.js';
-import { renderTaskReference } from './renderTaskReference.js';
+import { renderTask } from './renderTask.js';
 
 export function renderDay(day: Day): string {
 	return `
@@ -9,7 +9,11 @@ export function renderDay(day: Day): string {
 
 	<h4>Tasks</h4>
 	<ul class="task-list">
-		${day.tasks.map(renderTaskReference).join('')}
+		${day.tasks.map((taskRef) => `
+			<li class="task-list__item">
+				${renderTask(taskRef)}
+			</li>`
+		).join('')}
 	</ul>
 </li>`;
 }

@@ -1,0 +1,18 @@
+.task {
+	display: grid;
+
+	grid-template-columns: auto 1fr;
+	grid-gap: 1rem;
+}
+
+.task__status {}
+
+.task__name {}
+
+.task__notes {
+	grid-column: 1 / -1;
+}
+
+.task__subtasks {
+	grid-column: 1 / -1;
+}
