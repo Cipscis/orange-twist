@@ -5,7 +5,13 @@
 	grid-gap: 1rem;
 }
 
-.task__status {}
+.task__status {
+	all: unset;
+	cursor: pointer;
+	&:focus-visible {
+		outline: auto;
+	}
+}
 
 .task__name {}
 
