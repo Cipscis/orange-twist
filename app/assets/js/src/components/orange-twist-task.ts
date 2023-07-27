@@ -24,7 +24,7 @@ class OrangeTwistTask extends HTMLElement {
 		}
 
 		const statusEl = document.createElement('orange-twist-task-status');
-		const statusOnThisDay = (dayName && task.status.get(dayName)) || task.currentStatus;
+		const statusOnThisDay = task.getStatus(dayName);
 		statusEl.setAttribute('status', statusOnThisDay);
 		root.append(statusEl);
 
