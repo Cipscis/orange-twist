@@ -1,8 +1,4 @@
-import { taskRegister } from '../registers/taskRegister.js';
-import { TaskStatus } from '../types/TaskStatus.js';
-
-import './orange-twist-day-list.js';
-import './orange-twist-task.js';
+import { getAllDayNotes } from '../registers/dayNotesRegister.js';
 
 export class OrangeTwist extends HTMLElement {
 	constructor() {
@@ -12,32 +8,30 @@ export class OrangeTwist extends HTMLElement {
 	connectedCallback() {
 		const root = this;
 
-		const dayListHeader = document.createElement('h2');
-		dayListHeader.textContent = 'Days';
-		root.append(dayListHeader);
+		const dayListHeading = document.createElement('h2');
+		dayListHeading.textContent = 'Days';
+		root.append(dayListHeading);
 
-		const dayList = document.createElement('ul', { is: 'orange-twist-day-list' });
-		dayList.className = 'day-list';
-		dayList.setAttribute('test', 'string');
-		root.append(dayList);
+		const dayNotes = getAllDayNotes();
+		if (dayNotes.length > 0) {
+			const daysList = document.createElement('ul');
+			root.append(daysList);
 
-		const unfinishedTasks = Array.from(taskRegister.values()).filter((task) => task.getStatus() === TaskStatus.TODO);
-		if (unfinishedTasks.length > 0) {
-			const taskListHeader = document.createElement('h2');
-			taskListHeader.textContent = 'Unfinished tasks';
-			root.append(taskListHeader);
+			for (const [day, note] of dayNotes) {
+				const itemEl = document.createElement('li');
+				daysList.append(itemEl);
 
-			const taskList = document.createElement('ul');
-			taskList.className = 'task-list';
-			for (const task of unfinishedTasks) {
-				const taskListItem = document.createElement('li');
-				taskList.append(taskListItem);
+				const dayEl = document.createElement('div');
+				itemEl.append(dayEl);
 
-				const taskEl = document.createElement('orange-twist-task');
-				taskEl.setAttribute('task', String(task.id));
-				taskListItem.append(taskEl);
+				const dayHeading = document.createElement('h3');
+				dayHeading.textContent = day;
+				itemEl.append(dayHeading);
+
+				const dayNoteEl = document.createElement('p');
+				dayNoteEl.textContent = note;
+				itemEl.append(note);
 			}
-			root.append(taskList);
 		}
 	}
 
