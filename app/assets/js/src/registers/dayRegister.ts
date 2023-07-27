@@ -1,6 +1,4 @@
-// Type-only import to make the symbol available for JSDoc
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import type { formatDate } from '../formatters/date.js';
+import { formatDate } from '../formatters/date.js';
 
 import { Day } from '../types/Day.js';
 
@@ -10,3 +8,8 @@ import { Day } from '../types/Day.js';
  * by {@linkcode formatDate}
  */
 export const dayRegister: Map<string, Day> = new Map();
+
+dayRegister.set(formatDate(new Date()), {
+	date: new Date(),
+	tasks: [1],
+});
