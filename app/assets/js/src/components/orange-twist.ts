@@ -1,4 +1,8 @@
+import { taskRegister } from '../registers/taskRegister.js';
+import { TaskStatus } from '../types/TaskStatus.js';
+
 import './orange-twist-day-list.js';
+import './orange-twist-task.js';
 
 export class OrangeTwist extends HTMLElement {
 	constructor() {
@@ -8,38 +12,33 @@ export class OrangeTwist extends HTMLElement {
 	connectedCallback() {
 		const root = this;
 
-		const dayListHeader = Object.assign(
-			document.createElement('h2'),
-			{
-				textContent: 'Days',
-			} satisfies Partial<HTMLHeadingElement>
-		);
+		const dayListHeader = document.createElement('h2');
+		dayListHeader.textContent = 'Days';
 		root.append(dayListHeader);
 
-		const dayList = Object.assign(
-			document.createElement('ul', { is: 'orange-twist-day-list' }),
-			{
-				className: 'day-list',
-			} satisfies Partial<HTMLUListElement>
-		);
+		const dayList = document.createElement('ul', { is: 'orange-twist-day-list' });
+		dayList.className = 'day-list';
 		dayList.setAttribute('test', 'string');
 		root.append(dayList);
 
-		const taskListHeader = Object.assign(
-			document.createElement('h2'),
-			{
-				textContent: 'Unfinished tasks',
-			} satisfies Partial<HTMLHeadingElement>
-		);
-		root.append(taskListHeader);
+		const unfinishedTasks = Array.from(taskRegister.values()).filter((task) => task.getStatus() === TaskStatus.TODO);
+		if (unfinishedTasks.length > 0) {
+			const taskListHeader = document.createElement('h2');
+			taskListHeader.textContent = 'Unfinished tasks';
+			root.append(taskListHeader);
 
-		const taskList = Object.assign(
-			document.createElement('ul'),
-			{
-				className: 'task-list',
-			} satisfies Partial<HTMLUListElement>
-		);
-		root.append(taskList);
+			const taskList = document.createElement('ul');
+			taskList.className = 'task-list';
+			for (const task of unfinishedTasks) {
+				const taskListItem = document.createElement('li');
+				taskList.append(taskListItem);
+
+				const taskEl = document.createElement('orange-twist-task');
+				taskEl.setAttribute('task', String(task.id));
+				taskListItem.append(taskEl);
+			}
+			root.append(taskList);
+		}
 	}
 
 	disconnectedCallback() {
