@@ -52,6 +52,11 @@ function mergeDayData(
 
 	const newDataClone = structuredClone(newDayData);
 
+	/* TODO: We're going to need a better way to deal with sections.
+	Perhaps more specific functions like `addSection`? It's going to
+	get complicated once we try to add tasks, since they belong in
+	sections, so how does the data need to get sent? Will be easier
+	with an interface like `addTaskToSectionOnDay` */
 	const newDataSections = (newDataClone.sections ?? defaultDayData.sections).map((partialSection) => {
 		const section = {
 			...defaultSection,

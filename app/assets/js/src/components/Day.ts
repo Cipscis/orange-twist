@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import htm from 'htm';
+
 import { useDay } from '../registers/days/index.js';
 
 // Initialise htm with Preact

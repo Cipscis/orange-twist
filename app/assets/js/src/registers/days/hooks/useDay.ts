@@ -3,7 +3,7 @@ import { useLayoutEffect, useState } from 'preact/hooks';
 import { Day } from '../../../types/Day.js';
 
 import { getDayData } from '../daysRegister.js';
-import { offDayChange, onDayChange } from '../listeners/onDayChange.js';
+import { onDayChange, offDayChange } from '../listeners/onDayChange.js';
 
 /**
  * A custom hook that provides date information for a specified day.
