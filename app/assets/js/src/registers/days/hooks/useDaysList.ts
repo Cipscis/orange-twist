@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from 'preact/hooks';
 
 import { getDaysList } from '../daysRegister.js';
-import { offDaysListChange, onDaysListChange } from '../listeners/onDaysListChange.js';
+import { onDaysListChange, offDaysListChange } from '../listeners/onDaysListChange.js';
 
 /**
  * A custom hook that provides the list of days with associated data.

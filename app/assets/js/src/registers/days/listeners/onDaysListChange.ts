@@ -3,11 +3,11 @@ interface DayListChangeListener {
 }
 
 export const daysListChangeListeners: Array<DayListChangeListener> = [];
+
 /**
  * Bind a callback to fire whenever the list of
  * days is changed.
  */
-
 export function onDaysListChange(listener: DayListChangeListener): void {
 	// Mimic `addEventListener` by not adding duplicate listeners
 	if (daysListChangeListeners.includes(listener)) {
@@ -18,7 +18,7 @@ export function onDaysListChange(listener: DayListChangeListener): void {
 }
 
 /**
- * Unbind a callback bound for a specified day using {@linkcode onDaysListChange}
+ * Unbind a callback bound to days list changes using {@linkcode onDaysListChange}
  */
 export function offDaysListChange(listener: DayListChangeListener): void {
 	const listenerIndex = daysListChangeListeners.indexOf(listener);
