@@ -15,10 +15,15 @@ setDayData('2023-07-29', {
 });
 render(html`<${OrangeTwist} />`, main);
 setDayData('2023-07-27', {
-	note: 'Test note on the 27th',
+	note: 'Test note on the 27th\nAnother paragraph',
 });
 window.setTimeout(() => {
 	setDayData('2023-07-24', {
 		note: 'Earlier date',
+		sections: [
+			{
+				name: 'Section',
+			},
+		],
 	});
 }, 1000);

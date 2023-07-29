@@ -2,8 +2,6 @@
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { formatDate } from '../formatters/date.js';
 
-import { TaskStatus } from './TaskStatus.js';
-
 export type Day = {
 	/**
 	 * A standard string representing a day.
@@ -12,9 +10,12 @@ export type Day = {
 	 */
 	date: string;
 	note: string;
-	tasks: Array<{
-		id: number;
-		note: string;
-		status: TaskStatus;
+	sections: Array<{
+		name: string;
+		// tasks: Array<{
+		// 	id: number;
+		// 	note: string;
+		// 	status: TaskStatus;
+		// }>;
 	}>;
 };

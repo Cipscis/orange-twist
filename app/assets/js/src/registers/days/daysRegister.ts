@@ -1,4 +1,7 @@
+import { DeepPartial } from '../../util/types/DeepPartial.js';
+
 import { Day } from '../../types/Day.js';
+
 import { isValidDateString } from '../../util/date/isValidDateString.js';
 
 import { daysListChangeListeners } from './listeners/onDaysListChange.js';
@@ -29,33 +32,68 @@ export function getDayData(dayName: string): Readonly<Day> | null {
 }
 
 /**
+ * Merge deeply partial day data with existing day data, if present, and fill in any
+ * blanks using a set of hard-coded defaults.
+ */
+function mergeDayData(
+	dayName: string,
+	dayData: Day | null,
+	newDayData: DeepPartial<Omit<Day, 'date'>>
+): Day {
+	const defaultDayData: Day = {
+		date: dayName,
+		note: '',
+		sections: [],
+	};
+
+	const defaultSection: Day['sections'][number] = {
+		name: 'New section',
+	};
+
+	const newDataClone = structuredClone(newDayData);
+
+	const newDataSections = (newDataClone.sections ?? defaultDayData.sections).map((partialSection) => {
+		const section = {
+			...defaultSection,
+			...partialSection,
+		};
+
+		return section;
+	});
+
+	const newDataWithSections = {
+		...newDataClone,
+		sections: newDataSections,
+	};
+
+	const updatedData = {
+		...defaultDayData,
+		...dayData,
+		...newDataWithSections,
+	};
+
+	return updatedData;
+}
+
+/**
  * Set data for a given day. If no data exists
  * for this day yet, it will be added.
  */
-export function setDayData(dayName: string, data: Partial<Omit<Day, 'date'>>): void {
+export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>): void {
 	if (!isValidDateString(dayName)) {
 		throw new RangeError(`Invalid day name ${dayName}`);
 	}
 
-	const defaults: Day = {
-		date: dayName,
-		note: '',
-		tasks: [],
-	};
 
-	const day = daysRegister.get(dayName);
-	const isNewDay = typeof day === 'undefined';
+	const day = getDayData(dayName);
+	const isNewDay = day === null;
 
-	const newData = {
-		...defaults,
-		...day,
-		...data,
-	};
-	daysRegister.set(dayName, newData);
+	const updatedData = mergeDayData(dayName, day, data);
+	daysRegister.set(dayName, updatedData);
 
 	const thisDayChangeListeners = dayChangeListeners.get(dayName) ?? [];
 	for (const listener of thisDayChangeListeners) {
-		listener(newData);
+		listener(updatedData);
 	}
 
 	// If a new day was added, that means the list of days has changed so
