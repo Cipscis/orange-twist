@@ -17,9 +17,9 @@ export function OrangeTwist() {
 		<ul>
 			${daysList.map((dayName) => html`
 				<li
-					key=${dayName}
+					key="${dayName}"
 				>
-					<${Day} dayName=${dayName} />
+					<${Day} dayName="${dayName}" />
 				</li>
 			`)}
 		</ul>
