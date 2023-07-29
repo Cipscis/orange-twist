@@ -39,5 +39,9 @@
 	},
 	"engines": {
 		"node": ">=16"
+	},
+	"dependencies": {
+		"htm": "^3.1.1",
+		"preact": "^10.16.0"
 	}
 }
