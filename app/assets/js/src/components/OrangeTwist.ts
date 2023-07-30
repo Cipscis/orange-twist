@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import htm from 'htm';
 
-import { Day } from './Day.js';
+import { Day, DayProps } from './Day.js';
 
 import { useDaysList } from '../registers/days/index.js';
 import { useUnfinishedTasksList } from '../registers/tasks/index.js';
@@ -18,13 +18,16 @@ export function OrangeTwist() {
 		<h2>Days</h2>
 
 		<ul>
-			${daysList.map((dayName) => html`
-				<li
-					key="${dayName}"
-				>
-					<${Day} dayName="${dayName}" />
-				</li>
-			`)}
+			${daysList.map((dayName) => {
+				const dayProps: DayProps = { dayName };
+				return html`
+					<li
+						key="${dayName}"
+					>
+						<${Day} ...${dayProps} />
+					</li>
+				`;
+			})}
 		</ul>
 
 		<h2>Unfinished tasks</h2>
