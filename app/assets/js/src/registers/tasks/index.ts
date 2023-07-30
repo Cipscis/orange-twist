@@ -1,8 +1,8 @@
 export {
+	addNewTask,
 	getUnfinishedTasksList,
 	getTaskData,
 	setTaskData,
-	addNewTask,
 } from './tasksRegister.js';
 
 export * from './listeners/index.js';
