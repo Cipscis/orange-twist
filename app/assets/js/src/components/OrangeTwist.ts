@@ -1,13 +1,13 @@
 import { h } from 'preact';
+import { useCallback } from 'preact/hooks';
 import htm from 'htm';
+
+import { isValidDateString } from '../util/date/isValidDateString.js';
 
 import { Day, DayProps } from './Day.js';
 
-import { getDayData, setDayData, useDaysList } from '../registers/days/index.js';
-import { useUnfinishedTasksList } from '../registers/tasks/index.js';
-import { addNewTask } from '../registers/tasks/tasksRegister.js';
-import { isValidDateString } from '../util/date/isValidDateString.js';
-import { useCallback } from 'preact/hooks';
+import { getDayData, saveDays, setDayData, useDaysList } from '../registers/days/index.js';
+import { addNewTask, useUnfinishedTasksList } from '../registers/tasks/index.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -62,5 +62,7 @@ export function OrangeTwist() {
 		<ul>
 			${unfinishedTasksList.map((task) => html`<li key="${task.id}"><i>${task.id}</i> ${task.name} (${task.status})</li>`)}
 		</ul>
+
+		<button type="button" onClick="${() => saveDays()}">Save data</button>
 	</div>`;
 }

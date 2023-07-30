@@ -1,4 +1,4 @@
-import { DeepPartial } from '../../util/types/DeepPartial.js';
+import { DeepPartial } from '@cipscis/ts-toolbox';
 
 import { formatDate } from '../../formatters/date.js';
 
@@ -8,10 +8,29 @@ import { isValidDateString } from '../../util/date/isValidDateString.js';
 
 import { daysListChangeListeners } from './listeners/onDaysListChange.js';
 import { dayChangeListeners } from './listeners/onDayChange.js';
+import { loadDays } from './persistence/loadDays.js';
 
 const daysRegister: Map<string, Readonly<Day>> = new Map();
-// Initialise register with an empty day for today
-setDayData(formatDate(new Date()), {});
+initialiseDaysRegister();
+
+/**
+ * Fill the days register with initial data, then restore persisted data asynchronously.
+ */
+async function initialiseDaysRegister(): Promise<void> {
+	// Initialise register with an empty day for today
+	setDayData(formatDate(new Date()), {});
+
+	// Restore persisted data
+	const persistedData = await loadDays();
+	if (persistedData === null) {
+		return;
+	}
+
+	// TODO: We need to handle some sort of loading state, to prevent interaction
+	for (const [dayName, dayData] of persistedData) {
+		setDayData(dayName, dayData);
+	}
+}
 
 /**
  * Retrieve the list of all days with data
@@ -33,6 +52,10 @@ export function getDayData(dayName: string): Readonly<Day> | null {
 	const day = daysRegister.get(dayName);
 
 	return day ?? null;
+}
+
+export function getAllDayData(): ReadonlyArray<[dayName: string, dayData: Readonly<Day>]> {
+	return Array.from(daysRegister.entries());
 }
 
 /**
@@ -92,7 +115,6 @@ export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>
 	if (!isValidDateString(dayName)) {
 		throw new RangeError(`Invalid day name ${dayName}`);
 	}
-
 
 	const day = getDayData(dayName);
 	const isNewDay = day === null;

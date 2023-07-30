@@ -1,4 +1,4 @@
-import { EnumTypeOf, isEnum } from '../util/index.js';
+import { EnumTypeOf, isEnum } from '@cipscis/ts-toolbox';
 
 export const TaskStatus = {
 	TODO: 'todo',

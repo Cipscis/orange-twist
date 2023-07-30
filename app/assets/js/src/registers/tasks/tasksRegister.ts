@@ -1,6 +1,7 @@
+import { DeepPartial } from '@cipscis/ts-toolbox';
+
 import { Task } from '../../types/Task.js';
 import { TaskStatus } from '../../types/TaskStatus.js';
-import { DeepPartial } from '../../util/types/DeepPartial.js';
 import { unfinishedTasksListChangeListeners } from './listeners/onUnfinishedTasksListChange.js';
 
 const tasksRegister: Map<number, Task> = new Map();

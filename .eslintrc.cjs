@@ -76,6 +76,11 @@ module.exports = {
 		// There are plenty of times where it's safe to use a Promise without error handling
 		'@typescript-eslint/no-floating-promises': 'off',
 
+		// Sometimes it can be useful to create an asynchronous function that doesn't yet do anything
+		// asynchronous, but which is planned to eventually become asynchronous, in order to provide
+		// a consistent interface
+		'@typescript-eslint/require-await': 'warn',
+
 		////////////////////////
 		// Debugging warnings //
 		////////////////////////
