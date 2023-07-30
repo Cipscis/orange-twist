@@ -2,17 +2,19 @@ import { h } from 'preact';
 import htm from 'htm';
 
 import { useDay } from '../registers/days/index.js';
+import { DayNote, DayNoteProps } from './DayNote.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
 
-interface DayProps {
+export interface DayProps {
 	dayName: string;
 }
 
 export function Day(props: DayProps) {
-	const day = useDay(props.dayName);
+	const { dayName } = props;
 
+	const day = useDay(dayName);
 	if (day === null) {
 		return null;
 	}
@@ -20,7 +22,9 @@ export function Day(props: DayProps) {
 	return html`<div class="day">
 		<h3 class="day__heading">${day.date}</h3>
 
-		<div class="day__notes">${day.note.split('\n').map((paragraph, i) => html`<p key="${i}">${paragraph}</p>`)}</div>
+		<div class="day__notes">
+			<${DayNote} ...${{ dayName } as DayNoteProps} />
+		</div>
 
 		${day.sections.length > 0 && html`
 			<div class="day__sections">
