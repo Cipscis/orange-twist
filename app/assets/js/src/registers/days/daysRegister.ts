@@ -1,5 +1,7 @@
 import { DeepPartial } from '../../util/types/DeepPartial.js';
 
+import { formatDate } from '../../formatters/date.js';
+
 import { Day } from '../../types/Day.js';
 
 import { isValidDateString } from '../../util/date/isValidDateString.js';
@@ -8,6 +10,8 @@ import { daysListChangeListeners } from './listeners/onDaysListChange.js';
 import { dayChangeListeners } from './listeners/onDayChange.js';
 
 const daysRegister: Map<string, Readonly<Day>> = new Map();
+// Initialise register with an empty day for today
+setDayData(formatDate(new Date()), {});
 
 /**
  * Retrieve the list of all days with data
