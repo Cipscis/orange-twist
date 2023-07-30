@@ -114,3 +114,20 @@ export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>
 		}
 	}
 }
+
+/**
+ * Remove data for a given day.
+ */
+export function deleteDay(dayName: string): void {
+	daysRegister.delete(dayName);
+
+	const thisDayChangeListeners = dayChangeListeners.get(dayName) ?? [];
+	for (const listener of thisDayChangeListeners) {
+		listener(null);
+	}
+
+	const daysList = getDaysList();
+	for (const listener of daysListChangeListeners) {
+		listener(daysList);
+	}
+}
