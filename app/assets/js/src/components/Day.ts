@@ -1,8 +1,9 @@
 import { h } from 'preact';
 import htm from 'htm';
 
-import { useDay } from '../registers/days/index.js';
+import { deleteDay, useDay } from '../registers/days/index.js';
 import { DayNote, DayNoteProps } from './DayNote.js';
+import { useCallback } from 'preact/hooks';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -19,8 +20,18 @@ export function Day(props: DayProps) {
 		return null;
 	}
 
+	const removeDay = useCallback((dayName: string) => {
+		if (!window.confirm('Are you sure?')) {
+			return;
+		}
+
+		deleteDay(dayName);
+	}, []);
+
 	return html`<div class="day">
 		<h3 class="day__heading">${day.date}</h3>
+
+		<button type="button" onClick="${() => removeDay(dayName)}">Remove day</button>
 
 		<div class="day__notes">
 			<${DayNote} ...${{ dayName } as DayNoteProps} />

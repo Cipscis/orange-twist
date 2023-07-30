@@ -1,7 +1,7 @@
 import { Day } from '../../../types/Day.js';
 
 interface DayChangeListener {
-	(day: Day): void;
+	(day: Day | null): void;
 }
 
 export const dayChangeListeners: Map<string, Array<DayChangeListener>> = new Map();
