@@ -1,2 +1,1 @@
-export { useDaysList } from './useDaysList.js';
-export { useDay } from './useDay.js';
+export { useDays } from './useDays.js';

@@ -6,8 +6,8 @@ import { Day } from '../../types/Day.js';
 
 import { isValidDateString } from '../../util/date/isValidDateString.js';
 
-import { daysListChangeListeners } from './listeners/onDaysListChange.js';
-import { dayChangeListeners } from './listeners/onDayChange.js';
+import { daysChangeListeners } from './listeners/onDaysChange.js';
+
 import { loadDays } from './persistence/loadDays.js';
 
 const daysRegister: Map<string, Readonly<Day>> = new Map();
@@ -30,6 +30,17 @@ async function initialiseDaysRegister(): Promise<void> {
 	for (const [dayName, dayData] of persistedData) {
 		setDayData(dayName, dayData);
 	}
+}
+
+/**
+ * Retrieve all days' data
+ */
+export function getDays(): ReadonlyArray<Readonly<Day>> {
+	const days = Array.from(daysRegister.values());
+
+	days.sort((a, b) => a.dayName.localeCompare(b.dayName));
+
+	return days;
 }
 
 /**
@@ -68,7 +79,7 @@ function mergeDayData(
 	newDayData: DeepPartial<Omit<Day, 'date'>>
 ): Day {
 	const defaultDayData: Day = {
-		date: dayName,
+		dayName,
 		note: '',
 		sections: [],
 	};
@@ -117,24 +128,11 @@ export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>
 	}
 
 	const day = getDayData(dayName);
-	const isNewDay = day === null;
 
 	const updatedData = mergeDayData(dayName, day, data);
 	daysRegister.set(dayName, updatedData);
 
-	const thisDayChangeListeners = dayChangeListeners.get(dayName) ?? [];
-	for (const listener of thisDayChangeListeners) {
-		listener(updatedData);
-	}
-
-	// If a new day was added, that means the list of days has changed so
-	// we should call any day list change listeners.
-	if (isNewDay) {
-		const daysList = getDaysList();
-		for (const listener of daysListChangeListeners) {
-			listener(daysList);
-		}
-	}
+	callListeners();
 }
 
 /**
@@ -143,13 +141,12 @@ export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>
 export function deleteDay(dayName: string): void {
 	daysRegister.delete(dayName);
 
-	const thisDayChangeListeners = dayChangeListeners.get(dayName) ?? [];
-	for (const listener of thisDayChangeListeners) {
-		listener(null);
-	}
+	callListeners();
+}
 
-	const daysList = getDaysList();
-	for (const listener of daysListChangeListeners) {
-		listener(daysList);
+function callListeners() {
+	const days = getDays();
+	for (const listener of daysChangeListeners) {
+		listener(days);
 	}
 }

@@ -20,7 +20,7 @@ export type Day = {
 	 *
 	 * @see {@linkcode formatDate}
 	 */
-	date: string;
+	dayName: string;
 	note: string;
 	sections: Array<{
 		name: string;
@@ -38,7 +38,7 @@ export function isDay(data: unknown): data is Day {
 	}
 
 	if (!(hasPropertyOfType(
-		data, 'date', isTypeof('string')
+		data, 'dayName', isTypeof('string')
 	))) {
 		return false;
 	}
