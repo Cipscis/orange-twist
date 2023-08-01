@@ -28,8 +28,10 @@ async function initialiseDaysRegister(): Promise<void> {
 
 	// TODO: We need to handle some sort of loading state, to prevent interaction
 	for (const [dayName, dayData] of persistedData) {
-		setDayData(dayName, dayData);
+		daysRegister.set(dayName, dayData);
 	}
+
+	callListeners();
 }
 
 /**
@@ -65,7 +67,7 @@ export function getDayData(dayName: string): Readonly<Day> | null {
 	return day ?? null;
 }
 
-export function getAllDayData(): ReadonlyArray<[dayName: string, dayData: Readonly<Day>]> {
+export function getAllDaysData(): ReadonlyArray<[dayName: string, dayData: Readonly<Day>]> {
 	return Array.from(daysRegister.entries());
 }
 
