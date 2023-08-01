@@ -2,9 +2,12 @@ import { DeepPartial } from '@cipscis/ts-toolbox';
 
 import { Task } from '../../types/Task.js';
 import { TaskStatus } from '../../types/TaskStatus.js';
-import { unfinishedTasksListChangeListeners } from './listeners/onUnfinishedTasksListChange.js';
+
+import { tasksChangeListeners } from './listeners/onTasksChange.js';
+import { loadTasks } from './persistence/loadTasks.js';
 
 const tasksRegister: Map<number, Task> = new Map();
+initialiseTasksRegister();
 
 let latestId: number = 0;
 /**
@@ -17,15 +20,39 @@ function getNextId(): number {
 }
 
 /**
- * Retrieve a list of the IDs of all unfinished tasks
+ * Restore persisted data asynchronously.
  */
-export function getUnfinishedTasksList(): ReadonlyArray<Readonly<Task>> {
+async function initialiseTasksRegister(): Promise<void> {
+	// Restore persisted data
+	const persistedData = await loadTasks();
+	if (persistedData === null) {
+		return;
+	}
+
+	// TODO: We need to handle some sort of loading state, to prevent interaction
+	let highestId = -Infinity;
+	for (const [id, task] of persistedData) {
+		tasksRegister.set(id, task);
+		if (id > highestId) {
+			highestId = id;
+		}
+	}
+	latestId = highestId;
+
+	callListeners();
+}
+
+/**
+ * Retrieve all tasks
+ */
+export function getTasks(): ReadonlyArray<Readonly<Task>> {
 	const tasks = Array.from(tasksRegister.values());
 
-	const unfinishedTasks = tasks
-		.filter(({ status }) => status !== TaskStatus.COMPLETED);
+	return tasks;
+}
 
-	return unfinishedTasks;
+export function getAllTasksData(): ReadonlyArray<[number, Readonly<Task>]> {
+	return Array.from(tasksRegister.entries());
 }
 
 /**
@@ -74,8 +101,15 @@ export function setTaskData(id: number, data: DeepPartial<Omit<Task, 'id'>>): vo
 
 	const updatedData = mergeTaskData(id, task, data);
 	tasksRegister.set(id, updatedData);
+
+	callListeners();
 }
 
+/**
+ * Add a new task, with default values
+ *
+ * Returns the ID of the new task
+ */
 export function addNewTask(name?: string): number {
 	const id = getNextId();
 
@@ -86,13 +120,16 @@ export function addNewTask(name?: string): number {
 
 	const task: Task = mergeTaskData(id, null, stub);
 
-	console.log({ id, task });
 	tasksRegister.set(id, task);
 
-	const unfinishedTasksList = getUnfinishedTasksList();
-	for (const listener of unfinishedTasksListChangeListeners) {
-		listener(unfinishedTasksList);
-	}
+	callListeners();
 
 	return task.id;
+}
+
+function callListeners() {
+	const tasks = getTasks();
+	for (const listener of tasksChangeListeners) {
+		listener(tasks);
+	}
 }

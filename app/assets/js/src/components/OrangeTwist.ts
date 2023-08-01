@@ -7,14 +7,16 @@ import { isValidDateString } from '../util/date/isValidDateString.js';
 import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 
 import { getDayData, saveDays, setDayData, useDays } from '../registers/days/index.js';
-import { addNewTask, useUnfinishedTasksList } from '../registers/tasks/index.js';
+import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
+import { TaskStatus } from '../types/TaskStatus.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
 
 export function OrangeTwist() {
 	const days = useDays();
-	const unfinishedTasksList = useUnfinishedTasksList();
+	const tasks = useTasks();
+	const unfinishedTasks = tasks.filter(({ status }) => status !== TaskStatus.COMPLETED);
 
 	const addNewDay = useCallback(() => {
 		const dayName = window.prompt('What day?');
@@ -60,9 +62,12 @@ export function OrangeTwist() {
 		<button type="button" onClick="${() => addNewTask()}">Add new task</button>
 
 		<ul>
-			${unfinishedTasksList.map((task) => html`<li key="${task.id}"><i>${task.id}</i> ${task.name} (${task.status})</li>`)}
+			${unfinishedTasks.map((task) => html`<li key="${task.id}"><i>${task.id}</i> ${task.name} (${task.status})</li>`)}
 		</ul>
 
-		<button type="button" onClick="${() => saveDays()}">Save data</button>
+		<button type="button" onClick="${() => {
+			saveDays();
+			saveTasks();
+		}}">Save data</button>
 	</div>`;
 }
