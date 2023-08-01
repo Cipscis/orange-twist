@@ -4,16 +4,16 @@ import htm from 'htm';
 
 import { isValidDateString } from '../util/date/isValidDateString.js';
 
-import { Day, DayProps } from './Day.js';
+import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 
-import { getDayData, saveDays, setDayData, useDaysList } from '../registers/days/index.js';
+import { getDayData, saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, useUnfinishedTasksList } from '../registers/tasks/index.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
 
 export function OrangeTwist() {
-	const daysList = useDaysList();
+	const days = useDays();
 	const unfinishedTasksList = useUnfinishedTasksList();
 
 	const addNewDay = useCallback(() => {
@@ -41,13 +41,13 @@ export function OrangeTwist() {
 		<h2>Days</h2>
 
 		<ul>
-			${daysList.map((dayName) => {
-				const dayProps: DayProps = { dayName };
+			${days.map((day) => {
+				const dayProps: DayComponentProps = { day };
 				return html`
 					<li
-						key="${dayName}"
+						key="${day.dayName}"
 					>
-						<${Day} ...${dayProps} />
+						<${DayComponent} ...${dayProps} />
 					</li>
 				`;
 			})}

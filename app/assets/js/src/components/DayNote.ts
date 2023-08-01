@@ -1,24 +1,21 @@
 import { h } from 'preact';
 import htm from 'htm';
 
-import { setDayData, useDay } from '../registers/days/index.js';
+import { setDayData } from '../registers/days/index.js';
 import { useCallback, useState } from 'preact/hooks';
 import { Markdown, MarkdownProps } from './Markdown.js';
+import { Day } from '../types/Day.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
 
 export interface DayNoteProps {
-	dayName: string;
+	day: Readonly<Day>;
 }
 
 export function DayNote(props: DayNoteProps) {
-	const { dayName } = props;
-
-	const day = useDay(dayName);
-	if (day === null) {
-		return null;
-	}
+	const { day } = props;
+	const { dayName } = day;
 
 	const [isEditing, setIsEditing] = useState(false);
 
