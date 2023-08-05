@@ -42,7 +42,7 @@ export async function loadTasksData(): Promise<ReadonlyArray<Readonly<Task>>> {
 							highestId = taskId;
 						}
 					}
-					latestId = highestId;
+					latestId = Math.max(highestId, 0);
 					isInitialised = true;
 
 					const tasks = getTasks();
