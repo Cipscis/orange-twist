@@ -40,7 +40,7 @@ export function useAsyncData<T>(
 		})();
 
 		// TODO: Abort fetch on cleanup
-	});
+	}, []);
 
 	return {
 		isLoading,
