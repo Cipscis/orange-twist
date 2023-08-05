@@ -6,7 +6,7 @@ import { isValidDateString } from '../util/isValidDateString.js';
 
 import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 
-import { getDayData, saveDays, setDayData, useDays } from '../registers/days/index.js';
+import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
 import { TaskStatus } from '../types/TaskStatus.js';
 
@@ -29,7 +29,7 @@ export function OrangeTwist() {
 			return;
 		}
 
-		const existingDayData = getDayData(dayName);
+		const existingDayData = days.find((day) => day.dayName === dayName);
 		if (existingDayData) {
 			// TODO: Handle error
 			window.alert('Day already exists');
@@ -37,7 +37,7 @@ export function OrangeTwist() {
 		}
 
 		setDayData(dayName, {});
-	}, []);
+	}, [days]);
 
 	return html`<div>
 		<h2>Days</h2>
