@@ -4,7 +4,7 @@ import { formatDate } from '../../formatters/date.js';
 
 import { Day } from '../../types/Day.js';
 
-import { isValidDateString } from '../../util/date/isValidDateString.js';
+import { isValidDateString } from '../../util/isValidDateString.js';
 
 import { daysChangeListeners } from './listeners/onDaysChange.js';
 

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useCallback } from 'preact/hooks';
 import htm from 'htm';
 
-import { isValidDateString } from '../util/date/isValidDateString.js';
+import { isValidDateString } from '../util/isValidDateString.js';
 
 import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 
