@@ -9,7 +9,7 @@ export interface AsyncDataState<T> {
 export function useAsyncData<T>(
 	getData: () => Promise<T>,
 ): AsyncDataState<T> {
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	const [data, setData] = useState<T | null>(null);
 	const [error, setError] = useState<string | null>(null);
 
@@ -40,7 +40,7 @@ export function useAsyncData<T>(
 		})();
 
 		// TODO: Abort fetch on cleanup
-	}, []);
+	}, [getData]);
 
 	return {
 		isLoading,

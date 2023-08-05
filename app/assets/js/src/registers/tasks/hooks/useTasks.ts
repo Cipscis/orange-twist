@@ -28,11 +28,6 @@ export function useTasks(): AsyncDataState<ReadonlyArray<Readonly<Task>>> {
 		return null;
 	});
 
-	// When data becomes available, expose it
-	useEffect(() => {
-		setTasks(data);
-	}, [data]);
-
 	// When tasks are updated, reflect that
 	useEffect(() => {
 		const updateTasks = () => {
@@ -48,7 +43,7 @@ export function useTasks(): AsyncDataState<ReadonlyArray<Readonly<Task>>> {
 	}, []);
 
 	return {
-		data: tasks,
+		data: tasks ?? data,
 		isLoading,
 		error,
 	};
