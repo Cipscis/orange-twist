@@ -8,7 +8,7 @@ import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 
 import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
-import { TaskStatus } from '../types/TaskStatus.js';
+import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -25,7 +25,6 @@ export function OrangeTwist() {
 		isLoading: isTasksLoading,
 		error: tasksError,
 	} = useTasks();
-	const unfinishedTasks = tasks?.filter(({ status }) => status !== TaskStatus.COMPLETED);
 
 	const addNewDay = useCallback(() => {
 		if (!days) {
@@ -83,7 +82,7 @@ export function OrangeTwist() {
 			<button type="button" onClick="${addNewDay}">Add day</button>`
 		}
 
-		<h2>Unfinished tasks</h2>
+		<h2>Tasks</h2>
 
 		${
 			isTasksLoading &&
@@ -98,13 +97,15 @@ export function OrangeTwist() {
 
 			html`
 				<button type="button" onClick="${() => addNewTask()}">Add new task</button>
-				${
-					unfinishedTasks &&
-					html`<ul>
-						${unfinishedTasks.map((task) => html`<li key="${task.id}"><i>${task.id}</i> ${task.name} (${task.status})</li>`)}
-					</ul>`
-				}
-			`
+				<ul>
+				${tasks.map(
+					(task) => {
+						const taskProps: TaskComponentProps = { task };
+
+						return html`<li key="${task.id}"><${TaskComponent} ...${taskProps} /></li>`;
+					}
+				)}
+			</ul>`
 		}
 
 		${
