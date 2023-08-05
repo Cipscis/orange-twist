@@ -7,7 +7,8 @@ import { tasksChangeListeners } from './listeners/onTasksChange.js';
 import { loadTasks } from './persistence/loadTasks.js';
 
 const tasksRegister: Map<number, Task> = new Map();
-initialiseTasksRegister();
+let isInitialised = false;
+let loadTasksDataPromise: ReturnType<typeof loadTasksData> | null = null;
 
 let latestId: number = 0;
 /**
@@ -20,26 +21,39 @@ function getNextId(): number {
 }
 
 /**
- * Restore persisted data asynchronously.
+ * Load day data once, on first call, and store it in the register.
+ *
+ * Otherwise, return already stored day data.
  */
-async function initialiseTasksRegister(): Promise<void> {
-	// Restore persisted data
-	const persistedData = await loadTasks();
-	if (persistedData === null) {
-		return;
-	}
-
-	// TODO: We need to handle some sort of loading state, to prevent interaction
-	let highestId = -Infinity;
-	for (const [id, task] of persistedData) {
-		tasksRegister.set(id, task);
-		if (id > highestId) {
-			highestId = id;
+export async function loadTasksData(): Promise<ReadonlyArray<Readonly<Task>>> {
+	if (!isInitialised) {
+		if (loadTasksDataPromise) {
+			// If a request is still in progress, piggyback on that request
+			return loadTasksDataPromise;
 		}
-	}
-	latestId = highestId;
 
-	callListeners();
+		loadTasksDataPromise = new Promise<ReadonlyArray<Readonly<Task>>>((resolve, reject) => {
+			loadTasks()
+				.then((persistedTasks) => {
+					let highestId = -Infinity;
+					for (const [taskId, taskData] of persistedTasks) {
+						tasksRegister.set(taskId, taskData);
+						if (taskId > highestId) {
+							highestId = taskId;
+						}
+					}
+					latestId = highestId;
+					isInitialised = true;
+
+					const tasks = getTasks();
+					resolve(tasks);
+				})
+				.catch(reject);
+		});
+		return loadTasksDataPromise;
+	}
+
+	return getTasks();
 }
 
 /**
@@ -53,17 +67,6 @@ export function getTasks(): ReadonlyArray<Readonly<Task>> {
 
 export function getAllTasksData(): ReadonlyArray<[number, Readonly<Task>]> {
 	return Array.from(tasksRegister.entries());
-}
-
-/**
- * Retrieve data for a given task, if it exists.
- *
- * If the task doesn't exist, returns `null`.
- */
-export function getTaskData(id: number): Readonly<Task> | null {
-	const task = tasksRegister.get(id);
-
-	return task ?? null;
 }
 
 /**
@@ -94,7 +97,7 @@ function mergeTaskData(id: number, task: Task | null, data: DeepPartial<Omit<Tas
  * with a given ID, this will fail silently.
  */
 export function setTaskData(id: number, data: DeepPartial<Omit<Task, 'id'>>): void {
-	const task = getTaskData(id);
+	const task = tasksRegister.get(id) ?? null;
 	if (task === null) {
 		return;
 	}

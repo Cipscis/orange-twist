@@ -4,8 +4,8 @@ import { Day } from '../../../types/Day.js';
 
 import { AsyncDataState, useAsyncData } from '../../../util/useAsyncData.js';
 
-import { getDays, loadDayData } from '../daysRegister.js';
-import { offDaysChange, onDaysChange } from '../listeners/onDaysChange.js';
+import { getDays, loadDaysData } from '../daysRegister.js';
+import { onDaysChange, offDaysChange } from '../listeners/onDaysChange.js';
 
 /**
  * Load persisted days data if necessary, exposing loading and error states related to that process.
@@ -17,7 +17,7 @@ export function useDays(): AsyncDataState<ReadonlyArray<Readonly<Day>>> {
 		data,
 		isLoading,
 		error,
-	} = useAsyncData(loadDayData);
+	} = useAsyncData(loadDaysData);
 
 	// Try to initialise with existing data
 	const [days, setDays] = useState<ReadonlyArray<Day> | null>(() => {
@@ -26,7 +26,7 @@ export function useDays(): AsyncDataState<ReadonlyArray<Readonly<Day>>> {
 		}
 
 		const days = getDays();
-		if (days.length) {
+		if (days.length > 0) {
 			return days;
 		}
 

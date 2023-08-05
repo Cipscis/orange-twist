@@ -1,25 +1,55 @@
-import { useLayoutEffect, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
 import { Task } from '../../../types/Task.js';
 
-import { getTasks } from '../tasksRegister.js';
+import { AsyncDataState, useAsyncData } from '../../../util/useAsyncData.js';
+
+import { getTasks, loadTasksData } from '../tasksRegister.js';
 import { onTasksChange, offTasksChange } from '../listeners/onTasksChange.js';
 
-/**
- * A custom hoook that provides all tasks
- */
-export function useTasks(): ReadonlyArray<Readonly<Task>> {
-	const [tasks, setTasks] = useState<ReadonlyArray<Readonly<Task>>>(getTasks);
+export function useTasks(): AsyncDataState<ReadonlyArray<Readonly<Task>>> {
+	const {
+		data,
+		isLoading,
+		error,
+	} = useAsyncData(loadTasksData);
 
-	// `useLayoutEffect` runs synchronously, so this approach works with
-	// data being populated synchronously immediately after the initial render
-	useLayoutEffect(() => {
-		onTasksChange(setTasks);
+	// Try to initialise with existing data
+	const [tasks, setTasks] = useState<ReadonlyArray<Task> | null>(() => {
+		if (data) {
+			return data;
+		}
 
-		return (() => {
-			offTasksChange(setTasks);
-		});
+		const tasks = getTasks();
+		if (tasks.length > 0) {
+			return tasks;
+		}
+
+		return null;
 	});
 
-	return tasks;
+	// When data becomes available, expose it
+	useEffect(() => {
+		setTasks(data);
+	}, [data]);
+
+	// When tasks are updated, reflect that
+	useEffect(() => {
+		const updateTasks = () => {
+			const tasks = getTasks();
+			setTasks(tasks);
+		};
+
+		onTasksChange(updateTasks);
+
+		return () => {
+			offTasksChange(updateTasks);
+		};
+	}, []);
+
+	return {
+		data: tasks,
+		isLoading,
+		error,
+	};
 }
