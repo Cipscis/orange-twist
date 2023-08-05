@@ -30,7 +30,11 @@ export async function loadDayData(): Promise<ReadonlyArray<Readonly<Day>>> {
 			loadDays()
 				.then((persistedDays) => {
 					// Initialise register with an empty day for today
-					setDayData(formatDate(new Date()), {});
+					setDayData(
+						formatDate(new Date()),
+						{},
+						{ shouldCallListeners: false }
+					);
 
 					for (const [dayName, dayData] of persistedDays) {
 						daysRegister.set(dayName, dayData);
@@ -112,11 +116,15 @@ function mergeDayData(
 	return updatedData;
 }
 
+interface SetDayDataOptions {
+	/** @default true */
+	shouldCallListeners: boolean;
+}
 /**
  * Set data for a given day. If no data exists
  * for this day yet, it will be added.
  */
-export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>): void {
+export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>, options?: SetDayDataOptions): void {
 	if (!isValidDateString(dayName)) {
 		throw new RangeError(`Invalid day name ${dayName}`);
 	}
@@ -126,7 +134,9 @@ export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>
 	const updatedData = mergeDayData(dayName, day, data);
 	daysRegister.set(dayName, updatedData);
 
-	callListeners();
+	if (options?.shouldCallListeners ?? true) {
+		callListeners();
+	}
 }
 
 /**

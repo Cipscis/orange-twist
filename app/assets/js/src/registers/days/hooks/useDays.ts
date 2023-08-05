@@ -19,14 +19,31 @@ export function useDays(): AsyncDataState<ReadonlyArray<Readonly<Day>>> {
 		error,
 	} = useAsyncData(loadDayData);
 
-	const [days, setDays] = useState<ReadonlyArray<Day> | null>(null);
+	// Try to initialise with existing data
+	const [days, setDays] = useState<ReadonlyArray<Day> | null>(() => {
+		if (data) {
+			return data;
+		}
+
+		const days = getDays();
+		if (days.length) {
+			return days;
+		}
+
+		return null;
+	});
 
 	// When data becomes available, expose it
-	useEffect(() => setDays(data), [data]);
+	useEffect(() => {
+		setDays(data);
+	}, [data]);
 
 	// When days are updated, reflect that
 	useEffect(() => {
-		const updateDays = () => setDays(getDays());
+		const updateDays = () => {
+			const days = getDays();
+			setDays(days);
+		};
 
 		onDaysChange(updateDays);
 

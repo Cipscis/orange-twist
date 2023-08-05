@@ -16,9 +16,7 @@ const html = htm.bind(h);
 export function OrangeTwist() {
 	const {
 		data: days,
-		// TODO: Handle loading state
 		isLoading: isDaysLoading,
-		// TODO: Handle error state
 		error: daysError,
 	} = useDays();
 
