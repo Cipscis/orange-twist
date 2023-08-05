@@ -74,43 +74,33 @@ export function getAllDaysData(): ReadonlyArray<[dayName: string, dayData: Reado
 function mergeDayData(
 	dayName: string,
 	dayData: Day | null,
-	newDayData: DeepPartial<Omit<Day, 'date'>>
+	newDayData: DeepPartial<Omit<Day, 'date'>> & Partial<Pick<Day, 'tasks'>>
 ): Day {
 	const defaultDayData: Day = {
 		dayName,
 		note: '',
-		sections: [],
-	};
-
-	const defaultSection: Day['sections'][number] = {
-		name: 'New section',
+		tasks: [],
 	};
 
 	const newDataClone = structuredClone(newDayData);
 
-	/* TODO: We're going to need a better way to deal with sections.
-	Perhaps more specific functions like `addSection`? It's going to
-	get complicated once we try to add tasks, since they belong in
-	sections, so how does the data need to get sent? Will be easier
-	with an interface like `addTaskToSectionOnDay` */
-	const newDataSections = (newDataClone.sections ?? defaultDayData.sections).map((partialSection) => {
-		const section = {
-			...defaultSection,
-			...partialSection,
-		};
-
-		return section;
-	});
-
-	const newDataWithSections = {
-		...newDataClone,
-		sections: newDataSections,
-	};
+	// If we're combining new and old task data, just update tasks with existing data
+	if (newDataClone.tasks && dayData) {
+		for (const newTask of newDataClone.tasks) {
+			const taskIndex = dayData.tasks.findIndex(({ id }) => id === newTask.id);
+			if (taskIndex === -1) {
+				dayData.tasks.push(newTask);
+			} else {
+				dayData.tasks[taskIndex] = newTask;
+			}
+		}
+		newDataClone.tasks = dayData.tasks;
+	}
 
 	const updatedData = {
 		...defaultDayData,
 		...dayData,
-		...newDataWithSections,
+		...newDataClone,
 	};
 
 	return updatedData;
@@ -124,7 +114,11 @@ interface SetDayDataOptions {
  * Set data for a given day. If no data exists
  * for this day yet, it will be added.
  */
-export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>, options?: SetDayDataOptions): void {
+export function setDayData(
+	dayName: string,
+	data: DeepPartial<Omit<Day, 'date'>> & Partial<Pick<Day, 'tasks'>>,
+	options?: SetDayDataOptions
+): void {
 	if (!isValidDateString(dayName)) {
 		throw new RangeError(`Invalid day name ${dayName}`);
 	}

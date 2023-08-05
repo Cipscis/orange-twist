@@ -4,8 +4,10 @@ import { useCallback } from 'preact/hooks';
 
 import { Day } from '../types/Day.js';
 import { deleteDay } from '../registers/days/index.js';
+import { getTaskData } from '../registers/tasks/index.js';
 
 import { DayNote, DayNoteProps } from './DayNote.js';
+import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -37,14 +39,24 @@ export function DayComponent(props: DayProps) {
 			<${DayNote} ...${dayNoteProps} />
 		</div>
 
-		${day.sections.length > 0 && html`
-			<div class="day__sections">
-				${day.sections.map((section) => html`
-					<div class="day__section" key="${section.name}">
-						<h4 class="day__section-heading">${section.name}</h4>
-					</div>
-				`)}
-			</div>
-		`}
+		${
+			day.tasks.length > 0 &&
+			html`<div class="day__tasks">
+				${day.tasks.map((task) => {
+					const taskData = getTaskData(task.id);
+					if (!taskData) {
+						return '';
+					}
+
+					if (taskData) {
+						const taskComponentProps: TaskComponentProps = {
+							task: { ...taskData, ...task },
+							dayName,
+						};
+						return html`<${TaskComponent} ...${taskComponentProps} />`;
+					}
+				})}
+			</div>`
+		}
 	</div>`;
 }

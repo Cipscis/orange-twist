@@ -11,6 +11,7 @@ const html = htm.bind(h);
 
 export interface TaskStatusComponentProps {
 	task: Task;
+	dayName?: string;
 }
 
 const taskStatusSymbols = {
@@ -25,14 +26,14 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 			id,
 			status,
 		},
+		dayName,
 	} = props;
 
 	const statusSymbol = taskStatusSymbols[status];
 
 	const [isInChangeMode, setIsInChangeMode] = useState(false);
 	const changeStatus = useCallback((newStatus: TaskStatus) => {
-		// TODO: This status change should be associated with the current day
-		setTaskData(id, { status: newStatus });
+		setTaskData(id, { status: newStatus }, { dayName });
 		setIsInChangeMode(false);
 	}, []);
 
