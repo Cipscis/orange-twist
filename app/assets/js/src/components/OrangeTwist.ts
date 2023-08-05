@@ -20,8 +20,12 @@ export function OrangeTwist() {
 		error: daysError,
 	} = useDays();
 
-	const tasks = useTasks();
-	const unfinishedTasks = tasks.filter(({ status }) => status !== TaskStatus.COMPLETED);
+	const {
+		data: tasks,
+		isLoading: isTasksLoading,
+		error: tasksError,
+	} = useTasks();
+	const unfinishedTasks = tasks?.filter(({ status }) => status !== TaskStatus.COMPLETED);
 
 	const addNewDay = useCallback(() => {
 		if (!days) {
@@ -45,6 +49,8 @@ export function OrangeTwist() {
 
 		setDayData(dayName, {});
 	}, [days]);
+
+	const isLoading = isDaysLoading || isTasksLoading;
 
 	return html`<div>
 		<h2>Days</h2>
@@ -79,15 +85,34 @@ export function OrangeTwist() {
 
 		<h2>Unfinished tasks</h2>
 
-		<button type="button" onClick="${() => addNewTask()}">Add new task</button>
+		${
+			isTasksLoading &&
+			html`<span>Tasks loading</span>`
+		}
+		${
+			tasksError &&
+			html`<span>Tasks loading error: ${tasksError}</span>`
+		}
+		${
+			tasks &&
 
-		<ul>
-			${unfinishedTasks.map((task) => html`<li key="${task.id}"><i>${task.id}</i> ${task.name} (${task.status})</li>`)}
-		</ul>
+			html`
+				<button type="button" onClick="${() => addNewTask()}">Add new task</button>
+				${
+					unfinishedTasks &&
+					html`<ul>
+						${unfinishedTasks.map((task) => html`<li key="${task.id}"><i>${task.id}</i> ${task.name} (${task.status})</li>`)}
+					</ul>`
+				}
+			`
+		}
 
-		<button type="button" onClick="${() => {
-			saveDays();
-			saveTasks();
-		}}">Save data</button>
+		${
+			!isLoading &&
+			html`<button type="button" onClick="${() => {
+				saveDays();
+				saveTasks();
+			}}">Save data</button>`
+		}
 	</div>`;
 }

@@ -27,24 +27,17 @@ const isValidTasksData = isArrayOf(
 /**
  * Load data for the tasks register from where it was persisted.
  */
-export async function loadTasks(): Promise<Iterable<[number, Task]> | null> {
-	try {
-		const serialisedTasks = localStorage.getItem('tasks');
-		if (serialisedTasks === null) {
-			return null;
-		}
-
-		const persistedTasks = JSON.parse(serialisedTasks) as unknown;
-
-		if (!isValidTasksData(persistedTasks)) {
-			// TODO: Handle error
-			console.log('invalid data', persistedTasks);
-			return null;
-		}
-
-		return persistedTasks;
-	} catch (e) {
-		console.error(e);
-		return null;
+export async function loadTasks(): Promise<Iterable<[number, Task]>> {
+	const serialisedTasks = localStorage.getItem('tasks');
+	if (serialisedTasks === null) {
+		return [];
 	}
+
+	const persistedTasks = JSON.parse(serialisedTasks) as unknown;
+
+	if (!isValidTasksData(persistedTasks)) {
+		throw new TypeError('Invalid tasks data');
+	}
+
+	return persistedTasks;
 }

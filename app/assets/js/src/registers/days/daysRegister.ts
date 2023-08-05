@@ -12,21 +12,21 @@ import { loadDays } from './persistence/loadDays.js';
 
 const daysRegister: Map<string, Readonly<Day>> = new Map();
 let isInitialised = false;
-let loadDayDataPromise: ReturnType<typeof loadDayData> | null = null;
+let loadDaysDataPromise: ReturnType<typeof loadDaysData> | null = null;
 
 /**
  * Load day data once, on first call, and store it in the register.
  *
  * Otherwise, return already stored day data.
  */
-export async function loadDayData(): Promise<ReadonlyArray<Readonly<Day>>> {
+export async function loadDaysData(): Promise<ReadonlyArray<Readonly<Day>>> {
 	if (!isInitialised) {
-		if (loadDayDataPromise) {
+		if (loadDaysDataPromise) {
 			// If a request is still in progress, piggyback on that request
-			return loadDayDataPromise;
+			return loadDaysDataPromise;
 		}
 
-		loadDayDataPromise = new Promise<ReadonlyArray<Readonly<Day>>>((resolve, reject) => {
+		loadDaysDataPromise = new Promise<ReadonlyArray<Readonly<Day>>>((resolve, reject) => {
 			loadDays()
 				.then((persistedDays) => {
 					// Initialise register with an empty day for today
@@ -46,7 +46,7 @@ export async function loadDayData(): Promise<ReadonlyArray<Readonly<Day>>> {
 				})
 				.catch(reject);
 		});
-		return loadDayDataPromise;
+		return loadDaysDataPromise;
 	}
 
 	return getDays();
