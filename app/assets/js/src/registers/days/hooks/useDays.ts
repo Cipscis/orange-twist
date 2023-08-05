@@ -33,11 +33,6 @@ export function useDays(): AsyncDataState<ReadonlyArray<Readonly<Day>>> {
 		return null;
 	});
 
-	// When data becomes available, expose it
-	useEffect(() => {
-		setDays(data);
-	}, [data]);
-
 	// When days are updated, reflect that
 	useEffect(() => {
 		const updateDays = () => {
@@ -53,7 +48,7 @@ export function useDays(): AsyncDataState<ReadonlyArray<Readonly<Day>>> {
 	}, []);
 
 	return {
-		data: days,
+		data: days ?? data,
 		isLoading,
 		error,
 	};
