@@ -12,7 +12,7 @@ import {
 	isTypeof,
 } from '@cipscis/ts-toolbox';
 
-// import { TaskStatus, isTaskStatus } from './TaskStatus.js';
+import { TaskStatus, isTaskStatus } from './TaskStatus.js';
 
 export type Day = {
 	/**
@@ -22,14 +22,11 @@ export type Day = {
 	 */
 	dayName: string;
 	note: string;
-	sections: Array<{
-		name: string;
-	// 	tasks: Array<{
-	// 		id: number;
-	// 		note: string;
-	// 		status: TaskStatus;
-	// 	}>;
-	}>;
+
+	tasks: Array<{
+		id: number;
+		status: TaskStatus;
+	}>
 };
 
 export function isDay(data: unknown): data is Day {
@@ -50,16 +47,14 @@ export function isDay(data: unknown): data is Day {
 	}
 
 	if (!(hasPropertyOfType(
-		data, 'sections', isArrayOf(
+		data, 'tasks', isArrayOf(
 			isAllOf(
-				isObjectWithPropertyOfType('name', isTypeof('string')),
-				// isObjectWithPropertyOfType('tasks', isArrayOf(
-				// 	isAllOf(
-				// 		isObjectWithPropertyOfType('id', isTypeof('number')),
-				// 		isObjectWithPropertyOfType('note', isTypeof('string')),
-				// 		isObjectWithPropertyOfType('status', isTaskStatus),
-				// 	)
-				// ))
+				isObjectWithPropertyOfType(
+					'id', isTypeof('number')
+				),
+				isObjectWithPropertyOfType(
+					'status', isTaskStatus,
+				)
 			)
 		)
 	))) {

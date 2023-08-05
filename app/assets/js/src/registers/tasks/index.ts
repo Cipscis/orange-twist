@@ -1,5 +1,6 @@
 export {
 	addNewTask,
+	getTaskData,
 	setTaskData,
 } from './tasksRegister.js';
 

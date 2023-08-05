@@ -12,10 +12,11 @@ const html = htm.bind(h);
 
 export interface TaskComponentProps {
 	task: Readonly<Task>;
+	dayName?: string;
 }
 
 export function TaskComponent(props: TaskComponentProps) {
-	const { task } = props;
+	const { task, dayName } = props;
 	const { id, name } = task;
 
 	const nameChangeHandler = useCallback((e: InputEvent) => {
@@ -25,13 +26,13 @@ export function TaskComponent(props: TaskComponentProps) {
 		}
 
 		const name = input.value;
-		setTaskData(id, { name });
+		setTaskData(id, { name }, { dayName });
 	}, []);
 
 	return html`
 		<div class="task">
 			${(() => {
-				const taskStatusProps: TaskStatusComponentProps = { task };
+				const taskStatusProps: TaskStatusComponentProps = { task, dayName };
 
 				return html`<span>
 					<${TaskStatusComponent} ...${taskStatusProps} />

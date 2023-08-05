@@ -5,6 +5,8 @@ import { TaskStatus } from '../../types/TaskStatus.js';
 
 import { tasksChangeListeners } from './listeners/onTasksChange.js';
 import { loadTasks } from './persistence/loadTasks.js';
+import { formatDate } from '../../formatters/date.js';
+import { setDayData } from '../days/daysRegister.js';
 
 const tasksRegister: Map<number, Task> = new Map();
 let isInitialised = false;
@@ -15,7 +17,6 @@ let latestId: number = 0;
  * Get a unique numeric ID for a new task.
  */
 function getNextId(): number {
-	// TODO: This will need to be updated when persisting tasks
 	latestId += 1;
 	return latestId;
 }
@@ -93,19 +94,54 @@ function mergeTaskData(id: number, task: Task | null, data: DeepPartial<Omit<Tas
 }
 
 /**
+ * Retrieve data for a task with a given ID.
+ *
+ * If no such task exists, returns `null`.
+ */
+export function getTaskData(id: number): Readonly<Task> | null {
+	return tasksRegister.get(id) ?? null;
+}
+
+interface SetTaskDataOptions {
+	/** A day to associate a set of changes with. If omitted, the current day will be used */
+	dayName?: string;
+}
+/**
  * Set data for a given task. If no task exists
  * with a given ID, this will fail silently.
  */
-export function setTaskData(id: number, data: DeepPartial<Omit<Task, 'id'>>): void {
-	const task = tasksRegister.get(id) ?? null;
+export function setTaskData(
+	id: number,
+	data: DeepPartial<Omit<Task, 'id'>>,
+	options?: SetTaskDataOptions
+): void {
+	const task = getTaskData(id);
 	if (task === null) {
 		return;
 	}
 
+	const oldTaskData = task;
+
 	const updatedData = mergeTaskData(id, task, data);
+
+	/* TODO: If we're updating status data for a given day, and a later day has
+	status info for this task, don't update its current status in the register */
 	tasksRegister.set(id, updatedData);
 
 	callListeners();
+
+	if (oldTaskData.status !== updatedData.status) {
+		const dayName = options?.dayName || formatDate(new Date());
+		setDayData(
+			dayName,
+			{
+				tasks: [{
+					id,
+					status: updatedData.status,
+				}],
+			}
+		);
+	}
 }
 
 /**

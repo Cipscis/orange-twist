@@ -56,7 +56,7 @@ export function OrangeTwist() {
 
 		${
 			isDaysLoading &&
-			// TODO: Display a better logo
+			// TODO: Display a better loader
 			html`<span>Loading</span>`
 		}
 		${
@@ -66,20 +66,20 @@ export function OrangeTwist() {
 		}
 		${
 			days &&
-			html`<ul>
+			html`
 				${days.map((day) => {
 					const dayProps: DayComponentProps = { day };
 					return html`
-						<li
+						<section
 							key="${day.dayName}"
 						>
 							<${DayComponent} ...${dayProps} />
-						</li>
+						</section>
 					`;
 				})}
-			</ul>
 
-			<button type="button" onClick="${addNewDay}">Add day</button>`
+				<button type="button" onClick="${addNewDay}">Add day</button>
+			`
 		}
 
 		<h2>Tasks</h2>
