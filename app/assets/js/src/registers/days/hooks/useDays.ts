@@ -1,24 +1,43 @@
-import { useLayoutEffect, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
 import { Day } from '../../../types/Day.js';
-import { getDays } from '../daysRegister.js';
-import { onDaysChange, offDaysChange } from '../listeners/onDaysChange.js';
+
+import { AsyncDataState, useAsyncData } from '../../../util/useAsyncData.js';
+
+import { getDays, loadDayData } from '../daysRegister.js';
+import { offDaysChange, onDaysChange } from '../listeners/onDaysChange.js';
 
 /**
- * A custom hook that provides data for each day.
+ * Load persisted days data if necessary, exposing loading and error states related to that process.
+ *
+ * Once days data is loaded, expose days data and keep it up to date.
  */
-export function useDays(): ReadonlyArray<Readonly<Readonly<Day>>> {
-	const [days, setDays] = useState<ReadonlyArray<Readonly<Day>>>(getDays);
+export function useDays(): AsyncDataState<ReadonlyArray<Readonly<Day>>> {
+	const {
+		data,
+		isLoading,
+		error,
+	} = useAsyncData(loadDayData);
 
-	// `useLayoutEffect` runs synchronously, so this approach works with
-	// data being populated synchronously immediately after the initial render
-	useLayoutEffect(() => {
-		onDaysChange(setDays);
+	const [days, setDays] = useState<ReadonlyArray<Day> | null>(null);
 
-		return (() => {
-			offDaysChange(setDays);
-		});
-	});
+	// When data becomes available, expose it
+	useEffect(() => setDays(data), [data]);
 
-	return days;
+	// When days are updated, reflect that
+	useEffect(() => {
+		const updateDays = () => setDays(getDays());
+
+		onDaysChange(updateDays);
+
+		return () => {
+			offDaysChange(updateDays);
+		};
+	}, []);
+
+	return {
+		data: days,
+		isLoading,
+		error,
+	};
 }

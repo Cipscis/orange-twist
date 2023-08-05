@@ -11,27 +11,41 @@ import { daysChangeListeners } from './listeners/onDaysChange.js';
 import { loadDays } from './persistence/loadDays.js';
 
 const daysRegister: Map<string, Readonly<Day>> = new Map();
-initialiseDaysRegister();
+let isInitialised = false;
+let loadDayDataPromise: ReturnType<typeof loadDayData> | null = null;
 
 /**
- * Fill the days register with initial data, then restore persisted data asynchronously.
+ * Load day data once, on first call, and store it in the register.
+ *
+ * Otherwise, return already stored day data.
  */
-async function initialiseDaysRegister(): Promise<void> {
-	// Initialise register with an empty day for today
-	setDayData(formatDate(new Date()), {});
+export async function loadDayData(): Promise<ReadonlyArray<Readonly<Day>>> {
+	if (!isInitialised) {
+		if (loadDayDataPromise) {
+			// If a request is still in progress, piggyback on that request
+			return loadDayDataPromise;
+		}
 
-	// Restore persisted data
-	const persistedData = await loadDays();
-	if (persistedData === null) {
-		return;
+		loadDayDataPromise = new Promise<ReadonlyArray<Readonly<Day>>>((resolve, reject) => {
+			loadDays()
+				.then((persistedDays) => {
+					// Initialise register with an empty day for today
+					setDayData(formatDate(new Date()), {});
+
+					for (const [dayName, dayData] of persistedDays) {
+						daysRegister.set(dayName, dayData);
+					}
+					isInitialised = true;
+
+					const days = getDays();
+					resolve(days);
+				})
+				.catch(reject);
+		});
+		return loadDayDataPromise;
 	}
 
-	// TODO: We need to handle some sort of loading state, to prevent interaction
-	for (const [dayName, dayData] of persistedData) {
-		daysRegister.set(dayName, dayData);
-	}
-
-	callListeners();
+	return getDays();
 }
 
 /**
@@ -43,28 +57,6 @@ export function getDays(): ReadonlyArray<Readonly<Day>> {
 	days.sort((a, b) => a.dayName.localeCompare(b.dayName));
 
 	return days;
-}
-
-/**
- * Retrieve the list of all days with data
- */
-export function getDaysList(): ReadonlyArray<string> {
-	const days = Array.from(daysRegister.keys());
-
-	days.sort((a, b) => a.localeCompare(b));
-
-	return days;
-}
-
-/**
- * Retrieve data for a given day, if it exists.
- *
- * If the day doesn't have any data, returns `null`.
- */
-export function getDayData(dayName: string): Readonly<Day> | null {
-	const day = daysRegister.get(dayName);
-
-	return day ?? null;
 }
 
 export function getAllDaysData(): ReadonlyArray<[dayName: string, dayData: Readonly<Day>]> {
@@ -129,7 +121,7 @@ export function setDayData(dayName: string, data: DeepPartial<Omit<Day, 'date'>>
 		throw new RangeError(`Invalid day name ${dayName}`);
 	}
 
-	const day = getDayData(dayName);
+	const day = daysRegister.get(dayName) ?? null;
 
 	const updatedData = mergeDayData(dayName, day, data);
 	daysRegister.set(dayName, updatedData);

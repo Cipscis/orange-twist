@@ -27,7 +27,7 @@ export const isValidDaysData = isArrayOf(
 /**
  * Load data for the days register from where it was persisted.
  */
-export async function loadDays(): Promise<Iterable<[string, Day]>> {
+export async function loadDays(): Promise<Array<[string, Day]>> {
 	const serialisedDays = localStorage.getItem('days');
 	if (serialisedDays === null) {
 		return [];

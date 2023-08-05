@@ -1,6 +1,4 @@
 export {
-	getDaysList,
-	getDayData,
 	setDayData,
 	deleteDay,
 } from './daysRegister.js';

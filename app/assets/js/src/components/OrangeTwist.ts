@@ -14,24 +14,33 @@ import { TaskStatus } from '../types/TaskStatus.js';
 const html = htm.bind(h);
 
 export function OrangeTwist() {
-	const days = useDays();
+	const {
+		data: days,
+		// TODO: Handle loading state
+		isLoading: isDaysLoading,
+		// TODO: Handle error state
+		error: daysError,
+	} = useDays();
+
 	const tasks = useTasks();
 	const unfinishedTasks = tasks.filter(({ status }) => status !== TaskStatus.COMPLETED);
 
 	const addNewDay = useCallback(() => {
+		if (!days) {
+			return;
+		}
+
 		const dayName = window.prompt('What day?');
 		if (!dayName) {
 			return;
 		}
 		if (!isValidDateString(dayName)) {
-			// TODO: Handle error
 			window.alert('Invalid day');
 			return;
 		}
 
 		const existingDayData = days.find((day) => day.dayName === dayName);
 		if (existingDayData) {
-			// TODO: Handle error
 			window.alert('Day already exists');
 			return;
 		}
@@ -42,20 +51,33 @@ export function OrangeTwist() {
 	return html`<div>
 		<h2>Days</h2>
 
-		<ul>
-			${days.map((day) => {
-				const dayProps: DayComponentProps = { day };
-				return html`
-					<li
-						key="${day.dayName}"
-					>
-						<${DayComponent} ...${dayProps} />
-					</li>
-				`;
-			})}
-		</ul>
+		${
+			isDaysLoading &&
+			// TODO: Display a better logo
+			html`<span>Loading</span>`
+		}
+		${
+			daysError &&
+			// TODO: Handle error better somehow
+			html`<span>Error: ${daysError}</span>`
+		}
+		${
+			days &&
+			html`<ul>
+				${days.map((day) => {
+					const dayProps: DayComponentProps = { day };
+					return html`
+						<li
+							key="${day.dayName}"
+						>
+							<${DayComponent} ...${dayProps} />
+						</li>
+					`;
+				})}
+			</ul>
 
-		<button type="button" onClick="${addNewDay}">Add day</button>
+			<button type="button" onClick="${addNewDay}">Add day</button>`
+		}
 
 		<h2>Unfinished tasks</h2>
 
