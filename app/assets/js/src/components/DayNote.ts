@@ -4,12 +4,14 @@ import htm from 'htm';
 import { setDayData } from '../registers/days/index.js';
 import {
 	useCallback,
+	useContext,
 	useEffect,
 	useRef,
 	useState,
 } from 'preact/hooks';
 import { Markdown, MarkdownProps } from './Markdown.js';
 import { Day } from '../types/Day.js';
+import { OrangeTwistContext } from './OrangeTwist.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -21,6 +23,8 @@ export interface DayNoteProps {
 export function DayNote(props: DayNoteProps) {
 	const { day } = props;
 	const { dayName } = day;
+
+	const api = useContext(OrangeTwistContext);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const editButtonRef = useRef<HTMLButtonElement>(null);
@@ -37,6 +41,8 @@ export function DayNote(props: DayNoteProps) {
 		const exitEditingModeOnCtrlEnter = (e: KeyboardEvent) => {
 			if (e.key === 'Enter' && e.ctrlKey) {
 				setIsEditing(false);
+				// TODO: Only save if something changed.
+				api.save();
 			}
 		};
 		const textarea = textareaRef.current;

@@ -3,9 +3,10 @@ import htm from 'htm';
 
 import { Task } from '../types/Task.js';
 import { TaskStatus } from '../types/TaskStatus.js';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useContext, useEffect, useRef, useState } from 'preact/hooks';
 import { setTaskData } from '../registers/tasks/tasksRegister.js';
 import { elementHasAncestor } from '../util/elementHasAncestor.js';
+import { OrangeTwistContext } from './OrangeTwist.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -30,12 +31,15 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		dayName,
 	} = props;
 
+	const api = useContext(OrangeTwistContext);
+
 	const statusSymbol = taskStatusSymbols[status];
 
 	const [isInChangeMode, setIsInChangeMode] = useState(false);
 	const changeStatus = useCallback((newStatus: TaskStatus) => {
 		setTaskData(id, { status: newStatus }, { dayName });
 		setIsInChangeMode(false);
+		api.save();
 	}, []);
 
 	const rootRef = useRef<HTMLElement>(null);
