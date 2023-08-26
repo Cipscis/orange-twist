@@ -6,7 +6,7 @@ import { TaskStatus } from '../../types/TaskStatus.js';
 import { tasksChangeListeners } from './listeners/onTasksChange.js';
 import { loadTasks } from './persistence/loadTasks.js';
 import { formatDate } from '../../formatters/date.js';
-import { setDayData } from '../days/daysRegister.js';
+import { getDays, setDayData } from '../days/daysRegister.js';
 
 const tasksRegister: Map<number, Task> = new Map();
 let isInitialised = false;
@@ -120,13 +120,49 @@ export function setTaskData(
 		return;
 	}
 
-	const oldTaskData = task;
+	// Create a copy of day data in reverse chronological order
+	const days = [...getDays()].reverse();
+
+
+	const oldTaskData = {
+		...task,
+	};
+	if (options?.dayName) {
+		const dayData = days.find(({ dayName }) => dayName === options.dayName);
+		if (dayData) {
+			const taskDayData = dayData.tasks.find(({ id }) => id === task.id);
+			if (taskDayData) {
+				oldTaskData.status = taskDayData.status;
+			}
+		}
+	}
 
 	const updatedData = mergeTaskData(id, task, data);
 
-	/* TODO: If we're updating status data for a given day, and a later day has
-	status info for this task, don't update its current status in the register */
-	tasksRegister.set(id, updatedData);
+	if (data.status && options?.dayName) {
+		// If we're updating a tasks's status for a given day, the current status
+		// should only be updated if no more recent status is recorded on another day.
+		for (const day of days) {
+			if (day.dayName === options.dayName) {
+				// If we reach the current day, then there is no more recent status
+				// so we can update the data.
+				tasksRegister.set(id, updatedData);
+				break;
+			}
+
+			if (day.tasks.find(({ id }) => id === task.id)) {
+				// There is a more recent day with status information, so update
+				// the data *except* for status.
+				tasksRegister.set(id, {
+					...updatedData,
+					status: task.status,
+				});
+				break;
+			}
+		}
+	} else {
+		tasksRegister.set(id, updatedData);
+	}
 
 	callListeners();
 

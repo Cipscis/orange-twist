@@ -3,7 +3,7 @@ import htm from 'htm';
 
 import { Task } from '../types/Task.js';
 
-import { TaskStatusComponent, TaskStatusComponentProps } from './TaskStatus.js';
+import { TaskStatusComponent, TaskStatusComponentProps } from './TaskStatusComponent.js';
 import { useCallback } from 'preact/hooks';
 import { setTaskData } from '../registers/tasks/tasksRegister.js';
 
