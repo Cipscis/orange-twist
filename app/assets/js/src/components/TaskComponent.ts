@@ -29,6 +29,13 @@ export function TaskComponent(props: TaskComponentProps) {
 		setTaskData(id, { name }, { dayName });
 	}, []);
 
+	const enterHandler = useCallback((e: KeyboardEvent) => {
+		if (e.key === 'Enter' && e.target instanceof HTMLElement) {
+			e.target.blur();
+			// TODO: Save if anything was change
+		}
+	}, []);
+
 	return html`
 		<div class="task">
 			${(() => {
@@ -45,6 +52,7 @@ export function TaskComponent(props: TaskComponentProps) {
 							value="${name}"
 							size="1"
 							onInput="${nameChangeHandler}"
+							onKeydown="${enterHandler}"
 						/>
 					</div>
 				`;
