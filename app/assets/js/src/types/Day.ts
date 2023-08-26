@@ -5,6 +5,7 @@ import type { formatDate } from '../formatters/date.js';
 import { z } from 'zod';
 
 import { TaskStatus } from './TaskStatus.js';
+import { isZodSchemaType } from '../util/isZodSchemaType.js';
 
 const daySchema = z.object({
 	/**
@@ -22,4 +23,4 @@ const daySchema = z.object({
 });
 
 export type Day = z.infer<typeof daySchema>;
-export const isDay = (value: unknown): value is Day => daySchema.safeParse(value).success;
+export const isDay = isZodSchemaType(daySchema);

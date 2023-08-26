@@ -174,8 +174,9 @@ module.exports = {
 				],
 			},
 		],
+		// My IDE handles this, it's annoying to see the squigly lines appear
 		'no-trailing-spaces': [
-			'error',
+			'off',
 		],
 		'no-undefined': 'error',
 		'no-var': 'error',

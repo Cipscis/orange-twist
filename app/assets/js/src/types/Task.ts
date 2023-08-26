@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { TaskStatus } from './TaskStatus.js';
+import { isZodSchemaType } from '../util/isZodSchemaType.js';
 
 const taskSchema = z.object({
 	id: z.number(),
@@ -12,4 +13,4 @@ const taskSchema = z.object({
 });
 
 export type Task = z.infer<typeof taskSchema>;
-export const isTask = (value: unknown): value is Task => taskSchema.safeParse(value).success;
+export const isTask = isZodSchemaType(taskSchema);
