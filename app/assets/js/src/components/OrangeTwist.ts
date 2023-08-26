@@ -137,12 +137,6 @@ export function OrangeTwist() {
 				tasks &&
 
 				html`
-					<button
-						type="button"
-						class="button"
-						onClick="${() => addNewTask()}"
-					>Add new task</button>
-
 					<!-- TODO: Reduce duplication -->
 					<ul class="orange-twist__task-list">
 						${tasks.map(
@@ -159,6 +153,12 @@ export function OrangeTwist() {
 							}
 						)}
 					</ul>
+
+					<button
+						type="button"
+						class="button"
+						onClick="${() => addNewTask()}"
+					>Add new task</button>
 
 					<details>
 						<summary>Completed tasks</summary>
