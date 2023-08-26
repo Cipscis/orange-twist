@@ -2,7 +2,12 @@ import { h } from 'preact';
 import htm from 'htm';
 
 import { setDayData } from '../registers/days/index.js';
-import { useCallback, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from 'preact/hooks';
 import { Markdown, MarkdownProps } from './Markdown.js';
 import { Day } from '../types/Day.js';
 
@@ -17,7 +22,25 @@ export function DayNote(props: DayNoteProps) {
 	const { day } = props;
 	const { dayName } = day;
 
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+
 	const [isEditing, setIsEditing] = useState(false);
+
+	// Set up event listener to stop editing when textarea is blurred,
+	// and move focus into textarea when we start editing.
+	useEffect(() => {
+		const exitEditingModeOnTextareaBlur = () => setIsEditing(false);
+		const textarea = textareaRef.current;
+
+		if (isEditing) {
+			textarea?.addEventListener('blur', exitEditingModeOnTextareaBlur);
+			textarea?.focus();
+		}
+
+		return () => {
+			textarea?.removeEventListener('blur', exitEditingModeOnTextareaBlur);
+		};
+	}, [isEditing]);
 
 	const inputHandler = useCallback(function (e: InputEvent) {
 		const textarea = e.target;
@@ -44,6 +67,7 @@ export function DayNote(props: DayNoteProps) {
 				>
 					<textarea
 						onInput="${inputHandler}"
+						ref="${textareaRef}"
 					>${day.note}</textarea>
 				</div>
 			`
@@ -58,6 +82,7 @@ export function DayNote(props: DayNoteProps) {
 					...${{
 						content: day.note,
 					} as MarkdownProps}
+					onClick="${() => setIsEditing(true)}"
 				/>
 			`
 		}

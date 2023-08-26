@@ -5,6 +5,7 @@ import { Task } from '../types/Task.js';
 import { TaskStatus } from '../types/TaskStatus.js';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { setTaskData } from '../registers/tasks/tasksRegister.js';
+import { elementHasAncestor } from '../util/elementHasAncestor.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -56,21 +57,9 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 	const exitChangeModeOnOutsideClick = useCallback((e: MouseEvent) => {
 		if (
 			rootRef.current &&
-			e.target instanceof HTMLElement
+			e.target instanceof Element
 		) {
-			const isWithinRootRef = (() => {
-				let ancestor = e.target.parentElement;
-				while (ancestor) {
-					if (ancestor === rootRef.current) {
-						return true;
-					}
-					ancestor = ancestor.parentElement;
-				}
-
-				return false;
-			})();
-
-			if (!isWithinRootRef) {
+			if (!elementHasAncestor(e.target, rootRef.current)) {
 				setIsInChangeMode(false);
 			}
 		}
