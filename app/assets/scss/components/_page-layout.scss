@@ -14,7 +14,9 @@
 .page-layout__header {
 	margin-bottom: 20px;
 
-	h1 { @include font-heading-1 }
+	h1 {
+		@include font-heading-1;
+	}
 }
 
 .page-layout__main {}
