@@ -80,23 +80,46 @@ export function OrangeTwist() {
 		setNewTasksCreated((oldValue) => oldValue + 1);
 	}, []);
 
+	/**
+	 * How many minutes should pass between each autosave.
+	 */	const autosaveMinutes = 1;
+	const autosaveTimeout = useRef<number | null>(null);
+
+	/**
+	 * Start a timeout to automatically save.
+	 */
+	const queueAutosave = useCallback(() => {
+		if (autosaveTimeout.current !== null) {
+			window.clearTimeout(autosaveTimeout.current);
+		}
+
+		autosaveTimeout.current = window.setInterval(() => {
+			saveData();
+		}, autosaveMinutes * 1000 * 60);
+	}, []);
+
 	const saveData = useCallback(() => {
 		saveDays();
 		saveTasks();
 		toast('Saved', 2000);
+
+		// Reset autosave timeout
+		if (autosaveTimeout.current !== null) {
+			window.clearTimeout(autosaveTimeout.current);
+		}
+		queueAutosave();
 	}, []);
 
 	/**
-	 * How many minutes should pass between each autosave.
+	 * Queue autosave on initial render
 	 */
-	const autosaveMinutes = 1;
 	useEffect(() => {
-		const autosaveInterval = window.setInterval(() => {
-			saveData();
-		}, autosaveMinutes * 1000 * 60);
+		queueAutosave();
 
 		return () => {
-			window.clearInterval(autosaveInterval);
+			if (autosaveTimeout.current !== null) {
+				window.clearInterval(autosaveTimeout.current);
+			}
 		};
 	}, [saveData]);
 
