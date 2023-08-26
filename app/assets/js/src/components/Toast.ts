@@ -2,6 +2,7 @@ import { h, render } from 'preact';
 import htm from 'htm';
 import { useRef } from 'preact/hooks';
 import { CSSKeyframes } from '../util/CSSKeyframes.js';
+import { nextFrame } from '../util/nextFrame.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -39,19 +40,22 @@ export function Toast(props: ToastProps) {
 
 	if (duration) {
 		// Remove the toast after a timeout
-		window.setTimeout(() => {
+		window.setTimeout(async () => {
 			// Animate out
 			if (toastRef.current) {
 				toastRef.current.style.animationName = CSSKeyframes.DISAPPEAR_UP;
-				const animation = toastRef.current.getAnimations()[0];
 
-				animation.finished.then(() => {
-					const toastIndex = toasts.findIndex((toast) => toast.id === id);
-					if (toastIndex !== -1) {
-						toasts.splice(toastIndex, 1);
-						renderToasts();
-					}
-				});
+				await nextFrame();
+				const animation = toastRef.current?.getAnimations()[0];
+				if (animation) {
+					await animation.finished;
+				}
+
+				const toastIndex = toasts.findIndex((toast) => toast.id === id);
+				if (toastIndex !== -1) {
+					toasts.splice(toastIndex, 1);
+					renderToasts();
+				}
 			}
 		}, duration);
 	}
