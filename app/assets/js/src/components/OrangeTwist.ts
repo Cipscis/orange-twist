@@ -212,37 +212,45 @@ export function OrangeTwist() {
 						class="button"
 						onClick="${addNewTaskUI}"
 					>Add new task</button>
-
-					<details>
-						<summary>Completed tasks</summary>
-
-						<ul class="orange-twist__task-list">
-							${tasks.map(
-								(task) => {
-									const taskProps: TaskComponentProps = { task };
-
-									if (task.status !== TaskStatus.COMPLETED) {
-										return '';
-									}
-
-									return html`<li
-										key="${task.id}"
-									><${TaskComponent} ...${taskProps} /></li>`;
-								}
-							)}
-						</ul>
-					</details>
 				`
 			}
-
-			${
-				!isLoading &&
-				html`<button
-					type="button"
-					class="button"
-					onClick="${saveData}"
-				>Save data</button>`
-			}
 		</section>
+
+		${
+			tasks &&
+
+			html`
+				<details class="orange-twist__section">
+					<summary>
+						<h2 class="orange-twist__title">Completed tasks</h2>
+					</summary>
+
+					<ul class="orange-twist__task-list">
+						${tasks.map(
+							(task) => {
+								const taskProps: TaskComponentProps = { task };
+
+								if (task.status !== TaskStatus.COMPLETED) {
+									return '';
+								}
+
+								return html`<li
+									key="${task.id}"
+								><${TaskComponent} ...${taskProps} /></li>`;
+							}
+						)}
+					</ul>
+				</details>
+			`
+		}
+
+		${
+			!isLoading &&
+			html`<button
+				type="button"
+				class="button"
+				onClick="${saveData}"
+			>Save data</button>`
+		}
 	</div>`;
 }

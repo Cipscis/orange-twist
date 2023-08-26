@@ -14,6 +14,31 @@
 
 .orange-twist__title {
 	@include font-heading-2;
+
+	summary > & {
+		display: inline-block;
+
+		&::after {
+			content: "";
+			display: inline-block;
+			margin-left: 1ch;
+			vertical-align: middle;
+
+			border: 0.25em solid transparent;
+
+			transition: transform 0.1s ease-in-out;
+		}
+		details > &::after {
+			border-left-color: currentColor;
+			border-right-width: 0;
+		}
+		details[open] > &::after {
+			transform: rotate(90deg);
+		}
+	}
+	summary:has(&) {
+		list-style: none;
+	}
 }
 
 .orange-twist__loader {
