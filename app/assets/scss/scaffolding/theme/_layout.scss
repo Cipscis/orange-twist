@@ -1,6 +1,11 @@
 $layout-max-width: rem(800px);
 $layout-gutter: 1rem;
 
+:root {
+	--layout-max-width: #{$layout-max-width};
+	--layout-gutter: #{$layout-gutter};
+}
+
 ///////////////////
 // Layout Mixins //
 ///////////////////

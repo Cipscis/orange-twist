@@ -165,8 +165,7 @@ $colour-tertiary--active--dark: $white;
 	@include use-var(color, --colour, $colour-primary--light);
 
 	@if ($active == true) {
-		&:hover,
-		&:focus-visible {
+		@include active {
 			@include contrast-primary--active;
 		}
 	}
@@ -197,8 +196,7 @@ $colour-tertiary--active--dark: $white;
 	@include use-var(color, --colour, $colour-secondary--light);
 
 	@if ($active == true) {
-		&:hover,
-		&:focus-visible {
+		@include active {
 			@include contrast-secondary--active;
 		}
 	}
@@ -229,8 +227,7 @@ $colour-tertiary--active--dark: $white;
 	@include use-var(color, --colour, $colour-tertiary--light);
 
 	@if ($active == true) {
-		&:hover,
-		&:focus-visible {
+		@include active {
 			@include contrast-tertiary--active;
 		}
 	}

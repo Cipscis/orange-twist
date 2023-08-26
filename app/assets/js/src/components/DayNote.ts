@@ -27,6 +27,8 @@ export function DayNote(props: DayNoteProps) {
 
 	const [isEditing, setIsEditing] = useState(false);
 
+	const initialLoad = useRef<boolean>(true);
+
 	// Set up event listeners to stop editing, and move focus
 	// into textarea when we start editing and onto edit button
 	// when we stop editing.
@@ -46,7 +48,7 @@ export function DayNote(props: DayNoteProps) {
 
 				textarea.focus();
 			}
-		} else {
+		} else if (initialLoad.current === false) {
 			editButtonRef.current?.focus();
 		}
 
@@ -66,6 +68,10 @@ export function DayNote(props: DayNoteProps) {
 
 		const note = textarea.value;
 		setDayData(dayName, { note });
+	}, []);
+
+	useEffect(() => {
+		initialLoad.current = false;
 	}, []);
 
 	return html`
