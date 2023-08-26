@@ -1,5 +1,7 @@
 .day {
 	margin: 2rem 0;
+
+	isolation: isolate;
 }
 
 .day__heading {
@@ -7,7 +9,7 @@
 	padding-bottom: 0.2em;
 
 	position: sticky;
-	z-index: 1;
+	z-index: 2;
 	top: 0;
 	@include contrast-primary;
 }
