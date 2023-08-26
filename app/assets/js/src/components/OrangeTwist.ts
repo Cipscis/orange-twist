@@ -126,6 +126,8 @@ export function OrangeTwist() {
 	const isLoading = isDaysLoading || isTasksLoading;
 
 	return html`<div class="orange-twist">
+		<h1 class="orange-twist__heading">Orange Twist</h1>
+
 		<section
 			class="${classNames({
 				'orange-twist__section': true,
@@ -248,9 +250,10 @@ export function OrangeTwist() {
 			!isLoading &&
 			html`<button
 				type="button"
-				class="button"
+				class="orange-twist__save"
+				title="Save data"
 				onClick="${saveData}"
-			>Save data</button>`
+			>🍊</button>`
 		}
 	</div>`;
 }

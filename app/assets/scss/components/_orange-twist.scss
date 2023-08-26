@@ -1,8 +1,19 @@
 .orange-twist {
+	display: grid;
+	grid-template-columns: minmax(var(--layout-gutter), 1fr) fit-content(var(--layout-max-width)) minmax(var(--layout-gutter), 1fr);
+
 	padding-block: 1rem;
 }
 
+.orange-twist__heading {
+	grid-column: 2 / 3;
+	@include font-heading-1;
+	margin-bottom: 2rem;
+}
+
 .orange-twist__section {
+	grid-column: 2 / 3;
+
 	+ .orange-twist__section {
 		margin-top: 2rem;
 	}
@@ -80,4 +91,14 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+}
+
+.orange-twist__save {
+	@extend %icon-button;
+
+	position: sticky;
+	bottom: 1rem;
+	margin-left: 1rem;
+
+	font-size: 3rem;
 }

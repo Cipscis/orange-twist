@@ -1,0 +1,8 @@
+/// Provides a standardised way of styling all states
+/// that indicate an element may be activated by the user.
+@mixin active {
+	&:hover,
+	&:focus-visible {
+		@content;
+	}
+}
