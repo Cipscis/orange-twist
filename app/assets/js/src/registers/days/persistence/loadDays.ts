@@ -1,28 +1,16 @@
-import { isArrayOf } from '@cipscis/ts-toolbox';
+import { z } from 'zod';
 
-import { Day, isDay } from '../../../types/Day.js';
+import { Day, daySchema } from '../../../types/Day.js';
+import { isZodSchemaType } from '../../../util/isZodSchemaType.js';
 
-export const isValidDaysData = isArrayOf(
-	(el: unknown): el is [string, Day] => {
-		if (!Array.isArray(el)) {
-			return false;
-		}
-
-		if (!(el.length === 2)) {
-			return false;
-		}
-
-		if (!(typeof el[0] === 'string')) {
-			return false;
-		}
-
-		if (!(isDay(el[1]))) {
-			return false;
-		}
-
-		return true;
-	}
+const validDaysDataSchema = z.array(
+	z.tuple([
+		z.string(),
+		daySchema,
+	])
 );
+
+export const isValidDaysData = isZodSchemaType(validDaysDataSchema);
 
 /**
  * Load data for the days register from where it was persisted.

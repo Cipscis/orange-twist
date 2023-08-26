@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { TaskStatus } from './TaskStatus.js';
 import { isZodSchemaType } from '../util/isZodSchemaType.js';
 
-const daySchema = z.object({
+export const daySchema = z.object({
 	/**
 	 * A standard string representing a day.
 	 *

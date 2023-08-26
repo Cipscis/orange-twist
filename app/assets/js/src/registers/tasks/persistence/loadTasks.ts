@@ -1,28 +1,15 @@
-import { isArrayOf } from '@cipscis/ts-toolbox';
+import { Task, taskSchema } from '../../../types/Task.js';
+import { z } from 'zod';
+import { isZodSchemaType } from '../../../util/isZodSchemaType.js';
 
-import { Task, isTask } from '../../../types/Task.js';
-
-const isValidTasksData = isArrayOf(
-	(el: unknown): el is [number, Task] => {
-		if (!Array.isArray(el)) {
-			return false;
-		}
-
-		if (!(el.length === 2)) {
-			return false;
-		}
-
-		if (!(typeof el[0] === 'number')) {
-			return false;
-		}
-
-		if (!(isTask(el[1]))) {
-			return false;
-		}
-
-		return true;
-	}
+const validTasksDataSchema = z.array(
+	z.tuple([
+		z.number(),
+		taskSchema,
+	])
 );
+
+const isValidTasksData = isZodSchemaType(validTasksDataSchema);
 
 /**
  * Load data for the tasks register from where it was persisted.
