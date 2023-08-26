@@ -1,5 +1,10 @@
 import { h } from 'preact';
-import { useCallback, useEffect } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from 'preact/hooks';
 import htm from 'htm';
 
 import classNames from 'classnames';
@@ -30,6 +35,8 @@ export function OrangeTwist() {
 		error: tasksError,
 	} = useTasks();
 
+	const unfinishedTasksListRef = useRef<HTMLElement>(null);
+
 	const addNewDay = useCallback(() => {
 		if (!days) {
 			return;
@@ -52,6 +59,26 @@ export function OrangeTwist() {
 
 		setDayData(dayName, {});
 	}, [days]);
+
+	const [newTasksCreated, setNewTasksCreated] = useState(0);
+	const focusOnLastUnfinishedTask = useCallback(() => {
+		// TODO: Is this the best way to find the right element to focus on?
+		const taskInputs = Array.from(unfinishedTasksListRef.current?.querySelectorAll('input') ?? []);
+		const lastTaskInput = taskInputs.at(-1);
+		lastTaskInput?.focus();
+	}, []);
+
+	// After the initial load, focus on the last task each time a new one is created.
+	useEffect(() => {
+		if (newTasksCreated > 0) {
+			focusOnLastUnfinishedTask();
+		}
+	}, [newTasksCreated]);
+
+	const addNewTaskUI = useCallback(() => {
+		addNewTask();
+		setNewTasksCreated((oldValue) => oldValue + 1);
+	}, []);
 
 	const saveData = useCallback(() => {
 		saveDays();
@@ -138,7 +165,10 @@ export function OrangeTwist() {
 
 				html`
 					<!-- TODO: Reduce duplication -->
-					<ul class="orange-twist__task-list">
+					<ul
+						class="orange-twist__task-list"
+						ref="${unfinishedTasksListRef}"
+					>
 						${tasks.map(
 							(task) => {
 								const taskProps: TaskComponentProps = { task };
@@ -157,7 +187,7 @@ export function OrangeTwist() {
 					<button
 						type="button"
 						class="button"
-						onClick="${() => addNewTask()}"
+						onClick="${addNewTaskUI}"
 					>Add new task</button>
 
 					<details>
