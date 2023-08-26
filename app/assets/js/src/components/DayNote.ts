@@ -32,12 +32,33 @@ export function DayNote(props: DayNoteProps) {
 	return html`
 		${isEditing
 			? html`
-				<button type="button" onClick="${() => setIsEditing(false)}">Done editing</button>
-				<textarea onInput="${inputHandler}">${day.note}</textarea>
+				<button
+					type="button"
+					class="day__note-done"
+					title="Done editing"
+					onClick="${() => setIsEditing(false)}"
+				>👍</button>
+				<div
+					class="day__note-edit-content"
+					data-content="${day.note}"
+				>
+					<textarea
+						onInput="${inputHandler}"
+					>${day.note}</textarea>
+				</div>
 			`
 			: html`
-				<button type="button" onClick="${() => setIsEditing(true)}">Edit</button>
-				<${Markdown} ...${{ content: day.note } as MarkdownProps} />
+				<button
+					type="button"
+					class="day__note-edit"
+					title="Edit"
+					onClick="${() => setIsEditing(true)}"
+				>✏️</button>
+				<${Markdown}
+					...${{
+						content: day.note,
+					} as MarkdownProps}
+				/>
 			`
 		}
 	`;

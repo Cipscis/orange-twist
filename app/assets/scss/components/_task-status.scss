@@ -1,0 +1,23 @@
+.task-status {
+	position: relative;
+}
+
+.task-status__change {
+	@extend %icon-button;
+}
+
+.task-status__options {
+	@extend %list-reset;
+	position: absolute;
+	z-index: 1;
+	padding: 0.5em;
+
+	display: flex;
+	gap: 0.5rem;
+}
+
+.task-status__option {}
+
+.task-status__option-button {
+	@extend %icon-button;
+}

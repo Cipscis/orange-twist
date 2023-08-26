@@ -2,68 +2,24 @@
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { formatDate } from '../formatters/date.js';
 
-import {
-	Equivalent,
-	Expect,
-	hasPropertyOfType,
-	isAllOf,
-	isArrayOf,
-	isObjectWithPropertyOfType,
-	isTypeof,
-} from '@cipscis/ts-toolbox';
+import { z } from 'zod';
 
-import { TaskStatus, isTaskStatus } from './TaskStatus.js';
+import { TaskStatus } from './TaskStatus.js';
 
-export type Day = {
+const daySchema = z.object({
 	/**
 	 * A standard string representing a day.
 	 *
 	 * @see {@linkcode formatDate}
 	 */
-	dayName: string;
-	note: string;
+	dayName: z.string(),
+	note: z.string(),
 
-	tasks: Array<{
-		id: number;
-		status: TaskStatus;
-	}>
-};
+	tasks: z.array(z.object({
+		id: z.number(),
+		status: z.nativeEnum(TaskStatus),
+	})),
+});
 
-export function isDay(data: unknown): data is Day {
-	if (typeof data !== 'object' || data === null) {
-		return false;
-	}
-
-	if (!(hasPropertyOfType(
-		data, 'dayName', isTypeof('string')
-	))) {
-		return false;
-	}
-
-	if (!(hasPropertyOfType(
-		data, 'note', isTypeof('string')
-	))) {
-		return false;
-	}
-
-	if (!(hasPropertyOfType(
-		data, 'tasks', isArrayOf(
-			isAllOf(
-				isObjectWithPropertyOfType(
-					'id', isTypeof('number')
-				),
-				isObjectWithPropertyOfType(
-					'status', isTaskStatus,
-				)
-			)
-		)
-	))) {
-		return false;
-	}
-
-	// This type exists to throw an error if the typeguard gets out of sync with the type
-	/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-	type Test = Expect<Equivalent<typeof data, Day>>;
-
-	return true;
-}
+export type Day = z.infer<typeof daySchema>;
+export const isDay = (value: unknown): value is Day => daySchema.safeParse(value).success;

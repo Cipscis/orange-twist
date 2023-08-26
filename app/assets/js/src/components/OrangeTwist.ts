@@ -2,6 +2,8 @@ import { h } from 'preact';
 import { useCallback } from 'preact/hooks';
 import htm from 'htm';
 
+import classNames from 'classnames';
+
 import { isValidDateString } from '../util/isValidDateString.js';
 
 import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
@@ -51,69 +53,83 @@ export function OrangeTwist() {
 
 	const isLoading = isDaysLoading || isTasksLoading;
 
-	return html`<div>
-		<h2>Days</h2>
+	return html`<div class="orange-twist">
+		<section
+			class="${classNames({
+				'orange-twist__section': true,
+				'orange-twist__section--loading': isDaysLoading,
+			})}"
+			aria-busy="${isDaysLoading || null}"
+		>
+			<h2 class="orange-twist__title">Days</h2>
 
-		${
-			isDaysLoading &&
-			// TODO: Display a better loader
-			html`<span>Loading</span>`
-		}
-		${
-			daysError &&
-			// TODO: Handle error better somehow
-			html`<span>Error: ${daysError}</span>`
-		}
-		${
-			days &&
-			html`
-				${days.map((day) => {
-					const dayProps: DayComponentProps = { day };
-					return html`
-						<section
-							key="${day.dayName}"
-						>
-							<${DayComponent} ...${dayProps} />
-						</section>
-					`;
-				})}
+			${
+				isDaysLoading &&
+				html`<span class="orange-twist__loader" title="Loading"></span>`
+			}
+			${
+				daysError &&
+				// TODO: Handle error better somehow
+				html`<span class="orange-twist__error">Error: ${daysError}</span>`
+			}
+			${
+				days &&
+				html`
+					${days.map((day) => {
+						const dayProps: DayComponentProps = { day };
+						return html`
+							<${DayComponent}
+								key="${day.dayName}"
+								...${dayProps}
+							/>
+						`;
+					})}
 
-				<button type="button" onClick="${addNewDay}">Add day</button>
-			`
-		}
+					<button type="button" onClick="${addNewDay}">Add day</button>
+				`
+			}
+		</section>
 
-		<h2>Tasks</h2>
+		<section
+			class="${classNames({
+				'orange-twist__section': true,
+				'orange-twist__section--loading': isTasksLoading,
+			})}"
+			aria-busy="${isTasksLoading || null}"
+		>
+			<h2 class="orange-twist__title">Tasks</h2>
 
-		${
-			isTasksLoading &&
-			html`<span>Tasks loading</span>`
-		}
-		${
-			tasksError &&
-			html`<span>Tasks loading error: ${tasksError}</span>`
-		}
-		${
-			tasks &&
+			${
+				isTasksLoading &&
+				html`<span class="orange-twist__loader" title="Tasks loading"></span>`
+			}
+			${
+				tasksError &&
+				html`<span class="orange-twist__error">Tasks loading error: ${tasksError}</span>`
+			}
+			${
+				tasks &&
 
-			html`
-				<button type="button" onClick="${() => addNewTask()}">Add new task</button>
-				<ul>
-				${tasks.map(
-					(task) => {
-						const taskProps: TaskComponentProps = { task };
+				html`
+					<button type="button" onClick="${() => addNewTask()}">Add new task</button>
+					<ul>
+					${tasks.map(
+						(task) => {
+							const taskProps: TaskComponentProps = { task };
 
-						return html`<li key="${task.id}"><${TaskComponent} ...${taskProps} /></li>`;
-					}
-				)}
-			</ul>`
-		}
+							return html`<li key="${task.id}"><${TaskComponent} ...${taskProps} /></li>`;
+						}
+					)}
+				</ul>`
+			}
 
-		${
-			!isLoading &&
-			html`<button type="button" onClick="${() => {
-				saveDays();
-				saveTasks();
-			}}">Save data</button>`
-		}
+			${
+				!isLoading &&
+				html`<button type="button" onClick="${() => {
+					saveDays();
+					saveTasks();
+				}}">Save data</button>`
+			}
+		</section>
 	</div>`;
 }

@@ -1,9 +1,20 @@
-.layout {}
-
-.layout__header {
+.page-layout {
 	@include layout-wrapper;
+	@include contrast-primary;
+	min-height: 100dvh;
+
+	@container style(--theme: light) {
+		box-shadow: 0 0 20px color-mix(in srgb, var(--bg), black);
+	}
+	@container style(--theme: dark) {
+		box-shadow: 0 0 20px color-mix(in srgb, var(--bg), white);
+	}
 }
 
-.layout__main {
-	@include layout-wrapper;
+.page-layout__header {
+	margin-bottom: 20px;
+
+	h1 { @include font-heading-1 }
 }
+
+.page-layout__main {}

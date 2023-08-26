@@ -3,16 +3,16 @@
 // # Tools
 // Tool files contain only mixins and functions, so they will not generate any CSS on their own.
 // These mixins and functions are general purpose, and shouldn't need to change from theme to theme.
-@import "tools/rem";
-@import "tools/use-var";
+@import "scaffolding/tools/rem";
+@import "scaffolding/tools/use-var";
 
 // # Theme
 // Theme files contain SCSS variables and mixins, so they will not generate any CSS on their own.
 // These mixins are part of the theme.
-@import "theme/breakpoints";
-@import "theme/layout";
-@import "theme/palette";
-@import "theme/typography";
+@import "scaffolding/theme/breakpoints";
+@import "scaffolding/theme/layout";
+@import "scaffolding/theme/palette";
+@import "scaffolding/theme/typography";
 
 // # Patterns
 // Pattern files contain mixins that are used to generate variations of similar components, like buttons.

@@ -1,0 +1,62 @@
+.day {}
+
+.day__heading {
+	@include font-heading-3;
+}
+
+.day__note {
+	position: relative;
+	--_gutter: 0.5em;
+
+	margin-block: 1rem;
+
+	textarea {
+		resize: none;
+		overflow: hidden;
+	}
+
+	&:has(:where(textarea, .content:not(:empty))) {
+		border: 1px solid var(--accent);
+		.content {
+			padding: var(--_gutter);
+		}
+
+		.day__note-edit,
+		.day__note-done {
+			position: absolute;
+			z-index: 1;
+			top: 5px;
+			right: 5px;
+		}
+	}
+}
+
+.day__note-edit-content {
+	display: grid;
+
+	// Stack them on top of each other
+	&::before,
+	textarea {
+		grid-area: 1 / 1 / -1 / -1;
+
+		@include font-base-body;
+		padding: var(--_gutter);
+	}
+
+	// Simulate content of textarea with visibility hidden, to auto-expand content
+	&::before {
+		content: attr(data-content) " ";
+		white-space: pre-wrap;
+		visibility: hidden;
+	}
+}
+
+.day__note-edit {
+	@extend %icon-button;
+}
+
+.day__note-done {
+	@extend %icon-button;
+}
+
+.day__tasks {}
