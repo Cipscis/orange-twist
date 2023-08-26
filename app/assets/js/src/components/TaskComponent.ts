@@ -8,6 +8,7 @@ import { useCallback, useContext } from 'preact/hooks';
 import { setTaskData } from '../registers/tasks/tasksRegister.js';
 
 import { OrangeTwistContext } from './OrangeTwist.js';
+import { Markdown } from './Markdown.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -48,8 +49,8 @@ export function TaskComponent(props: TaskComponentProps) {
 					<${TaskStatusComponent} ...${taskStatusProps} />
 					<div
 						class="task__name"
-						data-content="${name}"
 					>
+						<${Markdown} content="${name}" class="task__name-markdown content" />
 						<input
 							type="text"
 							value="${name}"
