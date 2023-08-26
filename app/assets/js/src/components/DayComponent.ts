@@ -33,9 +33,13 @@ export function DayComponent(props: DayProps) {
 	return html`<div class="day">
 		<h3 class="day__heading">${day.dayName}</h3>
 
-		<button type="button" onClick="${() => removeDay(dayName)}">Remove day</button>
+		<button
+			type="button"
+			class="button"
+			onClick="${() => removeDay(dayName)}"
+		>Remove day</button>
 
-		<div class="day__notes">
+		<div class="day__note">
 			<${DayNote} ...${dayNoteProps} />
 		</div>
 

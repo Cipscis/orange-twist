@@ -1,0 +1,16 @@
+.button {
+	all: unset;
+	&:focus-visible {
+		outline: auto;
+	}
+	cursor: pointer;
+
+	padding: 0.5em 0.7em;
+	border-radius: 0.2em;
+
+	@include contrast-secondary;
+	&:hover,
+	&:focus-visible {
+		@include contrast-secondary--active;
+	}
+}

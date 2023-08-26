@@ -1,0 +1,43 @@
+.orange-twist {}
+
+.orange-twist__section {}
+
+.orange-twist__section--loading {
+	display: grid;
+}
+
+.orange-twist__title {
+	@include font-heading-2;
+}
+
+.orange-twist__loader {
+	display: grid;
+	place-items: center;
+
+	min-height: 10rem;
+	cursor: wait;
+
+	&::before {
+		content: "";
+		animation: spinCW 1s linear infinite;
+
+		font-size: 4rem;
+		color: var(--accent);
+
+		width: 1em;
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+
+		border: 0.1em solid transparent;
+		border-top-color: currentColor;
+
+		@container style(--theme: dark) {
+			filter: drop-shadow(0 0 0.15em color-mix(in srgb, var(--accent), white));
+		}
+		@container style(--theme: light) {
+			filter: drop-shadow(0 0 0.15em var(--accent));
+		}
+	}
+}
+
+.orange-twist__error {}

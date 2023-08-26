@@ -57,6 +57,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		<span class="task-status">
 			<button
 				type="button"
+				class="task-status__change"
 				title="${status}"
 				onClick="${() => setIsInChangeMode(!isInChangeMode)}"
 			>${statusSymbol}</button>
@@ -64,11 +65,15 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 			${
 				isInChangeMode &&
 				html`
-					<ul>
+					<ul class="task-status__options">
 						${Object.values(TaskStatus).map((taskStatus) => html`
-							<li key="${taskStatus}">
+							<li
+								key="${taskStatus}"
+								class="task-status__option"
+							>
 								<button
 									type="button"
+									class="task-status__option-button"
 									onClick="${() => changeStatus(taskStatus)}"
 								>
 									${taskStatusSymbols[taskStatus]}

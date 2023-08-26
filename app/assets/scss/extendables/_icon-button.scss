@@ -1,0 +1,20 @@
+%icon-button {
+	all: unset;
+	cursor: pointer;
+	&:focus-visible {
+		outline: auto;
+	}
+
+	display: grid;
+	place-items: center;
+
+	height: 2em;
+	aspect-ratio: 1 / 1;
+	border-radius: 25%;
+
+	@include contrast-secondary;
+	&:hover,
+	&:focus-visible {
+		@include contrast-secondary--active;
+	}
+}

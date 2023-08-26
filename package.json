@@ -43,8 +43,10 @@
 	"dependencies": {
 		"@cipscis/ts-toolbox": "file:cipscis-ts-toolbox-0.1.0.tgz",
 		"@types/marked": "^5.0.1",
+		"classnames": "^2.3.2",
 		"htm": "^3.1.1",
 		"marked": "^5.1.2",
-		"preact": "^10.16.0"
+		"preact": "^10.16.0",
+		"zod": "^3.22.2"
 	}
 }
