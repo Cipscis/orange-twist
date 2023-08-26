@@ -52,13 +52,14 @@ export function DayComponent(props: DayProps) {
 						return '';
 					}
 
-					if (taskData) {
-						const taskComponentProps: TaskComponentProps = {
-							task: { ...taskData, ...task },
-							dayName,
-						};
-						return html`<${TaskComponent} ...${taskComponentProps} />`;
-					}
+					const taskComponentProps: TaskComponentProps = {
+						task: { ...taskData, ...task },
+						dayName,
+					};
+					return html`<${TaskComponent}
+						key="${taskData.id}"
+						...${taskComponentProps}
+					/>`;
 				})}
 			</div>`
 		}

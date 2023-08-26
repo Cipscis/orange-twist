@@ -12,6 +12,7 @@ import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
 import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
 import { toast } from './Toast.js';
+import { TaskStatus } from '../types/TaskStatus.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -142,10 +143,15 @@ export function OrangeTwist() {
 						onClick="${() => addNewTask()}"
 					>Add new task</button>
 
+					<!-- TODO: Reduce duplication -->
 					<ul class="orange-twist__task-list">
 						${tasks.map(
 							(task) => {
 								const taskProps: TaskComponentProps = { task };
+
+								if (task.status === TaskStatus.COMPLETED) {
+									return '';
+								}
 
 								return html`<li
 									key="${task.id}"
@@ -153,6 +159,26 @@ export function OrangeTwist() {
 							}
 						)}
 					</ul>
+
+					<details>
+						<summary>Completed tasks</summary>
+
+						<ul class="orange-twist__task-list">
+							${tasks.map(
+								(task) => {
+									const taskProps: TaskComponentProps = { task };
+
+									if (task.status !== TaskStatus.COMPLETED) {
+										return '';
+									}
+
+									return html`<li
+										key="${task.id}"
+									><${TaskComponent} ...${taskProps} /></li>`;
+								}
+							)}
+						</ul>
+					</details>
 				`
 			}
 

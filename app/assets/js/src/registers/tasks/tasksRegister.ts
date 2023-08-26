@@ -123,7 +123,6 @@ export function setTaskData(
 	// Create a copy of day data in reverse chronological order
 	const days = [...getDays()].reverse();
 
-
 	const oldTaskData = {
 		...task,
 	};
@@ -196,6 +195,16 @@ export function addNewTask(name?: string): number {
 	const task: Task = mergeTaskData(id, null, stub);
 
 	tasksRegister.set(id, task);
+
+	const days = getDays();
+	const currentDay = days[days.length - 1];
+	const currentDayName = currentDay.dayName;
+	setDayData(currentDayName, {
+		tasks: [{
+			id: task.id,
+			status: task.status,
+		}],
+	});
 
 	callListeners();
 
