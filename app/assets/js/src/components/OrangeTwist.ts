@@ -73,7 +73,8 @@ export function OrangeTwist() {
 		// TODO: Is this the best way to find the right element to focus on?
 		const taskInputs = Array.from(unfinishedTasksListRef.current?.querySelectorAll('input') ?? []);
 		const lastTaskInput = taskInputs.at(-1);
-		lastTaskInput?.focus();
+		// Focus on the input and select all its text
+		lastTaskInput?.select();
 	}, []);
 
 	// After the initial load, focus on the last task each time a new one is created.
@@ -106,9 +107,11 @@ export function OrangeTwist() {
 		}, autosaveMinutes * 1000 * 60);
 	}, []);
 
-	const saveData = useCallback(() => {
-		saveDays();
-		saveTasks();
+	const saveData = useCallback(async () => {
+		await Promise.all([
+			saveDays(),
+			saveTasks(),
+		]);
 		toast('Saved', 2000);
 
 		// Reset autosave timeout
@@ -139,11 +142,19 @@ export function OrangeTwist() {
 				saveData();
 			}
 		};
+		const addNewTaskOnKeyboardShortcut = (e: KeyboardEvent) => {
+			if (e.key === 'n' && e.ctrlKey) {
+				e.preventDefault();
+				addNewTaskUI();
+			}
+		};
 
 		document.addEventListener('keydown', saveOnKeyboardShortcut);
+		document.addEventListener('keydown', addNewTaskOnKeyboardShortcut);
 
 		return () => {
 			document.removeEventListener('keydown', saveOnKeyboardShortcut);
+			document.removeEventListener('keydown', addNewTaskOnKeyboardShortcut);
 		};
 	}, []);
 
