@@ -14,10 +14,13 @@
 
 	display: flex;
 	gap: 0.5rem;
+
+	@include contrast-secondary;
 }
 
 .task-status__option {}
 
 .task-status__option-button {
 	@extend %icon-button;
+	@include contrast-tertiary(true);
 }

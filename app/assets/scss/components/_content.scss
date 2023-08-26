@@ -1,0 +1,7 @@
+/// HTML in a content element may be user-generated,
+/// so styles will need to be applied based on tag name.
+.content {
+	a {
+		@include link;
+	}
+}

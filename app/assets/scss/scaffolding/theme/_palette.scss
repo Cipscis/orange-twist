@@ -5,10 +5,15 @@
 $white: #ffffff;
 $black: #000000;
 
-$grey--offwhite: #eeeeee;
-$grey--light: #d0d0d0;
+$grey--lightest: #eeeeee;
+$grey--lighter: #d0d0d0;
+$grey--light: #cccccc;
+$grey--lightish: #aaaaaa;
+
+$grey--darkish: #777777;
 $grey--dark: #555555;
 $grey--darker: #333333;
+$grey--darkest: #121212;
 
 // TODO
 $orange: orange;
@@ -26,24 +31,23 @@ $accent-base--light: $orange;
 
 // Contrast pairs
 /////////////////
-$bg-primary--light: $grey--offwhite;
-$col-primary--light: $black;
+$bg-primary--light: $grey--lightest;
+$colour-primary--light: $black;
 
-$bg-primary--active--light: $grey--light;
-$col-primary--active--light: $black;
+$bg-primary--active--light: $grey--lighter;
+$colour-primary--active--light: $black;
 
-$bg-secondary--light: $white;
-$col-secondary--light: $black;
+$bg-secondary--light: $grey--lighter;
+$colour-secondary--light: $black;
 
-$bg-secondary--active--light: $grey--offwhite;
-$col-secondary--active--light: $black;
+$bg-secondary--active--light: $grey--light;
+$colour-secondary--active--light: $black;
 
-// TODO
-// AAA 21
-// $bg-dark--light: $black;
-// $col-dark--light: $white;
-// $accent-dark--light: $cadet-blue;
-// $link-dark--light: $blue--vivid-bright;
+$bg-tertiary--light: $grey--light;
+$colour-tertiary--light: $black;
+
+$bg-tertiary--active--light: $grey--lightish;
+$colour-tertiary--active--light: $black;
 
 
 /// The colours to use in the light colour scheme
@@ -51,28 +55,29 @@ $col-secondary--active--light: $black;
 	color-scheme: light;
 	--theme: light;
 
-	--bg-primary: #{$bg-primary--light};
-	--col-primary: #{$col-primary--light};
-
-	--bg-primary--active: #{$bg-primary--active--light};
-	--col-primary--active: #{$col-primary--active--light};
-
-	--bg-secondary: #{$bg-secondary--light};
-	--col-secondary: #{$col-secondary--light};
-
-	--bg-secondary--active: #{$bg-secondary--active--light};
-	--col-secondary--active: #{$col-secondary--active--light};
-
-	// --bg-dark: #{$bg-dark--light};
-	// --col-dark: #{$col-dark--light};
-	// --accent-dark: #{$accent-dark--light};
-	// --link-dark: #{$link-dark--light};
-
 	--link-base: #{$link-base--light};
 	--link: var(--link-base);
 
 	--accent-base: #{$accent-base--light};
 	--accent: var(--accent-base);
+
+	--bg-primary: #{$bg-primary--light};
+	--colour-primary: #{$colour-primary--light};
+
+	--bg-primary--active: #{$bg-primary--active--light};
+	--colour-primary--active: #{$colour-primary--active--light};
+
+	--bg-secondary: #{$bg-secondary--light};
+	--colour-secondary: #{$colour-secondary--light};
+
+	--bg-secondary--active: #{$bg-secondary--active--light};
+	--colour-secondary--active: #{$colour-secondary--active--light};
+
+	--bg-tertiary: #{$bg-tertiary--light};
+	--colour-tertiary: #{$colour-tertiary--light};
+
+	--bg-tertiary--active: #{$bg-tertiary--active--light};
+	--colour-tertiary--active: #{$colour-tertiary--active--light};
 }
 
 ///////////////
@@ -86,51 +91,52 @@ $accent-base--dark: $orange--dark;
 
 // Contrast pairs
 /////////////////
-// AAA 18.88
-$bg-primary--dark: $grey--darker;
-$col-primary--dark: $white;
+$bg-primary--dark: $grey--darkest;
+$colour-primary--dark: $white;
 
-// AAA 15.91
-$bg-primary--active--dark: $grey--dark;
-$col-primary--active--dark: $white;
+$bg-primary--active--dark: $grey--darker;
+$colour-primary--active--dark: $white;
 
-// AAA 15.91
-$bg-secondary--dark: $grey--dark;
-$col-secondary--dark: $white;
+$bg-secondary--dark: $grey--darker;
+$colour-secondary--dark: $white;
 
-// AAA 18.88
-$bg-secondary--active--dark: $grey--darker;
-$col-secondary--active--dark: $white;
+$bg-secondary--active--dark: $grey--dark;
+$colour-secondary--active--dark: $white;
 
-// TODO
-// AAA 21
-// $bg-dark--dark: $black;
-// $col-dark--dark: $white;
-// $accent-dark--dark: $teal;
-// $link-dark--dark: $blue--vivid-bright;
+$bg-tertiary--dark: $grey--dark;
+$colour-tertiary--dark: $white;
+
+$bg-tertiary--active--dark: $grey--darkish;
+$colour-tertiary--active--dark: $white;
 
 /// The colours to use in the dark colour scheme
 @mixin palette-dark {
 	color-scheme: dark;
 	--theme: dark;
 
-	--bg-primary: #{$bg-primary--dark};
-	--col-primary: #{$col-primary--dark};
-
-	--bg-primary--active: #{$bg-primary--active--dark};
-	--col-primary--active: #{$col-primary--active--dark};
-
-	--bg-secondary: #{$bg-secondary--dark};
-	--col-secondary: #{$col-secondary--dark};
-
-	--bg-secondary--active: #{$bg-secondary--active--dark};
-	--col-secondary--active: #{$col-secondary--active--dark};
-
 	--link-base: #{$link-base--dark};
 	--link: var(--link-base);
 
 	--accent-base: #{$accent-base--dark};
 	--accent: var(--accent-base);
+
+	--bg-primary: #{$bg-primary--dark};
+	--colour-primary: #{$colour-primary--dark};
+
+	--bg-primary--active: #{$bg-primary--active--dark};
+	--colour-primary--active: #{$colour-primary--active--dark};
+
+	--bg-secondary: #{$bg-secondary--dark};
+	--colour-secondary: #{$colour-secondary--dark};
+
+	--bg-secondary--active: #{$bg-secondary--active--dark};
+	--colour-secondary--active: #{$colour-secondary--active--dark};
+
+	--bg-tertiary: #{$bg-tertiary--dark};
+	--colour-tertiary: #{$colour-tertiary--dark};
+
+	--bg-tertiary--active: #{$bg-tertiary--active--dark};
+	--colour-tertiary--active: #{$colour-tertiary--active--dark};
 }
 
 ////////////////////
@@ -146,50 +152,98 @@ $col-secondary--active--dark: $white;
 
 // These "contrast" mixins can be used to apply pairs of background and text colours that have sufficient contrast.
 
-/// The main background/colour pair
-@mixin contrast-primary {
+/// The main background/colour pair.
+/// @param {boolean} $active [false] - Whether or not the "active" contrast pair should be used on hover and focus.
+@mixin contrast-primary($active: false) {
 	--bg: var(--bg-primary);
-	--colour: var(--col-primary);
+	--colour: var(--colour-primary);
 
 	--accent: var(--accent-base, #{$accent-base--light});
 	--link: var(--link-base, #{$link-base--light});
 
 	@include use-var(background-color, --bg, $bg-primary--light);
-	@include use-var(color, --colour, $col-primary--light);
+	@include use-var(color, --colour, $colour-primary--light);
+
+	@if ($active == true) {
+		&:hover,
+		&:focus-visible {
+			@include contrast-primary--active;
+		}
+	}
 }
 
-/// An "active" variant of the main background/colour pair
+/// An "active" variant of the main background/colour pair.
 @mixin contrast-primary--active {
 	--bg: var(--bg-primary--active);
-	--colour: var(--col-primary--active);
+	--colour: var(--colour-primary--active);
 
 	--accent: var(--accent-base, #{$accent-base--light});
 	--link: var(--link-base, #{$link-base--light});
 
 	@include use-var(background-color, --bg, $bg-primary--active--light);
-	@include use-var(color, --colour, $col-primary--active--light);
+	@include use-var(color, --colour, $colour-primary--active--light);
 }
 
-/// A secondary background-colour pair to contrast with a primary contrast area
-@mixin contrast-secondary {
+/// A secondary background-colour pair to contrast with a primary contrast area.
+/// @param {boolean} $active [false] - Whether or not the "active" contrast pair should be used on hover and focus.
+@mixin contrast-secondary($active: false) {
 	--bg: var(--bg-secondary);
-	--colour: var(--col-secondary);
+	--colour: var(--colour-secondary);
 
 	--accent: var(--accent-base, #{$accent-base--light});
 	--link: var(--link-base, #{$link-base--light});
 
 	@include use-var(background-color, --bg, $bg-secondary--light);
-	@include use-var(color, --colour, $col-secondary--light);
+	@include use-var(color, --colour, $colour-secondary--light);
+
+	@if ($active == true) {
+		&:hover,
+		&:focus-visible {
+			@include contrast-secondary--active;
+		}
+	}
 }
 
-/// An "active" variant of the secondary background/colour pair
+/// An "active" variant of the secondary background/colour pair.
 @mixin contrast-secondary--active {
 	--bg: var(--bg-secondary--active);
-	--colour: var(--col-secondary--active);
+	--colour: var(--colour-secondary--active);
 
 	--accent: var(--accent-base, #{$accent-base--light});
 	--link: var(--link-base, #{$link-base--light});
 
 	@include use-var(background-color, --bg, $bg-secondary--active--light);
-	@include use-var(color, --colour, $col-secondary--active--light);
+	@include use-var(color, --colour, $colour-secondary--active--light);
+}
+
+/// A tertiary background-colour pair to contrast with a primary contrast area.
+/// @param {boolean} $active [false] - Whether or not the "active" contrast pair should be used on hover and focus.
+@mixin contrast-tertiary($active: false) {
+	--bg: var(--bg-tertiary);
+	--colour: var(--colour-tertiary);
+
+	--accent: var(--accent-base, #{$accent-base--light});
+	--link: var(--link-base, #{$link-base--light});
+
+	@include use-var(background-color, --bg, $bg-tertiary--light);
+	@include use-var(color, --colour, $colour-tertiary--light);
+
+	@if ($active == true) {
+		&:hover,
+		&:focus-visible {
+			@include contrast-tertiary--active;
+		}
+	}
+}
+
+/// An "active" variant of the tertiary background/colour pair.
+@mixin contrast-tertiary--active {
+	--bg: var(--bg-tertiary--active);
+	--colour: var(--colour-tertiary--active);
+
+	--accent: var(--accent-base, #{$accent-base--light});
+	--link: var(--link-base, #{$link-base--light});
+
+	@include use-var(background-color, --bg, $bg-tertiary--active--light);
+	@include use-var(color, --colour, $colour-tertiary--active--light);
 }

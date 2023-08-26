@@ -12,9 +12,5 @@
 	aspect-ratio: 1 / 1;
 	border-radius: 25%;
 
-	@include contrast-secondary;
-	&:hover,
-	&:focus-visible {
-		@include contrast-secondary--active;
-	}
+	@include contrast-secondary(true);
 }
