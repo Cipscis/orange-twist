@@ -131,6 +131,22 @@ export function OrangeTwist() {
 		};
 	}, [saveData]);
 
+	// Set up keyboard shortcuts
+	useEffect(() => {
+		const saveOnKeyboardShortcut = (e: KeyboardEvent) => {
+			if (e.key === 's' && e.ctrlKey) {
+				e.preventDefault();
+				saveData();
+			}
+		};
+
+		document.addEventListener('keydown', saveOnKeyboardShortcut);
+
+		return () => {
+			document.removeEventListener('keydown', saveOnKeyboardShortcut);
+		};
+	}, []);
+
 	const isLoading = isDaysLoading || isTasksLoading;
 
 	return html`

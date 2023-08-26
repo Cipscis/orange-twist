@@ -14,4 +14,10 @@
 			margin-bottom: 0.5em;
 		}
 	}
+
+	code {
+		@include contrast-secondary;
+		padding: 0 0.5ch;
+		border-radius: 0.2em;
+	}
 }
