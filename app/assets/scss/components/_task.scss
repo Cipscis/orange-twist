@@ -1,8 +1,9 @@
 .task {
 	display: grid;
+	align-items: center;
 
 	grid-template-columns: auto 1fr;
-	grid-gap: 1rem;
+	grid-gap: 0.5rem;
 }
 
 .task__status {
@@ -13,7 +14,36 @@
 	}
 }
 
-.task__name {}
+.task__name {
+	// Using this approach:
+	// https://css-tricks.com/auto-growing-inputs-textareas/
+	display: inline-grid;
+	width: min-content;
+
+	input {
+		all: unset;
+		cursor: text;
+		&:focus-visible {
+			outline: auto;
+		}
+	}
+
+	// Stack them on top of each other
+	&::before,
+	input {
+		grid-area: 1 / 1 / -1 / -1;
+
+		@include font-base-body;
+		border: 0;
+		padding: 0.1em 0.2em;
+	}
+
+	&::before {
+		content: attr(data-content) " ";
+		white-space: pre;
+		visibility: hidden;
+	}
+}
 
 .task__notes {
 	grid-column: 1 / -1;

@@ -1,6 +1,12 @@
-.orange-twist {}
+.orange-twist {
+	padding-block: 1rem;
+}
 
-.orange-twist__section {}
+.orange-twist__section {
+	+ .orange-twist__section {
+		margin-top: 2rem;
+	}
+}
 
 .orange-twist__section--loading {
 	display: grid;
@@ -41,3 +47,12 @@
 }
 
 .orange-twist__error {}
+
+.orange-twist__task-list {
+	@extend %list-reset;
+
+	margin-block: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}

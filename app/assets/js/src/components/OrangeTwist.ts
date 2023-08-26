@@ -85,7 +85,11 @@ export function OrangeTwist() {
 						`;
 					})}
 
-					<button type="button" onClick="${addNewDay}">Add day</button>
+					<button
+						type="button"
+						class="button"
+						onClick="${addNewDay}"
+					>Add day</button>
 				`
 			}
 		</section>
@@ -111,24 +115,36 @@ export function OrangeTwist() {
 				tasks &&
 
 				html`
-					<button type="button" onClick="${() => addNewTask()}">Add new task</button>
-					<ul>
-					${tasks.map(
-						(task) => {
-							const taskProps: TaskComponentProps = { task };
+					<button
+						type="button"
+						class="button"
+						onClick="${() => addNewTask()}"
+					>Add new task</button>
 
-							return html`<li key="${task.id}"><${TaskComponent} ...${taskProps} /></li>`;
-						}
-					)}
-				</ul>`
+					<ul class="orange-twist__task-list">
+						${tasks.map(
+							(task) => {
+								const taskProps: TaskComponentProps = { task };
+
+								return html`<li
+									key="${task.id}"
+								><${TaskComponent} ...${taskProps} /></li>`;
+							}
+						)}
+					</ul>
+				`
 			}
 
 			${
 				!isLoading &&
-				html`<button type="button" onClick="${() => {
-					saveDays();
-					saveTasks();
-				}}">Save data</button>`
+				html`<button
+					type="button"
+					class="button"
+					onClick="${() => {
+						saveDays();
+						saveTasks();
+					}}"
+				>Save data</button>`
 			}
 		</section>
 	</div>`;

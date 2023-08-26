@@ -34,15 +34,20 @@ export function TaskComponent(props: TaskComponentProps) {
 			${(() => {
 				const taskStatusProps: TaskStatusComponentProps = { task, dayName };
 
-				return html`<span>
+				return html`
 					<${TaskStatusComponent} ...${taskStatusProps} />
-					<i>${id}</i>
-					<input
-						type="text"
-						value="${name}"
-						onInput="${nameChangeHandler}"
-					/>
-				</span>`;
+					<div
+						class="task__name"
+						data-content="${name}"
+					>
+						<input
+							type="text"
+							value="${name}"
+							size="1"
+							onInput="${nameChangeHandler}"
+						/>
+					</div>
+				`;
 			})()}
 		</div>
 	`;
