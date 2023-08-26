@@ -23,22 +23,38 @@ export function DayNote(props: DayNoteProps) {
 	const { dayName } = day;
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const editButtonRef = useRef<HTMLButtonElement>(null);
 
 	const [isEditing, setIsEditing] = useState(false);
 
-	// Set up event listener to stop editing when textarea is blurred,
-	// and move focus into textarea when we start editing.
+	// Set up event listeners to stop editing, and move focus
+	// into textarea when we start editing and onto edit button
+	// when we stop editing.
 	useEffect(() => {
 		const exitEditingModeOnTextareaBlur = () => setIsEditing(false);
+		const exitEditingModeOnCtrlEnter = (e: KeyboardEvent) => {
+			if (e.key === 'Enter' && e.ctrlKey) {
+				setIsEditing(false);
+			}
+		};
 		const textarea = textareaRef.current;
 
 		if (isEditing) {
-			textarea?.addEventListener('blur', exitEditingModeOnTextareaBlur);
-			textarea?.focus();
+			if (textarea) {
+				textarea.addEventListener('blur', exitEditingModeOnTextareaBlur);
+				textarea.addEventListener('keydown', exitEditingModeOnCtrlEnter);
+
+				textarea.focus();
+			}
+		} else {
+			editButtonRef.current?.focus();
 		}
 
 		return () => {
-			textarea?.removeEventListener('blur', exitEditingModeOnTextareaBlur);
+			if (textarea) {
+				textarea.removeEventListener('blur', exitEditingModeOnTextareaBlur);
+				textarea.removeEventListener('keydown', exitEditingModeOnCtrlEnter);
+			}
 		};
 	}, [isEditing]);
 
@@ -77,6 +93,7 @@ export function DayNote(props: DayNoteProps) {
 					class="day__note-edit"
 					title="Edit"
 					onClick="${() => setIsEditing(true)}"
+					ref="${editButtonRef}"
 				>✏️</button>
 				<${Markdown}
 					...${{
