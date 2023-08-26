@@ -33,7 +33,8 @@
 	}
 
 	&::before {
-		content: attr(data-content) " ";
+		// Append a non-breaking space
+		content: attr(data-content) "\00a0";
 		visibility: hidden;
 
 		// Be as wide as the first line, but don't get taller if content wraps
