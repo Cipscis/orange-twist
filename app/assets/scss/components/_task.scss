@@ -7,11 +7,8 @@
 }
 
 .task__status {
-	all: unset;
+	@include reset;
 	cursor: pointer;
-	&:focus-visible {
-		outline: auto;
-	}
 }
 
 .task__name {
@@ -21,11 +18,8 @@
 	width: min-content;
 
 	input {
-		all: unset;
+		@include reset;
 		cursor: text;
-		&:focus-visible {
-			outline: auto;
-		}
 	}
 
 	// Stack them on top of each other

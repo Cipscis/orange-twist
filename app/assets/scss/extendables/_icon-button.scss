@@ -1,9 +1,6 @@
 %icon-button {
-	all: unset;
+	@include reset;
 	cursor: pointer;
-	&:focus-visible {
-		outline: auto;
-	}
 
 	display: grid;
 	place-items: center;

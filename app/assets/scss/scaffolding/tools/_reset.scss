@@ -1,0 +1,11 @@
+/// It can be useful sometimes to use `all: unset`, but
+/// of course the downside is that it unsets **all**
+/// properties. So this mixin also resets some that
+/// should always apply.
+@mixin reset {
+	all: unset;
+	box-sizing: border-box;
+	&:focus-visible {
+		outline: auto;
+	}
+}
