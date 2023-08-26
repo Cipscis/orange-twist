@@ -3,7 +3,7 @@ import htm from 'htm';
 
 import { Task } from '../types/Task.js';
 import { TaskStatus } from '../types/TaskStatus.js';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { setTaskData } from '../registers/tasks/tasksRegister.js';
 
 // Initialise htm with Preact
@@ -37,24 +37,63 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		setIsInChangeMode(false);
 	}, []);
 
+	const rootRef = useRef<HTMLElement>(null);
+
 	// TODO: Turn the selector part into a custom element, using shadow DOM
+
+	/**
+	 * Detect if a keypress was "Escape". If it was, exit change mode.
+	 */
 	const exitChangeModeOnEscape = useCallback((e: KeyboardEvent) => {
 		if (e.key === 'Escape') {
 			setIsInChangeMode(false);
 		}
 	}, []);
+
+	/**
+	 * Detect if a click was outside the component. If it was, exit change mode.
+	 */
+	const exitChangeModeOnOutsideClick = useCallback((e: MouseEvent) => {
+		if (
+			rootRef.current &&
+			e.target instanceof HTMLElement
+		) {
+			const isWithinRootRef = (() => {
+				let ancestor = e.target.parentElement;
+				while (ancestor) {
+					if (ancestor === rootRef.current) {
+						return true;
+					}
+					ancestor = ancestor.parentElement;
+				}
+
+				return false;
+			})();
+
+			if (!isWithinRootRef) {
+				setIsInChangeMode(false);
+			}
+		}
+	}, []);
+
+	// Set up event listeners for exiting change mode.
 	useEffect(() => {
 		if (isInChangeMode) {
 			document.addEventListener('keydown', exitChangeModeOnEscape);
+			document.addEventListener('click', exitChangeModeOnOutsideClick);
 		}
 
 		return () => {
 			document.removeEventListener('keydown', exitChangeModeOnEscape);
+			document.removeEventListener('click', exitChangeModeOnOutsideClick);
 		};
 	}, [isInChangeMode]);
 
 	return html`
-		<span class="task-status">
+		<span
+			class="task-status"
+			ref="${rootRef}"
+		>
 			<button
 				type="button"
 				class="task-status__change"
