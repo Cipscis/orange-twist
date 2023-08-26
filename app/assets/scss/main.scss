@@ -4,10 +4,10 @@
 @import "scaffolding";
 
 // Base
-@import "base/reset";
-@import "base/palette";
-@import "base/typography";
 @import "base/animations";
+@import "base/palette";
+@import "base/reset";
+@import "base/typography";
 
 // Extendables
 @import "extendables/icon-button";
@@ -18,8 +18,9 @@
 
 // Components
 @import "components/content";
-@import "components/page-layout";
-@import "components/orange-twist";
 @import "components/day";
+@import "components/orange-twist";
+@import "components/page-layout";
 @import "components/task";
 @import "components/task-status";
+@import "components/toast";

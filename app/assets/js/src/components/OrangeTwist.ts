@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useEffect } from 'preact/hooks';
 import htm from 'htm';
 
 import classNames from 'classnames';
@@ -11,6 +11,7 @@ import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
 import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
+import { toast } from './Toast.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -50,6 +51,26 @@ export function OrangeTwist() {
 
 		setDayData(dayName, {});
 	}, [days]);
+
+	const saveData = useCallback(() => {
+		saveDays();
+		saveTasks();
+		toast('Saved', 2000);
+	}, []);
+
+	/**
+	 * How many minutes should pass between each autosave.
+	 */
+	const autosaveMinutes = 1;
+	useEffect(() => {
+		const autosaveInterval = window.setInterval(() => {
+			saveData();
+		}, autosaveMinutes * 1000 * 60);
+
+		return () => {
+			window.clearInterval(autosaveInterval);
+		};
+	}, [saveData]);
 
 	const isLoading = isDaysLoading || isTasksLoading;
 
@@ -140,10 +161,7 @@ export function OrangeTwist() {
 				html`<button
 					type="button"
 					class="button"
-					onClick="${() => {
-						saveDays();
-						saveTasks();
-					}}"
+					onClick="${saveData}"
 				>Save data</button>`
 			}
 		</section>

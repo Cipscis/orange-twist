@@ -4,6 +4,12 @@
 
 .day__heading {
 	@include font-heading-3;
+	padding-bottom: 0.2em;
+
+	position: sticky;
+	z-index: 1;
+	top: 0;
+	@include contrast-primary;
 }
 
 .day__note {
@@ -11,6 +17,9 @@
 	--_gutter: 0.5em;
 
 	margin-block: 1rem;
+	// TODO: Make this more robust
+	// Button height + button offset + border
+	min-height: calc(2em + 12px);
 
 	&:has(:where(textarea, .content:not(:empty))) {
 		border: 1px solid var(--accent);
