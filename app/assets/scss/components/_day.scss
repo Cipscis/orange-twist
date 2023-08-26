@@ -72,4 +72,8 @@
 	@extend %icon-button;
 }
 
-.day__tasks {}
+.day__tasks {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
