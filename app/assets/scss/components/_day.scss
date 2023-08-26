@@ -1,4 +1,6 @@
-.day {}
+.day {
+	margin: 2rem 0;
+}
 
 .day__heading {
 	@include font-heading-3;
@@ -9,11 +11,6 @@
 	--_gutter: 0.5em;
 
 	margin-block: 1rem;
-
-	textarea {
-		resize: none;
-		overflow: hidden;
-	}
 
 	&:has(:where(textarea, .content:not(:empty))) {
 		border: 1px solid var(--accent);
@@ -32,12 +29,14 @@
 }
 
 .day__note-edit-content {
+	// Using this approach:
+	// https://css-tricks.com/auto-growing-inputs-textareas/
 	display: grid;
 
 	// Stack them on top of each other
 	&::before,
 	textarea {
-		grid-area: 1 / 1 / -1 / -1;
+		grid-area: 1 / -1 / -1 / -1;
 
 		@include font-base-body;
 		padding: var(--_gutter);
@@ -48,6 +47,11 @@
 		content: attr(data-content) " ";
 		white-space: pre-wrap;
 		visibility: hidden;
+	}
+
+	textarea {
+		resize: none;
+		overflow: hidden;
 	}
 }
 
