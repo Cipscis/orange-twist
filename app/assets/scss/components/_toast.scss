@@ -1,0 +1,17 @@
+.toast {
+	position: fixed;
+	bottom: 1rem;
+	right: 1rem;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1rem;
+}
+
+.toast__message {
+	@include contrast-secondary;
+	@include font-base-body;
+	padding: 0.5rem 1rem;
+
+	animation: appearUp 0.3s ease-in-out;
+}
