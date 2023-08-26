@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createContext, h } from 'preact';
 import {
 	useCallback,
 	useEffect,
@@ -21,6 +21,14 @@ import { TaskStatus } from '../types/TaskStatus.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
+
+type OrangeTwistApi = {
+	save(): void;
+}
+
+export const OrangeTwistContext = createContext<OrangeTwistApi>({
+	save() {},
+});
 
 export function OrangeTwist() {
 	const {
@@ -125,135 +133,143 @@ export function OrangeTwist() {
 
 	const isLoading = isDaysLoading || isTasksLoading;
 
-	return html`<div class="orange-twist">
-		<h1 class="orange-twist__heading">Orange Twist</h1>
-
-		<section
-			class="${classNames({
-				'orange-twist__section': true,
-				'orange-twist__section--loading': isDaysLoading,
-			})}"
-			aria-busy="${isDaysLoading || null}"
+	return html`
+		<${OrangeTwistContext.Provider}
+			value="${{
+				save: saveData,
+			}}"
 		>
-			<h2 class="orange-twist__title">Days</h2>
+			<div class="orange-twist">
+				<h1 class="orange-twist__heading">Orange Twist</h1>
 
-			${
-				isDaysLoading &&
-				html`<span class="orange-twist__loader" title="Loading"></span>`
-			}
-			${
-				daysError &&
-				// TODO: Handle error better somehow
-				html`<span class="orange-twist__error">Error: ${daysError}</span>`
-			}
-			${
-				days &&
-				html`
-					${days.map((day) => {
-						const dayProps: DayComponentProps = { day };
-						return html`
-							<${DayComponent}
-								key="${day.dayName}"
-								...${dayProps}
-							/>
-						`;
-					})}
+				<section
+					class="${classNames({
+						'orange-twist__section': true,
+						'orange-twist__section--loading': isDaysLoading,
+					})}"
+					aria-busy="${isDaysLoading || null}"
+				>
+					<h2 class="orange-twist__title">Days</h2>
 
-					<button
+					${
+						isDaysLoading &&
+						html`<span class="orange-twist__loader" title="Loading"></span>`
+					}
+					${
+						daysError &&
+						// TODO: Handle error better somehow
+						html`<span class="orange-twist__error">Error: ${daysError}</span>`
+					}
+					${
+						days &&
+						html`
+							${days.map((day) => {
+								const dayProps: DayComponentProps = { day };
+								return html`
+									<${DayComponent}
+										key="${day.dayName}"
+										...${dayProps}
+									/>
+								`;
+							})}
+
+							<button
+								type="button"
+								class="button"
+								onClick="${addNewDay}"
+							>Add day</button>
+						`
+					}
+				</section>
+
+				<section
+					class="${classNames({
+						'orange-twist__section': true,
+						'orange-twist__section--loading': isTasksLoading,
+					})}"
+					aria-busy="${isTasksLoading || null}"
+				>
+					<h2 class="orange-twist__title">Tasks</h2>
+
+					${
+						isTasksLoading &&
+						html`<span class="orange-twist__loader" title="Tasks loading"></span>`
+					}
+					${
+						tasksError &&
+						html`<span class="orange-twist__error">Tasks loading error: ${tasksError}</span>`
+					}
+					${
+						tasks &&
+
+						html`
+							<!-- TODO: Reduce duplication -->
+							<ul
+								class="orange-twist__task-list"
+								ref="${unfinishedTasksListRef}"
+							>
+								${tasks.map(
+									(task) => {
+										const taskProps: TaskComponentProps = { task };
+
+										if (task.status === TaskStatus.COMPLETED) {
+											return '';
+										}
+
+										return html`<li
+											key="${task.id}"
+										><${TaskComponent} ...${taskProps} /></li>`;
+									}
+								)}
+							</ul>
+
+							<button
+								type="button"
+								class="button"
+								onClick="${addNewTaskUI}"
+							>Add new task</button>
+						`
+					}
+				</section>
+
+				${
+					tasks &&
+
+					html`
+						<details class="orange-twist__section">
+							<summary>
+								<h2 class="orange-twist__title">Completed tasks</h2>
+							</summary>
+
+							<ul class="orange-twist__task-list">
+								${tasks.map(
+									(task) => {
+										const taskProps: TaskComponentProps = { task };
+
+										if (task.status !== TaskStatus.COMPLETED) {
+											return '';
+										}
+
+										return html`<li
+											key="${task.id}"
+										><${TaskComponent} ...${taskProps} /></li>`;
+									}
+								)}
+							</ul>
+						</details>
+					`
+				}
+
+				${
+					!isLoading &&
+					html`<button
 						type="button"
-						class="button"
-						onClick="${addNewDay}"
-					>Add day</button>
-				`
-			}
-		</section>
-
-		<section
-			class="${classNames({
-				'orange-twist__section': true,
-				'orange-twist__section--loading': isTasksLoading,
-			})}"
-			aria-busy="${isTasksLoading || null}"
-		>
-			<h2 class="orange-twist__title">Tasks</h2>
-
-			${
-				isTasksLoading &&
-				html`<span class="orange-twist__loader" title="Tasks loading"></span>`
-			}
-			${
-				tasksError &&
-				html`<span class="orange-twist__error">Tasks loading error: ${tasksError}</span>`
-			}
-			${
-				tasks &&
-
-				html`
-					<!-- TODO: Reduce duplication -->
-					<ul
-						class="orange-twist__task-list"
-						ref="${unfinishedTasksListRef}"
-					>
-						${tasks.map(
-							(task) => {
-								const taskProps: TaskComponentProps = { task };
-
-								if (task.status === TaskStatus.COMPLETED) {
-									return '';
-								}
-
-								return html`<li
-									key="${task.id}"
-								><${TaskComponent} ...${taskProps} /></li>`;
-							}
-						)}
-					</ul>
-
-					<button
-						type="button"
-						class="button"
-						onClick="${addNewTaskUI}"
-					>Add new task</button>
-				`
-			}
-		</section>
-
-		${
-			tasks &&
-
-			html`
-				<details class="orange-twist__section">
-					<summary>
-						<h2 class="orange-twist__title">Completed tasks</h2>
-					</summary>
-
-					<ul class="orange-twist__task-list">
-						${tasks.map(
-							(task) => {
-								const taskProps: TaskComponentProps = { task };
-
-								if (task.status !== TaskStatus.COMPLETED) {
-									return '';
-								}
-
-								return html`<li
-									key="${task.id}"
-								><${TaskComponent} ...${taskProps} /></li>`;
-							}
-						)}
-					</ul>
-				</details>
-			`
-		}
-
-		${
-			!isLoading &&
-			html`<button
-				type="button"
-				class="orange-twist__save"
-				title="Save data"
-				onClick="${saveData}"
-			>🍊</button>`
-		}
-	</div>`;
+						class="orange-twist__save"
+						title="Save data"
+						onClick="${saveData}"
+					>🍊</button>`
+				}
+			</div>
+		</${OrangeTwistContext.Provider}>
+	`;
 }

@@ -4,8 +4,10 @@ import htm from 'htm';
 import { Task } from '../types/Task.js';
 
 import { TaskStatusComponent, TaskStatusComponentProps } from './TaskStatusComponent.js';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useContext } from 'preact/hooks';
 import { setTaskData } from '../registers/tasks/tasksRegister.js';
+
+import { OrangeTwistContext } from './OrangeTwist.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -18,6 +20,8 @@ export interface TaskComponentProps {
 export function TaskComponent(props: TaskComponentProps) {
 	const { task, dayName } = props;
 	const { id, name } = task;
+
+	const api = useContext(OrangeTwistContext);
 
 	const nameChangeHandler = useCallback((e: InputEvent) => {
 		const input = e.target;
@@ -32,7 +36,8 @@ export function TaskComponent(props: TaskComponentProps) {
 	const enterHandler = useCallback((e: KeyboardEvent) => {
 		if (e.key === 'Enter' && e.target instanceof HTMLElement) {
 			e.target.blur();
-			// TODO: Save if anything was change
+			// TODO: Only save if something changed
+			api.save();
 		}
 	}, []);
 
