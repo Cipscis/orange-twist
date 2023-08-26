@@ -70,6 +70,7 @@
 }
 
 .day__note-edit-content textarea,
+.day__note-edit-content::before,
 .day__note .content {
 	// TODO: Tidy this up a bit
 	// Space for the icon button
