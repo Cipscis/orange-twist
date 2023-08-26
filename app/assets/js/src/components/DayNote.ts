@@ -37,7 +37,11 @@ export function DayNote(props: DayNoteProps) {
 	// into textarea when we start editing and onto edit button
 	// when we stop editing.
 	useEffect(() => {
-		const exitEditingModeOnTextareaBlur = () => setIsEditing(false);
+		const exitEditingModeOnTextareaBlur = () => {
+			setIsEditing(false);
+			// TODO: Only save if something changed.
+			api.save();
+		};
 		const exitEditingModeOnCtrlEnter = (e: KeyboardEvent) => {
 			if (e.key === 'Enter' && e.ctrlKey) {
 				setIsEditing(false);
