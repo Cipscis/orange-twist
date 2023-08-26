@@ -36,8 +36,6 @@ export function TaskComponent(props: TaskComponentProps) {
 	const enterHandler = useCallback((e: KeyboardEvent) => {
 		if (e.key === 'Enter' && e.target instanceof HTMLElement) {
 			e.target.blur();
-			// TODO: Only save if something changed
-			api.save();
 		}
 	}, []);
 
@@ -58,6 +56,10 @@ export function TaskComponent(props: TaskComponentProps) {
 							size="1"
 							onInput="${nameChangeHandler}"
 							onKeydown="${enterHandler}"
+							onBlur="${() => {
+								// TODO: Only save if something changed
+								api.save();
+							}}"
 						/>
 					</div>
 				`;
