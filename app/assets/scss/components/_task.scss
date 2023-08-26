@@ -15,7 +15,7 @@
 	// Using this approach:
 	// https://css-tricks.com/auto-growing-inputs-textareas/
 	display: inline-grid;
-	width: min-content;
+	width: fit-content;
 
 	input {
 		@include reset;
@@ -34,8 +34,12 @@
 
 	&::before {
 		content: attr(data-content) " ";
-		white-space: pre;
 		visibility: hidden;
+
+		// Be as wide as the first line, but don't get taller if content wraps
+		width: fit-content;
+		height: 1em;
+		overflow-y: hidden;
 	}
 }
 
