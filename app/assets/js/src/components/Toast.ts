@@ -1,16 +1,25 @@
 import { h, render } from 'preact';
 import htm from 'htm';
-import { useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { CSSKeyframes } from '../util/CSSKeyframes.js';
-import { nextFrame } from '../util/nextFrame.js';
+import { animate } from '../util/animate.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
 
 export interface ToastProps {
-	id: number;
+	/**
+	 * Automatically generated IDs are numbers, specified IDs are strings.
+	 */
+	id: number | string;
 	message: string;
-	duration?: number;
+	/**
+	 * The duration, in milliseconds, that a toast should stay on-screen.
+	 * If the toast is ever re-rendered, the duration will be restarted.
+	 *
+	 * A `null` duration means the toast is persistent.
+	 */
+	duration: number | null;
 }
 
 const toasts: Array<ToastProps> = [];
@@ -38,27 +47,38 @@ export function Toast(props: ToastProps) {
 
 	const toastRef = useRef<HTMLElement>(null);
 
-	if (duration) {
-		// Remove the toast after a timeout
-		window.setTimeout(async () => {
-			// Animate out
-			if (toastRef.current) {
-				toastRef.current.style.animationName = CSSKeyframes.DISAPPEAR_UP;
+	// Start a timeout for removing the toast. Runs on every render
+	useEffect(
+		() => {
+			let timeout: number | null = null;
 
-				await nextFrame();
-				const animation = toastRef.current?.getAnimations()[0];
-				if (animation) {
-					await animation.finished;
-				}
+			if (duration !== null) {
+				// Remove the toast after a timeout
+				timeout = window.setTimeout(async () => {
+					// Animate out
+					if (toastRef.current) {
+						const animation = await animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
+						// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
+						await animation.finished;
 
-				const toastIndex = toasts.findIndex((toast) => toast.id === id);
-				if (toastIndex !== -1) {
-					toasts.splice(toastIndex, 1);
-					renderToasts();
-				}
+						const toastIndex = toasts.findIndex((toast) => toast.id === id);
+						if (toastIndex !== -1) {
+							toasts.splice(toastIndex, 1);
+							renderToasts();
+						}
+					}
+				}, duration);
 			}
-		}, duration);
-	}
+
+			return () => {
+				if (timeout !== null) {
+					window.clearTimeout(timeout);
+				}
+			};
+		},
+		// A new object is different on each render, so this will always run
+		[{}]
+	);
 
 	return html`
 		<div
@@ -77,13 +97,42 @@ const renderToasts = () => {
 	`), toastContainer);
 };
 
-export function toast(message: string, duration?: number): void {
-	const newToast = {
-		id: getNextId(),
-		message,
-		duration,
-	};
-	toasts.push(newToast);
+type ToastOptions = Partial<Omit<ToastProps, 'message'>>;
+
+/**
+ * Show a new toast with a specified message and duration.
+ */
+export function toast(message: string, duration?: ToastProps['duration']): void
+/**
+ * Show a toast with a specified message. An ID can be passed to
+ * create a toast that can be updated by calling this function again
+ * with the same ID, if it still exists.
+ */
+export function toast(message: string, options?: ToastOptions): void
+export function toast(message: string, optionsArg?: ToastProps['duration'] | ToastOptions): void {
+	// Start by consolidating arguments
+	const options = typeof optionsArg === 'number' ? { duration: optionsArg } : { ...optionsArg };
+
+	const existingToast = (() => {
+		if (typeof options?.id !== 'undefined') {
+			return toasts.find((toast) => toast.id === options.id) ?? null;
+		}
+		return null;
+	})();
+
+	if (existingToast) {
+		existingToast.message = message;
+		if (typeof options.duration !== 'undefined') {
+			existingToast.duration = options.duration;
+		}
+	} else {
+		const newToast = {
+			id: options?.id ?? getNextId(),
+			message,
+			duration: options.duration ?? null,
+		};
+		toasts.push(newToast);
+	}
 
 	renderToasts();
 }
