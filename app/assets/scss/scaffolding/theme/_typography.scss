@@ -7,6 +7,10 @@ $regular: 400;
 $semibold: 600;
 $bold: 700;
 
+/////////////
+// Heading //
+/////////////
+
 @mixin font-heading-1 {
 	font-family: $font-heading;
 	font-weight: $bold;
@@ -28,9 +32,20 @@ $bold: 700;
 	line-height: 1.5;
 }
 
+//////////
+// Base //
+//////////
+
 @mixin font-base-body {
 	font-family: $font-base;
 	font-weight: $regular;
 	font-size: rem(18px);
+	line-height: 1.4;
+}
+
+@mixin font-base-large {
+	font-family: $font-base;
+	font-weight: $regular;
+	font-size: rem(32px);
 	line-height: 1.4;
 }
