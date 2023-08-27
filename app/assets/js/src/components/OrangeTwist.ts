@@ -108,11 +108,20 @@ export function OrangeTwist() {
 	}, []);
 
 	const saveData = useCallback(async () => {
+		const toastId = `saving-${crypto.randomUUID()}`;
+
+		// TODO: Show a nicer loader
+		toast('Saving...', {
+			id: toastId,
+		});
 		await Promise.all([
 			saveDays(),
 			saveTasks(),
 		]);
-		toast('Saved', 2000);
+		toast('Saved', {
+			duration: 2000,
+			id: toastId,
+		});
 
 		// Reset autosave timeout
 		if (autosaveTimeout.current !== null) {
