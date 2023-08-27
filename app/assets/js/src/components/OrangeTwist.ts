@@ -18,6 +18,7 @@ import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
 import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
 import { toast } from './Toast.js';
 import { TaskStatus } from '../types/TaskStatus.js';
+import { CommandPalette } from './CommandPalette.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -45,6 +46,8 @@ export function OrangeTwist() {
 
 	const unfinishedTasksListRef = useRef<HTMLElement>(null);
 
+	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+
 	const addNewDay = useCallback(() => {
 		if (!days) {
 			return;
@@ -69,6 +72,7 @@ export function OrangeTwist() {
 	}, [days]);
 
 	const [newTasksCreated, setNewTasksCreated] = useState(0);
+
 	const focusOnLastUnfinishedTask = useCallback(() => {
 		// TODO: Is this the best way to find the right element to focus on?
 		const taskInputs = Array.from(unfinishedTasksListRef.current?.querySelectorAll('input') ?? []);
@@ -157,13 +161,21 @@ export function OrangeTwist() {
 				addNewTaskUI();
 			}
 		};
+		const openCommandPaletteOnKeyboardShortcut = (e: KeyboardEvent) => {
+			if (e.key === '\\') {
+				e.preventDefault();
+				setCommandPaletteOpen(true);
+			}
+		};
 
 		document.addEventListener('keydown', saveOnKeyboardShortcut);
 		document.addEventListener('keydown', addNewTaskOnKeyboardShortcut);
+		document.addEventListener('keydown', openCommandPaletteOnKeyboardShortcut);
 
 		return () => {
 			document.removeEventListener('keydown', saveOnKeyboardShortcut);
 			document.removeEventListener('keydown', addNewTaskOnKeyboardShortcut);
+			document.removeEventListener('keydown', openCommandPaletteOnKeyboardShortcut);
 		};
 	}, []);
 
@@ -173,6 +185,11 @@ export function OrangeTwist() {
 				save: saveData,
 			}}"
 		>
+			<${CommandPalette}
+				open="${commandPaletteOpen}"
+				onClose="${() => setCommandPaletteOpen(false)}"
+			/>
+
 			<div class="orange-twist">
 				<h1 class="orange-twist__heading">Orange Twist</h1>
 
