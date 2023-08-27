@@ -167,8 +167,6 @@ export function OrangeTwist() {
 		};
 	}, []);
 
-	const isLoading = isDaysLoading || isTasksLoading;
-
 	return html`
 		<${OrangeTwistContext.Provider}
 			value="${{
@@ -294,16 +292,6 @@ export function OrangeTwist() {
 							</ul>
 						</details>
 					`
-				}
-
-				${
-					!isLoading &&
-					html`<button
-						type="button"
-						class="orange-twist__save"
-						title="Save data"
-						onClick="${saveData}"
-					>🍊</button>`
 				}
 			</div>
 		</${OrangeTwistContext.Provider}>

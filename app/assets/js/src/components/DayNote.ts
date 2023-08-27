@@ -57,6 +57,9 @@ export function DayNote(props: DayNoteProps) {
 				textarea.addEventListener('keydown', exitEditingModeOnCtrlEnter);
 
 				textarea.focus();
+				// Move the caret to the end
+				const end = textarea.value.length;
+				textarea.setSelectionRange(end, end);
 			}
 		} else if (initialLoad.current === false) {
 			editButtonRef.current?.focus();
