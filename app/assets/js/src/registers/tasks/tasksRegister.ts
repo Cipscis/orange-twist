@@ -6,7 +6,7 @@ import { TaskStatus } from '../../types/TaskStatus.js';
 import { tasksChangeListeners } from './listeners/onTasksChange.js';
 import { loadTasks } from './persistence/loadTasks.js';
 import { formatDate } from '../../formatters/date.js';
-import { getDays, setDayData } from '../days/daysRegister.js';
+import { getDays, removeTaskFromDay, setDayData } from '../days/daysRegister.js';
 
 const tasksRegister: Map<number, Task> = new Map();
 let isInitialised = false;
@@ -176,6 +176,22 @@ export function setTaskData(
 				}],
 			}
 		);
+	}
+}
+
+/**
+ * Delete a task.
+ */
+export function deleteTask(id: number): void {
+	if (tasksRegister.has(id)) {
+		tasksRegister.delete(id);
+	}
+
+	callListeners();
+
+	const days = getDays();
+	for (const day of days) {
+		removeTaskFromDay(day.dayName, id);
 	}
 }
 

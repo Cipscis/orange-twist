@@ -32,6 +32,25 @@
 	animation: 0.2s appearScreen, ease-in-out;
 }
 
+.task-status__optgroup {
+	padding-inline: 0.5rem;
+	border-inline: 1px solid var(--accent);
+	&:first-child {
+		padding-inline-start: 0;
+		border-inline-start: 0;
+	}
+	&:last-child {
+		padding-inline-end: 0;
+		border-inline-end: 0;
+	}
+}
+
+.task-status__optgroup-list {
+	@extend %list-reset;
+	display: flex;
+	gap: 0.5rem;
+}
+
 .task-status__option {}
 
 .task-status__option-button {

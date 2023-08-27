@@ -59,7 +59,9 @@ export function Toast(props: ToastProps) {
 					if (toastRef.current) {
 						const animation = await animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
 						// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
-						await animation.finished;
+						if (animation) {
+							await animation.finished;
+						}
 
 						const toastIndex = toasts.findIndex((toast) => toast.id === id);
 						if (toastIndex !== -1) {
