@@ -134,6 +134,23 @@ export function setDayData(
 }
 
 /**
+ * Remove a task from a specified day.
+ */
+export function removeTaskFromDay(dayName: string, taskId: number): void {
+	const day = daysRegister.get(dayName) ?? null;
+	if (!day) {
+		return;
+	}
+
+	const taskIndex = day.tasks.findIndex((task) => task.id === taskId);
+	if (taskIndex !== -1) {
+		day.tasks.splice(taskIndex, 1);
+	}
+
+	callListeners();
+}
+
+/**
  * Remove data for a given day.
  */
 export function deleteDay(dayName: string): void {

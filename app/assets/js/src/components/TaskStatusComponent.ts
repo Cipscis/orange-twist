@@ -4,7 +4,7 @@ import htm from 'htm';
 import { Task } from '../types/Task.js';
 import { TaskStatus } from '../types/TaskStatus.js';
 import { useCallback, useContext, useEffect, useRef, useState } from 'preact/hooks';
-import { setTaskData } from '../registers/tasks/tasksRegister.js';
+import { deleteTask, setTaskData } from '../registers/tasks/tasksRegister.js';
 import { elementHasAncestor } from '../util/elementHasAncestor.js';
 import { OrangeTwistContext } from './OrangeTwist.js';
 import { animate } from '../util/animate.js';
@@ -35,9 +35,16 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 
 	const api = useContext(OrangeTwistContext);
 
+	const rootRef = useRef<HTMLElement>(null);
+	const optionsRef = useRef<HTMLElement>(null);
+
 	const statusSymbol = taskStatusSymbols[status];
 
 	const [isInChangeMode, setIsInChangeModeInternal] = useState(false);
+
+	/**
+	 * Modify change mode with an exit animation
+	 */
 	const setIsInChangeMode = useCallback(async (value: boolean) => {
 		if (value || !optionsRef.current) {
 			setIsInChangeModeInternal(value);
@@ -46,17 +53,33 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 
 		// If we're leaving change mode and the options are visible, animate them out
 		const animation = await animate(optionsRef.current, CSSKeyframes.DISAPPEAR_SCREEN);
-		await animation.finished;
+		if (animation) {
+			await animation.finished;
+		}
 		setIsInChangeModeInternal(value);
 	}, [setIsInChangeModeInternal]);
+
+	/**
+	 * Update task data to reflect new status
+	 */
 	const changeStatus = useCallback((newStatus: TaskStatus) => {
 		setTaskData(id, { status: newStatus }, { dayName });
 		setIsInChangeMode(false);
 		api.save();
 	}, []);
 
-	const rootRef = useRef<HTMLElement>(null);
-	const optionsRef = useRef<HTMLElement>(null);
+	/**
+	 * Ask for confirmation, then delete the task
+	 */
+	const deleteTaskUI = useCallback(() => {
+		if (!confirm('Are you sure you want to delete this task?')) {
+			return;
+		}
+
+		deleteTask(id);
+		setIsInChangeMode(false);
+		api.save();
+	}, []);
 
 	// TODO: Turn the selector part into a custom element, using shadow DOM
 
@@ -115,20 +138,34 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 						class="task-status__options"
 						ref="${optionsRef}"
 					>
-						${Object.values(TaskStatus).map((taskStatus) => html`
-							<li
-								key="${taskStatus}"
-								class="task-status__option"
-							>
-								<button
-									type="button"
-									class="task-status__option-button"
-									onClick="${() => changeStatus(taskStatus)}"
-								>
-									${taskStatusSymbols[taskStatus]}
-								</button>
-							</li>
-						`)}
+						<li class="task-status__optgroup">
+							<ul class="task-status__optgroup-list">
+								${Object.values(TaskStatus).map((taskStatus) => html`
+									<li
+										key="${taskStatus}"
+										class="task-status__option"
+									>
+										<button
+											type="button"
+											class="task-status__option-button"
+											title="${taskStatus}"
+											onClick="${() => changeStatus(taskStatus)}"
+										>
+											${taskStatusSymbols[taskStatus]}
+										</button>
+									</li>
+								`)}
+							</ul>
+						</li>
+
+						<li class="task-status__option">
+							<button
+								type="button"
+								class="task-status__option-button"
+								title="Delete"
+								onClick="${() => deleteTaskUI()}"
+							>❌</button>
+						</li>
 					</ul>
 				`
 			}
