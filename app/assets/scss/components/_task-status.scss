@@ -16,6 +16,20 @@
 	gap: 0.5rem;
 
 	@include contrast-secondary;
+	background-color: transparent;
+	&::before {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		inset: 0;
+		background-color: var(--bg);
+		opacity: 0.5;
+	}
+	backdrop-filter: blur(2px);
+	border: 1px solid var(--accent);
+	box-shadow: 0 0 5px color-mix(in srgb, var(--accent), white);
+
+	animation: 0.2s appearScreen, ease-in-out;
 }
 
 .task-status__option {}

@@ -7,6 +7,8 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'preact/hoo
 import { setTaskData } from '../registers/tasks/tasksRegister.js';
 import { elementHasAncestor } from '../util/elementHasAncestor.js';
 import { OrangeTwistContext } from './OrangeTwist.js';
+import { animate } from '../util/animate.js';
+import { CSSKeyframes } from '../util/CSSKeyframes.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -35,7 +37,18 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 
 	const statusSymbol = taskStatusSymbols[status];
 
-	const [isInChangeMode, setIsInChangeMode] = useState(false);
+	const [isInChangeMode, setIsInChangeModeInternal] = useState(false);
+	const setIsInChangeMode = useCallback(async (value: boolean) => {
+		if (value || !optionsRef.current) {
+			setIsInChangeModeInternal(value);
+			return;
+		}
+
+		// If we're leaving change mode and the options are visible, animate them out
+		const animation = await animate(optionsRef.current, CSSKeyframes.DISAPPEAR_SCREEN);
+		await animation.finished;
+		setIsInChangeModeInternal(value);
+	}, [setIsInChangeModeInternal]);
 	const changeStatus = useCallback((newStatus: TaskStatus) => {
 		setTaskData(id, { status: newStatus }, { dayName });
 		setIsInChangeMode(false);
@@ -43,6 +56,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 	}, []);
 
 	const rootRef = useRef<HTMLElement>(null);
+	const optionsRef = useRef<HTMLElement>(null);
 
 	// TODO: Turn the selector part into a custom element, using shadow DOM
 
@@ -97,7 +111,10 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 			${
 				isInChangeMode &&
 				html`
-					<ul class="task-status__options">
+					<ul
+						class="task-status__options"
+						ref="${optionsRef}"
+					>
 						${Object.values(TaskStatus).map((taskStatus) => html`
 							<li
 								key="${taskStatus}"
