@@ -41,6 +41,10 @@ export function DayNote(props: DayNoteProps) {
 	// when we stop editing.
 	useEffect(() => {
 		const exitEditingModeOnTextareaBlur = () => {
+			if (closedWithKeyboardShortcut.current) {
+				return;
+			}
+
 			setIsEditing(false);
 			// TODO: Only save if something changed.
 			api.save();
