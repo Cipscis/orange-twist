@@ -31,7 +31,10 @@ export function DayNote(props: DayNoteProps) {
 
 	const [isEditing, setIsEditing] = useState(false);
 
-	const initialLoad = useRef<boolean>(true);
+	/**
+	 * Used to determine whether or not to move focus automatically when leaving editing mode.
+	 */
+	const closedWithKeyboardShortcut = useRef<boolean>(false);
 
 	// Set up event listeners to stop editing, and move focus
 	// into textarea when we start editing and onto edit button
@@ -44,6 +47,7 @@ export function DayNote(props: DayNoteProps) {
 		};
 		const exitEditingModeOnCtrlEnter = (e: KeyboardEvent) => {
 			if (e.key === 'Enter' && e.ctrlKey) {
+				closedWithKeyboardShortcut.current = true;
 				setIsEditing(false);
 				// TODO: Only save if something changed.
 				api.save();
@@ -61,7 +65,8 @@ export function DayNote(props: DayNoteProps) {
 				const end = textarea.value.length;
 				textarea.setSelectionRange(end, end);
 			}
-		} else if (initialLoad.current === false) {
+		} else if (closedWithKeyboardShortcut.current === true) {
+			closedWithKeyboardShortcut.current = false;
 			editButtonRef.current?.focus();
 		}
 
@@ -81,10 +86,6 @@ export function DayNote(props: DayNoteProps) {
 
 		const note = textarea.value;
 		setDayData(dayName, { note });
-	}, []);
-
-	useEffect(() => {
-		initialLoad.current = false;
 	}, []);
 
 	return html`
