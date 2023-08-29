@@ -25,11 +25,10 @@ export interface CommandsList {
 }
 
 type CommandId = keyof CommandsList;
-type CommandName = CommandsList[keyof CommandsList]['name'];
 
-export type Command = {
-	id: CommandId;
-	name: CommandName;
+export type Command<C extends CommandId = CommandId> = {
+	id: C;
+	name: CommandsList[C]['name'];
 };
 
 type CommandListener = () => void;
@@ -51,7 +50,7 @@ const commandsRegister = new Map<
  * Once a command has been registered, listeners can be bound to it via
  * {@linkcode addCommandListener} and the command can be first via {@linkcode fireCommand}.
  */
-export function registerCommand(command: Command): void {
+export function registerCommand<C extends CommandId>(command: Command<C>): void {
 	commandsRegister.set(command.id, {
 		command,
 		listeners: [],
