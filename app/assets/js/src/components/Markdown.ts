@@ -26,7 +26,10 @@ export function Markdown(props: MarkdownProps) {
 			return;
 		}
 
-		const renderedContent = marked.parse(content, { mangle: false, headerIds: false });
+		const renderedContent = marked
+			.parse(content, { mangle: false, headerIds: false })
+			// Stupid fucking plugin replaces tabs with spaces
+			.replace(/ {4}/g, '\t');
 		wrapper.setHTML(renderedContent);
 	}, [content]);
 

@@ -20,4 +20,11 @@
 		padding: 0 0.5ch;
 		border-radius: 0.2em;
 	}
+
+	// This is how `marked` renders code blocks
+	pre > code {
+		display: block;
+		width: fit-content;
+		tab-size: 4;
+	}
 }
