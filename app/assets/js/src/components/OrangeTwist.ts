@@ -19,6 +19,7 @@ import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
 import { toast } from './Toast.js';
 import { TaskStatus } from '../types/TaskStatus.js';
 import { CommandPalette } from './CommandPalette.js';
+import { addCommandListener, removeCommandListener } from '../registers/commands/index.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -92,6 +93,14 @@ export function OrangeTwist() {
 		addNewTask();
 		setNewTasksCreated((oldValue) => oldValue + 1);
 	}, []);
+
+	useEffect(() => {
+		addCommandListener('add-new-task', addNewTaskUI);
+
+		return () => {
+			removeCommandListener('add-new-task', addNewTaskUI);
+		};
+	}, [addNewTaskUI]);
 
 	/**
 	 * How many minutes should pass between each autosave.

@@ -26,9 +26,11 @@ module.exports = {
 		/////////////////////////
 
 		// Sometimes it's useful to leave a name for an unused argument,
-		// in case it might be used in the future
+		// in case it might be used in the future. Also, using a warning
+		// level makes it clearer when there's not a "real" error while
+		// authoring new variables.
 		'@typescript-eslint/no-unused-vars': [
-			'error',
+			'warn',
 			{
 				vars: 'all',
 				args: 'none',

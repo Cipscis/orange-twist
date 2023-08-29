@@ -1,7 +1,9 @@
 import { RefObject, createRef, h } from 'preact';
 import htm from 'htm';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import classNames from 'classnames';
+import { useCommands } from '../registers/commands/hooks/useCommands.js';
+import { fireCommand } from '../registers/commands/commandsRegister.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -20,24 +22,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 
 	const fieldRef = useRef<HTMLInputElement>(null);
 
-	// TODO: This is just a static placeholder
-	const commands = useMemo(() => [
-		{
-			id: 'add-new-task',
-			label: 'Add new task',
-			action() { console.log('Add new task'); },
-		},
-		{
-			id: 'add-new-day',
-			label: 'Add new day',
-			action() { console.log('Add new day'); },
-		},
-		{
-			id: 'secret-third-thing',
-			label: 'A secret third thing',
-			action() { console.log('A secret third thing'); },
-		},
-	], []);
+	const commands = useCommands();
 	const optionsRef = useRef<RefObject<HTMLElement>[]>([]);
 	optionsRef.current = commands.map((command, i) => optionsRef.current[i] ?? createRef<HTMLElement>());
 
@@ -115,6 +100,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 			html`
 				<div class="command-palette">
 					<div>
+						<!-- TODO: Make the input actually work for fuzzy search etc. -->
 						<div class="command-palette__field">
 							<input
 								ref="${fieldRef}"
@@ -144,11 +130,13 @@ export function CommandPalette(props: CommandPaletteProps) {
 										'command-palette__option--active': activeDescendant !== null && optionsRef.current[i].current === activeDescendant,
 									})}"
 									onClick="${() => {
-										command.action();
-										onClose?.();
+										if (onClose) {
+											onClose();
+										}
+										fireCommand(command.id);
 									}}"
 								>
-									${command.label}
+									${command.name}
 								</button>
 							`)}
 						</div>
