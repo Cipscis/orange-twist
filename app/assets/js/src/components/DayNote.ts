@@ -153,7 +153,8 @@ export function DayNote(props: DayNoteProps) {
 					>${day.note}</textarea>
 				</div>
 			`
-			: html`
+			: day.note
+			? html`
 				<div
 					class="day__note-display-content"
 					ref="${displayNoteRef}"
@@ -165,6 +166,13 @@ export function DayNote(props: DayNoteProps) {
 						onClick="${clickHandler}"
 					/>
 				</div>
+			`
+			: html`
+				<button
+					type="button"
+					class="button"
+					onClick="${() => setIsEditing(true)}"
+				>✏️</button>
 			`
 		}
 	`;
