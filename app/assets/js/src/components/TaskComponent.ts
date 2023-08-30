@@ -4,7 +4,7 @@ import htm from 'htm';
 import { Task } from '../types/Task.js';
 
 import { TaskStatusComponent, TaskStatusComponentProps } from './TaskStatusComponent.js';
-import { useCallback, useContext } from 'preact/hooks';
+import { useCallback, useContext, useRef } from 'preact/hooks';
 import { setTaskData } from '../registers/tasks/tasksRegister.js';
 
 import { OrangeTwistContext } from './OrangeTwist.js';
@@ -24,6 +24,18 @@ export function TaskComponent(props: TaskComponentProps) {
 
 	const api = useContext(OrangeTwistContext);
 
+	const dirtyFlag = useRef(false);
+
+	/**
+	 * Save changes if there were any, then clear `dirtyFlag`.
+	 */
+	const saveChanges = useCallback(() => {
+		if (dirtyFlag.current) {
+			api.save();
+			dirtyFlag.current = false;
+		}
+	}, []);
+
 	const nameChangeHandler = useCallback((e: InputEvent) => {
 		const input = e.target;
 		if (!(input instanceof HTMLInputElement)) {
@@ -32,6 +44,7 @@ export function TaskComponent(props: TaskComponentProps) {
 
 		const name = input.value;
 		setTaskData(id, { name }, { dayName });
+		dirtyFlag.current = true;
 	}, []);
 
 	const enterHandler = useCallback((e: KeyboardEvent) => {
@@ -57,10 +70,7 @@ export function TaskComponent(props: TaskComponentProps) {
 							size="1"
 							onInput="${nameChangeHandler}"
 							onKeydown="${enterHandler}"
-							onBlur="${() => {
-								// TODO: Only save if something changed
-								api.save();
-							}}"
+							onBlur="${saveChanges}"
 						/>
 					</div>
 				`;

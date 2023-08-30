@@ -124,7 +124,6 @@ export function CommandPalette(props: CommandPaletteProps) {
 			html`
 				<div class="command-palette">
 					<div>
-						<!-- TODO: Make the input actually work for fuzzy search etc. -->
 						<div class="command-palette__field">
 							<input
 								ref="${fieldRef}"

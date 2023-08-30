@@ -31,14 +31,24 @@ export function DayNote(props: DayNoteProps) {
 	const displayNoteRef = useRef<HTMLElement>(null);
 
 	const [isEditing, setIsEditing] = useState(false);
+	const dirtyFlag = useRef(false);
+
+	/**
+	 * Save changes if there were any, then clear `dirtyFlag`.
+	 */
+	const saveChanges = useCallback(() => {
+		if (dirtyFlag.current) {
+			api.save();
+			dirtyFlag.current = false;
+		}
+	}, []);
 
 	// Set up event listeners to stop editing, and move focus
 	// into textarea when we start editing.
 	useEffect(() => {
 		const exitEditingModeOnTextareaBlur = () => {
 			setIsEditing(false);
-			// TODO: Only save if something changed.
-			api.save();
+			saveChanges();
 		};
 		const keydownHandler = (e: KeyboardEvent) => {
 			// This type assertion is safe
@@ -47,8 +57,7 @@ export function DayNote(props: DayNoteProps) {
 			// Leave editing mode on Ctrl + Enter or Escape
 			if ((e.key === 'Enter' && e.ctrlKey) || e.key === 'Escape') {
 				setIsEditing(false);
-				// TODO: Only save if something changed.
-				api.save();
+				saveChanges();
 			}
 
 			// Insert a tab character on tab press
@@ -100,6 +109,7 @@ export function DayNote(props: DayNoteProps) {
 
 		const note = textarea.value;
 		setDayData(dayName, { note });
+		dirtyFlag.current = true;
 	}, []);
 
 	const clickHandler = useCallback(function (e: MouseEvent) {
