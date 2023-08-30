@@ -40,11 +40,32 @@ export function DayNote(props: DayNoteProps) {
 			// TODO: Only save if something changed.
 			api.save();
 		};
-		const exitEditingModeOnCtrlEnter = (e: KeyboardEvent) => {
-			if (e.key === 'Enter' && e.ctrlKey) {
+		const keydownHandler = (e: KeyboardEvent) => {
+			// This type assertion is safe
+			const textarea = e.target as HTMLTextAreaElement;
+
+			// Leave editing mode on Ctrl + Enter or Escape
+			if ((e.key === 'Enter' && e.ctrlKey) || e.key === 'Escape') {
 				setIsEditing(false);
 				// TODO: Only save if something changed.
 				api.save();
+			}
+
+			// Insert a tab character on tab press
+			if (e.key === 'Tab') {
+				e.preventDefault();
+				// TODO: Handle indentation if text is selected
+				// TODO: Handle un-indentation if text is selected and "Shift" is pressed
+				const selectionStart = textarea.selectionStart;
+				const selectionEnd = textarea.selectionEnd;
+
+				const beforeCaret = textarea.value.substring(0, selectionEnd);
+				const afterCaret = textarea.value.substring(selectionEnd);
+				const insertionString = '\t';
+
+				textarea.value = `${beforeCaret}${insertionString}${afterCaret}`;
+				textarea.selectionStart = selectionStart + insertionString.length;
+				textarea.selectionEnd = selectionEnd + insertionString.length;
 			}
 		};
 		const textarea = textareaRef.current;
@@ -52,7 +73,7 @@ export function DayNote(props: DayNoteProps) {
 		if (isEditing) {
 			if (textarea) {
 				textarea.addEventListener('blur', exitEditingModeOnTextareaBlur);
-				textarea.addEventListener('keydown', exitEditingModeOnCtrlEnter);
+				textarea.addEventListener('keydown', keydownHandler);
 
 				textarea.focus();
 				// Move the caret to the end
@@ -64,7 +85,7 @@ export function DayNote(props: DayNoteProps) {
 		return () => {
 			if (textarea) {
 				textarea.removeEventListener('blur', exitEditingModeOnTextareaBlur);
-				textarea.removeEventListener('keydown', exitEditingModeOnCtrlEnter);
+				textarea.removeEventListener('keydown', keydownHandler);
 			}
 		};
 	}, [isEditing]);
