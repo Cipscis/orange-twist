@@ -106,7 +106,7 @@ export function TaskList(props: TaskListProps) {
 		document.startViewTransition(() => {
 			onReorder(newTasksOrder);
 		});
-	}, []);
+	}, [onReorder]);
 
 	return html`
 		<div

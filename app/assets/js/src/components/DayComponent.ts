@@ -35,7 +35,7 @@ export function DayComponent(props: DayProps) {
 		const newTaskIndexById = Object.fromEntries(taskIds.map((id, index) => [id, index]));
 
 		const newTasks: Day['tasks'] = [];
-		for (const task of day.tasks.values()) {
+		for (const task of day.tasks) {
 			const newIndex = newTaskIndexById[task.id];
 			newTasks[newIndex] = task;
 		}
@@ -46,7 +46,7 @@ export function DayComponent(props: DayProps) {
 			overwriteTasks: true,
 		});
 		api.save();
-	}, []);
+	}, [day.tasks]);
 
 	const dayNoteProps: DayNoteProps = { day };
 
