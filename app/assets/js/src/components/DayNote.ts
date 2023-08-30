@@ -27,31 +27,19 @@ export function DayNote(props: DayNoteProps) {
 	const api = useContext(OrangeTwistContext);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const editButtonRef = useRef<HTMLButtonElement>(null);
 
 	const [isEditing, setIsEditing] = useState(false);
 
-	/**
-	 * Used to determine whether or not to move focus automatically when leaving editing mode.
-	 */
-	const closedWithKeyboardShortcut = useRef<boolean>(false);
-
 	// Set up event listeners to stop editing, and move focus
-	// into textarea when we start editing and onto edit button
-	// when we stop editing.
+	// into textarea when we start editing.
 	useEffect(() => {
 		const exitEditingModeOnTextareaBlur = () => {
-			if (closedWithKeyboardShortcut.current) {
-				return;
-			}
-
 			setIsEditing(false);
 			// TODO: Only save if something changed.
 			api.save();
 		};
 		const exitEditingModeOnCtrlEnter = (e: KeyboardEvent) => {
 			if (e.key === 'Enter' && e.ctrlKey) {
-				closedWithKeyboardShortcut.current = true;
 				setIsEditing(false);
 				// TODO: Only save if something changed.
 				api.save();
@@ -69,9 +57,6 @@ export function DayNote(props: DayNoteProps) {
 				const end = textarea.value.length;
 				textarea.setSelectionRange(end, end);
 			}
-		} else if (closedWithKeyboardShortcut.current === true) {
-			closedWithKeyboardShortcut.current = false;
-			editButtonRef.current?.focus();
 		}
 
 		return () => {
@@ -95,12 +80,6 @@ export function DayNote(props: DayNoteProps) {
 	return html`
 		${isEditing
 			? html`
-				<button
-					type="button"
-					class="day__note-done"
-					title="Done editing"
-					onClick="${() => setIsEditing(false)}"
-				>👍</button>
 				<div
 					class="day__note-edit-content"
 					data-content="${day.note}"
@@ -112,13 +91,6 @@ export function DayNote(props: DayNoteProps) {
 				</div>
 			`
 			: html`
-				<button
-					type="button"
-					class="day__note-edit"
-					title="Edit"
-					onClick="${() => setIsEditing(true)}"
-					ref="${editButtonRef}"
-				>✏️</button>
 				<${Markdown}
 					...${{
 						content: day.note,
