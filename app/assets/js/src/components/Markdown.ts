@@ -2,7 +2,7 @@ import { h } from 'preact';
 import htm from 'htm';
 
 import { marked } from 'marked';
-import { useLayoutEffect, useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { JSXInternal } from 'preact/src/jsx.js';
 
 // Initialise htm with Preact
@@ -20,7 +20,7 @@ export function Markdown(props: MarkdownProps) {
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		const wrapper = wrapperRef.current;
 		if (!wrapper) {
 			return;

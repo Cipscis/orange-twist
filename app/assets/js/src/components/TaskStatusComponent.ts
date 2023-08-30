@@ -5,7 +5,7 @@ import { Task } from '../types/Task.js';
 import { TaskStatus } from '../types/TaskStatus.js';
 import { useCallback, useContext, useEffect, useRef, useState } from 'preact/hooks';
 import { deleteTask, setTaskData } from '../registers/tasks/tasksRegister.js';
-import { elementHasAncestor } from '../util/elementHasAncestor.js';
+import { nodeHasAncestor } from '../util/nodeHasAncestor.js';
 import { OrangeTwistContext } from './OrangeTwist.js';
 import { animate } from '../util/animate.js';
 import { CSSKeyframes } from '../util/CSSKeyframes.js';
@@ -100,7 +100,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 			rootRef.current &&
 			e.target instanceof Element
 		) {
-			if (!elementHasAncestor(e.target, rootRef.current)) {
+			if (!nodeHasAncestor(e.target, rootRef.current)) {
 				setIsInChangeMode(false);
 			}
 		}
