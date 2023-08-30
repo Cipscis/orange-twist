@@ -54,18 +54,20 @@ export function DayNote(props: DayNoteProps) {
 			// Insert a tab character on tab press
 			if (e.key === 'Tab') {
 				e.preventDefault();
-				// TODO: Handle indentation if text is selected
-				// TODO: Handle un-indentation if text is selected and "Shift" is pressed
 				const selectionStart = textarea.selectionStart;
 				const selectionEnd = textarea.selectionEnd;
 
-				const beforeCaret = textarea.value.substring(0, selectionEnd);
-				const afterCaret = textarea.value.substring(selectionEnd);
-				const insertionString = '\t';
+				const beforeSelection = textarea.value.substring(0, selectionEnd);
+				const afterSelection = textarea.value.substring(selectionEnd);
 
-				textarea.value = `${beforeCaret}${insertionString}${afterCaret}`;
-				textarea.selectionStart = selectionStart + insertionString.length;
-				textarea.selectionEnd = selectionEnd + insertionString.length;
+				const indentation = '\t';
+
+				if (selectionStart === selectionEnd) {
+					// Insert indentation at the caret
+					textarea.value = `${beforeSelection}${indentation}${afterSelection}`;
+					textarea.selectionStart = selectionStart + indentation.length;
+					textarea.selectionEnd = selectionEnd + indentation.length;
+				}
 			}
 		};
 		const textarea = textareaRef.current;
