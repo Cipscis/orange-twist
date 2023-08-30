@@ -81,6 +81,7 @@ export function OrangeTwist() {
 		const lastTaskInput = taskInputs.at(-1);
 		// Focus on the input and select all its text
 		lastTaskInput?.select();
+		lastTaskInput?.scrollIntoView({ behavior: 'smooth' });
 	}, []);
 
 	// After the initial load, focus on the last task each time a new one is created.
