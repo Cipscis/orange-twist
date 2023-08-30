@@ -94,15 +94,16 @@ function mergeDayData(
 		newDataClone.tasks = newDayData.tasks;
 	} else if (newDataClone.tasks && dayData) {
 		// If we're combining new and old task data, just update tasks with existing data
+		const newDayTasks = Array.from(dayData.tasks);
 		for (const newTask of newDataClone.tasks) {
-			const taskIndex = dayData.tasks.findIndex(({ id }) => id === newTask.id);
+			const taskIndex = newDayTasks.findIndex(({ id }) => id === newTask.id);
 			if (taskIndex === -1) {
-				dayData.tasks.push(newTask);
+				newDayTasks.push(newTask);
 			} else {
-				dayData.tasks[taskIndex] = newTask;
+				newDayTasks[taskIndex] = newTask;
 			}
 		}
-		newDataClone.tasks = dayData.tasks;
+		newDataClone.tasks = newDayTasks;
 	}
 
 	const updatedData = {
@@ -118,6 +119,7 @@ interface SetDayDataOptions extends MergeDayDataOptions {
 	/** @default true */
 	shouldCallListeners?: boolean;
 }
+
 /**
  * Set data for a given day. If no data exists
  * for this day yet, it will be added.
