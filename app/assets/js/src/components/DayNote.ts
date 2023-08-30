@@ -12,6 +12,7 @@ import {
 import { Markdown, MarkdownProps } from './Markdown.js';
 import { Day } from '../types/Day.js';
 import { OrangeTwistContext } from './OrangeTwist.js';
+import { nodeHasAncestor } from '../util/nodeHasAncestor.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -27,6 +28,7 @@ export function DayNote(props: DayNoteProps) {
 	const api = useContext(OrangeTwistContext);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const displayNoteRef = useRef<HTMLElement>(null);
 
 	const [isEditing, setIsEditing] = useState(false);
 
@@ -77,6 +79,30 @@ export function DayNote(props: DayNoteProps) {
 		setDayData(dayName, { note });
 	}, []);
 
+	const clickHandler = useCallback(function (e: MouseEvent) {
+		const selection = getSelection();
+		const hasSelection = selection?.isCollapsed === false;
+
+		if (!hasSelection) {
+			// If there's nothing selected, enter edit mode
+			setIsEditing(true);
+			return;
+		}
+
+		const selectionFocus = selection?.focusNode;
+		const displayNote = displayNoteRef.current;
+		const selectionInDisplayNote = selectionFocus &&
+			displayNote &&
+			nodeHasAncestor(selectionFocus, displayNote);
+
+		// If selected text ends within the display note, don't enter edit mode
+		if (selectionInDisplayNote) {
+			return;
+		}
+
+		setIsEditing(true);
+	}, []);
+
 	return html`
 		${isEditing
 			? html`
@@ -91,12 +117,17 @@ export function DayNote(props: DayNoteProps) {
 				</div>
 			`
 			: html`
-				<${Markdown}
-					...${{
-						content: day.note,
-					} as MarkdownProps}
-					onClick="${() => setIsEditing(true)}"
-				/>
+				<div
+					class="day__note-display-content"
+					ref="${displayNoteRef}"
+				>
+					<${Markdown}
+						...${{
+							content: day.note,
+						} as MarkdownProps}
+						onClick="${clickHandler}"
+					/>
+				</div>
 			`
 		}
 	`;
