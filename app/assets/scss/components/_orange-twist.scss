@@ -85,12 +85,7 @@
 .orange-twist__error {}
 
 .orange-twist__task-list {
-	@extend %list-reset;
-
 	margin-block: 1rem;
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
 }
 
 .orange-twist__save {
