@@ -1,13 +1,14 @@
 import { h } from 'preact';
 import htm from 'htm';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useContext } from 'preact/hooks';
 
 import { Day } from '../types/Day.js';
-import { deleteDay } from '../registers/days/index.js';
-import { getTaskData } from '../registers/tasks/index.js';
+
+import { deleteDay, setDayData } from '../registers/days/index.js';
+import { OrangeTwistContext } from './OrangeTwist.js';
 
 import { DayNote, DayNoteProps } from './DayNote.js';
-import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
+import { TaskList } from './TaskList.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -20,12 +21,31 @@ export function DayComponent(props: DayProps) {
 	const { day } = props;
 	const { dayName } = day;
 
+	const api = useContext(OrangeTwistContext);
+
 	const removeDay = useCallback((dayName: string) => {
 		if (!window.confirm('Are you sure?')) {
 			return;
 		}
 
 		deleteDay(dayName);
+	}, []);
+
+	const reorderTasks = useCallback((taskIds: number[]) => {
+		const newTaskIndexById = Object.fromEntries(taskIds.map((id, index) => [id, index]));
+
+		const newTasks: Day['tasks'] = [];
+		for (const task of day.tasks.values()) {
+			const newIndex = newTaskIndexById[task.id];
+			newTasks[newIndex] = task;
+		}
+
+		setDayData(day.dayName, {
+			tasks: newTasks,
+		}, {
+			overwriteTasks: true,
+		});
+		api.save();
 	}, []);
 
 	const dayNoteProps: DayNoteProps = { day };
@@ -45,23 +65,11 @@ export function DayComponent(props: DayProps) {
 
 		${
 			day.tasks.length > 0 &&
-			html`<div class="day__tasks">
-				${day.tasks.map((task) => {
-					const taskData = getTaskData(task.id);
-					if (!taskData) {
-						return '';
-					}
-
-					const taskComponentProps: TaskComponentProps = {
-						task: { ...taskData, ...task },
-						dayName,
-					};
-					return html`<${TaskComponent}
-						key="${taskData.id}"
-						...${taskComponentProps}
-					/>`;
-				})}
-			</div>`
+			html`<${TaskList}
+				tasks="${day.tasks}"
+				dayName="${day.dayName}"
+				onReorder="${reorderTasks}"
+			/>`
 		}
 	</div>`;
 }

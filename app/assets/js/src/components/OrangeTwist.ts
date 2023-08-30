@@ -11,15 +11,16 @@ import classNames from 'classnames';
 
 import { isValidDateString } from '../util/isValidDateString.js';
 
-import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
+import { TaskStatus } from '../types/TaskStatus.js';
 
 import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
-import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
-import { toast } from './Toast.js';
-import { TaskStatus } from '../types/TaskStatus.js';
-import { CommandPalette } from './CommandPalette.js';
 import { addCommandListener, removeCommandListener } from '../registers/commands/index.js';
+
+import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
+import { toast } from './Toast.js';
+import { CommandPalette } from './CommandPalette.js';
+import { TaskList } from './TaskList.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -248,6 +249,7 @@ export function OrangeTwist() {
 						'orange-twist__section--loading': isTasksLoading,
 					})}"
 					aria-busy="${isTasksLoading || null}"
+					ref="${unfinishedTasksListRef}"
 				>
 					<h2 class="orange-twist__title">Tasks</h2>
 
@@ -263,25 +265,10 @@ export function OrangeTwist() {
 						tasks &&
 
 						html`
-							<!-- TODO: Reduce duplication -->
-							<ul
-								class="orange-twist__task-list"
-								ref="${unfinishedTasksListRef}"
-							>
-								${tasks.map(
-									(task) => {
-										const taskProps: TaskComponentProps = { task };
-
-										if (task.status === TaskStatus.COMPLETED) {
-											return '';
-										}
-
-										return html`<li
-											key="${task.id}"
-										><${TaskComponent} ...${taskProps} /></li>`;
-									}
-								)}
-							</ul>
+							<${TaskList}
+								tasks="${tasks.filter((task) => task.status !== TaskStatus.COMPLETED)}"
+								className="orange-twist__task-list"
+							/>
 
 							<button
 								type="button"
@@ -301,21 +288,10 @@ export function OrangeTwist() {
 								<h2 class="orange-twist__title">Completed tasks</h2>
 							</summary>
 
-							<ul class="orange-twist__task-list">
-								${tasks.map(
-									(task) => {
-										const taskProps: TaskComponentProps = { task };
-
-										if (task.status !== TaskStatus.COMPLETED) {
-											return '';
-										}
-
-										return html`<li
-											key="${task.id}"
-										><${TaskComponent} ...${taskProps} /></li>`;
-									}
-								)}
-							</ul>
+							<${TaskList}
+								tasks="${tasks.filter((task) => task.status === TaskStatus.COMPLETED)}"
+								className="orange-twist__task-list"
+							/>
 						</details>
 					`
 				}

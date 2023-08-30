@@ -84,9 +84,3 @@
 .day__note-done {
 	@extend %icon-button;
 }
-
-.day__tasks {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-}

@@ -67,6 +67,11 @@ export function getAllDaysData(): ReadonlyArray<[dayName: string, dayData: Reado
 	return Array.from(daysRegister.entries());
 }
 
+interface MergeDayDataOptions {
+	/** @default false */
+	overwriteTasks?: boolean;
+}
+
 /**
  * Merge deeply partial day data with existing day data, if present, and fill in any
  * blanks using a set of hard-coded defaults.
@@ -74,7 +79,8 @@ export function getAllDaysData(): ReadonlyArray<[dayName: string, dayData: Reado
 function mergeDayData(
 	dayName: string,
 	dayData: Day | null,
-	newDayData: DeepPartial<Omit<Day, 'date'>> & Partial<Pick<Day, 'tasks'>>
+	newDayData: DeepPartial<Omit<Day, 'date'>> & Partial<Pick<Day, 'tasks'>>,
+	options?: MergeDayDataOptions
 ): Day {
 	const defaultDayData: Day = {
 		dayName,
@@ -84,8 +90,10 @@ function mergeDayData(
 
 	const newDataClone = structuredClone(newDayData);
 
-	// If we're combining new and old task data, just update tasks with existing data
-	if (newDataClone.tasks && dayData) {
+	if (options?.overwriteTasks && newDayData.tasks) {
+		newDataClone.tasks = newDayData.tasks;
+	} else if (newDataClone.tasks && dayData) {
+		// If we're combining new and old task data, just update tasks with existing data
 		for (const newTask of newDataClone.tasks) {
 			const taskIndex = dayData.tasks.findIndex(({ id }) => id === newTask.id);
 			if (taskIndex === -1) {
@@ -106,9 +114,9 @@ function mergeDayData(
 	return updatedData;
 }
 
-interface SetDayDataOptions {
+interface SetDayDataOptions extends MergeDayDataOptions {
 	/** @default true */
-	shouldCallListeners: boolean;
+	shouldCallListeners?: boolean;
 }
 /**
  * Set data for a given day. If no data exists
@@ -125,7 +133,7 @@ export function setDayData(
 
 	const day = daysRegister.get(dayName) ?? null;
 
-	const updatedData = mergeDayData(dayName, day, data);
+	const updatedData = mergeDayData(dayName, day, data, options);
 	daysRegister.set(dayName, updatedData);
 
 	if (options?.shouldCallListeners ?? true) {

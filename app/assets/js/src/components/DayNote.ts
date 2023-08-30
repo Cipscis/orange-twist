@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import htm from 'htm';
 
-import { setDayData } from '../registers/days/index.js';
 import {
 	useCallback,
 	useContext,
@@ -9,10 +8,15 @@ import {
 	useRef,
 	useState,
 } from 'preact/hooks';
+
 import { Markdown, MarkdownProps } from './Markdown.js';
+
 import { Day } from '../types/Day.js';
-import { OrangeTwistContext } from './OrangeTwist.js';
+
 import { nodeHasAncestor } from '../util/nodeHasAncestor.js';
+
+import { setDayData } from '../registers/days/index.js';
+import { OrangeTwistContext } from './OrangeTwist.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
