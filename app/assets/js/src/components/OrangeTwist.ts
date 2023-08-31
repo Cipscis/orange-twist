@@ -2,6 +2,7 @@ import { createContext, h } from 'preact';
 import {
 	useCallback,
 	useEffect,
+	useMemo,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -75,20 +76,18 @@ export function OrangeTwist() {
 
 	const [newTasksCreated, setNewTasksCreated] = useState(0);
 
-	const focusOnLastUnfinishedTask = useCallback(() => {
+	// After the initial load, focus on the last task each time a new one is created.
+	useEffect(() => {
+		if (newTasksCreated  === 0) {
+			return;
+		}
+
 		// TODO: Is this the best way to find the right element to focus on?
 		const taskInputs = Array.from(unfinishedTasksListRef.current?.querySelectorAll('input') ?? []);
 		const lastTaskInput = taskInputs.at(-1);
 		// Focus on the input and select all its text
 		lastTaskInput?.select();
 		lastTaskInput?.scrollIntoView({ behavior: 'smooth' });
-	}, []);
-
-	// After the initial load, focus on the last task each time a new one is created.
-	useEffect(() => {
-		if (newTasksCreated > 0) {
-			focusOnLastUnfinishedTask();
-		}
 	}, [newTasksCreated]);
 
 	const addNewTaskUI = useCallback(() => {
@@ -110,40 +109,52 @@ export function OrangeTwist() {
 	const autosaveTimeout = useRef<number | null>(null);
 
 	/**
+	 * Save all day and task data, while giving the user feedback,
+	 * then queue up a fresh autosave timer.
+	 */
+	const saveData = useCallback(
+		async () => {
+			const toastId = `saving-${crypto.randomUUID()}`;
+
+			// TODO: Show a nicer loader
+			toast('Saving...', {
+				id: toastId,
+			});
+			await Promise.all([
+				saveDays(),
+				saveTasks(),
+			]);
+			toast('Saved', {
+				duration: 2000,
+				id: toastId,
+			});
+
+			// Reset autosave timeout
+			if (autosaveTimeout.current !== null) {
+				window.clearTimeout(autosaveTimeout.current);
+			}
+			queueAutosave();
+		},
+		// This function never changes - it would have a circular dependency on `queueAutosave`
+		/* eslint-disable-next-line react-hooks/exhaustive-deps */
+		[]
+	);
+
+	/**
 	 * Start a timeout to automatically save.
 	 */
-	const queueAutosave = useCallback(() => {
-		if (autosaveTimeout.current !== null) {
-			window.clearTimeout(autosaveTimeout.current);
-		}
+	const queueAutosave = useCallback(
+		() => {
+			if (autosaveTimeout.current !== null) {
+				window.clearTimeout(autosaveTimeout.current);
+			}
 
-		autosaveTimeout.current = window.setInterval(() => {
-			saveData();
-		}, autosaveMinutes * 1000 * 60);
-	}, []);
-
-	const saveData = useCallback(async () => {
-		const toastId = `saving-${crypto.randomUUID()}`;
-
-		// TODO: Show a nicer loader
-		toast('Saving...', {
-			id: toastId,
-		});
-		await Promise.all([
-			saveDays(),
-			saveTasks(),
-		]);
-		toast('Saved', {
-			duration: 2000,
-			id: toastId,
-		});
-
-		// Reset autosave timeout
-		if (autosaveTimeout.current !== null) {
-			window.clearTimeout(autosaveTimeout.current);
-		}
-		queueAutosave();
-	}, []);
+			autosaveTimeout.current = window.setInterval(() => {
+				saveData();
+			}, autosaveMinutes * 1000 * 60);
+		},
+		[saveData]
+	);
 
 	/**
 	 * Queue autosave on initial render
@@ -156,7 +167,7 @@ export function OrangeTwist() {
 				window.clearInterval(autosaveTimeout.current);
 			}
 		};
-	}, [saveData]);
+	}, [saveData, queueAutosave]);
 
 	// Set up keyboard shortcuts
 	useEffect(() => {
@@ -188,13 +199,15 @@ export function OrangeTwist() {
 			document.removeEventListener('keydown', addNewTaskOnKeyboardShortcut);
 			document.removeEventListener('keydown', openCommandPaletteOnKeyboardShortcut);
 		};
-	}, []);
+	}, [addNewTaskUI, saveData]);
+
+	const api = useMemo(() => ({
+		save: saveData,
+	}), [saveData]);
 
 	return html`
 		<${OrangeTwistContext.Provider}
-			value="${{
-				save: saveData,
-			}}"
+			value="${api}"
 		>
 			<${CommandPalette}
 				open="${commandPaletteOpen}"

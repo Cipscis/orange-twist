@@ -116,7 +116,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 				document.removeEventListener('keydown', selectActiveDescendant);
 			}
 		};
-	}, [open, activeDescendant]);
+	}, [open, activeDescendant, onClose]);
 
 	return html`
 		${

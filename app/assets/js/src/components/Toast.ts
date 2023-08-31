@@ -46,41 +46,33 @@ export function Toast(props: ToastProps) {
 	} = props;
 
 	const toastRef = useRef<HTMLElement>(null);
+	const timeout = useRef<number | null>(null);
 
-	// Start a timeout for removing the toast. Runs on every render
-	useEffect(
-		() => {
-			let timeout: number | null = null;
+	// Reset the timeout for removing the toast on every render
+	if (timeout.current !== null) {
+		window.clearTimeout(timeout.current);
+		timeout.current = null;
+	}
 
-			if (duration !== null) {
-				// Remove the toast after a timeout
-				timeout = window.setTimeout(async () => {
-					// Animate out
-					if (toastRef.current) {
-						const animation = await animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
-						// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
-						if (animation) {
-							await animation.finished;
-						}
-
-						const toastIndex = toasts.findIndex((toast) => toast.id === id);
-						if (toastIndex !== -1) {
-							toasts.splice(toastIndex, 1);
-							renderToasts();
-						}
-					}
-				}, duration);
-			}
-
-			return () => {
-				if (timeout !== null) {
-					window.clearTimeout(timeout);
+	if (duration !== null) {
+		// Remove the toast after a timeout
+		timeout.current = window.setTimeout(async () => {
+			// Animate out
+			if (toastRef.current) {
+				const animation = await animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
+				// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
+				if (animation) {
+					await animation.finished;
 				}
-			};
-		},
-		// A new object is different on each render, so this will always run
-		[{}]
-	);
+
+				const toastIndex = toasts.findIndex((toast) => toast.id === id);
+				if (toastIndex !== -1) {
+					toasts.splice(toastIndex, 1);
+					renderToasts();
+				}
+			}
+		}, duration);
+	}
 
 	return html`
 		<div
