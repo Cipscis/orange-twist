@@ -48,6 +48,8 @@
 	pre > code {
 		display: block;
 		width: fit-content;
+		max-width: 100%;
+		overflow: auto;
 		tab-size: 4;
 
 		margin-block: calc(2em * var(--line-height));
