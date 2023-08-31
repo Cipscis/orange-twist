@@ -67,6 +67,7 @@ export function TaskComponent(props: TaskComponentProps) {
 						<input
 							type="text"
 							value="${name}"
+							placeholder="Task name"
 							size="1"
 							onInput="${nameChangeHandler}"
 							onKeydown="${enterHandler}"

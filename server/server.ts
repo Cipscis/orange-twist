@@ -14,10 +14,10 @@ if (projectName) {
 	// This breaks root-relative URLs, so instead use "/projectname/path/" locally
 	// and resolve it by redirecting it here to a root relative path.
 
-	let ghPagesPathPattern = new RegExp(`^/${projectName}/`, 'i');
+	const ghPagesPathPattern = new RegExp(`^/${projectName}/`, 'i');
 	app.get(ghPagesPathPattern, (req, res) => {
-		let url = req.url.replace(ghPagesPathPattern, '/');
-		url = `http://${req.headers.host}${url}`;
+		const path = req.url.replace(ghPagesPathPattern, '/');
+		const url = `http://${req.headers.host}${path}`;
 
 		res.redirect(url);
 	});
