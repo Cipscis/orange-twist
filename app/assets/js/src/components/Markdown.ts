@@ -30,7 +30,11 @@ export function Markdown(props: MarkdownProps) {
 		const renderedContent = marked
 			.parse(content, { mangle: false, headerIds: false })
 			// Stupid fucking plugin replaces tabs with spaces
-			.replace(/ {4}/g, '\t');
+			.replace(/ {4}/g, '\t')
+			// To allow HTML tags to be written as text in task names, I
+			// replace `<` with `&lt;`, so reverse it (this means if I were
+			// type "&amp;lt;" in a task name it would become "<" but that's fine)
+			.replace(/&amp;lt;/g, '&lt;');
 		wrapper.setHTML(renderedContent);
 	}, [content]);
 
