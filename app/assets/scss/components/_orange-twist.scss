@@ -1,6 +1,8 @@
 .orange-twist {
-	display: grid;
-	grid-template-columns: minmax(var(--layout-gutter), 1fr) fit-content(var(--layout-max-width)) minmax(var(--layout-gutter), 1fr);
+	width: 100%;
+	max-width: var(--layout-max-width);
+	padding-inline: var(--layout-gutter);
+	margin-inline: auto;
 
 	padding-block: 1rem;
 }

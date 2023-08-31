@@ -49,5 +49,7 @@
 		display: block;
 		width: fit-content;
 		tab-size: 4;
+
+		margin-block: calc(2em * var(--line-height));
 	}
 }
