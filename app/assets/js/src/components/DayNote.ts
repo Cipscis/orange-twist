@@ -45,7 +45,7 @@ export function DayNote(props: DayNoteProps) {
 			api.save();
 			dirtyFlag.current = false;
 		}
-	}, []);
+	}, [api]);
 
 	// Set up event listeners to stop editing, and move focus
 	// into textarea when we start editing.
@@ -103,7 +103,7 @@ export function DayNote(props: DayNoteProps) {
 				textarea.removeEventListener('keydown', keydownHandler);
 			}
 		};
-	}, [isEditing]);
+	}, [isEditing, saveChanges]);
 
 	const inputHandler = useCallback(function (e: InputEvent) {
 		const textarea = e.target;
@@ -114,7 +114,7 @@ export function DayNote(props: DayNoteProps) {
 		const note = textarea.value;
 		setDayData(dayName, { note });
 		dirtyFlag.current = true;
-	}, []);
+	}, [dayName]);
 
 	const clickHandler = useCallback(function (e: MouseEvent) {
 		const selection = getSelection();

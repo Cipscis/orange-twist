@@ -66,6 +66,9 @@
 		@include contrast-primary;
 		resize: none;
 		overflow: hidden;
+		border: 0;
+
+		@include font-base-body;
 	}
 }
 

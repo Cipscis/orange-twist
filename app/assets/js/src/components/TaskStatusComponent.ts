@@ -66,7 +66,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		setTaskData(id, { status: newStatus }, { dayName });
 		setIsInChangeMode(false);
 		api.save();
-	}, []);
+	}, [api, dayName, id, setIsInChangeMode]);
 
 	/**
 	 * Ask for confirmation, then delete the task
@@ -79,7 +79,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		deleteTask(id);
 		setIsInChangeMode(false);
 		api.save();
-	}, []);
+	}, [api, id, setIsInChangeMode]);
 
 	// TODO: Turn the selector part into a custom element, using shadow DOM
 
@@ -90,7 +90,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		if (e.key === 'Escape') {
 			setIsInChangeMode(false);
 		}
-	}, []);
+	}, [setIsInChangeMode]);
 
 	/**
 	 * Detect if a click was outside the component. If it was, exit change mode.
@@ -104,7 +104,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 				setIsInChangeMode(false);
 			}
 		}
-	}, []);
+	}, [setIsInChangeMode]);
 
 	// Set up event listeners for exiting change mode.
 	useEffect(() => {
@@ -117,7 +117,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 			document.removeEventListener('keydown', exitChangeModeOnEscape);
 			document.removeEventListener('click', exitChangeModeOnOutsideClick);
 		};
-	}, [isInChangeMode]);
+	}, [isInChangeMode, exitChangeModeOnEscape, exitChangeModeOnOutsideClick]);
 
 	return html`
 		<span

@@ -46,7 +46,7 @@ export function DayComponent(props: DayProps) {
 			overwriteTasks: true,
 		});
 		api.save();
-	}, [day.tasks]);
+	}, [day.tasks, day.dayName, api]);
 
 	const dayNoteProps: DayNoteProps = { day };
 

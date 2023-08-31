@@ -34,7 +34,7 @@ export function TaskComponent(props: TaskComponentProps) {
 			api.save();
 			dirtyFlag.current = false;
 		}
-	}, []);
+	}, [api]);
 
 	const nameChangeHandler = useCallback((e: InputEvent) => {
 		const input = e.target;
@@ -45,7 +45,7 @@ export function TaskComponent(props: TaskComponentProps) {
 		const name = input.value;
 		setTaskData(id, { name }, { dayName });
 		dirtyFlag.current = true;
-	}, []);
+	}, [dayName, id]);
 
 	const enterHandler = useCallback((e: KeyboardEvent) => {
 		if (e.key === 'Enter' && e.target instanceof HTMLElement) {
