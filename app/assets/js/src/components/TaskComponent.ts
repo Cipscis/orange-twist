@@ -63,7 +63,7 @@ export function TaskComponent(props: TaskComponentProps) {
 					<div
 						class="task__name"
 					>
-						<${Markdown} content="${name}" class="task__name-markdown content" />
+						<${Markdown} content="${name.replace(/</g, '&lt;')}" class="task__name-markdown content" />
 						<input
 							type="text"
 							value="${name}"
