@@ -227,6 +227,24 @@ export function addNewTask(name?: string): number {
 	return task.id;
 }
 
+/**
+ * Rearranges specified tasks and places them at the end of the map.
+ */
+export function reorderTasks(ids: number[]): void {
+	const reorderedTasks = ids
+		.map((id) => getTaskData(id))
+		.filter(
+			(task): task is NonNullable<typeof task> => Boolean(task)
+		);
+
+	for (const task of reorderedTasks) {
+		tasksRegister.delete(task.id);
+		tasksRegister.set(task.id, task);
+	}
+
+	callListeners();
+}
+
 function callListeners() {
 	const tasks = getTasks();
 	for (const listener of tasksChangeListeners) {

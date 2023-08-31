@@ -22,6 +22,7 @@ import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 import { toast } from './Toast.js';
 import { CommandPalette } from './CommandPalette.js';
 import { TaskList } from './TaskList.js';
+import { reorderTasks } from '../registers/tasks/tasksRegister.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -201,6 +202,11 @@ export function OrangeTwist() {
 		};
 	}, [addNewTaskUI, saveData]);
 
+	const onOpenTasksReorder = useCallback((taskIds: number[]) => {
+		reorderTasks(taskIds);
+		saveData();
+	}, [saveData]);
+
 	const api = useMemo(() => ({
 		save: saveData,
 	}), [saveData]);
@@ -281,6 +287,7 @@ export function OrangeTwist() {
 						html`
 							<${TaskList}
 								tasks="${tasks.filter((task) => task.status !== TaskStatus.COMPLETED)}"
+								onReorder="${onOpenTasksReorder}"
 								className="orange-twist__task-list"
 							/>
 
