@@ -90,10 +90,15 @@ export function DayNote(props: DayNoteProps) {
 				textarea.addEventListener('blur', exitEditingModeOnTextareaBlur);
 				textarea.addEventListener('keydown', keydownHandler);
 
+				const scrollTop = window.scrollY;
 				textarea.focus();
 				// Move the caret to the end
 				const end = textarea.value.length;
 				textarea.setSelectionRange(end, end);
+				window.scrollTo({
+					top: scrollTop,
+					behavior: 'instant',
+				});
 			}
 		}
 
