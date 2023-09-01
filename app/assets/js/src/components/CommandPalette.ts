@@ -16,7 +16,7 @@ const html = htm.bind(h);
 interface CommandPaletteProps {
 	open: boolean;
 
-	onClose?: () => void;
+	onClose: () => void;
 }
 
 export function CommandPalette(props: CommandPaletteProps) {
@@ -55,7 +55,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 	// Handle opening, closing, and active descendant management.
 	useEffect(() => {
 		const closeOnEscape = (e: KeyboardEvent) => {
-			if (e.key === 'Escape' && onClose) {
+			if (e.key === 'Escape') {
 				onClose();
 			}
 		};
@@ -140,6 +140,8 @@ export function CommandPalette(props: CommandPaletteProps) {
 									// This type assertion is safe because we know the event fired on an input
 									setQuery((e.target as HTMLInputElement).value);
 								}}"
+
+								onBlur="${onClose}"
 							/>
 						</div>
 						<div
