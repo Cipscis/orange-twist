@@ -4,6 +4,7 @@ declare module '../commandsRegister.js' {
 	interface CommandsList {
 		'add-new-task': {
 			name: 'Add new task';
+			arguments: [dayName: string];
 		};
 	}
 }

@@ -16,7 +16,7 @@ import { TaskStatus } from '../types/TaskStatus.js';
 
 import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
-import { addCommandListener, removeCommandListener } from '../registers/commands/index.js';
+import { useCommand } from '../registers/commands/hooks/useCommand.js';
 
 import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 import { toast } from './Toast.js';
@@ -48,6 +48,7 @@ export function OrangeTwist() {
 		error: tasksError,
 	} = useTasks();
 
+	const daySectionsRef = useRef<Record<string, HTMLElement>>({});
 	const unfinishedTasksListRef = useRef<HTMLElement>(null);
 
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -76,6 +77,7 @@ export function OrangeTwist() {
 	}, [days]);
 
 	const [newTasksCreated, setNewTasksCreated] = useState(0);
+	const [newTaskCreatedDayName, setNewTaskCreatedDayName] = useState<string | null>(null);
 
 	// After the initial load, focus on the last task each time a new one is created.
 	useEffect(() => {
@@ -83,26 +85,37 @@ export function OrangeTwist() {
 			return;
 		}
 
+		const taskListWrapper = (() => {
+			if (newTaskCreatedDayName === null) {
+				return unfinishedTasksListRef.current;
+			}
+
+			return daySectionsRef.current?.[newTaskCreatedDayName];
+		})();
+
+		if (!taskListWrapper) {
+			return;
+		}
+
 		// TODO: Is this the best way to find the right element to focus on?
-		const taskInputs = Array.from(unfinishedTasksListRef.current?.querySelectorAll('input') ?? []);
+		const taskInputs = Array.from(taskListWrapper.querySelectorAll('input') ?? []);
 		const lastTaskInput = taskInputs.at(-1);
+
 		// Focus on the input and select all its text
 		lastTaskInput?.select();
-		lastTaskInput?.scrollIntoView({ behavior: 'smooth' });
-	}, [newTasksCreated]);
+		lastTaskInput?.scrollIntoView({
+			block: 'center',
+			behavior: 'smooth',
+		});
+	}, [newTasksCreated, newTaskCreatedDayName]);
 
-	const addNewTaskUI = useCallback(() => {
+	const addNewTaskUI = useCallback((dayName?: string) => {
 		addNewTask();
 		setNewTasksCreated((oldValue) => oldValue + 1);
+		setNewTaskCreatedDayName(dayName ?? null);
 	}, []);
 
-	useEffect(() => {
-		addCommandListener('add-new-task', addNewTaskUI);
-
-		return () => {
-			removeCommandListener('add-new-task', addNewTaskUI);
-		};
-	}, [addNewTaskUI]);
+	useCommand('add-new-task', addNewTaskUI);
 
 	/**
 	 * How many minutes should pass between each autosave.
@@ -249,6 +262,7 @@ export function OrangeTwist() {
 								return html`
 									<${DayComponent}
 										key="${day.dayName}"
+										ref="${(ref: HTMLElement) => daySectionsRef.current[day.dayName] = ref}"
 										...${dayProps}
 									/>
 								`;
@@ -294,7 +308,7 @@ export function OrangeTwist() {
 							<button
 								type="button"
 								class="button"
-								onClick="${addNewTaskUI}"
+								onClick="${() => addNewTaskUI()}"
 							>Add new task</button>
 						`
 					}

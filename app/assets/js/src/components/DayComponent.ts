@@ -1,10 +1,14 @@
 import { h } from 'preact';
-import htm from 'htm';
 import { useCallback, useContext } from 'preact/hooks';
+import { forwardRef } from 'preact/compat';
+
+import htm from 'htm';
 
 import { Day } from '../types/Day.js';
 
 import { deleteDay, setDayData } from '../registers/days/index.js';
+import { fireCommand } from '../registers/commands/commandsRegister.js';
+
 import { OrangeTwistContext } from './OrangeTwist.js';
 
 import { DayNote, DayNoteProps } from './DayNote.js';
@@ -17,7 +21,7 @@ export interface DayProps {
 	day: Readonly<Day>;
 }
 
-export function DayComponent(props: DayProps) {
+export const DayComponent = forwardRef(function DayComponent(props: DayProps, ref: React.ForwardedRef<HTMLElement>) {
 	const { day } = props;
 	const { dayName } = day;
 
@@ -50,26 +54,37 @@ export function DayComponent(props: DayProps) {
 
 	const dayNoteProps: DayNoteProps = { day };
 
-	return html`<div class="day">
-		<h3 class="day__heading">${day.dayName}</h3>
+	return html`
+		<div
+			class="day"
+			ref="${ref}"
+		>
+			<h3 class="day__heading">${day.dayName}</h3>
 
-		<button
-			type="button"
-			class="button"
-			onClick="${() => removeDay(dayName)}"
-		>Remove day</button>
+			<button
+				type="button"
+				class="button"
+				onClick="${() => removeDay(dayName)}"
+			>Remove day</button>
 
-		<div class="day__note">
-			<${DayNote} ...${dayNoteProps} />
+			<div class="day__note">
+				<${DayNote} ...${dayNoteProps} />
+			</div>
+
+			${
+				day.tasks.length > 0 &&
+				html`<${TaskList}
+					tasks="${day.tasks}"
+					dayName="${day.dayName}"
+					onReorder="${reorderTasks}"
+				/>`
+			}
+
+			<button
+				type="button"
+				class="button"
+				onClick="${() => fireCommand('add-new-task', dayName)}"
+			>Add new task</button>
 		</div>
-
-		${
-			day.tasks.length > 0 &&
-			html`<${TaskList}
-				tasks="${day.tasks}"
-				dayName="${day.dayName}"
-				onReorder="${reorderTasks}"
-			/>`
-		}
-	</div>`;
-}
+	`;
+});

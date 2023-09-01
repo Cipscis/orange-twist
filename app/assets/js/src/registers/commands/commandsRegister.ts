@@ -1,3 +1,7 @@
+// Type-only import to make symbol available to JSDoc
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+import type { useCommand } from './hooks/useCommand.js';
+
 import { newCommandRegisteredListeners } from './listeners/onNewCommandRegistered.js';
 
 /**
@@ -14,6 +18,7 @@ import { newCommandRegisteredListeners } from './listeners/onNewCommandRegistere
  *     interface CommandsList {
  *         ['my-command-id']: {
  *             name: 'MyCommandName';
+ *             arguments: [argName: string];
  *         };
  *     }
  * }
@@ -24,14 +29,16 @@ export interface CommandsList {
 	// Commands are added here in place where they are registered
 }
 
-type CommandId = keyof CommandsList;
+export type CommandId = keyof CommandsList;
 
 export type Command<C extends CommandId = CommandId> = {
 	id: C;
 	name: CommandsList[C]['name'];
 };
 
-type CommandListener = () => void;
+export type CommandArgs<C extends CommandId = CommandId> = CommandsList[C]['arguments'] | [];
+
+export type CommandListener<C extends CommandId = CommandId> = (...args: CommandArgs<C>) => void;
 
 const commandsRegister = new Map<
 	CommandId,
@@ -49,6 +56,8 @@ const commandsRegister = new Map<
  *
  * Once a command has been registered, listeners can be bound to it via
  * {@linkcode addCommandListener} and the command can be first via {@linkcode fireCommand}.
+ *
+ * @see {@linkcode useCommand} for binding events in a Preact context.
  */
 export function registerCommand<C extends CommandId>(command: Command<C>): void {
 	commandsRegister.set(command.id, {
@@ -101,7 +110,7 @@ export function removeCommandListener<C extends CommandId>(id: C, listener: Comm
 	listeners.splice(listenerIndex, 1);
 }
 
-export function fireCommand<C extends CommandId>(id: C): void {
+export function fireCommand<C extends CommandId>(id: C, ...args: CommandArgs<C>): void {
 	const command = commandsRegister.get(id);
 	if (!command) {
 		throw new RangeError(`Cannot fire unregistered command ${id}`);
@@ -109,6 +118,6 @@ export function fireCommand<C extends CommandId>(id: C): void {
 
 	const { listeners } = command;
 	for (const listener of listeners) {
-		listener();
+		listener(...args);
 	}
 }

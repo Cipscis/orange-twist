@@ -1,26 +1,34 @@
 .day {
 	margin: 2rem 0;
+	display: grid;
+	justify-items: start;
+	grid-template-columns: 1fr;
+	gap: 1rem;
 
 	isolation: isolate;
 }
 
 .day__heading {
 	@include font-heading-3;
-	padding-bottom: 0.2em;
+	@include contrast-primary;
 
 	position: sticky;
 	z-index: 2;
 	top: 0;
-	@include contrast-primary;
+
+	width: 100%;
+
+	padding-bottom: 0.2em;
 }
 
 .day__note {
 	@include font-base-body;
 
+	width: 100%;
+
 	position: relative;
 	--_gutter: 0.5em;
 
-	margin-block: 1rem;
 	// TODO: Make this more robust
 	// Button height + button offset + border
 	min-height: calc(2em + 12px);
