@@ -53,12 +53,12 @@ export function OrangeTwist() {
 
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
-	const addNewDay = useCallback(() => {
+	const addNewDay = useCallback((dayNameArg?: string) => {
 		if (!days) {
 			return;
 		}
 
-		const dayName = window.prompt('What day?');
+		const dayName = dayNameArg ?? window.prompt('What day?');
 		if (!dayName) {
 			return;
 		}
@@ -75,6 +75,8 @@ export function OrangeTwist() {
 
 		setDayData(dayName, {});
 	}, [days]);
+
+	useCommand('add-new-day', addNewDay);
 
 	const [newTasksCreated, setNewTasksCreated] = useState(0);
 	const [newTaskCreatedDayName, setNewTaskCreatedDayName] = useState<string | null>(null);
@@ -271,7 +273,7 @@ export function OrangeTwist() {
 							<button
 								type="button"
 								class="button"
-								onClick="${addNewDay}"
+								onClick="${() => addNewDay()}"
 							>Add day</button>
 						`
 					}
