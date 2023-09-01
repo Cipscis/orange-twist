@@ -3,6 +3,8 @@ import { DeepPartial } from '@cipscis/ts-toolbox';
 import { Task } from '../../types/Task.js';
 import { TaskStatus } from '../../types/TaskStatus.js';
 
+import { getCurrentDateDayName } from '../../util/getCurrentDateDayName.js';
+
 import { tasksChangeListeners } from './listeners/onTasksChange.js';
 import { loadTasks } from './persistence/loadTasks.js';
 import { formatDate } from '../../formatters/date.js';
@@ -126,6 +128,7 @@ export function setTaskData(
 	const oldTaskData = {
 		...task,
 	};
+
 	if (options?.dayName) {
 		const dayData = days.find(({ dayName }) => dayName === options.dayName);
 		if (dayData) {
@@ -166,7 +169,7 @@ export function setTaskData(
 	callListeners();
 
 	if (oldTaskData.status !== updatedData.status) {
-		const dayName = options?.dayName || formatDate(new Date());
+		const dayName = options?.dayName || getCurrentDateDayName();
 		setDayData(
 			dayName,
 			{

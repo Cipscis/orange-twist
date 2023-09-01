@@ -1,10 +1,9 @@
 import { DeepPartial } from '@cipscis/ts-toolbox';
 
-import { formatDate } from '../../formatters/date.js';
-
 import { Day } from '../../types/Day.js';
 
 import { isValidDateString } from '../../util/isValidDateString.js';
+import { getCurrentDateDayName } from '../../util/getCurrentDateDayName.js';
 
 import { daysChangeListeners } from './listeners/onDaysChange.js';
 
@@ -29,9 +28,8 @@ export async function loadDaysData(): Promise<ReadonlyArray<Readonly<Day>>> {
 		loadDaysDataPromise = new Promise<ReadonlyArray<Readonly<Day>>>((resolve, reject) => {
 			loadDays()
 				.then((persistedDays) => {
-					// Initialise register with an empty day for today
 					setDayData(
-						formatDate(new Date()),
+						getCurrentDateDayName(),
 						{},
 						{ shouldCallListeners: false }
 					);
