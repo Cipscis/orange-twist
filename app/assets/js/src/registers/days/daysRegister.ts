@@ -1,4 +1,4 @@
-import { DeepPartial } from '@cipscis/ts-toolbox';
+import { DeepPartial } from '../../util/DeepPartial.js';
 
 import { Day } from '../../types/Day.js';
 

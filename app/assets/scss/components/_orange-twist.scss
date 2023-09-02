@@ -76,7 +76,7 @@
 		border-top-color: currentColor;
 
 		@container style(--theme: dark) {
-			filter: drop-shadow(0 0 0.15em color-mix(in srgb, var(--accent), white));
+			filter: drop-shadow(0 0 0.15em color-mix(in sRGB, var(--accent), white));
 		}
 		@container style(--theme: light) {
 			filter: drop-shadow(0 0 0.15em var(--accent));
