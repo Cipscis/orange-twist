@@ -51,7 +51,7 @@ export function getCommands(): ReadonlyArray<Readonly<Command>> {
 /**
  * Fire a command, optionally passing any arguments its listeners accept as subsequent arguments.
  */
-export function fireCommand<C extends CommandId>(id: C, ...args: CommandsList[C]): void {
+export function fireCommand<C extends CommandId>(id: C, ...args: CommandsList[C] | []): void {
 	const command = commandsRegister.get(id);
 	if (!command) {
 		throw new RangeError(`Cannot fire unregistered command ${id}`);

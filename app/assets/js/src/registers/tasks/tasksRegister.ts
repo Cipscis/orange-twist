@@ -79,7 +79,7 @@ export function getAllTasksData(): ReadonlyArray<[number, Readonly<Task>]> {
 function mergeTaskData(id: number, task: Task | null, data: DeepPartial<Omit<Task, 'id'>>): Task {
 	const defaultTaskData: Task = {
 		id,
-		name: 'New task',
+		name: '',
 		status: TaskStatus.TODO,
 
 		parent: null,

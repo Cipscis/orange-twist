@@ -4,9 +4,12 @@ import htm from 'htm';
 import { Task } from '../types/Task.js';
 
 import { TaskStatusComponent, TaskStatusComponentProps } from './TaskStatusComponent.js';
-import { useCallback, useRef } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { setTaskData } from '../registers/tasks/index.js';
+import {
+	setTaskData,
+	deleteTask,
+} from '../registers/tasks/index.js';
 import { fireCommand } from '../registers/commands/index.js';
 
 import { Markdown } from './Markdown.js';
@@ -23,18 +26,50 @@ export function TaskComponent(props: TaskComponentProps) {
 	const { task, dayName } = props;
 	const { id, name } = task;
 
-	const dirtyFlag = useRef(false);
+	const previousName = useRef<string | null>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	// Combine a state variable and `useEffect` to blur the input after re-render
+	const [blurOnRenderCount, setBlurOnRenderCount] = useState(0);
+	useEffect(() => {
+		inputRef.current?.blur();
+	}, [blurOnRenderCount]);
 
 	/**
-	 * Save changes if there were any, then clear `dirtyFlag`.
+	 * Blur the input after the component re-renders.
 	 */
-	const saveChanges = useCallback(() => {
-		if (dirtyFlag.current) {
-			fireCommand('save-data');
-			dirtyFlag.current = false;
-		}
+	const blurOnNextRender = useCallback(() => {
+		setBlurOnRenderCount((val) => val + 1);
 	}, []);
 
+	/**
+	 * If there is no task name, delete the task.
+	 *
+	 * Otherwise, if the name has been updated, save changes.
+	 */
+	const saveChanges = useCallback(() => {
+		if (task.name === '') {
+			deleteTask(task.id);
+			if (previousName.current !== '') {
+				fireCommand('save-data');
+			}
+		} else if (previousName.current !== task.name) {
+			fireCommand('save-data');
+		}
+		previousName.current = null;
+	}, [task.name, task.id]);
+
+	// Remember the previous name when the input is focused.
+	const rememberPreviousName = useCallback((e: FocusEvent) => {
+		const input = e.target;
+		if (!(input instanceof HTMLInputElement)) {
+			return;
+		}
+
+		previousName.current = input.value;
+	}, []);
+
+	// Update the name.
 	const nameChangeHandler = useCallback((e: InputEvent) => {
 		const input = e.target;
 		if (!(input instanceof HTMLInputElement)) {
@@ -43,14 +78,27 @@ export function TaskComponent(props: TaskComponentProps) {
 
 		const name = input.value;
 		setTaskData(id, { name }, { dayName });
-		dirtyFlag.current = true;
 	}, [dayName, id]);
 
-	const enterHandler = useCallback((e: KeyboardEvent) => {
-		if (e.key === 'Enter' && e.target instanceof HTMLElement) {
-			e.target.blur();
+	// Blur on "Enter" or "Escape", either committing or discarding changes
+	const keydownHandler = useCallback((e: KeyboardEvent) => {
+		const input = e.target;
+		if (!(input instanceof HTMLInputElement)) {
+			return;
 		}
-	}, []);
+
+		if (e.key === 'Enter') {
+			input.blur();
+			return;
+		}
+
+		if (e.key === 'Escape') {
+			const name = previousName.current ?? '';
+			setTaskData(id, { name }, { dayName });
+			blurOnNextRender();
+			return;
+		}
+	}, [id, dayName]);
 
 	return html`
 		<div class="task">
@@ -64,12 +112,14 @@ export function TaskComponent(props: TaskComponentProps) {
 					>
 						<${Markdown} content="${name.replace(/</g, '&lt;')}" class="task__name-markdown content" />
 						<input
+							ref="${inputRef}"
 							type="text"
 							value="${name}"
 							placeholder="Task name"
 							size="1"
+							onFocus="${rememberPreviousName}"
 							onInput="${nameChangeHandler}"
-							onKeydown="${enterHandler}"
+							onKeydown="${keydownHandler}"
 							onBlur="${saveChanges}"
 						/>
 					</div>
