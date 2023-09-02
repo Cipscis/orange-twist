@@ -120,11 +120,6 @@ export function OrangeTwist() {
 	useCommand('add-new-task', addNewTaskUI);
 
 	/**
-	 * How many minutes should pass between each autosave.
-	 */	const autosaveMinutes = 1;
-	const autosaveTimeout = useRef<number | null>(null);
-
-	/**
 	 * Save all day and task data, while giving the user feedback,
 	 * then queue up a fresh autosave timer.
 	 */
@@ -144,46 +139,9 @@ export function OrangeTwist() {
 				duration: 2000,
 				id: toastId,
 			});
-
-			// Reset autosave timeout
-			if (autosaveTimeout.current !== null) {
-				window.clearTimeout(autosaveTimeout.current);
-			}
-			queueAutosave();
 		},
-		// This function never changes - it would have a circular dependency on `queueAutosave`
-		/* eslint-disable-next-line react-hooks/exhaustive-deps */
 		[]
 	);
-
-	/**
-	 * Start a timeout to automatically save.
-	 */
-	const queueAutosave = useCallback(
-		() => {
-			if (autosaveTimeout.current !== null) {
-				window.clearTimeout(autosaveTimeout.current);
-			}
-
-			autosaveTimeout.current = window.setInterval(() => {
-				saveData();
-			}, autosaveMinutes * 1000 * 60);
-		},
-		[saveData]
-	);
-
-	/**
-	 * Queue autosave on initial render
-	 */
-	useEffect(() => {
-		queueAutosave();
-
-		return () => {
-			if (autosaveTimeout.current !== null) {
-				window.clearInterval(autosaveTimeout.current);
-			}
-		};
-	}, [saveData, queueAutosave]);
 
 	// Set up keyboard shortcuts
 	useEffect(() => {

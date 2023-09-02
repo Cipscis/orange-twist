@@ -8,6 +8,7 @@ import { Task } from '../types/Task.js';
 
 import { getTaskData } from '../registers/tasks/tasksRegister.js';
 import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
+import { nextFrame } from '../util/nextFrame.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -58,7 +59,7 @@ export function TaskList(props: TaskListProps) {
 		}
 
 		// TODO: Don't allow items to be dropped into other lists
-		const dropTarget = e.target.closest<HTMLElement>('[data-drop-target]');
+		const dropTarget = e.target.closest<HTMLElement>('[data-task-list-drop-target]');
 		if (dropTarget) {
 			// Prevent the default "drag over" action to allow drop events
 			e.preventDefault();
@@ -68,7 +69,7 @@ export function TaskList(props: TaskListProps) {
 	/**
 	 * Handle moving an element when dropped, and emiting an event.
 	 */
-	const dropHandler = useCallback((e: DragEvent) => {
+	const dropHandler = useCallback(async (e: DragEvent) => {
 		if (!onReorder) {
 			return;
 		}
@@ -77,7 +78,7 @@ export function TaskList(props: TaskListProps) {
 			return;
 		}
 
-		const dropTarget = e.target.closest('[data-drop-target]');
+		const dropTarget = e.target.closest('[data-task-list-drop-target]');
 		const dropData = e.dataTransfer.getData('text/plain');
 		const draggedElement = document.getElementById(dropData);
 
@@ -86,26 +87,36 @@ export function TaskList(props: TaskListProps) {
 		}
 
 		// Construct a new order of tasks to send to `onReorder`
-		const newTasksOrder = Array.from(itemsRef.current).map((element) => Number(element.dataset.taskId));
-		const dropTargetIndex = (newTasksOrder as unknown[]).indexOf(Number(dropTarget.dataset.taskId));
-		const draggedElementIndex = (newTasksOrder as unknown[]).indexOf(Number(draggedElement.dataset.taskId));
+		const newTasksOrder = Array.from(itemsRef.current).map((element) => Number(element.dataset.taskListItemId));
+		const dropTargetIndex = (newTasksOrder as unknown[]).indexOf(Number(dropTarget.dataset.taskListItemId));
+		const draggedElementIndex = (newTasksOrder as unknown[]).indexOf(Number(draggedElement.dataset.taskListItemId));
 
 		// Move the dragged element
 		if (dropTarget.compareDocumentPosition(draggedElement) === Node.DOCUMENT_POSITION_FOLLOWING) {
 			// Put the dragged element before the drop target
 			// dropTarget.before(draggedElement);
 			newTasksOrder.splice(draggedElementIndex, 1);
-			newTasksOrder.splice(dropTargetIndex, 0, Number(draggedElement.dataset.taskId));
+			newTasksOrder.splice(dropTargetIndex, 0, Number(draggedElement.dataset.taskListItemId));
 		} else {
 			// Put the dragged element after the drop target
 			// dropTarget.after(draggedElement);
-			newTasksOrder.splice(dropTargetIndex + 1, 0, Number(draggedElement.dataset.taskId));
+			newTasksOrder.splice(dropTargetIndex + 1, 0, Number(draggedElement.dataset.taskListItemId));
 			newTasksOrder.splice(draggedElementIndex, 1);
 		}
 
-		document.startViewTransition(() => {
+		const viewTransitionElements = Array.from(dropTarget.parentElement?.children ?? []);
+		for (const el of viewTransitionElements) {
+			if (el instanceof HTMLElement) {
+				el.style.setProperty('view-transition-name', el.id);
+			}
+		}
+		// await nextFrame();
+		debugger;
+		const viewTransition = document.startViewTransition(() => {
 			onReorder(newTasksOrder);
 		});
+		await viewTransition.updateCallbackDone;
+		debugger;
 	}, [onReorder]);
 
 	return html`
@@ -129,9 +140,9 @@ export function TaskList(props: TaskListProps) {
 						class="task-list__item"
 						ref="${(ref: HTMLElement) => itemsRef.current[i] = ref}"
 						id="${`${idBase}-${taskData.id}`}"
-						data-drop-target
-						data-task-id="${taskData.id}"
-						style="view-transition-name: ${`${idBase}-${taskData.id}`}"
+						data-task-list-drop-target
+						data-task-list-item-id="${taskData.id}"
+						style="view-transition-name: none;"
 					>
 						${
 							onReorder && html`
