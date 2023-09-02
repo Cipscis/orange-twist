@@ -8,7 +8,6 @@ import { Task } from '../types/Task.js';
 
 import { getTaskData } from '../registers/tasks/tasksRegister.js';
 import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
-import { nextFrame } from '../util/nextFrame.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -104,19 +103,9 @@ export function TaskList(props: TaskListProps) {
 			newTasksOrder.splice(draggedElementIndex, 1);
 		}
 
-		const viewTransitionElements = Array.from(dropTarget.parentElement?.children ?? []);
-		for (const el of viewTransitionElements) {
-			if (el instanceof HTMLElement) {
-				el.style.setProperty('view-transition-name', el.id);
-			}
-		}
-		// await nextFrame();
-		debugger;
-		const viewTransition = document.startViewTransition(() => {
+		document.startViewTransition(() => {
 			onReorder(newTasksOrder);
 		});
-		await viewTransition.updateCallbackDone;
-		debugger;
 	}, [onReorder]);
 
 	return html`
@@ -142,7 +131,7 @@ export function TaskList(props: TaskListProps) {
 						id="${`${idBase}-${taskData.id}`}"
 						data-task-list-drop-target
 						data-task-list-item-id="${taskData.id}"
-						style="view-transition-name: none;"
+						style="view-transition-name: ${idBase}-${taskData.id};"
 					>
 						${
 							onReorder && html`

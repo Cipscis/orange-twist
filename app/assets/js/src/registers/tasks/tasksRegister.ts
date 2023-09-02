@@ -7,7 +7,6 @@ import { getCurrentDateDayName } from '../../util/getCurrentDateDayName.js';
 
 import { tasksChangeListeners } from './listeners/onTasksChange.js';
 import { loadTasks } from './persistence/loadTasks.js';
-import { formatDate } from '../../formatters/date.js';
 import { getDays, removeTaskFromDay, setDayData } from '../days/daysRegister.js';
 
 const tasksRegister: Map<number, Task> = new Map();

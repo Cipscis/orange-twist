@@ -3,10 +3,13 @@ import htm from 'htm';
 
 import { Task } from '../types/Task.js';
 import { TaskStatus } from '../types/TaskStatus.js';
-import { useCallback, useContext, useEffect, useRef, useState } from 'preact/hooks';
+
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+
 import { deleteTask, setTaskData } from '../registers/tasks/tasksRegister.js';
+import { fireCommand } from '../registers/commands/index.js';
+
 import { nodeHasAncestor } from '../util/nodeHasAncestor.js';
-import { OrangeTwistContext } from './OrangeTwist.js';
 import { animate } from '../util/animate.js';
 import { CSSKeyframes } from '../util/CSSKeyframes.js';
 
@@ -32,8 +35,6 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		},
 		dayName,
 	} = props;
-
-	const api = useContext(OrangeTwistContext);
 
 	const rootRef = useRef<HTMLElement>(null);
 	const optionsRef = useRef<HTMLElement>(null);
@@ -65,8 +66,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 	const changeStatus = useCallback((newStatus: TaskStatus) => {
 		setTaskData(id, { status: newStatus }, { dayName });
 		setIsInChangeMode(false);
-		api.save();
-	}, [api, dayName, id, setIsInChangeMode]);
+		fireCommand('save-data');
+	}, [dayName, id, setIsInChangeMode]);
 
 	/**
 	 * Ask for confirmation, then delete the task
@@ -78,8 +79,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 
 		deleteTask(id);
 		setIsInChangeMode(false);
-		api.save();
-	}, [api, id, setIsInChangeMode]);
+		fireCommand('save-data');
+	}, [id, setIsInChangeMode]);
 
 	// TODO: Turn the selector part into a custom element, using shadow DOM
 

@@ -3,7 +3,6 @@ import htm from 'htm';
 
 import {
 	useCallback,
-	useContext,
 	useEffect,
 	useRef,
 	useState,
@@ -16,7 +15,7 @@ import { Day } from '../types/Day.js';
 import { nodeHasAncestor } from '../util/nodeHasAncestor.js';
 
 import { setDayData } from '../registers/days/index.js';
-import { OrangeTwistContext } from './OrangeTwist.js';
+import { fireCommand } from '../registers/commands/index.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -29,8 +28,6 @@ export function DayNote(props: DayNoteProps) {
 	const { day } = props;
 	const { dayName } = day;
 
-	const api = useContext(OrangeTwistContext);
-
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const displayNoteRef = useRef<HTMLElement>(null);
 
@@ -42,10 +39,10 @@ export function DayNote(props: DayNoteProps) {
 	 */
 	const saveChanges = useCallback(() => {
 		if (dirtyFlag.current) {
-			api.save();
+			fireCommand('save-data');
 			dirtyFlag.current = false;
 		}
-	}, [api]);
+	}, []);
 
 	// Set up event listeners to stop editing, and move focus
 	// into textarea when we start editing.

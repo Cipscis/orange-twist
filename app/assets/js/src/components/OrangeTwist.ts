@@ -1,8 +1,7 @@
-import { createContext, h } from 'preact';
+import { h } from 'preact';
 import {
 	useCallback,
 	useEffect,
-	useMemo,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -27,14 +26,6 @@ import { TaskList } from './TaskList.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
-
-type OrangeTwistApi = {
-	save(): void;
-}
-
-export const OrangeTwistContext = createContext<OrangeTwistApi>({
-	save() {},
-});
 
 export function OrangeTwist() {
 	const {
@@ -152,118 +143,109 @@ export function OrangeTwist() {
 		saveData();
 	}, [saveData]);
 
-	// TODO: Use commands instead
-	const api = useMemo(() => ({
-		save: saveData,
-	}), [saveData]);
-
 	return html`
-		<${OrangeTwistContext.Provider}
-			value="${api}"
-		>
-			<${CommandPalette}
-				open="${commandPaletteOpen}"
-				onClose="${() => setCommandPaletteOpen(false)}"
-			/>
+		<${CommandPalette}
+			open="${commandPaletteOpen}"
+			onClose="${() => setCommandPaletteOpen(false)}"
+		/>
 
-			<div class="orange-twist">
-				<h1 class="orange-twist__heading">Orange Twist</h1>
+		<div class="orange-twist">
+			<h1 class="orange-twist__heading">Orange Twist</h1>
 
-				<section
-					class="${classNames({
-						'orange-twist__section': true,
-						'orange-twist__section--loading': isDaysLoading,
-					})}"
-					aria-busy="${isDaysLoading || null}"
-				>
-					<h2 class="orange-twist__title">Days</h2>
+			<section
+				class="${classNames({
+					'orange-twist__section': true,
+					'orange-twist__section--loading': isDaysLoading,
+				})}"
+				aria-busy="${isDaysLoading || null}"
+			>
+				<h2 class="orange-twist__title">Days</h2>
 
-					${
-						isDaysLoading &&
-						html`<span class="orange-twist__loader" title="Loading"></span>`
-					}
-					${
-						daysError &&
-						// TODO: Handle error better somehow
-						html`<span class="orange-twist__error">Error: ${daysError}</span>`
-					}
-					${
-						days &&
-						html`
-							${days.map((day) => {
-								const dayProps: DayComponentProps = { day };
-								return html`
-									<${DayComponent}
-										key="${day.dayName}"
-										ref="${(ref: HTMLElement) => daySectionsRef.current[day.dayName] = ref}"
-										...${dayProps}
-									/>
-								`;
-							})}
+				${
+					isDaysLoading &&
+					html`<span class="orange-twist__loader" title="Loading"></span>`
+				}
+				${
+					daysError &&
+					// TODO: Handle error better somehow
+					html`<span class="orange-twist__error">Error: ${daysError}</span>`
+				}
+				${
+					days &&
+					html`
+						${days.map((day) => {
+							const dayProps: DayComponentProps = { day };
+							return html`
+								<${DayComponent}
+									key="${day.dayName}"
+									ref="${(ref: HTMLElement) => daySectionsRef.current[day.dayName] = ref}"
+									...${dayProps}
+								/>
+							`;
+						})}
 
-							<button
-								type="button"
-								class="button"
-								onClick="${() => addNewDay()}"
-							>Add day</button>
-						`
-					}
-				</section>
+						<button
+							type="button"
+							class="button"
+							onClick="${() => addNewDay()}"
+						>Add day</button>
+					`
+				}
+			</section>
 
-				<section
-					class="${classNames({
-						'orange-twist__section': true,
-						'orange-twist__section--loading': isTasksLoading,
-					})}"
-					aria-busy="${isTasksLoading || null}"
-					ref="${unfinishedTasksListRef}"
-				>
-					<h2 class="orange-twist__title">Tasks</h2>
+			<section
+				class="${classNames({
+					'orange-twist__section': true,
+					'orange-twist__section--loading': isTasksLoading,
+				})}"
+				aria-busy="${isTasksLoading || null}"
+				ref="${unfinishedTasksListRef}"
+			>
+				<h2 class="orange-twist__title">Tasks</h2>
 
-					${
-						isTasksLoading &&
-						html`<span class="orange-twist__loader" title="Tasks loading"></span>`
-					}
-					${
-						tasksError &&
-						html`<span class="orange-twist__error">Tasks loading error: ${tasksError}</span>`
-					}
-					${
-						tasks &&
-
-						html`
-							<${TaskList}
-								tasks="${tasks.filter((task) => task.status !== TaskStatus.COMPLETED)}"
-								onReorder="${onOpenTasksReorder}"
-								className="orange-twist__task-list"
-							/>
-
-							<button
-								type="button"
-								class="button"
-								onClick="${() => addNewTaskUI()}"
-							>Add new task</button>
-						`
-					}
-				</section>
-
+				${
+					isTasksLoading &&
+					html`<span class="orange-twist__loader" title="Tasks loading"></span>`
+				}
+				${
+					tasksError &&
+					html`<span class="orange-twist__error">Tasks loading error: ${tasksError}</span>`
+				}
 				${
 					tasks &&
 
 					html`
-						<details class="orange-twist__section">
-							<summary>
-								<h2 class="orange-twist__title">Completed tasks</h2>
-							</summary>
+						<${TaskList}
+							tasks="${tasks.filter((task) => task.status !== TaskStatus.COMPLETED)}"
+							onReorder="${onOpenTasksReorder}"
+							className="orange-twist__task-list"
+						/>
 
-							<${TaskList}
-								tasks="${tasks.filter((task) => task.status === TaskStatus.COMPLETED)}"
-								className="orange-twist__task-list"
-							/>
-						</details>
+						<button
+							type="button"
+							class="button"
+							onClick="${() => addNewTaskUI()}"
+						>Add new task</button>
 					`
 				}
-			</div>
-		</${OrangeTwistContext.Provider}>
+			</section>
+
+			${
+				tasks &&
+
+				html`
+					<details class="orange-twist__section">
+						<summary>
+							<h2 class="orange-twist__title">Completed tasks</h2>
+						</summary>
+
+						<${TaskList}
+							tasks="${tasks.filter((task) => task.status === TaskStatus.COMPLETED)}"
+							className="orange-twist__task-list"
+						/>
+					</details>
+				`
+			}
+		</div>
 	`;
 }
