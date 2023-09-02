@@ -13,7 +13,7 @@ You will need to install [Node.js](https://nodejs.org/en/) before working on thi
 3. Create a [`.env`](#env) file.
 4. Run `npm start` to run the local server and watch CSS and JS files for changes.
 
-This project creates the following npm scripts:
+Usually, you will just want to run `npm start`, but this project creates the following npm scripts:
 
 * `npm run server` runs a Node.js server on the port specified in the [`.env`](#env) file, using [Express](https://expressjs.com/).
 
@@ -21,19 +21,17 @@ This project creates the following npm scripts:
 
 * `npm run watch` first runs the `build` task, then watches the relevant directories and reruns the `build` task if it sees any changes.
 
-* `npm run lintCss` lints all SCSS files using [stylelint](https://www.npmjs.com/package/stylelint).
-
 * `npm run lintJs` lints all JavaScript and TypeScript files using [eslint](https://www.npmjs.com/package/eslint).
 
-* `npm run lint` runs the `lintCss` and `lintJs` scripts.
+* `npm run lintCss` lints all SCSS files using [stylelint](https://www.npmjs.com/package/stylelint).
+
+* `npm run lint` runs the `lintJs` and `lintCss` scripts.
 
 * `npm start` runs both the `server` and `watch` tasks simultaneously.
 
 * `npm test` lints and compiles any TypeScript.
 
 * `npm run prepare` first removes directories containing compiled files, then runs the `test` script. You should never need to run this script manually, [the `prepare` script runs automatically](https://docs.npmjs.com/cli/v7/using-npm/scripts#life-cycle-scripts) after you run `npm install`.
-
-Usually, you will just want to run `npm start`.
 
 ### .env
 
@@ -63,7 +61,15 @@ This file is intended to differ from environment to environment, so it is ignore
 
 ## Dependencies
 
-None.
+* [Preact](https://preactjs.com/): Rendering framework, alternative to React.
+
+* [htm](https://www.npmjs.com/package/htm): A library for using JSX-like syntax without a build system, using template literals.
+
+* [zod](https://zod.dev/): A library for writing type schemas, designed for working with TypeScript.
+
+* [marked](https://marked.js.org/): A Markdown compiler.
+
+* [classnames](https://www.npmjs.com/package/classnames): Utility library for combining CSS classnames.
 
 ## Dev Dependencies
 
@@ -72,6 +78,8 @@ None.
 These dependencies are used when working on the project locally.
 
 * [Node.js](https://nodejs.org/en/): Runtime environment
+
+* [ts-node](https://typestrong.org/ts-node/): Allows TypeScript code to be run in a Node.js environment
 
 * [npm](https://www.npmjs.com/): Package manager
 
@@ -98,6 +106,8 @@ These dependencies are used when working on the project locally.
 	* [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin): Allows `eslint` to lint TypeScript
 
 	* [@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser): Allows `eslint` to parse TypeScript
+
+	* [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks): Provides React/Preact linting rules
 
 * [stylelint](https://www.npmjs.com/package/stylelint): Linting CSS
 
