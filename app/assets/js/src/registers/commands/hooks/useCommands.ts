@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 
-import { Command, getCommands } from '../commandsRegister.js';
+import { Command } from '../types/index.js';
+import { getCommands } from '../commandsRegister.js';
 import { onNewCommandRegistered } from '../listeners/onNewCommandRegistered.js';
 
 export function useCommands(): ReadonlyArray<Readonly<Command>> {

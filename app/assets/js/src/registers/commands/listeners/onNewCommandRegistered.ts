@@ -1,10 +1,4 @@
-import { Command } from '../commandsRegister.js';
-
-interface NewCommandRegisteredListener {
-	(command: Command): void;
-}
-
-export const newCommandRegisteredListeners: Array<NewCommandRegisteredListener> = [];
+import { NewCommandRegisteredListener, newCommandRegisteredListeners } from '../commandsRegister.js';
 
 /**
  * Bind a callback to fire whenever a new command is registered.
