@@ -42,6 +42,8 @@
 		@include contrast-secondary;
 		padding: 0 0.5ch;
 		border-radius: 0.2em;
+
+		word-break: break-word;
 	}
 
 	// This is how `marked` renders code blocks
@@ -53,5 +55,12 @@
 		tab-size: 4;
 
 		margin-block: calc(2em * var(--line-height));
+	}
+
+	kbd {
+		display: inline-block;
+		padding: 0 0.5ch;
+		border: 1px solid currentColor;
+		border-radius: 0.5em;
 	}
 }
