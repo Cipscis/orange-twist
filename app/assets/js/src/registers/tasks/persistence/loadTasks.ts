@@ -1,6 +1,8 @@
-import { Task, taskSchema } from '../../../types/Task.js';
 import { z } from 'zod';
-import { isZodSchemaType } from '../../../util/isZodSchemaType.js';
+
+import { Task, taskSchema } from '../../../types/Task.js';
+
+import { isZodSchemaType } from '../../../util/index.js';
 
 const validTasksDataSchema = z.array(
 	z.tuple([

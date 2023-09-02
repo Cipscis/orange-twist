@@ -1,9 +1,10 @@
-import { DeepPartial } from '../../util/DeepPartial.js';
-
 import { Task } from '../../types/Task.js';
 import { TaskStatus } from '../../types/TaskStatus.js';
 
-import { getCurrentDateDayName } from '../../util/getCurrentDateDayName.js';
+import {
+	DeepPartial,
+	getCurrentDateDayName,
+} from '../../util/index.js';
 
 import { tasksChangeListeners } from './listeners/onTasksChange.js';
 import { loadTasks } from './persistence/loadTasks.js';

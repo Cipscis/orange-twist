@@ -1,0 +1,16 @@
+.modal {
+	position: fixed;
+	inset: 0;
+
+	display: grid;
+	place-content: center;
+
+	pointer-events: none;
+}
+
+.modal__body {
+	@include contrast-secondary;
+	padding: 10px;
+
+	pointer-events: auto;
+}

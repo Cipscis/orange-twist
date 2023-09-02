@@ -2,7 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { Task } from '../../../types/Task.js';
 
-import { AsyncDataState, useAsyncData } from '../../../util/useAsyncData.js';
+import { AsyncDataState, useAsyncData } from '../../../util/index.js';
 
 import { getTasks, loadTasksData } from '../tasksRegister.js';
 import { onTasksChange, offTasksChange } from '../listeners/onTasksChange.js';

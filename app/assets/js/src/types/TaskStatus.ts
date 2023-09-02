@@ -1,4 +1,4 @@
-import { EnumTypeOf } from '../util/EnumTypeOf.js';
+import { EnumTypeOf } from '../util/index.js';
 
 export const TaskStatus = {
 	TODO: 'todo',

@@ -1,9 +1,10 @@
-import { DeepPartial } from '../../util/DeepPartial.js';
-
 import { Day } from '../../types/Day.js';
 
-import { isValidDateString } from '../../util/isValidDateString.js';
-import { getCurrentDateDayName } from '../../util/getCurrentDateDayName.js';
+import {
+	isValidDateString,
+	getCurrentDateDayName,
+	DeepPartial,
+} from '../../util/index.js';
 
 import { daysChangeListeners } from './listeners/onDaysChange.js';
 

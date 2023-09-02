@@ -2,7 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { Day } from '../../../types/Day.js';
 
-import { AsyncDataState, useAsyncData } from '../../../util/useAsyncData.js';
+import { AsyncDataState, useAsyncData } from '../../../util/index.js';
 
 import { getDays, loadDaysData } from '../daysRegister.js';
 import { onDaysChange, offDaysChange } from '../listeners/onDaysChange.js';

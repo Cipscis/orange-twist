@@ -1,12 +1,17 @@
 import { RefObject, createRef, h } from 'preact';
-import htm from 'htm';
 import {
 	useEffect,
 	useMemo,
 	useRef,
 	useState,
 } from 'preact/hooks';
+
+import htm from 'htm';
+
 import classNames from 'classnames';
+
+import { escapeRegExpString } from '../util/index.js';
+
 import { useCommands } from '../registers/commands/hooks/useCommands.js';
 import { fireCommand } from '../registers/commands/commandsRegister.js';
 
@@ -32,14 +37,17 @@ export function CommandPalette(props: CommandPaletteProps) {
 	const [activeDescendant, setActiveDescendant] = useState<HTMLElement | null>(null);
 
 	const [query, setQuery] = useState('');
-	// TODO: Escape query before using it
 	/** Fuzzy match, with groups for all non-matching sequences */
 	const queryPattern = useMemo(() => {
 		if (query === '') {
 			return null;
 		}
 
-		return new RegExp(`^(.*?)${query.replace(/./g, '($&)(.*?)')}$`, 'i');
+		return new RegExp(`^(.*?)${
+			escapeRegExpString(
+				query.replace(/./g, '($&)(.*?)')
+			)
+		}$`, 'i');
 	}, [query]);
 	const matchingCommands = useMemo(() => {
 		if (queryPattern === null) {
@@ -52,7 +60,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 	const optionsRef = useRef<RefObject<HTMLElement>[]>([]);
 	optionsRef.current = matchingCommands.map((command, i) => optionsRef.current[i] ?? createRef<HTMLElement>());
 
-	// Handle opening, closing, and active descendant management.
+	// Handle opening and closing
 	useEffect(() => {
 		const closeOnEscape = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
@@ -60,6 +68,20 @@ export function CommandPalette(props: CommandPaletteProps) {
 			}
 		};
 
+		if (open) {
+			fieldRef.current?.focus();
+			document.addEventListener('keydown', closeOnEscape);
+		}
+
+		return () => {
+			if (open) {
+				document.removeEventListener('keydown', closeOnEscape);
+			}
+		};
+	}, [open, onClose]);
+
+	// Handle active descendant management.
+	useEffect(() => {
 		const adjustActiveDescendant = (e: KeyboardEvent) => {
 			if (!(e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
 				return;
@@ -105,8 +127,6 @@ export function CommandPalette(props: CommandPaletteProps) {
 		};
 
 		if (open) {
-			fieldRef.current?.focus();
-			document.addEventListener('keydown', closeOnEscape);
 			document.addEventListener('keydown', adjustActiveDescendant);
 			document.addEventListener('keydown', selectActiveDescendant);
 		} else {
@@ -115,12 +135,11 @@ export function CommandPalette(props: CommandPaletteProps) {
 
 		return () => {
 			if (open) {
-				document.removeEventListener('keydown', closeOnEscape);
 				document.removeEventListener('keydown', adjustActiveDescendant);
 				document.removeEventListener('keydown', selectActiveDescendant);
 			}
 		};
-	}, [open, activeDescendant, matchingCommands, onClose]);
+	}, [open, activeDescendant, matchingCommands]);
 
 	return html`
 		${

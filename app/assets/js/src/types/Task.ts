@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { TaskStatus } from './TaskStatus.js';
-import { isZodSchemaType } from '../util/isZodSchemaType.js';
+import { isZodSchemaType } from '../util/index.js';
 
 export const taskSchema = z.object({
 	id: z.number(),

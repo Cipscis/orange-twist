@@ -9,9 +9,11 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { deleteTask, setTaskData } from '../registers/tasks/tasksRegister.js';
 import { fireCommand } from '../registers/commands/index.js';
 
-import { nodeHasAncestor } from '../util/nodeHasAncestor.js';
-import { animate } from '../util/animate.js';
-import { CSSKeyframes } from '../util/CSSKeyframes.js';
+import {
+	animate,
+	nodeHasAncestor,
+	CSSKeyframes,
+} from '../util/index.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
