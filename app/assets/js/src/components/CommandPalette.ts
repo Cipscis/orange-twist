@@ -94,9 +94,13 @@ export function CommandPalette(props: CommandPaletteProps) {
 		};
 
 		const selectActiveDescendant = (e: KeyboardEvent) => {
-			if (e.key === 'Enter' && activeDescendant) {
-				e.preventDefault();
-				activeDescendant.click();
+			if (e.key === 'Enter') {
+				if (activeDescendant) {
+					e.preventDefault();
+					activeDescendant.click();
+				} else if (matchingCommands.length === 1) {
+					fireCommand(matchingCommands[0].id);
+				}
 			}
 		};
 
@@ -116,7 +120,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 				document.removeEventListener('keydown', selectActiveDescendant);
 			}
 		};
-	}, [open, activeDescendant, onClose]);
+	}, [open, activeDescendant, matchingCommands, onClose]);
 
 	return html`
 		${
@@ -150,6 +154,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 							role="listbox"
 						>
 							${matchingCommands.map((command, i) => {
+								// Determine how to display the command name based on the current query
 								const nameDisplay = (() => {
 									if (queryPattern === null) {
 										return command.name;
