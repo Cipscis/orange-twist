@@ -6,9 +6,19 @@ Adding a new command requires a few different pieces of code.
 
 ### Definition
 
-First, the new command must be defined. This is done by adding to the `CommandsList` interface found in [`commandsRegister.ts`](./commandsRegister.ts).
+First, the new command must be defined. This is done by adding to the `CommandsList` interface found in [`CommandsList.ts`](./types/CommandsList.ts).
 
-An example of how to do this can be found in [`add-new-task.ts`](./commands/add-new-task.ts).
+A declaration can be "re-opened" for [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html) in TypeScript by using `declare module`, like this:
+
+```typescript
+declare module 'path/to/CommandsList.ts' {
+	interface CommandsList {
+		'my-new-command': [myCommandArg: number];
+	}
+}
+```
+
+Commands are defined in terms of what arguments their listeners should be able to take. However, command listeners must also be able to work without any arguments at all.
 
 ### Registration
 
@@ -20,7 +30,7 @@ Registering a command will make it appear in the command palette, and allows `fi
 
 In order for a command to actually do anything, listeners will need to be bound to it to define its behaviour. This can be done using the `addCommandListener` function, and listeners can similarly be removed via the `removeCommandListener` function.
 
-When working within a Preact component, the `useCommand` can be used to bind a listener more easily.
+When working within a Preact component, the `useCommand` hook can be used to bind a listener more easily.
 
 ## Arguments
 

@@ -1,16 +1,10 @@
 import { useEffect } from 'preact/hooks';
 
-import {
-	CommandId,
-	CommandListener,
-	addCommandListener,
-	removeCommandListener,
-} from '../commandsRegister.js';
+import { CommandWithListener } from '../types/index.js';
 
-// Ensure listed commands have been registered
-import '../commands/index.js';
+import { addCommandListener, removeCommandListener } from '../listeners/addCommandListener.js';
 
-export function useCommand<C extends CommandId>(commandId: C, listener: CommandListener<C>) {
+export function useCommand(...[commandId, listener]: CommandWithListener) {
 	useEffect(() => {
 		addCommandListener(commandId, listener);
 

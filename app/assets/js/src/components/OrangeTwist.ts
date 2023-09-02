@@ -16,13 +16,14 @@ import { TaskStatus } from '../types/TaskStatus.js';
 
 import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
-import { useCommand } from '../registers/commands/hooks/useCommand.js';
+import { useCommand } from '../registers/commands/index.js';
+import { reorderTasks } from '../registers/tasks/tasksRegister.js';
+import { KeyboardShortcutName, useKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
 
 import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 import { toast } from './Toast.js';
 import { CommandPalette } from './CommandPalette.js';
 import { TaskList } from './TaskList.js';
-import { reorderTasks } from '../registers/tasks/tasksRegister.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -52,6 +53,7 @@ export function OrangeTwist() {
 	const unfinishedTasksListRef = useRef<HTMLElement>(null);
 
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+	useKeyboardShortcut(KeyboardShortcutName.COMMAND_PALETTE_OPEN, () => setCommandPaletteOpen(true));
 
 	const addNewDay = useCallback((dayNameArg?: string) => {
 		if (!days) {
@@ -143,43 +145,14 @@ export function OrangeTwist() {
 		[]
 	);
 
-	// Set up keyboard shortcuts
-	useEffect(() => {
-		const saveOnKeyboardShortcut = (e: KeyboardEvent) => {
-			if (e.key === 's' && e.ctrlKey) {
-				e.preventDefault();
-				saveData();
-			}
-		};
-		const addNewTaskOnKeyboardShortcut = (e: KeyboardEvent) => {
-			if (e.key === 'n' && e.ctrlKey) {
-				e.preventDefault();
-				addNewTaskUI();
-			}
-		};
-		const openCommandPaletteOnKeyboardShortcut = (e: KeyboardEvent) => {
-			if (e.key === '\\') {
-				e.preventDefault();
-				setCommandPaletteOpen(true);
-			}
-		};
-
-		document.addEventListener('keydown', saveOnKeyboardShortcut);
-		document.addEventListener('keydown', addNewTaskOnKeyboardShortcut);
-		document.addEventListener('keydown', openCommandPaletteOnKeyboardShortcut);
-
-		return () => {
-			document.removeEventListener('keydown', saveOnKeyboardShortcut);
-			document.removeEventListener('keydown', addNewTaskOnKeyboardShortcut);
-			document.removeEventListener('keydown', openCommandPaletteOnKeyboardShortcut);
-		};
-	}, [addNewTaskUI, saveData]);
+	useCommand('save-data', saveData);
 
 	const onOpenTasksReorder = useCallback((taskIds: number[]) => {
 		reorderTasks(taskIds);
 		saveData();
 	}, [saveData]);
 
+	// TODO: Use commands instead
 	const api = useMemo(() => ({
 		save: saveData,
 	}), [saveData]);
