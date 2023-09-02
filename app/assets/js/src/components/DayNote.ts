@@ -12,7 +12,7 @@ import { Markdown, MarkdownProps } from './Markdown.js';
 
 import { Day } from '../types/Day.js';
 
-import { nodeHasAncestor } from '../util/nodeHasAncestor.js';
+import { nodeHasAncestor } from '../util/index.js';
 
 import { setDayData } from '../registers/days/index.js';
 import { fireCommand } from '../registers/commands/index.js';

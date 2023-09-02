@@ -45,7 +45,7 @@ export function registerCommand<C extends CommandId>(command: Command<C>): void 
 export function getCommands(): ReadonlyArray<Readonly<Command>> {
 	return Array.from(
 		commandsRegister.values()
-	).map(({ command }) => command);
+	).map(({ command }) => ({ ...command }));
 }
 
 /**

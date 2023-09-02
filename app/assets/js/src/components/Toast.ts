@@ -1,8 +1,12 @@
 import { h, render } from 'preact';
-import htm from 'htm';
 import { useRef } from 'preact/hooks';
-import { CSSKeyframes } from '../util/CSSKeyframes.js';
-import { animate } from '../util/animate.js';
+
+import htm from 'htm';
+
+import {
+	animate,
+	CSSKeyframes,
+} from '../util/index.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);

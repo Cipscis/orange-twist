@@ -9,7 +9,7 @@ import htm from 'htm';
 
 import classNames from 'classnames';
 
-import { isValidDateString } from '../util/isValidDateString.js';
+import { isValidDateString } from '../util/index.js';
 
 import { TaskStatus } from '../types/TaskStatus.js';
 
@@ -23,6 +23,7 @@ import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 import { toast } from './Toast.js';
 import { CommandPalette } from './CommandPalette.js';
 import { TaskList } from './TaskList.js';
+import { KeyboardShortcutModal } from './KeyboardShortcutsModal.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -247,5 +248,7 @@ export function OrangeTwist() {
 				`
 			}
 		</div>
+
+		<${KeyboardShortcutModal} />
 	`;
 }

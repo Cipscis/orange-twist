@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 import { Day, daySchema } from '../../../types/Day.js';
-import { isZodSchemaType } from '../../../util/isZodSchemaType.js';
+
+import { isZodSchemaType } from '../../../util/index.js';
 
 const validDaysDataSchema = z.array(
 	z.tuple([

@@ -1,51 +1,46 @@
-import { getDeepActiveElement } from '../../util/getDeepActiveElement.js';
-import { KeyboardShortcutName } from './types/KeyboardShortcutName.js';
+import { getDeepActiveElement } from '../../util/index.js';
 
-/**
- * A key and any relevant modifier keys to be used in a keyboard shortcut.
- */
-type KeyCombo = {
-	key: KeyboardEvent['key'];
-	/**
-	 * Whether or not the Ctrl / Cmd key must be pressed for this key combo to fiie
-	 * @default false
-	 */
-	ctrl?: boolean;
-	/**
-	 * Whether or not the Alt key must be pressed for this key combo to fiie
-	 * @default false
-	 */
-	alt?: boolean;
-	/**
-	 * Whether or not the Shift key must be pressed for this key combo to fiie
-	 * @default false
-	 */
-	shift?: boolean;
-};
-
-interface KeyboardShortcutInfo {
-	name: KeyboardShortcutName;
-	/**
-	 * One or more key chords that can be used to fire this keyboard shortcut.
-	 */
-	shortcuts: Array<KeyCombo>;
-	listeners: Array<() => void>;
-}
+import { KeyCombo, KeyboardShortcutInfo, KeyboardShortcutName } from './types/index.js';
 
 export const keyboardShortcutsRegister = new Map<KeyboardShortcutName, KeyboardShortcutInfo>();
+
+export interface NewKeyboardShortcutRegisteredListener {
+	(shortcutName: KeyboardShortcutInfo): void;
+}
+
+export const newKeyboardShortcutRegisteredListeners: Array<NewKeyboardShortcutRegisteredListener> = [];
 
 /**
  * Check if a specific key combo was pressed.
  */
 function keyComboWasPressed(keyCombo: KeyCombo, e: KeyboardEvent): boolean {
-	const wasPressed = (
-		keyCombo.key === e.key &&
-		(keyCombo.ctrl ?? false) === (e.ctrlKey || e.metaKey) &&
-		(keyCombo.alt ?? false) === e.altKey &&
-		(keyCombo.shift ?? false) === e.shiftKey
-	);
+	if (keyCombo.key !== e.key) {
+		return false;
+	}
 
-	return wasPressed;
+	// Ctrl/Meta key must match key combo requirements
+	if (
+		(keyCombo.ctrl ?? false) !== (e.ctrlKey || e.metaKey)
+	) {
+		return false;
+	}
+
+	// Alt key must match key combo requirements
+	if (
+		(keyCombo.alt ?? false) !== e.altKey
+	) {
+		return false;
+	}
+
+	// Shift key is ignored if not specified in key combo requirements
+	if (
+		typeof keyCombo.shift !== 'undefined' &&
+		keyCombo.shift !== e.shiftKey
+	) {
+		return false;
+	}
+
+	return true;
 }
 
 /**
@@ -106,9 +101,23 @@ document.addEventListener('keydown', (e) => {
 export function registerKeyboardShortcut(name: KeyboardShortcutName, shortcuts: Array<KeyCombo>): void {
 	const listeners = keyboardShortcutsRegister.get(name)?.listeners ?? [];
 
-	keyboardShortcutsRegister.set(name, {
+	const info = {
 		name,
 		shortcuts,
 		listeners,
-	});
+	};
+	keyboardShortcutsRegister.set(name, info);
+
+	for (const listener of newKeyboardShortcutRegisteredListeners) {
+		listener(info);
+	}
+}
+
+/**
+ * Get a list of all registered keyboard shortcuts.
+ */
+export function getKeyboardShortcuts(): ReadonlyArray<Readonly<KeyboardShortcutInfo>> {
+	return Array.from(
+		keyboardShortcutsRegister.values()
+	).map((info) => ({ ...info }));
 }
