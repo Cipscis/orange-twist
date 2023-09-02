@@ -2,6 +2,7 @@ export {
 	addNewTask,
 	getTaskData,
 	setTaskData,
+	deleteTask,
 } from './tasksRegister.js';
 
 export * from './listeners/index.js';

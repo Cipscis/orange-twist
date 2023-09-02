@@ -16,6 +16,7 @@
 	// https://css-tricks.com/auto-growing-inputs-textareas/
 	display: inline-grid;
 	width: fit-content;
+	min-width: 11ch;
 
 	input {
 		@include reset;

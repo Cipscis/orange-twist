@@ -98,7 +98,7 @@ export function OrangeTwist() {
 		const lastTaskInput = taskInputs.at(-1);
 
 		// Focus on the input and select all its text
-		lastTaskInput?.select();
+		lastTaskInput?.focus();
 		lastTaskInput?.scrollIntoView({
 			block: 'center',
 			behavior: 'smooth',

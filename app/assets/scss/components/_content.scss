@@ -38,6 +38,19 @@
 		}
 	}
 
+	blockquote {
+		margin-block: calc(1em * var(--line-height));
+		&:first-child {
+			margin-block-start: 0;
+		}
+		&:last-child {
+			margin-block-end: 0;
+		}
+
+		// About enough to compensate for "> "
+		margin-inline-start: 1.5ch;
+	}
+
 	code {
 		@include contrast-secondary;
 		padding: 0 0.5ch;
@@ -55,6 +68,12 @@
 		tab-size: 4;
 
 		margin-block: calc(2em * var(--line-height));
+		&:first-child {
+			margin-block-start: 0;
+		}
+		&:last-child {
+			margin-block-end: 0;
+		}
 	}
 
 	kbd {
