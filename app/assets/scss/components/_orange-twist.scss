@@ -1,5 +1,9 @@
 .orange-twist {
-	width: 100%;
+	// Since we need `margin-inline: auto;` here, the
+	// gutter needs to occupy the element's padding.
+	// To prevent it affecting the width, we use
+	// `box-sizing: content-box;` for this element only.
+	box-sizing: content-box;
 	max-width: var(--layout-max-width);
 	padding-inline: var(--layout-gutter);
 	margin-inline: auto;
@@ -75,11 +79,9 @@
 		border: 0.1em solid transparent;
 		border-top-color: currentColor;
 
+		filter: drop-shadow(0 0 0.15em var(--accent));
 		@container style(--theme: dark) {
 			filter: drop-shadow(0 0 0.15em color-mix(in sRGB, var(--accent), white));
-		}
-		@container style(--theme: light) {
-			filter: drop-shadow(0 0 0.15em var(--accent));
 		}
 	}
 }

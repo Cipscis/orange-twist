@@ -8,6 +8,7 @@
 @import "base/palette";
 @import "base/reset";
 @import "base/typography";
+@import "base/theme";
 
 // Extendables
 @import "extendables/icon-button";
@@ -20,6 +21,7 @@
 @import "components/command-palette";
 @import "components/content";
 @import "components/day";
+@import "components/keyboard-shortcuts-modal";
 @import "components/modal";
 @import "components/orange-twist";
 @import "components/task";

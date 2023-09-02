@@ -1,0 +1,38 @@
+.keyboard-shortcuts__list {
+	margin: 0;
+
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 1rem;
+}
+
+.keyboard-shortcuts__item {
+	@include font-base-body;
+
+	grid-column: 1 / -1;
+
+	display: grid;
+	@supports (grid-template-columns: subgrid) {
+		grid-template-columns: subgrid;
+	}
+	@supports not(grid-template-columns: subgrid) {
+		grid-template-columns: 1fr 10ch;
+		gap: 1rem;
+	}
+}
+
+.keyboard-shortcuts__item__name {}
+
+.keyboard-shortcuts__item__combos {
+	margin: 0;
+
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.5rem;
+}
+
+.keyboard-shortcuts__item__combo {
+	display: block;
+	white-space: nowrap;
+}

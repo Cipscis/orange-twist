@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
 import htm from 'htm';
 
@@ -30,22 +30,27 @@ export function KeyboardShortcutModal() {
 		<${Modal}
 			open="${open}"
 			onClose="${() => setOpen(false)}"
+			title="Keyboard shortcuts"
 		>
-			<h2>Keyboard shortcuts</h2>
-
-			<dl>
+			<dl class="keyboard-shortcuts__list">
 				${keyboardShortcutsInfo.map((keyboardShortcutInfo) => html`
-					<div key="${keyboardShortcutInfo.name}">
-						<dt>${keyboardShortcutInfo.name}</dt>
+					<div
+						key="${keyboardShortcutInfo.name}"
+						class="keyboard-shortcuts__item"
+					>
+						<dt class="keyboard-shortcuts__item__name">${keyboardShortcutInfo.name}</dt>
 
-						<dd>
+						<dd class="keyboard-shortcuts__item__combos">
 							${keyboardShortcutInfo.shortcuts.map((shortcut, i) => html`
-								<li key="${`${keyboardShortcutInfo.name}-${i}`}">
+								<span
+									key="${`${keyboardShortcutInfo.name}-${i}`}"
+									class="keyboard-shortcuts__item__combo content"
+								>
 									${shortcut.ctrl && html`<kbd>Ctrl</kbd> + `}
 									${shortcut.alt && html`<kbd>Alt</kbd> + `}
 									${shortcut.shift && html`<kbd>Shift</kbd> + `}
 									<kbd>${shortcut.key}</kbd>
-								</li>
+								</span>
 							`)}
 						</dd>
 					</div>
