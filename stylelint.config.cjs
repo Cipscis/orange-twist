@@ -63,8 +63,8 @@ module.exports = {
 		// Cannot start with a number
 		'selector-id-pattern': '^[a-z][a-z0-9]*(-[a-z0-9]+)*$',
 
-		// camelCase
-		'keyframes-name-pattern': '^[a-z]+([A-Z][a-z]+)*$',
+		// camelCase (allow consecutive capitals for abbreviations)
+		'keyframes-name-pattern': '^[a-z]+([A-Z][a-z]*)*$',
 
 		'selector-pseudo-element-colon-notation': 'double',
 

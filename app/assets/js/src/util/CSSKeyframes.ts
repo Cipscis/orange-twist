@@ -1,4 +1,4 @@
-import { EnumTypeOf } from '@cipscis/ts-toolbox';
+import { EnumTypeOf } from './EnumTypeOf.js';
 
 /**
  * Names of CSS animations defined using `@keyframes` in `_animations.scss`.

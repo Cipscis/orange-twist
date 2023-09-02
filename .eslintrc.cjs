@@ -21,6 +21,7 @@ module.exports = {
 	plugins: [
 		'@typescript-eslint',
 	],
+	ignorePatterns: ['*.md'],
 	rules: {
 		/////////////////////////
 		// Overriding defaults //

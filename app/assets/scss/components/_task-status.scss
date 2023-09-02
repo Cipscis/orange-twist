@@ -29,7 +29,7 @@
 	}
 	backdrop-filter: blur(2px);
 	border: 1px solid var(--accent);
-	box-shadow: 0 0 5px color-mix(in srgb, var(--accent), white);
+	box-shadow: 0 0 5px color-mix(in sRGB, var(--accent), white);
 
 	animation: 0.2s appearScreen, ease-in-out;
 }

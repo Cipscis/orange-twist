@@ -1,4 +1,4 @@
-import { DeepPartial } from '@cipscis/ts-toolbox';
+import { DeepPartial } from '../../util/DeepPartial.js';
 
 import { Task } from '../../types/Task.js';
 import { TaskStatus } from '../../types/TaskStatus.js';
