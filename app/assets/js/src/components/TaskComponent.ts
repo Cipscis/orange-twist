@@ -4,10 +4,11 @@ import htm from 'htm';
 import { Task } from '../types/Task.js';
 
 import { TaskStatusComponent, TaskStatusComponentProps } from './TaskStatusComponent.js';
-import { useCallback, useContext, useRef } from 'preact/hooks';
-import { setTaskData } from '../registers/tasks/tasksRegister.js';
+import { useCallback, useRef } from 'preact/hooks';
 
-import { OrangeTwistContext } from './OrangeTwist.js';
+import { setTaskData } from '../registers/tasks/index.js';
+import { fireCommand } from '../registers/commands/index.js';
+
 import { Markdown } from './Markdown.js';
 
 // Initialise htm with Preact
@@ -22,8 +23,6 @@ export function TaskComponent(props: TaskComponentProps) {
 	const { task, dayName } = props;
 	const { id, name } = task;
 
-	const api = useContext(OrangeTwistContext);
-
 	const dirtyFlag = useRef(false);
 
 	/**
@@ -31,10 +30,10 @@ export function TaskComponent(props: TaskComponentProps) {
 	 */
 	const saveChanges = useCallback(() => {
 		if (dirtyFlag.current) {
-			api.save();
+			fireCommand('save-data');
 			dirtyFlag.current = false;
 		}
-	}, [api]);
+	}, []);
 
 	const nameChangeHandler = useCallback((e: InputEvent) => {
 		const input = e.target;

@@ -9,5 +9,5 @@ export function bindKeyboardShortcutToCommand(shortcut: KeyboardShortcutName, co
 }
 
 export function unbindKeyboardShortcutFromCommand(shortcut: KeyboardShortcutName, command: CommandId): void {
-	// TODO
+	// TODO: Allow keyboard shortcuts to be unbound from commands
 }

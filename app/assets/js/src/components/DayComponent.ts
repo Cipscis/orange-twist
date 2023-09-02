@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useContext } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
 
 import htm from 'htm';
@@ -7,9 +7,7 @@ import htm from 'htm';
 import { Day } from '../types/Day.js';
 
 import { deleteDay, setDayData } from '../registers/days/index.js';
-import { fireCommand } from '../registers/commands/commandsRegister.js';
-
-import { OrangeTwistContext } from './OrangeTwist.js';
+import { fireCommand } from '../registers/commands/index.js';
 
 import { DayNote, DayNoteProps } from './DayNote.js';
 import { TaskList } from './TaskList.js';
@@ -24,8 +22,6 @@ export interface DayProps {
 export const DayComponent = forwardRef(function DayComponent(props: DayProps, ref: React.ForwardedRef<HTMLElement>) {
 	const { day } = props;
 	const { dayName } = day;
-
-	const api = useContext(OrangeTwistContext);
 
 	const removeDay = useCallback((dayName: string) => {
 		if (!window.confirm('Are you sure?')) {
@@ -49,8 +45,8 @@ export const DayComponent = forwardRef(function DayComponent(props: DayProps, re
 		}, {
 			overwriteTasks: true,
 		});
-		api.save();
-	}, [day.tasks, day.dayName, api]);
+		fireCommand('save-data');
+	}, [day.tasks, day.dayName]);
 
 	const dayNoteProps: DayNoteProps = { day };
 

@@ -1,6 +1,6 @@
 import { h, render } from 'preact';
 import htm from 'htm';
-import { useEffect, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 import { CSSKeyframes } from '../util/CSSKeyframes.js';
 import { animate } from '../util/animate.js';
 
