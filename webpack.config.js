@@ -11,6 +11,7 @@ const distPath = path.resolve(__dirname, '../app/assets/js/dist');
 const config = {
 	mode: process.env.MODE,
 	entry: {
+		'priority': `${entryPath}/priority.ts`,
 		'main': `${entryPath}/main.ts`,
 	},
 	output: {
