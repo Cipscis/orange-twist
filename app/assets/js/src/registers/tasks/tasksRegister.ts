@@ -198,12 +198,46 @@ export function deleteTask(id: number): void {
 	}
 }
 
+interface AddNewTaskOptions {
+	name?: string;
+	dayName?: string;
+}
+
 /**
  * Add a new task, with default values
  *
  * Returns the ID of the new task
  */
-export function addNewTask(name?: string): number {
+export function addNewTask(name?: string): number
+export function addNewTask(options?: AddNewTaskOptions): number
+export function addNewTask(options?: string | AddNewTaskOptions): number {
+	// First, consolidate arguments
+	const name = (() => {
+		if (typeof options === 'string') {
+			return options;
+		}
+
+		return options?.name;
+	})();
+
+	const dayName = (() => {
+		const days = getDays();
+		// If the name of an existing day is specified, use that day
+		if (
+			typeof options === 'object' &&
+			options.dayName &&
+			days.find((day) => day.dayName === options.dayName)
+		) {
+			return options.dayName;
+		}
+
+		// Otherwise, use the current day
+		const currentDay = days[days.length - 1];
+		const currentDayName = currentDay.dayName;
+
+		return currentDayName;
+	})();
+
 	const id = getNextId();
 
 	const stub: DeepPartial<Omit<Task, 'id'>> = {};
@@ -215,10 +249,7 @@ export function addNewTask(name?: string): number {
 
 	tasksRegister.set(id, task);
 
-	const days = getDays();
-	const currentDay = days[days.length - 1];
-	const currentDayName = currentDay.dayName;
-	setDayData(currentDayName, {
+	setDayData(dayName, {
 		tasks: [{
 			id: task.id,
 			status: task.status,

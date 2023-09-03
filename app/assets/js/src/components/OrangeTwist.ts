@@ -41,12 +41,15 @@ export function OrangeTwist() {
 		error: tasksError,
 	} = useTasks();
 
-	const daySectionsRef = useRef<Record<string, HTMLElement>>({});
-	const unfinishedTasksListRef = useRef<HTMLElement>(null);
-
+	// Open command palette on keyboard shortcut
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-	useKeyboardShortcut(KeyboardShortcutName.COMMAND_PALETTE_OPEN, () => setCommandPaletteOpen(true));
+	useKeyboardShortcut(
+		KeyboardShortcutName.COMMAND_PALETTE_OPEN,
+		() => setCommandPaletteOpen(true)
+	);
 
+	// Scroll to new day when created
+	const daySectionsRef = useRef<Record<string, HTMLElement>>({});
 	const [newDayName, setNewDayName] = useState<string | null>(null);
 	useEffect(() => {
 		if (newDayName) {
@@ -87,6 +90,7 @@ export function OrangeTwist() {
 	const [newTaskCreatedDayName, setNewTaskCreatedDayName] = useState<string | null>(null);
 
 	// After the initial load, focus on the last task each time a new one is created.
+	const unfinishedTasksListRef = useRef<HTMLElement>(null);
 	useEffect(() => {
 		if (newTasksCreated  === 0) {
 			return;
@@ -116,12 +120,25 @@ export function OrangeTwist() {
 		});
 	}, [newTasksCreated, newTaskCreatedDayName]);
 
+	/**
+	 * Create a new task and then scroll to it immediately.
+	 *
+	 * @param [dayName] If specified, also add the task to the
+	 * specified day and scroll to its input within that day.
+	 */
 	const addNewTaskUI = useCallback((dayName?: string) => {
-		addNewTask();
+		const newTaskId = addNewTask({ dayName });
+		if (dayName) {
+			setDayData(dayName, {
+				tasks: [{
+					id: newTaskId,
+					status: TaskStatus.TODO,
+				}],
+			});
+		}
 		setNewTasksCreated((oldValue) => oldValue + 1);
 		setNewTaskCreatedDayName(dayName ?? null);
 	}, []);
-
 	useCommand(Command.TASK_ADD_NEW, addNewTaskUI);
 
 	/**
@@ -147,7 +164,6 @@ export function OrangeTwist() {
 		},
 		[]
 	);
-
 	useCommand(Command.DATA_SAVE, saveData);
 
 	const onOpenTasksReorder = useCallback((taskIds: number[]) => {
