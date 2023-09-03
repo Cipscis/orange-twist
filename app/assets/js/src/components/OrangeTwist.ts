@@ -47,6 +47,16 @@ export function OrangeTwist() {
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 	useKeyboardShortcut(KeyboardShortcutName.COMMAND_PALETTE_OPEN, () => setCommandPaletteOpen(true));
 
+	const [newDayName, setNewDayName] = useState<string | null>(null);
+	useEffect(() => {
+		if (newDayName) {
+			const newDaySection = daySectionsRef.current[newDayName];
+			if (newDaySection) {
+				newDaySection.scrollIntoView();
+			}
+		}
+	}, [newDayName]);
+
 	const addNewDay = useCallback((dayNameArg?: string) => {
 		if (!days) {
 			return;
@@ -68,6 +78,7 @@ export function OrangeTwist() {
 		}
 
 		setDayData(dayName, {});
+		setNewDayName(dayName);
 	}, [days]);
 
 	useCommand(Command.DAY_ADD_NEW, addNewDay);
