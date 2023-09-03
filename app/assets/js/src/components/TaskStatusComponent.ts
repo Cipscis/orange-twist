@@ -7,7 +7,7 @@ import { TaskStatus } from '../types/TaskStatus.js';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { deleteTask, setTaskData } from '../registers/tasks/tasksRegister.js';
-import { fireCommand } from '../registers/commands/index.js';
+import { Command, fireCommand } from '../registers/commands/index.js';
 
 import {
 	animate,
@@ -68,7 +68,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 	const changeStatus = useCallback((newStatus: TaskStatus) => {
 		setTaskData(id, { status: newStatus }, { dayName });
 		setIsInChangeMode(false);
-		fireCommand('save-data');
+		fireCommand(Command.DATA_SAVE);
 	}, [dayName, id, setIsInChangeMode]);
 
 	/**
@@ -81,7 +81,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 
 		deleteTask(id);
 		setIsInChangeMode(false);
-		fireCommand('save-data');
+		fireCommand(Command.DATA_SAVE);
 	}, [id, setIsInChangeMode]);
 
 	// TODO: Turn the selector part into a custom element, using shadow DOM

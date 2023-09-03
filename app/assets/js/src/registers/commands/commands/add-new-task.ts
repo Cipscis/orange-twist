@@ -1,6 +1,7 @@
+import { Command } from '../types/Command.js';
 import { registerCommand } from '../commandsRegister.js';
 
 registerCommand({
-	id: 'add-new-task',
+	id: Command.TASK_ADD_NEW,
 	name: 'Add new task',
 });

@@ -15,7 +15,7 @@ import { TaskStatus } from '../types/TaskStatus.js';
 
 import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, saveTasks, useTasks } from '../registers/tasks/index.js';
-import { useCommand } from '../registers/commands/index.js';
+import { Command, useCommand } from '../registers/commands/index.js';
 import { reorderTasks } from '../registers/tasks/tasksRegister.js';
 import { KeyboardShortcutName, useKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
 
@@ -70,7 +70,7 @@ export function OrangeTwist() {
 		setDayData(dayName, {});
 	}, [days]);
 
-	useCommand('add-new-day', addNewDay);
+	useCommand(Command.DAY_ADD_NEW, addNewDay);
 
 	const [newTasksCreated, setNewTasksCreated] = useState(0);
 	const [newTaskCreatedDayName, setNewTaskCreatedDayName] = useState<string | null>(null);
@@ -111,7 +111,7 @@ export function OrangeTwist() {
 		setNewTaskCreatedDayName(dayName ?? null);
 	}, []);
 
-	useCommand('add-new-task', addNewTaskUI);
+	useCommand(Command.TASK_ADD_NEW, addNewTaskUI);
 
 	/**
 	 * Save all day and task data, while giving the user feedback,
@@ -137,7 +137,7 @@ export function OrangeTwist() {
 		[]
 	);
 
-	useCommand('save-data', saveData);
+	useCommand(Command.DATA_SAVE, saveData);
 
 	const onOpenTasksReorder = useCallback((taskIds: number[]) => {
 		reorderTasks(taskIds);

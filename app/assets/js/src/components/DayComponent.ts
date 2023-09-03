@@ -7,7 +7,7 @@ import htm from 'htm';
 import { Day } from '../types/Day.js';
 
 import { deleteDay, setDayData } from '../registers/days/index.js';
-import { fireCommand } from '../registers/commands/index.js';
+import { Command, fireCommand } from '../registers/commands/index.js';
 
 import { DayNote, DayNoteProps } from './DayNote.js';
 import { TaskList } from './TaskList.js';
@@ -45,7 +45,7 @@ export const DayComponent = forwardRef(function DayComponent(props: DayProps, re
 		}, {
 			overwriteTasks: true,
 		});
-		fireCommand('save-data');
+		fireCommand(Command.DATA_SAVE);
 	}, [day.tasks, day.dayName]);
 
 	const dayNoteProps: DayNoteProps = { day };
@@ -79,7 +79,7 @@ export const DayComponent = forwardRef(function DayComponent(props: DayProps, re
 			<button
 				type="button"
 				class="button"
-				onClick="${() => fireCommand('add-new-task', dayName)}"
+				onClick="${() => fireCommand(Command.TASK_ADD_NEW, dayName)}"
 			>Add new task</button>
 		</div>
 	`;

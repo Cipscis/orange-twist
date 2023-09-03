@@ -1,17 +1,17 @@
 import { h } from 'preact';
 import htm from 'htm';
 
-import { Task } from '../types/Task.js';
-
-import { TaskStatusComponent, TaskStatusComponentProps } from './TaskStatusComponent.js';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+
+import { Task } from '../types/Task.js';
 
 import {
 	setTaskData,
 	deleteTask,
 } from '../registers/tasks/index.js';
-import { fireCommand } from '../registers/commands/index.js';
+import { Command, fireCommand } from '../registers/commands/index.js';
 
+import { TaskStatusComponent, TaskStatusComponentProps } from './TaskStatusComponent.js';
 import { Markdown } from './Markdown.js';
 
 // Initialise htm with Preact
@@ -51,10 +51,10 @@ export function TaskComponent(props: TaskComponentProps) {
 		if (task.name === '') {
 			deleteTask(task.id);
 			if (previousName.current !== '') {
-				fireCommand('save-data');
+				fireCommand(Command.DATA_SAVE);
 			}
 		} else if (previousName.current !== task.name) {
-			fireCommand('save-data');
+			fireCommand(Command.DATA_SAVE);
 		}
 		previousName.current = null;
 	}, [task.name, task.id]);
@@ -98,7 +98,7 @@ export function TaskComponent(props: TaskComponentProps) {
 			blurOnNextRender();
 			return;
 		}
-	}, [id, dayName]);
+	}, [id, dayName, blurOnNextRender]);
 
 	return html`
 		<div class="task">
