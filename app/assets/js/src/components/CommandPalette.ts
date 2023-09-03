@@ -12,8 +12,8 @@ import classNames from 'classnames';
 
 import { escapeRegExpString } from '../util/index.js';
 
-import { useCommands } from '../registers/commands/hooks/useCommands.js';
-import { fireCommand } from '../registers/commands/commandsRegister.js';
+import { fireCommand, useCommands } from '../registers/commands/index.js';
+import { getKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -54,7 +54,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 			return commands;
 		}
 
-		return commands.filter((command) => queryPattern.test(command.name));
+		return commands.filter((command) => queryPattern.test(command.commandInfo.name));
 	}, [commands, queryPattern]);
 
 	const optionsRef = useRef<RefObject<HTMLElement>[]>([]);
@@ -122,7 +122,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 					e.preventDefault();
 					activeDescendant.click();
 				} else if (matchingCommands.length === 1) {
-					fireCommand(matchingCommands[0].id);
+					fireCommand(matchingCommands[0].commandInfo.id);
 				}
 			}
 		};
@@ -177,10 +177,10 @@ export function CommandPalette(props: CommandPaletteProps) {
 								// Determine how to display the command name based on the current query
 								const nameDisplay = (() => {
 									if (queryPattern === null) {
-										return command.name;
+										return command.commandInfo.name;
 									}
 
-									const match = command.name.match(queryPattern);
+									const match = command.commandInfo.name.match(queryPattern);
 									if (match === null) {
 										return null;
 									}
@@ -223,10 +223,10 @@ export function CommandPalette(props: CommandPaletteProps) {
 
 								return html`
 									<button
-										key="${command.id}"
+										key="${command.commandInfo.id}"
 										type="button"
 										ref="${optionsRef.current[i]}"
-										id="${command.id}"
+										id="${command.commandInfo.id}"
 										class="${classNames({
 											'command-palette__option': true,
 											'command-palette__option--active': activeDescendant !== null && optionsRef.current[i].current === activeDescendant,
@@ -235,10 +235,23 @@ export function CommandPalette(props: CommandPaletteProps) {
 											if (onClose) {
 												onClose();
 											}
-											fireCommand(command.id);
+											fireCommand(command.commandInfo.id);
 										}}"
 									>
 										${nameDisplay}
+										<!-- TODO: This needs tidying up.
+										Perhaps instead of getting all info for a command and keyboard
+										shortcut, just allow a list of shortcuts to be retrieved? -->
+										<span class="content">
+											${command.shortcuts.map((shortcut) => html`
+												${getKeyboardShortcut(shortcut).shortcuts.map((keyCombo) => html`
+													${keyCombo.ctrl && html`<kbd>Ctrl</kbd> + `}
+													${keyCombo.alt && html`<kbd>Alt</kbd> + `}
+													${keyCombo.shift && html`<kbd>Shift</kbd> + `}
+													<kbd>${keyCombo.key}</kbd>
+												`)}
+											`)}
+										</span>
 									</button>
 								`;
 							})}

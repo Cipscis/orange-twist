@@ -121,3 +121,13 @@ export function getKeyboardShortcuts(): ReadonlyArray<Readonly<KeyboardShortcutI
 		keyboardShortcutsRegister.values()
 	).map((info) => ({ ...info }));
 }
+
+export function getKeyboardShortcut(name: KeyboardShortcutName): Readonly<KeyboardShortcutInfo> {
+	const info = keyboardShortcutsRegister.get(name);
+
+	if (!info) {
+		throw new Error(`Cannot get info for unregistered keyboard shortcut ${name}`);
+	}
+
+	return info;
+}
