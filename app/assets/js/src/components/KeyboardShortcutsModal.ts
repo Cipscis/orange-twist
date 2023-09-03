@@ -46,6 +46,7 @@ export function KeyboardShortcutModal() {
 									key="${`${keyboardShortcutInfo.name}-${i}`}"
 									class="keyboard-shortcuts__item__combo content"
 								>
+									<!-- TODO: Refactor this into its own component -->
 									${shortcut.ctrl && html`<kbd>Ctrl</kbd> + `}
 									${shortcut.alt && html`<kbd>Alt</kbd> + `}
 									${shortcut.shift && html`<kbd>Shift</kbd> + `}

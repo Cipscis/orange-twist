@@ -57,7 +57,9 @@
 .command-palette__option {
 	@include reset;
 	cursor: pointer;
-	display: block;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	width: 100%;
 
 	@include font-base-large;
