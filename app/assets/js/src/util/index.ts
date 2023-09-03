@@ -6,6 +6,7 @@ export { isValidDateString } from './isValidDateString.js';
 export { isZodSchemaType } from './isZodSchemaType.js';
 export { nodeHasAncestor } from './nodeHasAncestor.js';
 export { useAsyncData, AsyncDataState } from './useAsyncData.js';
+export { useViewTransition } from './useViewTransition.js';
 
 export { CSSKeyframes } from './CSSKeyframes.js';
 
