@@ -2,18 +2,18 @@
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { useCommand } from './hooks/useCommand.js';
 
-import { Command, CommandId, CommandListener, CommandsList } from './types/index.js';
+import { CommandInfo, CommandId, CommandListener, CommandsList } from './types/index.js';
 
 export const commandsRegister = new Map<
 	CommandId,
 	{
-		command: Command;
+		commandInfo: CommandInfo;
 		listeners: CommandListener[];
 	}
 >();
 
 export interface NewCommandRegisteredListener {
-	(command: Command): void;
+	(command: CommandInfo): void;
 }
 export const newCommandRegisteredListeners: Array<NewCommandRegisteredListener> = [];
 
@@ -28,24 +28,24 @@ export const newCommandRegisteredListeners: Array<NewCommandRegisteredListener> 
  *
  * @see {@linkcode useCommand} for binding events in a Preact context.
  */
-export function registerCommand<C extends CommandId>(command: Command<C>): void {
-	commandsRegister.set(command.id, {
-		command,
+export function registerCommand<C extends CommandId>(commandInfo: CommandInfo<C>): void {
+	commandsRegister.set(commandInfo.id, {
+		commandInfo: commandInfo,
 		listeners: [],
 	});
 
 	for (const listener of newCommandRegisteredListeners) {
-		listener(command);
+		listener(commandInfo);
 	}
 }
 
 /**
  * Get a list of all registered commands.
  */
-export function getCommands(): ReadonlyArray<Readonly<Command>> {
+export function getCommands(): ReadonlyArray<Readonly<CommandInfo>> {
 	return Array.from(
 		commandsRegister.values()
-	).map(({ command }) => ({ ...command }));
+	).map(({ commandInfo: command }) => ({ ...command }));
 }
 
 /**

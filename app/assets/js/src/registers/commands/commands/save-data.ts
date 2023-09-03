@@ -1,10 +1,12 @@
-import { KeyboardShortcutName } from '../../keyboard-shortcuts/index.js';
-import { bindKeyboardShortcutToCommand } from '../../keyboard-shortcuts/listeners/bindKeyboardShortcutToCommand.js';
+import { Command } from '../types/Command.js';
+
 import { registerCommand } from '../commandsRegister.js';
 
+import { KeyboardShortcutName, bindKeyboardShortcutToCommand } from '../../keyboard-shortcuts/index.js';
+
 registerCommand({
-	id: 'save-data',
+	id: Command.DATA_SAVE,
 	name: 'Save data',
 });
 
-bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, 'save-data');
+bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, 'data-save');

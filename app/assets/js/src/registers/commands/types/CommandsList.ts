@@ -1,3 +1,5 @@
+import { Command } from './Command.js';
+
 /**
  * This interface is used to allow the list of commands to be extended
  * through [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)
@@ -21,7 +23,7 @@
  */
 export interface CommandsList {
 	// Commands are added here in place where they are registered
-	'add-new-day': [dayName: string];
-	'add-new-task': [dayName: string];
-	'save-data': [];
+	[Command.DAY_ADD_NEW]: [dayName: string];
+	[Command.TASK_ADD_NEW]: [dayName: string];
+	[Command.DATA_SAVE]: [];
 }

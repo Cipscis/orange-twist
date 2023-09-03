@@ -15,7 +15,7 @@ import { Day } from '../types/Day.js';
 import { nodeHasAncestor } from '../util/index.js';
 
 import { setDayData } from '../registers/days/index.js';
-import { fireCommand } from '../registers/commands/index.js';
+import { Command, fireCommand } from '../registers/commands/index.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -39,7 +39,7 @@ export function DayNote(props: DayNoteProps) {
 	 */
 	const saveChanges = useCallback(() => {
 		if (dirtyFlag.current) {
-			fireCommand('save-data');
+			fireCommand(Command.DATA_SAVE);
 			dirtyFlag.current = false;
 		}
 	}, []);
