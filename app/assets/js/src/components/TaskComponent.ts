@@ -107,10 +107,11 @@ export function TaskComponent(props: TaskComponentProps) {
 
 				return html`
 					<${TaskStatusComponent} ...${taskStatusProps} />
-					<div
+					<form
 						class="task__name"
 					>
 						<${Markdown} content="${name.replace(/</g, '&lt;')}" class="task__name-markdown content" />
+
 						<input
 							ref="${inputRef}"
 							type="text"
@@ -122,7 +123,7 @@ export function TaskComponent(props: TaskComponentProps) {
 							onKeydown="${keydownHandler}"
 							onBlur="${saveChanges}"
 						/>
-					</div>
+					</form>
 				`;
 			})()}
 		</div>
