@@ -69,6 +69,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 		};
 
 		if (open) {
+			setQuery('');
 			fieldRef.current?.focus();
 			document.addEventListener('keydown', closeOnEscape);
 		}
