@@ -6,7 +6,10 @@ import classNames from 'classnames';
 
 import { Task } from '../types/Task.js';
 
+import { useViewTransition } from '../util/index.js';
+
 import { getTaskData } from '../registers/tasks/tasksRegister.js';
+
 import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
 
 // Initialise htm with Preact
@@ -32,6 +35,11 @@ export function TaskList(props: TaskListProps) {
 	const idBase = useId();
 
 	const itemsRef = useRef<Array<HTMLElement>>([]);
+
+	const {
+		startViewTransition,
+		isInViewTransition,
+	} = useViewTransition();
 
 	const dragStartHandler = useCallback((i: number) => {
 		return (e: DragEvent) => {
@@ -68,7 +76,7 @@ export function TaskList(props: TaskListProps) {
 	/**
 	 * Handle moving an element when dropped, and emiting an event.
 	 */
-	const dropHandler = useCallback(async (e: DragEvent) => {
+	const dropHandler = useCallback((e: DragEvent) => {
 		if (!onReorder) {
 			return;
 		}
@@ -103,10 +111,8 @@ export function TaskList(props: TaskListProps) {
 			newTasksOrder.splice(draggedElementIndex, 1);
 		}
 
-		document.startViewTransition(() => {
-			onReorder(newTasksOrder);
-		});
-	}, [onReorder]);
+		startViewTransition(() => onReorder(newTasksOrder));
+	}, [startViewTransition, onReorder]);
 
 	return html`
 		<div
@@ -131,7 +137,10 @@ export function TaskList(props: TaskListProps) {
 						id="${`${idBase}-${taskData.id}`}"
 						data-task-list-drop-target
 						data-task-list-item-id="${taskData.id}"
-						style="view-transition-name: ${idBase}-${taskData.id};"
+						style="view-transition-name: ${
+							isInViewTransition
+								? `${idBase}-${taskData.id}`
+								: 'none'};"
 					>
 						${
 							onReorder && html`
