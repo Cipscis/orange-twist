@@ -118,6 +118,18 @@ export function DayNote(props: DayNoteProps) {
 		dirtyFlag.current = true;
 	}, [dayName]);
 
+	const cleanNote = useCallback((e: FocusEvent) => {
+		const textarea = e.target;
+		if (!(textarea instanceof HTMLTextAreaElement)) {
+			return;
+		}
+
+		// Markdown doesn't render leading or trailing space, and treats
+		// 3 or more consecutive newlines the same as 2. So tidy the note.
+		const note = textarea.value.trim().replace(/\n{2}\n+/g, '\n\n');
+		setDayData(dayName, { note });
+	}, [dayName]);
+
 	const clickHandler = useCallback(function (e: MouseEvent) {
 		const selection = getSelection();
 		const hasSelection = selection?.isCollapsed === false;
@@ -151,6 +163,7 @@ export function DayNote(props: DayNoteProps) {
 				>
 					<textarea
 						onInput="${inputHandler}"
+						onBlur="${cleanNote}"
 						ref="${textareaRef}"
 					>${day.note}</textarea>
 				</div>

@@ -38,21 +38,9 @@
 		}
 	}
 
-	blockquote {
-		margin-block: calc(1em * var(--line-height));
-		&:first-child {
-			margin-block-start: 0;
-		}
-		&:last-child {
-			margin-block-end: 0;
-		}
-
-		// About enough to compensate for "> "
-		margin-inline-start: 1.5ch;
-	}
-
 	code {
 		@include contrast-secondary;
+		// About enough to compensate for "`"
 		padding: 0 0.5ch;
 		border-radius: 0.2em;
 
@@ -66,18 +54,11 @@
 		max-width: 100%;
 		overflow: auto;
 		tab-size: 4;
-
-		margin-block: calc(2em * var(--line-height));
-		&:first-child {
-			margin-block-start: 0;
-		}
-		&:last-child {
-			margin-block-end: 0;
-		}
 	}
 
 	kbd {
 		display: inline-block;
+		// About enough to compensate for "`"
 		padding: 0 0.5ch;
 		border: 1px solid currentColor;
 		border-radius: 0.5em;
