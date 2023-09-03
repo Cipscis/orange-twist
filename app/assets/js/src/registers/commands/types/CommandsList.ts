@@ -26,4 +26,5 @@ export interface CommandsList {
 	[Command.DAY_ADD_NEW]: [dayName: string];
 	[Command.TASK_ADD_NEW]: [dayName: string];
 	[Command.DATA_SAVE]: [];
+	[Command.THEME_TOGGLE]: [];
 }

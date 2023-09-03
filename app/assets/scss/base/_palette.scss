@@ -17,8 +17,18 @@
 		.light {
 			@include palette-light;
 		}
+		body {
+			@container style(--theme: light) {
+				@include palette-light;
+			}
+		}
 		.dark {
 			@include palette-dark;
+		}
+		body {
+			@container style(--theme: dark) {
+				@include palette-dark;
+			}
 		}
 		.colour-scheme--default {
 			@include palette-light;
