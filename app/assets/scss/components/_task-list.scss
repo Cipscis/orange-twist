@@ -10,6 +10,8 @@
 }
 
 .task-list__drag-handle {
+	flex-shrink: 0;
+
 	margin-right: 1ch;
 
 	cursor: move;
