@@ -6,7 +6,7 @@ declare global {
 		 *
 		 * @see {@linkcode https://developer.mozilla.org/en-US/docs/Web/API/Element/setHTML setHTML}
 		 */
-		setHTML(input: string): void;
+		setHTML?: (input: string) => void;
 	}
 }
 

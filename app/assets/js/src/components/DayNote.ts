@@ -126,7 +126,9 @@ export function DayNote(props: DayNoteProps) {
 
 		// Markdown doesn't render leading or trailing space, and treats
 		// 3 or more consecutive newlines the same as 2. So tidy the note.
-		const note = textarea.value.trim().replace(/\n{2}\n+/g, '\n\n');
+		const note = textarea.value
+			.trim()
+			.replace(/\n{2}\n+/g, '\n\n');
 		setDayData(dayName, { note });
 	}, [dayName]);
 

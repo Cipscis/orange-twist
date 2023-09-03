@@ -10,10 +10,10 @@ declare global {
 
 	interface Document {
 		/** {@link https://developer.mozilla.org/en-US/docs/Web/API/Document/startViewTransition MDN Reference} */
-		startViewTransition(
+		startViewTransition?: (
 			/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 			callback: () => any
-		): ViewTransition
+		) => ViewTransition
 	}
 }
 

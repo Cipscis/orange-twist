@@ -29,6 +29,10 @@
 	display: grid;
 }
 
+.orange-twist__section-summary {
+	list-style: none;
+}
+
 .orange-twist__title {
 	@include font-heading-2;
 
@@ -52,9 +56,6 @@
 		details[open] > &::after {
 			transform: rotate(90deg);
 		}
-	}
-	summary:has(&) {
-		list-style: none;
 	}
 }
 

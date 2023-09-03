@@ -35,7 +35,13 @@ export function Markdown(props: MarkdownProps) {
 			// replace `<` with `&lt;`, so reverse it (this means if I were
 			// type "&amp;lt;" in a task name it would become "<" but that's fine)
 			.replace(/&amp;lt;/g, '&lt;');
-		wrapper.setHTML(renderedContent);
+
+		if (wrapper.setHTML) {
+			wrapper.setHTML(renderedContent);
+		} else {
+			console.warn('`setHTML` is not supported, so falling back to vulnerable method');
+			wrapper.innerHTML = renderedContent;
+		}
 	}, [content]);
 
 	return html`<div

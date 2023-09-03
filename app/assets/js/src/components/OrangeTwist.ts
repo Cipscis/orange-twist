@@ -263,7 +263,7 @@ export function OrangeTwist() {
 
 				html`
 					<details class="orange-twist__section">
-						<summary>
+						<summary class="orange-twist__section-summary">
 							<h2 class="orange-twist__title">Completed tasks</h2>
 						</summary>
 
