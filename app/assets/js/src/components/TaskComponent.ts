@@ -110,11 +110,10 @@ export function TaskComponent(props: TaskComponentProps) {
 					<form
 						class="task__name"
 					>
-						<${Markdown} content="${name.replace(/</g, '&lt;')}" class="task__name-markdown content" />
-
 						<input
 							ref="${inputRef}"
 							type="text"
+							class="task__name-input"
 							value="${name}"
 							placeholder="Task name"
 							size="1"
@@ -123,6 +122,8 @@ export function TaskComponent(props: TaskComponentProps) {
 							onKeydown="${keydownHandler}"
 							onBlur="${saveChanges}"
 						/>
+
+						<${Markdown} content="${name.replace(/</g, '&lt;')}" class="task__name-markdown content" />
 					</form>
 				`;
 			})()}

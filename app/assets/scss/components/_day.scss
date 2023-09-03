@@ -29,24 +29,12 @@
 	position: relative;
 	--_gutter: 0.5em;
 
-	// TODO: Make this more robust
-	// Button height + button offset + border
-	min-height: calc(2em + 12px);
-
-	// TODO: What if no `:has` support?
-	&:has(:where(textarea, .content:not(:empty))) {
+	textarea,
+	.content:not(:empty) {
 		border: 1px solid var(--accent);
-		.content {
-			padding: var(--_gutter);
-		}
-
-		.day__note-edit,
-		.day__note-done {
-			position: absolute;
-			z-index: 1;
-			top: 5px;
-			right: 5px;
-		}
+	}
+	.content:not(:empty) {
+		padding: var(--_gutter);
 	}
 
 	.content {

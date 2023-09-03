@@ -18,13 +18,13 @@
 	width: fit-content;
 	min-width: 11ch;
 
-	input {
+	.task__name-input {
 		@include reset;
 		cursor: text;
 	}
 
 	// Stack them on top of each other
-	input,
+	.task__name-input,
 	.task__name-markdown {
 		grid-area: 1 / 1 / -1 / -1;
 
@@ -43,20 +43,17 @@
 		overflow: hidden;
 	}
 
-	&:not(:has(input:focus)) {
-		.task__name-markdown {
+	.task__name-input {
+		opacity: 0;
+		+ .task__name-markdown {
 			opacity: 1;
 		}
-		input {
-			opacity: 0;
-		}
-	}
-	&:has(input:focus) {
-		.task__name-markdown {
-			opacity: 0;
-		}
-		input {
+
+		&:focus {
 			opacity: 1;
+			+ .task__name-markdown {
+				opacity: 0;
+			}
 		}
 	}
 }

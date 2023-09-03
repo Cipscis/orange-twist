@@ -27,7 +27,7 @@
 		inset: 0;
 		z-index: -1;
 		background: var(--bg);
-		opacity: 0.5;
+		opacity: 0.7;
 
 		transition: opacity 0.2s ease-in-out;
 	}
@@ -45,11 +45,6 @@
 
 	&:focus-visible {
 		outline: none;
-		.command-palette__field:has(&) {
-			&::before {
-				opacity: 0.7;
-			}
-		}
 	}
 }
 
