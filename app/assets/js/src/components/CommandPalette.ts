@@ -13,7 +13,8 @@ import classNames from 'classnames';
 import { escapeRegExpString } from '../util/index.js';
 
 import { fireCommand, useCommands } from '../registers/commands/index.js';
-import { getKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
+
+import { KeyboardShortcutCombos } from './KeyboardShortcutCombos.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -244,12 +245,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 										shortcut, just allow a list of shortcuts to be retrieved? -->
 										<span class="content">
 											${command.shortcuts.map((shortcut) => html`
-												${getKeyboardShortcut(shortcut).shortcuts.map((keyCombo) => html`
-													${keyCombo.ctrl && html`<kbd>Ctrl</kbd> + `}
-													${keyCombo.alt && html`<kbd>Alt</kbd> + `}
-													${keyCombo.shift && html`<kbd>Shift</kbd> + `}
-													<kbd>${keyCombo.key}</kbd>
-												`)}
+												<${KeyboardShortcutCombos} keyboardShortcutName="${shortcut}" />
 											`)}
 										</span>
 									</button>
