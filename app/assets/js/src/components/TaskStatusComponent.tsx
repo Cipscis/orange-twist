@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import htm from 'htm';
 
 import { Task } from '../types/Task.js';
 import { TaskStatus } from '../types/TaskStatus.js';
@@ -15,10 +14,7 @@ import {
 	CSSKeyframes,
 } from '../util/index.js';
 
-// Initialise htm with Preact
-const html = htm.bind(h);
-
-export interface TaskStatusComponentProps {
+interface TaskStatusComponentProps {
 	task: Task;
 	dayName?: string;
 }
@@ -39,7 +35,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 	} = props;
 
 	const rootRef = useRef<HTMLElement>(null);
-	const optionsRef = useRef<HTMLElement>(null);
+	const optionsRef = useRef<HTMLUListElement>(null);
 
 	const statusSymbol = taskStatusSymbols[status];
 
@@ -122,56 +118,52 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		};
 	}, [isInChangeMode, exitChangeModeOnEscape, exitChangeModeOnOutsideClick]);
 
-	return html`
-		<span
-			class="task-status"
-			ref="${rootRef}"
-		>
-			<button
-				type="button"
-				class="task-status__change"
-				title="${status}"
-				onClick="${() => setIsInChangeMode(!isInChangeMode)}"
-			>${statusSymbol}</button>
+	return <span
+		class="task-status"
+		ref={rootRef}
+	>
+		<button
+			type="button"
+			class="task-status__change"
+			title={status}
+			onClick={() => setIsInChangeMode(!isInChangeMode)}
+		>{statusSymbol}</button>
 
-			${
-				isInChangeMode &&
-				html`
-					<ul
-						class="task-status__options"
-						ref="${optionsRef}"
-					>
-						<li class="task-status__optgroup">
-							<ul class="task-status__optgroup-list">
-								${Object.values(TaskStatus).map((taskStatus) => html`
-									<li
-										key="${taskStatus}"
-										class="task-status__option"
-									>
-										<button
-											type="button"
-											class="task-status__option-button"
-											title="${taskStatus}"
-											onClick="${() => changeStatus(taskStatus)}"
-										>
-											${taskStatusSymbols[taskStatus]}
-										</button>
-									</li>
-								`)}
-							</ul>
-						</li>
-
-						<li class="task-status__option">
-							<button
-								type="button"
-								class="task-status__option-button"
-								title="Delete"
-								onClick="${() => deleteTaskUI()}"
-							>❌</button>
-						</li>
+		{
+			isInChangeMode &&
+			<ul
+				class="task-status__options"
+				ref={optionsRef}
+			>
+				<li class="task-status__optgroup">
+					<ul class="task-status__optgroup-list">
+						{Object.values(TaskStatus).map((taskStatus) => (
+							<li
+								key={taskStatus}
+								class="task-status__option"
+							>
+								<button
+									type="button"
+									class="task-status__option-button"
+									title={taskStatus}
+									onClick={() => changeStatus(taskStatus)}
+								>
+									{taskStatusSymbols[taskStatus]}
+								</button>
+							</li>
+						))}
 					</ul>
-				`
-			}
-		</span>
-	`;
+				</li>
+
+				<li class="task-status__option">
+					<button
+						type="button"
+						class="task-status__option-button"
+						title="Delete"
+						onClick={() => deleteTaskUI()}
+					>❌</button>
+				</li>
+			</ul>
+		}
+	</span>;
 }

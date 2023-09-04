@@ -2,9 +2,8 @@ import { h } from 'preact';
 
 import { marked } from 'marked';
 import { useLayoutEffect, useRef } from 'preact/hooks';
-import { JSXInternal } from 'preact/src/jsx.js';
 
-interface MarkdownProps extends JSXInternal.DOMAttributes<HTMLDivElement> {
+interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	content: string;
 }
 

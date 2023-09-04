@@ -16,7 +16,7 @@ import { nodeHasAncestor } from '../util/index.js';
 import { setDayData } from '../registers/days/index.js';
 import { Command, fireCommand } from '../registers/commands/index.js';
 
-export interface DayNoteProps {
+interface DayNoteProps {
 	day: Readonly<Day>;
 }
 
