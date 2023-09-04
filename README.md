@@ -107,6 +107,8 @@ These dependencies are used when working on the project locally.
 
 	* [@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser): Allows `eslint` to parse TypeScript
 
+	* [eslint-plugin-react](https://www.npmjs.com/package/eslint-plugin-react): Provides React/Preact linting rules
+
 	* [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks): Provides React/Preact linting rules
 
 * [stylelint](https://www.npmjs.com/package/stylelint): Linting CSS

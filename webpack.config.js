@@ -21,13 +21,13 @@ const config = {
 	resolve: {
 		fullySpecified: true,
 		extensionAlias: {
-			'js': ['ts', 'js'],
+			'js': ['ts', 'tsx', 'js', 'jsx'],
 		},
 	},
 	module: {
 		rules: [
 			{
-				test: /\.ts$/,
+				test: /\.tsx?$/,
 				loader: 'ts-loader',
 			},
 		],

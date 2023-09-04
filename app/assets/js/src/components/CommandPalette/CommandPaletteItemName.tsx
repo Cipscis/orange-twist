@@ -1,10 +1,5 @@
 import { h } from 'preact';
 
-import htm from 'htm';
-
-// Initialise htm with Preact
-const html = htm.bind(h);
-
 interface CommandPaletteItemNameProps {
 	name: string;
 	query: string;
@@ -55,13 +50,11 @@ export function CommandPaletteItemName(props: CommandPaletteItemNameProps) {
 		}
 	}
 
-	return html`
-		<span class="command-palette__option__name">
-			${tokens.map((token) => {
-				return token.match
-					? html`<b>${token.string}</b>`
-					: token.string;
-			})}
-		</span>
-	`;
+	return <span class="command-palette__option__name">
+		${tokens.map((token) => {
+			return token.match
+				? <b>${token.string}</b>
+				: token.string;
+		})}
+	</span>;
 }
