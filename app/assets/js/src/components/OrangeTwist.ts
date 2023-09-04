@@ -21,7 +21,7 @@ import { KeyboardShortcutName, useKeyboardShortcut } from '../registers/keyboard
 
 import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
 import { toast } from './Toast.js';
-import { CommandPalette } from './CommandPalette.js';
+import { CommandPalette } from './CommandPalette/CommandPalette.js';
 import { TaskList } from './TaskList.js';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal.js';
 
