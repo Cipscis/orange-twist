@@ -7,20 +7,24 @@ import { getDeepActiveElement, nodeHasAncestor } from '../../util/index.js';
 
 interface ModalProps {
 	open: boolean;
+
+	onOpen?: () => void;
 	onClose: () => void;
 
 	children: ComponentChildren;
-	className?: string;
+	class?: string;
 	title?: string;
 }
 
 export function Modal(props: ModalProps) {
 	const {
 		open,
+
+		onOpen,
 		onClose,
 
 		children,
-		className,
+		class: className,
 		title,
 	} = props;
 
@@ -52,11 +56,13 @@ export function Modal(props: ModalProps) {
 		const closeOnFocusOut = (e: FocusEvent) => {
 			// Ignore `focusout` triggered by focus leaving the viewport,
 			// such as switching to another tab or focusing on the dev tools
+			const activeElement = document.activeElement;
+
 			if (
-				document.activeElement instanceof Node && modalEl &&
+				activeElement instanceof Node && modalEl &&
 				(
-					document.activeElement === modalEl ||
-					nodeHasAncestor(document.activeElement, modalEl)
+					activeElement === modalEl ||
+					nodeHasAncestor(activeElement, modalEl)
 				)
 			) {
 				return;
@@ -66,6 +72,10 @@ export function Modal(props: ModalProps) {
 		};
 
 		if (open) {
+			if (onOpen) {
+				onOpen();
+			}
+
 			document.addEventListener('keydown', closeOnEscape);
 			modalEl?.addEventListener('focusout', closeOnFocusOut);
 		}
@@ -76,7 +86,7 @@ export function Modal(props: ModalProps) {
 				modalEl?.removeEventListener('focusout', closeOnFocusOut);
 			}
 		};
-	}, [open, onClose]);
+	}, [open, onClose, onOpen]);
 
 	return <>
 		{
@@ -86,7 +96,7 @@ export function Modal(props: ModalProps) {
 			>
 				<div
 					class={classNames('modal__body', className)}
-					tabIndex={0}
+					tabIndex={-1}
 					ref={modalRef}
 				>
 					{

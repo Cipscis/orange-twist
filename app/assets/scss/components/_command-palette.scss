@@ -1,16 +1,5 @@
 .command-palette {
-	position: fixed;
-	z-index: 1;
-	inset: 0;
-	pointer-events: none;
-	& > * {
-		pointer-events: auto;
-	}
-
-	display: grid;
-	place-items: center;
-
-	isolation: isolate;
+	background: transparent;
 }
 
 .command-palette__field,
