@@ -5,7 +5,6 @@ import {
 	useRef,
 	useState,
 } from 'preact/hooks';
-import htm from 'htm';
 
 import classNames from 'classnames';
 
@@ -19,14 +18,11 @@ import { Command, useCommand } from '../registers/commands/index.js';
 import { reorderTasks } from '../registers/tasks/tasksRegister.js';
 import { KeyboardShortcutName, useKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
 
-import { DayComponent, DayProps as DayComponentProps } from './DayComponent.js';
+import { DayComponent } from './DayComponent.js';
 import { toast } from './Toast.js';
-import { CommandPalette } from './CommandPalette.js';
+import { CommandPalette } from './CommandPalette/CommandPalette.js';
 import { TaskList } from './TaskList.js';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal.js';
-
-// Initialise htm with Preact
-const html = htm.bind(h);
 
 export function OrangeTwist() {
 	const {
@@ -49,7 +45,7 @@ export function OrangeTwist() {
 	);
 
 	// Scroll to new day when created
-	const daySectionsRef = useRef<Record<string, HTMLElement>>({});
+	const daySectionsRef = useRef<Record<string, HTMLElement | null>>({});
 	const [newDayName, setNewDayName] = useState<string | null>(null);
 	useEffect(() => {
 		if (newDayName) {
@@ -171,111 +167,102 @@ export function OrangeTwist() {
 		saveData();
 	}, [saveData]);
 
-	return html`
-		<${CommandPalette}
-			open="${commandPaletteOpen}"
-			onClose="${() => setCommandPaletteOpen(false)}"
+	return <>
+		<CommandPalette
+			open={commandPaletteOpen}
+			onClose={() => setCommandPaletteOpen(false)}
 		/>
 
 		<div class="orange-twist">
 			<h1 class="orange-twist__heading">Orange Twist</h1>
 
 			<section
-				class="${classNames({
+				class={classNames({
 					'orange-twist__section': true,
 					'orange-twist__section--loading': isDaysLoading,
-				})}"
-				aria-busy="${isDaysLoading || null}"
+				})}
+				aria-busy={isDaysLoading || undefined}
 			>
 				<h2 class="orange-twist__title">Days</h2>
 
-				${
+				{
 					isDaysLoading &&
-					html`<span class="orange-twist__loader" title="Loading"></span>`
+					<span class="orange-twist__loader" title="Loading" />
 				}
-				${
+				{
 					daysError &&
 					// TODO: Handle error better somehow
-					html`<span class="orange-twist__error">Error: ${daysError}</span>`
+					<span class="orange-twist__error">Error: {daysError}</span>
 				}
-				${
-					days &&
-					html`
-						${days.map((day) => {
-							const dayProps: DayComponentProps = { day };
-							return html`
-								<${DayComponent}
-									key="${day.dayName}"
-									ref="${(ref: HTMLElement) => daySectionsRef.current[day.dayName] = ref}"
-									...${dayProps}
-								/>
-							`;
+				{
+					days && <>
+						{days.map((day) => {
+							return <DayComponent
+								key={day.dayName}
+								ref={(ref: HTMLDivElement | null) => daySectionsRef.current[day.dayName] = ref}
+								day={day}
+							/>;
 						})}
 
 						<button
 							type="button"
 							class="button"
-							onClick="${() => addNewDay()}"
+							onClick={() => addNewDay()}
 						>Add day</button>
-					`
+					</>
 				}
 			</section>
 
 			<section
-				class="${classNames({
+				class={classNames({
 					'orange-twist__section': true,
 					'orange-twist__section--loading': isTasksLoading,
-				})}"
-				aria-busy="${isTasksLoading || null}"
-				ref="${unfinishedTasksListRef}"
+				})}
+				aria-busy={isTasksLoading || undefined}
+				ref={unfinishedTasksListRef}
 			>
 				<h2 class="orange-twist__title">Tasks</h2>
 
-				${
+				{
 					isTasksLoading &&
-					html`<span class="orange-twist__loader" title="Tasks loading"></span>`
+					<span class="orange-twist__loader" title="Tasks loading" />
 				}
-				${
+				{
 					tasksError &&
-					html`<span class="orange-twist__error">Tasks loading error: ${tasksError}</span>`
+					<span class="orange-twist__error">Tasks loading error: {tasksError}</span>
 				}
-				${
-					tasks &&
-
-					html`
-						<${TaskList}
-							tasks="${tasks.filter((task) => task.status !== TaskStatus.COMPLETED)}"
-							onReorder="${onOpenTasksReorder}"
+				{
+					tasks && <>
+						<TaskList
+							tasks={tasks.filter((task) => task.status !== TaskStatus.COMPLETED)}
+							onReorder={onOpenTasksReorder}
 							className="orange-twist__task-list"
 						/>
 
 						<button
 							type="button"
 							class="button"
-							onClick="${() => addNewTaskUI()}"
+							onClick={() => addNewTaskUI()}
 						>Add new task</button>
-					`
+					</>
 				}
 			</section>
 
-			${
+			{
 				tasks &&
+				<details class="orange-twist__section">
+					<summary class="orange-twist__section-summary">
+						<h2 class="orange-twist__title">Completed tasks</h2>
+					</summary>
 
-				html`
-					<details class="orange-twist__section">
-						<summary class="orange-twist__section-summary">
-							<h2 class="orange-twist__title">Completed tasks</h2>
-						</summary>
-
-						<${TaskList}
-							tasks="${tasks.filter((task) => task.status === TaskStatus.COMPLETED)}"
-							className="orange-twist__task-list"
-						/>
-					</details>
-				`
+					<TaskList
+						tasks={tasks.filter((task) => task.status === TaskStatus.COMPLETED)}
+						className="orange-twist__task-list"
+					/>
+				</details>
 			}
 		</div>
 
-		<${KeyboardShortcutModal} />
-	`;
+		<KeyboardShortcutModal />
+	</>;
 }

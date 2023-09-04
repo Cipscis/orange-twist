@@ -12,7 +12,7 @@ const config = {
 	mode: process.env.MODE,
 	entry: {
 		'priority': `${entryPath}/priority.ts`,
-		'main': `${entryPath}/main.ts`,
+		'main': `${entryPath}/main.tsx`,
 	},
 	output: {
 		path: distPath,
@@ -21,13 +21,13 @@ const config = {
 	resolve: {
 		fullySpecified: true,
 		extensionAlias: {
-			'js': ['ts', 'js'],
+			'js': ['ts', 'tsx', 'js', 'jsx'],
 		},
 	},
 	module: {
 		rules: [
 			{
-				test: /\.ts$/,
+				test: /\.tsx?$/,
 				loader: 'ts-loader',
 			},
 		],

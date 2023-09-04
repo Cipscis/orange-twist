@@ -2,15 +2,17 @@
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { useCommand } from './hooks/useCommand.js';
 
+import { KeyboardShortcutName } from '../keyboard-shortcuts/index.js';
+
 import { CommandInfo, CommandId, CommandListener, CommandsList } from './types/index.js';
 
-export const commandsRegister = new Map<
-	CommandId,
-	{
-		commandInfo: CommandInfo;
-		listeners: CommandListener[];
-	}
->();
+export type CommandEntry = {
+	commandInfo: CommandInfo;
+	listeners: CommandListener[];
+	shortcuts: KeyboardShortcutName[];
+};
+
+export const commandsRegister = new Map<CommandId, CommandEntry>();
 
 export interface NewCommandRegisteredListener {
 	(command: CommandInfo): void;
@@ -32,6 +34,7 @@ export function registerCommand<C extends CommandId>(commandInfo: CommandInfo<C>
 	commandsRegister.set(commandInfo.id, {
 		commandInfo: commandInfo,
 		listeners: [],
+		shortcuts: [],
 	});
 
 	for (const listener of newCommandRegisteredListeners) {
@@ -42,10 +45,23 @@ export function registerCommand<C extends CommandId>(commandInfo: CommandInfo<C>
 /**
  * Get a list of all registered commands.
  */
-export function getCommands(): ReadonlyArray<Readonly<CommandInfo>> {
+export function getCommands(): ReadonlyArray<Readonly<CommandEntry>> {
 	return Array.from(
 		commandsRegister.values()
-	).map(({ commandInfo: command }) => ({ ...command }));
+	).map((entry) => (entry));
+}
+
+/**
+ * Get the entry for a single specified command.
+ */
+export function getCommand(commandId: CommandId): CommandEntry {
+	const entry = commandsRegister.get(commandId);
+
+	if (!entry) {
+		throw new Error(`Cannot get entry for unregistered command ${commandId}`);
+	}
+
+	return entry;
 }
 
 /**

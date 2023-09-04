@@ -9,7 +9,6 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:@typescript-eslint/recommended-requiring-type-checking',
-		'plugin:react-hooks/recommended',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -20,7 +19,19 @@ module.exports = {
 	},
 	plugins: [
 		'@typescript-eslint',
+		'react',
+		'react-hooks',
 	],
+	settings: {
+		// Copied from `eslint-confict-preact` (which is too opinionated for me to use, e.g. assumes Jest)
+		react: {
+			// eslint-plugin-preact interprets this as "h.createElement",
+			// however we only care about marking h() as being a used variable.
+			pragma: 'h',
+			// We use "react 16.0" to avoid pushing folks to UNSAFE_ methods.
+			version: '16.0'
+		},
+	},
 	ignorePatterns: ['*.md'],
 	rules: {
 		/////////////////////////
@@ -104,6 +115,41 @@ module.exports = {
 			}
 		],
 
+		////////////////////////
+		// Preact / JSX Rules //
+		////////////////////////
+		// Copied from `eslint-confict-preact` (which is too opinionated for me to use, e.g. assumes Jest)
+		'react/no-deprecated': 'error',
+		'react/react-in-jsx-scope': 'off',
+		'react/display-name': ['warn', { ignoreTranspilerName: false }],
+		'react/jsx-no-bind': ['warn', {
+			ignoreRefs: true,
+			allowFunctions: true,
+			allowArrowFunctions: true
+		}],
+		'react/jsx-no-comment-textnodes': 'error',
+		'react/jsx-no-duplicate-props': 'error',
+		'react/jsx-no-target-blank': 'error',
+		'react/jsx-no-undef': 'error',
+		'react/jsx-tag-spacing': ['error', { beforeSelfClosing: 'always' }],
+		'react/jsx-uses-react': 'error',
+		'react/jsx-uses-vars': 'error',
+		'react/jsx-key': ['error', { checkFragmentShorthand: true }],
+		'react/self-closing-comp': 'error',
+		'react/prefer-es6-class': 'error',
+		'react/prefer-stateless-function': 'warn',
+		'react/require-render-return': 'error',
+		'react/no-danger': 'warn',
+		// Legacy APIs not supported in Preact:
+		'react/no-did-mount-set-state': 'error',
+		'react/no-did-update-set-state': 'error',
+		'react/no-find-dom-node': 'error',
+		'react/no-is-mounted': 'error',
+		'react/no-string-refs': 'error',
+
+		'react-hooks/rules-of-hooks': 'error',
+		'react-hooks/exhaustive-deps': 'warn',
+
 		////////////////
 		// Code style //
 		////////////////
@@ -182,14 +228,11 @@ module.exports = {
 		'no-trailing-spaces': [
 			'off',
 		],
-		'no-undefined': 'error',
 		'no-var': 'error',
 		'one-var': [
 			'error',
 			'never',
 		],
-		// I do prefer template strings, but the 'prefer-template' rule also prohibits string coercion via `'' + val`
-		// 'prefer-template': 'error',
 		'quotes': [
 			'error',
 			'single',
