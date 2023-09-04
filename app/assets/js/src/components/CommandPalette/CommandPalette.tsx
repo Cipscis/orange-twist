@@ -1,5 +1,6 @@
 import { RefObject, createRef, h } from 'preact';
 import {
+	useCallback,
 	useEffect,
 	useMemo,
 	useRef,
@@ -10,6 +11,7 @@ import { escapeRegExpString } from '../../util/index.js';
 
 import { fireCommand, useCommands } from '../../registers/commands/index.js';
 
+import { Modal } from '../shared/Modal.js';
 import { CommandPaletteItem } from './CommandPaletteItem.js';
 
 interface CommandPaletteProps {
@@ -53,27 +55,6 @@ export function CommandPalette(props: CommandPaletteProps) {
 
 	const optionsRef = useRef<RefObject<HTMLButtonElement>[]>([]);
 	optionsRef.current = matchingCommands.map((command, i) => optionsRef.current[i] ?? createRef<HTMLElement>());
-
-	// Handle opening and closing
-	useEffect(() => {
-		const closeOnEscape = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') {
-				onClose();
-			}
-		};
-
-		if (open) {
-			setQuery('');
-			fieldRef.current?.focus();
-			document.addEventListener('keydown', closeOnEscape);
-		}
-
-		return () => {
-			if (open) {
-				document.removeEventListener('keydown', closeOnEscape);
-			}
-		};
-	}, [open, onClose]);
 
 	// Handle active descendant management.
 	useEffect(() => {
@@ -136,55 +117,58 @@ export function CommandPalette(props: CommandPaletteProps) {
 		};
 	}, [open, activeDescendant, matchingCommands]);
 
-	return <>
-		{
-			open &&
-			<div class="command-palette">
-				<div>
-					<div class="command-palette__field">
-						<input
-							ref={fieldRef}
-							type="text"
-							class="command-palette__field-input"
+	const onOpen = useCallback(() => {
+		setQuery('');
+		fieldRef.current?.focus();
+	}, []);
 
-							aria-role="combobox"
-							aria-expanded="true"
-							aria-haspopoup="listbox"
-							aria-controls="command-palette__options"
-							aria-activedescendant={activeDescendant?.id ?? undefined}
+	return <Modal
+		open={open}
+		onOpen={onOpen}
+		onClose={onClose}
+		class="command-palette"
+	>
+		<div>
+			<div class="command-palette__field">
+				<input
+					ref={fieldRef}
+					type="text"
+					class="command-palette__field-input"
 
-							onInput={(e) => {
-								setQuery(e.currentTarget.value);
-							}}
+					aria-role="combobox"
+					aria-expanded="true"
+					aria-haspopoup="listbox"
+					aria-controls="command-palette__options"
+					aria-activedescendant={activeDescendant?.id ?? undefined}
 
-							onBlur={onClose}
-						/>
-					</div>
-					<div
-						id="command-palette__options"
-						class="command-palette__options"
-						role="listbox"
-					>
-						{matchingCommands.map((command, i) => (
-							<CommandPaletteItem
-								key={command.commandInfo.id}
-								ref={optionsRef.current[i]}
-
-								commandEntry={command}
-								query={query}
-								queryPattern={queryPattern}
-								isActive={activeDescendant !== null && optionsRef.current[i].current === activeDescendant}
-
-								closeCommandPalette={() => {
-									if (onClose) {
-										onClose();
-									}
-								}}
-							/>
-						))}
-					</div>
-				</div>
+					onInput={(e) => {
+						setQuery(e.currentTarget.value);
+					}}
+				/>
 			</div>
-		}
-	</>;
+			<div
+				id="command-palette__options"
+				class="command-palette__options"
+				role="listbox"
+			>
+				{matchingCommands.map((command, i) => (
+					<CommandPaletteItem
+						key={command.commandInfo.id}
+						ref={optionsRef.current[i]}
+
+						commandEntry={command}
+						query={query}
+						queryPattern={queryPattern}
+						isActive={activeDescendant !== null && optionsRef.current[i].current === activeDescendant}
+
+						closeCommandPalette={() => {
+							if (onClose) {
+								onClose();
+							}
+						}}
+					/>
+				))}
+			</div>
+		</div>
+	</Modal>;
 }
