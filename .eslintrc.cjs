@@ -228,7 +228,6 @@ module.exports = {
 		'no-trailing-spaces': [
 			'off',
 		],
-		'no-undefined': 'error',
 		'no-var': 'error',
 		'one-var': [
 			'error',

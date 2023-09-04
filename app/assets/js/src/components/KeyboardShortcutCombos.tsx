@@ -1,10 +1,6 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 
-import htm from 'htm';
 import { KeyboardShortcutName, getKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
-
-// Initialise htm with Preact
-const html = htm.bind(h);
 
 interface KeyboardShortcutCombosProps {
 	keyboardShortcutName: KeyboardShortcutName;
@@ -19,12 +15,23 @@ export function KeyboardShortcutCombos(props: KeyboardShortcutCombosProps) {
 	// TODO: Create a hook so this stays up to date
 	const combos = getKeyboardShortcut(keyboardShortcutName).shortcuts;
 
-	return html`
-		${combos.map((keyCombo) => html`
-			${keyCombo.ctrl && html`<kbd>Ctrl</kbd> + `}
-			${keyCombo.alt && html`<kbd>Alt</kbd> + `}
-			${keyCombo.shift && html`<kbd>Shift</kbd> + `}
-			<kbd>${keyCombo.key}</kbd>
-		`)}
-	`;
+	return <>
+		{
+			combos.map((keyCombo, i) => <Fragment key={i}>
+				{
+					keyCombo.ctrl &&
+					<><kbd>Ctrl</kbd>{' + '}</>
+				}
+				{
+					keyCombo.alt &&
+					<><kbd>Alt</kbd>{' + '}</>
+				}
+				{
+					keyCombo.shift &&
+					<><kbd>Shift</kbd>{' + '}</>
+				}
+				<kbd>{keyCombo.key}</kbd>
+			</Fragment>)
+		}
+	</>;
 }

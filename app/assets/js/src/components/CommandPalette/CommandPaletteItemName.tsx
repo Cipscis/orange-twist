@@ -18,7 +18,7 @@ export function CommandPaletteItemName(props: CommandPaletteItemNameProps) {
 	} = props;
 
 	if (queryPattern === null) {
-		return name;
+		return <>{name}</>;
 	}
 
 	const match = name.match(queryPattern);
@@ -51,9 +51,9 @@ export function CommandPaletteItemName(props: CommandPaletteItemNameProps) {
 	}
 
 	return <span class="command-palette__option__name">
-		${tokens.map((token) => {
+		{tokens.map((token) => {
 			return token.match
-				? <b>${token.string}</b>
+				? <b>{token.string}</b>
 				: token.string;
 		})}
 	</span>;

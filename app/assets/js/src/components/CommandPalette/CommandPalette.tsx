@@ -6,16 +6,11 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import htm from 'htm';
-
 import { escapeRegExpString } from '../../util/index.js';
 
 import { fireCommand, useCommands } from '../../registers/commands/index.js';
 
 import { CommandPaletteItem } from './CommandPaletteItem.js';
-
-// Initialise htm with Preact
-const html = htm.bind(h);
 
 interface CommandPaletteProps {
 	open: boolean;
@@ -56,7 +51,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 		return commands.filter((command) => queryPattern.test(command.commandInfo.name));
 	}, [commands, queryPattern]);
 
-	const optionsRef = useRef<RefObject<HTMLElement>[]>([]);
+	const optionsRef = useRef<RefObject<HTMLButtonElement>[]>([]);
 	optionsRef.current = matchingCommands.map((command, i) => optionsRef.current[i] ?? createRef<HTMLElement>());
 
 	// Handle opening and closing
@@ -141,60 +136,55 @@ export function CommandPalette(props: CommandPaletteProps) {
 		};
 	}, [open, activeDescendant, matchingCommands]);
 
-	return html`
-		${
+	return <>
+		{
 			open &&
-			html`
-				<div class="command-palette">
-					<div>
-						<div class="command-palette__field">
-							<input
-								ref="${fieldRef}"
-								type="text"
-								class="command-palette__field-input"
+			<div class="command-palette">
+				<div>
+					<div class="command-palette__field">
+						<input
+							ref={fieldRef}
+							type="text"
+							class="command-palette__field-input"
 
-								aria-role="combobox"
-								aria-expanded="true"
-								aria-haspopoup="listbox"
-								aria-controls="command-palette__options"
-								aria-activedescendant="${activeDescendant?.id ?? null}"
+							aria-role="combobox"
+							aria-expanded="true"
+							aria-haspopoup="listbox"
+							aria-controls="command-palette__options"
+							aria-activedescendant={activeDescendant?.id ?? undefined}
 
-								onInput="${(e: InputEvent) => {
-									// This type assertion is safe because we know the event fired on an input
-									setQuery((e.target as HTMLInputElement).value);
-								}}"
+							onInput={(e) => {
+								setQuery(e.currentTarget.value);
+							}}
 
-								onBlur="${onClose}"
+							onBlur={onClose}
+						/>
+					</div>
+					<div
+						id="command-palette__options"
+						class="command-palette__options"
+						role="listbox"
+					>
+						{matchingCommands.map((command, i) => (
+							<CommandPaletteItem
+								key={command.commandInfo.id}
+								ref={optionsRef.current[i]}
+
+								commandEntry={command}
+								query={query}
+								queryPattern={queryPattern}
+								isActive={activeDescendant !== null && optionsRef.current[i].current === activeDescendant}
+
+								closeCommandPalette={() => {
+									if (onClose) {
+										onClose();
+									}
+								}}
 							/>
-						</div>
-						<div
-							id="command-palette__options"
-							class="command-palette__options"
-							role="listbox"
-						>
-							${matchingCommands.map((command, i) => {
-								return html`
-									<${CommandPaletteItem}
-										key="${command.commandInfo.id}"
-										ref="${optionsRef.current[i]}"
-
-										commandEntry="${command}"
-										query="${query}"
-										queryPattern="${queryPattern}"
-										isActive="${activeDescendant !== null && optionsRef.current[i].current === activeDescendant}"
-
-										closeCommandPalette="${() => {
-											if (onClose) {
-												onClose();
-											}
-										}}"
-									/>
-								`;
-							})}
-						</div>
+						))}
 					</div>
 				</div>
-			`
+			</div>
 		}
-	`;
+	</>;
 }
