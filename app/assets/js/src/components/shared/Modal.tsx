@@ -1,13 +1,9 @@
 import { ComponentChildren, h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
-import htm from 'htm';
 import classNames from 'classnames';
 
 import { getDeepActiveElement, nodeHasAncestor } from '../../util/index.js';
-
-// Initialise htm with Preact
-const html = htm.bind(h);
 
 interface ModalProps {
 	open: boolean;
@@ -28,7 +24,7 @@ export function Modal(props: ModalProps) {
 		title,
 	} = props;
 
-	const modalRef = useRef<HTMLElement>(null);
+	const modalRef = useRef<HTMLDivElement>(null);
 	const preFocusEl = useRef<Element | null>(null);
 
 	useEffect(() => {
@@ -82,27 +78,25 @@ export function Modal(props: ModalProps) {
 		};
 	}, [open, onClose]);
 
-	return html`
-		${
+	return <>
+		{
 			open &&
-			html`
+			<div
+				class="modal"
+			>
 				<div
-					class="modal"
+					class={classNames('modal__body', className)}
+					tabIndex={0}
+					ref={modalRef}
 				>
-					<div
-						class="${classNames('modal__body', className)}"
-						tabindex="0"
-						ref="${modalRef}"
-					>
-						${
-							title &&
-							html`<h2 class="modal__title">${title}</h2>`
-						}
+					{
+						title &&
+						<h2 class="modal__title">{title}</h2>
+					}
 
-						${children}
-					</div>
+					{children}
 				</div>
-			`
+			</div>
 		}
-	`;
+	</>;
 }

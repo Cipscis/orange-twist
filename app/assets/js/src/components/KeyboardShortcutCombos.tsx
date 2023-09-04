@@ -17,21 +17,26 @@ export function KeyboardShortcutCombos(props: KeyboardShortcutCombosProps) {
 
 	return <>
 		{
-			combos.map((keyCombo, i) => <Fragment key={i}>
-				{
-					keyCombo.ctrl &&
-					<><kbd>Ctrl</kbd>{' + '}</>
-				}
-				{
-					keyCombo.alt &&
-					<><kbd>Alt</kbd>{' + '}</>
-				}
-				{
-					keyCombo.shift &&
-					<><kbd>Shift</kbd>{' + '}</>
-				}
-				<kbd>{keyCombo.key}</kbd>
-			</Fragment>)
+			combos.map((keyCombo, i) => (
+				<span
+					key={i}
+					class="content"
+				>
+					{
+						keyCombo.ctrl &&
+						<><kbd>Ctrl</kbd>{' + '}</>
+					}
+					{
+						keyCombo.alt &&
+						<><kbd>Alt</kbd>{' + '}</>
+					}
+					{
+						keyCombo.shift &&
+						<><kbd>Shift</kbd>{' + '}</>
+					}
+					<kbd>{keyCombo.key}</kbd>
+				</span>
+			))
 		}
 	</>;
 }
