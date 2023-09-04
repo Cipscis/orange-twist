@@ -63,8 +63,6 @@ This file is intended to differ from environment to environment, so it is ignore
 
 * [Preact](https://preactjs.com/): Rendering framework, alternative to React.
 
-* [htm](https://www.npmjs.com/package/htm): A library for using JSX-like syntax without a build system, using template literals.
-
 * [zod](https://zod.dev/): A library for writing type schemas, designed for working with TypeScript.
 
 * [marked](https://marked.js.org/): A Markdown compiler.
