@@ -11,7 +11,7 @@ import { getTaskData } from '../registers/tasks/tasksRegister.js';
 
 import { TaskComponent } from './TaskComponent.js';
 
-export interface TaskListProps {
+interface TaskListProps {
 	tasks: ReadonlyArray<Readonly<Pick<Task, 'id'>>>;
 	dayName?: string;
 	className?: string;

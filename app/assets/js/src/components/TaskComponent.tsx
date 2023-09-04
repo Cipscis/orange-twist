@@ -110,7 +110,7 @@ export function TaskComponent(props: TaskComponentProps) {
 						ref={inputRef}
 						type="text"
 						class="task__name-input"
-						value="${name}"
+						value={name}
 						placeholder="Task name"
 						size={1}
 						onFocus={rememberPreviousName}

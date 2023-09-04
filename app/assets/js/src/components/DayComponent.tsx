@@ -10,7 +10,7 @@ import { Command, fireCommand } from '../registers/commands/index.js';
 import { DayNote } from './DayNote.js';
 import { TaskList } from './TaskList.js';
 
-export interface DayProps {
+interface DayProps {
 	day: Readonly<Day>;
 }
 
@@ -51,7 +51,7 @@ export const DayComponent = forwardRef(
 			class="day"
 			ref={ref}
 		>
-			<h3 class="day__heading">${day.dayName}</h3>
+			<h3 class="day__heading">{day.dayName}</h3>
 
 			<button
 				type="button"

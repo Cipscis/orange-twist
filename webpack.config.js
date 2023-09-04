@@ -12,7 +12,7 @@ const config = {
 	mode: process.env.MODE,
 	entry: {
 		'priority': `${entryPath}/priority.ts`,
-		'main': `${entryPath}/main.ts`,
+		'main': `${entryPath}/main.tsx`,
 	},
 	output: {
 		path: distPath,
