@@ -1,14 +1,10 @@
 import { h } from 'preact';
-import htm from 'htm';
 
 import { marked } from 'marked';
 import { useLayoutEffect, useRef } from 'preact/hooks';
 import { JSXInternal } from 'preact/src/jsx.js';
 
-// Initialise htm with Preact
-const html = htm.bind(h);
-
-export interface MarkdownProps extends JSXInternal.DOMAttributes<HTMLDivElement> {
+interface MarkdownProps extends JSXInternal.DOMAttributes<HTMLDivElement> {
 	content: string;
 }
 
@@ -44,9 +40,9 @@ export function Markdown(props: MarkdownProps) {
 		}
 	}, [content]);
 
-	return html`<div
-		ref="${wrapperRef}"
+	return <div
+		ref={wrapperRef}
 		class="content"
-		...${passthroughProps}
-	></div>`;
+		{...passthroughProps}
+	/>;
 }

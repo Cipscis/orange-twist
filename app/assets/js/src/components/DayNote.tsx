@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import htm from 'htm';
 
 import {
 	useCallback,
@@ -8,7 +7,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { Markdown, MarkdownProps } from './Markdown.js';
+import { Markdown } from './Markdown.js';
 
 import { Day } from '../types/Day.js';
 
@@ -16,9 +15,6 @@ import { nodeHasAncestor } from '../util/index.js';
 
 import { setDayData } from '../registers/days/index.js';
 import { Command, fireCommand } from '../registers/commands/index.js';
-
-// Initialise htm with Preact
-const html = htm.bind(h);
 
 export interface DayNoteProps {
 	day: Readonly<Day>;
@@ -29,7 +25,7 @@ export function DayNote(props: DayNoteProps) {
 	const { dayName } = day;
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const displayNoteRef = useRef<HTMLElement>(null);
+	const displayNoteRef = useRef<HTMLDivElement>(null);
 
 	const [isEditing, setIsEditing] = useState(false);
 	const dirtyFlag = useRef(false);
@@ -67,14 +63,11 @@ export function DayNote(props: DayNoteProps) {
 				const selectionStart = textarea.selectionStart;
 				const selectionEnd = textarea.selectionEnd;
 
-				const beforeSelection = textarea.value.substring(0, selectionEnd);
-				const afterSelection = textarea.value.substring(selectionEnd);
-
 				const indentation = '\t';
 
 				if (selectionStart === selectionEnd) {
 					// Insert indentation at the caret
-					textarea.value = `${beforeSelection}${indentation}${afterSelection}`;
+					textarea.value = `{beforeSelection}{indentation}{afterSelection}`;
 					textarea.selectionStart = selectionStart + indentation.length;
 					textarea.selectionEnd = selectionEnd + indentation.length;
 				}
@@ -107,7 +100,7 @@ export function DayNote(props: DayNoteProps) {
 		};
 	}, [isEditing, saveChanges]);
 
-	const inputHandler = useCallback(function (e: InputEvent) {
+	const inputHandler = useCallback(function (e: Event) {
 		const textarea = e.target;
 		if (!(textarea instanceof HTMLTextAreaElement)) {
 			return;
@@ -156,41 +149,33 @@ export function DayNote(props: DayNoteProps) {
 		setIsEditing(true);
 	}, []);
 
-	return html`
-		${isEditing
-			? html`
-				<div
-					class="day__note-edit-content"
-					data-content="${day.note}"
-				>
-					<textarea
-						onInput="${inputHandler}"
-						onBlur="${cleanNote}"
-						ref="${textareaRef}"
-					>${day.note}</textarea>
-				</div>
-			`
+	return <>
+		{isEditing
+			? <div
+				class="day__note-edit-content"
+				data-content={day.note}
+			>
+				<textarea
+					onInput={inputHandler}
+					onBlur={cleanNote}
+					ref={textareaRef}
+				>{day.note}</textarea>
+			</div>
 			: day.note
-			? html`
-				<div
+				? <div
 					class="day__note-display-content"
-					ref="${displayNoteRef}"
+					ref={displayNoteRef}
 				>
-					<${Markdown}
-						...${{
-							content: day.note,
-						} as MarkdownProps}
-						onClick="${clickHandler}"
+					<Markdown
+						content={day.note}
+						onClick={clickHandler}
 					/>
 				</div>
-			`
-			: html`
-				<button
+				: <button
 					type="button"
 					class="button"
-					onClick="${() => setIsEditing(true)}"
+					onClick={() => setIsEditing(true)}
 				>✏️</button>
-			`
 		}
-	`;
+	</>;
 }
