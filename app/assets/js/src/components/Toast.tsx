@@ -1,17 +1,12 @@
 import { h, render } from 'preact';
 import { useRef } from 'preact/hooks';
 
-import htm from 'htm';
-
 import {
 	animate,
 	CSSKeyframes,
 } from '../util/index.js';
 
-// Initialise htm with Preact
-const html = htm.bind(h);
-
-export interface ToastProps {
+interface ToastProps {
 	/**
 	 * Automatically generated IDs are numbers, specified IDs are strings.
 	 */
@@ -49,7 +44,7 @@ export function Toast(props: ToastProps) {
 		duration,
 	} = props;
 
-	const toastRef = useRef<HTMLElement>(null);
+	const toastRef = useRef<HTMLDivElement>(null);
 	const timeout = useRef<number | null>(null);
 
 	// Reset the timeout for removing the toast on every render
@@ -78,21 +73,19 @@ export function Toast(props: ToastProps) {
 		}, duration);
 	}
 
-	return html`
-		<div
-			ref="${toastRef}"
-			class="toast__message"
-		>${message}</div>
-	`;
+	return <div
+		ref={toastRef}
+		class="toast__message"
+	>{message}</div>;
 }
 
 const renderToasts = () => {
-	render(toasts.map((toast) => html`
-		<${Toast}
-			key="${toast.id}"
-			...${toast}
+	render(toasts.map((toast) => (
+		<Toast
+			key={toast.id}
+			{...toast}
 		/>
-	`), toastContainer);
+	)), toastContainer);
 };
 
 type ToastOptions = Partial<Omit<ToastProps, 'message'>>;

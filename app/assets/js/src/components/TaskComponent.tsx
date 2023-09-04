@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import htm from 'htm';
 
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
@@ -11,13 +10,10 @@ import {
 } from '../registers/tasks/index.js';
 import { Command, fireCommand } from '../registers/commands/index.js';
 
-import { TaskStatusComponent, TaskStatusComponentProps } from './TaskStatusComponent.js';
+import { TaskStatusComponent } from './TaskStatusComponent.js';
 import { Markdown } from './Markdown.js';
 
-// Initialise htm with Preact
-const html = htm.bind(h);
-
-export interface TaskComponentProps {
+interface TaskComponentProps {
 	task: Readonly<Task>;
 	dayName?: string;
 }
@@ -70,7 +66,7 @@ export function TaskComponent(props: TaskComponentProps) {
 	}, []);
 
 	// Update the name.
-	const nameChangeHandler = useCallback((e: InputEvent) => {
+	const nameChangeHandler = useCallback((e: Event) => {
 		const input = e.target;
 		if (!(input instanceof HTMLInputElement)) {
 			return;
@@ -100,33 +96,35 @@ export function TaskComponent(props: TaskComponentProps) {
 		}
 	}, [id, dayName, blurOnNextRender]);
 
-	return html`
-		<div class="task">
-			${(() => {
-				const taskStatusProps: TaskStatusComponentProps = { task, dayName };
+	return <div class="task">
+		{(() => {
+			return <>
+				<TaskStatusComponent
+					task={task}
+					dayName={dayName}
+				/>
+				<form
+					class="task__name"
+				>
+					<input
+						ref={inputRef}
+						type="text"
+						class="task__name-input"
+						value={name}
+						placeholder="Task name"
+						size={1}
+						onFocus={rememberPreviousName}
+						onInput={nameChangeHandler}
+						onKeyDown={keydownHandler}
+						onBlur={saveChanges}
+					/>
 
-				return html`
-					<${TaskStatusComponent} ...${taskStatusProps} />
-					<form
-						class="task__name"
-					>
-						<input
-							ref="${inputRef}"
-							type="text"
-							class="task__name-input"
-							value="${name}"
-							placeholder="Task name"
-							size="1"
-							onFocus="${rememberPreviousName}"
-							onInput="${nameChangeHandler}"
-							onKeydown="${keydownHandler}"
-							onBlur="${saveChanges}"
-						/>
-
-						<${Markdown} content="${name.replace(/</g, '&lt;')}" class="task__name-markdown content" />
-					</form>
-				`;
-			})()}
-		</div>
-	`;
+					<Markdown
+						content={name.replace(/</g, '&lt;')}
+						class="task__name-markdown content"
+					/>
+				</form>
+			</>;
+		})()}
+	</div>;
 }

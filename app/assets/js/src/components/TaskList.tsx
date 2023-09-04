@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { useCallback, useId, useRef } from 'preact/hooks';
 
-import htm from 'htm';
 import classNames from 'classnames';
 
 import { Task } from '../types/Task.js';
@@ -10,13 +9,10 @@ import { useViewTransition } from '../util/index.js';
 
 import { getTaskData } from '../registers/tasks/tasksRegister.js';
 
-import { TaskComponent, TaskComponentProps } from './TaskComponent.js';
+import { TaskComponent } from './TaskComponent.js';
 
-// Initialise htm with Preact
-const html = htm.bind(h);
-
-export interface TaskListProps {
-	tasks: ReadonlyArray<Readonly<Task>>;
+interface TaskListProps {
+	tasks: ReadonlyArray<Readonly<Pick<Task, 'id'>>>;
 	dayName?: string;
 	className?: string;
 
@@ -34,7 +30,7 @@ export function TaskList(props: TaskListProps) {
 
 	const idBase = useId();
 
-	const itemsRef = useRef<Array<HTMLElement>>([]);
+	const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
 
 	const {
 		startViewTransition,
@@ -94,7 +90,7 @@ export function TaskList(props: TaskListProps) {
 		}
 
 		// Construct a new order of tasks to send to `onReorder`
-		const newTasksOrder = Array.from(itemsRef.current).map((element) => Number(element.dataset.taskListItemId));
+		const newTasksOrder = Array.from(itemsRef.current).map((element) => Number(element?.dataset.taskListItemId));
 		const dropTargetIndex = (newTasksOrder as unknown[]).indexOf(Number(dropTarget.dataset.taskListItemId));
 		const draggedElementIndex = (newTasksOrder as unknown[]).indexOf(Number(draggedElement.dataset.taskListItemId));
 
@@ -114,50 +110,42 @@ export function TaskList(props: TaskListProps) {
 		startViewTransition(() => onReorder(newTasksOrder));
 	}, [startViewTransition, onReorder]);
 
-	return html`
-		<div
-			class="${classNames('task-list', className)}"
-			onDragOver="${dragOverHandler}"
-			onDrop="${dropHandler}"
-		>
-			${tasks.map((task, i) => {
-				const taskData = getTaskData(task.id);
-				if (!taskData) {
-					return '';
-				}
+	return <div
+		class={classNames('task-list', className)}
+		onDragOver={dragOverHandler}
+		onDrop={dropHandler}
+	>
+		{tasks.map((task, i) => {
+			const taskData = getTaskData(task.id);
+			if (!taskData) {
+				return '';
+			}
 
-				const taskComponentProps: TaskComponentProps = {
-					task: { ...taskData, ...task },
-					dayName,
-				};
-				return html`
-					<div
-						class="task-list__item"
-						ref="${(ref: HTMLElement) => itemsRef.current[i] = ref}"
-						id="${`${idBase}-${taskData.id}`}"
-						data-task-list-drop-target
-						data-task-list-item-id="${taskData.id}"
-						style="view-transition-name: ${
-							isInViewTransition
-								? `${idBase}-${taskData.id}`
-								: 'none'};"
-					>
-						${
-							onReorder && html`
-							<span
-								class="task-list__drag-handle"
-								draggable
-								onDragStart="${dragStartHandler(i)}"
-							></span>
-							`
-						}
-						<${TaskComponent}
-							key="${taskData.id}"
-							...${taskComponentProps}
-						/>
-					</div>
-				`;
-			})}
-		</div>
-	`;
+			return <div
+				key={taskData.id}
+				class="task-list__item"
+				ref={(ref) => itemsRef.current[i] = ref}
+				id={`${idBase}-${taskData.id}`}
+				data-task-list-drop-target
+				data-task-list-item-id={taskData.id}
+				style={`view-transition-name: ${
+					isInViewTransition
+						? `${idBase}-${taskData.id}`
+						: 'none'};
+				`}
+			>
+				{
+					onReorder && <span
+						class="task-list__drag-handle"
+						draggable
+						onDragStart={dragStartHandler(i)}
+					/>
+				}
+				<TaskComponent
+					task={{ ...taskData, ...task }}
+					dayName={dayName}
+				/>
+			</div>;
+		})}
+	</div>;
 }

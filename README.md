@@ -63,8 +63,6 @@ This file is intended to differ from environment to environment, so it is ignore
 
 * [Preact](https://preactjs.com/): Rendering framework, alternative to React.
 
-* [htm](https://www.npmjs.com/package/htm): A library for using JSX-like syntax without a build system, using template literals.
-
 * [zod](https://zod.dev/): A library for writing type schemas, designed for working with TypeScript.
 
 * [marked](https://marked.js.org/): A Markdown compiler.
@@ -106,6 +104,8 @@ These dependencies are used when working on the project locally.
 	* [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin): Allows `eslint` to lint TypeScript
 
 	* [@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser): Allows `eslint` to parse TypeScript
+
+	* [eslint-plugin-react](https://www.npmjs.com/package/eslint-plugin-react): Provides React/Preact linting rules
 
 	* [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks): Provides React/Preact linting rules
 
