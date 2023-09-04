@@ -11,6 +11,7 @@ import {
 } from '../registers/keyboard-shortcuts/index.js';
 
 import { Modal } from './shared/Modal.js';
+import { KeyboardShortcutCombos } from './KeyboardShortcutCombos.js';
 
 // Initialise htm with Preact
 const html = htm.bind(h);
@@ -46,11 +47,7 @@ export function KeyboardShortcutModal() {
 									key="${`${keyboardShortcutInfo.name}-${i}`}"
 									class="keyboard-shortcuts__item__combo content"
 								>
-									<!-- TODO: Refactor this into its own component -->
-									${shortcut.ctrl && html`<kbd>Ctrl</kbd> + `}
-									${shortcut.alt && html`<kbd>Alt</kbd> + `}
-									${shortcut.shift && html`<kbd>Shift</kbd> + `}
-									<kbd>${shortcut.key}</kbd>
+									<${KeyboardShortcutCombos} keyboardShortcutName="${keyboardShortcutInfo.name}" />
 								</span>
 							`)}
 						</dd>
