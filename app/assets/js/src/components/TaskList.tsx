@@ -31,6 +31,7 @@ export function TaskList(props: TaskListProps) {
 	const idBase = useId();
 
 	const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
+	const isInDraggingMode = useRef(false);
 
 	const {
 		startViewTransition,
@@ -44,6 +45,8 @@ export function TaskList(props: TaskListProps) {
 			if (!(itemEl && dataTransfer)) {
 				return;
 			}
+
+			isInDraggingMode.current = true;
 
 			dataTransfer.dropEffect = 'move';
 			dataTransfer.setDragImage(itemEl, 0, 0);
@@ -61,7 +64,10 @@ export function TaskList(props: TaskListProps) {
 			return;
 		}
 
-		// TODO: Don't allow items to be dropped into other lists
+		if (!isInDraggingMode.current) {
+			return;
+		}
+
 		const dropTarget = e.target.closest<HTMLElement>('[data-task-list-drop-target]');
 		if (dropTarget) {
 			// Prevent the default "drag over" action to allow drop events
@@ -88,6 +94,8 @@ export function TaskList(props: TaskListProps) {
 		if (!(dropTarget instanceof HTMLElement && draggedElement)) {
 			return;
 		}
+
+		isInDraggingMode.current = false;
 
 		// Construct a new order of tasks to send to `onReorder`
 		const newTasksOrder = Array.from(itemsRef.current).map((element) => Number(element?.dataset.taskListItemId));
