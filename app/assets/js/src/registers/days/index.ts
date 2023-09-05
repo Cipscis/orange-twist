@@ -1,6 +1,7 @@
 export {
 	setDayData,
 	deleteDay,
+	getDayData,
 } from './daysRegister.js';
 
 export * from './listeners/index.js';

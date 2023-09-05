@@ -13,6 +13,7 @@ import {
 	nodeHasAncestor,
 	CSSKeyframes,
 } from '../util/index.js';
+import { getDayData, setDayData } from '../registers/days/daysRegister.js';
 
 interface TaskStatusComponentProps {
 	task: Task;
@@ -79,6 +80,45 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
 	}, [id, setIsInChangeMode]);
+
+	/**
+	 * Ask for confirmation, then remove a task from this component's day.
+	 */
+	const removeTaskFromDay = useCallback(() => {
+		if (!confirm(`Are you sure you want to remove this task from ${dayName}?`)) {
+			return;
+		}
+
+		if (!dayName) {
+			return;
+		}
+
+		const day = getDayData(dayName);
+		if (!day) {
+			return;
+		}
+
+		const tasks = structuredClone(day.tasks);
+		const thisTaskIndex = tasks.findIndex((dayTask) => dayTask.id === id);
+		if (thisTaskIndex === -1) {
+			return;
+		}
+
+		tasks.splice(thisTaskIndex, 1);
+		setDayData(dayName, { tasks }, { overwriteTasks: true });
+	}, [dayName, id]);
+
+	/**
+	 * Remove the task from the current day, if there is one,
+	 * otherwise delete it entirely.
+	 */
+	const onDeleteButtonClick = useCallback(() => {
+		if (dayName) {
+			removeTaskFromDay();
+		} else {
+			deleteTaskUI();
+		}
+	}, [dayName, removeTaskFromDay, deleteTaskUI]);
 
 	// TODO: Turn the selector part into a custom element, using shadow DOM
 
@@ -160,7 +200,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 						type="button"
 						class="task-status__option-button"
 						title="Delete"
-						onClick={() => deleteTaskUI()}
+						onClick={onDeleteButtonClick}
 					>❌</button>
 				</li>
 			</ul>

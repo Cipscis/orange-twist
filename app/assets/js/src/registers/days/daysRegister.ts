@@ -62,6 +62,10 @@ export function getDays(): ReadonlyArray<Readonly<Day>> {
 	return days;
 }
 
+export function getDayData(dayName: string): Readonly<Day> | null {
+	return daysRegister.get(dayName) ?? null;
+}
+
 export function getAllDaysData(): ReadonlyArray<[dayName: string, dayData: Readonly<Day>]> {
 	return Array.from(daysRegister.entries());
 }
