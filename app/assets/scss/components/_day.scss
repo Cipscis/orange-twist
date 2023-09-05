@@ -1,24 +1,54 @@
 .day {
 	margin: 2rem 0;
+
+	isolation: isolate;
+}
+
+.day__summary {
+	list-style: none;
+
+	position: sticky;
+	z-index: 2;
+	top: 0;
+}
+
+.day__body {
 	display: grid;
 	justify-items: start;
 	grid-template-columns: minmax(0, 1fr);
 	gap: 1rem;
-
-	isolation: isolate;
 }
 
 .day__heading {
 	@include font-heading-3;
 	@include contrast-primary;
 
-	position: sticky;
-	z-index: 2;
-	top: 0;
-
 	width: 100%;
 
 	padding-bottom: 0.2em;
+
+	// TODO: Should this be a mixin?
+	summary > & {
+		display: inline-block;
+
+		&::after {
+			content: "";
+			display: inline-block;
+			margin-left: 1ch;
+			vertical-align: middle;
+
+			border: 0.25em solid transparent;
+
+			transition: transform 0.1s ease-in-out;
+		}
+		details > &::after {
+			border-left-color: currentColor;
+			border-right-width: 0;
+		}
+		details[open] > &::after {
+			transform: rotate(90deg);
+		}
+	}
 }
 
 .day__note {

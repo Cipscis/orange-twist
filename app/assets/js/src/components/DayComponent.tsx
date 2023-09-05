@@ -10,16 +10,19 @@ import { Command, fireCommand } from '../registers/commands/index.js';
 import { DayNote } from './DayNote.js';
 import { TaskList } from './TaskList.js';
 
-interface DayProps {
+interface DayProps extends h.JSX.HTMLAttributes<HTMLDetailsElement> {
 	day: Readonly<Day>;
 }
 
 export const DayComponent = forwardRef(
 	function DayComponent(
 		props: DayProps,
-		ref: React.ForwardedRef<HTMLDivElement>
+		ref: React.ForwardedRef<HTMLDetailsElement>
 	) {
-		const { day } = props;
+		const {
+			day,
+			...passthrougProps
+		} = props;
 		const { dayName } = day;
 
 		const removeDay = useCallback((dayName: string) => {
@@ -47,36 +50,41 @@ export const DayComponent = forwardRef(
 			fireCommand(Command.DATA_SAVE);
 		}, [day.tasks, day.dayName]);
 
-		return <div
+		return <details
 			class="day"
 			ref={ref}
+			{...passthrougProps}
 		>
-			<h3 class="day__heading">{day.dayName}</h3>
+			<summary class="day__summary">
+				<h3 class="day__heading">{day.dayName}</h3>
+			</summary>
 
-			<button
-				type="button"
-				class="button"
-				onClick={() => removeDay(dayName)}
-			>Remove day</button>
+			<div class="day__body">
+				<button
+					type="button"
+					class="button"
+					onClick={() => removeDay(dayName)}
+				>Remove day</button>
 
-			<div class="day__note">
-				<DayNote day={day} />
+				<div class="day__note">
+					<DayNote day={day} />
+				</div>
+
+				{
+					day.tasks.length > 0 &&
+					<TaskList
+						tasks={day.tasks}
+						dayName={day.dayName}
+						onReorder={reorderTasks}
+					/>
+				}
+
+				<button
+					type="button"
+					class="button"
+					onClick={() => fireCommand(Command.TASK_ADD_NEW, dayName)}
+				>Add new task</button>
 			</div>
-
-			{
-				day.tasks.length > 0 &&
-				<TaskList
-					tasks={day.tasks}
-					dayName={day.dayName}
-					onReorder={reorderTasks}
-				/>
-			}
-
-			<button
-				type="button"
-				class="button"
-				onClick={() => fireCommand(Command.TASK_ADD_NEW, dayName)}
-			>Add new task</button>
-		</div>;
+		</details>;
 	}
 );

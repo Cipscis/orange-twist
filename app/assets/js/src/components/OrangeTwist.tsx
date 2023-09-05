@@ -211,11 +211,12 @@ export function OrangeTwist() {
 				}
 				{
 					days && <>
-						{days.map((day) => {
+						{days.map((day, i) => {
 							return <DayComponent
 								key={day.dayName}
-								ref={(ref: HTMLDivElement | null) => daySectionsRef.current[day.dayName] = ref}
+								ref={(ref: HTMLDetailsElement | null) => daySectionsRef.current[day.dayName] = ref}
 								day={day}
+								open={i === days.length-1}
 							/>;
 						})}
 
