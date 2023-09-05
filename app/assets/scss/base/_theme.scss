@@ -1,7 +1,3 @@
-html {
-	scroll-behavior: smooth;
-}
-
 body {
 	@include contrast-primary;
 	accent-color: var(--accent);
