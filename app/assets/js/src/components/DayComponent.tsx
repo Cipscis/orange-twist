@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useId } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
 
 import { Day } from '../types/Day.js';
@@ -50,12 +50,14 @@ export const DayComponent = forwardRef(
 			fireCommand(Command.DATA_SAVE);
 		}, [day.tasks, day.dayName]);
 
+		const id = useId();
+
 		return <details
 			class="day"
 			ref={ref}
 			{...passthrougProps}
 		>
-			<summary class="day__summary">
+			<summary class="day__summary" style={`view-transition-name: ${id};`}>
 				<h3 class="day__heading">{day.dayName}</h3>
 			</summary>
 
