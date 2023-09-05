@@ -1,6 +1,7 @@
 import { h } from 'preact';
-
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+
+import classNames from 'classnames';
 
 import { Task } from '../types/Task.js';
 
@@ -31,6 +32,15 @@ export function TaskComponent(props: TaskComponentProps) {
 		inputRef.current?.blur();
 	}, [blurOnRenderCount]);
 
+	const [isInEditMode, setIsInEditMode] = useState(false);
+
+	// Automatically focus on input when entering edit mode
+	useEffect(() => {
+		if (isInEditMode) {
+			inputRef.current?.focus();
+		}
+	}, [isInEditMode]);
+
 	/**
 	 * Blur the input after the component re-renders.
 	 */
@@ -54,6 +64,14 @@ export function TaskComponent(props: TaskComponentProps) {
 		}
 		previousName.current = null;
 	}, [task.name, task.id]);
+
+	/**
+	 * Save any change, and leave edit mode.
+	 */
+	const leaveEditMode = useCallback(() => {
+		saveChanges();
+		setIsInEditMode(false);
+	}, [saveChanges]);
 
 	// Remember the previous name when the input is focused.
 	const rememberPreviousName = useCallback((e: FocusEvent) => {
@@ -106,23 +124,36 @@ export function TaskComponent(props: TaskComponentProps) {
 				<form
 					class="task__name"
 				>
-					<input
-						ref={inputRef}
-						type="text"
-						class="task__name-input"
-						value={name}
-						placeholder="Task name"
-						size={1}
-						onFocus={rememberPreviousName}
-						onInput={nameChangeHandler}
-						onKeyDown={keydownHandler}
-						onBlur={saveChanges}
-					/>
+					{
+						isInEditMode &&
+						<input
+							ref={inputRef}
+							type="text"
+							class="task__name-input"
+							value={name}
+							placeholder="Task name"
+							size={1}
+							onFocus={rememberPreviousName}
+							onInput={nameChangeHandler}
+							onKeyDown={keydownHandler}
+							onBlur={leaveEditMode}
+						/>
+					}
 
 					<Markdown
 						content={name.replace(/</g, '&lt;')}
-						class="task__name-markdown content"
+						class={classNames('task__name-display', 'content', {
+							'task__name-display--hidden': isInEditMode,
+						})}
+						onClick={() => setIsInEditMode(true)}
 					/>
+
+					<button
+						type="button"
+						class="task__name-edit"
+						label="Edit task name"
+						onClick={() => setIsInEditMode(true)}
+					>✏️</button>
 				</form>
 			</>;
 		})()}
