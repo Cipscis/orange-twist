@@ -2,14 +2,25 @@
 	margin: 2rem 0;
 
 	isolation: isolate;
+
+	&:not([open]) {
+		content-visibility: auto;
+		// Padding plus heading size
+		contain-intrinsic-height: 2rem + rem(28px) * 1.5;
+	}
 }
 
 .day__summary {
+	@include contrast-primary;
+
 	list-style: none;
 
 	position: sticky;
 	z-index: 2;
-	top: 0;
+	top: -1px;
+	padding-top: 1px;
+	margin-inline: -1px;
+	padding-inline: 1px;
 }
 
 .day__body {
@@ -21,7 +32,6 @@
 
 .day__heading {
 	@include font-heading-3;
-	@include contrast-primary;
 
 	width: 100%;
 
