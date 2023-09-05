@@ -18,43 +18,47 @@
 	width: fit-content;
 	min-width: 11ch;
 
-	.task__name-input {
-		@include reset;
-		cursor: text;
-	}
+	position: relative;
 
 	// Stack them on top of each other
 	.task__name-input,
-	.task__name-markdown {
+	.task__name-display {
 		grid-area: 1 / 1 / -1 / -1;
 
 		@include font-base-body;
 		border: 0;
 		padding: 0.1em 0.2em;
 	}
+}
 
-	.task__name-markdown {
-		pointer-events: none;
-		p {
-			white-space: pre;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
+.task__name-input {
+	@include reset;
+	cursor: text;
+}
+
+.task__name-display {
+	p {
+		white-space: pre;
 		overflow: hidden;
+		text-overflow: ellipsis;
 	}
+	overflow: hidden;
+}
 
-	.task__name-input {
-		opacity: 0;
-		+ .task__name-markdown {
-			opacity: 1;
-		}
+.task__name-display--hidden {
+	visibility: hidden;
+}
 
-		&:focus {
-			opacity: 1;
-			+ .task__name-markdown {
-				opacity: 0;
-			}
-		}
+.task__name-edit {
+	@extend %icon-button;
+
+	position: absolute;
+	right: 0;
+
+	&:not(:focus) {
+		overflow: hidden;
+		width: 0;
+		height: 0;
 	}
 }
 
