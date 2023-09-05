@@ -56,6 +56,20 @@ export function OrangeTwist() {
 		}
 	}, [newDayName]);
 
+	// Scroll to last day when days loads
+	const scrolledToLastDay = useRef(false);
+	useEffect(() => {
+		if (scrolledToLastDay.current) {
+			return;
+		}
+
+		if (days) {
+			const lastDay = Object.values(daySectionsRef.current).at(-1);
+			lastDay?.scrollIntoView({ behavior: 'instant' });
+			scrolledToLastDay.current = true;
+		}
+	}, [days]);
+
 	const addNewDay = useCallback((dayNameArg?: string) => {
 		if (!days) {
 			return;
