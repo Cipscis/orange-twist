@@ -104,13 +104,14 @@ export function OrangeTwist() {
 			return;
 		}
 
-		// TODO: Is this the best way to find the right element to focus on?
-		const taskInputs = Array.from(taskListWrapper.querySelectorAll('input') ?? []);
-		const lastTaskInput = taskInputs.at(-1);
+		// Find new task and put it in edit mode, then scroll to it
 
-		// Focus on the input and select all its text
-		lastTaskInput?.focus();
-		lastTaskInput?.scrollIntoView({
+		// TODO: Is this the best way to find the right element?
+		const taskEditButtons = Array.from(taskListWrapper.querySelectorAll<HTMLElement>('.js-task__name-edit') ?? []);
+		const lastTaskEditButton = taskEditButtons.at(-1);
+
+		lastTaskEditButton?.click();
+		lastTaskEditButton?.scrollIntoView({
 			block: 'center',
 			behavior: 'smooth',
 		});

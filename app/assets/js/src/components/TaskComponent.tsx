@@ -150,7 +150,7 @@ export function TaskComponent(props: TaskComponentProps) {
 
 					<button
 						type="button"
-						class="task__name-edit"
+						class="task__name-edit js-task__name-edit"
 						label="Edit task name"
 						onClick={() => setIsInEditMode(true)}
 					>✏️</button>
