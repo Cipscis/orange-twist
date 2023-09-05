@@ -161,21 +161,24 @@ export function DayNote(props: DayNoteProps) {
 					ref={textareaRef}
 				>{day.note}</textarea>
 			</div>
-			: day.note
-				? <div
-					class="day__note-display-content"
-					ref={displayNoteRef}
-				>
+			: <div
+				class="day__note-display-content"
+				ref={displayNoteRef}
+			>
+				{
+					day.note &&
 					<Markdown
 						content={day.note}
 						onClick={clickHandler}
 					/>
-				</div>
-				: <button
+				}
+				<button
 					type="button"
-					class="button"
+					class="day__note-edit"
+					label="Edit note"
 					onClick={() => setIsEditing(true)}
 				>✏️</button>
+			</div>
 		}
 	</>;
 }
