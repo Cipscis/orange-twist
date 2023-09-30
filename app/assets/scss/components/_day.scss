@@ -155,13 +155,15 @@
 .day__note-edit {
 	@extend %icon-button;
 
-	position: absolute;
-	bottom: 0;
-	right: 0;
+	&:not(:first-child:last-child) {
+		position: absolute;
+		bottom: 0;
+		right: 0;
 
-	&:not(:focus) {
-		overflow: hidden;
-		width: 0;
-		height: 0;
+		&:not(:focus) {
+			overflow: hidden;
+			width: 0;
+			height: 0;
+		}
 	}
 }
