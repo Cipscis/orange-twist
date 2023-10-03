@@ -147,14 +147,16 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 
 	// Set up event listeners for exiting change mode.
 	useEffect(() => {
+		const eventListenerAbortController = new AbortController();
+		const { signal } = eventListenerAbortController;
+
 		if (isInChangeMode) {
-			document.addEventListener('keydown', exitChangeModeOnEscape);
-			document.addEventListener('click', exitChangeModeOnOutsideClick);
+			document.addEventListener('keydown', exitChangeModeOnEscape, { signal });
+			document.addEventListener('click', exitChangeModeOnOutsideClick, { signal });
 		}
 
 		return () => {
-			document.removeEventListener('keydown', exitChangeModeOnEscape);
-			document.removeEventListener('click', exitChangeModeOnOutsideClick);
+			eventListenerAbortController.abort();
 		};
 	}, [isInChangeMode, exitChangeModeOnEscape, exitChangeModeOnOutsideClick]);
 
