@@ -102,17 +102,19 @@ export function CommandPalette(props: CommandPaletteProps) {
 			}
 		};
 
+		const eventListenerAbortController = new AbortController();
+		const { signal } = eventListenerAbortController;
+
 		if (open) {
-			document.addEventListener('keydown', adjustActiveDescendant);
-			document.addEventListener('keydown', selectActiveDescendant);
+			document.addEventListener('keydown', adjustActiveDescendant, { signal });
+			document.addEventListener('keydown', selectActiveDescendant, { signal });
 		} else {
 			setActiveDescendant(null);
 		}
 
 		return () => {
 			if (open) {
-				document.removeEventListener('keydown', adjustActiveDescendant);
-				document.removeEventListener('keydown', selectActiveDescendant);
+				eventListenerAbortController.abort();
 			}
 		};
 	}, [open, activeDescendant, matchingCommands]);

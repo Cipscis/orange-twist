@@ -75,10 +75,13 @@ export function DayNote(props: DayNoteProps) {
 		};
 		const textarea = textareaRef.current;
 
+		const eventListenerAbortController = new AbortController();
+		const { signal } = eventListenerAbortController;
+
 		if (isEditing) {
 			if (textarea) {
-				textarea.addEventListener('blur', exitEditingModeOnTextareaBlur);
-				textarea.addEventListener('keydown', keydownHandler);
+				textarea.addEventListener('blur', exitEditingModeOnTextareaBlur, { signal });
+				textarea.addEventListener('keydown', keydownHandler, { signal });
 
 				const scrollTop = window.scrollY;
 				textarea.focus();
@@ -94,8 +97,7 @@ export function DayNote(props: DayNoteProps) {
 
 		return () => {
 			if (textarea) {
-				textarea.removeEventListener('blur', exitEditingModeOnTextareaBlur);
-				textarea.removeEventListener('keydown', keydownHandler);
+				eventListenerAbortController.abort();
 			}
 		};
 	}, [isEditing, saveChanges]);

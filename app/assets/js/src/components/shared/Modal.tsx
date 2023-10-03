@@ -71,19 +71,21 @@ export function Modal(props: ModalProps) {
 			onClose();
 		};
 
+		const eventListenerAbortController = new AbortController();
+		const { signal } = eventListenerAbortController;
+
 		if (open) {
 			if (onOpen) {
 				onOpen();
 			}
 
-			document.addEventListener('keydown', closeOnEscape);
-			modalEl?.addEventListener('focusout', closeOnFocusOut);
+			document.addEventListener('keydown', closeOnEscape, { signal });
+			modalEl?.addEventListener('focusout', closeOnFocusOut, { signal });
 		}
 
 		return () => {
 			if (open) {
-				document.removeEventListener('keydown', closeOnEscape);
-				modalEl?.removeEventListener('focusout', closeOnFocusOut);
+				eventListenerAbortController.abort();
 			}
 		};
 	}, [open, onClose, onOpen]);
