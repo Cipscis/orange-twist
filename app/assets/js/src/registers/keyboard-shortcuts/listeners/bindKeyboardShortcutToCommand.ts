@@ -35,7 +35,7 @@ export function bindKeyboardShortcutToCommand(
 		bindings.set(command, fire);
 	}
 
-	addKeyboardShortcutListener(shortcut, () => fire, { signal: options?.signal });
+	addKeyboardShortcutListener(shortcut, () => fire(), { signal: options?.signal });
 
 	// Tell commands register about shortcut
 	const commandEntry = getCommand(command);
