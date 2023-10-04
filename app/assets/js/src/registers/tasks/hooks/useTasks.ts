@@ -5,7 +5,7 @@ import { Task } from '../../../types/Task.js';
 import { AsyncDataState, useAsyncData } from '../../../util/index.js';
 
 import { getTasks, loadTasksData } from '../tasksRegister.js';
-import { onTasksChange, offTasksChange } from '../listeners/onTasksChange.js';
+import { onTasksChange } from '../listeners/onTasksChange.js';
 
 export function useTasks(): AsyncDataState<ReadonlyArray<Readonly<Task>>> {
 	const {

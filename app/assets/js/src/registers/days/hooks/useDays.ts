@@ -5,7 +5,7 @@ import { Day } from '../../../types/Day.js';
 import { AsyncDataState, useAsyncData } from '../../../util/index.js';
 
 import { getDays, loadDaysData } from '../daysRegister.js';
-import { onDaysChange, offDaysChange } from '../listeners/onDaysChange.js';
+import { onDaysChange } from '../listeners/onDaysChange.js';
 
 /**
  * Load persisted days data if necessary, exposing loading and error states related to that process.

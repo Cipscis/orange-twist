@@ -28,7 +28,9 @@ function getNextId(): number {
  *
  * Otherwise, return already stored day data.
  */
-export async function loadTasksData(): Promise<ReadonlyArray<Readonly<Task>>> {
+export async function loadTasksData(
+	options?: { signal?: AbortSignal }
+): Promise<ReadonlyArray<Readonly<Task>>> {
 	if (!isInitialised) {
 		if (loadTasksDataPromise) {
 			// If a request is still in progress, piggyback on that request
@@ -36,6 +38,11 @@ export async function loadTasksData(): Promise<ReadonlyArray<Readonly<Task>>> {
 		}
 
 		loadTasksDataPromise = new Promise<ReadonlyArray<Readonly<Task>>>((resolve, reject) => {
+			if (options?.signal?.aborted) {
+				reject(options.signal.reason);
+			}
+			options?.signal?.addEventListener('abort', reject);
+
 			loadTasks()
 				.then((persistedTasks) => {
 					let highestId = -Infinity;

@@ -19,7 +19,9 @@ let loadDaysDataPromise: ReturnType<typeof loadDaysData> | null = null;
  *
  * Otherwise, return already stored day data.
  */
-export async function loadDaysData(): Promise<ReadonlyArray<Readonly<Day>>> {
+export async function loadDaysData(
+	options?: { signal?: AbortSignal }
+): Promise<ReadonlyArray<Readonly<Day>>> {
 	if (!isInitialised) {
 		if (loadDaysDataPromise) {
 			// If a request is still in progress, piggyback on that request
@@ -27,6 +29,11 @@ export async function loadDaysData(): Promise<ReadonlyArray<Readonly<Day>>> {
 		}
 
 		loadDaysDataPromise = new Promise<ReadonlyArray<Readonly<Day>>>((resolve, reject) => {
+			if (options?.signal?.aborted) {
+				reject(options.signal.reason);
+			}
+			options?.signal?.addEventListener('abort', reject);
+
 			loadDays()
 				.then((persistedDays) => {
 					setDayData(
@@ -45,6 +52,7 @@ export async function loadDaysData(): Promise<ReadonlyArray<Readonly<Day>>> {
 				})
 				.catch(reject);
 		});
+
 		return loadDaysDataPromise;
 	}
 
