@@ -2,8 +2,16 @@
 	position: relative;
 }
 
-.task-status__change {
+.task-status__indicator {
 	@extend %icon-button;
+}
+
+.task-status__indicator--readonly {
+	cursor: pointer;
+	// TODO: This is a messy way of overriding %icon-button to remove its active state
+	@include active {
+		@include contrast-secondary;
+	}
 }
 
 .task-status__options {
