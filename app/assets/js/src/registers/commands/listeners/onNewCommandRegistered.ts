@@ -1,15 +1,36 @@
 import { NewCommandRegisteredListener, newCommandRegisteredListeners } from '../commandsRegister.js';
 
+interface OnNewCommandRegisteredOptions {
+	/**
+	 * An `AbortSignal`. The listener will be removed when the given `AbortSignal`
+	 * object's `abort()` method is called. If not specified, no `AbortSignal` is
+	 * associated with the listener.
+	 */
+	signal?: AbortSignal;
+}
+
 /**
  * Bind a callback to fire whenever a new command is registered.
  */
-export function onNewCommandRegistered(listener: NewCommandRegisteredListener): void {
+export function onNewCommandRegistered(
+	listener: NewCommandRegisteredListener,
+	options?: OnNewCommandRegisteredOptions,
+): void {
+	if (options?.signal?.aborted) {
+		return;
+	}
+
 	// Mimic `addEventListener` by not adding duplicate listeners
 	if (newCommandRegisteredListeners.includes(listener)) {
 		return;
 	}
 
 	newCommandRegisteredListeners.push(listener);
+
+	options?.signal?.addEventListener(
+		'abort',
+		() => offNewCommandRegistered(listener),
+	);
 }
 
 /**

@@ -14,16 +14,20 @@ export function useKeyboardShortcut(name: KeyboardShortcutName, listener: () => 
  * Bind a keyboard shortcut to a command within a Preact component.
  */
 export function useKeyboardShortcut(name: KeyboardShortcutName, command: CommandId): void
-export function useKeyboardShortcut(name: KeyboardShortcutName, listener: (() => void) | CommandId): void {
+export function useKeyboardShortcut(
+	name: KeyboardShortcutName,
+	listenerOrCommand: (() => void) | CommandId,
+): void {
 	useEffect(() => {
-		if (typeof listener === 'function') {
-			addKeyboardShortcutListener(name, listener);
+		const controller = new AbortController();
+		const { signal } = controller;
 
-			return () => removeKeyboardShortcutListener(name, listener);
+		if (typeof listenerOrCommand === 'function') {
+			addKeyboardShortcutListener(name, listenerOrCommand, { signal });
 		} else {
-			bindKeyboardShortcutToCommand(name, listener);
-
-			return () => unbindKeyboardShortcutFromCommand(name, listener);
+			bindKeyboardShortcutToCommand(name, listenerOrCommand, { signal });
 		}
-	}, [name, listener]);
+
+		return () => controller.abort();
+	}, [name, listenerOrCommand]);
 }

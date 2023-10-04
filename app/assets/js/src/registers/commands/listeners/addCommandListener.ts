@@ -2,12 +2,29 @@
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { useCommand } from '../hooks/index.js';
 
-import { CommandWithListener } from '../types/index.js';
+import {
+	CommandId,
+	CommandListener,
+	CommandWithListener,
+} from '../types/index.js';
 
 import { commandsRegister } from '../commandsRegister.js';
 
 // Ensure listed commands have been registered
 import '../commands/index.js';
+
+interface AddCommandListenerOptions {
+	/**
+	 * An `AbortSignal`. The listener will be removed when the given `AbortSignal`
+	 * object's `abort()` method is called. If not specified, no `AbortSignal` is
+	 * associated with the listener.
+	 */
+	signal?: AbortSignal;
+}
+
+type AddCommandListenerAgs = {
+	[C in CommandId]: [commandId: C, listener: CommandListener<C>, options?: AddCommandListenerOptions]
+}[CommandId];
 
 /**
  * Bind a listener function a a specified command.
@@ -15,10 +32,14 @@ import '../commands/index.js';
  * @see {@linkcode removeCommandListener} for unbinding a listener.
  * @see {@linkcode useCommand} for binding listeners to commands within Preact components.
  */
-export function addCommandListener(...[commandId, listener]: CommandWithListener): void {
+export function addCommandListener(...[commandId, listener, options]: AddCommandListenerAgs): void {
 	const command = commandsRegister.get(commandId);
 	if (!command) {
 		throw new RangeError(`Cannot add listener to unregistered command ${commandId}`);
+	}
+
+	if (options?.signal?.aborted) {
+		return;
 	}
 
 	const { listeners } = command;
@@ -26,6 +47,11 @@ export function addCommandListener(...[commandId, listener]: CommandWithListener
 		// Like `addEventListener`, don't allow the same listener to be bound multiple times
 		return;
 	}
+
+	options?.signal?.addEventListener(
+		'abort',
+		() => removeCommandListener(commandId, listener),
+	);
 
 	listeners.push(listener);
 }

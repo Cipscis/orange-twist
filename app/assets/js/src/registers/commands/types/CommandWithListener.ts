@@ -12,5 +12,5 @@ import { CommandListener } from './CommandListener.js';
  * ```
  */
 export type CommandWithListener = {
-	[C in CommandId]: [C, CommandListener<C>];
+	[C in CommandId]: [commandId: C, listener: CommandListener<C>];
 }[CommandId];

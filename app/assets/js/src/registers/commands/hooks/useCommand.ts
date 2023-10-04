@@ -2,14 +2,15 @@ import { useEffect } from 'preact/hooks';
 
 import { CommandWithListener } from '../types/index.js';
 
-import { addCommandListener, removeCommandListener } from '../listeners/addCommandListener.js';
+import { addCommandListener } from '../listeners/addCommandListener.js';
 
 export function useCommand(...[commandId, listener]: CommandWithListener) {
 	useEffect(() => {
-		addCommandListener(commandId, listener);
+		const controller = new AbortController();
+		const { signal } = controller;
 
-		return () => {
-			removeCommandListener(commandId, listener);
-		};
+		addCommandListener(commandId, listener, { signal });
+
+		return () => controller.abort();
 	}, [commandId, listener]);
 }

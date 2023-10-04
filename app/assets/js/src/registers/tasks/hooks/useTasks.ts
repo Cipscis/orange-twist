@@ -30,15 +30,18 @@ export function useTasks(): AsyncDataState<ReadonlyArray<Readonly<Task>>> {
 
 	// When tasks are updated, reflect that
 	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
+
 		const updateTasks = () => {
 			const tasks = getTasks();
 			setTasks(tasks);
 		};
 
-		onTasksChange(updateTasks);
+		onTasksChange(updateTasks, { signal });
 
 		return () => {
-			offTasksChange(updateTasks);
+			controller.abort();
 		};
 	}, []);
 
