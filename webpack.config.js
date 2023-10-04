@@ -13,6 +13,7 @@ const config = {
 	entry: {
 		'priority': `${entryPath}/priority.ts`,
 		'main': `${entryPath}/main.tsx`,
+		'task': `${entryPath}/task.tsx`,
 	},
 	output: {
 		path: distPath,
