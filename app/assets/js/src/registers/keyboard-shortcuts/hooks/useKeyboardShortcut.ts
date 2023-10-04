@@ -1,10 +1,10 @@
 import { useEffect } from 'preact/hooks';
 
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from '../listeners/addKeyboardShortcutListener.js';
+import { addKeyboardShortcutListener } from '../listeners/addKeyboardShortcutListener.js';
 
 import { CommandId } from '../../commands/index.js';
-import { bindKeyboardShortcutToCommand, unbindKeyboardShortcutFromCommand } from '../listeners/bindKeyboardShortcutToCommand.js';
+import { bindKeyboardShortcutToCommand } from '../listeners/bindKeyboardShortcutToCommand.js';
 
 /**
  * Bind a keyboard shortcut within a Preact component.
