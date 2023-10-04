@@ -9,11 +9,15 @@ import { nodeHasAncestor } from '../util/nodeHasAncestor.js';
 import { Markdown } from './Markdown.js';
 
 interface NoteProps {
-	note: string;
+	note: string | null;
 	onNoteChange: (note: string) => void;
 	saveChanges: () => void;
 }
 
+/**
+ * Display a note as HTML, and provide options to edit
+ * it in a textarea as Markdown.
+ */
 export function Note(props: NoteProps) {
 	const {
 		note,
