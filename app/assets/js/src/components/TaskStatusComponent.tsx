@@ -18,6 +18,8 @@ import { getDayData, setDayData } from '../registers/days/daysRegister.js';
 interface TaskStatusComponentProps {
 	task: Task;
 	dayName?: string;
+	/** @default */
+	readonly?: boolean;
 }
 
 const taskStatusSymbols = {
@@ -178,12 +180,18 @@ export function TaskStatusComponent(props: TaskStatusComponentProps) {
 		class="task-status"
 		ref={rootRef}
 	>
-		<button
-			type="button"
-			class="task-status__change"
-			title={status}
-			onClick={() => setIsInChangeMode(!isInChangeMode)}
-		>{statusSymbol}</button>
+		{readonly
+			? <span
+				class="task-status__indicator task-status__indicator--readonly"
+				title={status}
+			>{statusSymbol}</span>
+			: <button
+				type="button"
+				class="task-status__indicator"
+				title={status}
+				onClick={() => setIsInChangeMode(!isInChangeMode)}
+			>{statusSymbol}</button>
+		}
 
 		{
 			isInChangeMode &&
