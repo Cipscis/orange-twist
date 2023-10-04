@@ -7,9 +7,6 @@ export const taskSchema = z.object({
 	id: z.number(),
 	name: z.string(),
 	status: z.nativeEnum(TaskStatus),
-
-	parent: z.nullable(z.number()),
-	children: z.array(z.number()),
 });
 
 export type Task = z.infer<typeof taskSchema>;

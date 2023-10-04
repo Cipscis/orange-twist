@@ -19,10 +19,13 @@ export const daySchema = z.object({
 	note: z.string(),
 
 	tasks: z.array(
-		taskSchema.pick({ id: true })
-			.and(z.object({
-				status: z.nativeEnum(TaskStatus),
-			}))
+		taskSchema.pick({
+			id: true,
+			status: true,
+		})
+			.extend({
+				note: z.string().nullable(),
+			})
 	),
 });
 
