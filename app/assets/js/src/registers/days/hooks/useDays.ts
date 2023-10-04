@@ -35,15 +35,18 @@ export function useDays(): AsyncDataState<ReadonlyArray<Readonly<Day>>> {
 
 	// When days are updated, reflect that
 	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
+
 		const updateDays = () => {
 			const days = getDays();
 			setDays(days);
 		};
 
-		onDaysChange(updateDays);
+		onDaysChange(updateDays, { signal });
 
 		return () => {
-			offDaysChange(updateDays);
+			controller.abort();
 		};
 	}, []);
 
