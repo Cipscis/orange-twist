@@ -144,6 +144,7 @@ export function OrangeTwist() {
 				tasks: [{
 					id: newTaskId,
 					status: TaskStatus.TODO,
+					note: null,
 				}],
 			});
 		}

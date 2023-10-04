@@ -8,7 +8,7 @@ import {
 
 import { tasksChangeListeners } from './listeners/onTasksChange.js';
 import { loadTasks } from './persistence/loadTasks.js';
-import { getDays, removeTaskFromDay, setDayData } from '../days/daysRegister.js';
+import { getDayData, getDays, removeTaskFromDay, setDayData } from '../days/daysRegister.js';
 
 const tasksRegister: Map<number, Task> = new Map();
 let isInitialised = false;
@@ -88,9 +88,6 @@ function mergeTaskData(id: number, task: Task | null, data: DeepPartial<Omit<Tas
 		id,
 		name: '',
 		status: TaskStatus.TODO,
-
-		parent: null,
-		children: [],
 	};
 
 	const newData = {
@@ -177,12 +174,17 @@ export function setTaskData(
 
 	if (oldTaskData.status !== updatedData.status) {
 		const dayName = options?.dayName || getCurrentDateDayName();
+		const dayData = getDayData(dayName);
+		const dayTasks = dayData?.tasks ?? [];
+		const taskData = dayTasks.find(({ id: taskId }) => taskId === id);
+
 		setDayData(
 			dayName,
 			{
 				tasks: [{
 					id,
 					status: updatedData.status,
+					note: taskData?.note ?? null,
 				}],
 			}
 		);
@@ -260,6 +262,7 @@ export function addNewTask(options?: string | AddNewTaskOptions): number {
 		tasks: [{
 			id: task.id,
 			status: task.status,
+			note: null,
 		}],
 	});
 
