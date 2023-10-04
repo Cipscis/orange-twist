@@ -1,0 +1,106 @@
+.day__note {
+	@include font-base-body;
+
+	width: 100%;
+
+	position: relative;
+	--_gutter: 0.5em;
+
+	textarea,
+	.content:not(:empty) {
+		border: 1px solid var(--accent);
+	}
+	.content:not(:empty) {
+		padding: var(--_gutter);
+	}
+
+	.content {
+		blockquote {
+			margin-block: calc(1em * var(--line-height));
+			&:first-child {
+				margin-block-start: 0;
+			}
+			&:last-child {
+				margin-block-end: 0;
+			}
+
+			// About enough to compensate for "> "
+			margin-inline-start: 1.5ch;
+		}
+
+		ul {
+			// About enough to compensate for bullets
+			padding-left: 1.2ch;
+
+			margin-block: calc(1em * var(--line-height));
+			&:first-child {
+				margin-block-start: 0;
+			}
+			&:last-child {
+				margin-block-end: 0;
+			}
+		}
+
+		// This is how `marked` renders code blocks
+		pre > code {
+			margin-block: calc(2em * var(--line-height));
+			&:first-child {
+				margin-block-start: 0;
+			}
+			&:last-child {
+				margin-block-end: 0;
+			}
+		}
+	}
+}
+
+.note__edit-content {
+	// Using this approach:
+	// https://css-tricks.com/auto-growing-inputs-textareas/
+	display: grid;
+
+	// Stack them on top of each other
+	&::before,
+	textarea {
+		grid-area: 1 / -1 / -1 / -1;
+
+		@include font-base-body;
+		padding: var(--_gutter);
+	}
+
+	// Simulate content of textarea with visibility hidden, to auto-expand content
+	&::before {
+		content: attr(data-content) " ";
+		white-space: pre-wrap;
+		visibility: hidden;
+	}
+
+	textarea {
+		@include contrast-primary;
+		resize: none;
+		overflow: hidden;
+		border: 0;
+
+		@include font-base-body;
+	}
+}
+
+.note__display-content {
+	position: relative;
+}
+
+.note__edit {
+	@extend %icon-button;
+
+	&:not(:first-child:last-child) {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+
+		&:not(:focus) {
+			overflow: hidden;
+			width: 0;
+			height: 0;
+		}
+	}
+}
