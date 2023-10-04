@@ -28,15 +28,29 @@ const taskStatusSymbols = {
 
 export function TaskStatusComponent(props: TaskStatusComponentProps) {
 	const {
-		task: {
-			id,
-			status,
-		},
+		task,
 		dayName,
 	} = props;
+	const { id } = task;
+
+	const readonly = props.readonly ?? false;
 
 	const rootRef = useRef<HTMLElement>(null);
 	const optionsRef = useRef<HTMLUListElement>(null);
+
+	const status = (() => {
+		if (dayName) {
+			const dayData = getDayData(dayName);
+			const dayTasks = dayData?.tasks;
+
+			const taskOnDay = dayTasks?.find(({ id: taskId }) => taskId === id);
+			if (taskOnDay) {
+				return taskOnDay.status;
+			}
+		}
+
+		return task.status;
+	})();
 
 	const statusSymbol = taskStatusSymbols[status];
 
