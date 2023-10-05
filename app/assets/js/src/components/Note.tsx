@@ -148,8 +148,11 @@ export function Note(props: NoteProps) {
 						const indentation = '\t';
 
 						if (selectionStart === selectionEnd) {
+							const beforeSelection = textarea.value.substring(0, selectionStart);
+							const afterSelection = textarea.value.substring(selectionEnd);
+
 							// Insert indentation at the caret
-							textarea.value = `{beforeSelection}{indentation}{afterSelection}`;
+							textarea.value = `${beforeSelection}${indentation}${afterSelection}`;
 							textarea.selectionStart = selectionStart + indentation.length;
 							textarea.selectionEnd = selectionEnd + indentation.length;
 						}
