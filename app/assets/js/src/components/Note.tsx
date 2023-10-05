@@ -56,42 +56,34 @@ export function Note(props: NoteProps) {
 	 * 3 or more consecutive newlines the same as 2. So tidy the note
 	 * to match these expectations.
 	 */
-	const cleanNote = useCallback(() => {
+	const getCleanedNote = useCallback((): string | null => {
 		const textarea = textareaRef.current;
 		if (!textarea) {
-			return;
+			return null;
 		}
 
 		const cleanedNote = textarea.value
 			.trim()
 			.replace(/\n{2}\n+/g, '\n\n');
-		updateNote(cleanedNote);
-	}, [updateNote]);
+
+		return cleanedNote;
+	}, []);
 
 	/**
 	 * Leave editing mode and save changes.
 	 */
 	const leaveEditingMode = useCallback(() => {
 		setIsEditing(false);
-		cleanNote();
+		const cleanedNote = getCleanedNote();
+		if (cleanedNote) {
+			updateNote(cleanedNote);
+		}
 		saveChangesIfDirty();
 	}, [
-		cleanNote,
+		getCleanedNote,
+		updateNote,
 		saveChangesIfDirty,
 	]);
-
-	/**
-	 * An event listener to update the note to match the value
-	 * of the textarea.
-	 */
-	const updateNoteOnInput = useCallback((e: Event) => {
-		const textarea = textareaRef.current;
-		if (!textarea) {
-			return;
-		}
-
-		updateNote(textarea.value);
-	}, [updateNote]);
 
 	/**
 	 * Enter edit mode on click, unless the user was selecting
@@ -189,8 +181,6 @@ export function Note(props: NoteProps) {
 				data-content={note}
 			>
 				<textarea
-					onInput={updateNoteOnInput}
-					onBlur={cleanNote}
 					ref={textareaRef}
 				>{note}</textarea>
 			</div>
