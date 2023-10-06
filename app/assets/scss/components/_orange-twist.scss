@@ -4,22 +4,17 @@
 	// To prevent it affecting the width, we use
 	// `box-sizing: content-box;` for this element only.
 	box-sizing: content-box;
-	max-width: var(--layout-max-width);
-	padding-inline: var(--layout-gutter);
-	margin-inline: auto;
+	@include layout-wrapper;
 
 	padding-block: 1rem;
 }
 
 .orange-twist__heading {
-	grid-column: 2 / 3;
 	@include font-heading-1;
 	margin-bottom: 2rem;
 }
 
 .orange-twist__section {
-	grid-column: 2 / 3;
-
 	+ .orange-twist__section {
 		margin-top: 2rem;
 	}
