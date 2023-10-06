@@ -19,6 +19,10 @@ interface TaskListProps {
 	onReorder?: (taskIds: number[]) => void;
 }
 
+/**
+ * Renders a list of specified tasks, which can be
+ * reordered via drag & drop.
+ */
 export function TaskList(props: TaskListProps) {
 	const {
 		tasks,

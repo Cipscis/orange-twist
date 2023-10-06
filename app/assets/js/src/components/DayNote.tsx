@@ -4,12 +4,17 @@ import { Day } from '../types/Day.js';
 
 import { setDayData } from '../registers/days/index.js';
 import { Command, fireCommand } from '../registers/commands/index.js';
+
 import { Note } from './shared/Note.js';
 
 interface DayNoteProps {
 	day: Readonly<Day>;
 }
 
+/**
+ * Renders a note for a specified day, including the ability to
+ * edit that note.
+ */
 export function DayNote(props: DayNoteProps) {
 	const { day } = props;
 	const { dayName } = day;

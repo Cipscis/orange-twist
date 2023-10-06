@@ -12,6 +12,9 @@ interface TaskDetailProps {
 	taskId: number | null;
 }
 
+/**
+ * Renders a detailed view for a task, including its notes.
+ */
 export function TaskDetail(props: TaskDetailProps) {
 	const {
 		taskId,

@@ -18,6 +18,11 @@ import { Command, useCommand } from '../registers/commands/index.js';
 
 import { DayComponent } from './DayComponent.js';
 
+/**
+ * Renders a list of days.
+ *
+ * Only one of these components is intended to render at a time.
+ */
 export function DayList() {
 	const {
 		data: days,
@@ -51,6 +56,7 @@ export function DayList() {
 		}
 	}, [days]);
 
+	// TODO: Move this to `OrangeTwist` and find another way to hook this up
 	/**
 	 * Ask the user what day to add, then add it to the register.
 	 */
@@ -114,6 +120,7 @@ export function DayList() {
 		});
 	}, [newTasksCreated, newTaskCreatedDayName]);
 
+	// TODO: Move this to `OrangeTwist` and find another way to hook this up.
 	/**
 	 * Create a new task against a particular day,
 	 * and then scroll to it immediately.

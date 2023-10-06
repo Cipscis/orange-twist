@@ -16,6 +16,9 @@ import { reorderTasks } from '../registers/tasks/tasksRegister.js';
 
 import { TaskList } from './TaskList.js';
 
+/**
+ * Renders a {@linkcode TaskList} of all unfinished tasks in a disclosure.
+ */
 export function UnfinishedTasksList() {
 	const {
 		data: tasks,
@@ -51,6 +54,7 @@ export function UnfinishedTasksList() {
 		});
 	}, [newTasksCreated]);
 
+	// TODO: Move this to `OrangeTwist` and find another way to hook this up
 	/**
 	 * Create a new task not attached to any particular day,
 	 * and then scroll to it immediately.

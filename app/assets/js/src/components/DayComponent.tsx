@@ -14,6 +14,12 @@ interface DayProps extends h.JSX.HTMLAttributes<HTMLDetailsElement> {
 	day: Readonly<Day>;
 }
 
+/**
+ * Renders a day, including its notes and tasks, in a disclosure.
+ *
+ * Props that can apply to a `<details>` element will be passed
+ * through to that element.
+ */
 export const DayComponent = forwardRef(
 	function DayComponent(
 		props: DayProps,
