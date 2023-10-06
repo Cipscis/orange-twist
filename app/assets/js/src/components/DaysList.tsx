@@ -8,13 +8,11 @@ import {
 
 import classNames from 'classnames';
 
-import { isValidDateString } from '../util/index.js';
-
 import { TaskStatus } from '../types/TaskStatus.js';
 
 import { setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask } from '../registers/tasks/index.js';
-import { Command, useCommand } from '../registers/commands/index.js';
+import { Command, fireCommand, useCommand } from '../registers/commands/index.js';
 
 import { DayComponent } from './DayComponent.js';
 
@@ -30,17 +28,8 @@ export function DayList() {
 		error,
 	} = useDays();
 
-	// Scroll to new day when created
-	const daySectionsRef = useRef<Record<string, HTMLElement | null>>({});
-	const [newDayName, setNewDayName] = useState<string | null>(null);
-	useEffect(() => {
-		if (newDayName) {
-			const newDaySection = daySectionsRef.current[newDayName];
-			if (newDaySection) {
-				newDaySection.scrollIntoView();
-			}
-		}
-	}, [newDayName]);
+	const daySectionsRef = useRef<Record<string, HTMLDetailsElement | null>>({});
+	const loadedDaysRef = useRef<ReadonlyArray<string> | null>(null);
 
 	// Scroll to last day when days loads
 	const scrolledToLastDay = useRef(false);
@@ -56,35 +45,28 @@ export function DayList() {
 		}
 	}, [days]);
 
-	// TODO: Move this to `OrangeTwist` and find another way to hook this up
-	/**
-	 * Ask the user what day to add, then add it to the register.
-	 */
-	const addNewDay = useCallback((dayNameArg?: string) => {
-		if (!days) {
-			return;
+	// Scroll to new day when created
+	useEffect(() => {
+		const loadedDays = days?.map(({ dayName }) => dayName) ?? null;
+		const previouslyLoadedDays = loadedDaysRef.current;
+		if (loadedDays && previouslyLoadedDays !== null) {
+			// If days are loaded and days were already loaded
+			const diff = loadedDays.filter(
+				(dayName) => !previouslyLoadedDays.includes(dayName)
+			);
+
+			// If one new day was added, scroll to it and open it
+			if (diff.length === 1) {
+				const newDay = daySectionsRef.current[diff[0]];
+				if (newDay) {
+					newDay.scrollIntoView({ behavior: 'instant' });
+					newDay.setAttribute('open', String(true));
+				}
+			}
 		}
 
-		const dayName = dayNameArg ?? window.prompt('What day?');
-		if (!dayName) {
-			return;
-		}
-		if (!isValidDateString(dayName)) {
-			window.alert('Invalid day');
-			return;
-		}
-
-		const existingDayData = days.find((day) => day.dayName === dayName);
-		if (existingDayData) {
-			window.alert('Day already exists');
-			return;
-		}
-
-		setDayData(dayName, {});
-		setNewDayName(dayName);
+		loadedDaysRef.current = loadedDays;
 	}, [days]);
-
-	useCommand(Command.DAY_ADD_NEW, addNewDay);
 
 	const [newTasksCreated, setNewTasksCreated] = useState(0);
 	const [newTaskCreatedDayName, setNewTaskCreatedDayName] = useState<string | null>(null);
@@ -178,7 +160,7 @@ export function DayList() {
 				<button
 					type="button"
 					class="button"
-					onClick={() => addNewDay()}
+					onClick={() => fireCommand(Command.DAY_ADD_NEW)}
 				>Add day</button>
 			</>
 		}
