@@ -12,7 +12,7 @@ import {
 import { Command, fireCommand } from '../registers/commands/index.js';
 
 import { TaskStatusComponent } from './TaskStatusComponent.js';
-import { Markdown } from './Markdown.js';
+import { Markdown } from './shared/Markdown.js';
 
 interface TaskComponentProps {
 	task: Readonly<Task>;

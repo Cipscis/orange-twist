@@ -5,7 +5,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { nodeHasAncestor } from '../util/nodeHasAncestor.js';
+import { nodeHasAncestor } from '../../util/nodeHasAncestor.js';
 import { Markdown } from './Markdown.js';
 
 interface NoteProps {
