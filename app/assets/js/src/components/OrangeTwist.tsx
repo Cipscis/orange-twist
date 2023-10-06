@@ -5,16 +5,16 @@ import {
 } from 'preact/hooks';
 
 import { saveDays, setDayData, useDays } from '../registers/days/index.js';
-import { saveTasks } from '../registers/tasks/index.js';
+import { addNewTask, saveTasks } from '../registers/tasks/index.js';
 
 import { Command, useCommand } from '../registers/commands/index.js';
 import { KeyboardShortcutName, useKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
 
+import { isValidDateString } from '../util/index.js';
 import { toast } from './Toast.js';
 
 import { CommandPalette } from './CommandPalette/CommandPalette.js';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal.js';
-import { isValidDateString } from '../util/index.js';
 
 interface OrangeTwistProps {
 	children: ComponentChildren;
@@ -94,8 +94,16 @@ export function OrangeTwist(props: OrangeTwistProps) {
 
 		setDayData(dayName, {});
 	}, [days]);
-
 	useCommand(Command.DAY_ADD_NEW, addNewDay);
+
+	/**
+	 * Create a new task.
+	 *
+	 * @param [dayName] - If specified, the new task will be
+	 * created against this specified day.
+	 */
+	const addNewTaskWithOptions = useCallback((dayName?: string) => addNewTask({ dayName }), []);
+	useCommand(Command.TASK_ADD_NEW, addNewTaskWithOptions);
 
 	return <>
 		<CommandPalette

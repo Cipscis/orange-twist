@@ -1,6 +1,6 @@
 import { h } from 'preact';
-import { useCallback, useId } from 'preact/hooks';
-import { forwardRef } from 'preact/compat';
+import { useCallback, useEffect, useId, useRef } from 'preact/hooks';
+import React, { forwardRef } from 'preact/compat';
 
 import { Day } from '../types/Day.js';
 
@@ -27,9 +27,13 @@ export const DayComponent = forwardRef(
 	) {
 		const {
 			day,
-			...passthrougProps
+			...passthroughProps
 		} = props;
 		const { dayName } = day;
+
+		const tasksRef = useRef<HTMLDivElement | null>();
+
+		const id = useId();
 
 		/**
 		 * Ask for confirmation before deleting the current day.
@@ -62,12 +66,45 @@ export const DayComponent = forwardRef(
 			fireCommand(Command.DATA_SAVE);
 		}, [day.tasks, day.dayName]);
 
-		const id = useId();
+		/**
+		 * An array of the day's task IDs, used to compare
+		 * between renders.
+		 */
+		const taskIdsRef = useRef<ReadonlyArray<number> | null>(null);
+
+		// Scroll to new task when created, and focus on its name
+		useEffect(() => {
+			const taskIds = day.tasks.map(({ id }) => id);
+			const previousTaskIds = taskIdsRef.current;
+
+			const diff = previousTaskIds &&
+				taskIds.filter(
+					(taskId) => !previousTaskIds.includes(taskId)
+				);
+
+			// If one new task was added, scroll to it and focus on it
+			if (diff?.length === 1) {
+				if (tasksRef.current) {
+					// TODO: Is this the best way to find the right element?
+					const taskEditButtons = Array.from(
+						tasksRef.current.querySelectorAll<HTMLElement>('.js-task__name-edit') ?? []);
+					const lastTaskEditButton = taskEditButtons.at(-1);
+
+					lastTaskEditButton?.click();
+					lastTaskEditButton?.scrollIntoView({
+						block: 'center',
+						behavior: 'smooth',
+					});
+				}
+			}
+
+			taskIdsRef.current = taskIds;
+		}, [day.tasks]);
 
 		return <details
 			class="day"
 			ref={ref}
-			{...passthrougProps}
+			{...passthroughProps}
 		>
 			<summary class="day__summary" style={`view-transition-name: ${id};`}>
 				<h3 class="day__heading">{day.dayName}</h3>
@@ -90,6 +127,7 @@ export const DayComponent = forwardRef(
 						tasks={day.tasks}
 						dayName={day.dayName}
 						onReorder={reorderTasks}
+						ref={(ref: HTMLDivElement | null) => tasksRef.current = ref}
 					/>
 				}
 

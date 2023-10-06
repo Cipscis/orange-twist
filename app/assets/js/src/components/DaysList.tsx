@@ -3,7 +3,6 @@ import {
 	useCallback,
 	useEffect,
 	useRef,
-	useState,
 } from 'preact/hooks';
 
 import classNames from 'classnames';
@@ -28,7 +27,16 @@ export function DayList() {
 		error,
 	} = useDays();
 
+	/**
+	 * An object allowing each day's element to be looked
+	 * up by its day name.
+	 */
 	const daySectionsRef = useRef<Record<string, HTMLDetailsElement | null>>({});
+
+	/**
+	 * An array of loaded days' names, used to compare
+	 * between renders.
+	 */
 	const loadedDaysRef = useRef<ReadonlyArray<string> | null>(null);
 
 	// Scroll to last day when days loads
@@ -67,66 +75,6 @@ export function DayList() {
 
 		loadedDaysRef.current = loadedDays;
 	}, [days]);
-
-	const [newTasksCreated, setNewTasksCreated] = useState(0);
-	const [newTaskCreatedDayName, setNewTaskCreatedDayName] = useState<string | null>(null);
-
-	// After the initial load, focus on the last task each time a new one is created.
-	useEffect(() => {
-		if (newTasksCreated  === 0) {
-			return;
-		}
-
-		const taskListWrapper = (() => {
-			if (newTaskCreatedDayName === null) {
-				return null;
-			}
-
-			return daySectionsRef.current?.[newTaskCreatedDayName];
-		})();
-
-		if (!taskListWrapper) {
-			return;
-		}
-
-		// Find new task and put it in edit mode, then scroll to it
-
-		// TODO: Is this the best way to find the right element?
-		const taskEditButtons = Array.from(taskListWrapper.querySelectorAll<HTMLElement>('.js-task__name-edit') ?? []);
-		const lastTaskEditButton = taskEditButtons.at(-1);
-
-		lastTaskEditButton?.click();
-		lastTaskEditButton?.scrollIntoView({
-			block: 'center',
-			behavior: 'smooth',
-		});
-	}, [newTasksCreated, newTaskCreatedDayName]);
-
-	// TODO: Move this to `OrangeTwist` and find another way to hook this up.
-	/**
-	 * Create a new task against a particular day,
-	 * and then scroll to it immediately.
-	 *
-	 * @param [dayName] If this parameter is not received,
-	 * no task will be created.
-	 */
-	const addNewTaskWithDayName = useCallback((dayName?: string) => {
-		if (!dayName) {
-			return;
-		}
-
-		const newTaskId = addNewTask({ dayName });
-		setDayData(dayName, {
-			tasks: [{
-				id: newTaskId,
-				status: TaskStatus.TODO,
-				note: null,
-			}],
-		});
-		setNewTasksCreated((oldValue) => oldValue + 1);
-		setNewTaskCreatedDayName(dayName ?? null);
-	}, []);
-	useCommand(Command.TASK_ADD_NEW, addNewTaskWithDayName);
 
 	return <section
 		class={classNames({
