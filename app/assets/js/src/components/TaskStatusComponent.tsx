@@ -28,6 +28,12 @@ const taskStatusSymbols = {
 	[TaskStatus.COMPLETED]: '☑️',
 } as const satisfies Record<TaskStatus, string>;
 
+/**
+ * Renders the status for a specified task, optionally
+ * for a specified day.
+ *
+ * Allows that status to be edited.
+ */
 export function TaskStatusComponent(props: TaskStatusComponentProps) {
 	const {
 		task,

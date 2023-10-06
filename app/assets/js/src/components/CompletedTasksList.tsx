@@ -4,6 +4,9 @@ import { TaskStatus } from '../types/TaskStatus.js';
 
 import { TaskList } from './TaskList.js';
 
+/**
+ * Renders a list of all completed tasks inside a disclosure.
+ */
 export function CompletedTasksList() {
 	const {
 		data: tasks,

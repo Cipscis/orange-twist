@@ -20,7 +20,7 @@ interface OrangeTwistProps {
 }
 
 /**
- * The `OrangeTwist` component creates a standard page layout and sets up
+ * Renders a standard page layout and sets up
  * app-wide tools such as the command palette.
  */
 export function OrangeTwist(props: OrangeTwistProps) {

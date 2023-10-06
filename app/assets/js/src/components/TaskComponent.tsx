@@ -19,6 +19,9 @@ interface TaskComponentProps {
 	dayName?: string;
 }
 
+/**
+ * Renders a single task, and allows for it to be edited.
+ */
 export function TaskComponent(props: TaskComponentProps) {
 	const { task, dayName } = props;
 	const { id, name } = task;

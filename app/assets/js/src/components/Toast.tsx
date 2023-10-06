@@ -37,6 +37,9 @@ function getNextId(): number {
 	return id;
 }
 
+/**
+ * Renders a toast, which may automatically hide itself after a delay.
+ */
 export function Toast(props: ToastProps) {
 	const {
 		id,

@@ -13,6 +13,12 @@ import { KeyboardShortcutCombos } from './KeyboardShortcutCombos.js';
 
 registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
 
+/**
+ * Renders a keyboard shortcuts modal, which displays
+ * information about all bound keyboard shortcuts.
+ *
+ * This component is only intended to be used once per page.
+ */
 export function KeyboardShortcutModal() {
 	const [open, setOpen] = useState(false);
 	useKeyboardShortcut(
