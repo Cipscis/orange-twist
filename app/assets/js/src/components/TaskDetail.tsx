@@ -1,7 +1,7 @@
 import { useCallback } from 'preact/hooks';
 import { getDayData, saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { saveTasks, useTasks } from '../registers/tasks/index.js';
-import { Note } from './Note.js';
+import { Note } from './shared/Note.js';
 
 import { TaskStatusComponent } from './TaskStatusComponent.js';
 import { fireCommand } from '../registers/commands/commandsRegister.js';
