@@ -4,7 +4,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { saveDays } from '../registers/days/index.js';
+import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { saveTasks } from '../registers/tasks/index.js';
 
 import { Command, useCommand } from '../registers/commands/index.js';
@@ -14,6 +14,7 @@ import { toast } from './Toast.js';
 
 import { CommandPalette } from './CommandPalette/CommandPalette.js';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal.js';
+import { isValidDateString } from '../util/index.js';
 
 interface OrangeTwistProps {
 	children: ComponentChildren;
@@ -26,12 +27,23 @@ interface OrangeTwistProps {
 export function OrangeTwist(props: OrangeTwistProps) {
 	const { children } = props;
 
+	const {
+		data: days,
+	} = useDays();
+
 	// Open command palette on keyboard shortcut
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-	useKeyboardShortcut(
-		KeyboardShortcutName.COMMAND_PALETTE_OPEN,
-		() => setCommandPaletteOpen(true)
+	/** Open the command palette. */
+	const openCommandPalette = useCallback(
+		() => setCommandPaletteOpen(true),
+		[]
 	);
+	/** Close the command palette. */
+	const closeCommandPalette = useCallback(
+		() => setCommandPaletteOpen(false),
+		[]
+	);
+	useKeyboardShortcut(KeyboardShortcutName.COMMAND_PALETTE_OPEN, openCommandPalette);
 
 	/**
 	 * Save all day and task data, while giving the user feedback.
@@ -57,10 +69,38 @@ export function OrangeTwist(props: OrangeTwistProps) {
 	);
 	useCommand(Command.DATA_SAVE, saveData);
 
+	/**
+	 * Ask the user what day to add, then add it to the register.
+	 */
+	const addNewDay = useCallback((dayNameArg?: string) => {
+		if (!days) {
+			return;
+		}
+
+		const dayName = dayNameArg ?? window.prompt('What day?');
+		if (!dayName) {
+			return;
+		}
+		if (!isValidDateString(dayName)) {
+			window.alert('Invalid day');
+			return;
+		}
+
+		const existingDayData = days.find((day) => day.dayName === dayName);
+		if (existingDayData) {
+			window.alert('Day already exists');
+			return;
+		}
+
+		setDayData(dayName, {});
+	}, [days]);
+
+	useCommand(Command.DAY_ADD_NEW, addNewDay);
+
 	return <>
 		<CommandPalette
 			open={commandPaletteOpen}
-			onClose={() => setCommandPaletteOpen(false)}
+			onClose={closeCommandPalette}
 		/>
 
 		<div class="orange-twist">
