@@ -25,6 +25,9 @@ export const DayComponent = forwardRef(
 		} = props;
 		const { dayName } = day;
 
+		/**
+		 * Ask for confirmation before deleting the current day.
+		 */
 		const removeDay = useCallback((dayName: string) => {
 			if (!window.confirm('Are you sure?')) {
 				return;
@@ -33,6 +36,9 @@ export const DayComponent = forwardRef(
 			deleteDay(dayName);
 		}, []);
 
+		/**
+		 * Update the saved order of this day's tasks.
+		 */
 		const reorderTasks = useCallback((taskIds: number[]) => {
 			const newTaskIndexById = Object.fromEntries(taskIds.map((id, index) => [id, index]));
 

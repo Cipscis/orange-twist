@@ -1,5 +1,6 @@
 import { h, render } from 'preact';
 
+import { OrangeTwist } from './components/OrangeTwist.js';
 import { TaskDetail } from './components/TaskDetail.js';
 
 const main = document.getElementById('main');
@@ -11,6 +12,8 @@ const queryParams = new URLSearchParams(document.location.search);
 const taskIdParam = queryParams.get('id');
 const taskId = taskIdParam === null ? null : Number(taskIdParam);
 
-render(<TaskDetail
-	taskId={taskId}
-/>, main);
+render(<OrangeTwist>
+	<TaskDetail
+		taskId={taskId}
+	/>
+</OrangeTwist>, main);

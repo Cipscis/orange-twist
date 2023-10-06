@@ -79,7 +79,7 @@ const watchJs = function () {
 //////////////////////
 import sassInit from 'gulp-sass';
 
-import dartSass from 'sass';
+import * as dartSass from 'sass';
 const sass = sassInit(dartSass);
 
 const cssSrcDir = 'app/assets/scss';
