@@ -1,5 +1,7 @@
 import { h } from 'preact';
 
+import classNames from 'classnames';
+
 import { marked } from 'marked';
 import { useLayoutEffect, useRef } from 'preact/hooks';
 
@@ -41,7 +43,7 @@ export function Markdown(props: MarkdownProps) {
 
 	return <div
 		ref={wrapperRef}
-		class="content"
 		{...passthroughProps}
+		class={classNames('content', String(passthroughProps.class))}
 	/>;
 }
