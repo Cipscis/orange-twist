@@ -145,7 +145,7 @@ export function TaskComponent(props: TaskComponentProps) {
 
 					<Markdown
 						content={name.replace(/</g, '&lt;')}
-						class={classNames('task__name-display', 'content', {
+						class={classNames('task__name-display', {
 							'task__name-display--hidden': isInEditMode,
 						})}
 						onClick={() => setIsInEditMode(true)}

@@ -7,7 +7,7 @@ import { Task } from '../types/Task.js';
 
 import { useViewTransition } from '../util/index.js';
 
-import { getTaskData } from '../registers/tasks/tasksRegister.js';
+import { getTaskData, useTasks } from '../registers/tasks/index.js';
 
 import { TaskComponent } from './TaskComponent.js';
 import React, { forwardRef } from 'preact/compat';
@@ -29,6 +29,10 @@ export const TaskList = forwardRef(
 		props: TaskListProps,
 		ref: React.ForwardedRef<HTMLDivElement>
 	) {
+		// Force the component to update when tasks are changed
+		// TODO: Limit this to a list of tasks
+		useTasks();
+
 		const {
 			tasks,
 			dayName,
@@ -47,6 +51,9 @@ export const TaskList = forwardRef(
 			isInViewTransition,
 		} = useViewTransition();
 
+		/**
+		 * Set up the metadata for a drag.
+		 */
 		const dragStartHandler = useCallback((i: number) => {
 			return (e: DragEvent) => {
 				const itemEl = itemsRef.current[i];
