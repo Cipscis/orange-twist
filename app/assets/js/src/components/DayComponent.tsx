@@ -82,7 +82,7 @@ export const DayComponent = forwardRef(
 					(taskId) => !previousTaskIds.includes(taskId)
 				);
 
-			// If one new task was added, scroll to it and focus on it
+			// If one new task was added, begin editing its name
 			if (diff?.length === 1) {
 				if (tasksRef.current) {
 					// TODO: Is this the best way to find the right element?
@@ -90,11 +90,23 @@ export const DayComponent = forwardRef(
 						tasksRef.current.querySelectorAll<HTMLElement>('.js-task__name-edit') ?? []);
 					const lastTaskEditButton = taskEditButtons.at(-1);
 
-					lastTaskEditButton?.click();
-					lastTaskEditButton?.scrollIntoView({
-						block: 'center',
-						behavior: 'smooth',
-					});
+					if (lastTaskEditButton) {
+						// First, ensure any sections it's in are open
+						const ancestralDetails: Array<HTMLDetailsElement> = [];
+						let cursor: HTMLElement | null = lastTaskEditButton;
+						while (cursor !== null) {
+							cursor = cursor.parentElement;
+							if (cursor instanceof HTMLDetailsElement) {
+								ancestralDetails.push(cursor);
+							}
+						}
+						for (const el of ancestralDetails) {
+							el.setAttribute('open', String(true));
+						}
+
+						// Then, click the edit button
+						lastTaskEditButton.click();
+					}
 				}
 			}
 
