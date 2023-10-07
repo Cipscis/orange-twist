@@ -116,18 +116,32 @@ export function TaskDetail(props: TaskDetailProps) {
 		}
 		{
 			task &&
-			<>
-				<h1>{task.name}</h1>
-				<span>({task.status})</span>
+			<section class="orange-twist__section">
+				<h2 class="orange-twist__title">{task.name}</h2>
 
+				{
+					isLoading &&
+					// TODO: Make loader component
+					<span class="orange-twist__loader" title="Loading" />
+				}
+				{
+					error &&
+					// TODO: Handle error better somehow
+					// TODO: Make error component
+					<span class="orange-twist__error">Error: {error}</span>
+				}
 				{taskDayData &&
-					<ul>
-						{Object.entries(taskDayData).map(([dayName, dayTask]) => (
-							<li
-								key={dayName}
-							>
-								<h2>{dayName}</h2>
-								<span>{dayTask.status}</span>
+					Object.entries(taskDayData).map(([dayName, dayTask], i, arr) => (
+						<details
+							key={dayName}
+							class="day"
+							open={i === arr.length-1}
+						>
+							<summary class="day__summary">
+								<h3 class="day__heading">{dayName}</h3>
+							</summary>
+
+							<div class="day__body">
 								<TaskStatusComponent
 									task={task}
 									dayName={dayName}
@@ -137,11 +151,11 @@ export function TaskDetail(props: TaskDetailProps) {
 									onNoteChange={(note) => updateNoteForDay(dayName, note)}
 									saveChanges={() => fireCommand(Command.DATA_SAVE)}
 								/>
-							</li>
-						))}
-					</ul>
+							</div>
+						</details>
+					))
 				}
-			</>
+			</section>
 		}
 	</>;
 }
