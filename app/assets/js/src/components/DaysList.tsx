@@ -81,11 +81,13 @@ export function DayList() {
 
 		{
 			isLoading &&
+			// TODO: Make loader component
 			<span class="orange-twist__loader" title="Loading" />
 		}
 		{
 			error &&
 			// TODO: Handle error better somehow
+			// TODO: Make error component
 			<span class="orange-twist__error">Error: {error}</span>
 		}
 		{
