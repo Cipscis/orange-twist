@@ -4,7 +4,9 @@ import React, { forwardRef } from 'preact/compat';
 
 import { Day } from '../types/Day.js';
 
+import { getTaskData } from '../registers/tasks/index.js';
 import { deleteDay, setDayData } from '../registers/days/index.js';
+
 import { Command, fireCommand } from '../registers/commands/index.js';
 
 import { DayNote } from './DayNote.js';
@@ -83,7 +85,7 @@ export const DayComponent = forwardRef(
 				);
 
 			// If one new task was added, begin editing its name
-			if (diff?.length === 1) {
+			if (diff?.length === 1 && getTaskData(diff[0])?.name === '') {
 				if (tasksRef.current) {
 					// TODO: Is this the best way to find the right element?
 					const taskEditButtons = Array.from(
