@@ -4,7 +4,6 @@ import type { formatDate } from '../formatters/date.js';
 
 import { z } from 'zod';
 
-import { TaskStatus } from './TaskStatus.js';
 import { taskSchema } from './Task.js';
 
 import { isZodSchemaType } from '../util/index.js';
