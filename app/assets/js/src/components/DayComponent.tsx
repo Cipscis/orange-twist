@@ -101,7 +101,7 @@ export const DayComponent = forwardRef(
 							}
 						}
 						for (const el of ancestralDetails) {
-							el.setAttribute('open', String(true));
+							el.toggleAttribute('open', true);
 						}
 
 						// Then, click the edit button
@@ -129,9 +129,7 @@ export const DayComponent = forwardRef(
 					onClick={() => removeDay(dayName)}
 				>Remove day</button>
 
-				<div class="day__note">
-					<DayNote day={day} />
-				</div>
+				<DayNote day={day} />
 
 				{
 					day.tasks.length > 0 &&
