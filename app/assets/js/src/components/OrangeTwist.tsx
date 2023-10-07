@@ -11,7 +11,7 @@ import { Command, useCommand } from '../registers/commands/index.js';
 import { KeyboardShortcutName, useKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
 
 import { isValidDateString } from '../util/index.js';
-import { toast } from './Toast.js';
+import { toast } from './shared/Toast.js';
 
 import { CommandPalette } from './CommandPalette/CommandPalette.js';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal.js';

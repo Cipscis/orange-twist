@@ -177,7 +177,7 @@ export function Note(props: NoteProps) {
 		};
 	}, [isEditing, leaveEditingMode]);
 
-	return <>
+	return <div class="note">
 		{isEditing
 			? <div
 				class="note__edit-content"
@@ -206,5 +206,5 @@ export function Note(props: NoteProps) {
 				>✏️</button>
 			</div>
 		}
-	</>;
+	</div>;
 }

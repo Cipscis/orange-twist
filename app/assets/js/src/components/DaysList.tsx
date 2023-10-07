@@ -1,24 +1,18 @@
 import { h } from 'preact';
 import {
-	useCallback,
 	useEffect,
 	useRef,
 } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import { TaskStatus } from '../types/TaskStatus.js';
-
-import { setDayData, useDays } from '../registers/days/index.js';
-import { addNewTask } from '../registers/tasks/index.js';
-import { Command, fireCommand, useCommand } from '../registers/commands/index.js';
+import { useDays } from '../registers/days/index.js';
+import { Command, fireCommand } from '../registers/commands/index.js';
 
 import { DayComponent } from './DayComponent.js';
 
 /**
  * Renders a list of days.
- *
- * Only one of these components is intended to render at a time.
  */
 export function DayList() {
 	const {
@@ -68,7 +62,7 @@ export function DayList() {
 				const newDay = daySectionsRef.current[diff[0]];
 				if (newDay) {
 					newDay.scrollIntoView({ behavior: 'instant' });
-					newDay.setAttribute('open', String(true));
+					newDay.toggleAttribute('open', true);
 				}
 			}
 		}
