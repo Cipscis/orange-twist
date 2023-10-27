@@ -124,6 +124,11 @@ export function TaskComponent(props: TaskComponentProps) {
 					task={task}
 					dayName={dayName}
 				/>
+				<a
+					href={`/task?id=${task.id}`}
+					class="task__detail-link"
+					title="View task"
+				>📄</a>
 				<form
 					class="task__name"
 				>

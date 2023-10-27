@@ -2,13 +2,17 @@
 	display: grid;
 	align-items: center;
 
-	grid-template-columns: auto 1fr;
+	grid-template-columns: auto auto 1fr;
 	grid-gap: 0.5rem;
 }
 
 .task__status {
 	@include reset;
 	cursor: pointer;
+}
+
+.task__detail-link {
+	@extend %icon-button;
 }
 
 .task__name {
