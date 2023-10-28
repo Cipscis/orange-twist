@@ -6,14 +6,18 @@
 	"type": "module",
 	"scripts": {
 		"server": "ts-node --esm server/server.ts",
-		"build": "gulp build",
-		"watch": "gulp",
+		"buildJs": "concurrently \"tsc --noEmit\" \"ts-node --esm build/build.ts\"",
+		"buildCss": "sass app/assets/scss:app/assets/css",
+		"build": "concurrently \"npm run buildJs\" \"npm run buildCss\"",
+		"watchJs": "concurrently \"tsc --watch --noEmit\" \"ts-node --esm build/watch.ts\"",
+		"watchCss": "sass app/assets/scss:app/assets/css --watch",
+		"watch": "concurrently --kill-others \"npm run watchJs\" \"npm run watchCss\"",
 		"lintJs": "eslint app/assets/js/src/**",
 		"lintCss": "stylelint app/assets/scss/**/*.scss",
 		"lint": "npm run lintJs && npm run lintCss",
 		"start": "concurrently --kill-others \"npm run server\" \"npm run watch\"",
-		"test": "npm run lint && tsc",
-		"prepare": "gulp clean && npm test"
+		"test": "tsc --noEmit",
+		"prepare": "npm test"
 	},
 	"author": "Mark Hanna",
 	"repository": {
@@ -22,33 +26,29 @@
 	},
 	"license": "Hippocratic-2.1",
 	"devDependencies": {
-		"@types/express": "^4.17.17",
-		"@typescript-eslint/eslint-plugin": "^5.57.1",
-		"@typescript-eslint/parser": "^5.57.1",
-		"concurrently": "^8.0.1",
-		"dotenv": "^16.0.3",
-		"eslint": "^8.48.0",
+		"@types/express": "^4.17.20",
+		"@typescript-eslint/eslint-plugin": "^6.9.0",
+		"@typescript-eslint/parser": "^6.9.0",
+		"concurrently": "^8.2.2",
+		"dotenv": "^16.3.1",
+		"esbuild": "^0.19.5",
+		"eslint": "^8.52.0",
 		"eslint-plugin-react": "^7.33.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"express": "^4.18.2",
-		"gulp": "^4.0.2",
-		"gulp-sass": "^5.1.0",
-		"sass": "^1.61.0",
-		"stylelint": "^15.4.0",
-		"stylelint-config-recommended-scss": "^9.0.1",
-		"ts-loader": "^9.4.2",
+		"sass": "^1.69.5",
+		"stylelint": "^15.11.0",
+		"stylelint-config-recommended-scss": "^13.0.0",
 		"ts-node": "^10.9.1",
-		"typescript": "^5.0.4",
-		"webpack": "^5.78.0"
+		"typescript": "^5.2.2"
 	},
 	"engines": {
 		"node": ">=18"
 	},
 	"dependencies": {
-		"@types/marked": "^5.0.1",
 		"classnames": "^2.3.2",
-		"marked": "^5.1.2",
-		"preact": "^10.16.0",
-		"zod": "^3.22.2"
+		"marked": "^9.1.2",
+		"preact": "^10.18.1",
+		"zod": "^3.22.4"
 	}
 }

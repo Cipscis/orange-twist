@@ -13,25 +13,19 @@ You will need to install [Node.js](https://nodejs.org/en/) before working on thi
 3. Create a [`.env`](#env) file.
 4. Run `npm start` to run the local server and watch CSS and JS files for changes.
 
-Usually, you will just want to run `npm start`, but this project creates the following npm scripts:
+Usually, you will just want to run `npm start`, but this project also provides the following npm scripts:
 
 * `npm run server` runs a Node.js server on the port specified in the [`.env`](#env) file, using [Express](https://expressjs.com/).
 
-* `npm run build` compiles CSS files using [gulp-sass](https://www.npmjs.com/package/gulp-sass), then compiles TypeScript and bundles JavaScript using [Webpack](https://webpack.js.org/).
+* `npm run build` compiles CSS files using [sass](https://www.npmjs.com/package/sass), then compiles TypeScript and bundles JavaScript using [the TypeScript compiler](https://www.typescriptlang.org/docs/handbook/compiler-options.html).
 
-* `npm run watch` first runs the `build` task, then watches the relevant directories and reruns the `build` task if it sees any changes.
+* `npm run watch` compiles both CSS and TypeScript+JavaScript files just like `npm run build`, but in watch mode so any further changes will result in recompilation.
 
-* `npm run lintJs` lints all JavaScript and TypeScript files using [eslint](https://www.npmjs.com/package/eslint).
-
-* `npm run lintCss` lints all SCSS files using [stylelint](https://www.npmjs.com/package/stylelint).
-
-* `npm run lint` runs the `lintJs` and `lintCss` scripts.
+* `npm run lint` lints all JavaScript and TypeScript files using [eslint](https://www.npmjs.com/package/eslint) and all SCSS files using [stylelint](https://www.npmjs.com/package/stylelint).
 
 * `npm start` runs both the `server` and `watch` tasks simultaneously.
 
-* `npm test` lints and compiles any TypeScript.
-
-* `npm run prepare` first removes directories containing compiled files, then runs the `test` script. You should never need to run this script manually, [the `prepare` script runs automatically](https://docs.npmjs.com/cli/v7/using-npm/scripts#life-cycle-scripts) after you run `npm install`.
+* `npm test` typechecks TypeScript files.
 
 ### .env
 
@@ -81,17 +75,11 @@ These dependencies are used when working on the project locally.
 
 * [npm](https://www.npmjs.com/): Package manager
 
-* [Gulp](https://gulpjs.com/): Task runner
-
 * [TypeScript](https://www.typescriptlang.org/): JavaScript extension for static type checking
 
+* [esbuild](https://esbuild.github.io/): Bundling tool
+
 * [sass](https://www.npmjs.com/package/sass): Compiling CSS from [Sass](https://sass-lang.com/)
-
-	* [gulp-sass](https://www.npmjs.com/package/gulp-sass): Using the `sass` compiler with Gulp
-
-* [Webpack](https://webpack.js.org/): For JavaScript dependency management, used with Gulp
-
-	* [ts-loader](https://github.com/TypeStrong/ts-loader): For compiling TypeScript using Webpack
 
 * [Express](https://expressjs.com/): Running a Node.js server, accessed at `http://localhost:<PORT>`
 
