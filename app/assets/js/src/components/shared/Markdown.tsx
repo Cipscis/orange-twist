@@ -25,7 +25,7 @@ export function Markdown(props: MarkdownProps) {
 		}
 
 		const renderedContent = marked
-			.parse(content, { mangle: false, headerIds: false })
+			.parse(content)
 			// Stupid fucking plugin replaces tabs with spaces
 			.replace(/ {4}/g, '\t')
 			// To allow HTML tags to be written as text in task names, I
