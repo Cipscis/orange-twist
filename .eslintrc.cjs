@@ -15,7 +15,12 @@ module.exports = {
 		ecmaVersion: 'latest',
 		sourceType: 'module',
 		tsConfigRootDir: __dirname,
-		project: ['./tsconfig.json', './server/tsconfig.json', './build/tsconfig.json'],
+		project: [
+			'./tsconfig.json',
+			'./build/tsconfig.json',
+			'./test/tsconfig.json',
+			'./server/tsconfig.json',
+		],
 	},
 	plugins: [
 		'@typescript-eslint',
@@ -32,7 +37,10 @@ module.exports = {
 			version: '16.0'
 		},
 	},
-	ignorePatterns: ['*.md'],
+	ignorePatterns: [
+		'*.md',
+		'.eslintrc.cjs',
+	],
 	rules: {
 		/////////////////////////
 		// Overriding defaults //

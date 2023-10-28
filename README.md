@@ -25,7 +25,7 @@ Usually, you will just want to run `npm start`, but this project also provides t
 
 * `npm start` runs both the `server` and `watch` tasks simultaneously.
 
-* `npm test` typechecks TypeScript files.
+* `npm test` typechecks TypeScript files, then runs any configured test suites using [Jest](https://jestjs.io/).
 
 ### .env
 
@@ -76,6 +76,14 @@ These dependencies are used when working on the project locally.
 * [npm](https://www.npmjs.com/): Package manager
 
 * [TypeScript](https://www.typescriptlang.org/): JavaScript extension for static type checking
+
+* [Jest](https://jestjs.io/): Testing framework
+
+	* [@jest/globals](https://www.npmjs.com/package/@jest/globals): Allows Jest utilities to be imported instead of polluting the global scope
+
+	* [ts-jest](https://www.npmjs.com/package/ts-jest): Allows Jest tests to be written in TypeScript
+
+	* [ts-jest-resolver](https://www.npmjs.com/package/ts-jest-resolver): Allows ESM modules imported in TypeScript tests to be resolved using TypeScript's rules, e.g. 'code.js' may fine 'code.ts'
 
 * [esbuild](https://esbuild.github.io/): Bundling tool
 
