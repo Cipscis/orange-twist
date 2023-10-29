@@ -90,11 +90,21 @@ export function Note(props: NoteProps) {
 	 * text and included text outside the note.
 	 */
 	const enterEditModeOnClick = useCallback((e: MouseEvent) => {
+		const target = e.target;
+		if (
+			target instanceof HTMLAnchorElement ||
+			target instanceof Element && target.matches('a *')
+		) {
+			// If we clicked within a link, don't enter edit mode
+			return;
+		}
+
 		const selection = getSelection();
 		const hasSelection = selection?.isCollapsed === false;
 
 		if (!hasSelection) {
 			// If there's nothing selected, enter edit mode
+			e.preventDefault();
 			setIsEditing(true);
 			return;
 		}
@@ -110,6 +120,7 @@ export function Note(props: NoteProps) {
 			return;
 		}
 
+		e.preventDefault();
 		setIsEditing(true);
 	}, []);
 
