@@ -7,7 +7,7 @@ import {
 
 import {
 	renderHook,
-} from '@testing-library/preact-hooks';
+} from '@testing-library/preact';
 
 import { Command } from '../types/index.js';
 import { useCommand } from './index.js';
