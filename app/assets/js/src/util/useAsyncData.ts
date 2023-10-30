@@ -6,7 +6,7 @@ export interface AsyncDataState<T> {
 	error: string | null;
 }
 
-interface GetAsyncDataOptions {
+export interface GetAsyncDataOptions {
 	/**
 	 * An `AbortSignal`. If it is aborted, the asynchronous request
 	 * for data should also be aborted.
