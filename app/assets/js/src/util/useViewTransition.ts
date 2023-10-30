@@ -1,5 +1,39 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
 
+interface ViewTransitionState {
+	/**
+	 * @param callback The view transition callback that updates the DOM so there's something to transition to.
+	 *
+	 * @example
+	 * ```typescript
+	 * startViewTransition(() => setMyStateVariable(newValue));
+	 * ```
+	 */
+	startViewTransition: (callback: () => void) => void;
+	/**
+	 * Whether or not the component is currently preparing for or executing a view transition.
+	 *
+	 * This should be used as a condition to apply `view-transition-name` properties relevant
+	 * to the view transition.
+	 *
+	 * @example
+	 * ```typescript
+	 * html`
+	 *     <div
+	 *         style="view-transition-name: ${
+	 *             isInViewTransition
+	 *                 ? 'unique-name'
+	 *                 : 'none'
+	 *         }"
+	 *     >
+	 *         <!-- ... -->
+	 *     </div>
+	 * `
+	 * ```
+	 */
+	isInViewTransition: boolean;
+}
+
 /**
  * The [View Transitions API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API)
  * requires passing a callback that will update the DOM, either synchronously or returning a `Promise`
@@ -48,7 +82,7 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
  * `;
  * ```
  */
-export function useViewTransition() {
+export function useViewTransition(): ViewTransitionState {
 	// The function used to update the DOM for a view transition
 	const [updateDomFn, setUpdateDomFn] = useState<(() => void) | null>(null);
 
@@ -95,36 +129,7 @@ export function useViewTransition() {
 	const isInViewTransition = Boolean(updateDomFn || viewTransitionReadyFn);
 
 	return {
-		/**
-		 * @param callback The view transition callback that updates the DOM so there's something to transition to.
-		 *
-		 * @example
-		 * ```typescript
-		 * startViewTransition(() => setMyStateVariable(newValue));
-		 * ```
-		 */
 		startViewTransition,
-		/**
-		 * Whether or not the component is currently preparing for or executing a view transition.
-		 *
-		 * This should be used as a condition to apply `view-transition-name` properties relevant
-		 * to the view transition.
-		 *
-		 * @example
-		 * ```typescript
-		 * html`
-		 *     <div
-		 *         style="view-transition-name: ${
-		 *             isInViewTransition
-		 *                 ? 'unique-name'
-		 *                 : 'none'
-		 *         }"
-		 *     >
-		 *         <!-- ... -->
-		 *     </div>
-		 * `
-		 * ```
-		 */
 		isInViewTransition,
 	};
 }
