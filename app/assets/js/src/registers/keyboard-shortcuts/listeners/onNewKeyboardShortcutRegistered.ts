@@ -1,4 +1,7 @@
-import { NewKeyboardShortcutRegisteredListener, newKeyboardShortcutRegisteredListeners } from '../keyboardShortcutsRegister.js';
+import {
+	NewKeyboardShortcutRegisteredListener,
+	newKeyboardShortcutRegisteredListeners,
+} from '../registerKeyboardShortcut.js';
 
 interface OnNewKeyboardShortcutRegisteredOptions {
 	/**
@@ -11,6 +14,8 @@ interface OnNewKeyboardShortcutRegisteredOptions {
 
 /**
  * Bind a callback to fire whenever a new keyboard shortcut is registered.
+ *
+ * @see {@linkcode offNewKeyboardShortcutRegistered} for removing this binding.
  */
 export function onNewKeyboardShortcutRegistered(
 	listener: NewKeyboardShortcutRegisteredListener,

@@ -1,6 +1,12 @@
-import { KeyCombo, KeyboardShortcutName } from './types/index.js';
+import { KeyCombo, KeyboardShortcutInfo, KeyboardShortcutName } from './types/index.js';
 
-import { keyboardShortcutsRegister, newKeyboardShortcutRegisteredListeners } from './keyboardShortcutsRegister.js';
+import { keyboardShortcutsRegister } from './keyboardShortcutsRegister.js';
+
+export interface NewKeyboardShortcutRegisteredListener {
+	(shortcutName: KeyboardShortcutInfo): void;
+}
+
+export const newKeyboardShortcutRegisteredListeners: Array<NewKeyboardShortcutRegisteredListener> = [];
 
 /**
  * Register a keyboard shortcut, so listeners can be bound to it.

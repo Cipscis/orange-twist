@@ -18,6 +18,15 @@ beforeAll(() => {
 });
 
 describe('addKeyboardShortcutListener', () => {
+	test('throws an error if called with an unregistered keyboard shortcut', () => {
+		expect(
+			() => addKeyboardShortcutListener(
+				'Unregistered keyboard shortcut' as KeyboardShortcutName,
+				() => {}
+			)
+		).toThrow();
+	});
+
 	test('adds a listener to a keyboard shortcut', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();

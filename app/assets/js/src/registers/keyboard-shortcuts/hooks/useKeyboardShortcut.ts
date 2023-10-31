@@ -1,3 +1,7 @@
+// Type-only import to make symbol available to JSDoc
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+import type { useCommand } from '../../commands/index.js';
+
 import { useEffect } from 'preact/hooks';
 
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
@@ -7,11 +11,13 @@ import { CommandId } from '../../commands/index.js';
 import { bindKeyboardShortcutToCommand } from '../listeners/bindKeyboardShortcutToCommand.js';
 
 /**
- * Bind a keyboard shortcut within a Preact component.
+ * Bind a callback to a keyboard shortcut, within a Preact component.
  */
 export function useKeyboardShortcut(name: KeyboardShortcutName, listener: () => void): void
 /**
- * Bind a keyboard shortcut to a command within a Preact component.
+ * Bind a keyboard shortcut to fire a command, within a Preact component.
+ *
+ * For binding callbacks to commands, see {@linkcode useCommand}
  */
 export function useKeyboardShortcut(name: KeyboardShortcutName, command: CommandId): void
 export function useKeyboardShortcut(
