@@ -11,6 +11,15 @@ import { addCommandListener, removeCommandListener } from './addCommandListener.
 import { fireCommand } from '../commandsRegister.js';
 
 describe('addCommandListener', () => {
+	test('throws an error if called with an unregistered command', () => {
+		expect(
+			() => addCommandListener(
+				'unregistered-command' as Command,
+				() => {}
+			)
+		).toThrow();
+	});
+
 	test('adds a listener that is called when the command is fired', () => {
 		const mockFn = jest.fn();
 		addCommandListener(Command.DAY_ADD_NEW, mockFn);

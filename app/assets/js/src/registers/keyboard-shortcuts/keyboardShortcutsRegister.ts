@@ -1,14 +1,17 @@
+// Type-only import to make symbol available to JSDoc
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+import type { registerKeyboardShortcut } from './registerKeyboardShortcut.js';
+
 import { getDeepActiveElement } from '../../util/index.js';
 
 import { KeyCombo, KeyboardShortcutInfo, KeyboardShortcutName } from './types/index.js';
 
+/**
+ * A central register for keeping track of keyboard shortcuts.
+ *
+ * See {@linkcode registerKeyboardShortcut} for how to register keyboard shortcuts.
+ */
 export const keyboardShortcutsRegister = new Map<KeyboardShortcutName, KeyboardShortcutInfo>();
-
-export interface NewKeyboardShortcutRegisteredListener {
-	(shortcutName: KeyboardShortcutInfo): void;
-}
-
-export const newKeyboardShortcutRegisteredListeners: Array<NewKeyboardShortcutRegisteredListener> = [];
 
 /**
  * Check if a specific key combo was pressed.

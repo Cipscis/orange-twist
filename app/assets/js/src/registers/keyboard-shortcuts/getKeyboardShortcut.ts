@@ -2,6 +2,9 @@ import { KeyboardShortcutInfo, KeyboardShortcutName } from './types/index.js';
 
 import { keyboardShortcutsRegister } from './keyboardShortcutsRegister.js';
 
+/**
+ * Gets information about a specific keyboard shortcut.
+ */
 export function getKeyboardShortcut(name: KeyboardShortcutName): Readonly<KeyboardShortcutInfo> {
 	const info = keyboardShortcutsRegister.get(name);
 

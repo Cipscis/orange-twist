@@ -1,3 +1,7 @@
+// Type-only import to make symbol available within JSDoc
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+import type { registerKeyboardShortcut } from '../index.js';
+
 import { useEffect, useState } from 'preact/hooks';
 
 import { KeyboardShortcutInfo } from '../types/index.js';
@@ -5,6 +9,12 @@ import { onNewKeyboardShortcutRegistered } from '../listeners/index.js';
 
 import { getKeyboardShortcuts } from '../getKeyboardShortcuts.js';
 
+/**
+ * Provides access to information about currently registered keyboard
+ * shortcuts, within a Preact component.
+ *
+ * Causes re-rendering whenever {@linkcode registerKeyboardShortcut} is called.
+ */
 export function useKeyboardShortcuts(): ReadonlyArray<Readonly<KeyboardShortcutInfo>> {
 	// Try to initialise with existing data
 	const [keyboardShortcuts, setKeyboardShortcuts] = useState<ReadonlyArray<Readonly<KeyboardShortcutInfo>>>(getKeyboardShortcuts);
