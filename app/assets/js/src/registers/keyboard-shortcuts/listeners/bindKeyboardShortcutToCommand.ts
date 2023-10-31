@@ -4,7 +4,26 @@ import { CommandId, fireCommand } from '../../commands/index.js';
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
 import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from './addKeyboardShortcutListener.js';
 
+/**
+ * Functions that can be used to fire commands.
+ */
 const bindings: Map<CommandId, () => void> = new Map();
+
+/**
+ * Retrieve a function that can be used to fire a specified command.
+ */
+function getBinding(command: CommandId): () => void {
+	// If we already have a binding, return it
+	const binding = bindings.get(command);
+	if (binding) {
+		return binding;
+	}
+
+	// Otherwise, create a binding and store it, then return it
+	const fire = () => fireCommand(command);
+	bindings.set(command, fire);
+	return fire;
+}
 
 interface BindKeyboardShortcutToCommandOptions {
 	/**
@@ -29,19 +48,20 @@ export function bindKeyboardShortcutToCommand(
 		return;
 	}
 
-	const binding = bindings.get(command);
-	const fire = binding ?? (() => fireCommand(command));
-	if (!binding) {
-		bindings.set(command, fire);
-	}
+	const binding = getBinding(command);
 
-	addKeyboardShortcutListener(shortcut, () => fire(), { signal: options?.signal });
+	addKeyboardShortcutListener(shortcut, binding, { signal: options?.signal });
 
-	// Tell commands register about shortcut
+	// Tell commands register about shortcut so it can be displayed
 	const commandEntry = getCommand(command);
 	if (!commandEntry.shortcuts.includes(shortcut)) {
 		commandEntry.shortcuts.push(shortcut);
 	}
+
+	options?.signal?.addEventListener(
+		'abort',
+		() => unbindKeyboardShortcutFromCommand(shortcut, command)
+	);
 }
 
 /**
@@ -49,11 +69,9 @@ export function bindKeyboardShortcutToCommand(
  * bound with {@linkcode bindKeyboardShortcutToCommand}.
  */
 export function unbindKeyboardShortcutFromCommand(shortcut: KeyboardShortcutName, command: CommandId): void {
-	const binding = bindings.get(command);
+	const binding = getBinding(command);
 
-	if (binding) {
-		removeKeyboardShortcutListener(shortcut, binding);
-	}
+	removeKeyboardShortcutListener(shortcut, binding);
 
 	// Tell commands register to forget about shortcut
 	const commandEntry = getCommand(command);

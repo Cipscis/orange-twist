@@ -29,7 +29,7 @@ function getNextId(): number {
  * Otherwise, return already stored day data.
  */
 export async function loadTasksData(
-	options?: { signal?: AbortSignal }
+	options?: { signal: AbortSignal }
 ): Promise<ReadonlyArray<Readonly<Task>>> {
 	if (!isInitialised) {
 		if (loadTasksDataPromise) {
@@ -38,10 +38,10 @@ export async function loadTasksData(
 		}
 
 		loadTasksDataPromise = new Promise<ReadonlyArray<Readonly<Task>>>((resolve, reject) => {
-			if (options?.signal?.aborted) {
+			if (options?.signal.aborted) {
 				reject(options.signal.reason);
 			}
-			options?.signal?.addEventListener('abort', reject);
+			options?.signal.addEventListener('abort', reject);
 
 			loadTasks()
 				.then((persistedTasks) => {

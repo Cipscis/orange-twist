@@ -18,7 +18,7 @@ import { getDayData, setDayData } from '../registers/days/daysRegister.js';
 interface TaskStatusComponentProps {
 	task: Task;
 	dayName?: string;
-	/** @default */
+	/** @default false */
 	readonly?: boolean;
 }
 
