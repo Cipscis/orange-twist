@@ -8,7 +8,11 @@ import { saveDays, setDayData, useDays } from '../registers/days/index.js';
 import { addNewTask, saveTasks } from '../registers/tasks/index.js';
 
 import { Command, useCommand } from '../registers/commands/index.js';
-import { KeyboardShortcutName, useKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
+import {
+	KeyboardShortcutName,
+	registerKeyboardShortcut,
+	useKeyboardShortcut,
+} from '../registers/keyboard-shortcuts/index.js';
 
 import { isValidDateString } from '../util/index.js';
 import { toast } from './shared/Toast.js';
@@ -43,6 +47,12 @@ export function OrangeTwist(props: OrangeTwistProps) {
 		() => setCommandPaletteOpen(false),
 		[]
 	);
+	registerKeyboardShortcut(
+		KeyboardShortcutName.COMMAND_PALETTE_OPEN,
+		[{
+			key: '\\',
+		}],
+	);
 	useKeyboardShortcut(KeyboardShortcutName.COMMAND_PALETTE_OPEN, openCommandPalette);
 
 	/**
@@ -68,6 +78,16 @@ export function OrangeTwist(props: OrangeTwistProps) {
 		[]
 	);
 	useCommand(Command.DATA_SAVE, saveData);
+
+	// Set up save data keyboard shortcut
+	registerKeyboardShortcut(
+		KeyboardShortcutName.DATA_SAVE,
+		[{
+			key: 's',
+			ctrl: true,
+		}],
+	);
+	useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
 
 	/**
 	 * Ask the user what day to add, then add it to the register.

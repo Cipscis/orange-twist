@@ -7,7 +7,7 @@ import {
 } from '@jest/globals';
 
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { registerKeyboardShortcut } from '../keyboardShortcutsRegister.js';
+import { registerKeyboardShortcut } from '../registerKeyboardShortcut.js';
 
 import {
 	Command,

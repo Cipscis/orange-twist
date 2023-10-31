@@ -1,9 +1,6 @@
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
 import { keyboardShortcutsRegister } from '../keyboardShortcutsRegister.js';
 
-// Ensure keyboard shortcuts have been registered
-import '../shortcuts/index.js';
-
 interface AddKeyboardShortcutListenerOptions {
 	/**
 	 * An `AbortSignal`. The listener will be removed when the given `AbortSignal`
