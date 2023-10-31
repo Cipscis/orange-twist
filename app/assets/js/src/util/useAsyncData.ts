@@ -11,7 +11,7 @@ export interface GetAsyncDataOptions {
 	 * An `AbortSignal`. If it is aborted, the asynchronous request
 	 * for data should also be aborted.
 	 */
-	signal?: AbortSignal;
+	signal: AbortSignal;
 }
 
 export function useAsyncData<T>(
