@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 import { renderHook } from '@testing-library/preact';
 
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { registerKeyboardShortcut } from '../keyboardShortcutsRegister.js';
+import { registerKeyboardShortcut } from '../registerKeyboardShortcut.js';
 
 import {
 	Command,

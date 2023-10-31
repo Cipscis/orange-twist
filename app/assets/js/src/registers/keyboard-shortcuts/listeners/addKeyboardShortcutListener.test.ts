@@ -9,7 +9,7 @@ import {
 import userEvent from '@testing-library/user-event';
 
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { registerKeyboardShortcut } from '../keyboardShortcutsRegister.js';
+import { registerKeyboardShortcut } from '../registerKeyboardShortcut.js';
 
 import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from './addKeyboardShortcutListener.js';
 

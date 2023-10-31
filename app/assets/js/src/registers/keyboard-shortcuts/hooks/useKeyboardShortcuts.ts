@@ -2,7 +2,8 @@ import { useState } from 'preact/hooks';
 
 import { KeyboardShortcutInfo } from '../types/index.js';
 import { onNewKeyboardShortcutRegistered } from '../listeners/index.js';
-import { getKeyboardShortcuts } from '../keyboardShortcutsRegister.js';
+
+import { getKeyboardShortcuts } from '../getKeyboardShortcuts.js';
 
 export function useKeyboardShortcuts(): ReadonlyArray<Readonly<KeyboardShortcutInfo>> {
 	// Try to initialise with existing data
