@@ -1,3 +1,7 @@
+// Type-only import to expose symbol to JSDoc
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+import type { useRegister } from './useRegister.js';
+
 import { assertAllUnionMembersHandled } from '../assertAllUnionMembersHandled.js';
 
 /**
@@ -29,6 +33,24 @@ type RegisterEventBindingArguments<K, V> = {
 	];
 }[keyof RegisterEventMap<K, V>];
 
+/**
+ * A `Map`-like object that can be used to store arbitrary data in a way that allows event-driven
+ * responses to changes in that data.
+ *
+ * **Important**: Any objects stored as values within a `Register` should be treated as immutable.
+ * Any mutations will not be recognised as changes, and will not fire the appropriate events.
+ *
+ * @example
+ * ```typescript
+ * const register = new Register<string, number>();
+ * register.addEventListener('set', console.log);
+ *
+ * register.set('foo', 1);
+ * // > { key: 'foo', value: 1 }
+ * ```
+ *
+ * @see {@linkcode useRegister} for how to observe a `Register` within a Preact context.
+ */
 export class Register<K, V> {
 	constructor(iterable?: Iterable<readonly [K, V]> | null) {
 		this.#map = new Map(iterable);
