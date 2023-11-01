@@ -9,7 +9,9 @@ import { assertAllUnionMembersHandled } from '../assertAllUnionMembersHandled.js
  * values for the event object passed to listeners for that type of event.
  */
 interface RegisterEventMap<K, V> {
-	'set': { key: K; value: V; };
+	'set':    { key: K; value: V; };
+	'delete': { key: K; value: V; };
+	'change': { key: K; value: V; };
 }
 
 interface RegisterAddEventListenerOptions {
@@ -54,7 +56,10 @@ type RegisterEventBindingArguments<K, V> = {
 export class Register<K, V> {
 	constructor(iterable?: Iterable<readonly [K, V]> | null) {
 		this.#map = new Map(iterable);
+
 		this.#setListeners = new Set();
+		this.#deleteListeners = new Set();
+		this.#changeListeners = new Set();
 	}
 
 	/**
@@ -70,6 +75,20 @@ export class Register<K, V> {
 	 * Event listeners for 'set' events.
 	 */
 	#setListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'set' }>[1]>;
+
+	/**
+	 * @internal
+	 *
+	 * Event listeners for 'delete' events.
+	 */
+	#deleteListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'delete' }>[1]>;
+
+	/**
+	 * @internal
+	 *
+	 * Event listeners for 'change' events.
+	 */
+	#changeListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'change' }>[1]>;
 
 	/**
 	 * Retrieve the value for a given key. If the key does not exist, returns `undefined`.
@@ -98,6 +117,10 @@ export class Register<K, V> {
 		for (const listener of this.#setListeners.values()) {
 			listener({ key, value });
 		}
+
+		for (const listener of this.#changeListeners.values()) {
+			listener({ key, value });
+		}
 	}
 
 	/**
@@ -112,7 +135,23 @@ export class Register<K, V> {
 	 * if the element does not exist.
 	 */
 	delete(key: K): boolean {
-		return this.#map.delete(key);
+		if (this.#map.has(key)) {
+			// This type assertion is safe because we've already checked `has`
+			const value = this.#map.get(key) as V;
+			const result = this.#map.delete(key);
+
+			for (const listener of this.#deleteListeners.values()) {
+				listener({ key, value });
+			}
+
+			for (const listener of this.#changeListeners.values()) {
+				listener({ key, value });
+			}
+
+			return result;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -139,6 +178,10 @@ export class Register<K, V> {
 		// same listener from being bound multiple times
 		if (type === 'set') {
 			this.#setListeners.add(callback);
+		} else if (type === 'delete') {
+			this.#deleteListeners.add(callback);
+		} else if (type === 'change') {
+			this.#changeListeners.add(callback);
 		} else {
 			assertAllUnionMembersHandled(
 				type,
@@ -158,6 +201,10 @@ export class Register<K, V> {
 		// if attempting to remove an unbound listener
 		if (type === 'set') {
 			this.#setListeners.delete(callback);
+		} else if (type === 'delete') {
+			this.#deleteListeners.delete(callback);
+		} else if (type === 'change') {
+			this.#changeListeners.delete(callback);
 		} else {
 			assertAllUnionMembersHandled(
 				type,

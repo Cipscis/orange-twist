@@ -55,6 +55,18 @@ export function useRegister<K, V>(
 			}
 		}, { signal });
 
+		register.addEventListener('delete', ({ key, value }) => {
+			if (keyToObserve) {
+				if (key === keyToObserve) {
+					setValue(undefined);
+				}
+			} else {
+				setValue(
+					Array.from(register.entries())
+				);
+			}
+		}, { signal });
+
 		return () => controller.abort();
 	}, [register, keyToObserve]);
 
