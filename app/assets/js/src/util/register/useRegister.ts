@@ -43,29 +43,25 @@ export function useRegister<K, V>(
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		register.addEventListener('set', ({ key, value }) => {
-			if (keyToObserve) {
+		if (keyToObserve) {
+			// Observe a specific element only
+			register.addEventListener('set', ({ key, value }) => {
 				if (key === keyToObserve) {
 					setValue(value);
 				}
-			} else {
-				setValue(
-					Array.from(register.entries())
-				);
-			}
-		}, { signal });
+			}, { signal });
 
-		register.addEventListener('delete', ({ key, value }) => {
-			if (keyToObserve) {
+			register.addEventListener('delete', ({ key }) => {
 				if (key === keyToObserve) {
 					setValue(undefined);
 				}
-			} else {
-				setValue(
-					Array.from(register.entries())
-				);
-			}
-		}, { signal });
+			}, { signal });
+		} else {
+			// Observe the entire register
+			register.addEventListener('change', () => {
+				setValue(Array.from(register.entries()));
+			}, { signal });
+		}
 
 		return () => controller.abort();
 	}, [register, keyToObserve]);
