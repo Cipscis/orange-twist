@@ -24,6 +24,10 @@ describe('useRegister', () => {
 		await act(() => register.set('test', 2));
 
 		expect(result.current).toBe(2);
+
+		await act(() => void register.delete('test'));
+
+		expect(result.current).toBeUndefined();
 	});
 
 	test('stops observing a specific value after unmounting', async () => {
@@ -60,6 +64,13 @@ describe('useRegister', () => {
 
 		expect(result.current).toEqual([
 			['foo', 1],
+			['bar', 2],
+			['foobar', 3],
+		]);
+
+		await act(() => void register.delete('foo'));
+
+		expect(result.current).toEqual([
 			['bar', 2],
 			['foobar', 3],
 		]);
