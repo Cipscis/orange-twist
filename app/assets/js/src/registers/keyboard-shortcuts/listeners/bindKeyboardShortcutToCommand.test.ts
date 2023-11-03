@@ -12,6 +12,7 @@ import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 import {
 	Command,
 	addCommandListener,
+	registerCommand,
 } from '../../commands';
 
 import { bindKeyboardShortcutToCommand, unbindKeyboardShortcutFromCommand } from './bindKeyboardShortcutToCommand';
@@ -19,6 +20,10 @@ import userEvent from '@testing-library/user-event';
 
 beforeAll(() => {
 	registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 'a' }]);
+	registerCommand({
+		id: Command.DATA_SAVE,
+		name: 'Example command',
+	});
 });
 
 describe('bindKeyboardShortcutToCommand', () => {

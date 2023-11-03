@@ -1,4 +1,5 @@
 import {
+	beforeAll,
 	describe,
 	expect,
 	jest,
@@ -10,8 +11,16 @@ import {
 } from '@testing-library/preact';
 
 import { Command } from '../types';
+
 import { useCommand } from '.';
-import { fireCommand } from '../commandsRegister';
+import { fireCommand, registerCommand } from '../commandsRegister';
+
+beforeAll(() => {
+	registerCommand({
+		id: Command.DATA_SAVE,
+		name: 'Example command',
+	});
+});
 
 describe('useCommand', () => {
 	test('binds a listener to a command', () => {
