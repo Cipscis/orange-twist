@@ -1,5 +1,6 @@
 export {
 	registerCommand,
+	unregisterAllCommands,
 	fireCommand,
 	getCommands,
 } from './commandsRegister';
