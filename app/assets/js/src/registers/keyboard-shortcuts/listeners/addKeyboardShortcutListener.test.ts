@@ -8,10 +8,10 @@ import {
 
 import userEvent from '@testing-library/user-event';
 
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { registerKeyboardShortcut } from '../registerKeyboardShortcut.js';
+import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 
-import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from './addKeyboardShortcutListener.js';
+import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from './addKeyboardShortcutListener';
 
 beforeAll(() => {
 	registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 'a' }]);

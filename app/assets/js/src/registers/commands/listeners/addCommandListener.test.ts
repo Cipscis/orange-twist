@@ -5,10 +5,10 @@ import {
 	test,
 } from '@jest/globals';
 
-import { Command } from '../types/Command.js';
+import { Command } from '../types/Command';
 
-import { addCommandListener, removeCommandListener } from './addCommandListener.js';
-import { fireCommand } from '../commandsRegister.js';
+import { addCommandListener, removeCommandListener } from './addCommandListener';
+import { fireCommand } from '../commandsRegister';
 
 describe('addCommandListener', () => {
 	test('throws an error if called with an unregistered command', () => {

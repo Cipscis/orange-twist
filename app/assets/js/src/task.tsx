@@ -1,7 +1,7 @@
 import { h, render } from 'preact';
 
-import { OrangeTwist } from './components/OrangeTwist.js';
-import { TaskDetail } from './components/TaskDetail.js';
+import { OrangeTwist } from './components/OrangeTwist';
+import { TaskDetail } from './components/TaskDetail';
 
 const main = document.getElementById('main');
 if (main === null) {

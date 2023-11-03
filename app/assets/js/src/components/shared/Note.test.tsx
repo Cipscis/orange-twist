@@ -17,7 +17,7 @@ import {
 
 import userEvent from '@testing-library/user-event';
 
-import { Note } from './Note.js';
+import { Note } from './Note';
 
 describe('Note', () => {
 	afterEach(() => {

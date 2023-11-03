@@ -1,4 +1,4 @@
-import { Day } from '../../../types/Day.js';
+import type { Day } from 'types/Day';
 
 interface DaysChangeListener {
 	(days: ReadonlyArray<Readonly<Day>>): void;

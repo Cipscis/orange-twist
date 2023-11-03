@@ -1,7 +1,5 @@
-import {
-	NewKeyboardShortcutRegisteredListener,
-	newKeyboardShortcutRegisteredListeners,
-} from '../registerKeyboardShortcut.js';
+import type { NewKeyboardShortcutRegisteredListener } from '../registerKeyboardShortcut';
+import { newKeyboardShortcutRegisteredListeners } from '../registerKeyboardShortcut';
 
 interface OnNewKeyboardShortcutRegisteredOptions {
 	/**

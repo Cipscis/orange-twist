@@ -1,4 +1,4 @@
-import { EnumTypeOf } from './EnumTypeOf.js';
+import type { EnumTypeOf } from './EnumTypeOf';
 
 /**
  * Names of CSS animations defined using `@keyframes` in `_animations.scss`.

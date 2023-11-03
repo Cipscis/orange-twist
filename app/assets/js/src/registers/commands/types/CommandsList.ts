@@ -1,4 +1,4 @@
-import { Command } from './Command.js';
+import { Command } from './Command';
 
 /**
  * This interface is used to allow the list of commands to be extended

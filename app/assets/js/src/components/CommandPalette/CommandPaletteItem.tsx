@@ -3,10 +3,10 @@ import { forwardRef } from 'preact/compat';
 
 import classNames from 'classnames';
 
-import { CommandEntry, fireCommand } from '../../registers/commands/commandsRegister.js';
+import { type CommandEntry, fireCommand } from '../../registers/commands/commandsRegister';
 
-import { KeyboardShortcutCombos } from '../KeyboardShortcutCombos.js';
-import { CommandPaletteItemName } from './CommandPaletteItemName.js';
+import { KeyboardShortcutCombos } from '../KeyboardShortcutCombos';
+import { CommandPaletteItemName } from './CommandPaletteItemName';
 
 interface CommandPaletteItemProps {
 	commandEntry: CommandEntry;

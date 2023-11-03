@@ -5,13 +5,13 @@ import {
 
 import classNames from 'classnames';
 
-import { TaskStatus } from '../types/TaskStatus.js';
+import { TaskStatus } from '../types/TaskStatus';
 
-import { useTasks } from '../registers/tasks/index.js';
-import { Command, fireCommand } from '../registers/commands/index.js';
-import { reorderTasks } from '../registers/tasks/tasksRegister.js';
+import { useTasks } from '../registers/tasks';
+import { Command, fireCommand } from '../registers/commands';
+import { reorderTasks } from '../registers/tasks/tasksRegister';
 
-import { TaskList } from './TaskList.js';
+import { TaskList } from './TaskList';
 
 /**
  * Renders a {@linkcode TaskList} of all unfinished tasks in a disclosure.

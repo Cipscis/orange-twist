@@ -1,5 +1,5 @@
-import { Command } from '../types/Command.js';
-import { registerCommand } from '../commandsRegister.js';
+import { Command } from '../types/Command';
+import { registerCommand } from '../commandsRegister';
 
 registerCommand({
 	id: Command.DAY_ADD_NEW,

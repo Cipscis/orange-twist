@@ -1,17 +1,17 @@
 // Type-only import just to expose the symbol to JSDoc.
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import type { useCommand } from '../hooks/index.js';
+import type { useCommand } from '../hooks';
 
-import {
+import type {
 	CommandId,
 	CommandListener,
 	CommandWithListener,
-} from '../types/index.js';
+} from '../types';
 
-import { commandsRegister } from '../commandsRegister.js';
+import { commandsRegister } from '../commandsRegister';
 
 // Ensure listed commands have been registered
-import '../commands/index.js';
+import '../commands';
 
 interface AddCommandListenerOptions {
 	/**

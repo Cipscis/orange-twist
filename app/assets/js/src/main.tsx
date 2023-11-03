@@ -1,9 +1,9 @@
 import { h, render } from 'preact';
 
-import { OrangeTwist } from './components/OrangeTwist.js';
-import { DayList } from './components/DaysList.js';
-import { UnfinishedTasksList } from './components/UnfinishedTaskList.js';
-import { CompletedTasksList } from './components/CompletedTasksList.js';
+import { OrangeTwist } from './components/OrangeTwist';
+import { DayList } from './components/DaysList';
+import { UnfinishedTasksList } from './components/UnfinishedTaskList';
+import { CompletedTasksList } from './components/CompletedTasksList';
 
 const main = document.getElementById('main');
 if (main === null) {

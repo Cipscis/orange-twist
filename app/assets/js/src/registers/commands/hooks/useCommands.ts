@@ -1,7 +1,8 @@
 import { useState } from 'preact/hooks';
 
-import { CommandEntry, getCommands } from '../commandsRegister.js';
-import { onNewCommandRegistered } from '../listeners/onNewCommandRegistered.js';
+import type { CommandEntry } from '../commandsRegister';
+import { getCommands } from '../commandsRegister';
+import { onNewCommandRegistered } from '../listeners/onNewCommandRegistered';
 
 export function useCommands(): ReadonlyArray<Readonly<CommandEntry>> {
 	// Try to initialise with existing data

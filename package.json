@@ -5,22 +5,22 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"server": "ts-node --esm server/server.ts",
+		"server": "ts-node --esm scripts/server.ts",
 
-		"buildJs": "concurrently \"tsc --noEmit\" \"ts-node --esm build/build.ts\"",
+		"buildJs": "concurrently \"tsc --noEmit\" \"ts-node --esm scripts/build.ts\"",
 		"buildCss": "sass app/assets/scss:app/assets/css",
 		"build": "concurrently \"npm run buildJs\" \"npm run buildCss\"",
 
 		"pretest": "tsc --noEmit",
-		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=test/jest.config.ts",
+		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=config/jest.config.js",
 
-		"watchJs": "ts-node --esm build/watch.ts",
+		"watchJs": "ts-node --esm scripts/build-watch.ts",
 		"watchCss": "sass app/assets/scss:app/assets/css --watch",
-		"testWatch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=test/jest.config.ts --watch",
+		"testWatch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=config/jest.config.js --watch",
 		"watch": "concurrently --kill-others \"tsc --watch --preserveWatchOutput --noEmit\" \"npm run watchJs\" \"npm run watchCss\" \"npm run testWatch\"",
 
-		"lintJs": "eslint app/assets/js/src/**",
-		"lintCss": "stylelint app/assets/scss/**/*.scss",
+		"lintJs": "eslint --config=config/.eslintrc.cjs app/assets/js/src/**",
+		"lintCss": "stylelint --config=config/stylelint.config.cjs app/assets/scss/**/*.scss",
 		"lint": "npm run lintJs && npm run lintCss",
 
 		"start": "concurrently --kill-others \"npm run server\" \"npm run watch\"",

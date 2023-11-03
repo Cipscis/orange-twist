@@ -1,6 +1,7 @@
-import { KeyCombo, KeyboardShortcutInfo, KeyboardShortcutName } from './types/index.js';
+import type { KeyCombo, KeyboardShortcutInfo } from './types';
+import { KeyboardShortcutName } from './types';
 
-import { keyboardShortcutsRegister } from './keyboardShortcutsRegister.js';
+import { keyboardShortcutsRegister } from './keyboardShortcutsRegister';
 
 export interface NewKeyboardShortcutRegisteredListener {
 	(shortcutName: KeyboardShortcutInfo): void;

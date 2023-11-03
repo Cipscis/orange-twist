@@ -1,8 +1,8 @@
 import { useEffect } from 'preact/hooks';
 
-import { CommandWithListener } from '../types/index.js';
+import type { CommandWithListener } from '../types';
 
-import { addCommandListener } from '../listeners/addCommandListener.js';
+import { addCommandListener } from '../listeners/addCommandListener';
 
 /**
  * Bind a listener function to be called whenever a specified

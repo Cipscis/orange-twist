@@ -3,16 +3,16 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import { Task } from '../types/Task.js';
+import type { Task } from '../types/Task';
 
 import {
 	setTaskData,
 	deleteTask,
-} from '../registers/tasks/index.js';
-import { Command, fireCommand } from '../registers/commands/index.js';
+} from '../registers/tasks';
+import { Command, fireCommand } from '../registers/commands';
 
-import { TaskStatusComponent } from './TaskStatusComponent.js';
-import { Markdown } from './shared/Markdown.js';
+import { TaskStatusComponent } from './TaskStatusComponent';
+import { Markdown } from './shared/Markdown';
 
 interface TaskComponentProps {
 	task: Readonly<Task>;

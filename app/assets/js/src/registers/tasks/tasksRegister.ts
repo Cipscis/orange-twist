@@ -1,16 +1,14 @@
-import { Task } from '../../types/Task.js';
-import { TaskStatus } from '../../types/TaskStatus.js';
+import type { Task } from 'types/Task';
+import { TaskStatus } from 'types/TaskStatus';
 
-import {
-	DeepPartial,
-	getCurrentDateDayName,
-} from '../../util/index.js';
+import type { DeepPartial } from 'util/index';
+import { getCurrentDateDayName } from 'util/index';
 
-import { tasksChangeListeners } from './listeners/onTasksChange.js';
-import { loadTasks } from './persistence/loadTasks.js';
-import { getDayData, getDays, removeTaskFromDay, setDayData } from '../days/daysRegister.js';
+import { tasksChangeListeners } from './listeners/onTasksChange';
+import { loadTasks } from './persistence/loadTasks';
+import { getDayData, getDays, removeTaskFromDay, setDayData } from '../days/daysRegister';
 
-const tasksRegister: Map<number, Task> = new Map();
+const tasksRegister = new Map<number, Task>();
 let isInitialised = false;
 let loadTasksDataPromise: ReturnType<typeof loadTasksData> | null = null;
 
@@ -70,7 +68,7 @@ export async function loadTasksData(
  * Retrieve all tasks
  */
 export function getTasks(): ReadonlyArray<Readonly<Task>> {
-	const tasks = Array.from(tasksRegister.values());
+	const tasks = Array.from(tasksRegister.entries()).map(([key, value]) => value);
 
 	return tasks;
 }
