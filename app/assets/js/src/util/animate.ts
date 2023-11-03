@@ -1,5 +1,5 @@
-import { CSSKeyframes } from './CSSKeyframes.js';
-import { nextFrame } from './nextFrame.js';
+import { CSSKeyframes } from './CSSKeyframes';
+import { nextFrame } from './nextFrame';
 
 /**
  * Start an animation by specifying a named CSS animation defined

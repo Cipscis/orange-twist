@@ -7,8 +7,8 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { nodeHasAncestor } from '../../util/nodeHasAncestor.js';
-import { Markdown } from './Markdown.js';
+import { nodeHasAncestor } from '../../util/nodeHasAncestor';
+import { Markdown } from './Markdown';
 
 interface NoteProps {
 	note: string | null;

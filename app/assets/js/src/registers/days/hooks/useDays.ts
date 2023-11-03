@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'preact/hooks';
 
-import { Day } from '../../../types/Day.js';
+import type { Day } from 'types/Day';
 
-import { AsyncDataState, useAsyncData } from '../../../util/index.js';
+import type { AsyncDataState } from 'util/index';
+import { useAsyncData } from 'util/index';
 
-import { getDays, loadDaysData } from '../daysRegister.js';
-import { onDaysChange } from '../listeners/onDaysChange.js';
+import { getDays, loadDaysData } from '../daysRegister';
+import { onDaysChange } from '../listeners/onDaysChange';
 
 /**
  * Load persisted days data if necessary, exposing loading and error states related to that process.

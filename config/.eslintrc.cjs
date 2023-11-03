@@ -17,9 +17,7 @@ module.exports = {
 		tsConfigRootDir: __dirname,
 		project: [
 			'./tsconfig.json',
-			'./build/tsconfig.json',
-			'./test/tsconfig.json',
-			'./server/tsconfig.json',
+			'./scripts/tsconfig.json',
 		],
 	},
 	plugins: [
@@ -40,6 +38,8 @@ module.exports = {
 	ignorePatterns: [
 		'*.md',
 		'.eslintrc.cjs',
+		'stylelint.config.cjs',
+		'jest.config.js',
 	],
 	rules: {
 		/////////////////////////

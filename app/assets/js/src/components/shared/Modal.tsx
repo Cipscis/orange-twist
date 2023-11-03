@@ -1,9 +1,9 @@
-import { ComponentChildren, h } from 'preact';
+import { h, type ComponentChildren } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import { getDeepActiveElement, nodeHasAncestor } from '../../util/index.js';
+import { getDeepActiveElement, nodeHasAncestor } from '../../util';
 
 interface ModalProps {
 	open: boolean;

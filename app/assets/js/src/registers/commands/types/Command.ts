@@ -1,4 +1,4 @@
-import { EnumTypeOf } from '../../../util/index.js';
+import type { EnumTypeOf } from 'util/index';
 
 /**
  * An enum of names of built-in commands.

@@ -1,4 +1,4 @@
-import { Task } from '../../../types/Task.js';
+import type { Task } from 'types/Task';
 
 interface UnfinishedTasksListChangeListener {
 	(ids: ReadonlyArray<Readonly<Task>>): void;

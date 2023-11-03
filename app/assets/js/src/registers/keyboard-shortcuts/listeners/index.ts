@@ -1,3 +1,3 @@
-export * from './addKeyboardShortcutListener.js';
-export * from './bindKeyboardShortcutToCommand.js';
-export * from './onNewKeyboardShortcutRegistered.js';
+export * from './addKeyboardShortcutListener';
+export * from './bindKeyboardShortcutToCommand';
+export * from './onNewKeyboardShortcutRegistered';

@@ -1,4 +1,5 @@
-import { NewCommandRegisteredListener, newCommandRegisteredListeners } from '../commandsRegister.js';
+import type { NewCommandRegisteredListener } from '../commandsRegister';
+import { newCommandRegisteredListeners } from '../commandsRegister';
 
 interface OnNewCommandRegisteredOptions {
 	/**

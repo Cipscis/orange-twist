@@ -9,9 +9,9 @@ import {
 	renderHook,
 } from '@testing-library/preact';
 
-import { Command } from '../types/index.js';
-import { useCommand } from './index.js';
-import { fireCommand } from '../commandsRegister.js';
+import { Command } from '../types';
+import { useCommand } from '.';
+import { fireCommand } from '../commandsRegister';
 
 describe('useCommand', () => {
 	test('binds a listener to a command', () => {

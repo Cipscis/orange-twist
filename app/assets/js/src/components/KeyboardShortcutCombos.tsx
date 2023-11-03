@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import { KeyboardShortcutName, getKeyboardShortcut } from '../registers/keyboard-shortcuts/index.js';
+import { KeyboardShortcutName, getKeyboardShortcut } from '../registers/keyboard-shortcuts';
 
 interface KeyboardShortcutCombosProps {
 	keyboardShortcutName: KeyboardShortcutName;

@@ -3,8 +3,8 @@ export {
 	getTaskData,
 	setTaskData,
 	deleteTask,
-} from './tasksRegister.js';
+} from './tasksRegister';
 
-export * from './listeners/index.js';
-export * from './hooks/index.js';
-export * from './persistence/index.js';
+export * from './listeners';
+export * from './hooks';
+export * from './persistence';

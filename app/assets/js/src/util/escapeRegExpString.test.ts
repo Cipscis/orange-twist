@@ -3,7 +3,7 @@ import {
 	expect,
 	test,
 } from '@jest/globals';
-import { escapeRegExpString } from './escapeRegExpString.js';
+import { escapeRegExpString } from './escapeRegExpString';
 
 describe('escapeRegExpString', () => {
 	test('escapes each special character by prefixing with \\', () => {

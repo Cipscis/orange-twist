@@ -1,6 +1,6 @@
-import { Command } from '../types/Command.js';
-import { registerCommand } from '../commandsRegister.js';
-import { addCommandListener } from '../listeners/addCommandListener.js';
+import { Command } from '../types/Command';
+import { registerCommand } from '../commandsRegister';
+import { addCommandListener } from '../listeners/addCommandListener';
 
 registerCommand({
 	id: Command.THEME_TOGGLE,

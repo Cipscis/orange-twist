@@ -1,18 +1,14 @@
-import { Task } from '../../types/Task.js';
-import { TaskStatus } from '../../types/TaskStatus.js';
+import type { Task } from 'types/Task';
+import { TaskStatus } from 'types/TaskStatus';
 
-import {
-	DeepPartial,
-	getCurrentDateDayName,
-} from '../../util/index.js';
+import type { DeepPartial } from 'util/index';
+import { getCurrentDateDayName } from 'util/index';
 
-import { Register } from '../../util/register/Register.js';
+import { tasksChangeListeners } from './listeners/onTasksChange';
+import { loadTasks } from './persistence/loadTasks';
+import { getDayData, getDays, removeTaskFromDay, setDayData } from '../days/daysRegister';
 
-import { tasksChangeListeners } from './listeners/onTasksChange.js';
-import { loadTasks } from './persistence/loadTasks.js';
-import { getDayData, getDays, removeTaskFromDay, setDayData } from '../days/daysRegister.js';
-
-const tasksRegister = new Register<number, Task>();
+const tasksRegister = new Map<number, Task>();
 let isInitialised = false;
 let loadTasksDataPromise: ReturnType<typeof loadTasksData> | null = null;
 

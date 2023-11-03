@@ -1,5 +1,5 @@
-import { CommandId } from './CommandId.js';
-import { CommandListener } from './CommandListener.js';
+import type { CommandId } from './CommandId';
+import type { CommandListener } from './CommandListener';
 
 /**
  * A discriminated union of tuple types that can be used when defining

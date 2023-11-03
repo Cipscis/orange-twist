@@ -9,7 +9,8 @@ import {
 	renderHook,
 } from '@testing-library/preact';
 
-import { GetAsyncDataOptions, useAsyncData } from './useAsyncData.js';
+import type { GetAsyncDataOptions } from './useAsyncData';
+import { useAsyncData } from './useAsyncData';
 
 describe('useAsyncData', () => {
 	test('returns an AsyncDataState', () => {

@@ -1,4 +1,4 @@
-import { getAllTasksData } from '../tasksRegister.js';
+import { getAllTasksData } from '../tasksRegister';
 
 /**
  * Save data from the days register.

@@ -1,2 +1,2 @@
-export * from './useKeyboardShortcut.js';
-export * from './useKeyboardShortcuts.js';
+export * from './useKeyboardShortcut';
+export * from './useKeyboardShortcuts';

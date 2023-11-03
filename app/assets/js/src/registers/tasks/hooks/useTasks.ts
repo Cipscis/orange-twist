@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'preact/hooks';
 
-import { Task } from '../../../types/Task.js';
+import type { Task } from 'types/Task';
 
-import { AsyncDataState, useAsyncData } from '../../../util/index.js';
+import type { AsyncDataState } from 'util/index';
+import { useAsyncData } from 'util/index';
 
-import { getTasks, loadTasksData } from '../tasksRegister.js';
-import { onTasksChange } from '../listeners/onTasksChange.js';
+import { getTasks, loadTasksData } from '../tasksRegister';
+import { onTasksChange } from '../listeners/onTasksChange';
 
 export function useTasks(): AsyncDataState<ReadonlyArray<Readonly<Task>>> {
 	const {

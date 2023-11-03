@@ -2,8 +2,8 @@ export {
 	registerCommand,
 	fireCommand,
 	getCommands,
-} from './commandsRegister.js';
+} from './commandsRegister';
 
-export * from './types/index.js';
-export * from './listeners/index.js';
-export * from './hooks/index.js';
+export * from './types';
+export * from './listeners';
+export * from './hooks';

@@ -6,15 +6,15 @@ import {
 	test,
 } from '@jest/globals';
 
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { registerKeyboardShortcut } from '../registerKeyboardShortcut.js';
+import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 
 import {
 	Command,
 	addCommandListener,
-} from '../../commands/index.js';
+} from '../../commands';
 
-import { bindKeyboardShortcutToCommand, unbindKeyboardShortcutFromCommand } from './bindKeyboardShortcutToCommand.js';
+import { bindKeyboardShortcutToCommand, unbindKeyboardShortcutFromCommand } from './bindKeyboardShortcutToCommand';
 import userEvent from '@testing-library/user-event';
 
 beforeAll(() => {

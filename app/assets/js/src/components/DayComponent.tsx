@@ -2,15 +2,15 @@ import { h } from 'preact';
 import { useCallback, useEffect, useId, useRef } from 'preact/hooks';
 import React, { forwardRef } from 'preact/compat';
 
-import { Day } from '../types/Day.js';
+import type { Day } from '../types/Day';
 
-import { getTaskData } from '../registers/tasks/index.js';
-import { deleteDay, setDayData } from '../registers/days/index.js';
+import { getTaskData } from '../registers/tasks';
+import { deleteDay, setDayData } from '../registers/days';
 
-import { Command, fireCommand } from '../registers/commands/index.js';
+import { Command, fireCommand } from '../registers/commands';
 
-import { DayNote } from './DayNote.js';
-import { TaskList } from './TaskList.js';
+import { DayNote } from './DayNote';
+import { TaskList } from './TaskList';
 
 interface DayProps extends h.JSX.HTMLAttributes<HTMLDetailsElement> {
 	day: Readonly<Day>;

@@ -1,3 +1,3 @@
-import { CommandsList } from './CommandsList.js';
+import type { CommandsList } from './CommandsList';
 
 export type CommandId = keyof CommandsList;

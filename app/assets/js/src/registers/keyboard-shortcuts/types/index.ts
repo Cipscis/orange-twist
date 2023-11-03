@@ -1,3 +1,3 @@
-export * from './KeyCombo.js';
-export * from './KeyboardShortcutInfo.js';
-export * from './KeyboardShortcutName.js';
+export * from './KeyCombo';
+export * from './KeyboardShortcutInfo';
+export * from './KeyboardShortcutName';

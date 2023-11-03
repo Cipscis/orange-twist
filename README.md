@@ -17,15 +17,16 @@ Usually, you will just want to run `npm start`, but this project also provides t
 
 * `npm run server` runs a Node.js server on the port specified in the [`.env`](#env) file, using [Express](https://expressjs.com/).
 
-* `npm run build` compiles CSS files using [sass](https://www.npmjs.com/package/sass), then compiles TypeScript and bundles JavaScript using [the TypeScript compiler](https://www.typescriptlang.org/docs/handbook/compiler-options.html).
+* `npm run build` compiles CSS files using [sass](https://www.npmjs.com/package/sass), then typechecks TypeScript using [the TypeScript compiler](https://www.typescriptlang.org/docs/handbook/compiler-options.html) and bundles TypeScript and any JavaScript using [esbuild](https://esbuild.github.io/).
 
-* `npm run watch` compiles both CSS and TypeScript+JavaScript files just like `npm run build`, but in watch mode so any further changes will result in recompilation.
+* `npm run watch` compiles both CSS and TypeScript+JavaScript files just like `npm run build`, but in watch mode so any further changes will result in recompilation. Also runs any configured tests suites in watch mode.
 
 * `npm run lint` lints all JavaScript and TypeScript files using [eslint](https://www.npmjs.com/package/eslint) and all SCSS files using [stylelint](https://www.npmjs.com/package/stylelint).
 
 * `npm start` runs both the `server` and `watch` tasks simultaneously.
 
-* `npm test` typechecks TypeScript files, then runs any configured test suites using [Jest](https://jestjs.io/).
+* `npm test` runs any configured test suites using [Jest](https://jestjs.io/).
+* `npm run testWatch` runs any configured test suites using [Jest](https://jestjs.io/) in watch mode.
 
 ### .env
 
@@ -124,5 +125,7 @@ These dependencies are used when working on the project locally.
 These dependencies are used for deploying the project to GitHub Pages.
 
 * [checkout](https://github.com/marketplace/actions/checkout): Used to check out the repository to a workspace so it can be built
+
+* [setup-node](https://github.com/marketplace/actions/setup-node-js-environment): Use to set up a Node.JS environment for the build and test scripts to run on during the deployment process.
 
 * [Deploy to GitHub Pages](https://github.com/marketplace/actions/deploy-to-github-pages): Used to deploy the project to GitHub pages once it has been built

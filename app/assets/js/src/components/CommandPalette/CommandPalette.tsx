@@ -1,4 +1,4 @@
-import { RefObject, createRef, h } from 'preact';
+import { type RefObject, createRef, h } from 'preact';
 import {
 	useCallback,
 	useEffect,
@@ -7,12 +7,12 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { escapeRegExpString } from '../../util/index.js';
+import { escapeRegExpString } from '../../util';
 
-import { fireCommand, useCommands } from '../../registers/commands/index.js';
+import { fireCommand, useCommands } from '../../registers/commands';
 
-import { Modal } from '../shared/Modal.js';
-import { CommandPaletteItem } from './CommandPaletteItem.js';
+import { Modal } from '../shared/Modal';
+import { CommandPaletteItem } from './CommandPaletteItem';
 
 interface CommandPaletteProps {
 	open: boolean;

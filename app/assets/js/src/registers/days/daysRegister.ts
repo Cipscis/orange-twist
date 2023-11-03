@@ -1,14 +1,14 @@
-import { Day } from '../../types/Day.js';
+import type { Day } from 'types/Day';
 
+import type { DeepPartial } from 'util/index';
 import {
 	isValidDateString,
 	getCurrentDateDayName,
-	DeepPartial,
-} from '../../util/index.js';
+} from 'util/index';
 
-import { daysChangeListeners } from './listeners/onDaysChange.js';
+import { daysChangeListeners } from './listeners/onDaysChange';
 
-import { loadDays } from './persistence/loadDays.js';
+import { loadDays } from './persistence/loadDays';
 
 const daysRegister: Map<string, Readonly<Day>> = new Map();
 let isInitialised = false;

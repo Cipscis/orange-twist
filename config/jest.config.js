@@ -3,9 +3,10 @@
  * https://jestjs.io/docs/configuration
  */
 
-import type { JestConfigWithTsJest } from 'ts-jest';
+/** @typedef {import('ts-jest').JestConfigWithTsJest} JestConfigWithTsJest */
 
-const config: JestConfigWithTsJest = {
+/** @type {JestConfigWithTsJest} */
+const config = {
 	// Don't inject globals. Require them to be imported from `@jest/globals`
 	injectGlobals: false,
 	// Specify where the tests are
@@ -21,6 +22,8 @@ const config: JestConfigWithTsJest = {
 	preset: 'ts-jest/presets/default-esm',
 	// Allow Jest's module resolution to find TypeScript files when imported as `.js`
 	resolver: 'ts-jest-resolver',
+
+	passWithNoTests: true,
 };
 
 export default config;
