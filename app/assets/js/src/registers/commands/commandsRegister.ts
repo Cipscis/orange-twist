@@ -48,6 +48,15 @@ export function registerCommand<C extends CommandId>(commandInfo: CommandInfo<C>
 }
 
 /**
+ * Unregisters every command that has been registered using {@linkcode registerCommand}.
+ */
+export function unregisterAllCommands(): void {
+	commandsRegister.clear();
+
+	// TODO: Update `useCommand` to react to this
+}
+
+/**
  * Get a list of all registered commands.
  */
 export function getCommands(): ReadonlyArray<Readonly<CommandEntry>> {

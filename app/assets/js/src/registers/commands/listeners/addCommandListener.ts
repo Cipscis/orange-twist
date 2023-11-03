@@ -10,9 +10,6 @@ import type {
 
 import { commandsRegister } from '../commandsRegister';
 
-// Ensure listed commands have been registered
-import '../commands';
-
 interface AddCommandListenerOptions {
 	/**
 	 * An `AbortSignal`. The listener will be removed when the given `AbortSignal`

@@ -88,8 +88,6 @@ These dependencies are used when working on the project locally.
 
 	* [ts-jest](https://kulshekhar.github.io/ts-jest/docs/): Allows Jest tests to be written in TypeScript
 
-	* [ts-jest-resolver](https://www.npmjs.com/package/ts-jest-resolver): Allows ESM modules imported in TypeScript tests to be resolved using TypeScript's rules, e.g. 'code.js' may fine 'code.ts'
-
 	* [@testing-library/preact](https://testing-library.com/docs/preact-testing-library/intro): Testing library for Preact
 
 	* [@testing-library/jest-dom](https://testing-library.com/docs/ecosystem-jest-dom/): Utilities for DOM tests using Jest

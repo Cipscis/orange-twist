@@ -6,13 +6,35 @@ import classNames from 'classnames';
 import { getDeepActiveElement, nodeHasAncestor } from '../../util';
 
 interface ModalProps {
+	/** The Modal is only rendered when `open` is `true`. */
 	open: boolean;
 
+	/**
+	 * Called when the Modal is opened. This includes the first
+	 * time it is rendered, if `open` is initially `true`.
+	 */
 	onOpen?: () => void;
+	/**
+	 * Called when internal behaviour determines that the Modal
+	 * should be closed. Can be used in the parent component to
+	 * update the `open` prop.
+	 *
+	 * @example
+	 * ```tsx
+	 * const [open, setOpen] = useState(false);
+	 *
+	 * return <Modal
+	 *     open={open}
+	 *     onClose={() => setOpen(false)}
+	 * />;
+	 * ```
+	 */
 	onClose: () => void;
 
-	children: ComponentChildren;
+	children?: ComponentChildren;
+	/** CSS Classes to apply to the Modal's body element. */
 	class?: string;
+	/** A title to display as an `<h2>` within the Modal's body element. */
 	title?: string;
 }
 
@@ -45,23 +67,37 @@ export function Modal(props: ModalProps) {
 
 	// Handle opening and closing.
 	useEffect(() => {
-		const closeOnEscape = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') {
-				onClose();
-			}
-		};
+		if (!open) {
+			return;
+		}
+
+		const controller = new AbortController();
+		const { signal } = controller;
 
 		const modalEl = modalRef.current;
 
-		const closeOnFocusOut = (e: FocusEvent) => {
+		// Call `onOpen` when opening
+		if (onOpen) {
+			onOpen();
+		}
+
+		// Close on Escape key
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				onClose();
+			}
+		}, { signal });
+
+		// Close when focus leaves the modal
+		modalEl?.addEventListener('focusout', (e) => {
 			// Ignore `focusout` triggered by focus leaving the viewport,
 			// such as switching to another tab or focusing on the dev tools
 			const activeElement = document.activeElement;
 
 			if (
-				activeElement instanceof Node && modalEl &&
+				activeElement === modalEl ||
 				(
-					activeElement === modalEl ||
+					activeElement &&
 					nodeHasAncestor(activeElement, modalEl)
 				)
 			) {
@@ -69,26 +105,10 @@ export function Modal(props: ModalProps) {
 			}
 
 			onClose();
-		};
+		}, { signal });
 
-		const eventListenerAbortController = new AbortController();
-		const { signal } = eventListenerAbortController;
-
-		if (open) {
-			if (onOpen) {
-				onOpen();
-			}
-
-			document.addEventListener('keydown', closeOnEscape, { signal });
-			modalEl?.addEventListener('focusout', closeOnFocusOut, { signal });
-		}
-
-		return () => {
-			if (open) {
-				eventListenerAbortController.abort();
-			}
-		};
-	}, [open, onClose, onOpen]);
+		return () => controller.abort();
+	}, [open, onOpen, onClose]);
 
 	return <>
 		{
@@ -100,6 +120,7 @@ export function Modal(props: ModalProps) {
 					class={classNames('modal__body', className)}
 					tabIndex={-1}
 					ref={modalRef}
+					data-testid="modal"
 				>
 					{
 						title &&
