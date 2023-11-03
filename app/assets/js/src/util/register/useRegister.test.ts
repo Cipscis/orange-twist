@@ -6,8 +6,8 @@ import {
 
 import { act, renderHook } from '@testing-library/preact';
 
-import { useRegister } from './useRegister.js';
-import { Register } from './Register.js';
+import { useRegister } from './useRegister';
+import { Register } from './Register';
 
 describe('useRegister', () => {
 	test('allows a specific value within a register to be observed', async () => {

@@ -5,7 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import { Register } from './Register.js';
+import { Register } from './Register';
 
 describe('Register', () => {
 	test('supports get and set methods', () => {

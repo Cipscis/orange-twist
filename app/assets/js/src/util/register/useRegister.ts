@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 
-import { Register } from './Register.js';
+import { Register } from './Register';
 
 /**
  * A hook for observing all changes to a {@linkcode Register}.
