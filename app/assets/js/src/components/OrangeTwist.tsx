@@ -20,6 +20,9 @@ import { toast } from './shared/Toast';
 import { CommandPalette } from './CommandPalette/CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
 
+// Ensure all commands are registered
+import 'registers/commands/commands';
+
 interface OrangeTwistProps {
 	children: ComponentChildren;
 }

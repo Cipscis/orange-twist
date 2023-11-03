@@ -12,15 +12,15 @@
 		"build": "concurrently \"npm run buildJs\" \"npm run buildCss\"",
 
 		"pretest": "tsc --noEmit",
-		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=config/jest.config.js",
+		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
 
 		"watchJs": "ts-node --esm scripts/build-watch.ts",
 		"watchCss": "sass app/assets/scss:app/assets/css --watch",
-		"testWatch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=config/jest.config.js --watch",
+		"testWatch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
 		"watch": "concurrently --kill-others \"tsc --watch --preserveWatchOutput --noEmit\" \"npm run watchJs\" \"npm run watchCss\" \"npm run testWatch\"",
 
-		"lintJs": "eslint --config=config/.eslintrc.cjs app/assets/js/src/**",
-		"lintCss": "stylelint --config=config/stylelint.config.cjs app/assets/scss/**/*.scss",
+		"lintJs": "eslint app/assets/js/src/**",
+		"lintCss": "stylelint app/assets/scss/**/*.scss",
 		"lint": "npm run lintJs && npm run lintCss",
 
 		"start": "concurrently --kill-others \"npm run server\" \"npm run watch\"",
@@ -54,7 +54,6 @@
 		"stylelint": "^15.11.0",
 		"stylelint-config-recommended-scss": "^13.0.0",
 		"ts-jest": "^29.1.1",
-		"ts-jest-resolver": "^2.0.1",
 		"ts-node": "^10.9.1",
 		"typescript": "^5.2.2"
 	},
