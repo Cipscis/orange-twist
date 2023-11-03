@@ -3,9 +3,8 @@ import { h } from 'preact';
 import { afterEach, describe, expect, jest, test } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, render } from '@testing-library/preact';
+import { act, cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { act } from 'preact/test-utils';
 
 import { Modal } from './Modal';
 
@@ -47,7 +46,7 @@ describe('Modal', () => {
 	});
 
 	test('applies specified CSS classes', () => {
-		const { queryByTestId } = render(
+		const { getByTestId } = render(
 			<Modal
 				open
 				onClose={() => {}}
@@ -55,7 +54,7 @@ describe('Modal', () => {
 			/>
 		);
 
-		const modal = queryByTestId('modal')!;
+		const modal = getByTestId('modal');
 		expect(modal.classList.contains('test-class')).toBe(true);
 		expect(modal.classList.contains('another-class')).toBe(true);
 	});
