@@ -10,7 +10,7 @@ import {
 	renderHook,
 } from '@testing-library/preact';
 
-import { useViewTransition } from './useViewTransition.js';
+import { useViewTransition } from './useViewTransition';
 
 describe('useViewTransition', () => {
 	test('returns a ViewTransitionState', () => {

@@ -1,2 +1,2 @@
-export { loadTasks } from './loadTasks.js';
-export { saveTasks } from './saveTasks.js';
+export { loadTasks } from './loadTasks';
+export { saveTasks } from './saveTasks';

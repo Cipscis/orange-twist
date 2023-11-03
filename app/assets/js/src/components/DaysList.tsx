@@ -6,10 +6,10 @@ import {
 
 import classNames from 'classnames';
 
-import { useDays } from '../registers/days/index.js';
-import { Command, fireCommand } from '../registers/commands/index.js';
+import { useDays } from '../registers/days';
+import { Command, fireCommand } from '../registers/commands';
 
-import { DayComponent } from './DayComponent.js';
+import { DayComponent } from './DayComponent';
 
 /**
  * Renders a list of days.

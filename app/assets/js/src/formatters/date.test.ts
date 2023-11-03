@@ -3,7 +3,7 @@ import {
 	expect,
 	test,
 } from '@jest/globals';
-import { formatDate } from './date.js';
+import { formatDate } from './date';
 
 describe('formatDate', () => {
 	test(`formats a date as 'YYYY-MM-DD'`, () => {

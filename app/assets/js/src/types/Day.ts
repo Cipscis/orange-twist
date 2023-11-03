@@ -1,12 +1,12 @@
 // Type-only import to make symbol availabe in JSDoc
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import type { formatDate } from '../formatters/date.js';
+import type { formatDate } from '../formatters/date';
 
 import { z } from 'zod';
 
-import { taskSchema } from './Task.js';
+import { taskSchema } from './Task';
 
-import { isZodSchemaType } from '../util/index.js';
+import { isZodSchemaType } from '../util';
 
 export const daySchema = z.object({
 	/**

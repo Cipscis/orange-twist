@@ -1,2 +1,2 @@
-export * from './onNewCommandRegistered.js';
-export * from './addCommandListener.js';
+export * from './onNewCommandRegistered';
+export * from './addCommandListener';

@@ -1,2 +1,2 @@
-export * from './useCommands.js';
-export * from './useCommand.js';
+export * from './useCommands';
+export * from './useCommand';

@@ -1,11 +1,11 @@
 import { h } from 'preact';
 
-import { Day } from '../types/Day.js';
+import type { Day } from '../types/Day';
 
-import { setDayData } from '../registers/days/index.js';
-import { Command, fireCommand } from '../registers/commands/index.js';
+import { setDayData } from '../registers/days';
+import { Command, fireCommand } from '../registers/commands';
 
-import { Note } from './shared/Note.js';
+import { Note } from './shared/Note';
 
 interface DayNoteProps {
 	day: Readonly<Day>;

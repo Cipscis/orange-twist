@@ -1,1 +1,1 @@
-export { onDaysChange, offDaysChange } from './onDaysChange.js';
+export { onDaysChange, offDaysChange } from './onDaysChange';

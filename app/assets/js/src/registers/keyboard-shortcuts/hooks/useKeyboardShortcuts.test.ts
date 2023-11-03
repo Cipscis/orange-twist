@@ -6,13 +6,13 @@ import {
 
 import { renderHook } from '@testing-library/preact';
 
-import { Command } from '../../commands/index.js';
+import { Command } from '../../commands';
 
-import { KeyboardShortcutName } from '../types/index.js';
-import { registerKeyboardShortcut } from '../registerKeyboardShortcut.js';
-import { bindKeyboardShortcutToCommand } from '../listeners/index.js';
+import { KeyboardShortcutName } from '../types';
+import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
+import { bindKeyboardShortcutToCommand } from '../listeners';
 
-import { useKeyboardShortcuts } from './useKeyboardShortcuts.js';
+import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 
 describe('useKeyboardShortcuts', () => {
 	test('provides an array containing info on all keyboard shortcuts', () => {

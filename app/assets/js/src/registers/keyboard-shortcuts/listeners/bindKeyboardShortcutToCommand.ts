@@ -1,8 +1,9 @@
-import { getCommand } from '../../commands/commandsRegister.js';
-import { CommandId, fireCommand } from '../../commands/index.js';
+import { getCommand } from '../../commands/commandsRegister';
+import type { CommandId } from '../../commands';
+import { fireCommand } from '../../commands';
 
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from './addKeyboardShortcutListener.js';
+import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from './addKeyboardShortcutListener';
 
 /**
  * Functions that can be used to fire commands.

@@ -4,7 +4,7 @@ import { useRef } from 'preact/hooks';
 import {
 	animate,
 	CSSKeyframes,
-} from '../../util/index.js';
+} from '../../util';
 
 interface ToastProps {
 	/**

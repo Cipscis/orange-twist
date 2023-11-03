@@ -1,13 +1,13 @@
 // Type-only import to make symbol available within JSDoc
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import type { registerKeyboardShortcut } from '../index.js';
+import type { registerKeyboardShortcut } from '..';
 
 import { useEffect, useState } from 'preact/hooks';
 
-import { KeyboardShortcutInfo } from '../types/index.js';
-import { onNewKeyboardShortcutRegistered } from '../listeners/index.js';
+import type { KeyboardShortcutInfo } from '../types';
+import { onNewKeyboardShortcutRegistered } from '../listeners';
 
-import { getKeyboardShortcuts } from '../getKeyboardShortcuts.js';
+import { getKeyboardShortcuts } from '../getKeyboardShortcuts';
 
 /**
  * Provides access to information about currently registered keyboard

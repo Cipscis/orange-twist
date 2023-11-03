@@ -6,10 +6,10 @@ import {
 	registerKeyboardShortcut,
 	useKeyboardShortcut,
 	useKeyboardShortcuts,
-} from '../registers/keyboard-shortcuts/index.js';
+} from '../registers/keyboard-shortcuts';
 
-import { Modal } from './shared/Modal.js';
-import { KeyboardShortcutCombos } from './KeyboardShortcutCombos.js';
+import { Modal } from './shared/Modal';
+import { KeyboardShortcutCombos } from './KeyboardShortcutCombos';
 
 registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
 

@@ -3,13 +3,13 @@ import { useCallback, useId, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import { Task } from '../types/Task.js';
+import type { Task } from '../types/Task';
 
-import { useViewTransition } from '../util/index.js';
+import { useViewTransition } from '../util';
 
-import { getTaskData, useTasks } from '../registers/tasks/index.js';
+import { getTaskData, useTasks } from '../registers/tasks';
 
-import { TaskComponent } from './TaskComponent.js';
+import { TaskComponent } from './TaskComponent';
 import React, { forwardRef } from 'preact/compat';
 
 interface TaskListProps {

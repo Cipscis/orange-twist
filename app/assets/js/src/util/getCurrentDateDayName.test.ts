@@ -6,7 +6,7 @@ import {
 	jest,
 	test,
 } from '@jest/globals';
-import { getCurrentDateDayName } from './getCurrentDateDayName.js';
+import { getCurrentDateDayName } from './getCurrentDateDayName';
 
 describe('getCurrentDateDayName', () => {
 	beforeAll(() => {

@@ -1,14 +1,14 @@
 // Type-only import to make symbol available to JSDoc
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import type { useCommand } from '../../commands/index.js';
+import type { useCommand } from '../../commands';
 
 import { useEffect } from 'preact/hooks';
 
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { addKeyboardShortcutListener } from '../listeners/addKeyboardShortcutListener.js';
+import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import { addKeyboardShortcutListener } from '../listeners/addKeyboardShortcutListener';
 
-import { CommandId } from '../../commands/index.js';
-import { bindKeyboardShortcutToCommand } from '../listeners/bindKeyboardShortcutToCommand.js';
+import type { CommandId } from 'registers/commands';
+import { bindKeyboardShortcutToCommand } from '../listeners/bindKeyboardShortcutToCommand';
 
 /**
  * Bind a callback to a keyboard shortcut, within a Preact component.
