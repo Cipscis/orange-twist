@@ -8,7 +8,6 @@ import {
 	jest,
 	test,
 } from '@jest/globals';
-
 import '@testing-library/jest-dom/jest-globals';
 
 import {
