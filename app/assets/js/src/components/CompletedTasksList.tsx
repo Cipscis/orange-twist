@@ -1,3 +1,5 @@
+import { h } from 'preact';
+
 import { useTasks } from '../registers/tasks/index.js';
 
 import { TaskStatus } from '../types/TaskStatus.js';

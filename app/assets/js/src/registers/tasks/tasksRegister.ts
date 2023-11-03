@@ -6,11 +6,13 @@ import {
 	getCurrentDateDayName,
 } from '../../util/index.js';
 
+import { Register } from '../../util/register/Register.js';
+
 import { tasksChangeListeners } from './listeners/onTasksChange.js';
 import { loadTasks } from './persistence/loadTasks.js';
 import { getDayData, getDays, removeTaskFromDay, setDayData } from '../days/daysRegister.js';
 
-const tasksRegister: Map<number, Task> = new Map();
+const tasksRegister = new Register<number, Task>();
 let isInitialised = false;
 let loadTasksDataPromise: ReturnType<typeof loadTasksData> | null = null;
 
@@ -70,7 +72,7 @@ export async function loadTasksData(
  * Retrieve all tasks
  */
 export function getTasks(): ReadonlyArray<Readonly<Task>> {
-	const tasks = Array.from(tasksRegister.values());
+	const tasks = Array.from(tasksRegister.entries()).map(([key, value]) => value);
 
 	return tasks;
 }

@@ -28,7 +28,7 @@ module.exports = {
 		'react-hooks',
 	],
 	settings: {
-		// Copied from `eslint-confict-preact` (which is too opinionated for me to use, e.g. assumes Jest)
+		// Copied from `eslint-config-preact` (which is too opinionated for me to use, e.g. assumes Jest globals)
 		react: {
 			// eslint-plugin-preact interprets this as "h.createElement",
 			// however we only care about marking h() as being a used variable.
@@ -75,9 +75,6 @@ module.exports = {
 			},
 		],
 
-		// I like being able to use `'' + val` to coerce an unknown type to a string
-		'@typescript-eslint/restrict-plus-operands': 'off',
-
 		// I don't mind type coercion in string literal expressions
 		'@typescript-eslint/restrict-template-expressions': 'off',
 
@@ -91,10 +88,6 @@ module.exports = {
 				ignoreRestArgs: true,
 			},
 		],
-
-		// TypeScript namespaces serve a different purpose to modules, and are sometimes necessary,
-		// such as when extending the `Window` interface to add support for legacy APIs
-		'@typescript-eslint/no-namespace': 'off',
 
 		// There are plenty of times where it's safe to use a Promise without error handling
 		'@typescript-eslint/no-floating-promises': 'off',
@@ -126,9 +119,11 @@ module.exports = {
 		////////////////////////
 		// Preact / JSX Rules //
 		////////////////////////
-		// Copied from `eslint-confict-preact` (which is too opinionated for me to use, e.g. assumes Jest)
+		// Copied from `eslint-config-preact` (which is too opinionated for me to use, e.g. assumes Jest globals)
 		'react/no-deprecated': 'error',
-		'react/react-in-jsx-scope': 'off',
+		// Preact disables this, but in my opinion it should be enabled
+		// It automatically picks up our configured `pragma: 'h'` configuration
+		'react/react-in-jsx-scope': 'error',
 		'react/display-name': ['warn', { ignoreTranspilerName: false }],
 		'react/jsx-no-bind': ['warn', {
 			ignoreRefs: true,
