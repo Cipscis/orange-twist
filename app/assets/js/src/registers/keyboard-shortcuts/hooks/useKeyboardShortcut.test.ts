@@ -10,15 +10,15 @@ import userEvent from '@testing-library/user-event';
 
 import { renderHook } from '@testing-library/preact';
 
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { registerKeyboardShortcut } from '../registerKeyboardShortcut.js';
+import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 
 import {
 	Command,
 	addCommandListener,
-} from '../../commands/index.js';
+} from '../../commands';
 
-import { useKeyboardShortcut } from './useKeyboardShortcut.js';
+import { useKeyboardShortcut } from './useKeyboardShortcut';
 
 describe('useKeyboardShortcut', () => {
 	beforeAll(() => {

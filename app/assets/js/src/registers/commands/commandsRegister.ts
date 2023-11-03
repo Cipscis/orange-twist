@@ -1,10 +1,15 @@
 // Type-only import to make symbol available to JSDoc
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import type { useCommand } from './hooks/useCommand.js';
+import type { useCommand } from './hooks/useCommand';
 
-import { KeyboardShortcutName } from '../keyboard-shortcuts/index.js';
+import { KeyboardShortcutName } from '../keyboard-shortcuts';
 
-import { CommandInfo, CommandId, CommandListener, CommandsList } from './types/index.js';
+import type {
+	CommandInfo,
+	CommandId,
+	CommandListener,
+	CommandsList,
+} from './types';
 
 export type CommandEntry = {
 	commandInfo: CommandInfo;

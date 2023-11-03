@@ -6,7 +6,7 @@
  * libraries, to keep its file size to an absolute minimum.
  */
 
-import { isTheme } from './types/Theme.js';
+import { isTheme } from './types/Theme';
 
 const theme = localStorage.getItem('theme');
 if (isTheme(theme)) {

@@ -1,4 +1,4 @@
-import { formatDate } from '../formatters/date.js';
+import { formatDate } from '../formatters/date';
 
 /**
  * Gets the formatted day name for the current date,

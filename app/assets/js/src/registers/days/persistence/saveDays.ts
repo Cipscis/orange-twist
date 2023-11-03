@@ -1,4 +1,4 @@
-import { getAllDaysData } from '../daysRegister.js';
+import { getAllDaysData } from '../daysRegister';
 
 /**
  * Save data from the days register, excluding empty days.

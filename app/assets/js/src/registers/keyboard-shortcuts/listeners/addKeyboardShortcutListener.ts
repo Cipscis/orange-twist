@@ -1,5 +1,5 @@
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
-import { keyboardShortcutsRegister } from '../keyboardShortcutsRegister.js';
+import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import { keyboardShortcutsRegister } from '../keyboardShortcutsRegister';
 
 interface AddKeyboardShortcutListenerOptions {
 	/**

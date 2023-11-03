@@ -4,7 +4,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import { isValidDateString } from './isValidDateString.js';
+import { isValidDateString } from './isValidDateString';
 
 describe('isValidDateString', () => {
 	test('returns true if passed a valid date string', () => {

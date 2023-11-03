@@ -1,19 +1,19 @@
 import { h } from 'preact';
 
-import { Task } from '../types/Task.js';
-import { TaskStatus } from '../types/TaskStatus.js';
+import type { Task } from '../types/Task';
+import { TaskStatus } from '../types/TaskStatus';
 
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { deleteTask, setTaskData } from '../registers/tasks/tasksRegister.js';
-import { Command, fireCommand } from '../registers/commands/index.js';
+import { deleteTask, setTaskData } from '../registers/tasks/tasksRegister';
+import { Command, fireCommand } from '../registers/commands';
 
 import {
 	animate,
 	nodeHasAncestor,
 	CSSKeyframes,
-} from '../util/index.js';
-import { getDayData, setDayData } from '../registers/days/daysRegister.js';
+} from '../util';
+import { getDayData, setDayData } from '../registers/days/daysRegister';
 
 interface TaskStatusComponentProps {
 	task: Task;

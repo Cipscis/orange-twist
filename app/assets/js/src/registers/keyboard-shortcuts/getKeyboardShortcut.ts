@@ -1,6 +1,7 @@
-import { KeyboardShortcutInfo, KeyboardShortcutName } from './types/index.js';
+import type { KeyboardShortcutInfo } from './types';
+import { KeyboardShortcutName } from './types';
 
-import { keyboardShortcutsRegister } from './keyboardShortcutsRegister.js';
+import { keyboardShortcutsRegister } from './keyboardShortcutsRegister';
 
 /**
  * Gets information about a specific keyboard shortcut.

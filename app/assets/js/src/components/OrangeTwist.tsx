@@ -1,24 +1,24 @@
-import { ComponentChildren, h } from 'preact';
+import { h, type ComponentChildren } from 'preact';
 import {
 	useCallback,
 	useState,
 } from 'preact/hooks';
 
-import { saveDays, setDayData, useDays } from '../registers/days/index.js';
-import { addNewTask, saveTasks } from '../registers/tasks/index.js';
+import { saveDays, setDayData, useDays } from '../registers/days';
+import { addNewTask, saveTasks } from '../registers/tasks';
 
-import { Command, useCommand } from '../registers/commands/index.js';
+import { Command, useCommand } from '../registers/commands';
 import {
 	KeyboardShortcutName,
 	registerKeyboardShortcut,
 	useKeyboardShortcut,
-} from '../registers/keyboard-shortcuts/index.js';
+} from '../registers/keyboard-shortcuts';
 
-import { isValidDateString } from '../util/index.js';
-import { toast } from './shared/Toast.js';
+import { isValidDateString } from '../util';
+import { toast } from './shared/Toast';
 
-import { CommandPalette } from './CommandPalette/CommandPalette.js';
-import { KeyboardShortcutModal } from './KeyboardShortcutsModal.js';
+import { CommandPalette } from './CommandPalette/CommandPalette';
+import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
 
 interface OrangeTwistProps {
 	children: ComponentChildren;

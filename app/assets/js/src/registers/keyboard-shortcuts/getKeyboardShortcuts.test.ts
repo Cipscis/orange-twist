@@ -4,12 +4,13 @@ import {
 	test,
 } from '@jest/globals';
 
-import { KeyCombo, KeyboardShortcutName } from './types/index.js';
+import type { KeyCombo } from './types';
+import { KeyboardShortcutName } from './types';
 
-import { registerKeyboardShortcut } from './registerKeyboardShortcut.js';
-import { addKeyboardShortcutListener } from './listeners/addKeyboardShortcutListener.js';
+import { registerKeyboardShortcut } from './registerKeyboardShortcut';
+import { addKeyboardShortcutListener } from './listeners/addKeyboardShortcutListener';
 
-import { getKeyboardShortcuts } from './getKeyboardShortcuts.js';
+import { getKeyboardShortcuts } from './getKeyboardShortcuts';
 
 describe('getKeyboardShortcuts', () => {
 	test('returns a list of all registered keyboard shortcuts', () => {

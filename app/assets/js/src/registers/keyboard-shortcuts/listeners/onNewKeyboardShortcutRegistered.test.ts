@@ -5,13 +5,13 @@ import {
 	test,
 } from '@jest/globals';
 
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName.js';
+import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
 
 import {
 	onNewKeyboardShortcutRegistered,
 	offNewKeyboardShortcutRegistered,
-} from './onNewKeyboardShortcutRegistered.js';
-import { registerKeyboardShortcut } from '../registerKeyboardShortcut.js';
+} from './onNewKeyboardShortcutRegistered';
+import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 
 describe('onNewKeyboardShortcutRegistered', () => {
 	test('registers a listener to be fired whenever a keyboard shortcut is registered', () => {

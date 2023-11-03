@@ -7,10 +7,10 @@ import {
 
 import userEvent from '@testing-library/user-event';
 
-import { KeyboardShortcutName } from './types/KeyboardShortcutName.js';
-import { addKeyboardShortcutListener } from './listeners/addKeyboardShortcutListener.js';
+import { KeyboardShortcutName } from './types/KeyboardShortcutName';
+import { addKeyboardShortcutListener } from './listeners/addKeyboardShortcutListener';
 
-import { registerKeyboardShortcut } from './registerKeyboardShortcut.js';
+import { registerKeyboardShortcut } from './registerKeyboardShortcut';
 
 describe('registerKeyboardShortcut', () => {
 	test('sets the key combos that will fire a keyboard shortcut', async () => {

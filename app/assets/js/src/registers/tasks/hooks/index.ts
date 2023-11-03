@@ -1,1 +1,1 @@
-export { useTasks } from './useTasks.js';
+export { useTasks } from './useTasks';

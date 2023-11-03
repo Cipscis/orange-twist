@@ -1,4 +1,4 @@
-import { EnumTypeOf } from '../../../util/index.js';
+import type { EnumTypeOf } from 'util/index';
 
 export const KeyboardShortcutName = {
 	COMMAND_PALETTE_OPEN: 'Open command palette',

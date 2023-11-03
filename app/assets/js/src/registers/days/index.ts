@@ -2,8 +2,8 @@ export {
 	setDayData,
 	deleteDay,
 	getDayData,
-} from './daysRegister.js';
+} from './daysRegister';
 
-export * from './listeners/index.js';
-export * from './hooks/index.js';
-export * from './persistence/index.js';
+export * from './listeners';
+export * from './hooks';
+export * from './persistence';

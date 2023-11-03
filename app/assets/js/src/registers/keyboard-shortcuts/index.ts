@@ -1,6 +1,6 @@
-export * from './types/KeyboardShortcutName.js';
-export * from './listeners/index.js';
-export * from './hooks/index.js';
+export * from './types/KeyboardShortcutName';
+export * from './listeners';
+export * from './hooks';
 
-export { registerKeyboardShortcut } from './registerKeyboardShortcut.js';
-export { getKeyboardShortcut } from './getKeyboardShortcut.js';
+export { registerKeyboardShortcut } from './registerKeyboardShortcut';
+export { getKeyboardShortcut } from './getKeyboardShortcut';

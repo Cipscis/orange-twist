@@ -1,1 +1,1 @@
-export { onUnfinishedTasksListChange, offUnfinishedTasksListChange } from './onUnfinishedTasksListChange.js';
+export { onUnfinishedTasksListChange, offUnfinishedTasksListChange } from './onUnfinishedTasksListChange';

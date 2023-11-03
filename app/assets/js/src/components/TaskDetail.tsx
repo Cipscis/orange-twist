@@ -1,15 +1,15 @@
 import { h } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import { getDayData, setDayData, useDays } from '../registers/days/index.js';
-import { useTasks } from '../registers/tasks/index.js';
+import { getDayData, setDayData, useDays } from '../registers/days';
+import { useTasks } from '../registers/tasks';
 
-import { Command, fireCommand } from '../registers/commands/index.js';
+import { Command, fireCommand } from '../registers/commands';
 
-import { Note } from './shared/Note.js';
-import { toast } from './shared/Toast.js';
+import { Note } from './shared/Note';
+import { toast } from './shared/Toast';
 
-import { TaskStatusComponent } from './TaskStatusComponent.js';
+import { TaskStatusComponent } from './TaskStatusComponent';
 
 interface TaskDetailProps {
 	taskId: number | null;

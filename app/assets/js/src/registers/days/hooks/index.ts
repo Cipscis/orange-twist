@@ -1,1 +1,1 @@
-export { useDays } from './useDays.js';
+export { useDays } from './useDays';

@@ -1,10 +1,10 @@
 import { h } from 'preact';
 
-import { useTasks } from '../registers/tasks/index.js';
+import { useTasks } from '../registers/tasks';
 
-import { TaskStatus } from '../types/TaskStatus.js';
+import { TaskStatus } from '../types/TaskStatus';
 
-import { TaskList } from './TaskList.js';
+import { TaskList } from './TaskList';
 
 /**
  * Renders a list of all completed tasks inside a disclosure.
