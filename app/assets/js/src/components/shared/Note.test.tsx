@@ -2,6 +2,7 @@ import { h } from 'preact';
 
 import {
 	afterEach,
+	beforeAll,
 	describe,
 	expect,
 	jest,
@@ -18,6 +19,11 @@ import {
 import userEvent from '@testing-library/user-event';
 
 import { Note } from './Note';
+
+beforeAll(() => {
+	// jsdom hasn't implemented window.scrollTo, so mock it to hide console errors
+	window.scrollTo = jest.fn();
+});
 
 describe('Note', () => {
 	afterEach(() => {
@@ -108,7 +114,8 @@ describe('Note', () => {
 	test('does not enter edit mode when a link in the note is clicked', async () => {
 		const user = userEvent.setup();
 
-		const noteWithLink = 'This note has [a link](https://example.com)';
+		// Use a hash link so jsdom won't complain about being unable to navigate
+		const noteWithLink = 'This note has [a link](#)';
 
 		const {
 			queryByRole,
