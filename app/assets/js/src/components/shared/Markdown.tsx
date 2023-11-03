@@ -36,7 +36,7 @@ export function Markdown(props: MarkdownProps) {
 		if (wrapper.setHTML) {
 			wrapper.setHTML(renderedContent);
 		} else {
-			console.warn('`setHTML` is not supported, so falling back to vulnerable method');
+			// `setHTML` is not supported, so falling back to vulnerable method'
 			wrapper.innerHTML = renderedContent;
 		}
 	}, [content]);
