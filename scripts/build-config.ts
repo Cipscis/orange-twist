@@ -5,7 +5,9 @@ const dstPath = 'app/assets/js/dist';
 
 export const config: BuildOptions = {
 	entryPoints: [
-		`${srcPath}/main.ts`,
+		`${srcPath}/priority.ts`,
+		`${srcPath}/main.tsx`,
+		`${srcPath}/task.tsx`,
 	],
 	outdir: dstPath,
 	bundle: true,
