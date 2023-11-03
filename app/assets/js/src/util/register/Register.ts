@@ -1,8 +1,8 @@
 // Type-only import to expose symbol to JSDoc
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import type { useRegister } from './useRegister.js';
+import type { useRegister } from './useRegister';
 
-import { assertAllUnionMembersHandled } from '../assertAllUnionMembersHandled.js';
+import { assertAllUnionMembersHandled } from '../assertAllUnionMembersHandled';
 
 /**
  * A type with keys for each type of event that can be bound on a {@linkcode Register}, and
