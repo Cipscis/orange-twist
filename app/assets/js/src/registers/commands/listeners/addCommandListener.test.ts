@@ -1,4 +1,5 @@
 import {
+	beforeAll,
 	describe,
 	expect,
 	jest,
@@ -8,7 +9,18 @@ import {
 import { Command } from '../types/Command';
 
 import { addCommandListener, removeCommandListener } from './addCommandListener';
-import { fireCommand } from '../commandsRegister';
+import { fireCommand, registerCommand } from '../commandsRegister';
+
+beforeAll(() => {
+	registerCommand({
+		id: Command.DATA_SAVE,
+		name: 'Example command',
+	});
+	registerCommand({
+		id: Command.DAY_ADD_NEW,
+		name: 'Example command 2',
+	});
+});
 
 describe('addCommandListener', () => {
 	test('throws an error if called with an unregistered command', () => {

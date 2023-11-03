@@ -1,4 +1,5 @@
 import {
+	beforeAll,
 	describe,
 	expect,
 	test,
@@ -6,13 +7,20 @@ import {
 
 import { renderHook } from '@testing-library/preact';
 
-import { Command } from '../../commands';
+import { Command, registerCommand } from '../../commands';
 
 import { KeyboardShortcutName } from '../types';
 import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 import { bindKeyboardShortcutToCommand } from '../listeners';
 
 import { useKeyboardShortcuts } from './useKeyboardShortcuts';
+
+beforeAll(() => {
+	registerCommand({
+		id: Command.DATA_SAVE,
+		name: 'Example command',
+	});
+});
 
 describe('useKeyboardShortcuts', () => {
 	test('provides an array containing info on all keyboard shortcuts', () => {

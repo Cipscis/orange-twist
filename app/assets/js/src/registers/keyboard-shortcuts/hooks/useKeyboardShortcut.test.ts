@@ -16,9 +16,17 @@ import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 import {
 	Command,
 	addCommandListener,
+	registerCommand,
 } from '../../commands';
 
 import { useKeyboardShortcut } from './useKeyboardShortcut';
+
+beforeAll(() => {
+	registerCommand({
+		id: Command.DATA_SAVE,
+		name: 'Example command',
+	});
+});
 
 describe('useKeyboardShortcut', () => {
 	beforeAll(() => {
