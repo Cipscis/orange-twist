@@ -38,6 +38,9 @@ interface ModalProps {
 	title?: string;
 }
 
+/**
+ * A modal window that displays in the center of the viewport
+ */
 export function Modal(props: ModalProps) {
 	const {
 		open,
@@ -53,6 +56,7 @@ export function Modal(props: ModalProps) {
 	const modalRef = useRef<HTMLDivElement>(null);
 	const preFocusEl = useRef<Element | null>(null);
 
+	// Handle automatic focus management when opening and closing
 	useEffect(() => {
 		if (open) {
 			preFocusEl.current = getDeepActiveElement();
@@ -65,7 +69,14 @@ export function Modal(props: ModalProps) {
 		}
 	}, [open]);
 
-	// Handle opening and closing.
+	// Handle opening callback
+	useEffect(() => {
+		if (open && onOpen) {
+			onOpen();
+		}
+	}, [open, onOpen]);
+
+	// Handle and closing behaviour
 	useEffect(() => {
 		if (!open) {
 			return;
@@ -75,11 +86,6 @@ export function Modal(props: ModalProps) {
 		const { signal } = controller;
 
 		const modalEl = modalRef.current;
-
-		// Call `onOpen` when opening
-		if (onOpen) {
-			onOpen();
-		}
 
 		// Close on Escape key
 		document.addEventListener('keydown', (e) => {
@@ -108,7 +114,7 @@ export function Modal(props: ModalProps) {
 		}, { signal });
 
 		return () => controller.abort();
-	}, [open, onOpen, onClose]);
+	}, [open, onClose]);
 
 	return <>
 		{

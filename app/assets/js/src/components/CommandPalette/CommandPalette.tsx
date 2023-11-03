@@ -36,6 +36,11 @@ interface CommandPaletteProps {
 	onClose: () => void;
 }
 
+/**
+ * A modal window that lists all registered commands, displaying their
+ * names and any keyboard shortcuts bound to them. Registered commands
+ * can be filtered and activated in this command palette.
+ */
 export function CommandPalette(props: CommandPaletteProps) {
 	const {
 		open,
@@ -49,7 +54,10 @@ export function CommandPalette(props: CommandPaletteProps) {
 	const [activeDescendant, setActiveDescendant] = useState<HTMLElement | null>(null);
 
 	const [query, setQuery] = useState('');
-	/** Fuzzy match, with groups for all non-matching sequences */
+	/**
+	 * A regular expression constructed from the query, which can be used for
+	 * executing a fuzzy match, with groups for all non-matching sequences.
+	 */
 	const queryPattern = useMemo(() => {
 		if (query === '') {
 			return null;
@@ -61,6 +69,8 @@ export function CommandPalette(props: CommandPaletteProps) {
 			).replace(/\\?[^\\]/g, '($&)(.*?)')
 		}$`, 'i');
 	}, [query]);
+
+	/** All commands that match against the current query. */
 	const matchingCommands = useMemo(() => {
 		if (queryPattern === null) {
 			return commands;
