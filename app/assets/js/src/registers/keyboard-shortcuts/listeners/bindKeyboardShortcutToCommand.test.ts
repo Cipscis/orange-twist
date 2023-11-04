@@ -1,5 +1,7 @@
 import {
+	afterEach,
 	beforeAll,
+	beforeEach,
 	describe,
 	expect,
 	jest,
@@ -10,29 +12,32 @@ import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
 import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 
 import {
-	Command,
 	addCommandListener,
 	registerCommand,
+	unregisterCommand,
 } from '../../commands';
 
 import { bindKeyboardShortcutToCommand, unbindKeyboardShortcutFromCommand } from './bindKeyboardShortcutToCommand';
 import userEvent from '@testing-library/user-event';
 
-beforeAll(() => {
-	registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 'a' }]);
-	registerCommand({
-		id: Command.DATA_SAVE,
-		name: 'Example command',
-	});
-});
-
 describe('bindKeyboardShortcutToCommand', () => {
+	beforeAll(() => {
+		registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 'a' }]);
+	});
+
+	beforeEach(() => {
+		registerCommand('__TEST_COMMAND_A__', { name: 'Example command' });
+	});
+	afterEach(() => {
+		unregisterCommand('__TEST_COMMAND_A__');
+	});
+
 	test('binds a command to a keyboard shortcut', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
-		addCommandListener(Command.DATA_SAVE, spy);
+		addCommandListener('__TEST_COMMAND_A__', spy);
 
-		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
+		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__');
 
 		expect(spy).not.toHaveBeenCalled();
 
@@ -44,12 +49,12 @@ describe('bindKeyboardShortcutToCommand', () => {
 	test('can be removed by aborting an AbortSignal', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
-		addCommandListener(Command.DATA_SAVE, spy);
+		addCommandListener('__TEST_COMMAND_A__', spy);
 
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE, { signal });
+		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__', { signal });
 
 		expect(spy).not.toHaveBeenCalled();
 
@@ -67,11 +72,11 @@ describe('bindKeyboardShortcutToCommand', () => {
 	test('does not bind if passed an aborted AbortSignal', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
-		addCommandListener(Command.DATA_SAVE, spy);
+		addCommandListener('__TEST_COMMAND_A__', spy);
 
 		const signal = AbortSignal.abort();
 
-		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE, { signal });
+		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__', { signal });
 
 		expect(spy).not.toHaveBeenCalled();
 
@@ -83,10 +88,10 @@ describe('bindKeyboardShortcutToCommand', () => {
 	test('does nothing if command is already bound', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
-		addCommandListener(Command.DATA_SAVE, spy);
+		addCommandListener('__TEST_COMMAND_A__', spy);
 
-		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
-		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
+		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__');
+		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__');
 
 		expect(spy).not.toHaveBeenCalled();
 
@@ -97,12 +102,23 @@ describe('bindKeyboardShortcutToCommand', () => {
 });
 
 describe('unbindKeyboardShortcutFromCommand', () => {
+	beforeAll(() => {
+		registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 'a' }]);
+	});
+
+	beforeEach(() => {
+		registerCommand('__TEST_COMMAND_A__', { name: 'Example command' });
+	});
+	afterEach(() => {
+		unregisterCommand('__TEST_COMMAND_A__');
+	});
+
 	test('removes a bound command shortcut listener', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
-		addCommandListener(Command.DATA_SAVE, spy);
+		addCommandListener('__TEST_COMMAND_A__', spy);
 
-		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
+		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__');
 
 		expect(spy).not.toHaveBeenCalled();
 
@@ -110,7 +126,7 @@ describe('unbindKeyboardShortcutFromCommand', () => {
 
 		expect(spy).toHaveBeenCalledTimes(1);
 
-		unbindKeyboardShortcutFromCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
+		unbindKeyboardShortcutFromCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__');
 		await user.keyboard('a');
 
 		expect(spy).toHaveBeenCalledTimes(1);
@@ -118,7 +134,7 @@ describe('unbindKeyboardShortcutFromCommand', () => {
 
 	test('does nothing if command is already unbound', () => {
 		expect(
-			() => unbindKeyboardShortcutFromCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE)
+			() => unbindKeyboardShortcutFromCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__')
 		).not.toThrow();
 	});
 });

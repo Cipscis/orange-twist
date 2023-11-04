@@ -1,2 +1,4 @@
-export * from './onNewCommandRegistered';
-export * from './addCommandListener';
+export {
+	addCommandListener,
+	removeCommandListener,
+} from './addCommandListener';

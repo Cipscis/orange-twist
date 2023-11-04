@@ -3,13 +3,15 @@ import { forwardRef } from 'preact/compat';
 
 import classNames from 'classnames';
 
-import { type CommandEntry, fireCommand } from '../../registers/commands/commandsRegister';
+import { fireCommand } from 'registers/commands';
+import type { CommandInfo } from 'registers/commands/types/CommandInfo';
+
 
 import { KeyboardShortcutCombos } from '../KeyboardShortcutCombos';
 import { CommandPaletteItemName } from './CommandPaletteItemName';
 
 interface CommandPaletteItemProps {
-	commandEntry: CommandEntry;
+	commandInfo: CommandInfo;
 	query: string;
 	queryPattern: RegExp | null;
 	isActive: boolean;
@@ -23,7 +25,7 @@ export const CommandPaletteItem = forwardRef(
 		forwardedRef: React.ForwardedRef<HTMLButtonElement>
 	) {
 		const {
-			commandEntry,
+			commandInfo,
 			query,
 			queryPattern,
 			isActive,
@@ -34,23 +36,25 @@ export const CommandPaletteItem = forwardRef(
 		return <button
 			type="button"
 			ref={forwardedRef}
-			id={commandEntry.commandInfo.id}
+			id={commandInfo.id}
 			class={classNames({
 				'command-palette__option': true,
 				'command-palette__option--active': isActive,
 			})}
 			onClick={() => {
 				closeCommandPalette();
-				fireCommand(commandEntry.commandInfo.id);
+				fireCommand(commandInfo.id);
 			}}
 		>
 			<CommandPaletteItemName
-				name={commandEntry.commandInfo.name}
+				name={commandInfo.name}
 				query={query}
 				queryPattern={queryPattern}
 			/>
 			<span class="content">
-				{commandEntry.shortcuts.map((shortcut, i) => (
+				{Array.from(
+					commandInfo.shortcuts.values()
+				).map((shortcut, i) => (
 					<KeyboardShortcutCombos
 						key={i}
 						keyboardShortcutName={shortcut}

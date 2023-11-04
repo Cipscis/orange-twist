@@ -1,14 +1,7 @@
-// Type-only import just to expose the symbol to JSDoc.
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import type { useCommand } from '../hooks';
-
-import type {
-	CommandId,
-	CommandListener,
-	CommandWithListener,
-} from '../types';
-
 import { commandsRegister } from '../commandsRegister';
+
+import type { CommandId } from '../types/CommandId';
+import type { CommandsList } from '../types/CommandsList';
 
 interface AddCommandListenerOptions {
 	/**
@@ -19,55 +12,64 @@ interface AddCommandListenerOptions {
 	signal?: AbortSignal;
 }
 
-type AddCommandListenerAgs = {
-	[C in CommandId]: [commandId: C, listener: CommandListener<C>, options?: AddCommandListenerOptions]
-}[CommandId];
+/**
+ * In order to ensure commands and listeners match one another,
+ * this immediately indexed mapped type constructs a discriminated
+ * union of tuples that can be narrowed together.
+ */
+type RemoveCommandListenerArgs = {
+	[C in CommandId]: [
+		command: C,
+		listener: (...args: CommandsList[C] | []) => void
+	];
+}[CommandId]
 
 /**
- * Bind a listener function a a specified command.
- *
- * @see {@linkcode removeCommandListener} for unbinding a listener.
- * @see {@linkcode useCommand} for binding listeners to commands within Preact components.
+ * The same discriminated union of tuples as in {@linkcode RemoveCommandListenerArgs},
+ * but with an optional {@linkcode AddCommandListenerOptions} argument appended.
  */
-export function addCommandListener(...[commandId, listener, options]: AddCommandListenerAgs): void {
-	const command = commandsRegister.get(commandId);
-	if (!command) {
-		throw new RangeError(`Cannot add listener to unregistered command ${commandId}`);
+type AddCommandListenerArgs = [...RemoveCommandListenerArgs, options?: AddCommandListenerOptions];
+
+type InferSetType<S extends Set<unknown>> = S extends Set<infer T> ? T : never;
+
+export function addCommandListener(
+	...[command, listener, options]: AddCommandListenerArgs
+): void {
+	const commandInfo = commandsRegister.get(command);
+
+	// Throw an error if passed an unregistered command
+	if (!commandInfo) {
+		throw new Error(`Cannot add listener to unregistered command ${command}`);
 	}
 
+	// Do nothing if passed an aborted signal
 	if (options?.signal?.aborted) {
 		return;
 	}
 
-	const { listeners } = command;
-	if (listeners.includes(listener)) {
-		// Like `addEventListener`, don't allow the same listener to be bound multiple times
-		return;
-	}
+	const { listeners } = commandInfo;
+	// This type assertion is safe because the type of `listener` is linked to the type of `command`
+	// It's also necessary because `listeners` wrongly thinks it could accept a listener for any command
+	listeners.add(listener as InferSetType<typeof listeners>);
 
 	options?.signal?.addEventListener(
 		'abort',
-		() => removeCommandListener(commandId, listener),
+		// This type assertion is safe because the types of `command` and `listener` are linked
+		// It's also necessary because TypeScript can't see at this point that they are linked
+		() => removeCommandListener(...[command, listener] as RemoveCommandListenerArgs)
 	);
-
-	listeners.push(listener);
 }
 
-/**
- * Unbind a listener that was bound to a particular command using {@linkcode addCommandListener}.
- */
-export function removeCommandListener(...[commandId, listener]: CommandWithListener): void {
-	const command = commandsRegister.get(commandId);
-	if (!command) {
-		throw new RangeError(`Cannot remove listener from unregistered command ${commandId}`);
+export function removeCommandListener(...[command, listener]: RemoveCommandListenerArgs): void {
+	const commandInfo = commandsRegister.get(command);
+
+	// Throw an error if passed an unregistered command
+	if (!commandInfo) {
+		throw new Error(`Cannot add listener to unregistered command ${command}`);
 	}
 
-	const { listeners } = command;
-	const listenerIndex = listeners.indexOf(listener);
-	if (listenerIndex === -1) {
-		// Like `removeEventListener`, just return silently if the listener wasn't bound
-		return;
-	}
-
-	listeners.splice(listenerIndex, 1);
+	const { listeners } = commandInfo;
+	// This type assertion is safe because the type of `listener` is linked to the type of `command`
+	// It's also necessary because `listeners` wrongly thinks it could accept a listener for any command
+	listeners.delete(listener as InferSetType<typeof listeners>);
 }

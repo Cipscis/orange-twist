@@ -1,42 +1,39 @@
 import {
-	beforeAll,
+	afterEach,
+	beforeEach,
 	describe,
 	expect,
 	jest,
 	test,
 } from '@jest/globals';
+import { renderHook } from '@testing-library/preact';
 
-import {
-	renderHook,
-} from '@testing-library/preact';
-
-import { Command } from '../types';
-
-import { useCommand } from '.';
-import { fireCommand, registerCommand } from '../commandsRegister';
-
-beforeAll(() => {
-	registerCommand({
-		id: Command.DATA_SAVE,
-		name: 'Example command',
-	});
-});
+import { fireCommand } from '../fireCommand';
+import { registerCommand, unregisterCommand } from '../registerCommand';
+import { useCommand } from './useCommand';
 
 describe('useCommand', () => {
-	test('binds a listener to a command', () => {
-		const mockFn = jest.fn();
+	beforeEach(() => {
+		registerCommand('__TEST_COMMAND_A__', { name: 'Test command' });
+	});
+	afterEach(() => {
+		unregisterCommand('__TEST_COMMAND_A__');
+	});
 
-		const { unmount } = renderHook(() => useCommand(Command.DATA_SAVE, mockFn));
+	test('binds the specified listener to the command until unmounted', () => {
+		const spy = jest.fn();
 
-		expect(mockFn).not.toHaveBeenCalled();
+		const { unmount } = renderHook(
+			() => useCommand('__TEST_COMMAND_A__', spy)
+		);
 
-		fireCommand(Command.DATA_SAVE);
+		expect(spy).not.toHaveBeenCalled();
 
-		expect(mockFn).toHaveBeenCalledTimes(1);
+		fireCommand('__TEST_COMMAND_A__');
+		expect(spy).toHaveBeenCalledTimes(1);
 
 		unmount();
-		fireCommand(Command.DATA_SAVE);
-
-		expect(mockFn).toHaveBeenCalledTimes(1);
+		fireCommand('__TEST_COMMAND_A__');
+		expect(spy).toHaveBeenCalledTimes(1);
 	});
 });

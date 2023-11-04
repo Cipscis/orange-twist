@@ -1,8 +1,5 @@
 import type { EnumTypeOf } from 'util/index';
 
-/**
- * An enum of names of built-in commands.
- */
 export const Command = {
 	DAY_ADD_NEW: 'day-add-new',
 	TASK_ADD_NEW: 'task-add-new',
@@ -10,3 +7,12 @@ export const Command = {
 	THEME_TOGGLE: 'theme-toggle',
 } as const;
 export type Command = EnumTypeOf<typeof Command>;
+
+declare module 'registers/commands' {
+	interface CommandsList {
+		[Command.DAY_ADD_NEW]: [];
+		[Command.TASK_ADD_NEW]: [dayName: string];
+		[Command.DATA_SAVE]: [];
+		[Command.THEME_TOGGLE]: [];
+	}
+}

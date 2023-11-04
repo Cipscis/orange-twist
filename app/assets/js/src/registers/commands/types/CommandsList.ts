@@ -1,5 +1,3 @@
-import { Command } from './Command';
-
 /**
  * This interface is used to allow the list of commands to be extended
  * through [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)
@@ -22,9 +20,10 @@ import { Command } from './Command';
  * ```
  */
 export interface CommandsList {
-	// Commands are added here in place where they are registered
-	[Command.DAY_ADD_NEW]: [dayName: string];
-	[Command.TASK_ADD_NEW]: [dayName: string];
-	[Command.DATA_SAVE]: [];
-	[Command.THEME_TOGGLE]: [];
+	/** This command is only used in testing */
+	__TEST_COMMAND_A__: [argA: string, argB: boolean];
+	/** This command is only used in testing */
+	__TEST_COMMAND_B__: [argA: number, argB: boolean];
+	/** This command is only used in testing */
+	__TEST_COMMAND_C__: [];
 }

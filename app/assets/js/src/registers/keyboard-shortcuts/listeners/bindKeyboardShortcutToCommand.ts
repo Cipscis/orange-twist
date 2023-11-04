@@ -1,5 +1,7 @@
-import { getCommand } from '../../commands/commandsRegister';
-import type { CommandId } from '../../commands';
+import {
+	getCommandInfo,
+	type CommandId,
+} from 'registers/commands';
 import { fireCommand } from '../../commands';
 
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
@@ -54,9 +56,11 @@ export function bindKeyboardShortcutToCommand(
 	addKeyboardShortcutListener(shortcut, binding, { signal: options?.signal });
 
 	// Tell commands register about shortcut so it can be displayed
-	const commandEntry = getCommand(command);
-	if (!commandEntry.shortcuts.includes(shortcut)) {
-		commandEntry.shortcuts.push(shortcut);
+	const commandEntry = getCommandInfo(command);
+	if (commandEntry) {
+		if (!commandEntry.shortcuts.has(shortcut)) {
+			commandEntry.shortcuts.add(shortcut);
+		}
 	}
 
 	options?.signal?.addEventListener(
@@ -69,15 +73,19 @@ export function bindKeyboardShortcutToCommand(
  * Unbinds a keyboard shortcut from a command, after it was
  * bound with {@linkcode bindKeyboardShortcutToCommand}.
  */
-export function unbindKeyboardShortcutFromCommand(shortcut: KeyboardShortcutName, command: CommandId): void {
+export function unbindKeyboardShortcutFromCommand(
+	shortcut: KeyboardShortcutName,
+	command: CommandId
+): void {
 	const binding = getBinding(command);
 
 	removeKeyboardShortcutListener(shortcut, binding);
 
 	// Tell commands register to forget about shortcut
-	const commandEntry = getCommand(command);
-	const shortcutIndex = commandEntry.shortcuts.indexOf(shortcut);
-	if (shortcutIndex !== -1) {
-		commandEntry.shortcuts.splice(shortcutIndex, 1);
+	const commandEntry = getCommandInfo(command);
+	if (!commandEntry) {
+		return;
 	}
+
+	commandEntry.shortcuts.delete(shortcut);
 }

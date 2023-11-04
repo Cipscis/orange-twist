@@ -1,19 +1,35 @@
 import { h } from 'preact';
 
-import { afterEach, describe, expect, jest, test } from '@jest/globals';
+import {
+	afterEach,
+	describe,
+	expect,
+	jest,
+	test,
+} from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
 import { act, cleanup, render } from '@testing-library/preact';
 
 import { CommandPalette } from './CommandPalette';
 import userEvent from '@testing-library/user-event';
-import { Command, addCommandListener, registerCommand, unregisterAllCommands } from 'registers/commands';
-import { KeyboardShortcutName, bindKeyboardShortcutToCommand, registerKeyboardShortcut } from 'registers/keyboard-shortcuts';
+import {
+	addCommandListener,
+	registerCommand,
+	unregisterCommand,
+} from 'registers/commands';
+import {
+	KeyboardShortcutName,
+	bindKeyboardShortcutToCommand,
+	registerKeyboardShortcut,
+} from 'registers/keyboard-shortcuts';
 
 describe('CommandPalette', () => {
 	afterEach(() => {
 		cleanup();
-		unregisterAllCommands();
+		unregisterCommand('__TEST_COMMAND_A__');
+		unregisterCommand('__TEST_COMMAND_B__');
+		unregisterCommand('__TEST_COMMAND_C__');
 	});
 
 	test('is only rendered when open is true', () => {
@@ -64,15 +80,8 @@ describe('CommandPalette', () => {
 	});
 
 	test('renders buttons for all registered commands', () => {
-		registerCommand({
-			id: Command.DATA_SAVE,
-			name: 'Test name',
-		});
-
-		registerCommand({
-			id: Command.DAY_ADD_NEW,
-			name: 'Second command',
-		});
+		registerCommand('__TEST_COMMAND_A__', { name: 'Test name' });
+		registerCommand('__TEST_COMMAND_B__', { name: 'Second command' });
 
 		const { getByRole } = render(
 			<CommandPalette
@@ -93,12 +102,8 @@ describe('CommandPalette', () => {
 		const closeSpy = jest.fn();
 		const fireCommandSpy = jest.fn();
 
-		registerCommand({
-			id: Command.DATA_SAVE,
-			name: 'Test name',
-		});
-
-		addCommandListener(Command.DATA_SAVE, fireCommandSpy);
+		registerCommand('__TEST_COMMAND_A__', { name: 'Test name' });
+		addCommandListener('__TEST_COMMAND_A__', fireCommandSpy);
 
 		const { getByRole } = render(
 			<CommandPalette
@@ -119,13 +124,10 @@ describe('CommandPalette', () => {
 	});
 
 	test('displays a keyboard shortcut if one is bound to a command', () => {
-		registerCommand({
-			id: Command.DATA_SAVE,
-			name: 'Test name',
-		});
+		registerCommand('__TEST_COMMAND_A__', { name: 'Test name' });
 		registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 's', ctrl: true }]);
 
-		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
+		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__');
 
 		const { getByRole } = render(
 			<CommandPalette
@@ -155,18 +157,9 @@ describe('CommandPalette', () => {
 		const user = userEvent.setup();
 		const closeSpy = jest.fn();
 
-		registerCommand({
-			id: Command.DATA_SAVE,
-			name: 'Command 1',
-		});
-		registerCommand({
-			id: Command.DAY_ADD_NEW,
-			name: 'Command 2',
-		});
-		registerCommand({
-			id: Command.TASK_ADD_NEW,
-			name: 'Command 3',
-		});
+		registerCommand('__TEST_COMMAND_A__', { name: 'Command 1' });
+		registerCommand('__TEST_COMMAND_B__', { name: 'Command 2' });
+		registerCommand('__TEST_COMMAND_C__', { name: 'Command 3' });
 
 		const { getByRole } = render(
 			<CommandPalette
@@ -179,22 +172,22 @@ describe('CommandPalette', () => {
 
 		expect(queryInput.getAttribute('aria-activedescendant')).toBe(null);
 		await user.keyboard('{ArrowDown}');
-		expect(queryInput.getAttribute('aria-activedescendant')).toBe(Command.DATA_SAVE);
+		expect(queryInput.getAttribute('aria-activedescendant')).toBe('__TEST_COMMAND_A__');
 		await user.keyboard('{ArrowDown}');
-		expect(queryInput.getAttribute('aria-activedescendant')).toBe(Command.DAY_ADD_NEW);
+		expect(queryInput.getAttribute('aria-activedescendant')).toBe('__TEST_COMMAND_B__');
 		await user.keyboard('{ArrowDown}');
-		expect(queryInput.getAttribute('aria-activedescendant')).toBe(Command.TASK_ADD_NEW);
+		expect(queryInput.getAttribute('aria-activedescendant')).toBe('__TEST_COMMAND_C__');
 		// It should wrap around
 		await user.keyboard('{ArrowDown}');
-		expect(queryInput.getAttribute('aria-activedescendant')).toBe(Command.DATA_SAVE);
+		expect(queryInput.getAttribute('aria-activedescendant')).toBe('__TEST_COMMAND_A__');
 		// And back
 		await user.keyboard('{ArrowUp}');
-		expect(queryInput.getAttribute('aria-activedescendant')).toBe(Command.TASK_ADD_NEW);
+		expect(queryInput.getAttribute('aria-activedescendant')).toBe('__TEST_COMMAND_C__');
 		await user.keyboard('{ArrowUp}');
-		expect(queryInput.getAttribute('aria-activedescendant')).toBe(Command.DAY_ADD_NEW);
+		expect(queryInput.getAttribute('aria-activedescendant')).toBe('__TEST_COMMAND_B__');
 
 		const fireCommandSpy = jest.fn();
-		addCommandListener(Command.DAY_ADD_NEW, fireCommandSpy);
+		addCommandListener('__TEST_COMMAND_B__', fireCommandSpy);
 
 		await user.keyboard('{Enter}');
 
@@ -206,18 +199,9 @@ describe('CommandPalette', () => {
 		const user = userEvent.setup();
 		const closeSpy = jest.fn();
 
-		registerCommand({
-			id: Command.DATA_SAVE,
-			name: 'abcd',
-		});
-		registerCommand({
-			id: Command.DAY_ADD_NEW,
-			name: 'cdef',
-		});
-		registerCommand({
-			id: Command.TASK_ADD_NEW,
-			name: 'efgh',
-		});
+		registerCommand('__TEST_COMMAND_A__', { name: 'abcd' });
+		registerCommand('__TEST_COMMAND_B__', { name: 'cdef' });
+		registerCommand('__TEST_COMMAND_C__', { name: 'efgh' });
 
 		const {
 			getAllByRole,
@@ -250,10 +234,10 @@ describe('CommandPalette', () => {
 		// Skips over hidden items
 		await user.keyboard('{ArrowDown}{ArrowDown}');
 
-		expect(queryInput.getAttribute('aria-activedescendant')).toBe(Command.TASK_ADD_NEW);
+		expect(queryInput.getAttribute('aria-activedescendant')).toBe('__TEST_COMMAND_C__');
 
 		const fireCommand3Spy = jest.fn();
-		addCommandListener(Command.TASK_ADD_NEW, fireCommand3Spy);
+		addCommandListener('__TEST_COMMAND_C__', fireCommand3Spy);
 
 		// Fires selected item
 		await user.keyboard('{Enter}');
@@ -269,7 +253,7 @@ describe('CommandPalette', () => {
 		expect(queryInput.getAttribute('aria-activedescendant')).toBe(null);
 
 		const fireCommand1Spy = jest.fn();
-		addCommandListener(Command.DATA_SAVE, fireCommand1Spy);
+		addCommandListener('__TEST_COMMAND_A__', fireCommand1Spy);
 
 		// When there's only one result, it fires even without being active descendant
 		await user.keyboard('{Enter}');

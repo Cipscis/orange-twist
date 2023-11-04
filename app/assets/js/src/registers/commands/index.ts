@@ -1,10 +1,18 @@
 export {
 	registerCommand,
-	unregisterAllCommands,
-	fireCommand,
-	getCommands,
-} from './commandsRegister';
+	unregisterCommand,
+} from './registerCommand';
+export { fireCommand } from './fireCommand';
+export { getCommandInfo } from './getCommandInfo';
 
-export * from './types';
-export * from './listeners';
-export * from './hooks';
+export {
+	addCommandListener,
+	removeCommandListener,
+} from './listeners';
+export {
+	useCommand,
+	useCommandInfo,
+} from './hooks';
+
+export type { CommandsList } from './types/CommandsList';
+export type { CommandId } from './types/CommandId';

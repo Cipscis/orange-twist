@@ -1,19 +1,21 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 
-import type { Task } from '../types/Task';
+import type { Task } from 'types/Task';
 import { TaskStatus } from '../types/TaskStatus';
 
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { deleteTask, setTaskData } from '../registers/tasks/tasksRegister';
-import { Command, fireCommand } from '../registers/commands';
+import { Command } from 'types/Command';
 
 import {
 	animate,
 	nodeHasAncestor,
 	CSSKeyframes,
-} from '../util';
-import { getDayData, setDayData } from '../registers/days/daysRegister';
+} from 'util/index';
+
+import { deleteTask, setTaskData } from 'registers/tasks';
+import { fireCommand } from 'registers/commands';
+import { getDayData, setDayData } from 'registers/days';
 
 interface TaskStatusComponentProps {
 	task: Task;
@@ -34,7 +36,7 @@ const taskStatusSymbols = {
  *
  * Allows that status to be edited.
  */
-export function TaskStatusComponent(props: TaskStatusComponentProps) {
+export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Element {
 	const {
 		task,
 		dayName,

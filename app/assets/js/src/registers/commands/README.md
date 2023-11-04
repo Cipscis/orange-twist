@@ -11,7 +11,7 @@ First, the new command must be defined. This is done by adding to the `CommandsL
 A declaration can be "re-opened" for [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html) in TypeScript by using `declare module`, like this:
 
 ```typescript
-declare module 'path/to/CommandsList.ts' {
+declare module 'registers/commands' {
 	interface CommandsList {
 		'my-new-command': [myCommandArg: number];
 	}

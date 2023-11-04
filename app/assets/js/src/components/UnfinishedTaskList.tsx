@@ -1,22 +1,23 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 import {
 	useCallback,
 } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import { TaskStatus } from '../types/TaskStatus';
+import { TaskStatus } from 'types/TaskStatus';
+import { Command } from 'types/Command';
 
-import { useTasks } from '../registers/tasks';
-import { Command, fireCommand } from '../registers/commands';
-import { reorderTasks } from '../registers/tasks/tasksRegister';
+import { useTasks } from 'registers/tasks';
+import { fireCommand } from 'registers/commands';
+import { reorderTasks } from 'registers/tasks/tasksRegister';
 
 import { TaskList } from './TaskList';
 
 /**
  * Renders a {@linkcode TaskList} of all unfinished tasks in a disclosure.
  */
-export function UnfinishedTasksList() {
+export function UnfinishedTasksList(): JSX.Element {
 	const {
 		data: tasks,
 		isLoading: isTasksLoading,

@@ -1,2 +1,2 @@
-export * from './useCommands';
-export * from './useCommand';
+export { useCommand } from './useCommand';
+export { useCommandInfo } from './useCommandInfo';

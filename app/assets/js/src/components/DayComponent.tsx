@@ -7,7 +7,9 @@ import type { Day } from '../types/Day';
 import { getTaskData } from '../registers/tasks';
 import { deleteDay, setDayData } from '../registers/days';
 
-import { Command, fireCommand } from '../registers/commands';
+import { Command } from 'types/Command';
+
+import { fireCommand } from 'registers/commands';
 
 import { DayNote } from './DayNote';
 import { TaskList } from './TaskList';
