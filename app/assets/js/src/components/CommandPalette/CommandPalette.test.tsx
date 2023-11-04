@@ -161,7 +161,7 @@ describe('CommandPalette', () => {
 		registerCommand('__TEST_COMMAND_B__', { name: 'Command 2' });
 		registerCommand('__TEST_COMMAND_C__', { name: 'Command 3' });
 
-		const { getByRole, rerender } = render(
+		const { getByRole } = render(
 			<CommandPalette
 				open
 				onClose={closeSpy}
