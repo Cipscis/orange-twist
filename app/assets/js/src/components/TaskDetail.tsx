@@ -1,10 +1,12 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import { getDayData, setDayData, useDays } from '../registers/days';
-import { useTasks } from '../registers/tasks';
+import { Command } from 'types/Command';
 
-import { Command, fireCommand } from '../registers/commands';
+import { getDayData, setDayData, useDays } from 'registers/days';
+import { useTasks } from 'registers/tasks';
+
+import { fireCommand } from 'registers/commands';
 
 import { Note } from './shared/Note';
 import { toast } from './shared/Toast';
@@ -18,7 +20,7 @@ interface TaskDetailProps {
 /**
  * Renders a detailed view for a task, including its notes.
  */
-export function TaskDetail(props: TaskDetailProps) {
+export function TaskDetail(props: TaskDetailProps): JSX.Element {
 	const {
 		taskId,
 	} = props;

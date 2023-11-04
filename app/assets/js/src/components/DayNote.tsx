@@ -1,9 +1,11 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 
-import type { Day } from '../types/Day';
+import type { Day } from 'types/Day';
 
-import { setDayData } from '../registers/days';
-import { Command, fireCommand } from '../registers/commands';
+import { Command } from 'types/Command';
+
+import { setDayData } from 'registers/days';
+import { fireCommand } from 'registers/commands';
 
 import { Note } from './shared/Note';
 
@@ -15,7 +17,7 @@ interface DayNoteProps {
  * Renders a note for a specified day, including the ability to
  * edit that note.
  */
-export function DayNote(props: DayNoteProps) {
+export function DayNote(props: DayNoteProps): JSX.Element {
 	const { day } = props;
 	const { dayName } = day;
 

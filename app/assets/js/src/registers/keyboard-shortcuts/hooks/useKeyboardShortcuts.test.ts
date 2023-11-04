@@ -1,5 +1,6 @@
 import {
-	beforeAll,
+	afterEach,
+	beforeEach,
 	describe,
 	expect,
 	test,
@@ -7,7 +8,7 @@ import {
 
 import { renderHook } from '@testing-library/preact';
 
-import { Command, registerCommand } from '../../commands';
+import { registerCommand, unregisterCommand } from 'registers/commands';
 
 import { KeyboardShortcutName } from '../types';
 import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
@@ -15,14 +16,14 @@ import { bindKeyboardShortcutToCommand } from '../listeners';
 
 import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 
-beforeAll(() => {
-	registerCommand({
-		id: Command.DATA_SAVE,
-		name: 'Example command',
-	});
-});
-
 describe('useKeyboardShortcuts', () => {
+	beforeEach(() => {
+		registerCommand('__TEST_COMMAND_A__', { name: 'Example command' });
+	});
+	afterEach(() => {
+		unregisterCommand('__TEST_COMMAND_A__');
+	});
+
 	test('provides an array containing info on all keyboard shortcuts', () => {
 		const {
 			result,
@@ -43,7 +44,7 @@ describe('useKeyboardShortcuts', () => {
 			listeners: [],
 		}]);
 
-		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
+		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__');
 		// TODO: Re-rendering is not necessary because this mutates the shared `listeners` array
 		// Perhaps `listeners` should be removed from the info made available?
 

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 import {
 	useEffect,
 	useRef,
@@ -6,15 +6,17 @@ import {
 
 import classNames from 'classnames';
 
-import { useDays } from '../registers/days';
-import { Command, fireCommand } from '../registers/commands';
+import { Command } from 'types/Command';
+
+import { useDays } from 'registers/days';
+import { fireCommand } from 'registers/commands';
 
 import { DayComponent } from './DayComponent';
 
 /**
  * Renders a list of days.
  */
-export function DayList() {
+export function DayList(): JSX.Element {
 	const {
 		data: days,
 		isLoading,

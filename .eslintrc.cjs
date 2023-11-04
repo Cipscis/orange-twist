@@ -309,5 +309,8 @@ module.exports = {
 				assertionStyle: 'as',
 			},
 		],
+		'@typescript-eslint/explicit-module-boundary-types': [
+			'error'
+		],
 	}
 };

@@ -1,6 +1,14 @@
 import type { CommandId } from './CommandId';
+import type { CommandRegistration } from './CommandRegistration';
 
-export type CommandInfo<C extends CommandId = CommandId> = {
-	id: C;
-	name: string;
-};
+/**
+ * The public interface describing a registered command.
+ */
+export type CommandInfo<
+	C extends CommandId = CommandId
+> = Readonly<
+	Pick<
+		CommandRegistration<C>,
+		'id' | 'name' | 'shortcuts'
+	>
+>;

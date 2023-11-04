@@ -1,27 +1,27 @@
-import { h, type ComponentChildren } from 'preact';
+import { h, type ComponentChildren, type JSX } from 'preact';
 import {
 	useCallback,
+	useEffect,
 	useState,
 } from 'preact/hooks';
 
-import { saveDays, setDayData, useDays } from '../registers/days';
-import { addNewTask, saveTasks } from '../registers/tasks';
+import { Command } from 'types/Command';
 
-import { Command, useCommand } from '../registers/commands';
+import { saveDays, setDayData, useDays } from 'registers/days';
+import { addNewTask, saveTasks } from 'registers/tasks';
+
+import { registerCommand, useCommand } from 'registers/commands';
 import {
 	KeyboardShortcutName,
 	registerKeyboardShortcut,
 	useKeyboardShortcut,
-} from '../registers/keyboard-shortcuts';
+} from 'registers/keyboard-shortcuts';
 
-import { isValidDateString } from '../util';
+import { isValidDateString } from 'util/index';
 import { toast } from './shared/Toast';
 
 import { CommandPalette } from './CommandPalette/CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
-
-// Ensure all commands are registered
-import 'registers/commands/commands';
 
 interface OrangeTwistProps {
 	children: ComponentChildren;
@@ -31,8 +31,38 @@ interface OrangeTwistProps {
  * Renders a standard page layout and sets up
  * app-wide tools such as the command palette.
  */
-export function OrangeTwist(props: OrangeTwistProps) {
+export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const { children } = props;
+
+	// Register all commands
+	useEffect(() => {
+		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
+		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
+		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
+		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
+	});
+
+	/**
+	 * Toggle between task and light themes.
+	 */
+	const toggleTheme = useCallback(() => {
+		const htmlEl = document.documentElement;
+
+		const currentTheme = getComputedStyle(htmlEl).getPropertyValue('--theme');
+
+		const newTheme = (() => {
+			if (currentTheme === 'light') {
+				return 'dark';
+			} else {
+				return 'light';
+			}
+		})();
+
+		htmlEl.style.setProperty('--theme', newTheme);
+		localStorage.setItem('theme', newTheme);
+	}, []);
+
+	useCommand(Command.THEME_TOGGLE, toggleTheme);
 
 	const {
 		data: days,

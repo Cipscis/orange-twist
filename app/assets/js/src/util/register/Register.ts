@@ -167,7 +167,7 @@ export class Register<K, V> {
 	 * @see {@linkcode Register.removeEventListener} for
 	 * removing bound event listeners.
 	 */
-	addEventListener(...[type, callback, options]: RegisterEventBindingArguments<K, V>) {
+	addEventListener(...[type, callback, options]: RegisterEventBindingArguments<K, V>): void {
 		if (options?.signal?.aborted) {
 			// Don't add the event listener if it has an already aborted signal
 			return;
@@ -195,7 +195,7 @@ export class Register<K, V> {
 	/**
 	 * Unbind an event listener bound with {@linkcode Register.addEventListener}.
 	 */
-	removeEventListener(...[type, callback]: RegisterEventBindingArguments<K, V>) {
+	removeEventListener(...[type, callback]: RegisterEventBindingArguments<K, V>): void {
 		// Remove the listener from the appropriate internal `Set`
 		// We rely on the behaviour of `Set` to behave correctly
 		// if attempting to remove an unbound listener

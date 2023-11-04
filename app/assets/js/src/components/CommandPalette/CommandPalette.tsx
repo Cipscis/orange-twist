@@ -1,4 +1,9 @@
-import { type RefObject, createRef, h } from 'preact';
+import {
+	type RefObject,
+	createRef,
+	h,
+	type JSX,
+} from 'preact';
 import {
 	useCallback,
 	useEffect,
@@ -7,9 +12,9 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { escapeRegExpString } from '../../util';
+import { escapeRegExpString } from 'util/index';
 
-import { fireCommand, useCommands } from '../../registers/commands';
+import { fireCommand, useCommandInfo } from 'registers/commands';
 
 import { Modal } from '../shared/Modal';
 import { CommandPaletteItem } from './CommandPaletteItem';
@@ -41,7 +46,7 @@ interface CommandPaletteProps {
  * names and any keyboard shortcuts bound to them. Registered commands
  * can be filtered and activated in this command palette.
  */
-export function CommandPalette(props: CommandPaletteProps) {
+export function CommandPalette(props: CommandPaletteProps): JSX.Element {
 	const {
 		open,
 		onClose,
@@ -49,7 +54,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 
 	const fieldRef = useRef<HTMLInputElement>(null);
 
-	const commands = useCommands();
+	const allCommandsInfo = useCommandInfo();
 
 	const [activeDescendant, setActiveDescendant] = useState<HTMLElement | null>(null);
 
@@ -73,11 +78,11 @@ export function CommandPalette(props: CommandPaletteProps) {
 	/** All commands that match against the current query. */
 	const matchingCommands = useMemo(() => {
 		if (queryPattern === null) {
-			return commands;
+			return allCommandsInfo;
 		}
 
-		return commands.filter((command) => queryPattern.test(command.commandInfo.name));
-	}, [commands, queryPattern]);
+		return allCommandsInfo.filter((commandInfo) => queryPattern.test(commandInfo.name));
+	}, [allCommandsInfo, queryPattern]);
 
 	const optionsRef = useRef<RefObject<HTMLButtonElement>[]>([]);
 	optionsRef.current = matchingCommands.map((command, i) => optionsRef.current[i] ?? createRef<HTMLElement>());
@@ -131,7 +136,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 					e.preventDefault();
 					activeDescendant.click();
 				} else if (matchingCommands.length === 1) {
-					fireCommand(matchingCommands[0].commandInfo.id);
+					fireCommand(matchingCommands[0].id);
 					onClose();
 				}
 			}
@@ -148,7 +153,7 @@ export function CommandPalette(props: CommandPaletteProps) {
 
 		const activeDescendantId = activeDescendant.getAttribute('id');
 		const activeDescendantIsVisible = Boolean(matchingCommands.find(
-			({ commandInfo: { id } }) => id === activeDescendantId
+			({ id }) => id === activeDescendantId
 		));
 
 		if (!activeDescendantIsVisible) {
@@ -196,10 +201,10 @@ export function CommandPalette(props: CommandPaletteProps) {
 			>
 				{matchingCommands.map((command, i) => (
 					<CommandPaletteItem
-						key={command.commandInfo.id}
+						key={command.id}
 						ref={optionsRef.current[i]}
 
-						commandEntry={command}
+						commandInfo={command}
 						query={query}
 						queryPattern={queryPattern}
 						isActive={activeDescendant !== null && optionsRef.current[i].current === activeDescendant}

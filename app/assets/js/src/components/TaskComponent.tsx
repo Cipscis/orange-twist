@@ -1,15 +1,16 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import type { Task } from '../types/Task';
+import type { Task } from 'types/Task';
+import { Command } from 'types/Command';
 
 import {
 	setTaskData,
 	deleteTask,
-} from '../registers/tasks';
-import { Command, fireCommand } from '../registers/commands';
+} from 'registers/tasks';
+import { fireCommand } from 'registers/commands';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
 import { Markdown } from './shared/Markdown';
@@ -22,7 +23,7 @@ interface TaskComponentProps {
 /**
  * Renders a single task, and allows for it to be edited.
  */
-export function TaskComponent(props: TaskComponentProps) {
+export function TaskComponent(props: TaskComponentProps): JSX.Element {
 	const { task, dayName } = props;
 	const { id, name } = task;
 

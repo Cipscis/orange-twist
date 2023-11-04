@@ -1,5 +1,7 @@
 import {
+	afterEach,
 	beforeAll,
+	beforeEach,
 	describe,
 	expect,
 	jest,
@@ -14,23 +16,23 @@ import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
 import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 
 import {
-	Command,
 	addCommandListener,
 	registerCommand,
-} from '../../commands';
+	unregisterCommand,
+} from 'registers/commands';
 
 import { useKeyboardShortcut } from './useKeyboardShortcut';
-
-beforeAll(() => {
-	registerCommand({
-		id: Command.DATA_SAVE,
-		name: 'Example command',
-	});
-});
 
 describe('useKeyboardShortcut', () => {
 	beforeAll(() => {
 		registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 'a' }]);
+	});
+
+	beforeEach(() => {
+		registerCommand('__TEST_COMMAND_A__', { name: 'Example command' });
+	});
+	afterEach(() => {
+		unregisterCommand('__TEST_COMMAND_A__');
 	});
 
 	test('binds a keyboard shortcut to a listener', async () => {
@@ -56,9 +58,11 @@ describe('useKeyboardShortcut', () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
-		addCommandListener(Command.DATA_SAVE, spy);
+		addCommandListener('__TEST_COMMAND_A__', spy);
 
-		const { unmount } = renderHook(() => useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE));
+		const { unmount } = renderHook(
+			() => useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__')
+		);
 
 		expect(spy).not.toHaveBeenCalled();
 

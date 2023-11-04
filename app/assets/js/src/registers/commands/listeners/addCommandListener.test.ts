@@ -1,128 +1,110 @@
 import {
-	beforeAll,
+	afterEach,
+	beforeEach,
 	describe,
 	expect,
 	jest,
 	test,
 } from '@jest/globals';
 
-import { Command } from '../types/Command';
-
+import { commandsRegister } from '../commandsRegister';
+import { registerCommand, unregisterCommand } from '../registerCommand';
 import { addCommandListener, removeCommandListener } from './addCommandListener';
-import { fireCommand, registerCommand } from '../commandsRegister';
-
-beforeAll(() => {
-	registerCommand({
-		id: Command.DATA_SAVE,
-		name: 'Example command',
-	});
-	registerCommand({
-		id: Command.DAY_ADD_NEW,
-		name: 'Example command 2',
-	});
-});
 
 describe('addCommandListener', () => {
+	beforeEach(() => {
+		registerCommand('__TEST_COMMAND_A__', { name: 'Test command' });
+	});
+	afterEach(() => {
+		unregisterCommand('__TEST_COMMAND_A__');
+	});
+
+	test('adds a specified listener to a registered command', () => {
+		const spy = jest.fn();
+		addCommandListener('__TEST_COMMAND_A__', spy);
+
+		const listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
+		expect(listeners?.size).toBe(1);
+		expect(listeners?.has(spy)).toBe(true);
+	});
+
+	test('does nothing if the listener is already bound', () => {
+		const spy = jest.fn();
+		addCommandListener('__TEST_COMMAND_A__', spy);
+		addCommandListener('__TEST_COMMAND_A__', spy);
+
+		const listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
+		expect(listeners?.size).toBe(1);
+		expect(listeners?.has(spy)).toBe(true);
+	});
+
 	test('throws an error if called with an unregistered command', () => {
-		expect(
-			() => addCommandListener(
-				'unregistered-command' as Command,
-				() => {}
-			)
-		).toThrow();
+		expect(() => {
+			addCommandListener('__TEST_COMMAND_B__', () => {});
+		}).toThrow();
 	});
 
-	test('adds a listener that is called when the command is fired', () => {
-		const mockFn = jest.fn();
-		addCommandListener(Command.DAY_ADD_NEW, mockFn);
-
-		expect(mockFn).not.toHaveBeenCalled();
-
-		fireCommand(Command.DAY_ADD_NEW, '2023-10-28');
-
-		expect(mockFn).toHaveBeenCalledTimes(1);
-		expect(mockFn).toHaveBeenCalledWith('2023-10-28');
-
-		fireCommand(Command.DAY_ADD_NEW, '2023-10-29');
-		expect(mockFn).toHaveBeenCalledTimes(2);
-	});
-
-	test('does nothing if called with an already bound listener', () => {
-		const mockFn = jest.fn();
-		addCommandListener(Command.DAY_ADD_NEW, mockFn);
-		addCommandListener(Command.DAY_ADD_NEW, mockFn);
-
-		expect(mockFn).not.toHaveBeenCalled();
-
-		fireCommand(Command.DAY_ADD_NEW, '2023-10-28');
-
-		expect(mockFn).toHaveBeenCalledTimes(1);
-		expect(mockFn).toHaveBeenCalledWith('2023-10-28');
-
-		fireCommand(Command.DAY_ADD_NEW, '2023-10-29');
-		expect(mockFn).toHaveBeenCalledTimes(2);
-	});
-
-	test('allows the listener to be unbound using an AbortSignal', () => {
+	test('can be called with an AbortSignal, which removes the listener when it is aborted', () => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		const mockFn = jest.fn();
-		addCommandListener(Command.DATA_SAVE, mockFn, { signal });
+		const spy = jest.fn();
+		addCommandListener('__TEST_COMMAND_A__', spy, { signal });
 
-		expect(mockFn).not.toHaveBeenCalled();
-
-		fireCommand(Command.DATA_SAVE);
-
-		expect(mockFn).toHaveBeenCalledTimes(1);
+		let listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
+		expect(listeners?.size).toBe(1);
+		expect(listeners?.has(spy)).toBe(true);
 
 		controller.abort();
-		fireCommand(Command.DATA_SAVE);
 
-		expect(mockFn).toHaveBeenCalledTimes(1);
+		listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
+		expect(listeners?.size).toBe(0);
 	});
 
-	test('does not bind the listener if an already aborted AbortSignal is passed', () => {
+	test('does not bind the listener if called with an already aborted AbortSignal', () => {
 		const signal = AbortSignal.abort();
 
-		const mockFn = jest.fn();
+		const spy = jest.fn();
+		addCommandListener('__TEST_COMMAND_A__', spy, { signal });
 
-		addCommandListener(Command.DATA_SAVE, mockFn, { signal });
-
-		expect(mockFn).not.toHaveBeenCalled();
-
-		fireCommand(Command.DATA_SAVE);
-
-		expect(mockFn).toHaveBeenCalledTimes(0);
+		const listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
+		expect(listeners?.size).toBe(0);
 	});
 });
 
 describe('removeCommandListener', () => {
-	test('unbinds a listener bound using addCommandListener', () => {
-		const mockFn = jest.fn();
-		addCommandListener(Command.DATA_SAVE, mockFn);
-
-		expect(mockFn).not.toHaveBeenCalled();
-
-		fireCommand(Command.DATA_SAVE);
-
-		expect(mockFn).toHaveBeenCalledTimes(1);
-
-		removeCommandListener(Command.DATA_SAVE, mockFn);
-		fireCommand(Command.DATA_SAVE);
-
-		expect(mockFn).toHaveBeenCalledTimes(1);
+	beforeEach(() => {
+		registerCommand('__TEST_COMMAND_A__', { name: 'Test command' });
+	});
+	afterEach(() => {
+		unregisterCommand('__TEST_COMMAND_A__');
 	});
 
-	test('does nothing if called with an listener that is not bound', () => {
-		const mockFn = jest.fn();
-		addCommandListener(Command.DATA_SAVE, mockFn);
+	test('removes a specified listener from a command', () => {
+		const spy = jest.fn();
+		addCommandListener('__TEST_COMMAND_A__', spy);
 
-		expect(mockFn).not.toHaveBeenCalled();
+		let listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
+		expect(listeners?.size).toBe(1);
+		expect(listeners?.has(spy)).toBe(true);
 
-		removeCommandListener(Command.DATA_SAVE, mockFn);
-		fireCommand(Command.DATA_SAVE);
+		removeCommandListener('__TEST_COMMAND_A__', spy);
 
-		expect(mockFn).not.toHaveBeenCalled();
+		listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
+		expect(listeners?.size).toBe(0);
+	});
+
+	test('does nothing if the listener is not bound', () => {
+		expect(
+			() => {
+				removeCommandListener('__TEST_COMMAND_A__', () => {});
+			}
+		).not.toThrow();
+	});
+
+	test('throws an error if called with an unregistered command', () => {
+		expect(() => {
+			removeCommandListener('__TEST_COMMAND_B__', () => {});
+		}).toThrow();
 	});
 });
