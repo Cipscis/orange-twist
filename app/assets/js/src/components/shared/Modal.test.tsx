@@ -57,6 +57,43 @@ describe('Modal', () => {
 		expect(modal).toHaveFocus();
 	});
 
+	test('returns keyboard focus when closed', async () => {
+		const user = userEvent.setup();
+
+		const { getByRole } = render(<button>Focusable element</button>);
+		const button = getByRole('button');
+
+		const { rerender } = render(
+			<>
+				<Modal
+					open={false}
+					onClose={() => {}}
+				/>
+			</>
+		);
+
+		await user.click(button);
+		expect(button).toHaveFocus();
+
+		await act(() => rerender(<>
+			<Modal
+				open
+				onClose={() => {}}
+			/>
+		</>));
+
+		expect(button).not.toHaveFocus();
+
+		await act(() => rerender(<>
+			<Modal
+				open={false}
+				onClose={() => {}}
+			/>
+		</>));
+
+		expect(button).toHaveFocus();
+	});
+
 	test('applies specified CSS classes', () => {
 		const { getByTestId } = render(
 			<Modal
