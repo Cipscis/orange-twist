@@ -15,13 +15,13 @@ import { bindKeyboardShortcutToCommand } from '../listeners/bindKeyboardShortcut
 /**
  * Bind a callback to a keyboard shortcut, within a Preact component.
  */
-export function useKeyboardShortcut(name: KeyboardShortcutName, listener: () => void): void
+export function useKeyboardShortcut(name: KeyboardShortcutName, listener: () => void): void;
 /**
  * Bind a keyboard shortcut to fire a command, within a Preact component.
  *
  * For binding callbacks to commands, see {@linkcode useCommand}
  */
-export function useKeyboardShortcut(name: KeyboardShortcutName, command: CommandId): void
+export function useKeyboardShortcut(name: KeyboardShortcutName, command: CommandId): void;
 export function useKeyboardShortcut(
 	name: KeyboardShortcutName,
 	listenerOrCommand: (() => void) | CommandId,

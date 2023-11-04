@@ -11,13 +11,13 @@ import { commandsRegister } from './commandsRegister';
  */
 export function getCommandInfo(
 	command: CommandId
-): CommandInfo | null
+): CommandInfo | null;
 /**
  * Retrieves information about all registered commands.
  *
  * @returns An array of objects containing information about all registered commands.
  */
-export function getCommandInfo(): CommandInfo[]
+export function getCommandInfo(): CommandInfo[];
 export function getCommandInfo(
 	command?: CommandId
 ): CommandInfo[] | CommandInfo | null {

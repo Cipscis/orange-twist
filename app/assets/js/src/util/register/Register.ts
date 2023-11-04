@@ -74,21 +74,21 @@ export class Register<K, V> {
 	 *
 	 * Event listeners for 'set' events.
 	 */
-	#setListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'set' }>[1]>;
+	#setListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'set'; }>[1]>;
 
 	/**
 	 * @internal
 	 *
 	 * Event listeners for 'delete' events.
 	 */
-	#deleteListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'delete' }>[1]>;
+	#deleteListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'delete'; }>[1]>;
 
 	/**
 	 * @internal
 	 *
 	 * Event listeners for 'change' events.
 	 */
-	#changeListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'change' }>[1]>;
+	#changeListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'change'; }>[1]>;
 
 	/**
 	 * Retrieve the value for a given key. If the key does not exist, returns `undefined`.

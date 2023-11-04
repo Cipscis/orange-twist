@@ -13,7 +13,7 @@ declare global {
 		startViewTransition?: (
 			/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 			callback: () => any
-		) => ViewTransition
+		) => ViewTransition;
 	}
 }
 

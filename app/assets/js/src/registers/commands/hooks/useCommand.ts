@@ -10,7 +10,7 @@ type UseCommandArgs = {
 		command: C,
 		listener: (...args: CommandsList[C] | []) => void
 	]
-}[CommandId]
+}[CommandId];
 
 /**
  * Binds a listener to a specified command.

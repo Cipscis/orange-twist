@@ -27,7 +27,7 @@ function getNextId(): number {
  * Otherwise, return already stored day data.
  */
 export async function loadTasksData(
-	options?: { signal: AbortSignal }
+	options?: { signal: AbortSignal; }
 ): Promise<ReadonlyArray<Readonly<Task>>> {
 	if (!isInitialised) {
 		if (loadTasksDataPromise) {
@@ -215,8 +215,8 @@ interface AddNewTaskOptions {
  *
  * Returns the ID of the new task
  */
-export function addNewTask(name?: string): number
-export function addNewTask(options?: AddNewTaskOptions): number
+export function addNewTask(name?: string): number;
+export function addNewTask(options?: AddNewTaskOptions): number;
 export function addNewTask(options?: string | AddNewTaskOptions): number {
 	// First, consolidate arguments
 	const name = (() => {
