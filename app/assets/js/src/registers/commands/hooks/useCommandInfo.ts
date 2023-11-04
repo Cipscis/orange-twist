@@ -9,13 +9,13 @@ import { getCommandInfo } from '../getCommandInfo';
 /**
  * Provides up to date information on all registered commands.
  */
-export function useCommandInfo(): CommandInfo[]
+export function useCommandInfo(): CommandInfo[];
 /**
  * Provides up to date information on a single registered command.
  *
  * @param command A string ID identifying a command.
  */
-export function useCommandInfo(command: CommandId): CommandInfo | null
+export function useCommandInfo(command: CommandId): CommandInfo | null;
 export function useCommandInfo(
 	command?: CommandId
 ): CommandInfo[] | CommandInfo | null {
