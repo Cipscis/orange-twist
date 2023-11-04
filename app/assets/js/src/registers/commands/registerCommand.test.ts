@@ -75,6 +75,17 @@ describe('registerCommand', () => {
 		controller.abort();
 		expect(getCommandInfo('__TEST_COMMAND_A__')).toBe(null);
 	});
+
+	test('doesn\'t register the command if passed an already aborted AbortSignal', () => {
+		const signal = AbortSignal.abort();
+
+		registerCommand(
+			'__TEST_COMMAND_A__',
+			{ name: 'Test command' },
+			{ signal }
+		);
+		expect(getCommandInfo('__TEST_COMMAND_A__')).toBe(null);
+	});
 });
 
 describe('unregisterCommand', () => {

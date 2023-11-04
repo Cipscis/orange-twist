@@ -61,12 +61,14 @@ export function addCommandListener(
 	// It's also necessary because `listeners` wrongly thinks it could accept a listener for any command
 	listeners.add(listener as InferSetType<typeof listeners>);
 
-	options?.signal?.addEventListener(
-		'abort',
-		// This type assertion is safe because the types of `command` and `listener` are linked
-		// It's also necessary because TypeScript can't see at this point that they are linked
-		() => removeCommandListener(...[command, listener] as RemoveCommandListenerArgs)
-	);
+	if (options?.signal) {
+		options.signal.addEventListener(
+			'abort',
+			// This type assertion is safe because the types of `command` and `listener` are linked
+			// It's also necessary because TypeScript can't see at this point that they are linked
+			() => removeCommandListener(...[command, listener] as RemoveCommandListenerArgs)
+		);
+	}
 }
 
 /**

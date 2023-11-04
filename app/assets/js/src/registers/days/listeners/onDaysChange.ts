@@ -33,10 +33,12 @@ export function onDaysChange(
 
 	daysChangeListeners.push(listener);
 
-	options?.signal?.addEventListener(
-		'abort',
-		() => offDaysChange(listener),
-	);
+	if (options?.signal) {
+		options.signal.addEventListener(
+			'abort',
+			() => offDaysChange(listener),
+		);
+	}
 }
 
 /**

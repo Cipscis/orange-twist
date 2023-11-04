@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 
 import {
 	useCallback,
@@ -20,7 +20,7 @@ interface NoteProps {
  * Display a note as HTML, and provide options to edit
  * it in a textarea as Markdown.
  */
-export function Note(props: NoteProps) {
+export function Note(props: NoteProps): JSX.Element {
 	const {
 		note,
 		onNoteChange,

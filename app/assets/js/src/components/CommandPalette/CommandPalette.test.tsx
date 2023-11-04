@@ -161,7 +161,7 @@ describe('CommandPalette', () => {
 		registerCommand('__TEST_COMMAND_B__', { name: 'Command 2' });
 		registerCommand('__TEST_COMMAND_C__', { name: 'Command 3' });
 
-		const { getByRole } = render(
+		const { getByRole, rerender } = render(
 			<CommandPalette
 				open
 				onClose={closeSpy}
@@ -206,6 +206,7 @@ describe('CommandPalette', () => {
 		const {
 			getAllByRole,
 			getByRole,
+			queryAllByRole,
 			queryByRole,
 		} = render(
 			<CommandPalette
@@ -260,5 +261,10 @@ describe('CommandPalette', () => {
 
 		expect(fireCommand1Spy).toHaveBeenCalled();
 		expect(closeSpy).toHaveBeenCalledTimes(2);
+
+		await user.keyboard('z');
+
+		commandButtons = queryAllByRole('button');
+		expect(commandButtons.length).toBe(0);
 	});
 });

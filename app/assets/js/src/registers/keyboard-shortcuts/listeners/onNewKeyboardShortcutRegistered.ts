@@ -30,10 +30,12 @@ export function onNewKeyboardShortcutRegistered(
 
 	newKeyboardShortcutRegisteredListeners.push(listener);
 
-	options?.signal?.addEventListener(
-		'abort',
-		() => offNewKeyboardShortcutRegistered(listener),
-	);
+	if (options?.signal) {
+		options.signal.addEventListener(
+			'abort',
+			() => offNewKeyboardShortcutRegistered(listener),
+		);
+	}
 }
 
 /**

@@ -183,13 +183,16 @@ export class Register<K, V> {
 		} else if (type === 'change') {
 			this.#changeListeners.add(callback);
 		} else {
+			/* istanbul ignore next */
 			assertAllUnionMembersHandled(
 				type,
 				(value) => `Unrecognised event type '${value}'`
 			);
 		}
 
-		options?.signal?.addEventListener('abort', () => this.removeEventListener(type, callback));
+		if (options?.signal) {
+			options.signal.addEventListener('abort', () => this.removeEventListener(type, callback));
+		}
 	}
 
 	/**
@@ -206,6 +209,7 @@ export class Register<K, V> {
 		} else if (type === 'change') {
 			this.#changeListeners.delete(callback);
 		} else {
+			/* istanbul ignore next */
 			assertAllUnionMembersHandled(
 				type,
 				(value) => `Unrecognised event type '${value}'`

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 
 import classNames from 'classnames';
 
@@ -9,7 +9,7 @@ interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	content: string;
 }
 
-export function Markdown(props: MarkdownProps) {
+export function Markdown(props: MarkdownProps): JSX.Element {
 	const {
 		content,
 		...passthroughProps

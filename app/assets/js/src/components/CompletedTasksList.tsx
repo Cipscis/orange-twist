@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 
 import { useTasks } from '../registers/tasks';
 
@@ -9,7 +9,7 @@ import { TaskList } from './TaskList';
 /**
  * Renders a list of all completed tasks inside a disclosure.
  */
-export function CompletedTasksList() {
+export function CompletedTasksList(): JSX.Element | null {
 	const {
 		data: tasks,
 	} = useTasks();

@@ -165,7 +165,6 @@ export function CommandPalette(props: CommandPaletteProps): JSX.Element {
 	 * Set up initial state when the command palette is opened.
 	 */
 	const onOpen = useCallback(() => {
-		setActiveDescendant(null);
 		setQuery('');
 		fieldRef.current?.focus();
 	}, []);

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 
 interface CommandPaletteItemNameProps {
 	name: string;
@@ -10,7 +10,7 @@ interface CommandPaletteItemNameProps {
  * Display the name of a command palette item, highlighting which parts
  * of it match a query pattern if one is specified.
  */
-export function CommandPaletteItemName(props: CommandPaletteItemNameProps) {
+export function CommandPaletteItemName(props: CommandPaletteItemNameProps): JSX.Element | null {
 	const {
 		name,
 		query,

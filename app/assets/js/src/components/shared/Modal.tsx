@@ -1,4 +1,4 @@
-import { h, type ComponentChildren } from 'preact';
+import { h, type ComponentChildren, type JSX } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
@@ -41,7 +41,7 @@ interface ModalProps {
 /**
  * A modal window that displays in the center of the viewport
  */
-export function Modal(props: ModalProps) {
+export function Modal(props: ModalProps): JSX.Element {
 	const {
 		open,
 

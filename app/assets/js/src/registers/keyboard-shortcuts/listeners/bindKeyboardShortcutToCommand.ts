@@ -63,10 +63,12 @@ export function bindKeyboardShortcutToCommand(
 		}
 	}
 
-	options?.signal?.addEventListener(
-		'abort',
-		() => unbindKeyboardShortcutFromCommand(shortcut, command)
-	);
+	if (options?.signal) {
+		options.signal.addEventListener(
+			'abort',
+			() => unbindKeyboardShortcutFromCommand(shortcut, command)
+		);
+	}
 }
 
 /**

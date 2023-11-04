@@ -3,3 +3,4 @@ node_modules/
 *.sublime-workspace
 app/assets/css/
 app/assets/js/dist/
+app/coverage/
