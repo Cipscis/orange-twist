@@ -1,4 +1,5 @@
 import {
+	afterEach,
 	describe,
 	expect,
 	jest,
@@ -11,7 +12,6 @@ import {
 } from '@testing-library/preact';
 
 import { useViewTransition } from './useViewTransition';
-import { afterEach } from 'node:test';
 
 const defaultStartViewTransition = document.startViewTransition;
 
