@@ -22,6 +22,8 @@ export function CommandPaletteItemName(props: CommandPaletteItemNameProps): JSX.
 	}
 
 	const match = name.match(queryPattern);
+	// match should never be null, since the filtering should be done in a higher component
+	/* istanbul ignore next */
 	if (match === null) {
 		return null;
 	}

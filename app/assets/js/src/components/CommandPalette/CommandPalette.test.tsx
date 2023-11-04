@@ -125,7 +125,7 @@ describe('CommandPalette', () => {
 
 	test('displays a keyboard shortcut if one is bound to a command', () => {
 		registerCommand('__TEST_COMMAND_A__', { name: 'Test name' });
-		registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 's', ctrl: true }]);
+		registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 's', ctrl: true, alt: true, shift: true }]);
 
 		bindKeyboardShortcutToCommand(KeyboardShortcutName.DATA_SAVE, '__TEST_COMMAND_A__');
 
@@ -136,7 +136,7 @@ describe('CommandPalette', () => {
 			/>
 		);
 
-		const commandButton = getByRole('button', { name: 'Test name Ctrl + s' });
+		const commandButton = getByRole('button', { name: 'Test name Ctrl + Alt + Shift + s' });
 		expect(commandButton).toBeInTheDocument();
 	});
 
