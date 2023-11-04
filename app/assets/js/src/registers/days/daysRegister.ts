@@ -20,7 +20,7 @@ let loadDaysDataPromise: ReturnType<typeof loadDaysData> | null = null;
  * Otherwise, return already stored day data.
  */
 export async function loadDaysData(
-	options?: { signal: AbortSignal }
+	options?: { signal: AbortSignal; }
 ): Promise<ReadonlyArray<Readonly<Day>>> {
 	if (!isInitialised) {
 		if (loadDaysDataPromise) {

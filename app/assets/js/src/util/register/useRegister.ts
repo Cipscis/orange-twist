@@ -11,7 +11,7 @@ import { Register } from './Register';
  */
 export function useRegister<K, V>(
 	register: Register<K, V>
-): readonly (readonly [K, V])[]
+): readonly (readonly [K, V])[];
 /**
  * A hook for observing changes to a specific key in a {@linkcode Register}.
  *
@@ -23,7 +23,7 @@ export function useRegister<K, V>(
 export function useRegister<K, V>(
 	register: Register<K, V>,
 	keyToObserve: K
-): V | undefined
+): V | undefined;
 export function useRegister<K, V>(
 	register: Register<K, V>,
 	keyToObserve?: K

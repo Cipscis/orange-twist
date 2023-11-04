@@ -91,7 +91,8 @@ export const DayComponent = forwardRef(
 				if (tasksRef.current) {
 					// TODO: Is this the best way to find the right element?
 					const taskEditButtons = Array.from(
-						tasksRef.current.querySelectorAll<HTMLElement>('.js-task__name-edit') ?? []);
+						tasksRef.current.querySelectorAll<HTMLElement>('.js-task__name-edit') ?? []
+					);
 					const lastTaskEditButton = taskEditButtons.at(-1);
 
 					if (lastTaskEditButton) {

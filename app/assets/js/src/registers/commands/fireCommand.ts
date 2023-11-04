@@ -9,7 +9,7 @@ import type { CommandId } from './types/CommandId';
  */
 type FireCommandArgs = {
 	[C in CommandId]: [command: C, ...args: CommandsList[C] | []];
-}[CommandId]
+}[CommandId];
 
 /**
  * Call all listeners bound to a specified command.

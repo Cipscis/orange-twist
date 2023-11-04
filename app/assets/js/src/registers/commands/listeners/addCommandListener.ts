@@ -22,7 +22,7 @@ type RemoveCommandListenerArgs = {
 		command: C,
 		listener: (...args: CommandsList[C] | []) => void
 	];
-}[CommandId]
+}[CommandId];
 
 /**
  * The same discriminated union of tuples as in {@linkcode RemoveCommandListenerArgs},

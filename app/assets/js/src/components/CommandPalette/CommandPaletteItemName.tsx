@@ -29,7 +29,7 @@ export function CommandPaletteItemName(props: CommandPaletteItemNameProps): JSX.
 	}
 
 	// Convert match into matched and unmatched tokens
-	const tokens: Array<{ string: string, match: boolean; }> = [];
+	const tokens: Array<{ string: string; match: boolean; }> = [];
 	let queryIndex = 0;
 	for (const token of match.slice(1)) {
 		// Step through groups, keeping track of our position in the query
