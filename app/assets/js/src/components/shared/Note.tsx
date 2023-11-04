@@ -61,6 +61,8 @@ export function Note(props: NoteProps): JSX.Element {
 	const getCleanedNote = useCallback((): string | null => {
 		const textarea = textareaRef.current;
 		if (!textarea) {
+			// `textarea` should always exist by the point this is called
+			/* istanbul ignore next */
 			return null;
 		}
 

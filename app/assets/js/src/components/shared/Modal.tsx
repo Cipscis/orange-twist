@@ -62,7 +62,10 @@ export function Modal(props: ModalProps): JSX.Element {
 			preFocusEl.current = getDeepActiveElement();
 			modalRef.current?.focus();
 		} else if (
-			document.activeElement === null &&
+			(
+				document.activeElement === null ||
+				document.activeElement === document.body
+			) &&
 			preFocusEl.current instanceof HTMLElement
 		) {
 			preFocusEl.current.focus();
