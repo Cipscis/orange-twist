@@ -62,7 +62,7 @@ export function Note(props: NoteProps): JSX.Element {
 		const textarea = textareaRef.current;
 		if (!textarea) {
 			// `textarea` should always exist by the point this is called
-			/* istanbul-ignore-next */
+			/* istanbul ignore next */
 			return null;
 		}
 
