@@ -5,9 +5,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"server": "ts-node --esm scripts/server.ts",
+		"server": "node --loader ts-node/esm scripts/server.ts",
 
-		"buildJs": "concurrently \"tsc --noEmit\" \"ts-node --esm scripts/build.ts\"",
+		"buildJs": "concurrently \"tsc --noEmit\" \"node --loader ts-node/esm scripts/build.ts\"",
 		"buildCss": "sass app/assets/scss:app/assets/css",
 		"build": "concurrently \"npm run buildJs\" \"npm run buildCss\"",
 
@@ -15,7 +15,7 @@
 		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
 		"testCoverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --collectCoverage",
 
-		"watchJs": "ts-node --esm scripts/build-watch.ts",
+		"watchJs": "node --loader ts-node/esm scripts/build-watch.ts",
 		"watchCss": "sass app/assets/scss:app/assets/css --watch",
 		"testWatch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
 		"watch": "concurrently --kill-others \"tsc --watch --preserveWatchOutput --noEmit\" \"npm run watchJs\" \"npm run watchCss\" \"npm run testWatch\"",
@@ -60,7 +60,7 @@
 		"typescript": "^5.2.2"
 	},
 	"engines": {
-		"node": ">=18"
+		"node": ">=20"
 	},
 	"dependencies": {
 		"classnames": "^2.3.2",
