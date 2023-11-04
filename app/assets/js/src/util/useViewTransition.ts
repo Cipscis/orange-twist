@@ -91,12 +91,8 @@ export function useViewTransition(): ViewTransitionState {
 
 	// Update the DOM, and remember how to tell the browser when we're ready to start a view transition
 	useEffect(() => {
-		if (updateDomFn) {
-			if (!document.startViewTransition) {
-				updateDomFn();
-				return;
-			}
-
+		// `updateDomFn` is only ever set when `document.startViewTransition` exists
+		if (updateDomFn && document.startViewTransition) {
 			const viewTransition = document.startViewTransition(() => new Promise((resolve) => {
 				updateDomFn();
 				setViewTransitionReadyFn(() => resolve);
@@ -118,7 +114,7 @@ export function useViewTransition(): ViewTransitionState {
 	const startViewTransition = useCallback((
 		callback: () => void
 	) => {
-		if (!('startViewTransition' in document)) {
+		if (!document.startViewTransition) {
 			callback();
 			return;
 		}
