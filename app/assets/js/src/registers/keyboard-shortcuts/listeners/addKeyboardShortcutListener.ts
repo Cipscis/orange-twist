@@ -36,10 +36,12 @@ export function addKeyboardShortcutListener(
 		return;
 	}
 
-	options?.signal?.addEventListener(
-		'abort',
-		() => removeKeyboardShortcutListener(name, listener),
-	);
+	if (options?.signal) {
+		options.signal.addEventListener(
+			'abort',
+			() => removeKeyboardShortcutListener(name, listener),
+		);
+	}
 
 	shortcutInfo.listeners.push(listener);
 }

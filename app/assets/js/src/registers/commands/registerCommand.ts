@@ -45,7 +45,9 @@ export function registerCommand(
 
 	commandsRegister.set(command, newCommandRegistration);
 
-	options?.signal?.addEventListener('abort', () => unregisterCommand(command));
+	if (options?.signal) {
+		options.signal.addEventListener('abort', () => unregisterCommand(command));
+	}
 }
 
 /**

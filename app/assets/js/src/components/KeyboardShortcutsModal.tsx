@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 import { useState } from 'preact/hooks';
 
 import {
@@ -19,7 +19,7 @@ registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ 
  *
  * This component is only intended to be used once per page.
  */
-export function KeyboardShortcutModal() {
+export function KeyboardShortcutModal(): JSX.Element {
 	const [open, setOpen] = useState(false);
 	useKeyboardShortcut(
 		KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN,

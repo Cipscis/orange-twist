@@ -26,6 +26,7 @@ Usually, you will just want to run `npm start`, but this project also provides t
 * `npm start` runs both the `server` and `watch` tasks simultaneously.
 
 * `npm test` runs any configured test suites using [Jest](https://jestjs.io/).
+* `npm run testCoverage` runs any configured test suites using [Jest](https://jestjs.io/), and reports coverage information.
 * `npm run testWatch` runs any configured test suites using [Jest](https://jestjs.io/) in watch mode.
 
 ### .env

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, type JSX } from 'preact';
 
 import { KeyboardShortcutName, getKeyboardShortcut } from '../registers/keyboard-shortcuts';
 
@@ -9,7 +9,7 @@ interface KeyboardShortcutCombosProps {
 /**
  * Render all the keyboard combos currently mapped to a named keyboard shortcut.
  */
-export function KeyboardShortcutCombos(props: KeyboardShortcutCombosProps) {
+export function KeyboardShortcutCombos(props: KeyboardShortcutCombosProps): JSX.Element {
 	const { keyboardShortcutName } = props;
 
 	// TODO: Create a hook so this stays up to date

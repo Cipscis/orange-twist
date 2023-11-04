@@ -33,10 +33,12 @@ export function onTasksChange(
 
 	tasksChangeListeners.push(listener);
 
-	options?.signal?.addEventListener(
-		'abort',
-		() => offTasksChange(listener),
-	);
+	if (options?.signal) {
+		options.signal.addEventListener(
+			'abort',
+			() => offTasksChange(listener),
+		);
+	}
 }
 
 /**

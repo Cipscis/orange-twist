@@ -1,4 +1,4 @@
-import { h, render } from 'preact';
+import { h, render, type JSX } from 'preact';
 import { useRef } from 'preact/hooks';
 
 import {
@@ -40,7 +40,7 @@ function getNextId(): number {
 /**
  * Renders a toast, which may automatically hide itself after a delay.
  */
-export function Toast(props: ToastProps) {
+export function Toast(props: ToastProps): JSX.Element {
 	const {
 		id,
 		message,
