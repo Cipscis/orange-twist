@@ -32,6 +32,15 @@ type AddCommandListenerArgs = [...RemoveCommandListenerArgs, options?: AddComman
 
 type InferSetType<S extends Set<unknown>> = S extends Set<infer T> ? T : never;
 
+/**
+ * Binds a callback function to fire whenever a specified command it called.
+ *
+ * @param command A string ID identifying a command.
+ * @param listener A function to be called whenever the specified command is fired.
+ * @param [options] An object containing options.
+ *
+ * @see {@linkcode removeCommandListener} for removing listeners.
+ */
 export function addCommandListener(
 	...[command, listener, options]: AddCommandListenerArgs
 ): void {
@@ -60,6 +69,14 @@ export function addCommandListener(
 	);
 }
 
+/**
+ * Unbinds a callback function that was bound to the specified command
+ * with {@linkcode addCommandListener}
+ *
+ * @param command A string ID identifying a command.
+ * @param listener A function to be called whenever the specified command is fired.
+ * @param [options] An object containing options.
+ */
 export function removeCommandListener(...[command, listener]: RemoveCommandListenerArgs): void {
 	const commandInfo = commandsRegister.get(command);
 

@@ -2,6 +2,11 @@ import { commandsRegister } from './commandsRegister';
 import type { CommandsList } from './types/CommandsList';
 import type { CommandId } from './types/CommandId';
 
+/**
+ * This immediately access indexed type constructs a
+ * discriminated union of tuples that ensures the correct
+ * combinations of arguments will be passed to {@linkcode fireCommand}.
+ */
 type FireCommandArgs = {
 	[C in CommandId]: [command: C, ...args: CommandsList[C] | []];
 }[CommandId]
