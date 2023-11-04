@@ -11,8 +11,15 @@ import {
 } from '@testing-library/preact';
 
 import { useViewTransition } from './useViewTransition';
+import { afterEach } from 'node:test';
+
+const defaultStartViewTransition = document.startViewTransition;
 
 describe('useViewTransition', () => {
+	afterEach(() => {
+		document.startViewTransition = defaultStartViewTransition;
+	});
+
 	test('returns a ViewTransitionState', () => {
 		const { result } = renderHook(
 			() => useViewTransition()
@@ -22,14 +29,14 @@ describe('useViewTransition', () => {
 		expect(result.current.isInViewTransition).toBe(false);
 	});
 
-	test('puts us through a view transition when calling startViewTransition', async () => {
+	test('if the View Transitions API is supported, puts us through a view transition when calling startViewTransition', async () => {
 		const { result, rerender } = renderHook(
 			() => useViewTransition()
 		);
 
 		expect(result.current.isInViewTransition).toBe(false);
 
-		// At time of writing, jsdom hasn't  implemented document.startViewTransition
+		// Mock document.startViewTransition so we can control when it's finished
 		let finished: (value: unknown) => void;
 
 		Object.defineProperty(document, 'startViewTransition', {
@@ -68,6 +75,30 @@ describe('useViewTransition', () => {
 			rerender();
 		});
 
+		expect(result.current.isInViewTransition).toBe(false);
+	});
+
+	test('if the View Transitions API is not supported, calls the callback immediately', async () => {
+		// Ensure the View Transitions API is not supported
+		document.startViewTransition = undefined;
+
+		const { result, rerender } = renderHook(
+			() => useViewTransition()
+		);
+
+		expect(result.current.isInViewTransition).toBe(false);
+
+		// Calling startViewTransition executes the callback
+		const spy = jest.fn();
+		await act(() => {
+			result.current.startViewTransition(spy);
+		});
+
+		expect(spy).toHaveBeenCalled();
+
+		await act(() => rerender());
+
+		// We never enter this state if the View Transitions API is not supported
 		expect(result.current.isInViewTransition).toBe(false);
 	});
 });
