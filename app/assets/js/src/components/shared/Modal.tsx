@@ -66,9 +66,9 @@ export function Modal(props: ModalProps): JSX.Element {
 				document.activeElement === null ||
 				document.activeElement === document.body
 			) &&
-			preFocusEl.current
+			preFocusEl.current instanceof HTMLElement
 		) {
-			(preFocusEl.current as HTMLElement).focus();
+			preFocusEl.current.focus();
 		}
 	}, [open]);
 
