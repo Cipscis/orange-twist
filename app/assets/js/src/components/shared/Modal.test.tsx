@@ -45,6 +45,18 @@ describe('Modal', () => {
 		expect(title).toHaveTextContent('Test title');
 	});
 
+	test('receives keyboard focus when opened', () => {
+		const { getByTestId } = render(
+			<Modal
+				open
+				onClose={() => {}}
+			/>
+		);
+
+		const modal = getByTestId('modal');
+		expect(modal).toHaveFocus();
+	});
+
 	test('applies specified CSS classes', () => {
 		const { getByTestId } = render(
 			<Modal
