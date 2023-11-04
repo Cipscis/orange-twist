@@ -96,13 +96,13 @@ type ToastOptions = Partial<Omit<ToastProps, 'message'>>;
 /**
  * Show a new toast with a specified message and duration.
  */
-export function toast(message: string, duration?: ToastProps['duration']): void
+export function toast(message: string, duration?: ToastProps['duration']): void;
 /**
  * Show a toast with a specified message. An ID can be passed to
  * create a toast that can be updated by calling this function again
  * with the same ID, if it still exists.
  */
-export function toast(message: string, options?: ToastOptions): void
+export function toast(message: string, options?: ToastOptions): void;
 export function toast(message: string, optionsArg?: ToastProps['duration'] | ToastOptions): void {
 	// Start by consolidating arguments
 	const options = typeof optionsArg === 'number' ? { duration: optionsArg } : { ...optionsArg };
