@@ -21,6 +21,8 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 	useLayoutEffect(() => {
 		const wrapper = wrapperRef.current;
 		if (!wrapper) {
+			// The wrapper should always be set by this point
+			/* istanbul ignore next */
 			return;
 		}
 
@@ -28,9 +30,10 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 			.parse(content)
 			// Stupid fucking plugin replaces tabs with spaces
 			.replace(/ {4}/g, '\t')
-			// To allow HTML tags to be written as text in task names, I
-			// replace `<` with `&lt;`, so reverse it (this means if I were
-			// type "&amp;lt;" in a task name it would become "<" but that's fine)
+			// To allow HTML tags to be written as text in task names,
+			// I replace `<` with `&lt;`. So, when displaying the rendered
+			// content, reverse it. This also means if I were type "&amp;lt;"
+			// in a task name it would become "<" but that's fine)
 			.replace(/&amp;lt;/g, '&lt;');
 
 		if (wrapper.setHTML) {
@@ -44,6 +47,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 	return <div
 		ref={wrapperRef}
 		{...passthroughProps}
-		class={classNames('content', String(passthroughProps.class))}
+		class={classNames('content', passthroughProps.class && String(passthroughProps.class))}
+		data-testid="markdown-content"
 	/>;
 }
