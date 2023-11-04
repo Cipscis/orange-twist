@@ -18,10 +18,9 @@
  * ```
  */
 export type DeepPartial<T> = T extends object ? {
-	[P in keyof T]?:
-		T[P] extends Array<infer Inner>
-		? Array<DeepPartial<Inner>> :
-		T[P] extends ReadonlyArray<infer Inner>
-		? ReadonlyArray<DeepPartial<Inner>> :
-		DeepPartial<T[P]>;
+	[P in keyof T]?: T[P] extends Array<infer Inner>
+		? Array<DeepPartial<Inner>>
+		: T[P] extends ReadonlyArray<infer Inner>
+			? ReadonlyArray<DeepPartial<Inner>>
+			: DeepPartial<T[P]>;
 } : T;

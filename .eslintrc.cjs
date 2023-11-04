@@ -183,9 +183,7 @@ module.exports = {
 
 		'@stylistic/array-bracket-newline': [
 			'error',
-			{
-				multiline: true,
-			},
+			'consistent',
 		],
 		'@stylistic/array-bracket-spacing': [
 			'error',
@@ -261,7 +259,10 @@ module.exports = {
 				SwitchCase: 1,
 				ignoredNodes: [
 					// Ignore indentation within template literals to allow them to be indented like markup
-					"TemplateLiteral *",
+					'TemplateLiteral *',
+					// This rule doesn't behave correctly for TypeScript generic types
+					// https://github.com/typescript-eslint/typescript-eslint/issues/455#issuecomment-560585408
+					'TSTypeParameterInstantiation ',
 				],
 			},
 		],
@@ -270,6 +271,7 @@ module.exports = {
 			{
 				'beforeColon': false,
 				'afterColon': true,
+				mode: 'minimum',
 			},
 		],
 		'@stylistic/keyword-spacing': [
@@ -413,10 +415,6 @@ module.exports = {
 			'error',
 			'prefer-double',
 		],
-		'@stylistic/jsx-curly-newline': [
-			'error',
-			'consistent',
-		],
 		'@stylistic/jsx-equals-spacing': [
 			'error',
 			'never',
@@ -431,9 +429,6 @@ module.exports = {
 				maximum: 1,
 				when: 'multiline',
 			},
-		],
-		'@stylistic/jsx-props-no-multi-spaces': [
-			'error',
 		],
 		'@stylistic/jsx-self-closing-comp': [
 			'error',

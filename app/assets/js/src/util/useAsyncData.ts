@@ -45,7 +45,7 @@ export function useAsyncData<T>(
 					}
 				})();
 				setError(error);
-			 } finally {
+			} finally {
 				setIsLoading(false);
 			}
 		})();
