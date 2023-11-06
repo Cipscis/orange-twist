@@ -7,7 +7,7 @@ import {
 
 import { Command } from 'types/Command';
 
-import { saveDays, setDayData, useDays } from 'registers/days';
+import { loadDays, saveDays, setDayData, useDays } from 'registers/days';
 import { addNewTask, saveTasks } from 'registers/tasks';
 
 import { registerCommand, useCommand } from 'registers/commands';
@@ -22,6 +22,7 @@ import { toast } from './shared/Toast';
 
 import { CommandPalette } from './CommandPalette/CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
+import { getDays } from 'registers/days/daysRegister';
 
 interface OrangeTwistProps {
 	children: ComponentChildren;
@@ -63,10 +64,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	}, []);
 
 	useCommand(Command.THEME_TOGGLE, toggleTheme);
-
-	const {
-		data: days,
-	} = useDays();
 
 	// Open command palette on keyboard shortcut
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -126,9 +123,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 * Ask the user what day to add, then add it to the register.
 	 */
 	const addNewDay = useCallback((dayNameArg?: string) => {
-		if (!days) {
-			return;
-		}
+		const days = getDays();
 
 		const dayName = dayNameArg ?? window.prompt('What day?');
 		if (!dayName) {
@@ -146,7 +141,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		}
 
 		setDayData(dayName, {});
-	}, [days]);
+	}, []);
 	useCommand(Command.DAY_ADD_NEW, addNewDay);
 
 	/**
@@ -158,6 +153,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const addNewTaskWithOptions = useCallback((dayName?: string) => addNewTask({ dayName }), []);
 	useCommand(Command.TASK_ADD_NEW, addNewTaskWithOptions);
 
+	console.log(props);
 	return <>
 		<CommandPalette
 			open={commandPaletteOpen}
