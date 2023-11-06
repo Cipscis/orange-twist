@@ -12,6 +12,7 @@ import { Note } from './shared/Note';
 import { toast } from './shared/Toast';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
+import { Markdown } from './shared/Markdown';
 
 interface TaskDetailProps {
 	taskId: number | null;
@@ -120,7 +121,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element {
 		{
 			task &&
 			<section class="orange-twist__section">
-				<h2 class="orange-twist__title">{task.name}</h2>
+				<Markdown class="orange-twist__title" content={`## ${task.name}`} inline />
 
 				{
 					isLoading &&

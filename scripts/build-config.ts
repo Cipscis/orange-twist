@@ -11,4 +11,5 @@ export const config: BuildOptions = {
 	],
 	outdir: dstPath,
 	bundle: true,
+	sourcemap: 'linked',
 };
