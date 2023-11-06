@@ -7,7 +7,7 @@ import {
 
 import { Command } from 'types/Command';
 
-import { loadDays, saveDays, setDayData, useDays } from 'registers/days';
+import { saveDays, setDayData } from 'registers/days';
 import { addNewTask, saveTasks } from 'registers/tasks';
 
 import { registerCommand, useCommand } from 'registers/commands';

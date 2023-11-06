@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import { afterEach, describe, expect, jest, test } from '@jest/globals';
+import { afterEach, describe, expect, test } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
 import { cleanup, render } from '@testing-library/preact';
