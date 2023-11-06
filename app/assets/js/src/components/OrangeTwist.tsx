@@ -152,7 +152,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const addNewTaskWithOptions = useCallback((dayName?: string) => addNewTask({ dayName }), []);
 	useCommand(Command.TASK_ADD_NEW, addNewTaskWithOptions);
 
-	console.log(props);
 	return <>
 		<CommandPalette
 			open={commandPaletteOpen}
