@@ -73,4 +73,20 @@ describe('Markdown', () => {
 		const content = getByTestId('markdown-content');
 		expect(content.textContent).toBe('window.alert(\'xss\')');
 	});
+
+	test('displays the first line of content only, unwrapped, when using the inline prop', () => {
+		const content = `This is **the** *first* \`line\`
+
+this is the second line`;
+
+		const { getByTestId } = render(
+			<Markdown
+				content={content}
+				inline
+			/>
+		);
+
+		const contentEl = getByTestId('markdown-content');
+		expect(contentEl.innerHTML).toBe('This is <strong>the</strong> <em>first</em> <code>line</code>');
+	});
 });
