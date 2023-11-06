@@ -7,7 +7,7 @@ import {
 
 import { Command } from 'types/Command';
 
-import { saveDays, setDayData } from 'registers/days';
+import { getDays, saveDays, setDayData } from 'registers/days';
 import { addNewTask, saveTasks } from 'registers/tasks';
 
 import { registerCommand, useCommand } from 'registers/commands';
@@ -22,7 +22,6 @@ import { toast } from './shared/Toast';
 
 import { CommandPalette } from './CommandPalette/CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
-import { getDays } from 'registers/days/daysRegister';
 
 interface OrangeTwistProps {
 	children: ComponentChildren;
