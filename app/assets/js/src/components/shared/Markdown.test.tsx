@@ -4,9 +4,9 @@ import { afterEach, describe, expect, jest, test } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
 import { cleanup, render } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 
 import { Markdown } from './Markdown';
-import userEvent from '@testing-library/user-event';
 
 describe('Markdown', () => {
 	afterEach(() => {
@@ -52,12 +52,19 @@ describe('Markdown', () => {
 			<Markdown content="" />
 		);
 
-		const content = getByTestId('markdown-content');
+		let content = getByTestId('markdown-content');
 		expect([...content.classList.values()]).toEqual(['content']);
 
 		rerender(
-			<Markdown content="" class="test" onClick={spy} />
+			<Markdown
+				content=""
+				class="test"
+				onClick={spy}
+				data-testid="different-test-id"
+			/>
 		);
+
+		content = getByTestId('different-test-id');
 		expect(content.classList.contains('test')).toBe(true);
 
 		expect(spy).not.toHaveBeenCalled();
