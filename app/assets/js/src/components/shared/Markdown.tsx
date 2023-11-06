@@ -6,12 +6,23 @@ import { marked } from 'marked';
 import { useLayoutEffect, useRef } from 'preact/hooks';
 
 interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
+	/**
+	 * The markdown content to be rendered as HTML.
+	 */
 	content: string;
+	/**
+	 * If set to `true`, only the first line of the content will be used,
+	 * and it won't be wrapped in a `<p>` tag.
+	 *
+	 * @default false
+	 */
+	inline?: boolean;
 }
 
 export function Markdown(props: MarkdownProps): JSX.Element {
 	const {
 		content,
+		inline,
 		...passthroughProps
 	} = props;
 
@@ -26,8 +37,12 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 			return;
 		}
 
-		const renderedContent = marked
-			.parse(content)
+		const contentToRender = inline
+			? content.split('\n')[0]
+			: content;
+
+		let renderedContent = marked
+			.parse(contentToRender)
 			// Stupid fucking plugin replaces tabs with spaces
 			.replace(/ {4}/g, '\t')
 			// To allow HTML tags to be written as text in task names,
@@ -36,18 +51,22 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 			// in a task name it would become "<" but that's fine)
 			.replace(/&amp;lt;/g, '&lt;');
 
+		if (inline) {
+			renderedContent = renderedContent.replace(/<p>(.+)<\/p>\n?/, '$1');
+		}
+
 		if (wrapper.setHTML) {
 			wrapper.setHTML(renderedContent);
 		} else {
 			// `setHTML` is not supported, so falling back to vulnerable method'
 			wrapper.innerHTML = renderedContent;
 		}
-	}, [content]);
+	}, [content, inline]);
 
 	return <div
 		ref={wrapperRef}
+		data-testid="markdown-content"
 		{...passthroughProps}
 		class={classNames('content', passthroughProps.class && String(passthroughProps.class))}
-		data-testid="markdown-content"
 	/>;
 }
