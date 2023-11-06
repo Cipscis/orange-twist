@@ -28,6 +28,12 @@ const taskStatusSymbols = {
 	[TaskStatus.TODO]: '☐',
 	[TaskStatus.IN_PROGRESS]: '▶️',
 	[TaskStatus.COMPLETED]: '☑️',
+
+	[TaskStatus.INVESTIGATING]: '🔍',
+	[TaskStatus.IN_REVIEW]: '👀',
+	[TaskStatus.READY_TO_TEST]: '🧪',
+	[TaskStatus.APPROVED_TO_DEPLOY]: '🟢',
+	[TaskStatus.WILL_NOT_DO]: '🚫',
 } as const satisfies Record<TaskStatus, string>;
 
 /**
