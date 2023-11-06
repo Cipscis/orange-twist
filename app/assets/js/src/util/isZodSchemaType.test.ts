@@ -3,7 +3,6 @@ import { describe, expect, test } from '@jest/globals';
 import { z } from 'zod';
 
 import { isZodSchemaType } from 'util/index';
-import type { satisfies } from 'semver';
 
 describe('isZodSchemaType', () => {
 	test('constructs a typeguard function when passed a Zod schema', () => {
