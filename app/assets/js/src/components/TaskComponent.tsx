@@ -126,7 +126,7 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 					dayName={dayName}
 				/>
 				<a
-					href={`/task?id=${task.id}`}
+					href={`/orange-twist/task?id=${task.id}`}
 					class="task__detail-link"
 					title="View task"
 				>📄</a>
