@@ -154,7 +154,19 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 						class={classNames('task__name-display', {
 							'task__name-display--hidden': isInEditMode,
 						})}
-						onClick={() => setIsInEditMode(true)}
+						onClick={(e) => {
+							const target = e.target;
+							if (
+								target instanceof HTMLAnchorElement ||
+								target instanceof Element && target.matches('a *')
+							) {
+								// If we clicked within a link, don't enter edit mode
+								return;
+							}
+
+							setIsInEditMode(true);
+						}}
+						data-testid="task-component-name"
 					/>
 
 					<button

@@ -65,8 +65,8 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 	return <div
 		ref={wrapperRef}
+		data-testid="markdown-content"
 		{...passthroughProps}
 		class={classNames('content', passthroughProps.class && String(passthroughProps.class))}
-		data-testid="markdown-content"
 	/>;
 }
