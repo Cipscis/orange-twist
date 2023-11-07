@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { useState } from 'preact/hooks';
 
 import {
 	afterEach,
@@ -307,5 +308,36 @@ describe('Note', () => {
 
 		expect(queryByRole('textbox')).not.toBeInTheDocument();
 		expect(spy).toHaveBeenCalled();
+	});
+
+	test('allows editing the middle when the note is updated on each change', async () => {
+		const user = userEvent.setup();
+		const spy = jest.fn();
+
+		const NoteContainer = function () {
+			const [note, setNote] = useState('');
+
+			return <Note
+				note={note}
+				onNoteChange={(note: string) => {
+					spy(note);
+					setNote(note);
+				}}
+				saveChanges={() => {}}
+			/>;
+		};
+
+		const { getByRole, getByTitle } = render(<NoteContainer />);
+
+		const editButton = getByTitle('Edit note')!;
+		await user.click(editButton);
+
+		const textarea = getByRole('textbox') as HTMLTextAreaElement;
+		await user.type(textarea, 'ab{ArrowLeft}{ArrowLeft}cd');
+
+		expect(spy).toHaveBeenCalledWith('a');
+		expect(spy).toHaveBeenCalledWith('ab');
+		expect(spy).toHaveBeenCalledWith('cab');
+		expect(spy).toHaveBeenCalledWith('cdab');
 	});
 });
