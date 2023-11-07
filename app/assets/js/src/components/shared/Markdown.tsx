@@ -19,6 +19,34 @@ interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	inline?: boolean;
 }
 
+marked.use({
+	renderer: {
+		link(href, title, text) {
+			try {
+				const url = new URL(href, location.origin);
+				const isExternal = url.origin !== location.origin;
+
+				return `<a href="${href}"${
+					isExternal
+						? ' target="_blank"'
+						: ''
+				}${
+					title
+						? ` title="${title}"`
+						: ''
+				}>${text}</a>`;
+			} catch (e) {
+				// Could not construct a valid URL
+				return `<a href="${href}"${
+					title
+						? ` title="${title}"`
+						: ''
+				}>${text}</a>`;
+			}
+		},
+	},
+});
+
 export function Markdown(props: MarkdownProps): JSX.Element {
 	const {
 		content,
