@@ -50,6 +50,24 @@ describe('Markdown', () => {
 		expect(content).toBeInTheDocument();
 	});
 
+	test('renders external links with `target="_blank"`', () => {
+		const { getByText } = render(
+			<Markdown content={`[Internal link](/test/ "Title")\n[External link](https://example.com "Title")`} />
+		);
+
+		const internalLink = getByText('Internal link');
+		expect(internalLink).toBeInTheDocument();
+		expect(internalLink.getAttribute('href')).toBe('/test/');
+		expect(internalLink.getAttribute('target')).toBe(null);
+		expect(internalLink.getAttribute('title')).toBe('Title');
+
+		const externalLink = getByText('External link');
+		expect(externalLink).toBeInTheDocument();
+		expect(externalLink.getAttribute('href')).toBe('https://example.com');
+		expect(externalLink.getAttribute('target')).toBe('_blank');
+		expect(externalLink.getAttribute('title')).toBe('Title');
+	});
+
 	test('allows line breaks without any extra syntax', () => {
 		const { getByTestId } = render(
 			<Markdown
