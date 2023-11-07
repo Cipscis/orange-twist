@@ -42,7 +42,9 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 			: content;
 
 		let renderedContent = marked
-			.parse(contentToRender)
+			.parse(contentToRender, {
+				breaks: true,
+			})
 			// Stupid fucking plugin replaces tabs with spaces
 			.replace(/ {4}/g, '\t')
 			// To allow HTML tags to be written as text in task names,
@@ -65,7 +67,6 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 	return <div
 		ref={wrapperRef}
-		data-testid="markdown-content"
 		{...passthroughProps}
 		class={classNames('content', passthroughProps.class && String(passthroughProps.class))}
 	/>;
