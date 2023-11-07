@@ -15,7 +15,10 @@ describe('Markdown', () => {
 
 	test('renders its content, converted to HTML', () => {
 		const { getByTestId } = render(
-			<Markdown content="**Bold** *italic* `code`" />
+			<Markdown
+				content="**Bold** *italic* `code`"
+				data-testid="markdown-content"
+			/>
 		);
 
 		const content = getByTestId('markdown-content');
@@ -28,7 +31,10 @@ describe('Markdown', () => {
 	This is some code
 \`\`\``;
 		const { getByTestId } = render(
-			<Markdown content={text} />
+			<Markdown
+				content={text}
+				data-testid="markdown-content"
+			/>
 		);
 
 		const content = getByTestId('markdown-content');
@@ -62,12 +68,27 @@ describe('Markdown', () => {
 		expect(externalLink.getAttribute('title')).toBe('Title');
 	});
 
+	test('allows line breaks without any extra syntax', () => {
+		const { getByTestId } = render(
+			<Markdown
+				content={`First line\nSecond line`}
+				data-testid="markdown-content"
+			/>
+		);
+
+		const content = getByTestId('markdown-content');
+		expect(content.innerHTML).toBe('<p>First line<br>Second line</p>\n');
+	});
+
 	test('passes through additional props to the internal `<div>`, adding CSS classes to its existing ones', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
 		const { getByTestId, rerender } = render(
-			<Markdown content="" />
+			<Markdown
+				content=""
+				data-testid="markdown-content"
+			/>
 		);
 
 		let content = getByTestId('markdown-content');
@@ -92,7 +113,10 @@ describe('Markdown', () => {
 
 	test('sanitises content', () => {
 		const { getByTestId } = render(
-			<Markdown content="<script>window.alert('xss')</script>" />
+			<Markdown
+				content="<script>window.alert('xss')</script>"
+				data-testid="markdown-content"
+			/>
 		);
 
 		const content = getByTestId('markdown-content');
@@ -108,6 +132,7 @@ this is the second line`;
 			<Markdown
 				content={content}
 				inline
+				data-testid="markdown-content"
 			/>
 		);
 
