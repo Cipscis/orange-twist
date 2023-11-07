@@ -128,15 +128,18 @@ export function Note(props: NoteProps): JSX.Element {
 		setIsEditing(true);
 	}, []);
 
-	// Set up event listeners to stop editing, and move focus
-	// into textarea when we start editing.
+	// Set up event listeners to stop editing
 	useEffect(() => {
+		const textarea = textareaRef.current;
+		if (!textarea) {
+			return;
+		}
+
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		const textarea = textareaRef.current;
-
-		if (isEditing && textarea) {
+		// If we've just entered editing mode
+		if (isEditing) {
 			textarea.addEventListener(
 				'blur',
 				(e) => leaveEditingMode(),
@@ -175,22 +178,37 @@ export function Note(props: NoteProps): JSX.Element {
 				},
 				{ signal },
 			);
-
-			const scrollTop = window.scrollY;
-			textarea.focus();
-			// Move the caret to the end
-			const end = textarea.value.length;
-			textarea.setSelectionRange(end, end);
-			window.scrollTo({
-				top: scrollTop,
-				behavior: 'instant',
-			});
 		}
 
 		return () => {
 			controller.abort();
 		};
 	}, [isEditing, leaveEditingMode]);
+
+	// Move focus into textarea when we start editing.
+	useEffect(() => {
+		const textarea = textareaRef.current;
+		if (!textarea) {
+			return;
+		}
+
+		// If we've just entered editing mode
+		if (isEditing) {
+			// Focus on the textarea
+			textarea.focus();
+
+			// Move the caret to the end
+			const end = textarea.value.length;
+			textarea.setSelectionRange(end, end);
+
+			// Scroll to the textarea
+			const scrollTop = window.scrollY;
+			window.scrollTo({
+				top: scrollTop,
+				behavior: 'instant',
+			});
+		}
+	}, [isEditing]);
 
 	return <div class="note">
 		{isEditing
