@@ -34,13 +34,34 @@ interface OrangeTwistProps {
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const { children } = props;
 
-	// Register all commands
+	// Register all commands and keyboard shortcuts
 	useEffect(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
 		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
 		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
-	});
+
+		registerKeyboardShortcut(
+			KeyboardShortcutName.COMMAND_PALETTE_OPEN,
+			[{
+				key: '\\',
+			}],
+		);
+		registerKeyboardShortcut(
+			KeyboardShortcutName.DATA_SAVE,
+			[{
+				key: 's',
+				ctrl: true,
+			}],
+		);
+		registerKeyboardShortcut(
+			KeyboardShortcutName.EDITING_FINISH,
+			[
+				{ key: 'Enter', ctrl: true },
+				{ key: 'Escape' },
+			]
+		);
+	}, []);
 
 	/**
 	 * Toggle between task and light themes.
@@ -61,7 +82,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		htmlEl.style.setProperty('--theme', newTheme);
 		localStorage.setItem('theme', newTheme);
 	}, []);
-
 	useCommand(Command.THEME_TOGGLE, toggleTheme);
 
 	// Open command palette on keyboard shortcut
@@ -75,12 +95,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const closeCommandPalette = useCallback(
 		() => setCommandPaletteOpen(false),
 		[]
-	);
-	registerKeyboardShortcut(
-		KeyboardShortcutName.COMMAND_PALETTE_OPEN,
-		[{
-			key: '\\',
-		}],
 	);
 	useKeyboardShortcut(KeyboardShortcutName.COMMAND_PALETTE_OPEN, openCommandPalette);
 
@@ -107,15 +121,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		[]
 	);
 	useCommand(Command.DATA_SAVE, saveData);
-
-	// Set up save data keyboard shortcut
-	registerKeyboardShortcut(
-		KeyboardShortcutName.DATA_SAVE,
-		[{
-			key: 's',
-			ctrl: true,
-		}],
-	);
 	useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
 
 	/**
