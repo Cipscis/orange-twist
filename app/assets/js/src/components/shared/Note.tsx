@@ -94,8 +94,8 @@ export function Note(props: NoteProps): JSX.Element {
 	/**
 	 * Leave editing mode if event was received from textarea element.
 	 */
-	const leaveEditingModeFromTextarea = useCallback((e: KeyboardEvent) => {
-		if (e.target === textareaRef.current) {
+	const leaveEditingModeFromTextarea = useCallback(() => {
+		if (document.activeElement === textareaRef.current) {
 			leaveEditingMode();
 		}
 	}, [leaveEditingMode]);
