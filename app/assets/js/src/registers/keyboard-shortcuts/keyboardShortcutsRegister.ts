@@ -75,8 +75,13 @@ document.addEventListener('keydown', (e) => {
 		activeElement instanceof HTMLTextAreaElement ||
 		(activeElement instanceof HTMLElement && activeElement.isContentEditable)
 	) {
-		// ...unless the Ctrl / Cmd modifier key is also pressed, ignore the event
-		if (!(e.ctrlKey || e.metaKey)) {
+		// ...unless the Ctrl / Cmd modifier key is also pressed,
+		// or the key is recognised as a special case, ignore the event
+		if (!(
+			e.ctrlKey ||
+			e.metaKey ||
+			e.key === 'Escape'
+		)) {
 			return;
 		}
 	}

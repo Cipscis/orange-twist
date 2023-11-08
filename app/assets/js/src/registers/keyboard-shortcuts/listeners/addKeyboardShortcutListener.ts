@@ -1,5 +1,8 @@
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import type { KeyboardShortcutInfo } from '../types';
+
 import { keyboardShortcutsRegister } from '../keyboardShortcutsRegister';
+import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 
 interface AddKeyboardShortcutListenerOptions {
 	/**
@@ -21,15 +24,18 @@ export function addKeyboardShortcutListener(
 	listener: () => void,
 	options?: AddKeyboardShortcutListenerOptions,
 ): void {
-	const shortcutInfo = keyboardShortcutsRegister.get(name);
-
-	if (!shortcutInfo) {
-		throw new Error(`Cannot add listener to unregistered keyboard shortcut "${name}"`);
-	}
-
 	if (options?.signal?.aborted) {
 		return;
 	}
+
+	const shortcutInfo: KeyboardShortcutInfo = (() => {
+		const shortcutInfo = keyboardShortcutsRegister.get(name);
+		if (shortcutInfo) {
+			return shortcutInfo;
+		}
+
+		return registerKeyboardShortcut(name, []);
+	})();
 
 	if (shortcutInfo.listeners.includes(listener)) {
 		// Behave like `addEventListener` - don't bind the same listener twice

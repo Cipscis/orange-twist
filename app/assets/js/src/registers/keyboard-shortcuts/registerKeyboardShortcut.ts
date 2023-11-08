@@ -14,7 +14,7 @@ export const newKeyboardShortcutRegisteredListeners: Array<NewKeyboardShortcutRe
  *
  * A keyboard shortcut can be re-registered to override its shortcuts.
  */
-export function registerKeyboardShortcut(name: KeyboardShortcutName, shortcuts: Array<KeyCombo>): void {
+export function registerKeyboardShortcut(name: KeyboardShortcutName, shortcuts: Array<KeyCombo>): KeyboardShortcutInfo {
 	const listeners = keyboardShortcutsRegister.get(name)?.listeners ?? [];
 
 	const info = {
@@ -27,4 +27,6 @@ export function registerKeyboardShortcut(name: KeyboardShortcutName, shortcuts: 
 	for (const listener of newKeyboardShortcutRegisteredListeners) {
 		listener(info);
 	}
+
+	return info;
 }

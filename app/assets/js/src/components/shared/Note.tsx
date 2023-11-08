@@ -8,6 +8,8 @@ import {
 } from 'preact/hooks';
 
 import { nodeHasAncestor } from '../../util/nodeHasAncestor';
+import { KeyboardShortcutName, useKeyboardShortcut } from 'registers/keyboard-shortcuts';
+
 import { Markdown } from './Markdown';
 
 interface NoteProps {
@@ -90,6 +92,18 @@ export function Note(props: NoteProps): JSX.Element {
 	]);
 
 	/**
+	 * Leave editing mode if event was received from textarea element.
+	 */
+	const leaveEditingModeFromTextarea = useCallback((e: KeyboardEvent) => {
+		if (e.target === textareaRef.current) {
+			leaveEditingMode();
+		}
+	}, [leaveEditingMode]);
+
+	// Leave editing on keyboard shortcut
+	useKeyboardShortcut(KeyboardShortcutName.EDITING_FINISH, leaveEditingModeFromTextarea);
+
+	/**
 	 * Enter edit mode on click, unless the user was selecting
 	 * text and included text outside the note.
 	 */
@@ -148,14 +162,6 @@ export function Note(props: NoteProps): JSX.Element {
 			textarea.addEventListener(
 				'keydown',
 				(e) => {
-					// Leave editing mode on Ctrl + Enter or Escape
-					if (
-						(e.key === 'Enter' && e.ctrlKey) ||
-						e.key === 'Escape'
-					) {
-						leaveEditingMode();
-					}
-
 					// Insert a tab character on tab press
 					if (e.key === 'Tab') {
 						e.preventDefault();

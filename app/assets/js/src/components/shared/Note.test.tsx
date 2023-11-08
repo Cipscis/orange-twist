@@ -18,6 +18,8 @@ import {
 
 import userEvent from '@testing-library/user-event';
 
+import { KeyboardShortcutName, registerKeyboardShortcut } from 'registers/keyboard-shortcuts';
+
 import { Note } from './Note';
 
 beforeAll(() => {
@@ -170,8 +172,16 @@ describe('Note', () => {
 		expect(spy).toHaveBeenCalledWith('abcd');
 	});
 
-	test('leaves editing mode when pressing "Escape"', async () => {
+	test('leaves editing mode when pressing the "Finish editing" keyboard shortcut', async () => {
 		const user = userEvent.setup();
+
+		registerKeyboardShortcut(
+			KeyboardShortcutName.EDITING_FINISH,
+			[
+				{ key: 'Enter', ctrl: true },
+				{ key: 'Escape' },
+			]
+		);
 
 		const {
 			queryByRole,
@@ -186,40 +196,20 @@ describe('Note', () => {
 
 		const editButton = queryByTitle('Edit note')!;
 		await user.click(editButton);
-
-		expect(queryByRole('textbox')).toBeInTheDocument();
-
-		await user.keyboard('{Escape}');
-
-		expect(queryByRole('textbox')).not.toBeInTheDocument();
-	});
-
-	test('leaves editing mode when pressing "Ctrl + Enter"', async () => {
-		const user = userEvent.setup();
-
-		const {
-			queryByRole,
-			queryByTitle,
-		} = render(
-			<Note
-				note={null}
-				onNoteChange={() => {}}
-				saveChanges={() => {}}
-			/>
-		);
-
-		const editButton = queryByTitle('Edit note')!;
-		await user.click(editButton);
-
 		expect(queryByRole('textbox')).toBeInTheDocument();
 
 		// Pressing enter should not exit edit mode
 		await user.keyboard('{Enter}');
-
 		expect(queryByRole('textbox')).toBeInTheDocument();
 
+		// Pressing Ctrl + enter should exit edit mode
 		await user.keyboard('{Control>}{Enter}{/Control}');
+		expect(queryByRole('textbox')).not.toBeInTheDocument();
 
+		// Pressing escape should exit edit mode
+		await user.click(editButton);
+		expect(queryByRole('textbox')).toBeInTheDocument();
+		await user.keyboard('{Escape}');
 		expect(queryByRole('textbox')).not.toBeInTheDocument();
 	});
 
