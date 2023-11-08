@@ -10,6 +10,7 @@ import userEvent from '@testing-library/user-event';
 
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
 import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
+import { getKeyboardShortcut } from '../getKeyboardShortcut';
 
 import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from './addKeyboardShortcutListener';
 
@@ -18,13 +19,31 @@ beforeAll(() => {
 });
 
 describe('addKeyboardShortcutListener', () => {
-	test('throws an error if called with an unregistered keyboard shortcut', () => {
+	test('can be called before a keyboard shortcut is registered', async () => {
+		const user = userEvent.setup();
+
+		const shortcutName = 'Test keyboard shortcut';
+		const spy = jest.fn();
+
 		expect(
 			() => addKeyboardShortcutListener(
-				'Unregistered keyboard shortcut' as KeyboardShortcutName,
-				() => {}
+				shortcutName,
+				spy
 			)
-		).toThrow();
+		).not.toThrow();
+
+		const keyboardShortcut = getKeyboardShortcut(shortcutName);
+		expect(keyboardShortcut).toEqual({
+			name: shortcutName,
+			shortcuts: [],
+			listeners: [spy],
+		});
+
+		registerKeyboardShortcut(shortcutName, [{ key: 'f' }]);
+
+		expect(spy).not.toHaveBeenCalled();
+		await user.keyboard('f');
+		expect(spy).toHaveBeenCalled();
 	});
 
 	test('adds a listener to a keyboard shortcut', async () => {
