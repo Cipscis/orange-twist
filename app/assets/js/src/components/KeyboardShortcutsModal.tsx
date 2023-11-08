@@ -34,20 +34,22 @@ export function KeyboardShortcutModal(): JSX.Element {
 		title="Keyboard shortcuts"
 	>
 		<dl class="keyboard-shortcuts__list">
-			{keyboardShortcutsInfo.map((keyboardShortcutInfo) => (
-				<div
-					key={keyboardShortcutInfo.name}
-					class="keyboard-shortcuts__item"
-				>
-					<dt class="keyboard-shortcuts__item__name">{keyboardShortcutInfo.name}</dt>
+			{keyboardShortcutsInfo
+				.filter(({ shortcuts }) => shortcuts.length > 0)
+				.map((keyboardShortcutInfo) => (
+					<div
+						key={keyboardShortcutInfo.name}
+						class="keyboard-shortcuts__item"
+					>
+						<dt class="keyboard-shortcuts__item__name">{keyboardShortcutInfo.name}</dt>
 
-					<dd class="keyboard-shortcuts__item__combos">
-						<KeyboardShortcutCombos
-							keyboardShortcutName={keyboardShortcutInfo.name}
-						/>
-					</dd>
-				</div>
-			))}
+						<dd class="keyboard-shortcuts__item__combos">
+							<KeyboardShortcutCombos
+								keyboardShortcutName={keyboardShortcutInfo.name}
+							/>
+						</dd>
+					</div>
+				))}
 		</dl>
 	</Modal>;
 }
