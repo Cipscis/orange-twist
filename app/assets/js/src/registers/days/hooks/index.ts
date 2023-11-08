@@ -1,1 +1,1 @@
-export { useDays } from './useDays';
+export { useDayInfo } from './useDayInfo';

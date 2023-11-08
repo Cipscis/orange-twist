@@ -1,10 +1,10 @@
-export {
-	setDayData,
-	deleteDay,
-	getDayData,
-	getDays,
-} from './daysRegister';
+export { setDayInfo } from './setDayInfo';
+export { deleteDayInfo } from './deleteDayInfo';
+export { getDayInfo } from './getDayInfo';
 
-export * from './listeners';
-export * from './hooks';
-export * from './persistence';
+export { useDayInfo } from './hooks';
+
+export {
+	loadDays,
+	saveDays,
+} from './persistence';
