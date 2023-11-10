@@ -9,9 +9,12 @@ import { assertAllUnionMembersHandled } from '../assertAllUnionMembersHandled';
  * values for the event object passed to listeners for that type of event.
  */
 interface RegisterEventMap<K, V> {
-	'set':    { key: K; value: V; };
-	'delete': { key: K; value: V; };
-	'change': { key: K; value: V; };
+	// Technically 'set' only ever receives a tuple with one member,
+	// but TypeScript seems to have trouble with that approach. I belive
+	// it may be related to this issue:
+	// https://github.com/microsoft/TypeScript/issues/51693
+	'set':    { key: K; value: V; }[];
+	'delete': { key: K; value: V; }[];
 }
 
 interface RegisterAddEventListenerOptions {
@@ -59,7 +62,6 @@ export class Register<K, V> {
 
 		this.#setListeners = new Set();
 		this.#deleteListeners = new Set();
-		this.#changeListeners = new Set();
 	}
 
 	/**
@@ -82,13 +84,6 @@ export class Register<K, V> {
 	 * Event listeners for 'delete' events.
 	 */
 	#deleteListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'delete'; }>[1]>;
-
-	/**
-	 * @internal
-	 *
-	 * Event listeners for 'change' events.
-	 */
-	#changeListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'change'; }>[1]>;
 
 	/**
 	 * Retrieve the value for a given key. If the key does not exist, returns `undefined`.
@@ -115,11 +110,7 @@ export class Register<K, V> {
 		this.#map.set(key, value);
 
 		for (const listener of this.#setListeners.values()) {
-			listener({ key, value });
-		}
-
-		for (const listener of this.#changeListeners.values()) {
-			listener({ key, value });
+			listener([{ key, value }]);
 		}
 	}
 
@@ -141,11 +132,7 @@ export class Register<K, V> {
 			const result = this.#map.delete(key);
 
 			for (const listener of this.#deleteListeners.values()) {
-				listener({ key, value });
-			}
-
-			for (const listener of this.#changeListeners.values()) {
-				listener({ key, value });
+				listener([{ key, value }]);
 			}
 
 			return result;
@@ -155,10 +142,50 @@ export class Register<K, V> {
 	}
 
 	/**
+	 * Removes all entries from the Register.
+	 */
+	clear(): void {
+		const deletedEntries: {
+			key: K;
+			value: V;
+		}[] = [];
+
+		for (const [key, value] of this.#map.entries()) {
+			deletedEntries.push({
+				key,
+				value,
+			});
+			this.#map.delete(key);
+		}
+
+		if (deletedEntries.length === 0) {
+			return;
+		}
+
+		for (const listener of this.#deleteListeners.values()) {
+			listener([...deletedEntries]);
+		}
+	}
+
+	/**
 	 * Returns an iterable of `[key, value]` pairs for every entry in the register.
 	 */
 	entries(): IterableIterator<[K, V]> {
 		return this.#map.entries();
+	}
+
+	/**
+	 * Returns an iterable of the Register's keys.
+	 */
+	keys(): IterableIterator<K> {
+		return this.#map.keys();
+	}
+
+	/**
+	 * Returns an iterable of the Register's values.
+	 */
+	values(): IterableIterator<V> {
+		return this.#map.values();
 	}
 
 	/**
@@ -180,8 +207,6 @@ export class Register<K, V> {
 			this.#setListeners.add(callback);
 		} else if (type === 'delete') {
 			this.#deleteListeners.add(callback);
-		} else if (type === 'change') {
-			this.#changeListeners.add(callback);
 		} else {
 			/* istanbul ignore next */
 			assertAllUnionMembersHandled(
@@ -191,7 +216,15 @@ export class Register<K, V> {
 		}
 
 		if (options?.signal) {
-			options.signal.addEventListener('abort', () => this.removeEventListener(type, callback));
+			options.signal.addEventListener(
+				'abort',
+				() => this.removeEventListener(
+					// This type assertion is necessary because TypeScript loses
+					// information about linked types of tuple type members
+					// https://github.com/microsoft/TypeScript/issues/55344
+					...[type, callback] as RegisterEventBindingArguments<K, V>
+				)
+			);
 		}
 	}
 
@@ -206,8 +239,6 @@ export class Register<K, V> {
 			this.#setListeners.delete(callback);
 		} else if (type === 'delete') {
 			this.#deleteListeners.delete(callback);
-		} else if (type === 'change') {
-			this.#changeListeners.delete(callback);
 		} else {
 			/* istanbul ignore next */
 			assertAllUnionMembersHandled(

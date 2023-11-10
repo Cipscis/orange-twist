@@ -30,6 +30,22 @@ describe('Register', () => {
 		expect(register.delete('foo')).toBe(false);
 	});
 
+	test('supports clear method', () => {
+		const register = new Register([
+			['foo', 1],
+			['bar', 2],
+		]);
+
+		expect(Array.from(register.entries())).toEqual([
+			['foo', 1],
+			['bar', 2],
+		]);
+
+		register.clear();
+
+		expect(Array.from(register.entries())).toEqual([]);
+	});
+
 	test('supports entries method', () => {
 		const register = new Register<string, number>();
 
@@ -45,6 +61,36 @@ describe('Register', () => {
 			['foo', 1],
 			['bar', 2],
 		]);
+	});
+
+	test('supports keys method', () => {
+		const register = new Register<string, number>();
+
+		register.set('foo', 1);
+		register.set('bar', 2);
+
+		const keys = register.keys();
+
+		// Should be iterable
+		expect(typeof keys[Symbol.iterator]).toBe('function');
+		// Should contain the entries put in the register
+		expect(Array.from(keys)).toEqual(['foo', 'bar']);
+
+	});
+
+	test('supports values method', () => {
+		const register = new Register<string, number>();
+
+		register.set('foo', 1);
+		register.set('bar', 2);
+
+		const values = register.values();
+
+		// Should be iterable
+		expect(typeof values[Symbol.iterator]).toBe('function');
+		// Should contain the entries put in the register
+		expect(Array.from(values)).toEqual([1, 2]);
+
 	});
 
 	test('can be initialised with an iterable', () => {
@@ -72,10 +118,10 @@ describe('Register', () => {
 			register.set('key', 'value');
 
 			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith({
+			expect(spy).toHaveBeenCalledWith([{
 				key: 'key',
 				value: 'value',
-			});
+			}]);
 		});
 
 		test('can be removed via removeEventListener', () => {
@@ -86,10 +132,10 @@ describe('Register', () => {
 			register.set('key', 'value');
 
 			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith({
+			expect(spy).toHaveBeenCalledWith([{
 				key: 'key',
 				value: 'value',
-			});
+			}]);
 
 			register.removeEventListener('set', spy);
 
@@ -109,10 +155,10 @@ describe('Register', () => {
 			register.set('key', 'value');
 
 			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith({
+			expect(spy).toHaveBeenCalledWith([{
 				key: 'key',
 				value: 'value',
-			});
+			}]);
 
 			controller.abort();
 
@@ -131,6 +177,23 @@ describe('Register', () => {
 			register.set('key', 'value');
 
 			expect(spy).not.toHaveBeenCalled();
+		});
+
+		test('fire when a value is set', () => {
+			const register = new Register<string, unknown>();
+			const spy = jest.fn();
+
+			register.addEventListener('set', spy);
+
+			expect(spy).not.toHaveBeenCalled();
+
+			register.set('key', 'value');
+
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith([{
+				key: 'key',
+				value: 'value',
+			}]);
 		});
 
 		test('do not fire if the value was not changed', () => {
@@ -161,10 +224,10 @@ describe('Register', () => {
 			register.delete('foo');
 
 			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith({
+			expect(spy).toHaveBeenCalledWith([{
 				key: 'foo',
 				value: 1,
-			});
+			}]);
 		});
 
 		test('can be removed via removeEventListener', () => {
@@ -178,10 +241,10 @@ describe('Register', () => {
 			register.delete('foo');
 
 			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith({
+			expect(spy).toHaveBeenCalledWith([{
 				key: 'foo',
 				value: 1,
-			});
+			}]);
 
 			register.removeEventListener('delete', spy);
 
@@ -204,10 +267,10 @@ describe('Register', () => {
 			register.delete('foo');
 
 			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith({
+			expect(spy).toHaveBeenCalledWith([{
 				key: 'foo',
 				value: 1,
-			});
+			}]);
 
 			controller.abort();
 
@@ -228,6 +291,49 @@ describe('Register', () => {
 			expect(spy).not.toHaveBeenCalled();
 		});
 
+		test('fire when an element is deleted', () => {
+			const register = new Register<string, number>([['foo', 1]]);
+			const spy = jest.fn();
+
+			register.addEventListener('delete', spy);
+
+			expect(spy).not.toHaveBeenCalled();
+
+			register.delete('foo');
+
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith([{
+				key: 'foo',
+				value: 1,
+			}]);
+		});
+
+		test('fire once when the Register is cleared', () => {
+			const register = new Register<string, number>([
+				['foo', 1],
+				['bar', 2],
+			]);
+			const spy = jest.fn();
+
+			register.addEventListener('delete', spy);
+
+			expect(spy).not.toHaveBeenCalled();
+
+			register.clear();
+
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith([
+				{
+					key: 'foo',
+					value: 1,
+				},
+				{
+					key: 'bar',
+					value: 2,
+				},
+			]);
+		});
+
 		test('do not fire if an element does not exist', () => {
 			const register = new Register();
 			const spy = jest.fn();
@@ -240,121 +346,35 @@ describe('Register', () => {
 
 			expect(spy).not.toHaveBeenCalled();
 		});
-	});
 
-	describe('"change" events', () => {
-		test('can be bound via addEventListener', () => {
-			const register = new Register([['foo', 1]]);
-			const spy = jest.fn();
-
-			register.addEventListener('change', spy);
-
-			expect(spy).not.toHaveBeenCalled();
-
-			register.set('bar', 2);
-
-			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith({
-				key: 'bar',
-				value: 2,
-			});
-
-			register.delete('foo');
-
-			expect(spy).toHaveBeenCalledTimes(2);
-			expect(spy).toHaveBeenCalledWith({
-				key: 'foo',
-				value: 1,
-			});
-		});
-
-		test('can be removed via removeEventListener', () => {
-			const register = new Register([
+		test('do not fire if an empty Register is cleared', () => {
+			const register = new Register<string, number>([
 				['foo', 1],
 				['bar', 2],
 			]);
 			const spy = jest.fn();
 
-			register.addEventListener('change', spy);
-			register.set('foo', 2);
-
-			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith({
-				key: 'foo',
-				value: 2,
-			});
-
-			register.removeEventListener('change', spy);
-
-			register.set('foo', 3);
-			register.delete('bar');
-
-			expect(spy).toHaveBeenCalledTimes(1);
-		});
-
-		test('can be removed by aborting an AbortSignal', () => {
-			const register = new Register<string, unknown>();
-			const spy = jest.fn();
-
-			const controller = new AbortController();
-			const { signal } = controller;
-
-			register.addEventListener('change', spy, { signal });
-			register.set('foo', 2);
-
-			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith({
-				key: 'foo',
-				value: 2,
-			});
-
-			controller.abort();
-
-			register.set('foo', 3);
-			register.delete('bar');
-
-			expect(spy).toHaveBeenCalledTimes(1);
-		});
-
-		test('are not bound if an already aborted AbortSignal is passed', () => {
-			const register = new Register([['foo', 1]]);
-			const spy = jest.fn();
-
-			const signal = AbortSignal.abort();
-
-			register.addEventListener('change', spy, { signal });
-			register.set('key', 1);
-			register.delete('foo');
-
-			expect(spy).not.toHaveBeenCalled();
-		});
-
-		test('do not fire if the value was not changed', () => {
-			const register = new Register([['foo', 1]]);
-			const spy = jest.fn();
-
-			register.addEventListener('change', spy);
-			register.set('foo', 1);
+			register.addEventListener('delete', spy);
 
 			expect(spy).not.toHaveBeenCalled();
 
-			register.set('foo', 2);
-			register.set('foo', 2);
+			register.clear();
 
 			expect(spy).toHaveBeenCalledTimes(1);
-		});
+			expect(spy).toHaveBeenCalledWith([
+				{
+					key: 'foo',
+					value: 1,
+				},
+				{
+					key: 'bar',
+					value: 2,
+				},
+			]);
 
-		test('do not fire if delete was called for an element that does not exist', () => {
-			const register = new Register();
-			const spy = jest.fn();
+			register.clear();
 
-			register.addEventListener('change', spy);
-
-			expect(spy).not.toHaveBeenCalled();
-
-			register.delete('foo');
-
-			expect(spy).not.toHaveBeenCalled();
+			expect(spy).toHaveBeenCalledTimes(1);
 		});
 	});
 });
