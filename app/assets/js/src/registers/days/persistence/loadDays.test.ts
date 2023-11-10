@@ -89,19 +89,43 @@ describe('loadDays', () => {
 		expect(loadDays()).rejects.toBeInstanceOf(Error);
 	});
 
-	test('triggers only a single "set" event', async () => {
+	test('triggers up to a single "delete" event and a single "set" event', async () => {
 		const spy = jest.fn();
+		daysRegister.addEventListener('delete', spy);
 		daysRegister.addEventListener('set', spy);
 
 		await loadDays();
 
-		expect(spy).toHaveBeenCalledTimes(1);
-		expect(spy).toHaveBeenCalledWith(
-			Array.from(
-				daysRegister.entries()
-			).map(
-				([key, value]) => ({ key, value })
-			)
+		const entryObjArr = Array.from(
+			daysRegister.entries()
+		).map(
+			([key, value]) => ({ key, value })
 		);
+
+		expect(spy).toHaveBeenCalledTimes(1);
+		expect(spy).toHaveBeenCalledWith(entryObjArr);
+
+		await loadDays();
+
+		expect(spy).toHaveBeenCalledTimes(3);
+		expect(spy).toHaveBeenNthCalledWith(2, entryObjArr);
+		expect(spy).toHaveBeenNthCalledWith(3, entryObjArr);
+	});
+
+	test('overwrites any existing data in the register', async () => {
+		const testData = [
+			['2020-11-09', { name: '2020-11-09', ...ninthDayInfo }],
+			['2020-11-10', { name: '2020-10-09', ...ninthDayInfo }],
+		] as const;
+
+		daysRegister.set(testData);
+		expect(Array.from(daysRegister.entries())).toEqual(testData);
+
+		await loadDays();
+
+		expect(Array.from(daysRegister.entries())).toEqual([
+			['2023-11-09', { name: '2023-11-09', ...ninthDayInfo }],
+			['2023-11-10', { name: '2023-11-10', ...tenthDayInfo }],
+		]);
 	});
 });

@@ -14,6 +14,8 @@ export async function loadDays(): Promise<void> {
 
 	const persistedDaysInfo = JSON.parse(serialisedDaysInfo) as unknown;
 
+	daysRegister.clear();
+
 	if (!(
 		Array.isArray(persistedDaysInfo) &&
 		persistedDaysInfo.every((el): el is [string, DayInfo] => {
