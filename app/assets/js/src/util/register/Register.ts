@@ -98,9 +98,9 @@ export class Register<K, V> {
 	 * If the value passed is the same as the existing value of the key, nothing will change.
 	 */
 	set(key: K, value: V): void;
-	set(entries: [key: K, value: V][]): void;
-	set(...args: [K, V] | [[K, V][]]): void {
-		const entriesToSet: [K, V][] = [];
+	set(entries: readonly (readonly [key: K, value: V])[]): void;
+	set(...args: [K, V] | [readonly (readonly [K, V])[]]): void {
+		const entriesToSet: (readonly [K, V])[] = [];
 		const setEntries: { key: K; value: V; }[] = [];
 
 		if (args.length === 2) {
