@@ -18,6 +18,17 @@ describe('Register', () => {
 		expect(register.get('key')).toBe('new value');
 	});
 
+	test('can pass an array of key value tuples to the set method', () => {
+		const register = new Register<string, unknown>();
+
+		register.set([
+			['foo', 1],
+			['bar', 2],
+		]);
+		expect(register.get('foo')).toBe(1);
+		expect(register.get('bar')).toBe(2);
+	});
+
 	test('supports has and delete methods', () => {
 		const register = new Register([['foo', 1]]);
 
@@ -196,6 +207,47 @@ describe('Register', () => {
 			}]);
 		});
 
+		test('fire once when multiple values are set', () => {
+			const register = new Register<string, unknown>();
+			const spy = jest.fn();
+
+			register.addEventListener('set', spy);
+
+			expect(spy).not.toHaveBeenCalled();
+
+			register.set([
+				['foo', 1],
+				['bar', 2],
+			]);
+
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith([
+				{ key: 'foo', value: 1 },
+				{ key: 'bar', value: 2 },
+			]);
+		});
+
+		test('fires with only changed values when multiple values are set', () => {
+			const register = new Register<string, unknown>([['bar', 2]]);
+			const spy = jest.fn();
+
+			register.addEventListener('set', spy);
+
+			expect(spy).not.toHaveBeenCalled();
+
+			register.set([
+				['foo', 1],
+				['bar', 2],
+				['foobar', 3],
+			]);
+
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith([
+				{ key: 'foo', value: 1 },
+				{ key: 'foobar', value: 3 },
+			]);
+		});
+
 		test('do not fire if the value was not changed', () => {
 			const register = new Register([['foo', 1]]);
 			const spy = jest.fn();
@@ -209,6 +261,19 @@ describe('Register', () => {
 			register.set('foo', 2);
 
 			expect(spy).toHaveBeenCalledTimes(1);
+		});
+
+		test('do not fire if none of multiple values were not changed', () => {
+			const register = new Register([['foo', 1], ['bar', 2]]);
+			const spy = jest.fn();
+
+			register.addEventListener('set', spy);
+			register.set([
+				['foo', 1],
+				['bar', 2],
+			]);
+
+			expect(spy).not.toHaveBeenCalled();
 		});
 	});
 
