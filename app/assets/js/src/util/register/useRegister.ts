@@ -45,20 +45,24 @@ export function useRegister<K, V>(
 
 		if (keyToObserve) {
 			// Observe a specific element only
-			register.addEventListener('set', ({ key, value }) => {
+			register.addEventListener('set', ([{ key, value }]) => {
 				if (key === keyToObserve) {
 					setValue(value);
 				}
 			}, { signal });
 
-			register.addEventListener('delete', ({ key }) => {
+			register.addEventListener('delete', ([{ key }]) => {
 				if (key === keyToObserve) {
 					setValue(undefined);
 				}
 			}, { signal });
 		} else {
 			// Observe the entire register
-			register.addEventListener('change', () => {
+			register.addEventListener('set', () => {
+				setValue(Array.from(register.entries()));
+			}, { signal });
+
+			register.addEventListener('delete', () => {
 				setValue(Array.from(register.entries()));
 			}, { signal });
 		}

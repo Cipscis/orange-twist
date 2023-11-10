@@ -14,7 +14,7 @@ export function getDayInfo(): Readonly<DayInfo>[];
 export function getDayInfo(dayName: string): Readonly<DayInfo> | null;
 export function getDayInfo(dayName?: string): Readonly<DayInfo>[] | Readonly<DayInfo> | null {
 	if (typeof dayName === 'undefined') {
-		return Array.from(daysRegister.entries()).map(([key, value]) => value);
+		return Array.from(daysRegister.values());
 	}
 
 	return daysRegister.get(dayName) ?? null;
