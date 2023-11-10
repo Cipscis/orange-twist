@@ -97,20 +97,38 @@ export class Register<K, V> {
 	 *
 	 * If the value passed is the same as the existing value of the key, nothing will change.
 	 */
-	set(key: K, value: V): void {
-		if (
-			// We check `has` in case the value is `undefined`
-			this.#map.has(key) &&
-			this.#map.get(key) === value
-		) {
-			// Don't do anything.
+	set(key: K, value: V): void;
+	set(entries: [key: K, value: V][]): void;
+	set(...args: [K, V] | [[K, V][]]): void {
+		const entriesToSet: [K, V][] = [];
+		const setEntries: { key: K; value: V; }[] = [];
+
+		if (args.length === 2) {
+			entriesToSet.push(args);
+		} else {
+			entriesToSet.push(...args[0]);
+		}
+
+		for (const [key, value] of entriesToSet) {
+			if (
+				// We check `has` in case the value is `undefined`
+				this.#map.has(key) &&
+				this.#map.get(key) === value
+			) {
+				// Don't do anything.
+				continue;
+			}
+
+			this.#map.set(key, value);
+			setEntries.push({ key, value });
+		}
+
+		if (setEntries.length === 0) {
 			return;
 		}
 
-		this.#map.set(key, value);
-
 		for (const listener of this.#setListeners.values()) {
-			listener([{ key, value }]);
+			listener(setEntries);
 		}
 	}
 

@@ -8,38 +8,40 @@ import {
 import { TaskStatus } from 'types/TaskStatus';
 import { setDayInfo } from '../setDayInfo';
 import { saveDays } from './saveDays';
+import { daysRegister } from '../daysRegister';
+
+const ninthDayInfo = {
+	note: 'Ninth note',
+	tasks: [{
+		id: 1,
+		note: 'Task note',
+		status: TaskStatus.TODO,
+	}],
+};
+
+const tenthDayInfo = {
+	note: 'Tenth note',
+	tasks: [
+		{
+			id: 1,
+			note: 'Task note',
+			status: TaskStatus.IN_PROGRESS,
+		},
+		{
+			id: 2,
+			note: 'Second task note',
+			status: TaskStatus.INVESTIGATING,
+		},
+	],
+};
 
 describe('saveDays', () => {
 	beforeEach(() => {
 		localStorage.clear();
+		daysRegister.clear();
 	});
 
 	test('returns a Promise that resolves when the content of the days register has been persisted', async () => {
-		const ninthDayInfo = {
-			note: 'Ninth note',
-			tasks: [{
-				id: 1,
-				note: 'Task note',
-				status: TaskStatus.TODO,
-			}],
-		};
-
-		const tenthDayInfo = {
-			note: 'Tenth note',
-			tasks: [
-				{
-					id: 1,
-					note: 'Task note',
-					status: TaskStatus.IN_PROGRESS,
-				},
-				{
-					id: 2,
-					note: 'Second task note',
-					status: TaskStatus.INVESTIGATING,
-				},
-			],
-		};
-
 		setDayInfo('2023-11-09', ninthDayInfo);
 		setDayInfo('2023-11-10', tenthDayInfo);
 
