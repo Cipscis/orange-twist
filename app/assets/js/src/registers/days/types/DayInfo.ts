@@ -1,14 +1,15 @@
 import { z } from 'zod';
 import { isZodSchemaType } from 'util/index';
 
-import { taskSchema } from 'types/Task';
+// TODO: Is there a better way to couple these together?
+import { taskInfoSchema } from 'registers/tasks/types/TaskInfo';
 
 const dayInfoSchema = z.object({
 	name: z.string(),
 	note: z.string(),
 
 	tasks: z.array(
-		taskSchema.pick({
+		taskInfoSchema.pick({
 			id: true,
 			status: true,
 		}).extend({

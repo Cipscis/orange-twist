@@ -2,10 +2,10 @@ import { h } from 'preact';
 import { useCallback, useEffect, useId, useRef } from 'preact/hooks';
 import React, { forwardRef } from 'preact/compat';
 
-import type { Day } from '../types/Day';
+import type { DayInfo } from 'registers/days';
 
-import { getTaskData } from '../registers/tasks';
-import { deleteDay, setDayData } from '../registers/days';
+import { getTaskInfo } from 'registers/tasks';
+import { deleteDay, setDayInfo } from 'registers/days';
 
 import { Command } from 'types/Command';
 
@@ -15,7 +15,7 @@ import { DayNote } from './DayNote';
 import { TaskList } from './TaskList';
 
 interface DayProps extends h.JSX.HTMLAttributes<HTMLDetailsElement> {
-	day: Readonly<Day>;
+	day: Readonly<DayInfo>;
 }
 
 /**
@@ -33,7 +33,7 @@ export const DayComponent = forwardRef(
 			day,
 			...passthroughProps
 		} = props;
-		const { dayName } = day;
+		const { name } = day;
 
 		const tasksRef = useRef<HTMLDivElement | null>();
 
@@ -56,19 +56,19 @@ export const DayComponent = forwardRef(
 		const reorderTasks = useCallback((taskIds: number[]) => {
 			const newTaskIndexById = Object.fromEntries(taskIds.map((id, index) => [id, index]));
 
-			const newTasks: Day['tasks'] = [];
+			const newTasks: DayInfo['tasks'] = [];
 			for (const task of day.tasks) {
 				const newIndex = newTaskIndexById[task.id];
 				newTasks[newIndex] = task;
 			}
 
-			setDayData(day.dayName, {
+			setDayInfo(day.name, {
 				tasks: newTasks,
 			}, {
 				overwriteTasks: true,
 			});
 			fireCommand(Command.DATA_SAVE);
-		}, [day.tasks, day.dayName]);
+		}, [day.tasks, day.name]);
 
 		/**
 		 * An array of the day's task IDs, used to compare
@@ -87,7 +87,7 @@ export const DayComponent = forwardRef(
 				);
 
 			// If one new task was added, begin editing its name
-			if (diff?.length === 1 && getTaskData(diff[0])?.name === '') {
+			if (diff?.length === 1 && getTaskInfo(diff[0])?.name === '') {
 				if (tasksRef.current) {
 					// TODO: Is this the best way to find the right element?
 					const taskEditButtons = Array.from(
@@ -124,14 +124,14 @@ export const DayComponent = forwardRef(
 			{...passthroughProps}
 		>
 			<summary class="day__summary" style={`view-transition-name: ${id};`}>
-				<h3 class="day__heading">{day.dayName}</h3>
+				<h3 class="day__heading">{day.name}</h3>
 			</summary>
 
 			<div class="day__body">
 				<button
 					type="button"
 					class="button"
-					onClick={() => removeDay(dayName)}
+					onClick={() => removeDay(name)}
 				>Remove day</button>
 
 				<DayNote day={day} />
@@ -140,7 +140,7 @@ export const DayComponent = forwardRef(
 					day.tasks.length > 0 &&
 					<TaskList
 						tasks={day.tasks}
-						dayName={day.dayName}
+						dayName={day.name}
 						onReorder={reorderTasks}
 						ref={(ref: HTMLDivElement | null) => tasksRef.current = ref}
 					/>
@@ -149,7 +149,7 @@ export const DayComponent = forwardRef(
 				<button
 					type="button"
 					class="button"
-					onClick={() => fireCommand(Command.TASK_ADD_NEW, dayName)}
+					onClick={() => fireCommand(Command.TASK_ADD_NEW, name)}
 				>Add new task</button>
 			</div>
 		</details>;

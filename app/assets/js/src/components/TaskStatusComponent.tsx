@@ -1,7 +1,7 @@
 import { h, type JSX } from 'preact';
 
-import type { Task } from 'types/Task';
-import { TaskStatus } from '../types/TaskStatus';
+import type { TaskInfo } from 'registers/tasks';
+import { TaskStatus } from 'types/TaskStatus';
 
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
@@ -13,12 +13,12 @@ import {
 	CSSKeyframes,
 } from 'util/index';
 
-import { deleteTask, setTaskData } from 'registers/tasks';
+import { deleteTask, setTaskInfo } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
 import { getDayInfo, setDayInfo } from 'registers/days';
 
 interface TaskStatusComponentProps {
-	task: Task;
+	task: TaskInfo;
 	dayName?: string;
 	/** @default false */
 	readonly?: boolean;
@@ -93,7 +93,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	 * Update task data to reflect new status
 	 */
 	const changeStatus = useCallback((newStatus: TaskStatus) => {
-		setTaskData(id, { status: newStatus }, { dayName });
+		setTaskInfo(id, { status: newStatus }, { dayName });
 		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
 	}, [dayName, id, setIsInChangeMode]);

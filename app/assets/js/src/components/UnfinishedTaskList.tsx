@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import { TaskStatus } from 'types/TaskStatus';
 import { Command } from 'types/Command';
 
-import { useTasks } from 'registers/tasks';
+import { useTaskInfo } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
 import { reorderTasks } from 'registers/tasks/tasksRegister';
 
@@ -18,11 +18,7 @@ import { TaskList } from './TaskList';
  * Renders a {@linkcode TaskList} of all unfinished tasks in a disclosure.
  */
 export function UnfinishedTasksList(): JSX.Element {
-	const {
-		data: tasks,
-		isLoading: isTasksLoading,
-		error: tasksError,
-	} = useTasks();
+	const tasks = useTaskInfo();
 
 	const onOpenTasksReorder = useCallback((taskIds: number[]) => {
 		reorderTasks(taskIds);
@@ -32,20 +28,9 @@ export function UnfinishedTasksList(): JSX.Element {
 	return <section
 		class={classNames({
 			'orange-twist__section': true,
-			'orange-twist__section--loading': isTasksLoading,
 		})}
-		aria-busy={isTasksLoading || undefined}
 	>
 		<h2 class="orange-twist__title">Tasks</h2>
-
-		{
-			isTasksLoading &&
-			<span class="orange-twist__loader" title="Tasks loading" />
-		}
-		{
-			tasksError &&
-			<span class="orange-twist__error">Tasks loading error: {tasksError}</span>
-		}
 		{
 			tasks && <>
 				<TaskList

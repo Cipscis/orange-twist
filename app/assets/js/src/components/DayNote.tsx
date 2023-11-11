@@ -1,16 +1,16 @@
 import { h, type JSX } from 'preact';
 
-import type { Day } from 'types/Day';
+import type { DayInfo } from 'registers/days';
 
 import { Command } from 'types/Command';
 
-import { setDayData } from 'registers/days';
+import { setDayInfo } from 'registers/days';
 import { fireCommand } from 'registers/commands';
 
 import { Note } from './shared/Note';
 
 interface DayNoteProps {
-	day: Readonly<Day>;
+	day: Readonly<DayInfo>;
 }
 
 /**
@@ -19,11 +19,11 @@ interface DayNoteProps {
  */
 export function DayNote(props: DayNoteProps): JSX.Element {
 	const { day } = props;
-	const { dayName } = day;
+	const { name } = day;
 
 	return <Note
 		note={day.note}
-		onNoteChange={(note) => setDayData(dayName, { note })}
+		onNoteChange={(note) => setDayInfo(name, { note })}
 		saveChanges={() => fireCommand(Command.DATA_SAVE)}
 	/>;
 }
