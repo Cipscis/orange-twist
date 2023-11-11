@@ -15,7 +15,7 @@ import {
 
 import { deleteTask, setTaskData } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
-import { getDayData, setDayData } from 'registers/days';
+import { getDayInfo, setDayInfo } from 'registers/days';
 
 interface TaskStatusComponentProps {
 	task: Task;
@@ -56,7 +56,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 
 	const status = (() => {
 		if (dayName) {
-			const dayData = getDayData(dayName);
+			const dayData = getDayInfo(dayName);
 			const dayTasks = dayData?.tasks;
 
 			const taskOnDay = dayTasks?.find(({ id: taskId }) => taskId === id);
@@ -123,7 +123,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			return;
 		}
 
-		const day = getDayData(dayName);
+		const day = getDayInfo(dayName);
 		if (!day) {
 			return;
 		}
@@ -135,7 +135,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		}
 
 		tasks.splice(thisTaskIndex, 1);
-		setDayData(dayName, { tasks }, { overwriteTasks: true });
+		setDayInfo(dayName, { tasks }, { overwriteTasks: true });
 	}, [dayName, id]);
 
 	/**

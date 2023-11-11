@@ -38,7 +38,13 @@ export function useCommandInfo(
 		const { signal } = controller;
 
 		commandsRegister.addEventListener(
-			'change',
+			'set',
+			() => setCommandInfo(getThisCommandInfo()),
+			{ signal }
+		);
+
+		commandsRegister.addEventListener(
+			'delete',
 			() => setCommandInfo(getThisCommandInfo()),
 			{ signal }
 		);
