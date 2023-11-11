@@ -6,12 +6,13 @@ import {
 	test,
 } from '@jest/globals';
 
-import { renderHook } from '@testing-library/preact';
+import { act, renderHook } from '@testing-library/preact';
 
 import type { DayInfo } from '../types';
 
 import { daysRegister } from '../daysRegister';
 import { TaskStatus } from 'types/TaskStatus';
+import { setDayInfo } from '../setDayInfo';
 
 import { useDayInfo } from './useDayInfo';
 
@@ -86,6 +87,52 @@ describe('useDayInfo', () => {
 		expect(result.current).toEqual({
 			name: '2023-11-09',
 			...ninthDayInfo,
+		});
+	});
+
+	test('when passed a day name, re-renders only when the matching day is changed', async () => {
+		let renderCount = 0;
+		const { result } = renderHook(() => {
+			renderCount += 1;
+			return useDayInfo('2023-11-09');
+		});
+
+		expect(result.current).toEqual({
+			name: '2023-11-09',
+			...ninthDayInfo,
+		});
+		expect(renderCount).toBe(1);
+
+		// Updating a different day shouldn't cause re-renders
+		await act(() => setDayInfo('2023-11-10', { note: 'New note' }));
+		expect(renderCount).toBe(1);
+
+		// Updating the watched day should cause re-render with new info
+		await act(() => setDayInfo('2023-11-09', { note: 'New note' }));
+		expect(result.current).toEqual({
+			name: '2023-11-09',
+			...ninthDayInfo,
+			note: 'New note',
+		});
+	});
+
+	test('when the argument changes, returns updated information', () => {
+		const {
+			rerender,
+			result,
+		} = renderHook(
+			(dayName) => useDayInfo(dayName),
+			{ initialProps: '2023-11-09' }
+		);
+		expect(result.current).toEqual({
+			name: '2023-11-09',
+			...ninthDayInfo,
+		});
+
+		rerender('2023-11-10');
+		expect(result.current).toEqual({
+			name: '2023-11-10',
+			...tenthDayInfo,
 		});
 	});
 });
