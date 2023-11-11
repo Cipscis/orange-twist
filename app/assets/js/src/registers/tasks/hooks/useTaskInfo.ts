@@ -33,9 +33,7 @@ export function useTaskInfo(taskId?: number): TaskInfo[] | TaskInfo | null {
 
 		const hasChanged = Boolean(changes.find(({ key }) => key === taskId));
 		if (hasChanged) {
-			const newThisTaskInfo = getTaskInfo(taskId);
-			console.log({ taskId, newTaskInfo: newThisTaskInfo });
-			setThisTaskInfo(newThisTaskInfo);
+			setThisTaskInfo(getTaskInfo(taskId));
 		}
 	}, [taskId]);
 

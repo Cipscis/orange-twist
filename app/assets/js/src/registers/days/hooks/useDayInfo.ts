@@ -16,34 +16,46 @@ export function useDayInfo(): DayInfo[];
  */
 export function useDayInfo(dayName: string): DayInfo | null;
 export function useDayInfo(dayName?: string): DayInfo[] | DayInfo | null {
-	const getThisDayInfo = useCallback(() => {
-		if (dayName) {
-			return getDayInfo(dayName);
-		} else {
-			return getDayInfo();
+	// Initialise thisDayInfo based on the passed dayName
+	const [thisDayInfo, setThisDayInfo] = useState(() => getDayInfo(dayName));
+
+	// Update thisDayInfo if dayName changes
+	useEffect(() => setThisDayInfo(getDayInfo(dayName)), [dayName]);
+
+	/**
+	 * Update the day info if and only if the relevant day has changed.
+	 */
+	const handleDayInfoUpdate = useCallback((changes: { key: string; }[]) => {
+		if (typeof dayName === 'undefined') {
+			setThisDayInfo(getDayInfo());
+			return;
+		}
+
+		const hasChanged = Boolean(changes.find(({ key }) => key === dayName));
+		if (hasChanged) {
+			setThisDayInfo(getDayInfo(dayName));
 		}
 	}, [dayName]);
 
-	const [dayInfo, setDayInfo] = useState(getThisDayInfo);
-
+	// Listen for relevant changes on daysRegister
 	useEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
 		daysRegister.addEventListener(
 			'set',
-			() => setDayInfo(getThisDayInfo()),
+			handleDayInfoUpdate,
 			{ signal }
 		);
 
 		daysRegister.addEventListener(
 			'delete',
-			() => setDayInfo(getThisDayInfo()),
+			handleDayInfoUpdate,
 			{ signal }
 		);
 
 		return () => controller.abort();
-	}, [getThisDayInfo]);
+	}, [handleDayInfoUpdate]);
 
-	return dayInfo;
+	return thisDayInfo;
 }

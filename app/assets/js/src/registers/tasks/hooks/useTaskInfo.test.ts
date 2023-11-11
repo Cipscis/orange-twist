@@ -68,18 +68,18 @@ describe('useTaskInfo', () => {
 	});
 
 	test('when passed a task ID, re-renders only when the matching task is changed', async () => {
-		let renders = 0;
+		let renderCount = 0;
 		const { result } = renderHook(() => {
-			renders += 1;
+			renderCount += 1;
 			return useTaskInfo(1);
 		});
 
 		expect(result.current).toEqual(firstTaskInfo);
-		expect(renders).toBe(1);
+		expect(renderCount).toBe(1);
 
         // Updating a different task shouldn't cause re-renders
 		await act(() => setTaskInfo(2, { name: 'New name' }));
-		expect(renders).toBe(1);
+		expect(renderCount).toBe(1);
 
         // Updating the watched task should cause re-render with new info
 		await act(() => setTaskInfo(1, { name: 'New name' }));
@@ -87,7 +87,7 @@ describe('useTaskInfo', () => {
 			...firstTaskInfo,
 			name: 'New name',
 		});
-		expect(renders).toBe(2);
+		expect(renderCount).toBe(2);
 	});
 
 	test('when the argument changes, returns updated information', () => {
