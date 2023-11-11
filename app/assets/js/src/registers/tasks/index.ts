@@ -1,10 +1,12 @@
-export {
-	addNewTask,
-	getTaskData,
-	setTaskData,
-	deleteTask,
-} from './tasksRegister';
+export type { TaskInfo } from './types';
 
-export * from './listeners';
-export * from './hooks';
-export * from './persistence';
+export { setTaskInfo } from './setTaskInfo';
+export { deleteTaskInfo } from './deleteTaskInfo';
+export { getTaskInfo } from './getTaskInfo';
+
+export { useTaskInfo } from './hooks';
+
+export {
+	loadTasks,
+	saveTasks,
+} from './persistence';

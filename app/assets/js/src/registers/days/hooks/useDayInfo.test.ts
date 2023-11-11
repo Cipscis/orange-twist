@@ -8,12 +8,14 @@ import {
 
 import { renderHook } from '@testing-library/preact';
 
+import type { DayInfo } from '../types';
+
 import { daysRegister } from '../daysRegister';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { useDayInfo } from './useDayInfo';
 
-const ninthDayInfo = {
+const ninthDayInfo: Omit<DayInfo, 'name'> = {
 	note: 'Ninth note',
 	tasks: [{
 		id: 1,
@@ -22,7 +24,7 @@ const ninthDayInfo = {
 	}],
 };
 
-const tenthDayInfo = {
+const tenthDayInfo: Omit<DayInfo, 'name'> = {
 	note: 'Tenth note',
 	tasks: [
 		{

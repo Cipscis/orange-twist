@@ -1,1 +1,1 @@
-export { useTasks } from './useTasks';
+export { useTaskInfo } from './useTaskInfo';
