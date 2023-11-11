@@ -16,34 +16,48 @@ export function useTaskInfo(): TaskInfo[];
  */
 export function useTaskInfo(taskId: number): TaskInfo | null;
 export function useTaskInfo(taskId?: number): TaskInfo[] | TaskInfo | null {
-	const getThisDayInfo = useCallback(() => {
-		if (taskId) {
-			return getTaskInfo(taskId);
-		} else {
-			return getTaskInfo();
+	// Initialise thisTaskInfo based on the passed taskId
+	const [thisTaskInfo, setThisTaskInfo] = useState(() => getTaskInfo(taskId));
+
+	// Update thisTaskInfo if taskId changes
+	useEffect(() => setThisTaskInfo(getTaskInfo(taskId)), [taskId]);
+
+	/**
+	 * Update the task info if and only if the relevant task has changed.
+	 */
+	const handleTaskInfoUpdate = useCallback((changes: { key: number; }[]) => {
+		if (typeof taskId === 'undefined') {
+			setThisTaskInfo(getTaskInfo());
+			return;
+		}
+
+		const hasChanged = Boolean(changes.find(({ key }) => key === taskId));
+		if (hasChanged) {
+			const newThisTaskInfo = getTaskInfo(taskId);
+			console.log({ taskId, newTaskInfo: newThisTaskInfo });
+			setThisTaskInfo(newThisTaskInfo);
 		}
 	}, [taskId]);
 
-	const [dayInfo, setDayInfo] = useState(getThisDayInfo);
-
+	// Listen for relevant changes on tasksRegister
 	useEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
 		tasksRegister.addEventListener(
 			'set',
-			() => setDayInfo(getThisDayInfo()),
+			handleTaskInfoUpdate,
 			{ signal }
 		);
 
 		tasksRegister.addEventListener(
 			'delete',
-			() => setDayInfo(getThisDayInfo()),
+			handleTaskInfoUpdate,
 			{ signal }
 		);
 
 		return () => controller.abort();
-	}, [getThisDayInfo]);
+	}, [handleTaskInfoUpdate]);
 
-	return dayInfo;
+	return thisTaskInfo;
 }
