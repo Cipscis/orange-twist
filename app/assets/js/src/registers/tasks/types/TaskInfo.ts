@@ -3,7 +3,7 @@ import { isZodSchemaType } from 'util/index';
 
 import { TaskStatus } from 'types/TaskStatus';
 
-const taskInfoSchema = z.object({
+export const taskInfoSchema = z.object({
 	id: z.number(),
 	name: z.string(),
 	status: z.nativeEnum(TaskStatus),

@@ -3,11 +3,11 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import type { Task } from 'types/Task';
+import type { TaskInfo } from 'registers/tasks';
 import { Command } from 'types/Command';
 
 import {
-	setTaskData,
+	setTaskInfo,
 	deleteTask,
 } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
@@ -16,7 +16,7 @@ import { TaskStatusComponent } from './TaskStatusComponent';
 import { Markdown } from './shared/Markdown';
 
 interface TaskComponentProps {
-	task: Readonly<Task>;
+	task: Readonly<TaskInfo>;
 	dayName?: string;
 }
 
@@ -95,7 +95,7 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 		}
 
 		const name = input.value;
-		setTaskData(id, { name }, { dayName });
+		setTaskInfo(id, { name }, { dayName });
 	}, [dayName, id]);
 
 	// Blur on "Enter" or "Escape", either committing or discarding changes
@@ -112,7 +112,7 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 
 		if (e.key === 'Escape') {
 			const name = previousName.current ?? '';
-			setTaskData(id, { name }, { dayName });
+			setTaskInfo(id, { name }, { dayName });
 			blurOnNextRender();
 			return;
 		}

@@ -4,11 +4,9 @@ import {
 	useRef,
 } from 'preact/hooks';
 
-import classNames from 'classnames';
-
 import { Command } from 'types/Command';
 
-import { useDays } from 'registers/days';
+import { useDayInfo } from 'registers/days';
 import { fireCommand } from 'registers/commands';
 
 import { DayComponent } from './DayComponent';
@@ -17,11 +15,7 @@ import { DayComponent } from './DayComponent';
  * Renders a list of days.
  */
 export function DayList(): JSX.Element {
-	const {
-		data: days,
-		isLoading,
-		error,
-	} = useDays();
+	const days = useDayInfo();
 
 	/**
 	 * An object allowing each day's element to be looked
@@ -51,7 +45,7 @@ export function DayList(): JSX.Element {
 
 	// Scroll to new day when created
 	useEffect(() => {
-		const loadedDays = days?.map(({ dayName }) => dayName) ?? null;
+		const loadedDays = days?.map(({ name }) => name) ?? null;
 		const previouslyLoadedDays = loadedDaysRef.current;
 		if (loadedDays && previouslyLoadedDays !== null) {
 			// If days are loaded and days were already loaded
@@ -72,32 +66,14 @@ export function DayList(): JSX.Element {
 		loadedDaysRef.current = loadedDays;
 	}, [days]);
 
-	return <section
-		class={classNames({
-			'orange-twist__section': true,
-			'orange-twist__section--loading': isLoading,
-		})}
-		aria-busy={isLoading || undefined}
-	>
+	return <section class="orange-twist__section">
 		<h2 class="orange-twist__title">Days</h2>
-
-		{
-			isLoading &&
-			// TODO: Make loader component
-			<span class="orange-twist__loader" title="Loading" />
-		}
-		{
-			error &&
-			// TODO: Handle error better somehow
-			// TODO: Make error component
-			<span class="orange-twist__error">Error: {error}</span>
-		}
 		{
 			days && <>
 				{days.map((day, i) => (
 					<DayComponent
-						key={day.dayName}
-						ref={(ref: HTMLDetailsElement | null) => daySectionsRef.current[day.dayName] = ref}
+						key={day.name}
+						ref={(ref: HTMLDetailsElement | null) => daySectionsRef.current[day.name] = ref}
 						day={day}
 						open={i === days.length-1}
 					/>

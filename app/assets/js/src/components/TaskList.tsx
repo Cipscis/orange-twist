@@ -3,17 +3,17 @@ import { useCallback, useId, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import type { Task } from '../types/Task';
+import type { TaskInfo } from 'registers/tasks';
 
-import { useViewTransition } from '../util';
+import { useViewTransition } from 'util/index';
 
-import { getTaskData, useTasks } from '../registers/tasks';
+import { getTaskInfo, useTaskInfo } from 'registers/tasks';
 
 import { TaskComponent } from './TaskComponent';
 import React, { forwardRef } from 'preact/compat';
 
 interface TaskListProps {
-	tasks: ReadonlyArray<Readonly<Pick<Task, 'id'>>>;
+	tasks: ReadonlyArray<Readonly<Pick<TaskInfo, 'id'>>>;
 	dayName?: string;
 	className?: string;
 
@@ -31,7 +31,7 @@ export const TaskList = forwardRef(
 	) {
 		// Force the component to update when tasks are changed
 		// TODO: Limit this to a list of tasks
-		useTasks();
+		useTaskInfo(props.tasks.map(({ id }) => id));
 
 		const {
 			tasks,
@@ -141,7 +141,7 @@ export const TaskList = forwardRef(
 			ref={ref}
 		>
 			{tasks.map((task, i) => {
-				const taskData = getTaskData(task.id);
+				const taskData = getTaskInfo(task.id);
 				if (!taskData) {
 					return '';
 				}

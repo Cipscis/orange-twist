@@ -3,8 +3,8 @@ import { useCallback } from 'preact/hooks';
 
 import { Command } from 'types/Command';
 
-import { getDayData, setDayData, useDays } from 'registers/days';
-import { useTasks } from 'registers/tasks';
+import { getDayInfo, setDayInfo, useDayInfo } from 'registers/days';
+import { useTaskInfo } from 'registers/tasks';
 
 import { fireCommand } from 'registers/commands';
 
@@ -26,17 +26,9 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element {
 		taskId,
 	} = props;
 
-	const {
-		data: days,
-		isLoading: isDaysLoading,
-		error: daysError,
-	} = useDays();
+	const days = useDayInfo();
 
-	const {
-		data: tasks,
-		isLoading: isTasksLoading,
-		error: tasksError,
-	} = useTasks();
+	const tasks = useTaskInfo();
 
 	let error: string | null = null;
 
@@ -69,7 +61,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element {
 			return null;
 		}
 
-		return [day.dayName, dayTask] as const;
+		return [day.name, dayTask] as const;
 	}).filter(
 		(el): el is NonNullable<typeof el> => Boolean(el)
 	));
@@ -79,7 +71,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element {
 	 */
 	const updateNoteForDay = useCallback((dayName: string, note: string) => {
 		try {
-			const dayData = getDayData(dayName);
+			const dayData = getDayInfo(dayName);
 			if (!dayData) {
 				// TODO: Handle this error better
 				throw new Error(`Tried to update note against ${dayName} but no such day exists`);
@@ -98,22 +90,13 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element {
 				note,
 			});
 
-			setDayData(dayName, { tasks: dayTasks });
+			setDayInfo(dayName, { tasks: dayTasks });
 		} catch (e) {
 			toast(String(e));
 		}
 	}, [taskId]);
 
-	const isLoading = isDaysLoading || isTasksLoading;
-	error = error ||
-		daysError ||
-		tasksError;
-
 	return <>
-		{
-			isLoading &&
-			<span class="orange-twist__loader" title="Loading" />
-		}
 		{
 			error &&
 			<span class="orange-twist__error">{error}</span>
@@ -123,11 +106,6 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element {
 			<section class="orange-twist__section">
 				<Markdown class="orange-twist__title" content={`## ${task.name}`} inline />
 
-				{
-					isLoading &&
-					// TODO: Make loader component
-					<span class="orange-twist__loader" title="Loading" />
-				}
 				{
 					error &&
 					// TODO: Handle error better somehow

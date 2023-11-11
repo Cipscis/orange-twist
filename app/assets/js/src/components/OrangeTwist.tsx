@@ -7,7 +7,7 @@ import {
 
 import { Command } from 'types/Command';
 
-import { getDays, saveDays, setDayData } from 'registers/days';
+import { getDayInfo, saveDays, setDayInfo } from 'registers/days';
 import { addNewTask, saveTasks } from 'registers/tasks';
 
 import { registerCommand, useCommand } from 'registers/commands';
@@ -127,7 +127,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 * Ask the user what day to add, then add it to the register.
 	 */
 	const addNewDay = useCallback((dayNameArg?: string) => {
-		const days = getDays();
+		const days = getDayInfo();
 
 		const dayName = dayNameArg ?? window.prompt('What day?');
 		if (!dayName) {
@@ -138,13 +138,13 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			return;
 		}
 
-		const existingDayData = days.find((day) => day.dayName === dayName);
+		const existingDayData = days.find((day) => day.name === dayName);
 		if (existingDayData) {
 			window.alert('Day already exists');
 			return;
 		}
 
-		setDayData(dayName, {});
+		setDayInfo(dayName, {});
 	}, []);
 	useCommand(Command.DAY_ADD_NEW, addNewDay);
 
