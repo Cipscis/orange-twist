@@ -1,10 +1,14 @@
-import { getAllTasksData } from '../tasksRegister';
+import { tasksRegister } from '../tasksRegister';
 
 /**
- * Save data from the days register.
+ * Save the current tasks data in memory into persistent storage.
  */
 export async function saveTasks(): Promise<void> {
-	const tasksData = getAllTasksData();
+	const tasksInfo = Array.from(tasksRegister.entries());
 
-	localStorage.setItem('tasks', JSON.stringify(tasksData));
+	// Until we use an asynchronous API to store this data, emulate
+	// it by using the microtask queue.
+	await new Promise<void>((resolve) => queueMicrotask(resolve));
+
+	localStorage.setItem('tasks', JSON.stringify(tasksInfo));
 }

@@ -1,33 +1,29 @@
-import { z } from 'zod';
+import { tasksRegister } from '../tasksRegister';
+import { isTaskInfo, type TaskInfo } from '../types/TaskInfo';
 
-import type { Task } from 'types/Task';
-import { taskSchema } from 'types/Task';
+export async function loadTasks(): Promise<void> {
+	// Until we use an asynchronous API to store this data, emulate
+	// it by using the microtask queue.
+	await new Promise<void>((resolve) => queueMicrotask(resolve));
 
-import { isZodSchemaType } from 'util/index';
+	const serialisedTasksInfo = localStorage.getItem('tasks');
 
-const validTasksDataSchema = z.array(
-	z.tuple([
-		z.number(),
-		taskSchema,
-	])
-);
-
-const isValidTasksData = isZodSchemaType(validTasksDataSchema);
-
-/**
- * Load data for the tasks register from where it was persisted.
- */
-export async function loadTasks(): Promise<Iterable<[number, Task]>> {
-	const serialisedTasks = localStorage.getItem('tasks');
-	if (serialisedTasks === null) {
-		return [];
+	if (!serialisedTasksInfo) {
+		return;
 	}
 
-	const persistedTasks = JSON.parse(serialisedTasks) as unknown;
+	const persistedTasksInfo = JSON.parse(serialisedTasksInfo) as unknown;
 
-	if (!isValidTasksData(persistedTasks)) {
-		throw new TypeError('Invalid tasks data');
+	tasksRegister.clear();
+
+	if (!(
+		Array.isArray(persistedTasksInfo) &&
+		persistedTasksInfo.every((el): el is [number, TaskInfo] => {
+			return Array.isArray(el) && typeof el[0] === 'number' && isTaskInfo(el[1]);
+		})
+	)) {
+		throw new Error(`Persisted tasks data is invalid: ${serialisedTasksInfo}`);
 	}
 
-	return persistedTasks;
+	tasksRegister.set(persistedTasksInfo);
 }
