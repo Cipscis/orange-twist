@@ -7,12 +7,12 @@ import {
 import { setDayInfo } from './setDayInfo';
 import { getDayInfo } from './getDayInfo';
 
-import { deleteDayInfo } from './deleteDayInfo';
+import { deleteDay } from './deleteDay';
 
-describe('deleteDayInfo', () => {
+describe('deleteDay', () => {
 	test('when passed a day name without any day data, does nothing', () => {
 		expect(() => {
-			deleteDayInfo('2023-11-08');
+			deleteDay('2023-11-08');
 		}).not.toThrow();
 	});
 
@@ -22,7 +22,7 @@ describe('deleteDayInfo', () => {
 		});
 		expect(getDayInfo('2023-11-08')).not.toBeNull();
 
-		deleteDayInfo('2023-11-08');
+		deleteDay('2023-11-08');
 		expect(getDayInfo('2023-11-08')).toBeNull();
 	});
 });

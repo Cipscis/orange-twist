@@ -1,9 +1,8 @@
 import { h } from 'preact';
-import { useCallback, useId, useMemo, useRef } from 'preact/hooks';
+import { useCallback, useId, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import type { TaskInfo } from 'registers/tasks';
 
 import { useViewTransition } from 'util/index';
 
@@ -13,7 +12,7 @@ import { TaskComponent } from './TaskComponent';
 import React, { forwardRef } from 'preact/compat';
 
 interface TaskListProps {
-	tasks: ReadonlyArray<Readonly<Pick<TaskInfo, 'id'>>>;
+	taskIds: readonly number[];
 	dayName?: string;
 	className?: string;
 
@@ -30,14 +29,11 @@ export const TaskList = forwardRef(
 		ref: React.ForwardedRef<HTMLDivElement>
 	) {
 		// Force the component to update when tasks are changed
-		const taskIds = useMemo(
-			() => props.tasks.map(({ id }) => id),
-			[props.tasks]
-		);
+		const { taskIds } = props;
 		useTaskInfo(taskIds);
 
 		const {
-			tasks,
+			taskIds: tasks,
 			dayName,
 			className,
 
@@ -143,8 +139,8 @@ export const TaskList = forwardRef(
 			onDrop={dropHandler}
 			ref={ref}
 		>
-			{tasks.map((task, i) => {
-				const taskData = getTaskInfo(task.id);
+			{tasks.map((taskId, i) => {
+				const taskData = getTaskInfo(taskId);
 				if (!taskData) {
 					return '';
 				}
@@ -170,7 +166,7 @@ export const TaskList = forwardRef(
 						/>
 					}
 					<TaskComponent
-						task={{ ...taskData, ...task }}
+						task={{ ...taskData, id: taskId }}
 						dayName={dayName}
 					/>
 				</div>;

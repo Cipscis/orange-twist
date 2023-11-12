@@ -1,7 +1,7 @@
 export type { DayInfo } from './types';
 
 export { setDayInfo } from './setDayInfo';
-export { deleteDayInfo } from './deleteDayInfo';
+export { deleteDay } from './deleteDay';
 export { getDayInfo } from './getDayInfo';
 
 export { useDayInfo } from './hooks';

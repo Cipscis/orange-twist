@@ -11,34 +11,18 @@ import { act, renderHook } from '@testing-library/preact';
 import type { DayInfo } from '../types';
 
 import { daysRegister } from '../daysRegister';
-import { TaskStatus } from 'types/TaskStatus';
 import { setDayInfo } from '../setDayInfo';
 
 import { useDayInfo } from './useDayInfo';
 
 const ninthDayInfo: Omit<DayInfo, 'name'> = {
 	note: 'Ninth note',
-	tasks: [{
-		id: 1,
-		note: 'Task note',
-		status: TaskStatus.TODO,
-	}],
+	tasks: [1],
 };
 
 const tenthDayInfo: Omit<DayInfo, 'name'> = {
 	note: 'Tenth note',
-	tasks: [
-		{
-			id: 1,
-			note: 'Task note',
-			status: TaskStatus.IN_PROGRESS,
-		},
-		{
-			id: 2,
-			note: 'Second task note',
-			status: TaskStatus.INVESTIGATING,
-		},
-	],
+	tasks: [1, 2],
 };
 
 describe('useDayInfo', () => {

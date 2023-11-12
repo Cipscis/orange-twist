@@ -5,7 +5,7 @@ import React, { forwardRef } from 'preact/compat';
 import type { DayInfo } from 'registers/days';
 
 import { getTaskInfo } from 'registers/tasks';
-import { deleteDayInfo, setDayInfo } from 'registers/days';
+import { deleteDay, setDayInfo } from 'registers/days';
 
 import { Command } from 'types/Command';
 
@@ -47,7 +47,7 @@ export const DayComponent = forwardRef(
 				return;
 			}
 
-			deleteDayInfo(dayName);
+			deleteDay(dayName);
 		}, []);
 
 		/**
@@ -57,9 +57,9 @@ export const DayComponent = forwardRef(
 			const newTaskIndexById = Object.fromEntries(taskIds.map((id, index) => [id, index]));
 
 			const newTasks: DayInfo['tasks'] = [];
-			for (const task of day.tasks) {
-				const newIndex = newTaskIndexById[task.id];
-				newTasks[newIndex] = task;
+			for (const taskId of day.tasks) {
+				const newIndex = newTaskIndexById[taskId];
+				newTasks[newIndex] = taskId;
 			}
 
 			setDayInfo(day.name, {
@@ -78,7 +78,7 @@ export const DayComponent = forwardRef(
 
 		// Scroll to new task when created, and focus on its name
 		useEffect(() => {
-			const taskIds = day.tasks.map(({ id }) => id);
+			const taskIds = day.tasks.map((id) => id);
 			const previousTaskIds = taskIdsRef.current;
 
 			const diff = previousTaskIds &&
@@ -139,7 +139,7 @@ export const DayComponent = forwardRef(
 				{
 					day.tasks.length > 0 &&
 					<TaskList
-						tasks={day.tasks}
+						taskIds={day.tasks}
 						dayName={day.name}
 						onReorder={reorderTasks}
 						ref={(ref: HTMLDivElement | null) => tasksRef.current = ref}

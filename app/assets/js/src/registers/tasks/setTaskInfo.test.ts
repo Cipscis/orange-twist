@@ -9,7 +9,7 @@ import type { TaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { getTaskInfo } from './getTaskInfo';
-import { deleteTaskInfo } from './deleteTaskInfo';
+import { deleteTask } from './deleteTask';
 
 import { setTaskInfo } from './setTaskInfo';
 
@@ -18,7 +18,7 @@ describe('setTaskInfo', () => {
 		// Delete all tasks with data
 		const taskIds = getTaskInfo().map(({ id }) => id);
 		for (const taskId of taskIds) {
-			deleteTaskInfo(taskId);
+			deleteTask(taskId);
 		}
 	});
 

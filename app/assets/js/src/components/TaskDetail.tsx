@@ -56,7 +56,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element {
 			return null;
 		}
 
-		const dayTask = structuredClone(day.tasks.find(({ id }) => id === taskId));
+		const dayTask = structuredClone(day.tasks.find((id) => id === taskId));
 		if (!dayTask) {
 			return null;
 		}
@@ -77,7 +77,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element {
 				throw new Error(`Tried to update note against ${dayName} but no such day exists`);
 			}
 			const dayTasks = dayData.tasks;
-			const taskIndexForDay = dayTasks.findIndex(({ id }) => id === taskId);
+			const taskIndexForDay = dayTasks.findIndex((id) => id === taskId);
 
 			if (taskIndexForDay === -1) {
 				// TODO: Should we add the task? We'd need to know what status to use if so

@@ -17,14 +17,14 @@ export function getTaskInfo(taskId: number): Readonly<TaskInfo> | null;
  *
  * @param taskIds An array of IDs of the tasks to fetch information for.
  */
-export function getTaskInfo(taskIds: number[]): (Readonly<TaskInfo> | null)[];
+export function getTaskInfo(taskIds: readonly number[]): (Readonly<TaskInfo> | null)[];
 // Expose the implementation signature as an overload
 // to allow calling from similarly overloaded functions
 export function getTaskInfo(
-	taskIds?: number | number[]
+	taskIds?: number | readonly number[]
 ): Readonly<TaskInfo>[] | Readonly<TaskInfo> | null;
 export function getTaskInfo(
-	taskIds?: number | number[]
+	taskIds?: number | readonly number[]
 ): Readonly<TaskInfo>[] | Readonly<TaskInfo> | null | (Readonly<TaskInfo> | null)[] {
 	if (typeof taskIds === 'undefined') {
 		return Array.from(tasksRegister.values());
