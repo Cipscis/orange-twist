@@ -1,5 +1,3 @@
-import { h } from 'preact';
-
 import {
 	afterEach,
 	beforeEach,
@@ -9,6 +7,8 @@ import {
 } from '@jest/globals';
 
 import { act, renderHook } from '@testing-library/preact';
+
+import { useMemo } from 'preact/hooks';
 
 import type { TaskInfo } from '../types';
 
@@ -30,11 +30,18 @@ const secondTaskInfo: TaskInfo = {
 	status: TaskStatus.IN_PROGRESS,
 };
 
+const thirdTaskInfo: TaskInfo = {
+	id: 3,
+	name: 'Third task',
+	status: TaskStatus.COMPLETED,
+};
+
 describe('useTaskInfo', () => {
 	beforeEach(() => {
 		tasksRegister.set([
 			[1, firstTaskInfo],
 			[2, secondTaskInfo],
+			[3, thirdTaskInfo],
 		]);
 	});
 
@@ -52,7 +59,7 @@ describe('useTaskInfo', () => {
 	test('when passed no arguments, returns an array of info on all tasks', () => {
 		const { result } = renderHook(() => useTaskInfo());
 
-		expect(result.current).toEqual([firstTaskInfo, secondTaskInfo]);
+		expect(result.current).toEqual([firstTaskInfo, secondTaskInfo, thirdTaskInfo]);
 	});
 
 	test('when passed a task ID that has no matching task, returns null', () => {
@@ -67,6 +74,12 @@ describe('useTaskInfo', () => {
 		expect(result.current).toEqual(firstTaskInfo);
 	});
 
+	test('when passed multiple task IDs, returns an array of those tasks\' info', () => {
+		const { result } = renderHook(() => useTaskInfo(useMemo(() => [1, 3], [])));
+
+		expect(result.current).toEqual([firstTaskInfo, thirdTaskInfo]);
+	});
+
 	test('when passed a task ID, re-renders only when the matching task is changed', async () => {
 		let renderCount = 0;
 		const { result } = renderHook(() => {
@@ -77,11 +90,11 @@ describe('useTaskInfo', () => {
 		expect(result.current).toEqual(firstTaskInfo);
 		expect(renderCount).toBe(1);
 
-        // Updating a different task shouldn't cause re-renders
+		// Updating a different task shouldn't cause re-renders
 		await act(() => setTaskInfo(2, { name: 'New name' }));
 		expect(renderCount).toBe(1);
 
-        // Updating the watched task should cause re-render with new info
+		// Updating a watched task should cause re-render with new info
 		await act(() => setTaskInfo(1, { name: 'New name' }));
 		expect(result.current).toEqual({
 			...firstTaskInfo,
@@ -90,17 +103,63 @@ describe('useTaskInfo', () => {
 		expect(renderCount).toBe(2);
 	});
 
+	test('when passed multiple task IDs, re-renders only when a matching task is changed', async () => {
+		let renderCount = 0;
+		const { result } = renderHook(() => {
+			renderCount += 1;
+			return useTaskInfo(useMemo(() => [1, 3], []));
+		});
+
+		expect(result.current).toEqual([firstTaskInfo, thirdTaskInfo]);
+		expect(renderCount).toBe(1);
+
+		// Updating a different task shouldn't cause re-renders
+		await act(() => setTaskInfo(2, { name: 'New name' }));
+		expect(renderCount).toBe(1);
+
+		// Updating the watched task should cause re-render with new info
+		await act(() => setTaskInfo(1, { name: 'New name' }));
+		expect(result.current).toEqual([
+			{
+				...firstTaskInfo,
+				name: 'New name',
+			},
+			thirdTaskInfo,
+		]);
+		expect(renderCount).toBe(2);
+
+		// Updating a watched task should cause re-render with new info
+		await act(() => setTaskInfo(3, { name: 'New name' }));
+		expect(result.current).toEqual([
+			{
+				...firstTaskInfo,
+				name: 'New name',
+			},
+			{
+				...thirdTaskInfo,
+				name: 'New name',
+			},
+		]);
+		expect(renderCount).toBe(3);
+	});
+
 	test('when the argument changes, returns updated information', () => {
 		const {
 			rerender,
 			result,
 		} = renderHook(
 			(taskId) => useTaskInfo(taskId),
-			{ initialProps: 1 }
+			{ initialProps: 1 as number | number[] }
 		);
 		expect(result.current).toEqual(firstTaskInfo);
 
 		rerender(2);
 		expect(result.current).toEqual(secondTaskInfo);
+
+		rerender([1, 3]);
+		expect(result.current).toEqual([firstTaskInfo, thirdTaskInfo]);
+
+		rerender();
+		expect(result.current).toEqual([firstTaskInfo, secondTaskInfo, thirdTaskInfo]);
 	});
 });

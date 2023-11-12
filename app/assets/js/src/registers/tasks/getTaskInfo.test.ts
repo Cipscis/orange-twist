@@ -46,4 +46,8 @@ describe('getTaskInfo', () => {
 	test('when passed a task ID that has a matching task, returns that task\'s info', () => {
 		expect(getTaskInfo(1)).toEqual(firstTaskInfo);
 	});
+
+	test('when passed an array of task IDs, returns an array of those tasks\' info', () => {
+		expect(getTaskInfo([1, 3, 2])).toEqual([firstTaskInfo, null, secondTaskInfo]);
+	});
 });

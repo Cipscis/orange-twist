@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useId, useRef } from 'preact/hooks';
+import { useCallback, useId, useMemo, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
@@ -30,8 +30,11 @@ export const TaskList = forwardRef(
 		ref: React.ForwardedRef<HTMLDivElement>
 	) {
 		// Force the component to update when tasks are changed
-		// TODO: Limit this to a list of tasks
-		useTaskInfo(props.tasks.map(({ id }) => id));
+		const taskIds = useMemo(
+			() => props.tasks.map(({ id }) => id),
+			[props.tasks]
+		);
+		useTaskInfo(taskIds);
 
 		const {
 			tasks,

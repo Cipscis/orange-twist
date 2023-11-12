@@ -40,5 +40,5 @@ describe('setTaskInfo', () => {
 		});
 	});
 
-	test.todo('when passed a day name with existing data, updates that day with the passed data');
+	test.todo('when passed a task ID with existing data, updates that task with the passed data');
 });
