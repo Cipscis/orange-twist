@@ -5,7 +5,7 @@ import React, { forwardRef } from 'preact/compat';
 import type { DayInfo } from 'registers/days';
 
 import { getTaskInfo } from 'registers/tasks';
-import { deleteDay, setDayInfo } from 'registers/days';
+import { deleteDayInfo, setDayInfo } from 'registers/days';
 
 import { Command } from 'types/Command';
 
@@ -47,7 +47,7 @@ export const DayComponent = forwardRef(
 				return;
 			}
 
-			deleteDay(dayName);
+			deleteDayInfo(dayName);
 		}, []);
 
 		/**

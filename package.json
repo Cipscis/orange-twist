@@ -11,7 +11,6 @@
 		"buildCss": "sass app/assets/scss:app/assets/css",
 		"build": "concurrently \"npm run buildJs\" \"npm run buildCss\"",
 
-		"pretest": "tsc --noEmit",
 		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
 		"testCoverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --collectCoverage",
 
@@ -25,7 +24,7 @@
 		"lint": "npm run lintJs && npm run lintCss",
 
 		"start": "concurrently --kill-others \"npm run server\" \"npm run watch\"",
-		"prepare": "npm test"
+		"prepare": "tsc --noEmit && npm test"
 	},
 	"author": "Mark Hanna",
 	"repository": {

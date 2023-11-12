@@ -1,5 +1,6 @@
 export type { TaskInfo } from './types';
 
+export { createTask } from './createTask';
 export { setTaskInfo } from './setTaskInfo';
 export { deleteTaskInfo } from './deleteTaskInfo';
 export { getTaskInfo } from './getTaskInfo';

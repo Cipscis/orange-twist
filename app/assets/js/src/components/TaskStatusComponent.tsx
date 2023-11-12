@@ -13,7 +13,7 @@ import {
 	CSSKeyframes,
 } from 'util/index';
 
-import { deleteTask, setTaskInfo } from 'registers/tasks';
+import { deleteTaskInfo, setTaskInfo } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
 import { getDayInfo, setDayInfo } from 'registers/days';
 
@@ -106,7 +106,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			return;
 		}
 
-		deleteTask(id);
+		deleteTaskInfo(id);
 		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
 	}, [id, setIsInChangeMode]);
