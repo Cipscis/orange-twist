@@ -9,7 +9,7 @@ import type { DayInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { getDayInfo } from './getDayInfo';
-import { deleteDayInfo } from './deleteDayInfo';
+import { deleteDay } from './deleteDay';
 
 import { setDayInfo } from './setDayInfo';
 
@@ -18,7 +18,7 @@ describe('setDayInfo', () => {
 		// Delete all days with data
 		const dayNames = getDayInfo().map(({ name }) => name);
 		for (const dayName of dayNames) {
-			deleteDayInfo(dayName);
+			deleteDay(dayName);
 		}
 	});
 
@@ -35,11 +35,7 @@ describe('setDayInfo', () => {
 			'2023-11-08',
 			{
 				note: 'Test note',
-				tasks: [{
-					id: 1,
-					note: 'Note',
-					status: TaskStatus.TODO,
-				}],
+				tasks: [1],
 			} satisfies Omit<DayInfo, 'name'> // <- Ensure we're testing every option
 		);
 

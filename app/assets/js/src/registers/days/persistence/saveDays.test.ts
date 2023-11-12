@@ -5,34 +5,18 @@ import {
 	test,
 } from '@jest/globals';
 
-import { TaskStatus } from 'types/TaskStatus';
 import { setDayInfo } from '../setDayInfo';
 import { saveDays } from './saveDays';
 import { daysRegister } from '../daysRegister';
 
 const ninthDayInfo = {
 	note: 'Ninth note',
-	tasks: [{
-		id: 1,
-		note: 'Task note',
-		status: TaskStatus.TODO,
-	}],
+	tasks: [1],
 };
 
 const tenthDayInfo = {
 	note: 'Tenth note',
-	tasks: [
-		{
-			id: 1,
-			note: 'Task note',
-			status: TaskStatus.IN_PROGRESS,
-		},
-		{
-			id: 2,
-			note: 'Second task note',
-			status: TaskStatus.INVESTIGATING,
-		},
-	],
+	tasks: [1, 2],
 };
 
 describe('saveDays', () => {

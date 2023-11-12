@@ -5,6 +5,6 @@ import { daysRegister } from './daysRegister';
  *
  * @param dayName The string specifying the day to delete.
  */
-export function deleteDayInfo(dayName: string): void {
+export function deleteDay(dayName: string): void {
 	daysRegister.delete(dayName);
 }

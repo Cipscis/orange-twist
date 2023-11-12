@@ -7,12 +7,12 @@ import {
 import { setTaskInfo } from './setTaskInfo';
 import { getTaskInfo } from './getTaskInfo';
 
-import { deleteTaskInfo } from './deleteTaskInfo';
+import { deleteTask } from './deleteTask';
 
-describe('deleteTaskInfo', () => {
+describe('deleteTask', () => {
 	test('when passed a task ID without any task data, does nothing', () => {
 		expect(() => {
-			deleteTaskInfo(-1);
+			deleteTask(-1);
 		}).not.toThrow();
 	});
 
@@ -22,7 +22,7 @@ describe('deleteTaskInfo', () => {
 		});
 		expect(getTaskInfo(1)).not.toBeNull();
 
-		deleteTaskInfo(1);
+		deleteTask(1);
 		expect(getTaskInfo(1)).toBeNull();
 	});
 });

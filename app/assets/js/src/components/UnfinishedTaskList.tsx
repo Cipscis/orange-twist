@@ -34,7 +34,11 @@ export function UnfinishedTasksList(): JSX.Element {
 		{
 			tasks && <>
 				<TaskList
-					tasks={tasks.filter((task) => task.status !== TaskStatus.COMPLETED)}
+					taskIds={
+						tasks
+							.filter((task) => task.status !== TaskStatus.COMPLETED)
+							.map(({ id }) => id)
+					}
 					onReorder={onOpenTasksReorder}
 					className="orange-twist__task-list"
 				/>

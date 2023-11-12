@@ -18,7 +18,11 @@ export function CompletedTasksList(): JSX.Element | null {
 		</summary>
 
 		<TaskList
-			tasks={tasks.filter((task) => task.status === TaskStatus.COMPLETED)}
+			taskIds={
+				tasks
+					.filter((task) => task.status === TaskStatus.COMPLETED)
+					.map(({ id }) => id)
+			}
 			className="orange-twist__task-list"
 		/>
 	</details>;

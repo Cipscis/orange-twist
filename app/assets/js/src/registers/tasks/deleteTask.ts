@@ -5,6 +5,6 @@ import { tasksRegister } from './tasksRegister';
  *
  * @param taskId The string specifying the task to delete.
  */
-export function deleteTaskInfo(taskId: number): void {
+export function deleteTask(taskId: number): void {
 	tasksRegister.delete(taskId);
 }

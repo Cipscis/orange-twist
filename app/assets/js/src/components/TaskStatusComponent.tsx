@@ -13,7 +13,7 @@ import {
 	CSSKeyframes,
 } from 'util/index';
 
-import { deleteTaskInfo, setTaskInfo } from 'registers/tasks';
+import { deleteTask, setTaskInfo } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
 import { getDayInfo, setDayInfo } from 'registers/days';
 
@@ -55,15 +55,16 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	const optionsRef = useRef<HTMLUListElement>(null);
 
 	const status = (() => {
-		if (dayName) {
-			const dayData = getDayInfo(dayName);
-			const dayTasks = dayData?.tasks;
+		// TODO: Refactor into getTaskStatusOnDay function
+		// if (dayName) {
+		// 	const dayData = getDayInfo(dayName);
+		// 	const dayTasks = dayData?.tasks;
 
-			const taskOnDay = dayTasks?.find(({ id: taskId }) => taskId === id);
-			if (taskOnDay) {
-				return taskOnDay.status;
-			}
-		}
+		// 	const taskOnDay = dayTasks?.find((taskId) => taskId === id);
+		// 	if (taskOnDay) {
+		// 		return taskOnDay.status;
+		// 	}
+		// }
 
 		return task.status;
 	})();
@@ -106,7 +107,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			return;
 		}
 
-		deleteTaskInfo(id);
+		deleteTask(id);
 		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
 	}, [id, setIsInChangeMode]);
@@ -129,7 +130,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		}
 
 		const tasks = structuredClone(day.tasks);
-		const thisTaskIndex = tasks.findIndex((dayTask) => dayTask.id === id);
+		const thisTaskIndex = tasks.findIndex((taskId) => taskId === id);
 		if (thisTaskIndex === -1) {
 			return;
 		}

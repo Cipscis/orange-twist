@@ -23,11 +23,11 @@ export function useTaskInfo(taskId: number): TaskInfo | null;
  *
  * @param taskIds The IDs of the tasks to watch.
  */
-export function useTaskInfo(taskIds: number[]): (TaskInfo | null)[];
+export function useTaskInfo(taskIds: readonly number[]): (TaskInfo | null)[];
 // Expose the implementation signature as an overload
 // to allow calling from similarly overloaded functions
-export function useTaskInfo(taskIdsArg?: number | number[]): TaskInfo[] | TaskInfo | null | (TaskInfo | null)[];
-export function useTaskInfo(taskIdsArg?: number | number[]): TaskInfo[] | TaskInfo | null | (TaskInfo | null)[] {
+export function useTaskInfo(taskIdsArg?: number | readonly number[]): TaskInfo[] | TaskInfo | null | (TaskInfo | null)[];
+export function useTaskInfo(taskIdsArg?: number | readonly number[]): TaskInfo[] | TaskInfo | null | (TaskInfo | null)[] {
 	// First, consolidate arguments
 	const taskIds = useMemo(() => {
 		if (Array.isArray(taskIdsArg)) {

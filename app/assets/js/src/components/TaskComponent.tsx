@@ -8,7 +8,7 @@ import { Command } from 'types/Command';
 
 import {
 	setTaskInfo,
-	deleteTaskInfo,
+	deleteTask,
 } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
 
@@ -59,7 +59,7 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 	 */
 	const saveChanges = useCallback(() => {
 		if (task.name === '') {
-			deleteTaskInfo(task.id);
+			deleteTask(task.id);
 			if (previousName.current !== '') {
 				fireCommand(Command.DATA_SAVE);
 			}
