@@ -8,7 +8,7 @@ import {
 import { Command } from 'types/Command';
 
 import { getDayInfo, saveDays, setDayInfo } from 'registers/days';
-import { addNewTask, saveTasks } from 'registers/tasks';
+import { createTask, saveTasks } from 'registers/tasks';
 
 import { registerCommand, useCommand } from 'registers/commands';
 import {
@@ -154,7 +154,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 * @param [dayName] - If specified, the new task will be
 	 * created against this specified day.
 	 */
-	const addNewTaskWithOptions = useCallback((dayName?: string) => addNewTask({ dayName }), []);
+	const addNewTaskWithOptions = useCallback((dayName?: string) => createTask({ dayName }), []);
 	useCommand(Command.TASK_ADD_NEW, addNewTaskWithOptions);
 
 	return <>
