@@ -1,7 +1,7 @@
 export type { DayTaskInfo } from './types';
 
 export { setDayTaskInfo } from './setDayTaskInfo';
-export { deleteDayTaskInfo } from './deleteDayTaskInfo';
+export { deleteDayTask } from './deleteDayTask';
 export { getDayTaskInfo } from './getDayTaskInfo';
 
 export { useDayTaskInfo } from './hooks';

@@ -14,8 +14,8 @@ export function getDayInfo(): Readonly<DayInfo>[];
 export function getDayInfo(dayName: string): Readonly<DayInfo> | null;
 // Expose the implementation signature as an overload
 // to allow calling from similarly overloaded functions
-export function getDayInfo(dayName?: string): Readonly<DayInfo>[] | Readonly<DayInfo> | null
-	export function getDayInfo(dayName?: string): Readonly<DayInfo>[] | Readonly<DayInfo> | null {
+export function getDayInfo(dayName?: string): Readonly<DayInfo>[] | Readonly<DayInfo> | null;
+export function getDayInfo(dayName?: string): Readonly<DayInfo>[] | Readonly<DayInfo> | null {
 	if (typeof dayName === 'undefined') {
 		return Array.from(daysRegister.values());
 	}
