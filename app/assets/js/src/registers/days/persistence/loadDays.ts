@@ -1,6 +1,13 @@
 import { daysRegister } from '../daysRegister';
 import { isDayInfo, type DayInfo } from '../types/DayInfo';
 
+/**
+ * Asynchronously loads any persisted days info, overwriting any data
+ * currently in memory.
+ *
+ * @returns A Promise which resolves when days info has finished loading,
+ * or rejects when days info fails to load.
+ */
 export async function loadDays(): Promise<void> {
 	// Until we use an asynchronous API to store this data, emulate
 	// it by using the microtask queue.

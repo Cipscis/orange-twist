@@ -1,6 +1,13 @@
 import { tasksRegister } from '../tasksRegister';
 import { isTaskInfo, type TaskInfo } from '../types/TaskInfo';
 
+/**
+ * Asynchronously loads any persisted tasks info, overwriting any data
+ * currently in memory.
+ *
+ * @returns A Promise which resolves when tasks info has finished loading,
+ * or rejects when tasks info fails to load.
+ */
 export async function loadTasks(): Promise<void> {
 	// Until we use an asynchronous API to store this data, emulate
 	// it by using the microtask queue.
