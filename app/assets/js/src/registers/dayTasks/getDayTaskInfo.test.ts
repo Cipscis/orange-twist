@@ -44,4 +44,10 @@ describe('getDayTaskInfo', () => {
 	test('when passed a day name and task ID that has info, returns that info', () => {
 		expect(getDayTaskInfo('2023-11-12', 1)).toEqual(firstDayTaskInfo);
 	});
+
+	test.todo('when passed a day name only, returns an array of all day tasks for that day');
+
+	test.todo('when passed a task ID only, returns an array of all day tasks for that task');
+
+	test.todo('when passed no arguments, returns an array of all day tasks');
 });
