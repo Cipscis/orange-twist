@@ -36,8 +36,8 @@ describe('saveDayTasks', () => {
 	});
 
 	test('returns a Promise that resolves when the content of the day tasks register has been persisted', async () => {
-		setDayTaskInfo('2023-11-13', 1, firstDayTaskInfo);
-		setDayTaskInfo('2023-11-13', 2, secondDayTaskInfo);
+		setDayTaskInfo({ dayName: '2023-11-13', taskId: 1 }, firstDayTaskInfo);
+		setDayTaskInfo({ dayName: '2023-11-13', taskId: 2 }, secondDayTaskInfo);
 
 		expect(localStorage.getItem('day-tasks')).toBeNull();
 
@@ -49,9 +49,9 @@ describe('saveDayTasks', () => {
 		const saveDayTasksResult = await saveDayTasksPromise;
 		expect(saveDayTasksResult).toBeUndefined();
 
-		expect(localStorage.getItem('day-tasks')).toEqual(JSON.stringify([
+		expect(JSON.parse(localStorage.getItem('day-tasks')!)).toEqual([
 			['2023-11-13_1', firstDayTaskInfo],
 			['2023-11-13_2', secondDayTaskInfo],
-		]));
+		]);
 	});
 });

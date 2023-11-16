@@ -2,14 +2,12 @@ import { z } from 'zod';
 import { isZodSchemaType } from 'util/index';
 
 import { TaskStatus } from 'types/TaskStatus';
+import { dayTaskIdentifierSchema } from './DayTaskIdentifier';
 
 /**
  * Zod schema for {@linkcode DayTaskInfo}.
  */
-export const dayTaskInfoSchema = z.object({
-	dayName: z.string(),
-	taskId: z.number(),
-
+export const dayTaskInfoSchema = dayTaskIdentifierSchema.extend({
 	status: z.nativeEnum(TaskStatus),
 	note: z.string(),
 });

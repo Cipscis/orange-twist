@@ -107,11 +107,19 @@ describe('loadDayTasks', () => {
 	});
 
 	test('overwrites any existing data in the register', async () => {
-		setDayTaskInfo('2023-11-12', 3, firstDayTaskInfo);
-		setDayTaskInfo('2023-11-12', 4, secondDayTaskInfo);
+		setDayTaskInfo({ dayName: '2023-11-12', taskId: 3 }, firstDayTaskInfo);
+		setDayTaskInfo({ dayName: '2023-11-12', taskId: 4 }, secondDayTaskInfo);
 		expect(Array.from(dayTasksRegister.entries())).toEqual([
-			['2023-11-12_3', firstDayTaskInfo],
-			['2023-11-12_4', secondDayTaskInfo],
+			['2023-11-12_3', {
+				...firstDayTaskInfo,
+				dayName: '2023-11-12',
+				taskId: 3,
+			}],
+			['2023-11-12_4', {
+				...secondDayTaskInfo,
+				dayName: '2023-11-12',
+				taskId: 4,
+			}],
 		]);
 
 		await loadDayTasks();

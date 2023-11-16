@@ -1,6 +1,6 @@
-import type { DayTaskInfo } from './types';
+import type { DayTaskIdentifier, DayTaskInfo } from './types';
 import { dayTasksRegister } from './dayTasksRegister';
-import { getDayTaskKey } from './getDayTaskKey';
+import { encodeDayTaskKey } from './util';
 
 /**
  * Returns information for the specified day task, if any exists.
@@ -8,7 +8,13 @@ import { getDayTaskKey } from './getDayTaskKey';
  * @param dayName The name of the day to fetch information for.
  * @param taskId The ID of the task to fetch information for.
  */
-export function getDayTaskInfo(dayName: string, taskId: number): DayTaskInfo | null {
-	const key = getDayTaskKey(dayName, taskId);
+export function getDayTaskInfo(): DayTaskInfo[];
+export function getDayTaskInfo({ dayName, taskId }: DayTaskIdentifier): DayTaskInfo | null;
+export function getDayTaskInfo(identifier?: DayTaskIdentifier): DayTaskInfo[] | DayTaskInfo | null {
+	if (typeof identifier === 'undefined') {
+		return Array.from(dayTasksRegister.values());
+	}
+
+	const key = encodeDayTaskKey(identifier);
 	return dayTasksRegister.get(key) ?? null;
 }

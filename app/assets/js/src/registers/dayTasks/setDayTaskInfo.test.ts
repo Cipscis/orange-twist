@@ -5,7 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import type { DayTaskInfo } from './types';
+import type { DayTaskIdentifier, DayTaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { dayTasksRegister } from './dayTasksRegister';
@@ -20,22 +20,41 @@ describe('setDayTaskInfo', () => {
 	});
 
 	test('when passed a day name and task ID without existing data, creates a new task with default information filling in the blanks', () => {
-		expect(getDayTaskInfo('2023-11-12', 1)).toBeNull();
+		expect(getDayTaskInfo({ dayName: '2023-11-12', taskId: 1 })).toBeNull();
 
 		setDayTaskInfo(
-			'2023-11-12',
-			1,
+			{
+				dayName: '2023-11-12',
+				taskId: 1,
+			},
 			{
 				note: 'Test note',
 				status: TaskStatus.IN_PROGRESS,
 			} satisfies Omit<DayTaskInfo, 'dayName' | 'taskId'> // <- Ensure we're testing every option
 		);
 
-		expect(getDayTaskInfo('2023-11-12', 1)).toEqual({
+		expect(getDayTaskInfo({ dayName: '2023-11-12', taskId: 1 })).toEqual({
 			dayName: '2023-11-12',
 			taskId: 1,
 			note: 'Test note',
 			status: TaskStatus.IN_PROGRESS,
+		});
+	});
+
+	test('doesn\'t allow the dayName or taskId properties to be overridden', () => {
+		const testDayTaskInfo: DayTaskInfo = {
+			dayName: '2000-01-01',
+			taskId: -1,
+			note: 'Test note',
+			status: TaskStatus.TODO,
+		};
+		const testDayTaskIdentifier: DayTaskIdentifier = { dayName: '2023-11-16', taskId: 3 };
+
+		setDayTaskInfo(testDayTaskIdentifier, testDayTaskInfo);
+
+		expect(getDayTaskInfo(testDayTaskIdentifier)).toEqual({
+			...testDayTaskInfo,
+			...testDayTaskIdentifier,
 		});
 	});
 
