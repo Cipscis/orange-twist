@@ -58,5 +58,21 @@ describe('setDayTaskInfo', () => {
 		});
 	});
 
-	test.todo('when passed a day name and task ID with existing data, updates that day task with the passed data');
+	test('when passed a day name and task ID with existing data, updates that day task with the passed data', () => {
+		const testTaskInfo: DayTaskInfo = {
+			dayName: '2023-11-16',
+			taskId: 1,
+			note: 'Test note',
+			status: TaskStatus.TODO,
+		};
+
+		setDayTaskInfo(testTaskInfo, testTaskInfo);
+		expect(getDayTaskInfo(testTaskInfo)).toEqual(testTaskInfo);
+
+		setDayTaskInfo(testTaskInfo, { status: TaskStatus.COMPLETED });
+		expect(getDayTaskInfo(testTaskInfo)).toEqual({
+			...testTaskInfo,
+			status: TaskStatus.COMPLETED,
+		});
+	});
 });
