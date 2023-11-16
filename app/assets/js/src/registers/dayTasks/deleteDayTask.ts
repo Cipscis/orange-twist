@@ -1,6 +1,7 @@
-import { getDayTaskKey } from './getDayTaskKey';
+import { encodeDayTaskKey } from './util';
 import { dayTasksRegister } from './dayTasksRegister';
+import type { DayTaskIdentifier } from './types/DayTaskIdentifier';
 
-export function deleteDayTask(dayName: string, taskId: number): void {
-	dayTasksRegister.delete(getDayTaskKey(dayName, taskId));
+export function deleteDayTask({ dayName, taskId }: DayTaskIdentifier): void {
+	dayTasksRegister.delete(encodeDayTaskKey({ dayName, taskId }));
 }

@@ -29,25 +29,50 @@ const secondDayTaskInfo: DayTaskInfo = {
 	status: TaskStatus.COMPLETED,
 };
 
+const thirdDayTaskInfo: DayTaskInfo = {
+	dayName: '2023-11-16',
+	taskId: 1,
+
+	note: 'Test note 3',
+	status: TaskStatus.COMPLETED,
+};
+
+const fourthDayTaskInfo: DayTaskInfo = {
+	dayName: '2023-11-16',
+	taskId: 2,
+
+	note: 'Test note 4',
+	status: TaskStatus.COMPLETED,
+};
+
 describe('getDayTaskInfo', () => {
 	beforeAll(() => {
 		dayTasksRegister.clear();
-		setDayTaskInfo('2023-11-12', 1, firstDayTaskInfo);
-		setDayTaskInfo('2023-11-12', 2, secondDayTaskInfo);
+		setDayTaskInfo({ dayName: '2023-11-12', taskId: 1 }, firstDayTaskInfo);
+		setDayTaskInfo({ dayName: '2023-11-12', taskId: 2 }, secondDayTaskInfo);
+		setDayTaskInfo({ dayName: '2023-11-16', taskId: 1 }, thirdDayTaskInfo);
+		setDayTaskInfo({ dayName: '2023-11-16', taskId: 2 }, fourthDayTaskInfo);
 	});
 
 	test('when passed a day name task ID that has no info, returns null', () => {
-		expect(getDayTaskInfo('2023-11-12', 3)).toBeNull();
-		expect(getDayTaskInfo('2023-11-11', 1)).toBeNull();
+		expect(getDayTaskInfo({ dayName: '2023-11-12', taskId: 3 })).toBeNull();
+		expect(getDayTaskInfo({ dayName: '2023-11-11', taskId: 1 })).toBeNull();
 	});
 
 	test('when passed a day name and task ID that has info, returns that info', () => {
-		expect(getDayTaskInfo('2023-11-12', 1)).toEqual(firstDayTaskInfo);
+		expect(getDayTaskInfo({ dayName: '2023-11-12', taskId: 1 })).toEqual(firstDayTaskInfo);
 	});
 
 	test.todo('when passed a day name only, returns an array of all day tasks for that day');
 
 	test.todo('when passed a task ID only, returns an array of all day tasks for that task');
 
-	test.todo('when passed no arguments, returns an array of all day tasks');
+	test('when passed no arguments, returns an array of all day tasks', () => {
+		expect(getDayTaskInfo()).toEqual([
+			firstDayTaskInfo,
+			secondDayTaskInfo,
+			thirdDayTaskInfo,
+			fourthDayTaskInfo,
+		]);
+	});
 });

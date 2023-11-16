@@ -1,7 +1,7 @@
-import type { DayTaskInfo } from './types';
+import type { DayTaskIdentifier, DayTaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 import { dayTasksRegister } from './dayTasksRegister';
-import { getDayTaskKey } from './getDayTaskKey';
+import { encodeDayTaskKey } from './util';
 
 /**
  * Updates the specified day task with the provided information. If the day
@@ -12,21 +12,18 @@ import { getDayTaskKey } from './getDayTaskKey';
  * @param dayInfo The new information to set of the specified day task.
  */
 export function setDayTaskInfo(
-	dayName: string,
-	taskId: number,
+	dayTaskIdentifier: DayTaskIdentifier,
 	dayTaskInfo: Partial<Omit<DayTaskInfo, 'dayName' | 'taskId'>>
 ): void {
-	const key = getDayTaskKey(dayName, taskId);
+	const key = encodeDayTaskKey(dayTaskIdentifier);
 	const existingInfo = dayTasksRegister.get(key);
 
 	dayTasksRegister.set(key, {
-		dayName,
-		taskId,
-
 		note: '',
 		status: TaskStatus.TODO,
 
 		...existingInfo,
 		...dayTaskInfo,
+		...dayTaskIdentifier,
 	});
 }

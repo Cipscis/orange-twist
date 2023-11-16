@@ -12,17 +12,18 @@ import { deleteDayTask } from './deleteDayTask';
 describe('deleteDayTask', () => {
 	test('when passed a day name and task ID without data, does nothing', () => {
 		expect(() => {
-			deleteDayTask('2023-11-13', -1);
+			deleteDayTask({ dayName: '2023-11-13', taskId: -1 });
 		}).not.toThrow();
 	});
 
 	test('when passed a task ID that has task data, removes that task from the register', () => {
-		setDayTaskInfo('2023-11-13', 1, {
-			note: 'Test note',
-		});
-		expect(getDayTaskInfo('2023-11-13', 1)).not.toBeNull();
+		setDayTaskInfo(
+			{ dayName: '2023-11-13', taskId: 1 },
+			{ note: 'Test note' },
+		);
+		expect(getDayTaskInfo({ dayName: '2023-11-13', taskId: 1 })).not.toBeNull();
 
-		deleteDayTask('2023-11-13', 1);
-		expect(getDayTaskInfo('2023-11-13', 1)).toBeNull();
+		deleteDayTask({ dayName: '2023-11-13', taskId: 1 });
+		expect(getDayTaskInfo({ dayName: '2023-11-13', taskId: 1 })).toBeNull();
 	});
 });
