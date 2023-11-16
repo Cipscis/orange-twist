@@ -18,12 +18,21 @@ export function setDayTaskInfo(
 	const key = encodeDayTaskKey(dayTaskIdentifier);
 	const existingInfo = dayTasksRegister.get(key);
 
+	// Destructure to avoid extra properties being included, which
+	// could potentially override the day task info
+	const {
+		dayName,
+		taskId,
+	} = dayTaskIdentifier;
+
 	dayTasksRegister.set(key, {
 		note: '',
 		status: TaskStatus.TODO,
 
 		...existingInfo,
 		...dayTaskInfo,
-		...dayTaskIdentifier,
+
+		dayName,
+		taskId,
 	});
 }
