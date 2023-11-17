@@ -42,11 +42,7 @@ describe('setDayInfo', () => {
 		expect(getDayInfo('2023-11-08')).toEqual({
 			name: '2023-11-08',
 			note: 'Test note',
-			tasks: [{
-				id: 1,
-				note: 'Note',
-				status: TaskStatus.TODO,
-			}],
+			tasks: [1],
 		});
 	});
 
