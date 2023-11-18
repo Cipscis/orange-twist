@@ -45,5 +45,24 @@ describe('setDayInfo', () => {
 		});
 	});
 
-	test.todo('when passed a day name with existing data, updates that day with the passed data');
+	test('when passed a day name with existing data, updates that day with the passed data', () => {
+		setDayInfo('2023-11-18', {
+			note: 'Test note',
+			tasks: [1],
+		} satisfies Omit<DayInfo, 'name'>);
+
+		expect(getDayInfo('2023-11-18')).toEqual({
+			name: '2023-11-18',
+			note: 'Test note',
+			tasks: [1],
+		});
+
+		setDayInfo('2023-11-18', { tasks: [1, 2] });
+
+		expect(getDayInfo('2023-11-18')).toEqual({
+			name: '2023-11-18',
+			note: 'Test note',
+			tasks: [1, 2],
+		});
+	});
 });
