@@ -1,7 +1,10 @@
 import type { TaskInfo } from './types';
 
+import { getCurrentDateDayName } from 'util/index';
+
 import { tasksRegister } from './tasksRegister';
 import { TaskStatus } from 'types/TaskStatus';
+import { getDayTaskInfo, setDayTaskInfo } from 'registers/dayTasks';
 
 const defaultTaskInfo = {
 	name: 'New task',
@@ -26,4 +29,11 @@ export function setTaskInfo(
 		name: taskInfo.name ?? existingTaskInfo?.name ?? defaultTaskInfo.name,
 		status: taskInfo.status ?? existingTaskInfo?.status ?? defaultTaskInfo.status,
 	});
+
+	if (taskInfo.status) {
+		const dayName = getCurrentDateDayName();
+		if (getDayTaskInfo({ dayName, taskId })?.status !== taskInfo.status) {
+			setDayTaskInfo({ dayName, taskId }, { status: taskInfo.status });
+		}
+	}
 }
