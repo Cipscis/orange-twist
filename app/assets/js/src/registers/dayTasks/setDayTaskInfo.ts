@@ -3,6 +3,11 @@ import { TaskStatus } from 'types/TaskStatus';
 import { dayTasksRegister } from './dayTasksRegister';
 import { encodeDayTaskKey } from './util';
 
+const defaultDayTaskInfo = {
+	note: '',
+	status: TaskStatus.TODO,
+} as const satisfies Omit<DayTaskInfo, 'dayName' | 'taskId'>;
+
 /**
  * Updates the specified day task with the provided information. If the day
  * task has no information already, the blanks will be filled in with defaults.
@@ -16,7 +21,7 @@ export function setDayTaskInfo(
 	dayTaskInfo: Partial<Omit<DayTaskInfo, 'dayName' | 'taskId'>>
 ): void {
 	const key = encodeDayTaskKey(dayTaskIdentifier);
-	const existingInfo = dayTasksRegister.get(key);
+	const existingDayTaskInfo = dayTasksRegister.get(key);
 
 	// Destructure to avoid extra properties being included, which
 	// could potentially override the day task info
@@ -26,13 +31,10 @@ export function setDayTaskInfo(
 	} = dayTaskIdentifier;
 
 	dayTasksRegister.set(key, {
-		note: '',
-		status: TaskStatus.TODO,
-
-		...existingInfo,
-		...dayTaskInfo,
-
 		dayName,
 		taskId,
+
+		note: dayTaskInfo.note ?? existingDayTaskInfo?.note ?? defaultDayTaskInfo.note,
+		status: dayTaskInfo.status ?? existingDayTaskInfo?.status ?? defaultDayTaskInfo.status,
 	});
 }

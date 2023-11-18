@@ -4,6 +4,12 @@ import { isValidDateString } from 'util/index';
 
 import { daysRegister } from './daysRegister';
 
+const defaultDayInfo = {
+	note: '',
+	// Use a getter to return a new array each time
+	get tasks() { return []; },
+} as const satisfies Omit<DayInfo, 'name'>;
+
 /**
  * Updates the specified day with the provided information. If the day
  * has no information already, the blanks will be filled in with defaults.
@@ -22,10 +28,8 @@ export function setDayInfo(
 	const existingDayInfo = daysRegister.get(dayName);
 	daysRegister.set(dayName, {
 		name: dayName,
-		note: '',
-		tasks: [],
 
-		...existingDayInfo,
-		...dayInfo,
+		note: dayInfo.note ?? existingDayInfo?.note ?? defaultDayInfo.note,
+		tasks: Array.from(dayInfo.tasks ?? existingDayInfo?.tasks ?? defaultDayInfo.tasks),
 	});
 }
