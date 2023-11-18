@@ -40,5 +40,20 @@ describe('setTaskInfo', () => {
 		});
 	});
 
-	test.todo('when passed a task ID with existing data, updates that task with the passed data');
+	test('when passed a task ID with existing data, updates that task with the passed data', () => {
+		setTaskInfo(1, {
+			name: 'Task name',
+			status: TaskStatus.TODO,
+		} satisfies Omit<TaskInfo, 'id'>);
+
+		setTaskInfo(1, {
+			name: 'Updated name',
+		});
+
+		expect(getTaskInfo(1)).toEqual({
+			id: 1,
+			name: 'Updated name',
+			status: TaskStatus.TODO,
+		});
+	});
 });
