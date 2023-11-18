@@ -1,4 +1,8 @@
-import type { DayTaskIdentifier, DayTaskInfo } from './types';
+import type {
+	DayTaskIdentifier,
+	DayTaskInfo,
+	DayTaskPartialIdentifier,
+} from './types';
 import { dayTasksRegister } from './dayTasksRegister';
 import { decodeDayTaskKey, encodeDayTaskKey } from './util';
 import { isDayTaskIdentifier } from './types/DayTaskIdentifier';
@@ -16,15 +20,15 @@ export function getDayTaskInfo({ dayName, taskId }: DayTaskIdentifier): DayTaskI
  * match the specified day name or task ID.
  */
 export function getDayTaskInfo(
-	identifier: Omit<DayTaskIdentifier, 'dayName'> | Omit<DayTaskIdentifier, 'taskId'>
+	identifier: DayTaskPartialIdentifier
 ): DayTaskInfo[];
 // Expose the implementation signature as an overload
 // to allow calling from similarly overloaded functions
 export function getDayTaskInfo(
-	identifier?: Omit<DayTaskIdentifier, 'dayName'> | Omit<DayTaskIdentifier, 'taskId'>
+	identifier?: DayTaskIdentifier | DayTaskPartialIdentifier
 ): DayTaskInfo[] | DayTaskInfo | null;
 export function getDayTaskInfo(
-	identifier?: Omit<DayTaskIdentifier, 'dayName'> | Omit<DayTaskIdentifier, 'taskId'>
+	identifier?: DayTaskIdentifier | DayTaskPartialIdentifier
 ): DayTaskInfo[] | DayTaskInfo | null {
 	// If there's no identifier, return everything
 	if (typeof identifier === 'undefined') {
