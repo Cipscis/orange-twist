@@ -5,7 +5,6 @@ import {
 	test,
 } from '@jest/globals';
 
-import { TaskStatus } from 'types/TaskStatus';
 import type { DayInfo } from './types';
 
 import { setDayInfo } from './setDayInfo';
