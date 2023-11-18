@@ -6,7 +6,6 @@ import {
 } from '@jest/globals';
 
 import type { DayInfo } from './types';
-import { TaskStatus } from 'types/TaskStatus';
 
 import { getDayInfo } from './getDayInfo';
 import { deleteDay } from './deleteDay';
