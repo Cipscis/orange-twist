@@ -1,7 +1,4 @@
 import { h, type JSX } from 'preact';
-import {
-	useCallback,
-} from 'preact/hooks';
 
 import classNames from 'classnames';
 
@@ -10,7 +7,6 @@ import { Command } from 'types/Command';
 
 import { useTaskInfo } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
-import { reorderTasks } from 'registers/tasks/tasksRegister';
 
 import { TaskList } from './TaskList';
 
@@ -19,11 +15,6 @@ import { TaskList } from './TaskList';
  */
 export function UnfinishedTasksList(): JSX.Element {
 	const tasks = useTaskInfo();
-
-	const onOpenTasksReorder = useCallback((taskIds: number[]) => {
-		reorderTasks(taskIds);
-		fireCommand(Command.DATA_SAVE);
-	}, []);
 
 	return <section
 		class={classNames({
@@ -39,7 +30,6 @@ export function UnfinishedTasksList(): JSX.Element {
 							.filter((task) => task.status !== TaskStatus.COMPLETED)
 							.map(({ id }) => id)
 					}
-					onReorder={onOpenTasksReorder}
 					className="orange-twist__task-list"
 				/>
 
