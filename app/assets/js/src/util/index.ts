@@ -13,3 +13,4 @@ export { CSSKeyframes } from './CSSKeyframes';
 
 export type { DeepPartial } from './DeepPartial';
 export type { EnumTypeOf } from './EnumTypeOf';
+export type { ExpandType } from './ExpandType';
