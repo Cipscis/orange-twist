@@ -59,11 +59,10 @@ describe('setTaskInfo', () => {
 		});
 	});
 
-	test('when setting the status for a task, also updates the day task for the current day', () => {
+	test('when setting the status for a task, unless the "forCurrentDay" option is negated, also updates the day task for the current day', () => {
 		const currentDayName = getCurrentDateDayName();
 
 		setTaskInfo(1, { status: TaskStatus.COMPLETED });
-
 		expect(getDayTaskInfo({ dayName: currentDayName, taskId: 1 })).toEqual({
 			dayName: currentDayName,
 			taskId: 1,
@@ -71,5 +70,8 @@ describe('setTaskInfo', () => {
 			note: '',
 			status: TaskStatus.COMPLETED,
 		});
+
+		setTaskInfo(2, { status: TaskStatus.COMPLETED }, { forCurrentDay: false });
+		expect(getDayTaskInfo({ dayName: currentDayName, taskId: 2 })).toBeNull();
 	});
 });
