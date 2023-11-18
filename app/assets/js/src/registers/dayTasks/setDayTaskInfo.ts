@@ -3,8 +3,9 @@ import { TaskStatus } from 'types/TaskStatus';
 import { dayTasksRegister } from './dayTasksRegister';
 import { encodeDayTaskKey } from './util';
 
-import { getTaskInfo, setTaskInfo, type TaskInfo } from 'registers/tasks';
+import { getTaskInfo, setTaskInfo } from 'registers/tasks';
 import { getDayInfo, setDayInfo } from 'registers/days';
+import { getDayTaskInfo } from '.';
 
 const defaultDayTaskInfo = {
 	note: '',
@@ -43,11 +44,6 @@ export function setDayTaskInfo(
 
 	dayTasksRegister.set(key, newDayTaskInfo);
 
-	// If no task exists, create one
-	if (getTaskInfo(taskId) === null) {
-		setTaskInfo(taskId, { status: newDayTaskInfo.status }, { forCurrentDay: false });
-	}
-
 	const dayInfo = getDayInfo(dayName);
 	// If no day exists, create one
 	if (dayInfo === null) {
@@ -57,5 +53,24 @@ export function setDayTaskInfo(
 		setDayInfo(dayName, {
 			tasks: [...dayInfo.tasks, taskId],
 		});
+	}
+
+	// If no task exists, create one
+	if (getTaskInfo(taskId) === null) {
+		setTaskInfo(taskId, { status: newDayTaskInfo.status }, { forCurrentDay: false });
+	} else {
+		// If a task exists and it has no later days with day tasks, update its status
+
+		/** The day names for all day task info objects matching this task, sorted chronologically */
+		const matchingDayNames = getDayTaskInfo()
+			.filter(({ taskId: thisTaskId }) => thisTaskId === taskId).map(({ dayName }) => dayName)
+			.sort((dayNameA, dayNameB) => dayNameA.localeCompare(dayNameB));
+
+		const hasLaterDay = matchingDayNames.length > 0 &&
+			matchingDayNames[matchingDayNames.length - 1].localeCompare(dayName) > 0;
+
+		if (!hasLaterDay) {
+			setTaskInfo(taskId, { status: newDayTaskInfo.status }, { forCurrentDay: false });
+		}
 	}
 }

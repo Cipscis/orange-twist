@@ -114,8 +114,26 @@ describe('setDayTaskInfo', () => {
 	});
 
 	describe('when updating status', () => {
-		test.todo('if there are no later days, updates the task\'s status to match');
+		test('if there are no later days, updates the task\'s status to match', () => {
+			setDayTaskInfo({ dayName: '2023-11-16', taskId: 1 }, { status: TaskStatus.TODO });
+			expect(getTaskInfo(1)?.status).toEqual(TaskStatus.TODO);
 
-		test.todo('if there is at least one later day, doesn\'t update the task\'s status');
+			setDayTaskInfo({ dayName: '2023-11-18', taskId: 1 }, { status: TaskStatus.IN_PROGRESS });
+			expect(getTaskInfo(1)?.status).toEqual(TaskStatus.IN_PROGRESS);
+
+			setDayTaskInfo({ dayName: '2023-11-18', taskId: 1 }, { status: TaskStatus.COMPLETED });
+			expect(getTaskInfo(1)?.status).toEqual(TaskStatus.COMPLETED);
+		});
+
+		test('if there is at least one later day, doesn\'t update the task\'s status', () => {
+			setDayTaskInfo({ dayName: '2023-11-18', taskId: 1 }, { status: TaskStatus.COMPLETED });
+			expect(getTaskInfo(1)?.status).toEqual(TaskStatus.COMPLETED);
+
+			setDayTaskInfo({ dayName: '2023-11-17', taskId: 1 }, { status: TaskStatus.IN_PROGRESS });
+			expect(getTaskInfo(1)?.status).toEqual(TaskStatus.COMPLETED);
+
+			setDayTaskInfo({ dayName: '2023-11-16', taskId: 1 }, { status: TaskStatus.TODO });
+			expect(getTaskInfo(1)?.status).toEqual(TaskStatus.COMPLETED);
+		});
 	});
 });
