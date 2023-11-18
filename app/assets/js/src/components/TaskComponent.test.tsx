@@ -6,22 +6,26 @@ import '@testing-library/jest-dom/jest-globals';
 import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
+import { tasksRegister } from 'registers/tasks/tasksRegister';
 import { TaskStatus } from 'types/TaskStatus';
+
 import { TaskComponent } from './TaskComponent';
+import { setTaskInfo } from 'registers/tasks';
 
 describe('TaskComponent', () => {
 	afterEach(() => {
 		cleanup();
+		tasksRegister.clear();
 	});
 
 	test('renders the task name as Markdown', () => {
+		setTaskInfo(0, {
+			name: '**Bold** *italic* `code`',
+			status: TaskStatus.TODO,
+		});
+
 		const { getByTestId } = render(
-			<TaskComponent task={{
-				id: 0,
-				name: '**Bold** *italic* `code`',
-				status: TaskStatus.TODO,
-			}}
-			/>
+			<TaskComponent taskId={0} />
 		);
 
 		const content = getByTestId('task-component-name');
@@ -38,14 +42,13 @@ describe('TaskComponent', () => {
 	test('opens edit mode when name is clicked', async () => {
 		const user = userEvent.setup();
 
+		setTaskInfo(0, {
+			name: 'Task name',
+			status: TaskStatus.TODO,
+		});
+
 		const { getByRole, getByText } = render(
-			<TaskComponent
-				task={{
-					id: 0,
-					name: 'Task name',
-					status: TaskStatus.TODO,
-				}}
-			/>
+			<TaskComponent taskId={0} />
 		);
 
 		const name = getByText('Task name');
@@ -59,14 +62,13 @@ describe('TaskComponent', () => {
 	test('doesn\'t open edit mode when a link inside is clicked', async () => {
 		const user = userEvent.setup();
 
+		setTaskInfo(0, {
+			name: '[Link text](#)',
+			status: TaskStatus.TODO,
+		});
+
 		const { getByRole, queryByRole } = render(
-			<TaskComponent
-				task={{
-					id: 0,
-					name: '[Link text](#)',
-					status: TaskStatus.TODO,
-				}}
-			/>
+			<TaskComponent taskId={0} />
 		);
 
 		const name = getByRole('link', { name: 'Link text' });

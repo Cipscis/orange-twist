@@ -64,8 +64,6 @@ export const DayComponent = forwardRef(
 
 			setDayInfo(day.name, {
 				tasks: newTasks,
-			}, {
-				overwriteTasks: true,
 			});
 			fireCommand(Command.DATA_SAVE);
 		}, [day.tasks, day.name]);

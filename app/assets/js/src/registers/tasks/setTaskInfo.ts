@@ -17,7 +17,7 @@ export function setTaskInfo(
 	const existingDayInfo = tasksRegister.get(taskId);
 	tasksRegister.set(taskId, {
 		id: taskId,
-		name: 'New task',
+		name: '',
 		status: TaskStatus.TODO,
 
 		...existingDayInfo,

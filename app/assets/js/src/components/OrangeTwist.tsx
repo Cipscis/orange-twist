@@ -7,8 +7,9 @@ import {
 
 import { Command } from 'types/Command';
 
-import { getDayInfo, saveDays, setDayInfo } from 'registers/days';
-import { createTask, saveTasks } from 'registers/tasks';
+import { getDayInfo, loadDays, saveDays, setDayInfo } from 'registers/days';
+import { createTask, loadTasks, saveTasks } from 'registers/tasks';
+import { loadDayTasks, saveDayTasks, setDayTaskInfo } from 'registers/dayTasks';
 
 import { registerCommand, useCommand } from 'registers/commands';
 import {
@@ -17,7 +18,7 @@ import {
 	useKeyboardShortcut,
 } from 'registers/keyboard-shortcuts';
 
-import { isValidDateString } from 'util/index';
+import { getCurrentDateDayName, isValidDateString } from 'util/index';
 import { toast } from './shared/Toast';
 
 import { CommandPalette } from './CommandPalette/CommandPalette';
@@ -33,6 +34,19 @@ interface OrangeTwistProps {
  */
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const { children } = props;
+
+	// Load persisted data
+	useEffect(() => {
+		loadDays().then(() => {
+			// If there's no info for the current day, set up a stub
+			const currentDateDayName = getCurrentDateDayName();
+			if (getDayInfo(currentDateDayName) === null) {
+				setDayInfo(currentDateDayName, {});
+			}
+		});
+		loadTasks();
+		loadDayTasks();
+	}, []);
 
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
@@ -112,6 +126,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			await Promise.all([
 				saveDays(),
 				saveTasks(),
+				saveDayTasks(),
 			]);
 			toast('Saved', {
 				duration: 2000,
@@ -148,14 +163,17 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	}, []);
 	useCommand(Command.DAY_ADD_NEW, addNewDay);
 
-	/**
-	 * Create a new task.
-	 *
-	 * @param [dayName] - If specified, the new task will be
-	 * created against this specified day.
-	 */
-	const addNewTaskWithOptions = useCallback((dayName?: string) => createTask({ dayName }), []);
-	useCommand(Command.TASK_ADD_NEW, addNewTaskWithOptions);
+	const createNewTask = useCallback((dayName?: string) => {
+		const taskId = createTask();
+		if (dayName) {
+			setDayTaskInfo({ dayName, taskId }, {});
+			setDayInfo(dayName, {
+				tasks: [...(getDayInfo(dayName)?.tasks ?? []), taskId],
+			});
+			// TODO: Remove dayInfo.tasks and dayTaskInfo coupling into registers' methods
+		}
+	}, []);
+	useCommand(Command.TASK_ADD_NEW, createNewTask);
 
 	return <>
 		<CommandPalette

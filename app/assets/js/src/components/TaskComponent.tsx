@@ -3,12 +3,12 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import type { TaskInfo } from 'registers/tasks';
 import { Command } from 'types/Command';
 
 import {
 	setTaskInfo,
 	deleteTask,
+	useTaskInfo,
 } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
 
@@ -16,16 +16,16 @@ import { TaskStatusComponent } from './TaskStatusComponent';
 import { Markdown } from './shared/Markdown';
 
 interface TaskComponentProps {
-	task: Readonly<TaskInfo>;
+	taskId: number;
 	dayName?: string;
 }
 
 /**
  * Renders a single task, and allows for it to be edited.
  */
-export function TaskComponent(props: TaskComponentProps): JSX.Element {
-	const { task, dayName } = props;
-	const { id, name } = task;
+export function TaskComponent(props: TaskComponentProps): JSX.Element | null {
+	const { taskId, dayName } = props;
+	const taskInfo = useTaskInfo(taskId);
 
 	const previousName = useRef<string | null>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -58,16 +58,20 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 	 * Otherwise, if the name has been updated, save changes.
 	 */
 	const saveChanges = useCallback(() => {
-		if (task.name === '') {
-			deleteTask(task.id);
+		if (!taskInfo) {
+			return;
+		}
+
+		if (taskInfo.name === '') {
+			deleteTask(taskInfo.id);
 			if (previousName.current !== '') {
 				fireCommand(Command.DATA_SAVE);
 			}
-		} else if (previousName.current !== task.name) {
+		} else if (previousName.current !== taskInfo.name) {
 			fireCommand(Command.DATA_SAVE);
 		}
 		previousName.current = null;
-	}, [task.name, task.id]);
+	}, [taskInfo]);
 
 	/**
 	 * Save any change, and leave edit mode.
@@ -89,17 +93,25 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 
 	// Update the name.
 	const nameChangeHandler = useCallback((e: Event) => {
+		if (!taskInfo) {
+			return;
+		}
+
 		const input = e.target;
 		if (!(input instanceof HTMLInputElement)) {
 			return;
 		}
 
 		const name = input.value;
-		setTaskInfo(id, { name });
-	}, [id]);
+		setTaskInfo(taskInfo.id, { name });
+	}, [taskInfo]);
 
 	// Blur on "Enter" or "Escape", either committing or discarding changes
 	const keydownHandler = useCallback((e: KeyboardEvent) => {
+		if (!taskInfo) {
+			return;
+		}
+
 		const input = e.target;
 		if (!(input instanceof HTMLInputElement)) {
 			return;
@@ -112,21 +124,25 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 
 		if (e.key === 'Escape') {
 			const name = previousName.current ?? '';
-			setTaskInfo(id, { name });
+			setTaskInfo(taskInfo.id, { name });
 			blurOnNextRender();
 			return;
 		}
-	}, [id, blurOnNextRender]);
+	}, [taskInfo, blurOnNextRender]);
+
+	if (!taskInfo) {
+		return null;
+	}
 
 	return <div class="task">
 		{(() => {
 			return <>
 				<TaskStatusComponent
-					task={task}
+					taskId={taskInfo.id}
 					dayName={dayName}
 				/>
 				<a
-					href={`/orange-twist/task?id=${task.id}`}
+					href={`/orange-twist/task?id=${taskInfo.id}`}
 					class="task__detail-link"
 					title="View task"
 				>📄</a>
@@ -139,7 +155,7 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 							ref={inputRef}
 							type="text"
 							class="task__name-input"
-							value={name}
+							value={taskInfo.name}
 							placeholder="Task name"
 							size={1}
 							onFocus={rememberPreviousName}
@@ -150,7 +166,7 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 					}
 
 					<Markdown
-						content={name.replace(/</g, '&lt;')}
+						content={taskInfo.name.replace(/</g, '&lt;')}
 						class={classNames('task__name-display', {
 							'task__name-display--hidden': isInEditMode,
 						})}

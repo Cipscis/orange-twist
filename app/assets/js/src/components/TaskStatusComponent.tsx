@@ -1,6 +1,5 @@
 import { h, type JSX } from 'preact';
 
-import type { TaskInfo } from 'registers/tasks';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
@@ -13,13 +12,13 @@ import {
 	CSSKeyframes,
 } from 'util/index';
 
-import { deleteTask, setTaskInfo } from 'registers/tasks';
+import { deleteTask, setTaskInfo, useTaskInfo } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
 import { getDayInfo, setDayInfo } from 'registers/days';
 import { setDayTaskInfo } from 'registers/dayTasks';
 
 interface TaskStatusComponentProps {
-	task: TaskInfo;
+	taskId: number;
 	dayName?: string;
 	/** @default false */
 	readonly?: boolean;
@@ -43,34 +42,17 @@ const taskStatusSymbols = {
  *
  * Allows that status to be edited.
  */
-export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Element {
+export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Element | null {
 	const {
-		task,
+		taskId,
 		dayName,
 	} = props;
-	const { id } = task;
+	const taskInfo = useTaskInfo(taskId);
 
 	const readonly = props.readonly ?? false;
 
 	const rootRef = useRef<HTMLElement>(null);
 	const optionsRef = useRef<HTMLUListElement>(null);
-
-	const status = (() => {
-		// TODO: Refactor into getTaskStatusOnDay function
-		// if (dayName) {
-		// 	const dayData = getDayInfo(dayName);
-		// 	const dayTasks = dayData?.tasks;
-
-		// 	const taskOnDay = dayTasks?.find((taskId) => taskId === id);
-		// 	if (taskOnDay) {
-		// 		return taskOnDay.status;
-		// 	}
-		// }
-
-		return task.status;
-	})();
-
-	const statusSymbol = taskStatusSymbols[status];
 
 	const [isInChangeMode, setIsInChangeModeInternal] = useState(false);
 
@@ -95,17 +77,21 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	 * Update task data to reflect new status
 	 */
 	const changeStatus = useCallback((status: TaskStatus) => {
+		if (!taskInfo) {
+			return;
+		}
+
 		if (typeof dayName === 'undefined') {
-			setTaskInfo(id, { status });
+			setTaskInfo(taskId, { status });
 		} else {
 			setDayTaskInfo({
 				dayName,
-				taskId: id,
+				taskId,
 			}, { status });
 		}
 		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
-	}, [dayName, id, setIsInChangeMode]);
+	}, [dayName, taskId, taskInfo, setIsInChangeMode]);
 
 	/**
 	 * Ask for confirmation, then delete the task
@@ -115,10 +101,10 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			return;
 		}
 
-		deleteTask(id);
+		deleteTask(taskId);
 		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
-	}, [id, setIsInChangeMode]);
+	}, [taskId, setIsInChangeMode]);
 
 	/**
 	 * Ask for confirmation, then remove a task from this component's day.
@@ -138,14 +124,14 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		}
 
 		const tasks = structuredClone(day.tasks);
-		const thisTaskIndex = tasks.findIndex((taskId) => taskId === id);
+		const thisTaskIndex = tasks.findIndex((taskElId) => taskElId === taskId);
 		if (thisTaskIndex === -1) {
 			return;
 		}
 
 		tasks.splice(thisTaskIndex, 1);
 		setDayInfo(dayName, { tasks });
-	}, [dayName, id]);
+	}, [dayName, taskId]);
 
 	/**
 	 * Remove the task from the current day, if there is one,
@@ -198,6 +184,27 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			eventListenerAbortController.abort();
 		};
 	}, [isInChangeMode, exitChangeModeOnEscape, exitChangeModeOnOutsideClick]);
+
+	if (!taskInfo) {
+		return null;
+	}
+
+	const status = (() => {
+		// TODO: Refactor into getTaskStatusOnDay function
+		// if (dayName) {
+		// 	const dayData = getDayInfo(dayName);
+		// 	const dayTasks = dayData?.tasks;
+
+		// 	const taskOnDay = dayTasks?.find((taskId) => taskId === id);
+		// 	if (taskOnDay) {
+		// 		return taskOnDay.status;
+		// 	}
+		// }
+
+		return taskInfo.status;
+	})();
+
+	const statusSymbol = taskStatusSymbols[status];
 
 	return <span
 		class="task-status"

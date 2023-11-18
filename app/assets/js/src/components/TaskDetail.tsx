@@ -1,143 +1,63 @@
 import { h, type JSX } from 'preact';
-import { useCallback } from 'preact/hooks';
 
 import { Command } from 'types/Command';
-
-import { getDayInfo, setDayInfo, useDayInfo } from 'registers/days';
-import { useTaskInfo } from 'registers/tasks';
-
 import { fireCommand } from 'registers/commands';
 
-import { Note } from './shared/Note';
-import { toast } from './shared/Toast';
+import { useTaskInfo } from 'registers/tasks';
+import { setDayTaskInfo, useDayTaskInfo } from 'registers/dayTasks';
 
-import { TaskStatusComponent } from './TaskStatusComponent';
+import { Note } from './shared/Note';
 import { Markdown } from './shared/Markdown';
 
+import { TaskStatusComponent } from './TaskStatusComponent';
+
 interface TaskDetailProps {
-	taskId: number | null;
+	taskId: number;
 }
 
 /**
  * Renders a detailed view for a task, including its notes.
  */
-export function TaskDetail(props: TaskDetailProps): JSX.Element {
+export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 	const {
 		taskId,
 	} = props;
 
-	const days = useDayInfo();
+	const taskInfo = useTaskInfo(taskId);
+	const dayTasksInfo = useDayTaskInfo({ taskId });
 
-	const tasks = useTaskInfo();
+	if (!taskInfo) {
+		return null;
+	}
 
-	let error: string | null = null;
+	return <section class="orange-twist__section">
+		<Markdown
+			class="orange-twist__title"
+			content={`## ${taskInfo.name}`}
+			inline
+		/>
+		{dayTasksInfo.map(({ dayName, taskId, note }, i, arr) => (
+			<details
+				key={dayName}
+				class="day"
+				open={i === arr.length-1}
+			>
+				<summary class="day__summary">
+					<h3 class="day__heading">{dayName}</h3>
+				</summary>
 
-	const task = (() => {
-		if (taskId === null) {
-			error = 'No task ID specified';
-			return null;
-		}
-
-		if (!tasks) {
-			return null;
-		}
-
-		const task = tasks.find(({ id }) => id === taskId);
-		if (!task) {
-			error = `Could not find task with ID ${taskId}`;
-			return null;
-		}
-
-		return task;
-	})();
-
-	const taskDayData = Object.fromEntries((days ?? []).map((day) => {
-		if (!task) {
-			return null;
-		}
-
-		const dayTask = structuredClone(day.tasks.find((id) => id === taskId));
-		if (!dayTask) {
-			return null;
-		}
-
-		return [day.name, dayTask] as const;
-	}).filter(
-		(el): el is NonNullable<typeof el> => Boolean(el)
-	));
-
-	/**
-	 * Update a task's note against a given day.
-	 */
-	const updateNoteForDay = useCallback((dayName: string, note: string) => {
-		try {
-			const dayData = getDayInfo(dayName);
-			if (!dayData) {
-				// TODO: Handle this error better
-				throw new Error(`Tried to update note against ${dayName} but no such day exists`);
-			}
-			const dayTasks = dayData.tasks;
-			const taskIndexForDay = dayTasks.findIndex((id) => id === taskId);
-
-			if (taskIndexForDay === -1) {
-				// TODO: Should we add the task? We'd need to know what status to use if so
-				throw new Error(`Task ${taskId} doesn't exist against ${dayName}`);
-			}
-
-			const taskForDay = dayTasks[taskIndexForDay];
-			dayTasks.splice(taskIndexForDay, 1, {
-				...taskForDay,
-				note,
-			});
-
-			setDayInfo(dayName, { tasks: dayTasks });
-		} catch (e) {
-			toast(String(e));
-		}
-	}, [taskId]);
-
-	return <>
-		{
-			error &&
-			<span class="orange-twist__error">{error}</span>
-		}
-		{
-			task &&
-			<section class="orange-twist__section">
-				<Markdown class="orange-twist__title" content={`## ${task.name}`} inline />
-
-				{
-					error &&
-					// TODO: Handle error better somehow
-					// TODO: Make error component
-					<span class="orange-twist__error">Error: {error}</span>
-				}
-				{taskDayData &&
-					Object.entries(taskDayData).map(([dayName, dayTask], i, arr) => (
-						<details
-							key={dayName}
-							class="day"
-							open={i === arr.length-1}
-						>
-							<summary class="day__summary">
-								<h3 class="day__heading">{dayName}</h3>
-							</summary>
-
-							<div class="day__body">
-								<TaskStatusComponent
-									task={task}
-									dayName={dayName}
-								/>
-								<Note
-									note={dayTask.note}
-									onNoteChange={(note) => updateNoteForDay(dayName, note)}
-									saveChanges={() => fireCommand(Command.DATA_SAVE)}
-								/>
-							</div>
-						</details>
-					))
-				}
-			</section>
-		}
-	</>;
+				<div class="day__body">
+					<TaskStatusComponent
+						taskId={taskId}
+						dayName={dayName}
+					/>
+					<Note
+						note={note}
+						onNoteChange={(note) => setDayTaskInfo({ dayName, taskId }, { note })}
+						saveChanges={() => fireCommand(Command.DATA_SAVE)}
+					/>
+				</div>
+			</details>
+		))}
+	</section>;
 }

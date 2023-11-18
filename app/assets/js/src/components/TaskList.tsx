@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import { useViewTransition } from 'util/index';
 
-import { getTaskInfo, useTaskInfo } from 'registers/tasks';
+import { useTaskInfo } from 'registers/tasks';
 
 import { TaskComponent } from './TaskComponent';
 import React, { forwardRef } from 'preact/compat';
@@ -28,17 +28,15 @@ export const TaskList = forwardRef(
 		props: TaskListProps,
 		ref: React.ForwardedRef<HTMLDivElement>
 	) {
-		// Force the component to update when tasks are changed
-		const { taskIds } = props;
-		useTaskInfo(taskIds);
-
 		const {
-			taskIds: tasks,
+			taskIds,
 			dayName,
 			className,
 
 			onReorder,
 		} = props;
+
+		const tasksInfo = useTaskInfo(taskIds);
 
 		const idBase = useId();
 
@@ -139,22 +137,21 @@ export const TaskList = forwardRef(
 			onDrop={dropHandler}
 			ref={ref}
 		>
-			{tasks.map((taskId, i) => {
-				const taskData = getTaskInfo(taskId);
-				if (!taskData) {
+			{tasksInfo.map((taskInfo, i) => {
+				if (!taskInfo) {
 					return '';
 				}
 
 				return <div
-					key={taskData.id}
+					key={taskInfo.id}
 					class="task-list__item"
 					ref={(ref) => itemsRef.current[i] = ref}
-					id={`${idBase}-${taskData.id}`}
+					id={`${idBase}-${taskInfo.id}`}
 					data-task-list-drop-target
-					data-task-list-item-id={taskData.id}
+					data-task-list-item-id={taskInfo.id}
 					style={`view-transition-name: ${
 						isInViewTransition
-							? `${idBase}-${taskData.id}`
+							? `${idBase}-${taskInfo.id}`
 							: 'none'};
 					`}
 				>
@@ -166,7 +163,7 @@ export const TaskList = forwardRef(
 						/>
 					}
 					<TaskComponent
-						task={{ ...taskData, id: taskId }}
+						taskId={taskInfo.id}
 						dayName={dayName}
 					/>
 				</div>;
