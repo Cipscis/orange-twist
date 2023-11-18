@@ -95,8 +95,8 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 		}
 
 		const name = input.value;
-		setTaskInfo(id, { name }, { dayName });
-	}, [dayName, id]);
+		setTaskInfo(id, { name });
+	}, [id]);
 
 	// Blur on "Enter" or "Escape", either committing or discarding changes
 	const keydownHandler = useCallback((e: KeyboardEvent) => {
@@ -112,11 +112,11 @@ export function TaskComponent(props: TaskComponentProps): JSX.Element {
 
 		if (e.key === 'Escape') {
 			const name = previousName.current ?? '';
-			setTaskInfo(id, { name }, { dayName });
+			setTaskInfo(id, { name });
 			blurOnNextRender();
 			return;
 		}
-	}, [id, dayName, blurOnNextRender]);
+	}, [id, blurOnNextRender]);
 
 	return <div class="task">
 		{(() => {

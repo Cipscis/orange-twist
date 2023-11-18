@@ -16,6 +16,7 @@ import {
 import { deleteTask, setTaskInfo } from 'registers/tasks';
 import { fireCommand } from 'registers/commands';
 import { getDayInfo, setDayInfo } from 'registers/days';
+import { setDayTaskInfo } from 'registers/dayTasks';
 
 interface TaskStatusComponentProps {
 	task: TaskInfo;
@@ -93,8 +94,15 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	/**
 	 * Update task data to reflect new status
 	 */
-	const changeStatus = useCallback((newStatus: TaskStatus) => {
-		setTaskInfo(id, { status: newStatus }, { dayName });
+	const changeStatus = useCallback((status: TaskStatus) => {
+		if (typeof dayName === 'undefined') {
+			setTaskInfo(id, { status });
+		} else {
+			setDayTaskInfo({
+				dayName,
+				taskId: id,
+			}, { status });
+		}
 		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
 	}, [dayName, id, setIsInChangeMode]);
@@ -136,7 +144,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		}
 
 		tasks.splice(thisTaskIndex, 1);
-		setDayInfo(dayName, { tasks }, { overwriteTasks: true });
+		setDayInfo(dayName, { tasks });
 	}, [dayName, id]);
 
 	/**
