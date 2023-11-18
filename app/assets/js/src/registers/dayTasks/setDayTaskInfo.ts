@@ -3,6 +3,9 @@ import { TaskStatus } from 'types/TaskStatus';
 import { dayTasksRegister } from './dayTasksRegister';
 import { encodeDayTaskKey } from './util';
 
+import { getTaskInfo, setTaskInfo, type TaskInfo } from 'registers/tasks';
+import { getDayInfo, setDayInfo } from 'registers/days';
+
 const defaultDayTaskInfo = {
 	note: '',
 	status: TaskStatus.TODO,
@@ -30,11 +33,29 @@ export function setDayTaskInfo(
 		taskId,
 	} = dayTaskIdentifier;
 
-	dayTasksRegister.set(key, {
+	const newDayTaskInfo: DayTaskInfo = {
 		dayName,
 		taskId,
 
 		note: dayTaskInfo.note ?? existingDayTaskInfo?.note ?? defaultDayTaskInfo.note,
 		status: dayTaskInfo.status ?? existingDayTaskInfo?.status ?? defaultDayTaskInfo.status,
-	});
+	};
+
+	dayTasksRegister.set(key, newDayTaskInfo);
+
+	// If no task exists, create one
+	if (getTaskInfo(taskId) === null) {
+		setTaskInfo(taskId, { status: newDayTaskInfo.status }, { forCurrentDay: false });
+	}
+
+	const dayInfo = getDayInfo(dayName);
+	// If no day exists, create one
+	if (dayInfo === null) {
+		setDayInfo(dayName, { tasks: [taskId] });
+	} else if (dayInfo.tasks.indexOf(taskId) === -1) {
+		// If a day exists but it doesn't have this task, add it
+		setDayInfo(dayName, {
+			tasks: [...dayInfo.tasks, taskId],
+		});
+	}
 }

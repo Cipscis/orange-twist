@@ -11,6 +11,21 @@ const defaultTaskInfo = {
 	status: TaskStatus.TODO,
 } as const satisfies Omit<TaskInfo, 'id'>;
 
+interface SetTaskInfoOptions {
+	/**
+	 * Whether or not the task info being set should be considered as
+	 * being for the current day. If true, then any status change will
+	 * also be reflected in the day task for this task on the current day.
+	 *
+	 * @default true
+	 */
+	forCurrentDay?: boolean;
+}
+
+const defaultOptions = {
+	forCurrentDay: true,
+} as const satisfies Required<SetTaskInfoOptions>;
+
 /**
  * Updates the specified task with the provided information. If the task
  * has no information already, the blanks will be filled in with defaults.
@@ -20,8 +35,14 @@ const defaultTaskInfo = {
  */
 export function setTaskInfo(
 	taskId: number,
-	taskInfo: Partial<Omit<TaskInfo, 'id'>>
+	taskInfo: Partial<Omit<TaskInfo, 'id'>>,
+	options?: SetTaskInfoOptions
 ): void {
+	const consolidatedOptions = {
+		...defaultOptions,
+		...options,
+	};
+
 	const existingTaskInfo = tasksRegister.get(taskId);
 	tasksRegister.set(taskId, {
 		id: taskId,
@@ -30,7 +51,7 @@ export function setTaskInfo(
 		status: taskInfo.status ?? existingTaskInfo?.status ?? defaultTaskInfo.status,
 	});
 
-	if (taskInfo.status) {
+	if (consolidatedOptions.forCurrentDay && taskInfo.status) {
 		const dayName = getCurrentDateDayName();
 		if (getDayTaskInfo({ dayName, taskId })?.status !== taskInfo.status) {
 			setDayTaskInfo({ dayName, taskId }, { status: taskInfo.status });
