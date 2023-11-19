@@ -1,6 +1,7 @@
 import { h, type JSX } from 'preact';
 import {
 	useEffect,
+	useMemo,
 	useRef,
 } from 'preact/hooks';
 
@@ -15,7 +16,11 @@ import { DayComponent } from './DayComponent';
  * Renders a list of days.
  */
 export function DayList(): JSX.Element {
-	const days = useDayInfo();
+	const unsortedDays = useDayInfo();
+
+	const days = useMemo(() => unsortedDays.sort(
+		({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB)
+	), [unsortedDays]);
 
 	/**
 	 * An object allowing each day's element to be looked
