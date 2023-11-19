@@ -3,13 +3,13 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import type { TaskInfo } from 'registers/tasks';
+import type { TaskInfo } from 'data/tasks';
 import { Command } from 'types/Command';
 
 import {
 	setTaskInfo,
 	deleteTask,
-} from 'registers/tasks';
+} from 'data/tasks';
 import { fireCommand } from 'registers/commands';
 
 import { TaskStatusComponent } from './TaskStatusComponent';

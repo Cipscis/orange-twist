@@ -1,4 +1,4 @@
-import { getDayInfo, setDayInfo } from 'registers/days';
+import { getDayInfo, setDayInfo } from 'data/days';
 
 import { encodeDayTaskKey } from './util';
 import {

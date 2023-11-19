@@ -6,15 +6,15 @@ import {
 } from '@jest/globals';
 
 import { daysRegister } from './daysRegister';
-import { tasksRegister } from 'registers/tasks/tasksRegister';
-import { dayTasksRegister } from 'registers/dayTasks/dayTasksRegister';
+import { tasksRegister } from 'data/tasks/tasksRegister';
+import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
 
 import { setDayInfo } from './setDayInfo';
 import { getDayInfo } from './getDayInfo';
 
 import { deleteDay } from './deleteDay';
-import { createTask } from 'registers/tasks';
-import { getDayTaskInfo, setDayTaskInfo } from 'registers/dayTasks';
+import { createTask } from 'data/tasks';
+import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
 
 describe('deleteDay', () => {
 	afterEach(() => {

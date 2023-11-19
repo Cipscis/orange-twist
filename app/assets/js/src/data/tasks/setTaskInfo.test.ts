@@ -10,8 +10,8 @@ import { getCurrentDateDayName } from 'util/index';
 import type { TaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 
-import { dayTasksRegister } from 'registers/dayTasks/dayTasksRegister';
-import { getDayTaskInfo } from 'registers/dayTasks';
+import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
+import { getDayTaskInfo } from 'data/dayTasks';
 
 import { tasksRegister } from './tasksRegister';
 import { getTaskInfo } from './getTaskInfo';

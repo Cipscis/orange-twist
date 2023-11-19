@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import type { TaskInfo } from 'registers/tasks';
+import type { TaskInfo } from 'data/tasks';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
@@ -13,10 +13,10 @@ import {
 	CSSKeyframes,
 } from 'util/index';
 
-import { deleteTask, setTaskInfo } from 'registers/tasks';
+import { deleteTask, setTaskInfo } from 'data/tasks';
 import { fireCommand } from 'registers/commands';
-import { getDayInfo, setDayInfo } from 'registers/days';
-import { setDayTaskInfo } from 'registers/dayTasks';
+import { getDayInfo, setDayInfo } from 'data/days';
+import { setDayTaskInfo } from 'data/dayTasks';
 
 interface TaskStatusComponentProps {
 	task: TaskInfo;

@@ -6,7 +6,7 @@ import {
 
 import { Command } from 'types/Command';
 
-import { useDayInfo } from 'registers/days';
+import { useDayInfo } from 'data/days';
 import { fireCommand } from 'registers/commands';
 
 import { DayComponent } from './DayComponent';
