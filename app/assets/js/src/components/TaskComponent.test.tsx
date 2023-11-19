@@ -6,11 +6,11 @@ import '@testing-library/jest-dom/jest-globals';
 import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
-import { tasksRegister } from 'registers/tasks/tasksRegister';
+import { tasksRegister } from 'data/tasks/tasksRegister';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { TaskComponent } from './TaskComponent';
-import { setTaskInfo } from 'registers/tasks';
+import { setTaskInfo } from 'data/tasks';
 
 describe('TaskComponent', () => {
 	afterEach(() => {

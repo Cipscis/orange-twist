@@ -2,10 +2,10 @@ import { h } from 'preact';
 import { useCallback, useEffect, useId, useRef } from 'preact/hooks';
 import React, { forwardRef } from 'preact/compat';
 
-import type { DayInfo } from 'registers/days';
+import type { DayInfo } from 'data/days';
 
-import { getTaskInfo } from 'registers/tasks';
-import { deleteDay, setDayInfo } from 'registers/days';
+import { getTaskInfo } from 'data/tasks';
+import { deleteDay, setDayInfo } from 'data/days';
 
 import { Command } from 'types/Command';
 

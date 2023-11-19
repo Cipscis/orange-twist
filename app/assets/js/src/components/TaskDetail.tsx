@@ -1,10 +1,10 @@
 import { h, type JSX } from 'preact';
 
-import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
+import { Command } from 'types/Command';
 
-import { useTaskInfo } from 'registers/tasks';
-import { setDayTaskInfo, useDayTaskInfo } from 'registers/dayTasks';
+import { useTaskInfo } from 'data/tasks';
+import { setDayTaskInfo, useDayTaskInfo } from 'data/dayTasks';
 
 import { Note } from './shared/Note';
 import { Markdown } from './shared/Markdown';

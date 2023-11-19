@@ -41,6 +41,20 @@ describe('Register', () => {
 		expect(register.delete('foo')).toBe(false);
 	});
 
+	test('can pass an array of keys to the delete method', () => {
+		const register = new Register([
+			['foo', 1],
+			['bar', 2],
+			['foobar', 3],
+		]);
+
+		expect(register.delete('foo', 'bar', 'absent')).toEqual(true);
+
+		expect(Array.from(register.entries())).toEqual([['foobar', 3]]);
+
+		expect(register.delete('foo', 'bar')).toBe(false);
+	});
+
 	test('supports clear method', () => {
 		const register = new Register([
 			['foo', 1],
@@ -371,6 +385,32 @@ describe('Register', () => {
 				key: 'foo',
 				value: 1,
 			}]);
+		});
+
+		test('fire once when multiple elements are deleted', () => {
+			const register = new Register([
+				['foo', 1],
+				['bar', 2],
+				['foobar', 3],
+			]);
+			const spy = jest.fn();
+
+			register.addEventListener('delete', spy);
+			expect(spy).not.toHaveBeenCalled();
+
+			register.delete('foo', 'bar', 'absent');
+
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith([
+				{
+					key: 'foo',
+					value: 1,
+				},
+				{
+					key: 'bar',
+					value: 2,
+				},
+			]);
 		});
 
 		test('fire once when the Register is cleared', () => {

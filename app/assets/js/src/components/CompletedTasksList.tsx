@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { useTaskInfo } from '../registers/tasks';
+import { useTaskInfo } from 'data/tasks';
 
 import { TaskStatus } from '../types/TaskStatus';
 

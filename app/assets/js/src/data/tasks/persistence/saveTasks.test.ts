@@ -19,7 +19,7 @@ const firstTaskInfo: TaskInfo = {
 };
 
 const secondTaskInfo: TaskInfo = {
-	id: 1,
+	id: 2,
 	name: 'Second task',
 	status: TaskStatus.IN_PROGRESS,
 };

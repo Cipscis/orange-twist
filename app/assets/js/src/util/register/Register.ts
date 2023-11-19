@@ -140,23 +140,42 @@ export class Register<K, V> {
 	}
 
 	/**
+	 * Deletes a key from the Register.
+	 *
 	 * @returns `true` if an element in the Register existed and has been removed, or `false`
 	 * if the element does not exist.
 	 */
-	delete(key: K): boolean {
-		if (this.#map.has(key)) {
-			// This type assertion is safe because we've already checked `has`
-			const value = this.#map.get(key) as V;
-			const result = this.#map.delete(key);
+	delete(key: K): boolean;
+	/**
+	 * Deletes multiple keys from the Register.
+	 *
+	 * @returns `true` if any elements were removed from the Register, or `false` otherwise.
+	 */
+	delete(...keys: K[]): boolean;
+	delete(...keys: K[]): boolean {
+		let deletedAnything = false;
+		const deletions: { key: K; value: V; }[] = [];
 
-			for (const listener of this.#deleteListeners.values()) {
-				listener([{ key, value }]);
+		for (const key of keys) {
+			if (this.#map.has(key)) {
+				// This type assertion is safe because we've already checked `has`
+				const value = this.#map.get(key) as V;
+				const result = this.#map.delete(key);
+				if (result) {
+					deletedAnything = true;
+				}
+
+				deletions.push({ key, value });
 			}
-
-			return result;
-		} else {
-			return false;
 		}
+
+		if (deletions.length > 0) {
+			for (const listener of this.#deleteListeners.values()) {
+				listener(deletions);
+			}
+		}
+
+		return deletedAnything;
 	}
 
 	/**
