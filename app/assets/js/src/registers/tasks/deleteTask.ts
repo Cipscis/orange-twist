@@ -1,3 +1,4 @@
+import { deleteDayTask } from 'registers/dayTasks';
 import { tasksRegister } from './tasksRegister';
 
 /**
@@ -7,4 +8,5 @@ import { tasksRegister } from './tasksRegister';
  */
 export function deleteTask(taskId: number): void {
 	tasksRegister.delete(taskId);
+	deleteDayTask({ taskId });
 }
