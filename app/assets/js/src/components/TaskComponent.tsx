@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import { Command } from 'types/Command';
 
 import {
-	type TaskInfo,
 	setTaskInfo,
 	deleteTask,
 	useTaskInfo,
