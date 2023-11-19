@@ -8,11 +8,11 @@ import {
 import type { DayTaskIdentifier, DayTaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 
-import { getDayInfo } from 'registers/days';
-import { daysRegister } from 'registers/days/daysRegister';
+import { getDayInfo } from 'data/days';
+import { daysRegister } from 'data/days/daysRegister';
 
-import { getTaskInfo } from 'registers/tasks';
-import { tasksRegister } from 'registers/tasks/tasksRegister';
+import { getTaskInfo } from 'data/tasks';
+import { tasksRegister } from 'data/tasks/tasksRegister';
 
 import { dayTasksRegister } from './dayTasksRegister';
 import { getDayTaskInfo } from './getDayTaskInfo';

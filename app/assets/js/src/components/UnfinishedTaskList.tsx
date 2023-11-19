@@ -8,9 +8,9 @@ import classNames from 'classnames';
 import { TaskStatus } from 'types/TaskStatus';
 import { Command } from 'types/Command';
 
-import { useTaskInfo } from 'registers/tasks';
+import { useTaskInfo } from 'data/tasks';
 import { fireCommand } from 'registers/commands';
-import { reorderTasks } from 'registers/tasks/tasksRegister';
+import { reorderTasks } from 'data/tasks/tasksRegister';
 
 import { TaskList } from './TaskList';
 

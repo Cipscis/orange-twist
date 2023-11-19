@@ -5,10 +5,10 @@ import {
 	test,
 } from '@jest/globals';
 
-import { tasksRegister } from 'registers/tasks/tasksRegister';
-import { createTask } from 'registers/tasks';
+import { tasksRegister } from 'data/tasks/tasksRegister';
+import { createTask } from 'data/tasks';
 
-import { dayTasksRegister } from 'registers/dayTasks/dayTasksRegister';
+import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
 
 import type { DayInfo } from './types';
 
@@ -16,7 +16,7 @@ import { daysRegister } from './daysRegister';
 import { getDayInfo } from './getDayInfo';
 
 import { setDayInfo } from './setDayInfo';
-import { getDayTaskInfo } from 'registers/dayTasks';
+import { getDayTaskInfo } from 'data/dayTasks';
 
 describe('setDayInfo', () => {
 	afterEach(() => {

@@ -5,10 +5,10 @@ import {
 	test,
 } from '@jest/globals';
 
-import { daysRegister } from 'registers/days/daysRegister';
-import { getDayInfo, setDayInfo } from 'registers/days';
-import { dayTasksRegister } from 'registers/dayTasks/dayTasksRegister';
-import { getDayTaskInfo, setDayTaskInfo } from 'registers/dayTasks';
+import { daysRegister } from 'data/days/daysRegister';
+import { getDayInfo, setDayInfo } from 'data/days';
+import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
+import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
 
 import { tasksRegister } from './tasksRegister';
 import { setTaskInfo } from './setTaskInfo';

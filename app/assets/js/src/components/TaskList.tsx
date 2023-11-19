@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import { useViewTransition } from 'util/index';
 
-import { getTaskInfo, useTaskInfo } from 'registers/tasks';
+import { getTaskInfo, useTaskInfo } from 'data/tasks';
 
 import { TaskComponent } from './TaskComponent';
 import React, { forwardRef } from 'preact/compat';

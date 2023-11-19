@@ -4,7 +4,7 @@ import { getCurrentDateDayName } from 'util/index';
 
 import { tasksRegister } from './tasksRegister';
 import { TaskStatus } from 'types/TaskStatus';
-import { getDayTaskInfo, setDayTaskInfo } from 'registers/dayTasks';
+import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
 
 const defaultTaskInfo = {
 	name: 'New task',

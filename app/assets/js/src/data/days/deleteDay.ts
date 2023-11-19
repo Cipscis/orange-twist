@@ -1,4 +1,4 @@
-import { deleteDayTask } from 'registers/dayTasks';
+import { deleteDayTask } from 'data/dayTasks';
 import { daysRegister } from './daysRegister';
 
 /**

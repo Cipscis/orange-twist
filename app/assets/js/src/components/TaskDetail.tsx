@@ -3,8 +3,8 @@ import { useCallback } from 'preact/hooks';
 
 import { Command } from 'types/Command';
 
-import { getDayInfo, setDayInfo, useDayInfo } from 'registers/days';
-import { useTaskInfo } from 'registers/tasks';
+import { getDayInfo, setDayInfo, useDayInfo } from 'data/days';
+import { useTaskInfo } from 'data/tasks';
 
 import { fireCommand } from 'registers/commands';
 
