@@ -13,37 +13,37 @@ import { setDayTaskInfo } from './setDayTaskInfo';
 
 import { getDayTaskInfo } from './getDayTaskInfo';
 
-const firstDayTaskInfo: DayTaskInfo = {
+const firstDayTaskInfo = {
 	dayName: '2023-11-12',
 	taskId: 1,
 
 	note: 'Test note',
 	status: TaskStatus.IN_PROGRESS,
-};
+} as const satisfies DayTaskInfo;
 
-const secondDayTaskInfo: DayTaskInfo = {
+const secondDayTaskInfo = {
 	dayName: '2023-11-12',
 	taskId: 2,
 
 	note: 'Test note 2',
 	status: TaskStatus.COMPLETED,
-};
+} as const satisfies DayTaskInfo;
 
-const thirdDayTaskInfo: DayTaskInfo = {
+const thirdDayTaskInfo = {
 	dayName: '2023-11-16',
 	taskId: 1,
 
 	note: 'Test note 3',
 	status: TaskStatus.COMPLETED,
-};
+} as const satisfies DayTaskInfo;
 
-const fourthDayTaskInfo: DayTaskInfo = {
+const fourthDayTaskInfo = {
 	dayName: '2023-11-16',
 	taskId: 2,
 
 	note: 'Test note 4',
 	status: TaskStatus.COMPLETED,
-};
+} as const satisfies DayTaskInfo;
 
 describe('getDayTaskInfo', () => {
 	beforeAll(() => {

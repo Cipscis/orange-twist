@@ -1,10 +1,10 @@
 import { h, type JSX } from 'preact';
 
-import type { DayInfo } from 'registers/days';
+import type { DayInfo } from 'data/days';
 
 import { Command } from 'types/Command';
 
-import { setDayInfo } from 'registers/days';
+import { setDayInfo } from 'data/days';
 import { fireCommand } from 'registers/commands';
 
 import { Note } from './shared/Note';

@@ -6,10 +6,11 @@ import classNames from 'classnames';
 import { Command } from 'types/Command';
 
 import {
+	type TaskInfo,
 	setTaskInfo,
 	deleteTask,
 	useTaskInfo,
-} from 'registers/tasks';
+} from 'data/tasks';
 import { fireCommand } from 'registers/commands';
 
 import { TaskStatusComponent } from './TaskStatusComponent';

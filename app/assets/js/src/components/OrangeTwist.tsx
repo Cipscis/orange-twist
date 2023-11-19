@@ -7,9 +7,9 @@ import {
 
 import { Command } from 'types/Command';
 
-import { getDayInfo, loadDays, saveDays, setDayInfo } from 'registers/days';
-import { createTask, loadTasks, saveTasks } from 'registers/tasks';
-import { loadDayTasks, saveDayTasks, setDayTaskInfo } from 'registers/dayTasks';
+import { getDayInfo, loadDays, saveDays, setDayInfo } from 'data/days';
+import { createTask, loadTasks, saveTasks } from 'data/tasks';
+import { loadDayTasks, saveDayTasks } from 'data/dayTasks';
 
 import { registerCommand, useCommand } from 'registers/commands';
 import {
@@ -166,11 +166,9 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const createNewTask = useCallback((dayName?: string) => {
 		const taskId = createTask();
 		if (dayName) {
-			setDayTaskInfo({ dayName, taskId }, {});
 			setDayInfo(dayName, {
 				tasks: [...(getDayInfo(dayName)?.tasks ?? []), taskId],
 			});
-			// TODO: Remove dayInfo.tasks and dayTaskInfo coupling into registers' methods
 		}
 	}, []);
 	useCommand(Command.TASK_ADD_NEW, createNewTask);

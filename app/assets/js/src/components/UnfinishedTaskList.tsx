@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { TaskStatus } from 'types/TaskStatus';
 import { Command } from 'types/Command';
 
-import { useTaskInfo } from 'registers/tasks';
+import { useTaskInfo } from 'data/tasks';
 import { fireCommand } from 'registers/commands';
 
 import { TaskList } from './TaskList';

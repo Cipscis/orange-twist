@@ -1,4 +1,4 @@
-export type { DayTaskInfo } from './types';
+export type { DayTaskInfo, DayTaskIdentifier } from './types';
 
 export { setDayTaskInfo } from './setDayTaskInfo';
 export { deleteDayTask } from './deleteDayTask';

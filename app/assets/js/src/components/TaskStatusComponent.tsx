@@ -12,10 +12,10 @@ import {
 	CSSKeyframes,
 } from 'util/index';
 
-import { deleteTask, setTaskInfo, useTaskInfo } from 'registers/tasks';
+import { deleteTask, setTaskInfo, useTaskInfo } from 'data/tasks';
 import { fireCommand } from 'registers/commands';
-import { getDayInfo, setDayInfo } from 'registers/days';
-import { setDayTaskInfo } from 'registers/dayTasks';
+import { getDayInfo, setDayInfo } from 'data/days';
+import { setDayTaskInfo } from 'data/dayTasks';
 
 interface TaskStatusComponentProps {
 	taskId: number;

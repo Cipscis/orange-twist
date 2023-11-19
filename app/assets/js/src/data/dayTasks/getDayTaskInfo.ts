@@ -14,14 +14,12 @@ export function getDayTaskInfo(): DayTaskInfo[];
 /**
  * Returns information for the specified day task, if any exists.
  */
-export function getDayTaskInfo({ dayName, taskId }: DayTaskIdentifier): DayTaskInfo | null;
+export function getDayTaskInfo(identifier: DayTaskIdentifier): DayTaskInfo | null;
 /**
  * Returns information for all day tasks that
  * match the specified day name or task ID.
  */
-export function getDayTaskInfo(
-	identifier: DayTaskPartialIdentifier
-): DayTaskInfo[];
+export function getDayTaskInfo(identifier: DayTaskPartialIdentifier): DayTaskInfo[];
 // Expose the implementation signature as an overload
 // to allow calling from similarly overloaded functions
 export function getDayTaskInfo(
