@@ -3,6 +3,7 @@ import type { DayInfo } from './types';
 import { isValidDateString } from 'util/index';
 
 import { daysRegister } from './daysRegister';
+import { getDayTaskInfo, setDayTaskInfo } from 'registers/dayTasks';
 
 const defaultDayInfo = {
 	note: '',
@@ -26,10 +27,17 @@ export function setDayInfo(
 	}
 
 	const existingDayInfo = daysRegister.get(dayName);
-	daysRegister.set(dayName, {
+	const newDayInfo: DayInfo = {
 		name: dayName,
 
 		note: dayInfo.note ?? existingDayInfo?.note ?? defaultDayInfo.note,
 		tasks: Array.from(dayInfo.tasks ?? existingDayInfo?.tasks ?? defaultDayInfo.tasks),
-	});
+	};
+	daysRegister.set(dayName, newDayInfo);
+
+	for (const taskId of newDayInfo.tasks) {
+		if (getDayTaskInfo({ dayName, taskId }) === null) {
+			setDayTaskInfo({ dayName, taskId }, {});
+		}
+	}
 }

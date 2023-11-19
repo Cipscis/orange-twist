@@ -1,15 +1,29 @@
 import {
+	afterEach,
 	describe,
 	expect,
 	test,
 } from '@jest/globals';
 
+import { daysRegister } from './daysRegister';
+import { tasksRegister } from 'registers/tasks/tasksRegister';
+import { dayTasksRegister } from 'registers/dayTasks/dayTasksRegister';
+
 import { setDayInfo } from './setDayInfo';
 import { getDayInfo } from './getDayInfo';
 
 import { deleteDay } from './deleteDay';
+import { createTask } from 'registers/tasks';
+import { getDayTaskInfo, setDayTaskInfo } from 'registers/dayTasks';
 
 describe('deleteDay', () => {
+	afterEach(() => {
+		// Clear all registers
+		daysRegister.clear();
+		tasksRegister.clear();
+		dayTasksRegister.clear();
+	});
+
 	test('when passed a day name without any day data, does nothing', () => {
 		expect(() => {
 			deleteDay('2023-11-08');
@@ -24,5 +38,18 @@ describe('deleteDay', () => {
 
 		deleteDay('2023-11-08');
 		expect(getDayInfo('2023-11-08')).toBeNull();
+	});
+
+	test('when passed a day name with associated day tasks, removes them all from that register', () => {
+		// Start by setting up data
+		const taskId = createTask();
+
+		setDayInfo('2023-11-19', { tasks: [taskId] });
+		setDayTaskInfo({ dayName: '2023-11-19', taskId }, { note: 'Test note' });
+
+		expect(getDayTaskInfo({ dayName: '2023-11-19', taskId })).not.toBeNull();
+
+		deleteDay('2023-11-19');
+		expect(getDayTaskInfo({ dayName: '2023-11-19', taskId })).toBeNull();
 	});
 });

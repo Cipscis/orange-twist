@@ -5,20 +5,25 @@ import {
 	test,
 } from '@jest/globals';
 
+import { tasksRegister } from 'registers/tasks/tasksRegister';
+import { createTask } from 'registers/tasks';
+
+import { dayTasksRegister } from 'registers/dayTasks/dayTasksRegister';
+
 import type { DayInfo } from './types';
 
+import { daysRegister } from './daysRegister';
 import { getDayInfo } from './getDayInfo';
-import { deleteDay } from './deleteDay';
 
 import { setDayInfo } from './setDayInfo';
+import { getDayTaskInfo } from 'registers/dayTasks';
 
 describe('setDayInfo', () => {
 	afterEach(() => {
-		// Delete all days with data
-		const dayNames = getDayInfo().map(({ name }) => name);
-		for (const dayName of dayNames) {
-			deleteDay(dayName);
-		}
+		// Delete all data
+		daysRegister.clear();
+		tasksRegister.clear();
+		dayTasksRegister.clear();
 	});
 
 	test('when passed an invalid day name, throws an error', () => {
@@ -64,5 +69,13 @@ describe('setDayInfo', () => {
 			note: 'Test note',
 			tasks: [1, 2],
 		});
+	});
+
+	test('when updating tasks, ensures each one has a day task', () => {
+		const taskId = createTask();
+
+		setDayInfo('2023-11-19', { tasks: [taskId] });
+
+		expect(getDayTaskInfo({ dayName: '2023-11-19', taskId })).not.toBeNull();
 	});
 });
