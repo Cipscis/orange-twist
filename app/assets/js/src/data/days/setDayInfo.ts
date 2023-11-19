@@ -3,7 +3,8 @@ import type { DayInfo } from './types';
 import { isValidDateString } from 'util/index';
 
 import { daysRegister } from './daysRegister';
-import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
+import { getDayTaskInfo, setDayTaskInfo, type DayTaskInfo } from 'data/dayTasks';
+import { getTaskStatusForDay } from 'data/util/getTaskStatusForDay';
 
 const defaultDayInfo = {
 	note: '',
@@ -37,7 +38,14 @@ export function setDayInfo(
 
 	for (const taskId of newDayInfo.tasks) {
 		if (getDayTaskInfo({ dayName, taskId }) === null) {
-			setDayTaskInfo({ dayName, taskId }, {});
+			const dayTaskInfo: Partial<DayTaskInfo> = {};
+
+			const status = getTaskStatusForDay({ dayName, taskId });
+			if (status !== null) {
+				dayTaskInfo.status = status;
+			}
+
+			setDayTaskInfo({ dayName, taskId }, dayTaskInfo);
 		}
 	}
 }

@@ -10,13 +10,14 @@ import { createTask } from 'data/tasks';
 
 import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
 
+import { TaskStatus } from 'types/TaskStatus';
 import type { DayInfo } from './types';
 
 import { daysRegister } from './daysRegister';
 import { getDayInfo } from './getDayInfo';
 
 import { setDayInfo } from './setDayInfo';
-import { getDayTaskInfo } from 'data/dayTasks';
+import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
 
 describe('setDayInfo', () => {
 	afterEach(() => {
@@ -77,5 +78,16 @@ describe('setDayInfo', () => {
 		setDayInfo('2023-11-19', { tasks: [taskId] });
 
 		expect(getDayTaskInfo({ dayName: '2023-11-19', taskId })).not.toBeNull();
+	});
+
+	test('when updating tasks, initialises the day task with the appropriate status', () => {
+		const taskId = createTask();
+
+		setDayTaskInfo({ taskId, dayName: '2023-11-17' }, { status: TaskStatus.IN_PROGRESS });
+		setDayTaskInfo({ taskId, dayName: '2023-11-19' }, { status: TaskStatus.COMPLETED });
+
+		setDayInfo('2023-11-18', { tasks: [taskId] });
+
+		expect(getDayTaskInfo({ taskId, dayName: '2023-11-18' })?.status).toBe(TaskStatus.IN_PROGRESS);
 	});
 });
