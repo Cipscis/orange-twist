@@ -7,7 +7,7 @@ import {
 
 import { Command } from 'types/Command';
 
-import { getDayInfo, loadDays, saveDays, setDayInfo } from 'data/days';
+import { getAllDayInfo, getDayInfo, loadDays, saveDays, setDayInfo } from 'data/days';
 import { createTask, loadTasks, saveTasks } from 'data/tasks';
 import { loadDayTasks, saveDayTasks } from 'data/dayTasks';
 
@@ -142,7 +142,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 * Ask the user what day to add, then add it to the register.
 	 */
 	const addNewDay = useCallback((dayNameArg?: string) => {
-		const days = getDayInfo();
+		const days = getAllDayInfo();
 
 		const dayName = dayNameArg ?? window.prompt('What day?');
 		if (!dayName) {

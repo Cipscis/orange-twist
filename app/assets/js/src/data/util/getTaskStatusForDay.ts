@@ -1,5 +1,6 @@
 import type { TaskStatus } from 'types/TaskStatus';
 import { getTaskInfo, type DayTaskIdentifier, getDayTaskInfo } from 'data';
+import { getAllDayTaskInfo } from 'data/dayTasks';
 
 export function getTaskStatusForDay(
 	{ dayName, taskId }: DayTaskIdentifier
@@ -17,7 +18,7 @@ export function getTaskStatusForDay(
 	}
 
 	// If the task has no task days, return its status
-	const allDayTaskInfo = getDayTaskInfo({ taskId });
+	const allDayTaskInfo = getAllDayTaskInfo({ taskId });
 	if (allDayTaskInfo.length === 0) {
 		return taskInfo.status;
 	}

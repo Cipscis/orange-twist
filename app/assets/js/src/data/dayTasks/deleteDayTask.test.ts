@@ -11,6 +11,7 @@ import { getDayInfo } from 'data/days';
 import { dayTasksRegister } from './dayTasksRegister';
 import { setDayTaskInfo } from './setDayTaskInfo';
 import { getDayTaskInfo } from './getDayTaskInfo';
+import { getAllDayTaskInfo } from './getAllDayTaskInfo';
 
 import { deleteDayTask } from './deleteDayTask';
 
@@ -46,12 +47,12 @@ describe('deleteDayTask', () => {
 		setDayTaskInfo({ dayName: '2023-11-19', taskId: 2 }, {});
 
 		deleteDayTask({ dayName: '2023-11-17' });
-		expect(getDayTaskInfo({ dayName: '2023-11-17' })).toEqual([]);
+		expect(getAllDayTaskInfo({ dayName: '2023-11-17' })).toEqual([]);
 
 		deleteDayTask({ taskId: 1 });
-		expect(getDayTaskInfo({ taskId: 1 })).toEqual([]);
+		expect(getAllDayTaskInfo({ taskId: 1 })).toEqual([]);
 
-		expect(getDayTaskInfo()).toHaveLength(2);
+		expect(getAllDayTaskInfo()).toHaveLength(2);
 	});
 
 	test('also removes tasks from days', () => {

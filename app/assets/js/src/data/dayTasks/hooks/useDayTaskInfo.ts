@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import type {
-	DayTaskIdentifier,
-	DayTaskInfo,
-	DayTaskPartialIdentifier,
+import {
+	isDayTaskIdentifier,
+	type DayTaskIdentifier,
+	type DayTaskInfo,
 } from '../types';
 import type { RegisterKey } from 'util/register';
 
 import { dayTasksRegister } from '../dayTasksRegister';
 import { decodeDayTaskKey } from '../util';
 import { getDayTaskInfo } from '../getDayTaskInfo';
+import { getAllDayTaskInfo } from '../getAllDayTaskInfo';
 
 /**
  * Provides up to date information on all day tasks.
@@ -19,13 +20,25 @@ export function useDayTaskInfo(): DayTaskInfo[];
  * Provides up to date information on all day tasks
  * matching a partial identifier.
  */
-export function useDayTaskInfo(identifier: DayTaskPartialIdentifier): DayTaskInfo[];
+export function useDayTaskInfo(identifier: Partial<DayTaskIdentifier>): DayTaskInfo[];
 /**
  * Provides up to date information on a single day task.
  */
 export function useDayTaskInfo(identifier: DayTaskIdentifier): DayTaskInfo | null;
-export function useDayTaskInfo(identifier?: DayTaskPartialIdentifier | DayTaskIdentifier): DayTaskInfo[] | DayTaskInfo | null {
-	const [thisDayTaskInfo, setThisDayTaskInfo] = useState(() => getDayTaskInfo(identifier));
+export function useDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): DayTaskInfo[] | DayTaskInfo | null {
+	const getEachDayTaskInfo = useCallback(() => {
+		if (typeof identifier === 'undefined') {
+			return getAllDayTaskInfo();
+		}
+
+		if (isDayTaskIdentifier(identifier)) {
+			return getDayTaskInfo(identifier);
+		}
+
+		return getAllDayTaskInfo(identifier);
+	}, [identifier]);
+
+	const [thisDayTaskInfo, setThisDayTaskInfo] = useState(() => getEachDayTaskInfo());
 
 	const doneInitialRender = useRef(false);
 
@@ -37,8 +50,8 @@ export function useDayTaskInfo(identifier?: DayTaskPartialIdentifier | DayTaskId
 			return;
 		}
 
-		setThisDayTaskInfo(getDayTaskInfo(identifier));
-	}, [identifier]);
+		setThisDayTaskInfo(getEachDayTaskInfo());
+	}, [getEachDayTaskInfo]);
 
 	/**
 	 * Update the day task info if and only if a relevant day task has changed.
@@ -48,7 +61,7 @@ export function useDayTaskInfo(identifier?: DayTaskPartialIdentifier | DayTaskId
 	) => {
 		// If we're listening to everything, update on any change
 		if (typeof identifier === 'undefined') {
-			setThisDayTaskInfo(getDayTaskInfo());
+			setThisDayTaskInfo(getAllDayTaskInfo());
 			return;
 		}
 
@@ -70,9 +83,9 @@ export function useDayTaskInfo(identifier?: DayTaskPartialIdentifier | DayTaskId
 		));
 
 		if (hasChanged) {
-			setThisDayTaskInfo(getDayTaskInfo(identifier));
+			setThisDayTaskInfo(getEachDayTaskInfo());
 		}
-	}, [identifier]);
+	}, [identifier, getEachDayTaskInfo]);
 
 	// Listen for relevant changes on dayTasksRegister
 	useEffect(() => {

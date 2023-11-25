@@ -5,7 +5,7 @@ import { encodeDayTaskKey } from './util';
 
 import { getTaskInfo, setTaskInfo } from 'data/tasks';
 import { getDayInfo, setDayInfo } from 'data/days';
-import { getDayTaskInfo } from '.';
+import { getAllDayTaskInfo } from './getAllDayTaskInfo';
 
 const defaultDayTaskInfo = {
 	note: '',
@@ -62,7 +62,7 @@ export function setDayTaskInfo(
 		// If a task exists and it has no later days with day tasks, update its status
 
 		/** The day names for all day task info objects matching this task, sorted chronologically */
-		const matchingDayNames = getDayTaskInfo()
+		const matchingDayNames = getAllDayTaskInfo()
 			.filter(({ taskId: thisTaskId }) => thisTaskId === taskId).map(({ dayName }) => dayName)
 			.sort((dayNameA, dayNameB) => dayNameA.localeCompare(dayNameB));
 
