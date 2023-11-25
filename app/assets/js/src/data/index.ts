@@ -4,8 +4,10 @@ export {
 	setDayInfo,
 	deleteDay,
 	getDayInfo,
+	getAllDayInfo,
 
 	useDayInfo,
+	useAllDayInfo,
 
 	loadDays,
 	saveDays,
@@ -18,8 +20,10 @@ export {
 	setTaskInfo,
 	deleteTask,
 	getTaskInfo,
+	getAllTaskInfo,
 
 	useTaskInfo,
+	useAllTaskInfo,
 
 	loadTasks,
 	saveTasks,
@@ -32,8 +36,10 @@ export {
 	setDayTaskInfo,
 	deleteDayTask,
 	getDayTaskInfo,
+	getAllDayTaskInfo,
 
 	useDayTaskInfo,
+	useAllDayTaskInfo,
 
 	loadDayTasks,
 	saveDayTasks,
