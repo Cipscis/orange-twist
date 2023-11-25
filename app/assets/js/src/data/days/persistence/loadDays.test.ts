@@ -62,16 +62,16 @@ describe('loadDays', () => {
 		expect(Array.from(daysRegister.entries())).toEqual([]);
 	});
 
-	test('returns a Promise that rejects if invalid JSON has been persisted', () => {
+	test('returns a Promise that rejects if invalid JSON has been persisted', async () => {
 		localStorage.setItem('days', 'invalid JSON');
 
-		expect(loadDays()).rejects.toBeInstanceOf(Error);
+		await expect(loadDays()).rejects.toBeInstanceOf(Error);
 	});
 
-	test('returns a Promise that rejects if invalid data has been persisted', () => {
+	test('returns a Promise that rejects if invalid data has been persisted', async () => {
 		localStorage.setItem('days', JSON.stringify(['Invalid data']));
 
-		expect(loadDays()).rejects.toBeInstanceOf(Error);
+		await expect(loadDays()).rejects.toBeInstanceOf(Error);
 	});
 
 	test('triggers up to a single "delete" event and a single "set" event', async () => {

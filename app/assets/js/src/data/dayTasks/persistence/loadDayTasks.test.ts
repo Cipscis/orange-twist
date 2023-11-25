@@ -73,16 +73,16 @@ describe('loadDayTasks', () => {
 		expect(Array.from(dayTasksRegister.entries())).toEqual([]);
 	});
 
-	test('returns a Promise that rejects if invalid JSON has been persisted', () => {
+	test('returns a Promise that rejects if invalid JSON has been persisted', async () => {
 		localStorage.setItem('day-tasks', 'invalid JSON');
 
-		expect(loadDayTasks()).rejects.toBeInstanceOf(Error);
+		await expect(loadDayTasks()).rejects.toBeInstanceOf(Error);
 	});
 
-	test('returns a Promise that rejects if invalid data has been persisted', () => {
+	test('returns a Promise that rejects if invalid data has been persisted', async () => {
 		localStorage.setItem('day-tasks', JSON.stringify(['Invalid data']));
 
-		expect(loadDayTasks()).rejects.toBeInstanceOf(Error);
+		await expect(loadDayTasks()).rejects.toBeInstanceOf(Error);
 	});
 
 	test('triggers up to a single "delete" event and a single "set" event', async () => {
