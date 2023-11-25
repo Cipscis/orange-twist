@@ -1,15 +1,15 @@
 import { h } from 'preact';
 import { useCallback, useId, useRef } from 'preact/hooks';
+import type React from 'preact/compat';
+import { forwardRef } from 'preact/compat';
 
 import classNames from 'classnames';
-
 
 import { useViewTransition } from 'util/index';
 
 import { useAllTaskInfo } from 'data/tasks';
 
-import { TaskComponent } from './TaskComponent';
-import React, { forwardRef } from 'preact/compat';
+import { Task } from './Task';
 
 interface TaskListProps {
 	taskIds: readonly number[];
@@ -162,7 +162,7 @@ export const TaskList = forwardRef(
 							onDragStart={dragStartHandler(i)}
 						/>
 					}
-					<TaskComponent
+					<Task
 						taskId={taskInfo.id}
 						dayName={dayName}
 					/>

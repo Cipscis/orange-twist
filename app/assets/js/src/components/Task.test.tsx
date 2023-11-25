@@ -9,10 +9,10 @@ import userEvent from '@testing-library/user-event';
 import { tasksRegister } from 'data/tasks/tasksRegister';
 import { TaskStatus } from 'types/TaskStatus';
 
-import { TaskComponent } from './TaskComponent';
+import { Task } from './Task';
 import { setTaskInfo } from 'data/tasks';
 
-describe('TaskComponent', () => {
+describe('Task', () => {
 	afterEach(() => {
 		cleanup();
 		tasksRegister.clear();
@@ -25,7 +25,7 @@ describe('TaskComponent', () => {
 		});
 
 		const { getByTestId } = render(
-			<TaskComponent taskId={0} />
+			<Task taskId={0} />
 		);
 
 		const content = getByTestId('task-component-name');
@@ -48,7 +48,7 @@ describe('TaskComponent', () => {
 		});
 
 		const { getByRole, getByText } = render(
-			<TaskComponent taskId={0} />
+			<Task taskId={0} />
 		);
 
 		const name = getByText('Task name');
@@ -68,7 +68,7 @@ describe('TaskComponent', () => {
 		});
 
 		const { getByRole, queryByRole } = render(
-			<TaskComponent taskId={0} />
+			<Task taskId={0} />
 		);
 
 		const name = getByRole('link', { name: 'Link text' });
