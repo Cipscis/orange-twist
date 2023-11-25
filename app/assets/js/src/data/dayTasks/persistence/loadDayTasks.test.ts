@@ -10,8 +10,10 @@ import type { DayTaskInfo } from '../types';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { dayTasksRegister } from '../dayTasksRegister';
-import { loadDayTasks } from './loadDayTasks';
 import { setDayTaskInfo } from '../setDayTaskInfo';
+import { clear } from '../../shared';
+
+import { loadDayTasks } from './loadDayTasks';
 
 const firstDayTaskInfo: DayTaskInfo = {
 	dayName: '2023-11-13',
@@ -35,7 +37,7 @@ describe('loadDayTasks', () => {
 			['2023-11-13_1', firstDayTaskInfo],
 			['2023-11-13_2', secondDayTaskInfo],
 		]));
-		dayTasksRegister.clear();
+		clear();
 	});
 
 	test('returns a Promise that resolves when the day tasks register has been filled with the persisted days data', async () => {

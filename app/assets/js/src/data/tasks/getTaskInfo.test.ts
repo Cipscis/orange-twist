@@ -8,8 +8,8 @@ import {
 import { TaskStatus } from 'types/TaskStatus';
 import type { TaskInfo } from './types';
 
-import { tasksRegister } from './tasksRegister';
 import { setTaskInfo } from './setTaskInfo';
+import { clear } from '../shared';
 
 import { getTaskInfo } from './getTaskInfo';
 
@@ -27,7 +27,7 @@ const secondTaskInfo: TaskInfo = {
 
 describe('getTaskInfo', () => {
 	beforeAll(() => {
-		tasksRegister.clear();
+		clear();
 		setTaskInfo(1, firstTaskInfo);
 		setTaskInfo(2, secondTaskInfo);
 	});

@@ -8,6 +8,7 @@ import {
 
 import { loadDays } from './loadDays';
 import { daysRegister } from '../daysRegister';
+import { clear } from '../../shared';
 
 const ninthDayInfo = {
 	note: 'Ninth note',
@@ -25,7 +26,7 @@ describe('loadDays', () => {
 			['2023-11-09', { name: '2023-11-09', ...ninthDayInfo }],
 			['2023-11-10', { name: '2023-11-10', ...tenthDayInfo }],
 		]));
-		daysRegister.clear();
+		clear();
 	});
 
 	test('returns a Promise that resolves when the days register has been filled with the persisted days data', async () => {

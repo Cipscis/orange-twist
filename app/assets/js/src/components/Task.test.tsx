@@ -6,16 +6,18 @@ import '@testing-library/jest-dom/jest-globals';
 import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
-import { tasksRegister } from 'data/tasks/tasksRegister';
 import { TaskStatus } from 'types/TaskStatus';
+import {
+	clear,
+	setTaskInfo,
+} from 'data';
 
 import { Task } from './Task';
-import { setTaskInfo } from 'data/tasks';
 
 describe('Task', () => {
 	afterEach(() => {
 		cleanup();
-		tasksRegister.clear();
+		clear();
 	});
 
 	test('renders the task name as Markdown', () => {

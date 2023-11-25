@@ -45,4 +45,4 @@ export {
 	saveDayTasks,
 } from './dayTasks';
 
-export { clear } from './clear';
+export { clear } from './shared';

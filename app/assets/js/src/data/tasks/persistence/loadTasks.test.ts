@@ -9,8 +9,10 @@ import {
 import type { TaskInfo } from '../types';
 
 import { TaskStatus } from 'types/TaskStatus';
-import { loadTasks } from './loadTasks';
 import { tasksRegister } from '../tasksRegister';
+import { clear } from '../../shared';
+
+import { loadTasks } from './loadTasks';
 
 const firstTaskInfo: TaskInfo = {
 	id: 1,
@@ -30,7 +32,7 @@ describe('loadTasks', () => {
 			[1, firstTaskInfo],
 			[2, secondTaskInfo],
 		]));
-		tasksRegister.clear();
+		clear();
 	});
 
 	test('returns a Promise that resolves when the tasks register has been filled with the persisted tasks data', async () => {

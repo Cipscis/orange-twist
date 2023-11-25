@@ -13,6 +13,7 @@ import type { TaskInfo } from '../types';
 import { tasksRegister } from '../tasksRegister';
 import { TaskStatus } from 'types/TaskStatus';
 import { setTaskInfo } from '../setTaskInfo';
+import { clear } from '../../shared';
 
 import { useTaskInfo } from './useTaskInfo';
 
@@ -44,7 +45,7 @@ describe('useTaskInfo', () => {
 	});
 
 	afterEach(() => {
-		tasksRegister.clear();
+		clear();
 	});
 
 	test('when passed a task ID that has no matching task, returns null', () => {

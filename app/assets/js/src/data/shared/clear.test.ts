@@ -4,9 +4,9 @@ import {
 	test,
 } from '@jest/globals';
 
-import { getAllDayInfo, setDayInfo } from './days';
-import { getAllTaskInfo, setTaskInfo } from './tasks';
-import { getAllDayTaskInfo, setDayTaskInfo } from './dayTasks';
+import { getAllDayInfo, setDayInfo } from '../days';
+import { getAllTaskInfo, setTaskInfo } from '../tasks';
+import { getAllDayTaskInfo, setDayTaskInfo } from '../dayTasks';
 
 import { clear } from './clear';
 

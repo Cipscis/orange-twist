@@ -12,6 +12,7 @@ import type { DayInfo } from '../types';
 
 import { daysRegister } from '../daysRegister';
 import { setDayInfo } from '../setDayInfo';
+import { clear } from '../../shared';
 
 import { useDayInfo } from './useDayInfo';
 
@@ -34,7 +35,7 @@ describe('useDayInfo', () => {
 	});
 
 	afterEach(() => {
-		daysRegister.clear();
+		clear();
 	});
 
 	test('when passed a day name that has no matching day, returns null', () => {

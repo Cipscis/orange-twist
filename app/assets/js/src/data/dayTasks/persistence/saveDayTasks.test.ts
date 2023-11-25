@@ -9,7 +9,7 @@ import type { DayTaskInfo } from '../types';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { setDayTaskInfo } from '../setDayTaskInfo';
-import { dayTasksRegister } from '../dayTasksRegister';
+import { clear } from '../../shared';
 
 import { saveDayTasks } from './saveDayTasks';
 
@@ -32,7 +32,7 @@ const secondDayTaskInfo: DayTaskInfo = {
 describe('saveDayTasks', () => {
 	beforeEach(() => {
 		localStorage.clear();
-		dayTasksRegister.clear();
+		clear();
 	});
 
 	test('returns a Promise that resolves when the content of the day tasks register has been persisted', async () => {

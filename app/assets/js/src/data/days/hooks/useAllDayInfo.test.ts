@@ -11,6 +11,7 @@ import { renderHook } from '@testing-library/preact';
 import type { DayInfo } from '../types';
 
 import { daysRegister } from '../daysRegister';
+import { clear } from '../../shared';
 
 import { useAllDayInfo } from './useAllDayInfo';
 
@@ -33,11 +34,11 @@ describe('useAllDayInfo', () => {
 	});
 
 	afterEach(() => {
-		daysRegister.clear();
+		clear();
 	});
 
 	test('when passed no arguments, if there are no days, returns an empty array', () => {
-		daysRegister.clear();
+		clear();
 
 		const { result } = renderHook(() => useAllDayInfo());
 		expect(result.current).toEqual([]);

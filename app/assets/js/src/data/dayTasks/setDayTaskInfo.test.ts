@@ -8,23 +8,16 @@ import {
 import type { DayTaskIdentifier, DayTaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 
-import { getDayInfo } from 'data/days';
-import { daysRegister } from 'data/days/daysRegister';
-
-import { getTaskInfo } from 'data/tasks';
-import { tasksRegister } from 'data/tasks/tasksRegister';
-
-import { dayTasksRegister } from './dayTasksRegister';
+import { getDayInfo } from '../days';
+import { getTaskInfo } from '../tasks';
 import { getDayTaskInfo } from './getDayTaskInfo';
+import { clear } from '../shared';
 
 import { setDayTaskInfo } from './setDayTaskInfo';
 
 describe('setDayTaskInfo', () => {
 	afterEach(() => {
-		// Delete all data
-		daysRegister.clear();
-		tasksRegister.clear();
-		dayTasksRegister.clear();
+		clear();
 	});
 
 	test('when passed a day name and task ID without existing data, creates a new task and/or day as necessary with default information filling in the blanks', () => {
