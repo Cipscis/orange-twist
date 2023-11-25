@@ -62,27 +62,4 @@ describe('getDayTaskInfo', () => {
 	test('when passed a day name and task ID that has info, returns that info', () => {
 		expect(getDayTaskInfo({ dayName: '2023-11-12', taskId: 1 })).toEqual(firstDayTaskInfo);
 	});
-
-	test('when passed a day name only, returns an array of all day tasks for that day', () => {
-		expect(getDayTaskInfo({ dayName: '2023-11-12' })).toEqual([
-			firstDayTaskInfo,
-			secondDayTaskInfo,
-		]);
-	});
-
-	test('when passed a task ID only, returns an array of all day tasks for that task', () => {
-		expect(getDayTaskInfo({ taskId: 1 })).toEqual([
-			firstDayTaskInfo,
-			thirdDayTaskInfo,
-		]);
-	});
-
-	test('when passed no arguments, returns an array of all day tasks', () => {
-		expect(getDayTaskInfo()).toEqual([
-			firstDayTaskInfo,
-			secondDayTaskInfo,
-			thirdDayTaskInfo,
-			fourthDayTaskInfo,
-		]);
-	});
 });

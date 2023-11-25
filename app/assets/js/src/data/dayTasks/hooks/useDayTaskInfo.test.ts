@@ -7,7 +7,7 @@ import {
 
 import { act, renderHook } from '@testing-library/preact';
 
-import type { DayTaskIdentifier, DayTaskInfo, DayTaskPartialIdentifier } from '../types';
+import type { DayTaskIdentifier, DayTaskInfo } from '../types';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { dayTasksRegister } from '../dayTasksRegister';
@@ -134,7 +134,7 @@ describe('useDayTaskInfo', () => {
 				{
 					initialProps: {
 						dayName: '2023-11-12',
-					} as DayTaskIdentifier | DayTaskPartialIdentifier,
+					} as Partial<DayTaskIdentifier>,
 				}
 			);
 			expect(result.current).toEqual([firstDayTaskInfo, secondDayTaskInfo]);
@@ -146,7 +146,7 @@ describe('useDayTaskInfo', () => {
 		test('re-renders only when a matching day task is changed', async () => {
 			const identifier = {
 				dayName: '2023-11-12',
-			} as const satisfies DayTaskPartialIdentifier;
+			} as const satisfies Partial<DayTaskIdentifier>;
 
 			let renderCount = 0;
 			const { result } = renderHook(() => {
@@ -190,7 +190,7 @@ describe('useDayTaskInfo', () => {
 				initialProps: {
 					dayName: '2023-11-12',
 					taskId: 1,
-				} as DayTaskIdentifier | DayTaskPartialIdentifier,
+				} as Partial<DayTaskIdentifier>,
 			}
 		);
 		expect(result.current).toEqual(firstDayTaskInfo);

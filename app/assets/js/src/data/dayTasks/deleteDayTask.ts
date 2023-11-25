@@ -3,11 +3,10 @@ import { getDayInfo, setDayInfo } from 'data/days';
 import { encodeDayTaskKey } from './util';
 import {
 	type DayTaskIdentifier,
-	type DayTaskPartialIdentifier,
 } from './types';
 
 import { dayTasksRegister } from './dayTasksRegister';
-import { getDayTaskInfo } from './getDayTaskInfo';
+import { getAllDayTaskInfo } from './getAllDayTaskInfo';
 
 /**
  * Deletes a specified day task.
@@ -16,11 +15,11 @@ export function deleteDayTask(identifier: DayTaskIdentifier): void;
 /**
  * Deletes all day tasks matching a partially specified identifier.
  */
-export function deleteDayTask(identifier: DayTaskPartialIdentifier): void;
-export function deleteDayTask(identifier?: DayTaskPartialIdentifier | DayTaskIdentifier): void {
+export function deleteDayTask(identifier: Partial<DayTaskIdentifier>): void;
+export function deleteDayTask(identifier?: Partial<DayTaskIdentifier>): void {
 	// Collect all matching entries to delete
-	const matchingDayTaskInfo = getDayTaskInfo(identifier);
-	if (matchingDayTaskInfo === null) {
+	const matchingDayTaskInfo = getAllDayTaskInfo(identifier);
+	if (matchingDayTaskInfo.length === 0) {
 		return;
 	}
 
