@@ -18,7 +18,11 @@ import { randomUUID } from 'node:crypto';
 import { addCommandListener, fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
-import { getAllDayTaskInfo, getDayInfo } from 'data';
+import {
+	clear,
+	getAllDayTaskInfo,
+	getDayInfo,
+} from 'data';
 
 import { OrangeTwist } from './OrangeTwist';
 import { KeyboardShortcutName, addKeyboardShortcutListener } from 'registers/keyboard-shortcuts';
@@ -33,6 +37,7 @@ describe('OrangeTwist', () => {
 	afterEach(() => {
 		cleanup();
 		localStorage.clear();
+		clear();
 	});
 
 	test('renders its children', () => {
