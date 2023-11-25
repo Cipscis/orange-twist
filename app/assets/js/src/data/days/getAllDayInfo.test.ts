@@ -9,9 +9,9 @@ import type { DayInfo } from './types';
 
 import { setDayInfo } from './setDayInfo';
 
-import { getDayInfo } from './getDayInfo';
+import { getAllDayInfo } from './getAllDayInfo';
 
-describe('getDayInfo', () => {
+describe('getAllDayInfo', () => {
 	beforeAll(() => {
 		setDayInfo(
 			'2023-11-07',
@@ -29,15 +29,18 @@ describe('getDayInfo', () => {
 		);
 	});
 
-	test('when passed a day name that has no matching day, returns null', () => {
-		expect(getDayInfo('Invalid day')).toBeNull();
-	});
-
-	test('when passed a day name that has a matching day, returns that day\'s info', () => {
-		expect(getDayInfo('2023-11-07')).toEqual({
-			name: '2023-11-07',
-			note: 'Test note',
-			tasks: [1],
-		});
+	test('returns an array of info on all days', () => {
+		expect(getAllDayInfo()).toEqual([
+			{
+				name: '2023-11-07',
+				note: 'Test note',
+				tasks: [1],
+			},
+			{
+				name: '2023-11-08',
+				note: 'Test note 2',
+				tasks: [1],
+			},
+		]);
 	});
 });
