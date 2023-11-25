@@ -6,16 +6,9 @@ import { dayTasksRegister } from './dayTasksRegister';
 import { decodeDayTaskKey } from './util';
 
 /**
- * Returns information for all day tasks.
+ * Returns all day tasks that match a specified identifier.
+ * If no identifier is specified, returns all day tasks.
  */
-export function getAllDayTaskInfo(): DayTaskInfo[];
-/**
- * Returns all day tasks that match the specified identifier.
- */
-export function getAllDayTaskInfo(identifier: Partial<DayTaskIdentifier>): DayTaskInfo[];
-// Expose the implementation signature as an overload
-// to allow calling from similarly overloaded functions
-export function getAllDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): DayTaskInfo[];
 export function getAllDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): DayTaskInfo[] {
 	// If there's no identifier, return everything
 	if (typeof identifier === 'undefined') {

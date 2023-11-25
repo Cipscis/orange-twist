@@ -1,4 +1,8 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useState,
+} from 'preact/hooks';
 
 import type { DayInfo } from '../types/DayInfo';
 
@@ -12,15 +16,11 @@ export function useAllDayInfo(): DayInfo[] {
 	// Initialise thisDayInfo based on the passed dayName
 	const [thisDayInfo, setThisDayInfo] = useState(() => getAllDayInfo());
 
-	// Update thisDayInfo if dayName changes
-	useEffect(() => setThisDayInfo(getAllDayInfo()), []);
-
 	/**
 	 * Update the day info if and only if the relevant day has changed.
 	 */
 	const handleDayInfoUpdate = useCallback((changes: { key: string; }[]) => {
 		setThisDayInfo(getAllDayInfo());
-		return;
 	}, []);
 
 	// Listen for relevant changes on daysRegister

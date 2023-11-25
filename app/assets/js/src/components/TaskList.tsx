@@ -139,7 +139,7 @@ export const TaskList = forwardRef(
 		>
 			{tasksInfo.map((taskInfo, i) => {
 				if (!taskInfo) {
-					return '';
+					return null;
 				}
 
 				return <div
