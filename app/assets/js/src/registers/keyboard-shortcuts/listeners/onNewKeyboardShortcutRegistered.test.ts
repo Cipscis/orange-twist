@@ -78,7 +78,7 @@ describe('onNewKeyboardShortcutRegistered', () => {
 });
 
 describe('offNewKeyboardShortcutRegistered', () => {
-	test('unbinds a listener bound with onNewKeyboardShortcutRegistered', () => {});
+	test.todo('unbinds a listener bound with onNewKeyboardShortcutRegistered');
 
 	test('does nothing if the listener is not already bound', () => {
 		expect(

@@ -117,6 +117,8 @@ These dependencies are used when working on the project locally.
 
 	* [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks): Provides React/Preact linting rules
 
+	* [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest): Provides Jest linting rules
+
 * [stylelint](https://www.npmjs.com/package/stylelint): Linting CSS
 
 	* [stylelint-config-recommended-scss](https://www.npmjs.com/package/stylelint-config-recommended-scss): Allows `stylelint` to lint SCSS files, and provides a base set of SCSS linting rules

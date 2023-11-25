@@ -458,5 +458,13 @@ module.exports = {
 				"beforeClosing": "allow"
 			},
 		],
-	}
+	},
+
+	overrides: [
+		{
+			files: ['*.{spec,test}.{j,t}{s,sx}'],
+			plugins: ['jest'],
+			extends: ['plugin:jest/recommended'],
+		}
+	],
 };

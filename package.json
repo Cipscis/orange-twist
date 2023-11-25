@@ -6,23 +6,18 @@
 	"type": "module",
 	"scripts": {
 		"server": "node --loader ts-node/esm scripts/server.ts",
-
 		"buildJs": "concurrently \"tsc --noEmit\" \"node --loader ts-node/esm scripts/build.ts\"",
 		"buildCss": "sass app/assets/scss:app/assets/css",
 		"build": "concurrently \"npm run buildJs\" \"npm run buildCss\"",
-
 		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
 		"testCoverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --collectCoverage",
-
 		"watchJs": "node --loader ts-node/esm scripts/build-watch.ts",
 		"watchCss": "sass app/assets/scss:app/assets/css --watch",
 		"testWatch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
 		"watch": "concurrently --kill-others \"tsc --watch --preserveWatchOutput --noEmit\" \"npm run watchJs\" \"npm run watchCss\" \"npm run testWatch\"",
-
 		"lintJs": "eslint app/assets/js/src/**",
 		"lintCss": "stylelint app/assets/scss/**/*.scss",
 		"lint": "npm run lintJs && npm run lintCss",
-
 		"start": "concurrently --kill-others \"npm run server\" \"npm run watch\"",
 		"prepare": "tsc --noEmit && npm test"
 	},
@@ -46,6 +41,7 @@
 		"dotenv": "^16.3.1",
 		"esbuild": "^0.19.5",
 		"eslint": "^8.52.0",
+		"eslint-plugin-jest": "^27.6.0",
 		"eslint-plugin-react": "^7.33.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"express": "^4.18.2",
