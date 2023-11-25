@@ -9,7 +9,7 @@ import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
 import { daysRegister } from 'data/days/daysRegister';
 import { tasksRegister } from 'data/tasks/tasksRegister';
 
-import { createTask, getTaskInfo, setDayTaskInfo, setTaskInfo } from 'data';
+import { createTask, deleteDayTask, getTaskInfo, setDayTaskInfo, setTaskInfo } from 'data';
 
 import { getTaskStatusForDay } from './getTaskStatusForDay';
 import { TaskStatus } from 'types/TaskStatus';
@@ -30,15 +30,21 @@ describe('getTaskStatusForDay', () => {
 
 	test('returns the task\'s status if it has no days', () => {
 		const taskId = createTask({ status: TaskStatus.IN_PROGRESS });
+		// Delete the initial day task created automatically for the current day
+		deleteDayTask({ taskId });
 
-		expect(getTaskStatusForDay({
+		const taskStatusForDay = getTaskStatusForDay({
 			taskId,
 			dayName: '2023-11-19',
-		})).toBe(TaskStatus.IN_PROGRESS);
+		});
+
+		expect(taskStatusForDay).toBe(TaskStatus.IN_PROGRESS);
 	});
 
 	test('returns null if the task did not exist yet on this day', () => {
 		const taskId = createTask();
+		// Delete the initial day task created automatically for the current day
+		deleteDayTask({ taskId });
 
 		setDayTaskInfo({
 			taskId,
@@ -53,6 +59,8 @@ describe('getTaskStatusForDay', () => {
 
 	test('returns the status for the given day, if it has a day task', () => {
 		const taskId = createTask();
+		// Delete the initial day task created automatically for the current day
+		deleteDayTask({ taskId });
 
 		setDayTaskInfo({
 			taskId,
@@ -82,6 +90,8 @@ describe('getTaskStatusForDay', () => {
 
 	test('returns the task\'s status if all its days are prior', () => {
 		const taskId = createTask();
+		// Delete the initial day task created automatically for the current day
+		deleteDayTask({ taskId });
 
 		setDayTaskInfo({
 			taskId,
@@ -117,6 +127,8 @@ describe('getTaskStatusForDay', () => {
 
 	test('returns the status of task\'s prior day if it has prior and future days', () => {
 		const taskId = createTask();
+		// Delete the initial day task created automatically for the current day
+		deleteDayTask({ taskId });
 
 		setDayTaskInfo({
 			taskId,
