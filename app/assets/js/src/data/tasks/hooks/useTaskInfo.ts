@@ -4,6 +4,7 @@ import type { TaskInfo } from '../types/TaskInfo';
 
 import { tasksRegister } from '../tasksRegister';
 import { getTaskInfo } from '../getTaskInfo';
+import { getAllTaskInfo } from '../getAllTaskInfo';
 
 /**
  * Provides up to date information on all tasks.
@@ -37,14 +38,16 @@ export function useTaskInfo(taskIdsArg?: number | readonly number[]): TaskInfo[]
 		return taskIdsArg;
 	}, [taskIdsArg]);
 
-	// Initialise thisTaskInfo based on the passed taskIds
-	const [thisTaskInfo, setThisTaskInfo] = useState(() => {
+	const getEachTaskInfo = useCallback(() => {
 		if (Array.isArray(taskIds)) {
-			return taskIds.map((taskId) => getTaskInfo(taskId));
+			return taskIds.map(getTaskInfo);
 		}
 
-		return getTaskInfo(taskIds);
-	});
+		return typeof taskIds === 'number' ? getTaskInfo(taskIds) : getAllTaskInfo();
+	}, [taskIds]);
+
+	// Initialise thisTaskInfo based on the passed taskIds
+	const [thisTaskInfo, setThisTaskInfo] = useState(getEachTaskInfo);
 
 	const doneInitialRender = useRef(false);
 
@@ -56,15 +59,15 @@ export function useTaskInfo(taskIdsArg?: number | readonly number[]): TaskInfo[]
 			return;
 		}
 
-		setThisTaskInfo(getTaskInfo(taskIds));
-	}, [taskIds]);
+		setThisTaskInfo(getEachTaskInfo());
+	}, [taskIds, getEachTaskInfo]);
 
 	/**
 	 * Update the task info if and only if the relevant task has changed.
 	 */
 	const handleTaskInfoUpdate = useCallback((changes: { key: number; }[]) => {
 		if (typeof taskIds === 'undefined') {
-			setThisTaskInfo(getTaskInfo());
+			setThisTaskInfo(getEachTaskInfo());
 			return;
 		}
 
@@ -77,9 +80,9 @@ export function useTaskInfo(taskIdsArg?: number | readonly number[]): TaskInfo[]
 		})();
 
 		if (hasChanged) {
-			setThisTaskInfo(getTaskInfo(taskIds));
+			setThisTaskInfo(getEachTaskInfo());
 		}
-	}, [taskIds]);
+	}, [taskIds, getEachTaskInfo]);
 
 	// Listen for relevant changes on tasksRegister
 	useEffect(() => {

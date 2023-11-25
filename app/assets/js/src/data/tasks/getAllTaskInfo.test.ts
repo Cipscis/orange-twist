@@ -11,7 +11,7 @@ import type { TaskInfo } from './types';
 import { tasksRegister } from './tasksRegister';
 import { setTaskInfo } from './setTaskInfo';
 
-import { getTaskInfo } from './getTaskInfo';
+import { getAllTaskInfo } from './getAllTaskInfo';
 
 const firstTaskInfo: TaskInfo = {
 	id: 1,
@@ -25,18 +25,17 @@ const secondTaskInfo: TaskInfo = {
 	status: TaskStatus.IN_PROGRESS,
 };
 
-describe('getTaskInfo', () => {
+describe('getAllTaskInfo', () => {
 	beforeAll(() => {
 		tasksRegister.clear();
 		setTaskInfo(1, firstTaskInfo);
 		setTaskInfo(2, secondTaskInfo);
 	});
 
-	test('when passed a task ID that has no matching task, returns null', () => {
-		expect(getTaskInfo(-1)).toBeNull();
-	});
-
-	test('when passed a task ID that has a matching task, returns that task\'s info', () => {
-		expect(getTaskInfo(1)).toEqual(firstTaskInfo);
+	test('returns an array of info on all tasks', () => {
+		expect(getAllTaskInfo()).toEqual([
+			firstTaskInfo,
+			secondTaskInfo,
+		]);
 	});
 });
