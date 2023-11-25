@@ -5,7 +5,10 @@ export { deleteDay } from './deleteDay';
 export { getDayInfo } from './getDayInfo';
 export { getAllDayInfo } from './getAllDayInfo';
 
-export { useDayInfo } from './hooks';
+export {
+	useDayInfo,
+	useAllDayInfo,
+} from './hooks';
 
 export {
 	loadDays,

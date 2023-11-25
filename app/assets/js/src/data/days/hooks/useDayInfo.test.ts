@@ -37,28 +37,6 @@ describe('useDayInfo', () => {
 		daysRegister.clear();
 	});
 
-	test('when passed no arguments, if there are no days, returns an empty array', () => {
-		daysRegister.clear();
-
-		const { result } = renderHook(() => useDayInfo());
-		expect(result.current).toEqual([]);
-	});
-
-	test('when passed no arguments, returns an array of info on all days', () => {
-		const { result } = renderHook(() => useDayInfo());
-
-		expect(result.current).toEqual([
-			{
-				name: '2023-11-09',
-				...ninthDayInfo,
-			},
-			{
-				name: '2023-11-10',
-				...tenthDayInfo,
-			},
-		]);
-	});
-
 	test('when passed a day name that has no matching day, returns null', () => {
 		const { result } = renderHook(() => useDayInfo('2023-11-08'));
 

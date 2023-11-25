@@ -7,7 +7,7 @@ import {
 
 import { Command } from 'types/Command';
 
-import { useDayInfo } from 'data/days';
+import { useAllDayInfo } from 'data/days';
 import { fireCommand } from 'registers/commands';
 
 import { DayComponent } from './DayComponent';
@@ -16,7 +16,7 @@ import { DayComponent } from './DayComponent';
  * Renders a list of days.
  */
 export function DayList(): JSX.Element {
-	const unsortedDays = useDayInfo();
+	const unsortedDays = useAllDayInfo();
 
 	const days = useMemo(() => unsortedDays.sort(
 		({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB)
