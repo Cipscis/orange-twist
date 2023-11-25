@@ -44,3 +44,5 @@ export {
 	loadDayTasks,
 	saveDayTasks,
 } from './dayTasks';
+
+export { clear } from './clear';
