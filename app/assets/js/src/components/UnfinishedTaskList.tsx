@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { TaskStatus } from 'types/TaskStatus';
 import { Command } from 'types/Command';
 
-import { useTaskInfo } from 'data/tasks';
+import { useAllTaskInfo } from 'data/tasks';
 import { fireCommand } from 'registers/commands';
 
 import { TaskList } from './TaskList';
@@ -14,7 +14,7 @@ import { TaskList } from './TaskList';
  * Renders a {@linkcode TaskList} of all unfinished tasks in a disclosure.
  */
 export function UnfinishedTasksList(): JSX.Element {
-	const tasks = useTaskInfo();
+	const tasks = useAllTaskInfo();
 
 	return <section
 		class={classNames({

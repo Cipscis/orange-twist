@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { useTaskInfo } from 'data/tasks';
+import { useAllTaskInfo } from 'data/tasks';
 
 import { TaskStatus } from '../types/TaskStatus';
 
@@ -10,7 +10,7 @@ import { TaskList } from './TaskList';
  * Renders a list of all completed tasks inside a disclosure.
  */
 export function CompletedTasksList(): JSX.Element | null {
-	const tasks = useTaskInfo();
+	const tasks = useAllTaskInfo();
 
 	return tasks && <details class="orange-twist__section">
 		<summary class="orange-twist__section-summary">

@@ -6,7 +6,10 @@ export { deleteTask } from './deleteTask';
 export { getTaskInfo } from './getTaskInfo';
 export { getAllTaskInfo } from './getAllTaskInfo';
 
-export { useTaskInfo } from './hooks';
+export {
+	useTaskInfo,
+	useAllTaskInfo,
+} from './hooks';
 
 export {
 	loadTasks,
