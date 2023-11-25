@@ -7,11 +7,26 @@ import {
 
 import { Command } from 'types/Command';
 
-import { getAllDayInfo, getDayInfo, loadDays, saveDays, setDayInfo } from 'data/days';
-import { createTask, loadTasks, saveTasks } from 'data/tasks';
-import { loadDayTasks, saveDayTasks } from 'data/dayTasks';
+import {
+	getAllDayInfo,
+	getDayInfo,
+	loadDays,
+	saveDays,
+	setDayInfo,
 
-import { registerCommand, useCommand } from 'registers/commands';
+	createTask,
+	loadTasks,
+	saveTasks,
+
+	loadDayTasks,
+	saveDayTasks,
+	setDayTaskInfo,
+} from 'data';
+
+import {
+	registerCommand,
+	useCommand,
+} from 'registers/commands';
 import {
 	KeyboardShortcutName,
 	registerKeyboardShortcut,
@@ -21,7 +36,7 @@ import {
 import { getCurrentDateDayName, isValidDateString } from 'util/index';
 import { toast } from './shared/Toast';
 
-import { CommandPalette } from './CommandPalette/CommandPalette';
+import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
 
 interface OrangeTwistProps {
@@ -166,9 +181,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const createNewTask = useCallback((dayName?: string) => {
 		const taskId = createTask();
 		if (dayName) {
-			setDayInfo(dayName, {
-				tasks: [...(getDayInfo(dayName)?.tasks ?? []), taskId],
-			});
+			setDayTaskInfo({ dayName, taskId }, {});
 		}
 	}, []);
 	useCommand(Command.TASK_ADD_NEW, createNewTask);
