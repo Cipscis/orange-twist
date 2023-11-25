@@ -8,13 +8,22 @@ import type { RegisterKey } from 'util/register';
 
 import { dayTasksRegister } from '../dayTasksRegister';
 import { decodeDayTaskKey } from '../util';
-import { getDayTaskInfo } from '../getDayTaskInfo';
+import { getAllDayTaskInfo } from '../getAllDayTaskInfo';
 
 /**
- * Provides up to date information on a single day task.
+ * Provides up to date information on all day tasks.
  */
-export function useDayTaskInfo(identifier: DayTaskIdentifier): DayTaskInfo | null {
-	const [thisDayTaskInfo, setThisDayTaskInfo] = useState(() => getDayTaskInfo(identifier));
+export function useAllDayTaskInfo(): DayTaskInfo[];
+/**
+ * Provides up to date information on all day tasks
+ * matching a partial identifier.
+ */
+export function useAllDayTaskInfo(identifier: Partial<DayTaskIdentifier>): DayTaskInfo[];
+// Expose implementation signature to allow calling with
+// ambiguous arguments
+export function useAllDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): DayTaskInfo[];
+export function useAllDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): DayTaskInfo[] {
+	const [thisDayTaskInfo, setThisDayTaskInfo] = useState(() => getAllDayTaskInfo(identifier));
 
 	const doneInitialRender = useRef(false);
 
@@ -26,7 +35,7 @@ export function useDayTaskInfo(identifier: DayTaskIdentifier): DayTaskInfo | nul
 			return;
 		}
 
-		setThisDayTaskInfo(getDayTaskInfo(identifier));
+		setThisDayTaskInfo(getAllDayTaskInfo(identifier));
 	}, [identifier]);
 
 	/**
@@ -35,14 +44,22 @@ export function useDayTaskInfo(identifier: DayTaskIdentifier): DayTaskInfo | nul
 	const handleDayTaskInfoUpdate = useCallback((
 		changes: { key: RegisterKey<typeof dayTasksRegister>; }[]
 	) => {
+		// If we're listening to everything, update on any change
+		if (typeof identifier === 'undefined') {
+			setThisDayTaskInfo(getAllDayTaskInfo(identifier));
+			return;
+		}
+
 		const hasChanged = Boolean(changes.find(
 			({ key }) => {
 				const { dayName, taskId } = decodeDayTaskKey(key);
 
-				if (
-					dayName !== identifier.dayName ||
-					taskId !== identifier.taskId
-				) {
+				if ('dayName' in identifier && dayName !== identifier.dayName) {
+					return false;
+				}
+
+				if ('taskId' in identifier &&
+				taskId !== identifier.taskId) {
 					return false;
 				}
 
@@ -51,7 +68,7 @@ export function useDayTaskInfo(identifier: DayTaskIdentifier): DayTaskInfo | nul
 		));
 
 		if (hasChanged) {
-			setThisDayTaskInfo(getDayTaskInfo(identifier));
+			setThisDayTaskInfo(getAllDayTaskInfo(identifier));
 		}
 	}, [identifier]);
 
