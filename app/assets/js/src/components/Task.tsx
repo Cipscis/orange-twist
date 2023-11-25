@@ -15,7 +15,7 @@ import { fireCommand } from 'registers/commands';
 import { TaskStatusComponent } from './TaskStatusComponent';
 import { Markdown } from './shared/Markdown';
 
-interface TaskComponentProps {
+interface TaskProps {
 	taskId: number;
 	dayName?: string;
 }
@@ -23,7 +23,7 @@ interface TaskComponentProps {
 /**
  * Renders a single task, and allows for it to be edited.
  */
-export function TaskComponent(props: TaskComponentProps): JSX.Element | null {
+export function Task(props: TaskProps): JSX.Element | null {
 	const { taskId, dayName } = props;
 	const taskInfo = useTaskInfo(taskId);
 

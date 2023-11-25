@@ -10,7 +10,7 @@ import { Command } from 'types/Command';
 import { useAllDayInfo } from 'data/days';
 import { fireCommand } from 'registers/commands';
 
-import { DayComponent } from './DayComponent';
+import { Day } from './Day';
 
 /**
  * Renders a list of days.
@@ -76,7 +76,7 @@ export function DayList(): JSX.Element {
 		{
 			days && <>
 				{days.map((day, i) => (
-					<DayComponent
+					<Day
 						key={day.name}
 						ref={(ref: HTMLDetailsElement | null) => daySectionsRef.current[day.name] = ref}
 						day={day}

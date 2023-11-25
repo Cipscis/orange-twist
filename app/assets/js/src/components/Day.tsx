@@ -24,8 +24,8 @@ interface DayProps extends h.JSX.HTMLAttributes<HTMLDetailsElement> {
  * Props that can apply to a `<details>` element will be passed
  * through to that element.
  */
-export const DayComponent = forwardRef(
-	function DayComponent(
+export const Day = forwardRef(
+	function Day(
 		props: DayProps,
 		ref: React.ForwardedRef<HTMLDetailsElement>
 	) {
