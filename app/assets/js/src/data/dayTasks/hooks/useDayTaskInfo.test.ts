@@ -56,128 +56,53 @@ describe('useDayTaskInfo', () => {
 		setDayTaskInfo({ dayName: '2023-11-16', taskId: 2 }, fourthDayTaskInfo);
 	});
 
-	describe('when passed no arguments', () => {
-		test('if there are no day tasks, returns an empty array', () => {
-			dayTasksRegister.clear();
+	test('if there is no matching day task, returns null', () => {
+		const { result } = renderHook(() => useDayTaskInfo({
+			dayName: '2023-11-08',
+			taskId: 123,
+		}));
 
-			const { result } = renderHook(() => useDayTaskInfo());
-			expect(result.current).toEqual([]);
-		});
-
-		test('returns an array of info on all day tasks', () => {
-			const { result } = renderHook(() => useDayTaskInfo());
-
-			expect(result.current).toEqual([
-				firstDayTaskInfo,
-				secondDayTaskInfo,
-				thirdDayTaskInfo,
-				fourthDayTaskInfo,
-			]);
-		});
+		expect(result.current).toBeNull();
 	});
 
-	describe('when passed a complete identifier', () => {
-		test('if there is no matching day task, returns null', () => {
-			const { result } = renderHook(() => useDayTaskInfo({
-				dayName: '2023-11-08',
-				taskId: 123,
-			}));
+	test('if there is a matching day task, returns that day task\'s info', () => {
+		const { result } = renderHook(() => useDayTaskInfo({
+			dayName: '2023-11-12',
+			taskId: 1,
+		}));
 
-			expect(result.current).toBeNull();
-		});
-
-		test('if there is a matching day task, returns that day task\'s info', () => {
-			const { result } = renderHook(() => useDayTaskInfo({
-				dayName: '2023-11-12',
-				taskId: 1,
-			}));
-
-			expect(result.current).toEqual(firstDayTaskInfo);
-		});
-
-		test('re-renders only when the matching day task is changed', async () => {
-			const identifier = {
-				dayName: '2023-11-12',
-				taskId: 1,
-			} as const satisfies DayTaskIdentifier;
-
-			let renderCount = 0;
-			const { result } = renderHook(() => {
-				renderCount += 1;
-				return useDayTaskInfo(identifier);
-			});
-
-			expect(result.current).toEqual(firstDayTaskInfo);
-			expect(renderCount).toBe(1);
-
-			// Updating a different day info shouldn't cause re-renders
-			await act(() => setDayTaskInfo({
-				dayName: '2023-11-13',
-				taskId: 3,
-			}, { note: 'New note' }));
-			expect(renderCount).toBe(1);
-
-			// Updating the watched day info should cause re-render with new info
-			await act(() => setDayTaskInfo(identifier, { note: 'New note' }));
-			expect(result.current).toEqual({
-				...firstDayTaskInfo,
-				note: 'New note',
-			});
-			expect(renderCount).toBe(2);
-		});
+		expect(result.current).toEqual(firstDayTaskInfo);
 	});
 
-	describe('when passed a partial identifier', () => {
-		test('returns an array of all matching day tasks', () => {
-			const { rerender, result } = renderHook(
-				(identifier) => useDayTaskInfo(identifier),
-				{
-					initialProps: {
-						dayName: '2023-11-12',
-					} as Partial<DayTaskIdentifier>,
-				}
-			);
-			expect(result.current).toEqual([firstDayTaskInfo, secondDayTaskInfo]);
+	test('re-renders only when the matching day task is changed', async () => {
+		const identifier = {
+			dayName: '2023-11-12',
+			taskId: 1,
+		} as const satisfies DayTaskIdentifier;
 
-			rerender({ taskId: 1 });
-			expect(result.current).toEqual([firstDayTaskInfo, thirdDayTaskInfo]);
+		let renderCount = 0;
+		const { result } = renderHook(() => {
+			renderCount += 1;
+			return useDayTaskInfo(identifier);
 		});
 
-		test('re-renders only when a matching day task is changed', async () => {
-			const identifier = {
-				dayName: '2023-11-12',
-			} as const satisfies Partial<DayTaskIdentifier>;
+		expect(result.current).toEqual(firstDayTaskInfo);
+		expect(renderCount).toBe(1);
 
-			let renderCount = 0;
-			const { result } = renderHook(() => {
-				renderCount += 1;
-				return useDayTaskInfo(identifier);
-			});
+		// Updating a different day info shouldn't cause re-renders
+		await act(() => setDayTaskInfo({
+			dayName: '2023-11-13',
+			taskId: 3,
+		}, { note: 'New note' }));
+		expect(renderCount).toBe(1);
 
-			expect(result.current).toEqual([firstDayTaskInfo, secondDayTaskInfo]);
-			expect(renderCount).toBe(1);
-
-			// Updating an unwatched day info shouldn't cause re-renders
-			await act(() => setDayTaskInfo({
-				dayName: '2023-11-13',
-				taskId: 1,
-			}, { note: 'New note' }));
-			expect(renderCount).toBe(1);
-
-			// Updating a watched day info should cause re-render with new info
-			await act(() => setDayTaskInfo({
-				...identifier,
-				taskId: firstDayTaskInfo.taskId,
-			}, { note: 'New note' }));
-			expect(result.current).toEqual([
-				{
-					...firstDayTaskInfo,
-					note: 'New note',
-				},
-				secondDayTaskInfo,
-			]);
-			expect(renderCount).toBe(2);
+		// Updating the watched day info should cause re-render with new info
+		await act(() => setDayTaskInfo(identifier, { note: 'New note' }));
+		expect(result.current).toEqual({
+			...firstDayTaskInfo,
+			note: 'New note',
 		});
+		expect(renderCount).toBe(2);
 	});
 
 	test('when the argument changes, returns updated information', () => {
@@ -190,7 +115,7 @@ describe('useDayTaskInfo', () => {
 				initialProps: {
 					dayName: '2023-11-12',
 					taskId: 1,
-				} as Partial<DayTaskIdentifier>,
+				} as DayTaskIdentifier,
 			}
 		);
 		expect(result.current).toEqual(firstDayTaskInfo);
@@ -200,10 +125,5 @@ describe('useDayTaskInfo', () => {
 			taskId: 1,
 		});
 		expect(result.current).toEqual(thirdDayTaskInfo);
-
-		rerender({
-			dayName: '2023-11-16',
-		});
-		expect(result.current).toEqual([thirdDayTaskInfo, fourthDayTaskInfo]);
 	});
 });

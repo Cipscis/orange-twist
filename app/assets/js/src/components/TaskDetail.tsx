@@ -4,7 +4,7 @@ import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
 import { useTaskInfo } from 'data/tasks';
-import { setDayTaskInfo, useDayTaskInfo } from 'data/dayTasks';
+import { setDayTaskInfo, useAllDayTaskInfo } from 'data/dayTasks';
 
 import { Note } from './shared/Note';
 import { Markdown } from './shared/Markdown';
@@ -24,7 +24,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 	} = props;
 
 	const taskInfo = useTaskInfo(taskId);
-	const dayTasksInfo = useDayTaskInfo({ taskId });
+	const dayTasksInfo = useAllDayTaskInfo({ taskId });
 
 	if (!taskInfo) {
 		return null;
