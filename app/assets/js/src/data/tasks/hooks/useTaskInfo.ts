@@ -1,53 +1,23 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from 'preact/hooks';
 
 import type { TaskInfo } from '../types/TaskInfo';
 
 import { tasksRegister } from '../tasksRegister';
 import { getTaskInfo } from '../getTaskInfo';
-import { getAllTaskInfo } from '../getAllTaskInfo';
 
-/**
- * Provides up to date information on all tasks.
- */
-export function useTaskInfo(): TaskInfo[];
 /**
  * Provides up to date information on a single task.
  *
  * @param taskId The ID of the specified task.
  */
-export function useTaskInfo(taskId: number): TaskInfo | null;
-/**
- * Provides up to date information on multiple tasks.
- *
- * **Important**: You must memoise the array or a new reference will
- * be passed with each render, which will cause an infinite loop.
- *
- * @param taskIds The IDs of the tasks to watch.
- */
-export function useTaskInfo(taskIds: readonly number[]): (TaskInfo | null)[];
-// Expose the implementation signature as an overload
-// to allow calling from similarly overloaded functions
-export function useTaskInfo(taskIdsArg?: number | readonly number[]): TaskInfo[] | TaskInfo | null | (TaskInfo | null)[];
-export function useTaskInfo(taskIdsArg?: number | readonly number[]): TaskInfo[] | TaskInfo | null | (TaskInfo | null)[] {
-	// First, consolidate arguments
-	const taskIds = useMemo(() => {
-		if (Array.isArray(taskIdsArg)) {
-			return taskIdsArg;
-		}
-
-		return taskIdsArg;
-	}, [taskIdsArg]);
-
-	const getEachTaskInfo = useCallback(() => {
-		if (Array.isArray(taskIds)) {
-			return taskIds.map(getTaskInfo);
-		}
-
-		return typeof taskIds === 'number' ? getTaskInfo(taskIds) : getAllTaskInfo();
-	}, [taskIds]);
-
+export function useTaskInfo(taskId: number): TaskInfo | null {
 	// Initialise thisTaskInfo based on the passed taskIds
-	const [thisTaskInfo, setThisTaskInfo] = useState(getEachTaskInfo);
+	const [thisTaskInfo, setThisTaskInfo] = useState(() => getTaskInfo(taskId));
 
 	const doneInitialRender = useRef(false);
 
@@ -59,30 +29,21 @@ export function useTaskInfo(taskIdsArg?: number | readonly number[]): TaskInfo[]
 			return;
 		}
 
-		setThisTaskInfo(getEachTaskInfo());
-	}, [taskIds, getEachTaskInfo]);
+		setThisTaskInfo(getTaskInfo(taskId));
+	}, [taskId]);
 
 	/**
 	 * Update the task info if and only if the relevant task has changed.
 	 */
 	const handleTaskInfoUpdate = useCallback((changes: { key: number; }[]) => {
-		if (typeof taskIds === 'undefined') {
-			setThisTaskInfo(getEachTaskInfo());
-			return;
-		}
-
 		const hasChanged = (() => {
-			if (typeof taskIds === 'number') {
-				return Boolean(changes.find(({ key }) => key === taskIds));
-			}
-
-			return Boolean(changes.find(({ key }) => taskIds.indexOf(key) !== -1));
+			return Boolean(changes.find(({ key }) => key === taskId));
 		})();
 
 		if (hasChanged) {
-			setThisTaskInfo(getEachTaskInfo());
+			setThisTaskInfo(getTaskInfo(taskId));
 		}
-	}, [taskIds, getEachTaskInfo]);
+	}, [taskId]);
 
 	// Listen for relevant changes on tasksRegister
 	useEffect(() => {

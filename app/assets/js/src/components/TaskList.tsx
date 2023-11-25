@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import { useViewTransition } from 'util/index';
 
-import { getTaskInfo, useTaskInfo } from 'data/tasks';
+import { useAllTaskInfo } from 'data/tasks';
 
 import { TaskComponent } from './TaskComponent';
 import React, { forwardRef } from 'preact/compat';
@@ -36,7 +36,7 @@ export const TaskList = forwardRef(
 			onReorder,
 		} = props;
 
-		const tasksInfo = useTaskInfo(taskIds);
+		const tasksInfo = useAllTaskInfo(taskIds);
 
 		const idBase = useId();
 
