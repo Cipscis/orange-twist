@@ -21,22 +21,15 @@ function getNextTaskId(): number {
 }
 
 /**
- * Creates a new task, using default values.
- *
- * @returns The ID of the newly created task.
- */
-export function createTask(): number;
-/**
  * Creates a new task with specified initial info, filling in any
  * blanks with default values.
  *
  * @param taskInfo Partial data used to initialise the new task.
  */
-export function createTask(taskInfo: Partial<Omit<TaskInfo, 'id'>>): number;
 export function createTask(taskInfo?: Partial<Omit<TaskInfo, 'id'>>): number {
 	const nextTaskId = getNextTaskId();
 
-	setTaskInfo(nextTaskId, { ...taskInfo });
+	setTaskInfo(nextTaskId, { ...taskInfo }, { forCurrentDay: false });
 
 	return nextTaskId;
 }

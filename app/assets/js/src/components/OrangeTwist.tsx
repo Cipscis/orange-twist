@@ -40,7 +40,7 @@ import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
 
 interface OrangeTwistProps {
-	children: ComponentChildren;
+	children?: ComponentChildren;
 }
 
 /**
