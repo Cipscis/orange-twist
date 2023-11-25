@@ -3,8 +3,8 @@ import type { DayInfo } from './types';
 import { isValidDateString } from 'util/index';
 
 import { daysRegister } from './daysRegister';
-import { getDayTaskInfo, setDayTaskInfo, type DayTaskInfo } from 'data/dayTasks';
-import { getTaskStatusForDay } from 'data/util/getTaskStatusForDay';
+import { getDayTaskInfo, setDayTaskInfo, type DayTaskInfo } from '../dayTasks';
+import { getTaskStatusForDay } from '../shared';
 
 const defaultDayInfo = {
 	note: '',

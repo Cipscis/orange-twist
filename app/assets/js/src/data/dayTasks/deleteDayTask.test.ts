@@ -5,20 +5,20 @@ import {
 	test,
 } from '@jest/globals';
 
-import { daysRegister } from 'data/days/daysRegister';
-import { getDayInfo } from 'data/days';
+import { getDayInfo } from '../days';
 
-import { dayTasksRegister } from './dayTasksRegister';
 import { setDayTaskInfo } from './setDayTaskInfo';
 import { getDayTaskInfo } from './getDayTaskInfo';
 import { getAllDayTaskInfo } from './getAllDayTaskInfo';
+
+import { clear } from '../shared';
 
 import { deleteDayTask } from './deleteDayTask';
 
 describe('deleteDayTask', () => {
 	afterEach(() => {
-		daysRegister.clear();
-		dayTasksRegister.clear();
+		clear();
+		clear();
 	});
 
 	test('when passed a day name and task ID without data, does nothing', () => {

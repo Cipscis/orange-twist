@@ -1,7 +1,15 @@
 import type { TaskStatus } from 'types/TaskStatus';
-import { getTaskInfo, type DayTaskIdentifier, getDayTaskInfo } from 'data';
+import {
+	type DayTaskIdentifier,
+	getTaskInfo,
+	getDayTaskInfo,
+} from 'data';
 import { getAllDayTaskInfo } from 'data/dayTasks';
 
+/**
+ * Determines what status a task would have had on a given day,
+ * even if it doesn't have a status recorded against that day.
+ */
 export function getTaskStatusForDay(
 	{ dayName, taskId }: DayTaskIdentifier
 ): TaskStatus | null {

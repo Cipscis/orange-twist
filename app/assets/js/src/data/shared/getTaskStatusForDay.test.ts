@@ -5,20 +5,24 @@ import {
 	test,
 } from '@jest/globals';
 
-import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
-import { daysRegister } from 'data/days/daysRegister';
-import { tasksRegister } from 'data/tasks/tasksRegister';
+import {
+	createTask,
+	getTaskInfo,
+	setTaskInfo,
+} from '../tasks';
+import {
+	deleteDayTask,
+	setDayTaskInfo,
+} from '../dayTasks';
 
-import { createTask, deleteDayTask, getTaskInfo, setDayTaskInfo, setTaskInfo } from 'data';
+import { clear } from './clear';
+import { TaskStatus } from 'types/TaskStatus';
 
 import { getTaskStatusForDay } from './getTaskStatusForDay';
-import { TaskStatus } from 'types/TaskStatus';
 
 describe('getTaskStatusForDay', () => {
 	afterEach(() => {
-		daysRegister.clear();
-		tasksRegister.clear();
-		dayTasksRegister.clear();
+		clear();
 	});
 
 	test('returns null if the task does not exist', () => {

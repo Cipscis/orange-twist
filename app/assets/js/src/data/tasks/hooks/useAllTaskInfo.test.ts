@@ -15,6 +15,7 @@ import type { TaskInfo } from '../types';
 import { tasksRegister } from '../tasksRegister';
 import { TaskStatus } from 'types/TaskStatus';
 import { setTaskInfo } from '../setTaskInfo';
+import { clear } from '../../shared';
 
 import { useAllTaskInfo } from './useAllTaskInfo';
 
@@ -46,7 +47,7 @@ describe('useAllTaskInfo', () => {
 	});
 
 	afterEach(() => {
-		tasksRegister.clear();
+		clear();
 	});
 
 	test('when passed no arguments, if there are no tasks, returns an empty array', () => {

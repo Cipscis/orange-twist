@@ -5,16 +5,18 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { TaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
+
 import { tasksRegister } from './tasksRegister';
 import { getTaskInfo } from './getTaskInfo';
+import { clear } from '../shared';
 
 import { createTask } from './createTask';
-import type { TaskInfo } from './types';
 
 describe('createTask', () => {
 	afterEach(() => {
-		tasksRegister.clear();
+		clear();
 	});
 
 	test('returns the ID of a newly created task', () => {

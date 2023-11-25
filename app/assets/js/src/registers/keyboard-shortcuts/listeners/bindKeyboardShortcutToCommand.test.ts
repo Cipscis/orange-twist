@@ -15,7 +15,7 @@ import {
 	addCommandListener,
 	registerCommand,
 	unregisterCommand,
-} from '../../commands';
+} from 'registers/commands';
 
 import { bindKeyboardShortcutToCommand, unbindKeyboardShortcutFromCommand } from './bindKeyboardShortcutToCommand';
 import userEvent from '@testing-library/user-event';

@@ -12,6 +12,7 @@ import { TaskStatus } from 'types/TaskStatus';
 
 import { dayTasksRegister } from '../dayTasksRegister';
 import { setDayTaskInfo } from '../setDayTaskInfo';
+import { clear } from '../../shared';
 
 import { useAllDayTaskInfo } from './useAllDayTaskInfo';
 
@@ -49,7 +50,7 @@ const fourthDayTaskInfo: DayTaskInfo = {
 
 describe('useAllDayTaskInfo', () => {
 	beforeEach(() => {
-		dayTasksRegister.clear();
+		clear();
 		setDayTaskInfo({ dayName: '2023-11-12', taskId: 1 }, firstDayTaskInfo);
 		setDayTaskInfo({ dayName: '2023-11-12', taskId: 2 }, secondDayTaskInfo);
 		setDayTaskInfo({ dayName: '2023-11-16', taskId: 1 }, thirdDayTaskInfo);

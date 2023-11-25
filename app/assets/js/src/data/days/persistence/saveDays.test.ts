@@ -7,7 +7,7 @@ import {
 
 import { setDayInfo } from '../setDayInfo';
 import { saveDays } from './saveDays';
-import { daysRegister } from '../daysRegister';
+import { clear } from '../../shared';
 
 const ninthDayInfo = {
 	note: 'Ninth note',
@@ -22,7 +22,7 @@ const tenthDayInfo = {
 describe('saveDays', () => {
 	beforeEach(() => {
 		localStorage.clear();
-		daysRegister.clear();
+		clear();
 	});
 
 	test('returns a Promise that resolves when the content of the days register has been persisted', async () => {

@@ -9,8 +9,9 @@ import type { TaskInfo } from '../types';
 
 import { TaskStatus } from 'types/TaskStatus';
 import { setTaskInfo } from '../setTaskInfo';
+import { clear } from '../../shared';
+
 import { saveTasks } from './saveTasks';
-import { tasksRegister } from '../tasksRegister';
 
 const firstTaskInfo: TaskInfo = {
 	id: 1,
@@ -27,7 +28,7 @@ const secondTaskInfo: TaskInfo = {
 describe('saveDays', () => {
 	beforeEach(() => {
 		localStorage.clear();
-		tasksRegister.clear();
+		clear();
 	});
 
 	test('returns a Promise that resolves when the content of the tasks register has been persisted', async () => {

@@ -5,26 +5,24 @@ import {
 	test,
 } from '@jest/globals';
 
-import { tasksRegister } from 'data/tasks/tasksRegister';
-import { createTask } from 'data/tasks';
-
-import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
+import { createTask } from '../tasks';
 
 import { TaskStatus } from 'types/TaskStatus';
 import type { DayInfo } from './types';
 
-import { daysRegister } from './daysRegister';
 import { getDayInfo } from './getDayInfo';
 
 import { setDayInfo } from './setDayInfo';
-import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
+import { clear } from '../shared';
+
+import {
+	getDayTaskInfo,
+	setDayTaskInfo,
+} from 'data/dayTasks';
 
 describe('setDayInfo', () => {
 	afterEach(() => {
-		// Delete all data
-		daysRegister.clear();
-		tasksRegister.clear();
-		dayTasksRegister.clear();
+		clear();
 	});
 
 	test('when passed an invalid day name, throws an error', () => {

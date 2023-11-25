@@ -8,8 +8,8 @@ import {
 import type { DayTaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 
-import { dayTasksRegister } from './dayTasksRegister';
 import { setDayTaskInfo } from './setDayTaskInfo';
+import { clear } from '../shared';
 
 import { getAllDayTaskInfo } from './getAllDayTaskInfo';
 
@@ -47,7 +47,7 @@ const fourthDayTaskInfo = {
 
 describe('getAllDayTaskInfo', () => {
 	beforeAll(() => {
-		dayTasksRegister.clear();
+		clear();
 		setDayTaskInfo({ dayName: '2023-11-12', taskId: 1 }, firstDayTaskInfo);
 		setDayTaskInfo({ dayName: '2023-11-12', taskId: 2 }, secondDayTaskInfo);
 		setDayTaskInfo({ dayName: '2023-11-16', taskId: 1 }, thirdDayTaskInfo);

@@ -5,23 +5,19 @@ import {
 	test,
 } from '@jest/globals';
 
-import { daysRegister } from 'data/days/daysRegister';
-import { getDayInfo, setDayInfo } from 'data/days';
-import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
-import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
+import { getDayInfo, setDayInfo } from '../days';
+import { getDayTaskInfo, setDayTaskInfo } from '../dayTasks';
 
-import { tasksRegister } from './tasksRegister';
 import { setTaskInfo } from './setTaskInfo';
 import { getTaskInfo } from './getTaskInfo';
 import { createTask } from './createTask';
+import { clear } from '../shared';
 
 import { deleteTask } from './deleteTask';
 
 describe('deleteTask', () => {
 	afterEach(() => {
-		daysRegister.clear();
-		tasksRegister.clear();
-		dayTasksRegister.clear();
+		clear();
 	});
 
 	test('when passed a task ID without any task data, does nothing', () => {

@@ -10,18 +10,15 @@ import { getCurrentDateDayName } from 'util/index';
 import type { TaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 
-import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
-import { getDayTaskInfo } from 'data/dayTasks';
-
-import { tasksRegister } from './tasksRegister';
+import { getDayTaskInfo } from '../dayTasks';
 import { getTaskInfo } from './getTaskInfo';
+import { clear } from '../shared';
 
 import { setTaskInfo } from './setTaskInfo';
 
 describe('setTaskInfo', () => {
 	afterEach(() => {
-		tasksRegister.clear();
-		dayTasksRegister.clear();
+		clear();
 	});
 
 	test('when passed a task ID without existing data, creates a new task with default information filling in the blanks', () => {
