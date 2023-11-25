@@ -1,6 +1,7 @@
 import {
 	useCallback,
 	useEffect,
+	useMemo,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -8,7 +9,6 @@ import {
 import type { TaskInfo } from '../types/TaskInfo';
 
 import { tasksRegister } from '../tasksRegister';
-import { getTaskInfo } from '../getTaskInfo';
 import { getAllTaskInfo } from '../getAllTaskInfo';
 
 /**
@@ -23,28 +23,63 @@ export function useAllTaskInfo(): TaskInfo[];
  *
  * @param taskIds The IDs of the tasks to watch.
  */
-export function useAllTaskInfo(taskIds: readonly number[]): (TaskInfo | null)[];
+export function useAllTaskInfo(taskIds: readonly number[]): TaskInfo[];
+export function useAllTaskInfo(matcher: (task: TaskInfo) => boolean): TaskInfo[];
 // Expose the implementation signature as an overload
 // to allow calling from similarly overloaded functions
-export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[] | (TaskInfo | null)[];
-export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[] | (TaskInfo | null)[] {
+export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[];
+export function useAllTaskInfo(
+	matcherArg?: readonly number[] | ((task: TaskInfo) => boolean)
+): TaskInfo[] {
+	/**
+	 * A function used to determine which tasks to include in the returned data.
+	 */
+	const matcher = useMemo(() => {
+		if (Array.isArray(matcherArg)) {
+			return ({ id }: Pick<TaskInfo, 'id'>) => matcherArg.includes(id);
+		}
+
+		return matcherArg;
+	}, [matcherArg]);
+
+	/**
+	 * A list of the previous set of matching tasks, used to detect when a
+	 * task changes in a way that makes it no longer match.
+	 */
+	const matchingTaskIds = useRef<number[]>([]);
+
 	/**
 	 * Gets the requested task info, either for all tasks or a limited set.
 	 */
-	const getThisTaskInfo = useCallback(() => {
-		if (Array.isArray(taskIds)) {
-			return taskIds.map(getTaskInfo);
+	const getMatchingTaskInfo = useCallback(() => {
+		const allTasks = getAllTaskInfo();
+
+		if (matcher) {
+			return allTasks.filter(matcher);
 		}
+		return allTasks;
+	}, [matcher]);
 
-		return getAllTaskInfo();
-	}, [taskIds]);
+	/**
+	 * Update the list of matching task IDs, and the `thisTaskInfo` state variable.
+	 */
+	const updateThisTaskInfo = useCallback(() => {
+		const matchingTaskInfo = getMatchingTaskInfo();
+		matchingTaskIds.current = matchingTaskInfo.map(({ id }) => id);
+		setThisTaskInfo(getMatchingTaskInfo());
+	}, [getMatchingTaskInfo]);
 
-	// Initialise thisTaskInfo based on the passed taskIds
-	const [thisTaskInfo, setThisTaskInfo] = useState(getThisTaskInfo);
+	// Initialise thisTaskInfo based on the passed matcher
+	const [thisTaskInfo, setThisTaskInfo] = useState(() => {
+		// Initialise `matchingTaskIds` at the same time
+		const matchingTasks = getMatchingTaskInfo();
+		matchingTaskIds.current = matchingTasks.map(({ id }) => id);
+		return matchingTasks;
+	});
 
 	const doneInitialRender = useRef(false);
 
-	// Update thisTaskInfo if taskId changes
+	// Update thisTaskInfo if the matcher changes
 	useEffect(() => {
 		// Don't re-set the state during the initial render
 		if (!doneInitialRender.current) {
@@ -52,26 +87,39 @@ export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[] | (TaskI
 			return;
 		}
 
-		setThisTaskInfo(getThisTaskInfo());
-	}, [taskIds, getThisTaskInfo]);
+		updateThisTaskInfo();
+	}, [updateThisTaskInfo]);
 
 	/**
-	 * Update the task info if and only if the relevant task has changed.
+	 * Update the task info on update if and only if something
+	 * in the list of matching tasks has changed, including if
+	 * a previously matched task no longer matches.
 	 */
-	const handleTaskInfoUpdate = useCallback((changes: { key: number; }[]) => {
-		if (typeof taskIds === 'undefined') {
-			setThisTaskInfo(getThisTaskInfo());
+	const handleTaskInfoUpdate = useCallback((changes: { value: TaskInfo; }[]) => {
+		// If there's no matcher, we watch every task so always update on change
+		if (typeof matcher === 'undefined') {
+			updateThisTaskInfo();
 			return;
 		}
 
+		// Check if a matching task has changed, or a
+		// task has been removed from the matching list
 		const hasChanged = (() => {
-			return Boolean(changes.find(({ key }) => taskIds.indexOf(key) !== -1));
+			return Boolean(changes.find(({ value }) => {
+				const matches = matcher(value);
+
+				// If the task matches, or if it did match previously
+				if (matches || matchingTaskIds.current.includes(value.id)) {
+					return true;
+				}
+				return false;
+			}));
 		})();
 
 		if (hasChanged) {
-			setThisTaskInfo(getThisTaskInfo());
+			updateThisTaskInfo();
 		}
-	}, [taskIds, getThisTaskInfo]);
+	}, [matcher, updateThisTaskInfo]);
 
 	// Listen for relevant changes on tasksRegister
 	useEffect(() => {
