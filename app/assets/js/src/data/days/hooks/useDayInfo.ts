@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from 'preact/hooks';
 
 import type { DayInfo } from '../types/DayInfo';
 
@@ -14,8 +19,18 @@ export function useDayInfo(dayName: string): DayInfo | null {
 	// Initialise thisDayInfo based on the passed dayName
 	const [thisDayInfo, setThisDayInfo] = useState(() => getDayInfo(dayName));
 
+	const doneInitialRender = useRef(false);
+
 	// Update thisDayInfo if dayName changes
-	useEffect(() => setThisDayInfo(getDayInfo(dayName)), [dayName]);
+	useEffect(() => {
+		// Don't re-set the state during the initial render
+		if (!doneInitialRender.current) {
+			doneInitialRender.current = true;
+			return;
+		}
+
+		setThisDayInfo(getDayInfo(dayName));
+	}, [dayName]);
 
 	/**
 	 * Update the day info if and only if the relevant day has changed.

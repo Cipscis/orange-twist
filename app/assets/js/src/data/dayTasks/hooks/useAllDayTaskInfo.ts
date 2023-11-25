@@ -11,17 +11,10 @@ import { decodeDayTaskKey } from '../util';
 import { getAllDayTaskInfo } from '../getAllDayTaskInfo';
 
 /**
- * Provides up to date information on all day tasks.
- */
-export function useAllDayTaskInfo(): DayTaskInfo[];
-/**
  * Provides up to date information on all day tasks
- * matching a partial identifier.
+ * matching a partial identifier. If no identifier is
+ * provided, provides information on all day tasks.
  */
-export function useAllDayTaskInfo(identifier: Partial<DayTaskIdentifier>): DayTaskInfo[];
-// Expose implementation signature to allow calling with
-// ambiguous arguments
-export function useAllDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): DayTaskInfo[];
 export function useAllDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): DayTaskInfo[] {
 	const [thisDayTaskInfo, setThisDayTaskInfo] = useState(() => getAllDayTaskInfo(identifier));
 

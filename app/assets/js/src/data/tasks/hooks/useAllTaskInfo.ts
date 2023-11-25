@@ -28,7 +28,10 @@ export function useAllTaskInfo(taskIds: readonly number[]): (TaskInfo | null)[];
 // to allow calling from similarly overloaded functions
 export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[] | (TaskInfo | null)[];
 export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[] | (TaskInfo | null)[] {
-	const getEachTaskInfo = useCallback(() => {
+	/**
+	 * Gets the requested task info, either for all tasks or a limited set.
+	 */
+	const getThisTaskInfo = useCallback(() => {
 		if (Array.isArray(taskIds)) {
 			return taskIds.map(getTaskInfo);
 		}
@@ -37,7 +40,7 @@ export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[] | (TaskI
 	}, [taskIds]);
 
 	// Initialise thisTaskInfo based on the passed taskIds
-	const [thisTaskInfo, setThisTaskInfo] = useState(getEachTaskInfo);
+	const [thisTaskInfo, setThisTaskInfo] = useState(getThisTaskInfo);
 
 	const doneInitialRender = useRef(false);
 
@@ -49,15 +52,15 @@ export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[] | (TaskI
 			return;
 		}
 
-		setThisTaskInfo(getEachTaskInfo());
-	}, [taskIds, getEachTaskInfo]);
+		setThisTaskInfo(getThisTaskInfo());
+	}, [taskIds, getThisTaskInfo]);
 
 	/**
 	 * Update the task info if and only if the relevant task has changed.
 	 */
 	const handleTaskInfoUpdate = useCallback((changes: { key: number; }[]) => {
 		if (typeof taskIds === 'undefined') {
-			setThisTaskInfo(getEachTaskInfo());
+			setThisTaskInfo(getThisTaskInfo());
 			return;
 		}
 
@@ -66,9 +69,9 @@ export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[] | (TaskI
 		})();
 
 		if (hasChanged) {
-			setThisTaskInfo(getEachTaskInfo());
+			setThisTaskInfo(getThisTaskInfo());
 		}
-	}, [taskIds, getEachTaskInfo]);
+	}, [taskIds, getThisTaskInfo]);
 
 	// Listen for relevant changes on tasksRegister
 	useEffect(() => {
