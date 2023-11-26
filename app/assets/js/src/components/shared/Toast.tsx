@@ -61,11 +61,8 @@ export function Toast(props: ToastProps): JSX.Element {
 		timeout.current = window.setTimeout(async () => {
 			// Animate out
 			if (toastRef.current) {
-				const animation = await animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
 				// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
-				if (animation) {
-					await animation.finished;
-				}
+				await animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
 
 				const toastIndex = toasts.findIndex((toast) => toast.id === id);
 				if (toastIndex !== -1) {
