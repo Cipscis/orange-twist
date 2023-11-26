@@ -91,10 +91,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		}
 
 		// If we're leaving change mode and the options are visible, animate them out
-		const animation = await animate(optionsRef.current, CSSKeyframes.DISAPPEAR_SCREEN);
-		if (animation) {
-			await animation.finished;
-		}
+		await animate(optionsRef.current, CSSKeyframes.DISAPPEAR_SCREEN);
 		setIsInChangeModeInternal(value);
 	}, [setIsInChangeModeInternal]);
 
