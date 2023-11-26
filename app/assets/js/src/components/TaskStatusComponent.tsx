@@ -2,7 +2,13 @@ import { h, type JSX } from 'preact';
 
 import { TaskStatus } from 'types/TaskStatus';
 
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'preact/hooks';
 
 import { Command } from 'types/Command';
 
@@ -12,10 +18,16 @@ import {
 	CSSKeyframes,
 } from 'util/index';
 
-import { deleteTask, setTaskInfo, useTaskInfo } from 'data/tasks';
+import {
+	deleteDayTask,
+	deleteTask,
+	getTaskStatusForDay,
+	setDayTaskInfo,
+	setTaskInfo,
+	useAllDayTaskInfo,
+	useTaskInfo,
+} from 'data';
 import { fireCommand } from 'registers/commands';
-import { getDayInfo, setDayInfo } from 'data/days';
-import { setDayTaskInfo } from 'data/dayTasks';
 
 interface TaskStatusComponentProps {
 	taskId: number;
@@ -49,6 +61,19 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	} = props;
 	const taskInfo = useTaskInfo(taskId);
 
+	// Also re-render when any day task info for a specified day changes
+	useAllDayTaskInfo(
+		useMemo(() => {
+			if (dayName) {
+				return { taskId };
+			}
+
+			// If there's no day name, use an invalid task ID to prevent
+			// unnecessary re-renders
+			return { taskId: -1 };
+		}, [dayName, taskId])
+	);
+
 	const readonly = props.readonly ?? false;
 
 	const rootRef = useRef<HTMLElement>(null);
@@ -81,22 +106,22 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			return;
 		}
 
-		if (typeof dayName === 'undefined') {
-			setTaskInfo(taskId, { status });
-		} else {
+		if (dayName) {
 			setDayTaskInfo({
 				dayName,
 				taskId,
 			}, { status });
+		} else {
+			setTaskInfo(taskId, { status });
 		}
 		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
 	}, [dayName, taskId, taskInfo, setIsInChangeMode]);
 
 	/**
-	 * Ask for confirmation, then delete the task
+	 * Ask for confirmation, then delete the task.
 	 */
-	const deleteTaskUI = useCallback(() => {
+	const removeTaskEntirely = useCallback(() => {
 		if (!confirm('Are you sure you want to delete this task?')) {
 			return;
 		}
@@ -118,20 +143,10 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			return;
 		}
 
-		const day = getDayInfo(dayName);
-		if (!day) {
-			return;
-		}
-
-		const tasks = structuredClone(day.tasks);
-		const thisTaskIndex = tasks.findIndex((taskElId) => taskElId === taskId);
-		if (thisTaskIndex === -1) {
-			return;
-		}
-
-		tasks.splice(thisTaskIndex, 1);
-		setDayInfo(dayName, { tasks });
-	}, [dayName, taskId]);
+		deleteDayTask({ dayName, taskId });
+		setIsInChangeMode(false);
+		fireCommand(Command.DATA_SAVE);
+	}, [dayName, taskId, setIsInChangeMode]);
 
 	/**
 	 * Remove the task from the current day, if there is one,
@@ -141,9 +156,9 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		if (dayName) {
 			removeTaskFromDay();
 		} else {
-			deleteTaskUI();
+			removeTaskEntirely();
 		}
-	}, [dayName, removeTaskFromDay, deleteTaskUI]);
+	}, [dayName, removeTaskFromDay, removeTaskEntirely]);
 
 	// TODO: Turn the selector part into a custom element, using shadow DOM
 
@@ -185,24 +200,17 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		};
 	}, [isInChangeMode, exitChangeModeOnEscape, exitChangeModeOnOutsideClick]);
 
-	if (!taskInfo) {
+	const status = (() => {
+		if (dayName) {
+			return getTaskStatusForDay({ dayName, taskId });
+		}
+
+		return taskInfo?.status;
+	})();
+
+	if (!status) {
 		return null;
 	}
-
-	const status = (() => {
-		// TODO: Refactor into getTaskStatusOnDay function
-		// if (dayName) {
-		// 	const dayData = getDayInfo(dayName);
-		// 	const dayTasks = dayData?.tasks;
-
-		// 	const taskOnDay = dayTasks?.find((taskId) => taskId === id);
-		// 	if (taskOnDay) {
-		// 		return taskOnDay.status;
-		// 	}
-		// }
-
-		return taskInfo.status;
-	})();
 
 	const statusSymbol = taskStatusSymbols[status];
 
@@ -218,9 +226,11 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			: <button
 				type="button"
 				class="task-status__indicator"
-				title={status}
+				title={`${status} (click to edit)`}
 				onClick={() => setIsInChangeMode(!isInChangeMode)}
-			>{statusSymbol}</button>
+			>
+				<span aria-hidden>{statusSymbol}</span>
+			</button>
 		}
 
 		{
@@ -242,7 +252,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 									title={taskStatus}
 									onClick={() => changeStatus(taskStatus)}
 								>
-									{taskStatusSymbols[taskStatus]}
+									<span aria-hidden>{taskStatusSymbols[taskStatus]}</span>
 								</button>
 							</li>
 						))}
@@ -255,7 +265,9 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 						class="task-status__option-button"
 						title="Delete"
 						onClick={onDeleteButtonClick}
-					>❌</button>
+					>
+						<span aria-hidden>❌</span>
+					</button>
 				</li>
 			</ul>
 		}

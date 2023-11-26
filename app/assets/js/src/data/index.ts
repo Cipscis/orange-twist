@@ -45,4 +45,7 @@ export {
 	saveDayTasks,
 } from './dayTasks';
 
-export { clear } from './shared';
+export {
+	clear,
+	getTaskStatusForDay,
+} from './shared';
