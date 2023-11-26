@@ -78,7 +78,20 @@ describe('onNewKeyboardShortcutRegistered', () => {
 });
 
 describe('offNewKeyboardShortcutRegistered', () => {
-	test.todo('unbinds a listener bound with onNewKeyboardShortcutRegistered');
+	test('unbinds a listener bound with onNewKeyboardShortcutRegistered', () => {
+		const spy = jest.fn();
+
+		onNewKeyboardShortcutRegistered(spy);
+		registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, []);
+
+		expect(spy).toHaveBeenCalledTimes(1);
+
+		offNewKeyboardShortcutRegistered(spy);
+
+		registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 'a' }]);
+
+		expect(spy).toHaveBeenCalledTimes(1);
+	});
 
 	test('does nothing if the listener is not already bound', () => {
 		expect(
