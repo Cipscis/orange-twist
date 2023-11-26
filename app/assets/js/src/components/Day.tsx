@@ -1,10 +1,12 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useId, useRef } from 'preact/hooks';
+import {
+	useCallback,
+	useId,
+} from 'preact/hooks';
 import React, { forwardRef } from 'preact/compat';
 
 import type { DayInfo } from 'data/days';
 
-import { getTaskInfo } from 'data/tasks';
 import { deleteDay, setDayInfo } from 'data/days';
 
 import { Command } from 'types/Command';
@@ -38,8 +40,6 @@ export const Day = forwardRef(
 			tasks,
 		} = day;
 
-		const tasksRef = useRef<HTMLDivElement | null>();
-
 		const id = useId();
 
 		/**
@@ -71,54 +71,6 @@ export const Day = forwardRef(
 			fireCommand(Command.DATA_SAVE);
 		}, [tasks, name]);
 
-		/**
-		 * An array of the day's task IDs, used to compare
-		 * between renders.
-		 */
-		const taskIdsRef = useRef<ReadonlyArray<number> | null>(null);
-
-		// Scroll to new task when created, and focus on its name
-		useEffect(() => {
-			const taskIds = tasks.map((id) => id);
-			const previousTaskIds = taskIdsRef.current;
-
-			const diff = previousTaskIds &&
-				taskIds.filter(
-					(taskId) => !previousTaskIds.includes(taskId)
-				);
-
-			// If one new task was added, begin editing its name
-			if (diff?.length === 1 && getTaskInfo(diff[0])?.name === '') {
-				if (tasksRef.current) {
-					// TODO: Is this the best way to find the right element?
-					const taskEditButtons = Array.from(
-						tasksRef.current.querySelectorAll<HTMLElement>('.js-task__name-edit') ?? []
-					);
-					const lastTaskEditButton = taskEditButtons.at(-1);
-
-					if (lastTaskEditButton) {
-						// First, ensure any sections it's in are open
-						const ancestralDetails: Array<HTMLDetailsElement> = [];
-						let cursor: HTMLElement | null = lastTaskEditButton;
-						while (cursor !== null) {
-							cursor = cursor.parentElement;
-							if (cursor instanceof HTMLDetailsElement) {
-								ancestralDetails.push(cursor);
-							}
-						}
-						for (const el of ancestralDetails) {
-							el.toggleAttribute('open', true);
-						}
-
-						// Then, click the edit button
-						lastTaskEditButton.click();
-					}
-				}
-			}
-
-			taskIdsRef.current = taskIds;
-		}, [tasks]);
-
 		return <details
 			class="day"
 			ref={ref}
@@ -141,7 +93,6 @@ export const Day = forwardRef(
 					taskIds={tasks}
 					dayName={name}
 					onReorder={reorderTasks}
-					ref={(ref: HTMLDivElement | null) => tasksRef.current = ref}
 				/>
 
 				<button
