@@ -188,9 +188,11 @@ export function Task(props: TaskProps): JSX.Element | null {
 					<button
 						type="button"
 						class="task__name-edit js-task__name-edit"
-						label="Edit task name"
+						title="Edit task name"
 						onClick={() => setIsInEditMode(true)}
-					>✏️</button>
+					>
+						<span aria-hidden>✏️</span>
+					</button>
 				</form>
 			</>;
 		})()}

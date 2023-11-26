@@ -15,10 +15,12 @@ import { escapeRegExpString } from 'util/index';
 import { TaskStatus } from 'types/TaskStatus';
 import {
 	clear,
+	setDayTaskInfo,
 	setTaskInfo,
 } from 'data';
 
 import { Task } from './Task';
+import { act } from 'preact/test-utils';
 
 describe('Task', () => {
 	afterEach(() => {
@@ -51,9 +53,61 @@ describe('Task', () => {
 		)).toBeInTheDocument();
 	});
 
-	test.todo('renders the task status for the specified day');
+	test('renders the task status for the specified day', async () => {
+		setTaskInfo(1, { status: TaskStatus.TODO });
+		setDayTaskInfo(
+			{ taskId: 1, dayName: '2023-11-23' },
+			{ status: TaskStatus.IN_PROGRESS }
+		);
 
-	test.todo('opens edit mode when edit button is clicked');
+		const { getByTitle } = render(<Task
+			taskId={1}
+			dayName="2023-11-25"
+		/>);
+		expect(getByTitle(
+			new RegExp(escapeRegExpString(TaskStatus.IN_PROGRESS))
+		)).toBeInTheDocument();
+
+		await act(() => {
+			setDayTaskInfo(
+				{ taskId: 1, dayName: '2023-11-24' },
+				{ status: TaskStatus.IN_REVIEW }
+			);
+		});
+		expect(getByTitle(
+			new RegExp(escapeRegExpString(TaskStatus.IN_REVIEW))
+		)).toBeInTheDocument();
+
+		await act(() => {
+			setDayTaskInfo(
+				{ taskId: 1, dayName: '2023-11-25' },
+				{ status: TaskStatus.COMPLETED }
+			);
+		});
+		expect(getByTitle(
+			new RegExp(escapeRegExpString(TaskStatus.COMPLETED))
+		)).toBeInTheDocument();
+	});
+
+	test('opens edit mode when edit button is clicked', async () => {
+		const user = userEvent.setup();
+
+		setTaskInfo(0, {
+			name: 'Task name',
+			status: TaskStatus.TODO,
+		});
+
+		const { getByRole } = render(
+			<Task taskId={0} />
+		);
+
+		const editButton = getByRole('button', { name: 'Edit task name' });
+		await user.click(editButton);
+
+		const inputEl = getByRole('textbox');
+		expect(inputEl).toHaveFocus();
+		expect(inputEl).toHaveValue('Task name');
+	});
 
 	test('opens edit mode when name is clicked', async () => {
 		const user = userEvent.setup();
