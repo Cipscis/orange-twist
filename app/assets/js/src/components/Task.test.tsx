@@ -1,11 +1,17 @@
 import { h } from 'preact';
 
-import { afterEach, describe, expect, test } from '@jest/globals';
+import {
+	afterEach,
+	describe,
+	expect,
+	test,
+} from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
 import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
+import { escapeRegExpString } from 'util/index';
 import { TaskStatus } from 'types/TaskStatus';
 import {
 	clear,
@@ -35,7 +41,15 @@ describe('Task', () => {
 		expect(content.innerHTML.trim()).toBe('<p><strong>Bold</strong> <em>italic</em> <code>code</code></p>');
 	});
 
-	test.todo('renders the task status');
+	test('renders the task status', () => {
+		setTaskInfo(0, { status: TaskStatus.IN_PROGRESS });
+
+		const { getByTitle } = render(<Task taskId={0} />);
+
+		expect(getByTitle(
+			new RegExp(escapeRegExpString(TaskStatus.IN_PROGRESS))
+		)).toBeInTheDocument();
+	});
 
 	test.todo('renders the task status for the specified day');
 

@@ -95,6 +95,8 @@ These dependencies are used when working on the project locally.
 
 	* [@testing-library/user-event](https://testing-library.com/docs/user-event/intro/): Utilities for simulating user interaction during tests
 
+	* [jsdom-testing-mocks](https://www.npmjs.com/package/jsdom-testing-mocks): Mocks some browser APIs that aren't implemented in jsdom
+
 * [esbuild](https://esbuild.github.io/): Bundling tool
 
 * [sass](https://www.npmjs.com/package/sass): Compiling CSS from [Sass](https://sass-lang.com/)
