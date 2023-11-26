@@ -33,7 +33,10 @@ export const Day = forwardRef(
 			day,
 			...passthroughProps
 		} = props;
-		const { name } = day;
+		const {
+			name,
+			tasks,
+		} = day;
 
 		const tasksRef = useRef<HTMLDivElement | null>();
 
@@ -57,16 +60,16 @@ export const Day = forwardRef(
 			const newTaskIndexById = Object.fromEntries(taskIds.map((id, index) => [id, index]));
 
 			const newTasks: DayInfo['tasks'] = [];
-			for (const taskId of day.tasks) {
+			for (const taskId of tasks) {
 				const newIndex = newTaskIndexById[taskId];
 				newTasks[newIndex] = taskId;
 			}
 
-			setDayInfo(day.name, {
+			setDayInfo(name, {
 				tasks: newTasks,
 			});
 			fireCommand(Command.DATA_SAVE);
-		}, [day.tasks, day.name]);
+		}, [tasks, name]);
 
 		/**
 		 * An array of the day's task IDs, used to compare
@@ -76,7 +79,7 @@ export const Day = forwardRef(
 
 		// Scroll to new task when created, and focus on its name
 		useEffect(() => {
-			const taskIds = day.tasks.map((id) => id);
+			const taskIds = tasks.map((id) => id);
 			const previousTaskIds = taskIdsRef.current;
 
 			const diff = previousTaskIds &&
@@ -114,7 +117,7 @@ export const Day = forwardRef(
 			}
 
 			taskIdsRef.current = taskIds;
-		}, [day.tasks]);
+		}, [tasks]);
 
 		return <details
 			class="day"
@@ -122,7 +125,7 @@ export const Day = forwardRef(
 			{...passthroughProps}
 		>
 			<summary class="day__summary" style={`view-transition-name: ${id};`}>
-				<h3 class="day__heading">{day.name}</h3>
+				<h3 class="day__heading">{name}</h3>
 			</summary>
 
 			<div class="day__body">
@@ -134,15 +137,12 @@ export const Day = forwardRef(
 
 				<DayNote day={day} />
 
-				{
-					day.tasks.length > 0 &&
-					<TaskList
-						taskIds={day.tasks}
-						dayName={day.name}
-						onReorder={reorderTasks}
-						ref={(ref: HTMLDivElement | null) => tasksRef.current = ref}
-					/>
-				}
+				<TaskList
+					taskIds={tasks}
+					dayName={name}
+					onReorder={reorderTasks}
+					ref={(ref: HTMLDivElement | null) => tasksRef.current = ref}
+				/>
 
 				<button
 					type="button"
