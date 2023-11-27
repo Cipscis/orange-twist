@@ -1,16 +1,21 @@
 import { h, type JSX } from 'preact';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from 'preact/hooks';
 
 import classNames from 'classnames';
 
 import { Command } from 'types/Command';
+import { fireCommand } from 'registers/commands';
 
 import {
 	setTaskInfo,
 	deleteTask,
 	useTaskInfo,
-} from 'data/tasks';
-import { fireCommand } from 'registers/commands';
+} from 'data';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
 import { Markdown } from './shared/Markdown';

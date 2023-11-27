@@ -1,17 +1,14 @@
-import { h } from 'preact';
-import {
-	useCallback,
-	useId,
-} from 'preact/hooks';
-import React, { forwardRef } from 'preact/compat';
-
-import type { DayInfo } from 'data/days';
-
-import { deleteDay, setDayInfo } from 'data/days';
+import { h, type JSX } from 'preact';
+import { useCallback } from 'preact/hooks';
 
 import { Command } from 'types/Command';
-
 import { fireCommand } from 'registers/commands';
+
+import {
+	type DayInfo,
+	deleteDay,
+	setDayInfo,
+} from 'data';
 
 import { DayNote } from './DayNote';
 import { TaskList } from './TaskList';
@@ -26,81 +23,66 @@ interface DayProps extends h.JSX.HTMLAttributes<HTMLDetailsElement> {
  * Props that can apply to a `<details>` element will be passed
  * through to that element.
  */
-export const Day = forwardRef(
-	function Day(
-		props: DayProps,
-		ref: React.ForwardedRef<HTMLDetailsElement>
-	) {
-		const {
-			day,
-			...passthroughProps
-		} = props;
-		const {
-			name,
-			tasks,
-		} = day;
+export const Day = (props: DayProps): JSX.Element => {
+	const {
+		day,
+		...passthroughProps
+	} = props;
+	const {
+		name,
+		tasks,
+	} = day;
 
-		const id = useId();
+	/**
+	 * Ask for confirmation before deleting the current day.
+	 */
+	const removeDay = useCallback(() => {
+		if (!window.confirm('Are you sure?')) {
+			return;
+		}
 
-		/**
-		 * Ask for confirmation before deleting the current day.
-		 */
-		const removeDay = useCallback((dayName: string) => {
-			if (!window.confirm('Are you sure?')) {
-				return;
-			}
+		deleteDay(name);
+	}, [name]);
 
-			deleteDay(dayName);
-		}, []);
+	/**
+	 * Update the saved order of this day's tasks.
+	 */
+	const reorderTasks = useCallback((tasks: readonly number[]) => {
+		setDayInfo(name, { tasks });
+		fireCommand(Command.DATA_SAVE);
+	}, [name]);
 
-		/**
-		 * Update the saved order of this day's tasks.
-		 */
-		const reorderTasks = useCallback((taskIds: number[]) => {
-			const newTaskIndexById = Object.fromEntries(taskIds.map((id, index) => [id, index]));
+	return <details
+		class="day"
+		{...passthroughProps}
+	>
+		<summary class="day__summary">
+			<h3 class="day__heading">{name}</h3>
+		</summary>
 
-			const newTasks: DayInfo['tasks'] = [];
-			for (const taskId of tasks) {
-				const newIndex = newTaskIndexById[taskId];
-				newTasks[newIndex] = taskId;
-			}
+		<div class="day__body">
+			<button
+				type="button"
+				class="button"
+				onClick={removeDay}
+			>Remove day</button>
 
-			setDayInfo(name, {
-				tasks: newTasks,
-			});
-			fireCommand(Command.DATA_SAVE);
-		}, [tasks, name]);
+			<DayNote day={day} />
 
-		return <details
-			class="day"
-			ref={ref}
-			{...passthroughProps}
-		>
-			<summary class="day__summary" style={`view-transition-name: ${id};`}>
-				<h3 class="day__heading">{name}</h3>
-			</summary>
+			<TaskList
+				matcher={tasks}
+				dayName={name}
+				onReorder={reorderTasks}
+			/>
 
-			<div class="day__body">
-				<button
-					type="button"
-					class="button"
-					onClick={() => removeDay(name)}
-				>Remove day</button>
-
-				<DayNote day={day} />
-
-				<TaskList
-					matcher={tasks}
-					dayName={name}
-					onReorder={reorderTasks}
-				/>
-
-				<button
-					type="button"
-					class="button"
-					onClick={() => fireCommand(Command.TASK_ADD_NEW, name)}
-				>Add new task</button>
-			</div>
-		</details>;
-	}
-);
+			<button
+				type="button"
+				class="button"
+				onClick={useCallback(
+					() => fireCommand(Command.TASK_ADD_NEW, name),
+					[name]
+				)}
+			>Add new task</button>
+		</div>
+	</details>;
+};

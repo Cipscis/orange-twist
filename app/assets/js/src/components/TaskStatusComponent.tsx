@@ -1,7 +1,4 @@
 import { h, type JSX } from 'preact';
-
-import { TaskStatus } from 'types/TaskStatus';
-
 import {
 	useCallback,
 	useEffect,
@@ -10,13 +7,15 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { Command } from 'types/Command';
-
 import {
 	animate,
 	nodeHasAncestor,
 	CSSKeyframes,
 } from 'util/index';
+
+import { TaskStatus } from 'types/TaskStatus';
+import { Command } from 'types/Command';
+import { fireCommand } from 'registers/commands';
 
 import {
 	deleteDayTask,
@@ -27,7 +26,6 @@ import {
 	useAllDayTaskInfo,
 	useTaskInfo,
 } from 'data';
-import { fireCommand } from 'registers/commands';
 
 interface TaskStatusComponentProps {
 	taskId: number;
