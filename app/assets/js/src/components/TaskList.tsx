@@ -6,7 +6,7 @@ import {
 	useRef,
 } from 'preact/hooks';
 
-import classNames from 'classnames';
+import { classNames } from 'util/index';
 
 import { useViewTransition } from 'util/index';
 

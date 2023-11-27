@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import classNames from 'classnames';
+import { classNames } from 'util/index';
 
 import { marked } from 'marked';
 import { useLayoutEffect, useRef } from 'preact/hooks';

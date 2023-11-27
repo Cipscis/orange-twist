@@ -1,7 +1,7 @@
 import { h, type ComponentChildren, type JSX } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
-import classNames from 'classnames';
+import { classNames } from 'util/index';
 
 import { getDeepActiveElement, nodeHasAncestor } from '../../util';
 
