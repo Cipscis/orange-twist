@@ -11,6 +11,7 @@ import type { TaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';
 
 import { getDayTaskInfo } from '../dayTasks';
+import { getDayInfo } from '../days';
 import { getTaskInfo } from './getTaskInfo';
 import { clear } from '../shared';
 
@@ -56,19 +57,37 @@ describe('setTaskInfo', () => {
 		});
 	});
 
-	test('when setting the status for a task, unless the "forCurrentDay" option is negated, also updates the day task for the current day', () => {
-		const currentDayName = getCurrentDateDayName();
+	describe('when setting the status for a task', () => {
+		test('if the "forCurrentDay" option is absent or true, also updates the day task for the current day', () => {
+			const currentDayName = getCurrentDateDayName();
 
-		setTaskInfo(1, { status: TaskStatus.COMPLETED });
-		expect(getDayTaskInfo({ dayName: currentDayName, taskId: 1 })).toEqual({
-			dayName: currentDayName,
-			taskId: 1,
+			setTaskInfo(1, { status: TaskStatus.COMPLETED });
+			expect(getDayTaskInfo({ dayName: currentDayName, taskId: 1 })).toEqual({
+				dayName: currentDayName,
+				taskId: 1,
 
-			note: '',
-			status: TaskStatus.COMPLETED,
+				note: '',
+				status: TaskStatus.COMPLETED,
+			});
+			expect(getDayInfo(currentDayName)?.tasks.includes(1)).toBe(true);
+
+			setTaskInfo(2, { status: TaskStatus.COMPLETED }, { forCurrentDay: true });
+			expect(getDayTaskInfo({ dayName: currentDayName, taskId: 2 })).toEqual({
+				dayName: currentDayName,
+				taskId: 2,
+
+				note: '',
+				status: TaskStatus.COMPLETED,
+			});
+			expect(getDayInfo(currentDayName)?.tasks.includes(2)).toBe(true);
 		});
 
-		setTaskInfo(2, { status: TaskStatus.COMPLETED }, { forCurrentDay: false });
-		expect(getDayTaskInfo({ dayName: currentDayName, taskId: 2 })).toBeNull();
+		test('if the "forCurrentDay" option is negated, doesn\'t update the day task for the current day', () => {
+			const currentDayName = getCurrentDateDayName();
+
+			setTaskInfo(1, { status: TaskStatus.COMPLETED }, { forCurrentDay: false });
+			expect(getDayTaskInfo({ dayName: currentDayName, taskId: 1 })).toBeNull();
+			expect(getDayInfo(currentDayName)?.tasks.includes(1)).toBeFalsy();
+		});
 	});
 });
