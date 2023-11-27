@@ -11,8 +11,10 @@ import { TaskStatus } from 'types/TaskStatus';
 import { tasksRegister } from './tasksRegister';
 import { getTaskInfo } from './getTaskInfo';
 import { clear } from '../shared';
+import { getCurrentDateDayName } from 'util/index';
 
 import { createTask } from './createTask';
+import { getDayInfo, setDayInfo } from 'data';
 
 describe('createTask', () => {
 	afterEach(() => {
@@ -62,5 +64,14 @@ describe('createTask', () => {
 			name: 'Custom task name',
 			status: TaskStatus.IN_PROGRESS,
 		});
+	});
+
+	test('doesn\'t add the task to the current day', () => {
+		const currentDay = getCurrentDateDayName();
+		setDayInfo(currentDay, {});
+
+		const taskId = createTask();
+
+		expect(getDayInfo(currentDay)?.tasks.includes(taskId)).toBe(false);
 	});
 });
