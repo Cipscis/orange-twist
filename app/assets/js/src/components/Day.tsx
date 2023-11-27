@@ -90,7 +90,7 @@ export const Day = forwardRef(
 				<DayNote day={day} />
 
 				<TaskList
-					taskIds={tasks}
+					matcher={tasks}
 					dayName={name}
 					onReorder={reorderTasks}
 				/>

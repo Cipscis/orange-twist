@@ -10,12 +10,16 @@ import classNames from 'classnames';
 
 import { useViewTransition } from 'util/index';
 
-import { useAllTaskInfo } from 'data/tasks';
+import { useAllTaskInfo, type TaskInfo } from 'data';
 
 import { Task } from './Task';
 
 interface TaskListProps {
-	taskIds: readonly number[];
+	/**
+	 * Either an array of task IDs, or a function that determines
+	 * whether or not a task should be displayed.
+	 */
+	matcher: readonly number[] | ((task: TaskInfo) => boolean);
 	dayName?: string;
 	className?: string;
 
@@ -30,23 +34,37 @@ export function TaskList(
 	props: TaskListProps,
 ): JSX.Element {
 	const {
-		taskIds,
+		matcher,
 		dayName,
 		className,
 
 		onReorder,
 	} = props;
 
-	const tasksInfoUnsorted = useAllTaskInfo(taskIds);
+	const tasksInfoUnsorted = useAllTaskInfo(matcher);
+
+	const sortTasks = useMemo(() => {
+		// If passed an array of task IDs, sort based on that array
+		if (Array.isArray(matcher)) {
+			return (
+				{ id: idA }: TaskInfo,
+				{ id: idB }: TaskInfo
+			) => {
+				return matcher.indexOf(idA) - matcher.indexOf(idB);
+			};
+		}
+
+		return null;
+	}, [matcher]);
 
 	// Sort task info based on order in `taskIds` prop
 	const tasksInfo = useMemo(() => {
-		return tasksInfoUnsorted.toSorted(
-			({ id: idA }, { id: idB }) => {
-				return taskIds.indexOf(idA)  - taskIds.indexOf(idB);
-			}
-		);
-	}, [taskIds, tasksInfoUnsorted]);
+		if (sortTasks) {
+			return tasksInfoUnsorted.toSorted(sortTasks);
+		}
+
+		return tasksInfoUnsorted;
+	}, [tasksInfoUnsorted, sortTasks]);
 
 	const idBase = useId();
 
@@ -59,8 +77,8 @@ export function TaskList(
 	} = useViewTransition();
 
 	/**
-		 * Set up the metadata for a drag.
-		 */
+	 * Set up the metadata for a drag.
+	 */
 	const dragStartHandler = useCallback((i: number) => {
 		return (e: DragEvent) => {
 			const itemEl = itemsRef.current[i];
@@ -79,9 +97,9 @@ export function TaskList(
 	}, []);
 
 	/**
-		 * Detect if an item is being dragged over a valid drop target,
-		 * and allow drop events if so.
-		 */
+	 * Detect if an item is being dragged over a valid drop target,
+	 * and allow drop events if so.
+	 */
 	const dragOverHandler = useCallback((e: DragEvent) => {
 		if (!(e.target instanceof HTMLElement)) {
 			return;
@@ -99,8 +117,8 @@ export function TaskList(
 	}, []);
 
 	/**
-		 * Handle moving an element when dropped, and emiting an event.
-		 */
+	 * Handle moving an element when dropped, and emiting an event.
+	 */
 	const dropHandler = useCallback((e: DragEvent) => {
 		if (!onReorder) {
 			return;

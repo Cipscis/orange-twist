@@ -3,7 +3,7 @@ import { h, render } from 'preact';
 import { OrangeTwist } from './components/OrangeTwist';
 import { DayList } from './components/DaysList';
 import { UnfinishedTasksList } from './components/UnfinishedTaskList';
-import { CompletedTasksList } from './components/CompletedTasksList';
+import { CompletedTaskList } from './components/CompletedTaskList';
 
 const main = document.getElementById('main');
 if (main === null) {
@@ -15,5 +15,5 @@ render(<OrangeTwist>
 
 	<UnfinishedTasksList />
 
-	<CompletedTasksList />
+	<CompletedTaskList />
 </OrangeTwist>, main);
