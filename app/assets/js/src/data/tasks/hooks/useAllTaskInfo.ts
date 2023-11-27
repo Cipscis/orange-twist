@@ -27,7 +27,9 @@ export function useAllTaskInfo(taskIds: readonly number[]): TaskInfo[];
 export function useAllTaskInfo(matcher: (task: TaskInfo) => boolean): TaskInfo[];
 // Expose the implementation signature as an overload
 // to allow calling from similarly overloaded functions
-export function useAllTaskInfo(taskIds?: readonly number[]): TaskInfo[];
+export function useAllTaskInfo(
+	matcher?: readonly number[] | ((task: TaskInfo) => boolean)
+): TaskInfo[];
 export function useAllTaskInfo(
 	matcherArg?: readonly number[] | ((task: TaskInfo) => boolean)
 ): TaskInfo[] {

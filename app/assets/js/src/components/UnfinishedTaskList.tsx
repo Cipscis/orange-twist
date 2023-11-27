@@ -1,19 +1,13 @@
 import { h, type JSX } from 'preact';
-import {
-	useCallback,
-	useMemo,
-} from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import { TaskStatus } from 'types/TaskStatus';
+import { CompletedTaskStatuses } from 'types/TaskStatus';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import {
-	useAllTaskInfo,
-	type TaskInfo,
-} from 'data';
+import { type TaskInfo } from 'data';
 
 import { TaskList } from './TaskList';
 
@@ -21,16 +15,6 @@ import { TaskList } from './TaskList';
  * Renders a {@linkcode TaskList} of all unfinished tasks in a disclosure.
  */
 export function UnfinishedTasksList(): JSX.Element {
-	const completedStatuses = useMemo<TaskStatus[]>(() => ([
-		TaskStatus.COMPLETED,
-		TaskStatus.WILL_NOT_DO,
-	]), []);
-
-	const tasks = useAllTaskInfo(useCallback(
-		({ status }: TaskInfo) => !completedStatuses.includes(status),
-		[completedStatuses]
-	));
-
 	return <section
 		class={classNames({
 			'orange-twist__section': true,
@@ -39,7 +23,10 @@ export function UnfinishedTasksList(): JSX.Element {
 		<h2 class="orange-twist__title">Tasks</h2>
 
 		<TaskList
-			taskIds={tasks.map(({ id }) => id)}
+			matcher={useCallback(
+				({ status }: TaskInfo) => !CompletedTaskStatuses.has(status),
+				[]
+			)}
 			className="orange-twist__task-list"
 		/>
 
