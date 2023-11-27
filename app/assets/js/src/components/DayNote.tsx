@@ -1,11 +1,12 @@
 import { h, type JSX } from 'preact';
 
-import type { DayInfo } from 'data/days';
-
 import { Command } from 'types/Command';
-
-import { setDayInfo } from 'data/days';
 import { fireCommand } from 'registers/commands';
+
+import {
+	setDayInfo,
+	type DayInfo,
+} from 'data';
 
 import { Note } from './shared/Note';
 import { useCallback } from 'preact/hooks';

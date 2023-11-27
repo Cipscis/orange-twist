@@ -4,7 +4,7 @@ import { isZodSchemaType } from 'util/index';
 const dayInfoSchema = z.object({
 	name: z.string(),
 	note: z.string(),
-	tasks: z.array(z.number()),
+	tasks: z.array(z.number()).readonly(),
 });
 
 /**
