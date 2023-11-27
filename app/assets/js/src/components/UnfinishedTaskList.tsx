@@ -1,7 +1,7 @@
 import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import classNames from 'classnames';
+import { classNames } from 'util/index';
 
 import { CompletedTaskStatuses } from 'types/TaskStatus';
 import { Command } from 'types/Command';

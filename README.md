@@ -63,8 +63,6 @@ This file is intended to differ from environment to environment, so it is ignore
 
 * [marked](https://marked.js.org/): A Markdown compiler.
 
-* [classnames](https://www.npmjs.com/package/classnames): Utility library for combining CSS classnames.
-
 ## Dev Dependencies
 
 ### Development

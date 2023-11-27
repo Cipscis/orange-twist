@@ -1,4 +1,5 @@
 export { animate } from './animate';
+export { classNames } from './classNames';
 export { escapeRegExpString } from './escapeRegExpString';
 export { getCurrentDateDayName } from './getCurrentDateDayName';
 export { getDeepActiveElement } from './getDeepActiveElement';

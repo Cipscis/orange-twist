@@ -6,7 +6,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import classNames from 'classnames';
+import { classNames } from 'util/index';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
