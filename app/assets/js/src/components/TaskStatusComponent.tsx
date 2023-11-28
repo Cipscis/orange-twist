@@ -27,6 +27,8 @@ import {
 	useTaskInfo,
 } from 'data';
 
+import * as ui from 'ui';
+
 interface TaskStatusComponentProps {
 	taskId: number;
 	dayName?: string;
@@ -116,8 +118,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	/**
 	 * Ask for confirmation, then delete the task.
 	 */
-	const removeTaskEntirely = useCallback(() => {
-		if (!confirm('Are you sure you want to delete this task?')) {
+	const removeTaskEntirely = useCallback(async () => {
+		if (!await ui.confirm('Are you sure you want to delete this task?')) {
 			return;
 		}
 
@@ -129,8 +131,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	/**
 	 * Ask for confirmation, then remove a task from this component's day.
 	 */
-	const removeTaskFromDay = useCallback(() => {
-		if (!confirm(`Are you sure you want to remove this task from ${dayName}?`)) {
+	const removeTaskFromDay = useCallback(async () => {
+		if (!await ui.confirm(`Are you sure you want to remove this task from ${dayName}?`)) {
 			return;
 		}
 

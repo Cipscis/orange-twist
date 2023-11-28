@@ -3,6 +3,7 @@ export { classNames } from './classNames';
 export { escapeRegExpString } from './escapeRegExpString';
 export { getCurrentDateDayName } from './getCurrentDateDayName';
 export { getDeepActiveElement } from './getDeepActiveElement';
+export { getPromiseWithResolver } from './getPromiseWithResolver';
 export { isValidDateString } from './isValidDateString';
 export { isZodSchemaType } from './isZodSchemaType';
 export { nodeHasAncestor } from './nodeHasAncestor';
