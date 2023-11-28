@@ -6,11 +6,11 @@ import '@testing-library/jest-dom/jest-globals';
 import { render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
-import { ModalPrompt } from './ModalPrompt';
+import { ModalConfirm } from './ModalConfirm';
 
-describe('ModalPrompt', () => {
+describe('ModalConfirm', () => {
 	test('displays the prompt message', () => {
-		const { getByText } = render(<ModalPrompt
+		const { getByText } = render(<ModalConfirm
 			message="Test message"
 			resolve={() => {}}
 		/>);
@@ -18,43 +18,43 @@ describe('ModalPrompt', () => {
 		expect(getByText('Test message')).toBeInTheDocument();
 	});
 
-	test('calls the resolve callback with null if nothing was entered', async () => {
+	test('calls the resolve callback with false the modal was closed', async () => {
 		const user = userEvent.setup();
 
 		const spy = jest.fn();
-		render(<ModalPrompt
+		render(<ModalConfirm
 			message="Test message"
 			resolve={spy}
 		/>);
 
 		await user.keyboard('{Escape}');
-		expect(spy).toHaveBeenCalledWith(null);
+		expect(spy).toHaveBeenCalledWith(false);
 	});
 
-	test('calls the resolve prop with a string if something was entered', async () => {
+	test('calls the resolve prop with true if the "Confirm" button was pressed', async () => {
 		const user = userEvent.setup();
 
 		const spy = jest.fn();
-		render(<ModalPrompt
+		const { getByRole } = render(<ModalConfirm
 			message="Test message"
 			resolve={spy}
 		/>);
 
-		await user.keyboard('Test response{Enter}');
-		expect(spy).toHaveBeenCalledWith('Test response');
+		await user.click(getByRole('button', { name: 'Confirm' }));
+		expect(spy).toHaveBeenCalledWith(true);
 	});
 
-	test('closes after being submitted', async () => {
+	test('calls the resolve prop with false if the "Cancel" button was pressed', async () => {
 		const user = userEvent.setup();
 
-		const { getByRole, queryByRole } = render(<ModalPrompt
+		const spy = jest.fn();
+		const { getByRole } = render(<ModalConfirm
 			message="Test message"
-			resolve={() => {}}
+			resolve={spy}
 		/>);
 
-		expect(getByRole('textbox', { name: 'Test message' })).toBeInTheDocument();
-		await user.keyboard('Test response{Enter}');
-		expect(queryByRole('textbox', { name: 'Test message' })).not.toBeInTheDocument();
+		await user.click(getByRole('button', { name: 'Cancel' }));
+		expect(spy).toHaveBeenCalledWith(false);
 	});
 
 	test('re-opens when passed a new resolve callback', async () => {
@@ -63,7 +63,7 @@ describe('ModalPrompt', () => {
 		const {
 			queryByText,
 			rerender,
-		} = render(<ModalPrompt
+		} = render(<ModalConfirm
 			message="Test message"
 			resolve={() => {}}
 		/>);
@@ -72,29 +72,29 @@ describe('ModalPrompt', () => {
 		await user.keyboard('{Escape}');
 		expect(queryByText('Test message')).not.toBeInTheDocument();
 
-		rerender(<ModalPrompt
+		rerender(<ModalConfirm
 			message="Test message"
 			resolve={() => {}}
 		/>);
 		expect(queryByText('Test message')).toBeInTheDocument();
 	});
 
-	test('calls the resolve callback with null if it\'s changed before closing', () => {
+	test('calls the resolve callback with false if it\'s changed before closing', () => {
 		const spy = jest.fn();
 
-		const { rerender } = render(<ModalPrompt
+		const { rerender } = render(<ModalConfirm
 			message="Test message"
 			resolve={spy}
 		/>);
 
 		expect(spy).toHaveBeenCalledTimes(0);
 
-		rerender(<ModalPrompt
+		rerender(<ModalConfirm
 			message="Test message 2"
 			resolve={() => {}}
 		/>);
 
 		expect(spy).toHaveBeenCalledTimes(1);
-		expect(spy).toHaveBeenCalledWith(null);
+		expect(spy).toHaveBeenCalledWith(false);
 	});
 });

@@ -1,10 +1,8 @@
 import { h, render } from 'preact';
 
-import { ModalPrompt } from './ModalPrompt';
-import { getPromiseWithResolver } from 'util/getPromiseWithResolver';
+import { getPromiseWithResolver } from 'util/index';
 
-export const promptContainer = document.createElement('div');
-document.body.append(promptContainer);
+import { ModalPrompt } from './ModalPrompt';
 
 export async function prompt(message: string): Promise<string | null> {
 	const [resultPromise, resolve] = getPromiseWithResolver<string | null>();
@@ -12,7 +10,7 @@ export async function prompt(message: string): Promise<string | null> {
 	render(<ModalPrompt
 		message={message}
 		resolve={resolve}
-	/>, promptContainer);
+	/>, document.body);
 
 	return resultPromise;
 }

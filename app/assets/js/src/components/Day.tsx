@@ -10,6 +10,8 @@ import {
 	setDayInfo,
 } from 'data';
 
+import * as ui from 'ui';
+
 import { DayNote } from './DayNote';
 import { TaskList } from './TaskList';
 
@@ -36,8 +38,8 @@ export const Day = (props: DayProps): JSX.Element => {
 	/**
 	 * Ask for confirmation before deleting the current day.
 	 */
-	const removeDay = useCallback(() => {
-		if (!window.confirm('Are you sure?')) {
+	const removeDay = useCallback(async () => {
+		if (!await ui.confirm('Are you sure?')) {
 			return;
 		}
 

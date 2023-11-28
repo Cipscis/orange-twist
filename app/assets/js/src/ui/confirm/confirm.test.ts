@@ -7,15 +7,15 @@ import '@testing-library/jest-dom/jest-globals';
 
 import { screen } from '@testing-library/preact';
 
-import { prompt } from './prompt';
+import { confirm } from './confirm';
 
-describe('prompt', () => {
+describe('confirm', () => {
 	test('returns a Promise', () => {
-		expect(prompt('Test message')).toBeInstanceOf(Promise);
+		expect(confirm('Test message')).toBeInstanceOf(Promise);
 	});
 
 	test('renders the message', () => {
-		prompt('Test message');
+		confirm('Test message');
 
 		expect(screen.getByText('Test message')).toBeInTheDocument();
 	});

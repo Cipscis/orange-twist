@@ -16,6 +16,7 @@ import {
 	act,
 	cleanup,
 	render,
+	screen,
 } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
@@ -132,9 +133,6 @@ describe('TaskStatusComponent', () => {
 		});
 
 		test('can remove a task entirely', async () => {
-			const originalConfirm = window.confirm;
-			window.confirm = () => true;
-
 			const user = userEvent.setup();
 			const saveSpy = jest.fn();
 			addCommandListener(Command.DATA_SAVE, saveSpy);
@@ -156,11 +154,11 @@ describe('TaskStatusComponent', () => {
 			expect(deleteButton).toBeInTheDocument();
 
 			await user.click(deleteButton);
+			await user.click(screen.getByRole('button', { name: 'Confirm' }));
 
 			expect(getTaskInfo(1)).toBeNull();
 
 			removeCommandListener(Command.DATA_SAVE, saveSpy);
-			window.confirm = originalConfirm;
 		});
 	});
 
@@ -287,6 +285,7 @@ describe('TaskStatusComponent', () => {
 			expect(deleteButton).toBeInTheDocument();
 
 			await user.click(deleteButton);
+			await user.click(screen.getByRole('button', { name: 'Confirm' }));
 
 			expect(getTaskInfo(1)).not.toBeNull();
 			expect(
