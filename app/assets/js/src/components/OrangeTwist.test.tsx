@@ -1,6 +1,7 @@
 import { h } from 'preact';
 
 import {
+	afterAll,
 	afterEach,
 	beforeAll,
 	describe,
@@ -12,7 +13,7 @@ import '@testing-library/jest-dom/jest-globals';
 
 import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-
+import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
 import { randomUUID } from 'node:crypto';
 
 import { addCommandListener, fireCommand } from 'registers/commands';
@@ -23,9 +24,15 @@ import {
 	getAllDayTaskInfo,
 	getDayInfo,
 } from 'data';
+import { KeyboardShortcutName, addKeyboardShortcutListener } from 'registers/keyboard-shortcuts';
 
 import { OrangeTwist } from './OrangeTwist';
-import { KeyboardShortcutName, addKeyboardShortcutListener } from 'registers/keyboard-shortcuts';
+
+configMocks({
+	afterEach,
+	afterAll,
+});
+mockAnimationsApi();
 
 describe('OrangeTwist', () => {
 	beforeAll(() => {

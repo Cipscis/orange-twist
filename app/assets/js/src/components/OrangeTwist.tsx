@@ -34,7 +34,7 @@ import {
 } from 'registers/keyboard-shortcuts';
 
 import { getCurrentDateDayName, isValidDateString } from 'util/index';
-import { toast } from './shared/Toast';
+import { alert } from 'ui';
 
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
@@ -132,20 +132,18 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 */
 	const saveData = useCallback(
 		async () => {
-			const toastId = `saving-${crypto.randomUUID()}`;
+			const id = `saving-${crypto.randomUUID()}`;
 
 			// TODO: Show a nicer loader
-			toast('Saving...', {
-				id: toastId,
-			});
+			alert('Saving...', { id });
 			await Promise.all([
 				saveDays(),
 				saveTasks(),
 				saveDayTasks(),
 			]);
-			toast('Saved', {
+			alert('Saved', {
 				duration: 2000,
-				id: toastId,
+				id,
 			});
 		},
 		[]
