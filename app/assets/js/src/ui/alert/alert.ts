@@ -1,3 +1,4 @@
+import type { ExpandType } from 'util/index';
 import type { ToastProps } from './Toast';
 import {
 	getNextId,
@@ -5,7 +6,7 @@ import {
 	toasts,
 } from './toast-controller';
 
-type ToastOptions = Partial<Omit<ToastProps, 'message'>>;
+type ToastOptions = ExpandType<Partial<Omit<ToastProps, 'message'>>>;
 
 /**
  * Show a new "toast" alert with a specified message and duration.
@@ -20,6 +21,12 @@ export function alert(message: string, options?: ToastOptions): void;
 export function alert(message: string, optionsArg?: ToastProps['duration'] | ToastOptions): void {
 	// Start by consolidating arguments
 	const options = typeof optionsArg === 'number' ? { duration: optionsArg } : { ...optionsArg };
+
+	// Use a default duration of 2000ms
+	// TODO: Need a better approach to this - make dismissable toasts maybe?
+	if (!options.duration) {
+		options.duration = 2000;
+	}
 
 	const existingToast = (() => {
 		if (typeof options?.id !== 'undefined') {

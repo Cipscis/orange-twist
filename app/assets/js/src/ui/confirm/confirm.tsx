@@ -4,13 +4,16 @@ import { getPromiseWithResolver } from 'util/index';
 
 import { ModalConfirm } from './ModalConfirm';
 
+const confirmContainer = document.createElement('div');
+document.body.append(confirmContainer);
+
 export function confirm(message: string): Promise<boolean> {
 	const [resultPromise, resolve] = getPromiseWithResolver<boolean>();
 
 	render(<ModalConfirm
 		message={message}
 		resolve={resolve}
-	/>, document.body);
+	/>, confirmContainer);
 
 	return resultPromise;
 }
