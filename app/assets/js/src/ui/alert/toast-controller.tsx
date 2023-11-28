@@ -3,7 +3,7 @@ import { Toast, type ToastProps } from './Toast';
 
 export const toasts: Array<ToastProps> = [];
 
-export const toastContainer = document.createElement('div');
+const toastContainer = document.createElement('div');
 toastContainer.classList.add('toast__container');
 document.body.append(toastContainer);
 
