@@ -101,12 +101,12 @@ export function Modal(props: ModalProps): JSX.Element {
 		modalEl?.addEventListener('focusout', (e) => {
 			// Ignore `focusout` triggered by focus leaving the viewport,
 			// such as switching to another tab or focusing on the dev tools
-			const activeElement = document.activeElement;
+			const activeElement = e.relatedTarget;
 
 			if (
 				activeElement === modalEl ||
 				(
-					activeElement &&
+					activeElement instanceof Node &&
 					nodeHasAncestor(activeElement, modalEl)
 				)
 			) {

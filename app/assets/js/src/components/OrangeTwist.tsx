@@ -34,7 +34,7 @@ import {
 } from 'registers/keyboard-shortcuts';
 
 import { getCurrentDateDayName, isValidDateString } from 'util/index';
-import { alert } from 'ui';
+import * as ui from 'ui';
 
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
@@ -135,13 +135,13 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			const id = `saving-${crypto.randomUUID()}`;
 
 			// TODO: Show a nicer loader
-			alert('Saving...', { id });
+			ui.alert('Saving...', { id });
 			await Promise.all([
 				saveDays(),
 				saveTasks(),
 				saveDayTasks(),
 			]);
-			alert('Saved', {
+			ui.alert('Saved', {
 				duration: 2000,
 				id,
 			});
@@ -154,21 +154,21 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	/**
 	 * Ask the user what day to add, then add it to the register.
 	 */
-	const addNewDay = useCallback((dayNameArg?: string) => {
+	const addNewDay = useCallback(async (dayNameArg?: string) => {
 		const days = getAllDayInfo();
 
-		const dayName = dayNameArg ?? window.prompt('What day?');
+		const dayName = dayNameArg ?? await ui.prompt('What day?');
 		if (!dayName) {
 			return;
 		}
 		if (!isValidDateString(dayName)) {
-			window.alert('Invalid day');
+			ui.alert('Invalid day');
 			return;
 		}
 
 		const existingDayData = days.find((day) => day.name === dayName);
 		if (existingDayData) {
-			window.alert('Day already exists');
+			ui.alert('Day already exists');
 			return;
 		}
 
