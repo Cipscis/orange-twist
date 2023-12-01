@@ -63,9 +63,10 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 				resolve(result);
 				setIsOpen(false);
 			}, [resolve])}
+			class="modal-prompt__form"
 		>
 			<label>
-				{message}
+				<div class="modal-prompt__message">{message}</div>
 				<input
 					ref={resultElRef}
 					type="text"
