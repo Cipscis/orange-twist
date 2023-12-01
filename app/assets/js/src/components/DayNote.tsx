@@ -1,16 +1,18 @@
 import { h, type JSX } from 'preact';
 
-import type { Day } from 'types/Day';
-
 import { Command } from 'types/Command';
-
-import { setDayData } from 'registers/days';
 import { fireCommand } from 'registers/commands';
 
+import {
+	setDayInfo,
+	type DayInfo,
+} from 'data';
+
 import { Note } from './shared/Note';
+import { useCallback } from 'preact/hooks';
 
 interface DayNoteProps {
-	day: Readonly<Day>;
+	day: Readonly<DayInfo>;
 }
 
 /**
@@ -19,11 +21,14 @@ interface DayNoteProps {
  */
 export function DayNote(props: DayNoteProps): JSX.Element {
 	const { day } = props;
-	const { dayName } = day;
+	const { name } = day;
 
 	return <Note
 		note={day.note}
-		onNoteChange={(note) => setDayData(dayName, { note })}
-		saveChanges={() => fireCommand(Command.DATA_SAVE)}
+		onNoteChange={useCallback(
+			(note) => setDayInfo(name, { note }),
+			[name]
+		)}
+		saveChanges={useCallback(() => fireCommand(Command.DATA_SAVE), [])}
 	/>;
 }

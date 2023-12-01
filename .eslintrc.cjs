@@ -47,6 +47,18 @@ module.exports = {
 		// Overriding defaults //
 		/////////////////////////
 
+		// The `{}` type has many legitimate uses, primarily in "tagging"
+		// types to change some behaviours of the TypeScript compiler.
+		'@typescript-eslint/ban-types': [
+			'error',
+			{
+				'types': {
+					'{}': false,
+				},
+				'extendDefaults': true
+			}
+		  ],
+
 		// Sometimes it's useful to leave a name for an unused argument,
 		// in case it might be used in the future. Also, using a warning
 		// level makes it clearer when there's not a "real" error while
@@ -446,5 +458,13 @@ module.exports = {
 				"beforeClosing": "allow"
 			},
 		],
-	}
+	},
+
+	overrides: [
+		{
+			files: ['*.{spec,test}.{j,t}{s,sx}'],
+			plugins: ['jest'],
+			extends: ['plugin:jest/recommended'],
+		}
+	],
 };

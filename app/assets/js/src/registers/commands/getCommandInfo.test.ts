@@ -5,7 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 import { registerCommand, unregisterCommand } from './registerCommand';
-import { getCommandInfo } from '.';
+import { getCommandInfo } from './getCommandInfo';
 
 describe('getCommandInfo', () => {
 	afterEach(() => {

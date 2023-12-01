@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import { forwardRef } from 'preact/compat';
 
-import classNames from 'classnames';
+import { classNames } from 'util/index';
 
 import { fireCommand } from 'registers/commands';
 import type { CommandInfo } from 'registers/commands/types/CommandInfo';
 
 
-import { KeyboardShortcutCombos } from '../KeyboardShortcutCombos';
+import { KeyboardShortcutCombos } from '../shared/KeyboardShortcutCombos';
 import { CommandPaletteItemName } from './CommandPaletteItemName';
 
 interface CommandPaletteItemProps {

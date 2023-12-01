@@ -9,7 +9,7 @@ import {
 } from '../registers/keyboard-shortcuts';
 
 import { Modal } from './shared/Modal';
-import { KeyboardShortcutCombos } from './KeyboardShortcutCombos';
+import { KeyboardShortcutCombos } from './shared/KeyboardShortcutCombos';
 
 registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
 

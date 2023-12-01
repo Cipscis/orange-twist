@@ -11,7 +11,7 @@ describe('assertAllUnionMembersHandler', () => {
 		expect(() => {
 			/* @ts-expect-error TypeScript should forbid calling this function except with `never` */
 			assertAllUnionMembersHandled('test');
-		}).toThrowError(
+		}).toThrow(
 			'Union member test was not handled.'
 		);
 	});
@@ -22,6 +22,6 @@ describe('assertAllUnionMembersHandler', () => {
 				'test' as never,
 				(value) => `Custom error message with ${value}`
 			);
-		}).toThrowError('Custom error message with test');
+		}).toThrow('Custom error message with test');
 	});
 });

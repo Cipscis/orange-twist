@@ -6,26 +6,20 @@
 	"type": "module",
 	"scripts": {
 		"server": "node --loader ts-node/esm scripts/server.ts",
-
 		"buildJs": "concurrently \"tsc --noEmit\" \"node --loader ts-node/esm scripts/build.ts\"",
 		"buildCss": "sass app/assets/scss:app/assets/css",
 		"build": "concurrently \"npm run buildJs\" \"npm run buildCss\"",
-
-		"pretest": "tsc --noEmit",
 		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
 		"testCoverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --collectCoverage",
-
 		"watchJs": "node --loader ts-node/esm scripts/build-watch.ts",
 		"watchCss": "sass app/assets/scss:app/assets/css --watch",
 		"testWatch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
 		"watch": "concurrently --kill-others \"tsc --watch --preserveWatchOutput --noEmit\" \"npm run watchJs\" \"npm run watchCss\" \"npm run testWatch\"",
-
 		"lintJs": "eslint app/assets/js/src/**",
 		"lintCss": "stylelint app/assets/scss/**/*.scss",
 		"lint": "npm run lintJs && npm run lintCss",
-
 		"start": "concurrently --kill-others \"npm run server\" \"npm run watch\"",
-		"prepare": "npm test"
+		"prepare": "tsc --noEmit && npm test"
 	},
 	"author": "Mark Hanna",
 	"repository": {
@@ -47,11 +41,13 @@
 		"dotenv": "^16.3.1",
 		"esbuild": "^0.19.5",
 		"eslint": "^8.52.0",
+		"eslint-plugin-jest": "^27.6.0",
 		"eslint-plugin-react": "^7.33.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"express": "^4.18.2",
 		"jest": "^29.7.0",
 		"jest-environment-jsdom": "^29.7.0",
+		"jsdom-testing-mocks": "^1.11.0",
 		"sass": "^1.69.5",
 		"stylelint": "^15.11.0",
 		"stylelint-config-recommended-scss": "^13.0.0",
@@ -63,7 +59,6 @@
 		"node": ">=20"
 	},
 	"dependencies": {
-		"classnames": "^2.3.2",
 		"marked": "^9.1.2",
 		"preact": "^10.18.1",
 		"zod": "^3.22.4"

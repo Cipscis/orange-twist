@@ -1,177 +1,216 @@
-import { h } from 'preact';
-import { useCallback, useId, useRef } from 'preact/hooks';
+import { h, type JSX } from 'preact';
+import {
+	useCallback,
+	useId,
+	useMemo,
+	useRef,
+} from 'preact/hooks';
 
-import classNames from 'classnames';
+import { classNames } from 'util/index';
 
-import type { Task } from '../types/Task';
+import { useViewTransition } from 'util/index';
 
-import { useViewTransition } from '../util';
+import { useAllTaskInfo, type TaskInfo } from 'data';
 
-import { getTaskData, useTasks } from '../registers/tasks';
-
-import { TaskComponent } from './TaskComponent';
-import React, { forwardRef } from 'preact/compat';
+import { Task } from './Task';
 
 interface TaskListProps {
-	tasks: ReadonlyArray<Readonly<Pick<Task, 'id'>>>;
+	/**
+	 * Either an array of task IDs, or a function that determines
+	 * whether or not a task should be displayed.
+	 */
+	matcher: readonly number[] | ((task: TaskInfo) => boolean);
 	dayName?: string;
 	className?: string;
 
-	onReorder?: (taskIds: number[]) => void;
+	onReorder?: (taskIds: readonly number[]) => void;
 }
 
 /**
  * Renders a list of specified tasks, which can be
  * reordered via drag & drop.
  */
-export const TaskList = forwardRef(
-	function TaskList(
-		props: TaskListProps,
-		ref: React.ForwardedRef<HTMLDivElement>
-	) {
-		// Force the component to update when tasks are changed
-		// TODO: Limit this to a list of tasks
-		useTasks();
+export function TaskList(
+	props: TaskListProps,
+): JSX.Element {
+	const {
+		matcher,
+		dayName,
+		className,
 
-		const {
-			tasks,
-			dayName,
-			className,
+		onReorder,
+	} = props;
 
-			onReorder,
-		} = props;
+	const tasksInfoUnsorted = useAllTaskInfo(matcher);
 
-		const idBase = useId();
-
-		const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
-		const isInDraggingMode = useRef(false);
-
-		const {
-			startViewTransition,
-			isInViewTransition,
-		} = useViewTransition();
-
-		/**
-		 * Set up the metadata for a drag.
-		 */
-		const dragStartHandler = useCallback((i: number) => {
-			return (e: DragEvent) => {
-				const itemEl = itemsRef.current[i];
-				const dataTransfer = e.dataTransfer;
-				if (!(itemEl && dataTransfer)) {
-					return;
-				}
-
-				isInDraggingMode.current = true;
-
-				dataTransfer.dropEffect = 'move';
-				dataTransfer.setDragImage(itemEl, 0, 0);
-				dataTransfer.clearData();
-				dataTransfer.setData('text/plain', itemEl.id);
+	/**
+	 * Instructions on how tasks should be sorted, if necessary.
+	 */
+	const sortTasks = useMemo(() => {
+		// If passed an array of task IDs, sort based on that array
+		if (Array.isArray(matcher)) {
+			return (
+				{ id: idA }: TaskInfo,
+				{ id: idB }: TaskInfo
+			) => {
+				return matcher.indexOf(idA) - matcher.indexOf(idB);
 			};
-		}, []);
+		}
 
-		/**
-		 * Detect if an item is being dragged over a valid drop target,
-		 * and allow drop events if so.
-		 */
-		const dragOverHandler = useCallback((e: DragEvent) => {
-			if (!(e.target instanceof HTMLElement)) {
-				return;
+		// Otherwise, don't apply any sorting rules
+		return null;
+	}, [matcher]);
+
+	// Sort task info if necessary
+	const tasksInfo = useMemo(() => {
+		if (sortTasks) {
+			return tasksInfoUnsorted.toSorted(sortTasks);
+		}
+
+		return tasksInfoUnsorted;
+	}, [tasksInfoUnsorted, sortTasks]);
+
+	const idBase = useId();
+
+	const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
+	const isInDraggingMode = useRef(false);
+
+	const {
+		startViewTransition,
+		isInViewTransition,
+	} = useViewTransition();
+
+	/**
+	 * Set up the metadata for a drag.
+	 */
+	const dragStartHandler = useCallback((e: DragEvent) => {
+		const target = e.currentTarget;
+		if (!(target instanceof Element)) {
+			return;
+		}
+		const itemEl = target.parentElement;
+
+		const dataTransfer = e.dataTransfer;
+		if (!(itemEl && dataTransfer)) {
+			return;
+		}
+
+		isInDraggingMode.current = true;
+
+		dataTransfer.dropEffect = 'move';
+		dataTransfer.setDragImage(itemEl, 0, 0);
+		dataTransfer.clearData();
+		dataTransfer.setData('text/plain', itemEl.id);
+	}, []);
+
+	/**
+	 * Detect if an item is being dragged over a valid drop target,
+	 * and allow drop events if so.
+	 */
+	const dragOverHandler = useCallback((e: DragEvent) => {
+		if (!(e.target instanceof Element)) {
+			return;
+		}
+
+		if (!isInDraggingMode.current) {
+			return;
+		}
+
+		const dropTarget = e.target.closest('[data-task-list-drop-target]');
+		if (dropTarget) {
+			// Prevent the default "drag over" action to allow drop events
+			e.preventDefault();
+		}
+	}, []);
+
+	/**
+	 * Handle moving an element when dropped, and emiting an event.
+	 */
+	const dropHandler = useCallback((e: DragEvent) => {
+		if (!(
+			onReorder &&
+			(e.target instanceof Element) &&
+			e.dataTransfer
+		)) {
+			return;
+		}
+
+		const dropTarget = e.target.closest('[data-task-list-drop-target]');
+		const dropData = e.dataTransfer.getData('text/plain');
+		const draggedElement = document.getElementById(dropData);
+
+		if (!(
+			(dropTarget instanceof HTMLElement) &&
+			draggedElement
+		)) {
+			return;
+		}
+
+		isInDraggingMode.current = false;
+
+		// Construct a new order of tasks to send to `onReorder`
+		const newTasksOrder = itemsRef.current.map(
+			(element) => Number(element?.dataset.taskListItemId)
+		);
+
+		// Determine the positions of the dragged element and drop targe
+		// to determine where to move the dragged element from and to
+		const dropTargetIndex = newTasksOrder.indexOf(
+			Number(dropTarget.dataset.taskListItemId)
+		);
+		const draggedElementIndex = newTasksOrder.indexOf(
+			Number(draggedElement.dataset.taskListItemId)
+		);
+
+		// Move the dragged element to its new position in the array
+		if (dropTarget.compareDocumentPosition(draggedElement) === Node.DOCUMENT_POSITION_FOLLOWING) {
+			// Put the dragged element before the drop target
+			newTasksOrder.splice(draggedElementIndex, 1);
+			newTasksOrder.splice(dropTargetIndex, 0, Number(draggedElement.dataset.taskListItemId));
+		} else {
+			// Put the dragged element after the drop target
+			newTasksOrder.splice(dropTargetIndex + 1, 0, Number(draggedElement.dataset.taskListItemId));
+			newTasksOrder.splice(draggedElementIndex, 1);
+		}
+
+		startViewTransition(() => onReorder(newTasksOrder));
+	}, [startViewTransition, onReorder]);
+
+	return <div
+		class={classNames('task-list', className)}
+		onDragOver={dragOverHandler}
+		onDrop={dropHandler}
+	>
+		{tasksInfo.map((taskInfo, i) => {
+			if (!taskInfo) {
+				return null;
 			}
 
-			if (!isInDraggingMode.current) {
-				return;
-			}
-
-			const dropTarget = e.target.closest<HTMLElement>('[data-task-list-drop-target]');
-			if (dropTarget) {
-				// Prevent the default "drag over" action to allow drop events
-				e.preventDefault();
-			}
-		}, []);
-
-		/**
-		 * Handle moving an element when dropped, and emiting an event.
-		 */
-		const dropHandler = useCallback((e: DragEvent) => {
-			if (!onReorder) {
-				return;
-			}
-
-			if (!(e.target instanceof HTMLElement && e.dataTransfer)) {
-				return;
-			}
-
-			const dropTarget = e.target.closest('[data-task-list-drop-target]');
-			const dropData = e.dataTransfer.getData('text/plain');
-			const draggedElement = document.getElementById(dropData);
-
-			if (!(dropTarget instanceof HTMLElement && draggedElement)) {
-				return;
-			}
-
-			isInDraggingMode.current = false;
-
-			// Construct a new order of tasks to send to `onReorder`
-			const newTasksOrder = Array.from(itemsRef.current).map((element) => Number(element?.dataset.taskListItemId));
-			const dropTargetIndex = (newTasksOrder as unknown[]).indexOf(Number(dropTarget.dataset.taskListItemId));
-			const draggedElementIndex = (newTasksOrder as unknown[]).indexOf(Number(draggedElement.dataset.taskListItemId));
-
-			// Move the dragged element
-			if (dropTarget.compareDocumentPosition(draggedElement) === Node.DOCUMENT_POSITION_FOLLOWING) {
-				// Put the dragged element before the drop target
-				// dropTarget.before(draggedElement);
-				newTasksOrder.splice(draggedElementIndex, 1);
-				newTasksOrder.splice(dropTargetIndex, 0, Number(draggedElement.dataset.taskListItemId));
-			} else {
-				// Put the dragged element after the drop target
-				// dropTarget.after(draggedElement);
-				newTasksOrder.splice(dropTargetIndex + 1, 0, Number(draggedElement.dataset.taskListItemId));
-				newTasksOrder.splice(draggedElementIndex, 1);
-			}
-
-			startViewTransition(() => onReorder(newTasksOrder));
-		}, [startViewTransition, onReorder]);
-
-		return <div
-			class={classNames('task-list', className)}
-			onDragOver={dragOverHandler}
-			onDrop={dropHandler}
-			ref={ref}
-		>
-			{tasks.map((task, i) => {
-				const taskData = getTaskData(task.id);
-				if (!taskData) {
-					return '';
-				}
-
-				return <div
-					key={taskData.id}
-					class="task-list__item"
-					ref={(ref) => itemsRef.current[i] = ref}
-					id={`${idBase}-${taskData.id}`}
-					data-task-list-drop-target
-					data-task-list-item-id={taskData.id}
-					style={`view-transition-name: ${
-						isInViewTransition
-							? `${idBase}-${taskData.id}`
-							: 'none'};
-					`}
-				>
-					{
-						onReorder && <span
-							class="task-list__drag-handle"
-							draggable
-							onDragStart={dragStartHandler(i)}
-						/>
-					}
-					<TaskComponent
-						task={{ ...taskData, ...task }}
-						dayName={dayName}
+			return <div
+				key={taskInfo.id}
+				class="task-list__item"
+				ref={(ref) => itemsRef.current[i] = ref}
+				id={`${idBase}-${taskInfo.id}`}
+				data-task-list-drop-target
+				data-task-list-item-id={taskInfo.id}
+				style={`view-transition-name: ${
+					isInViewTransition
+						? `${idBase}-${taskInfo.id}`
+						: 'none'
+				};`}
+			>
+				{
+					onReorder && <span
+						class="task-list__drag-handle"
+						draggable
+						onDragStart={dragStartHandler}
 					/>
-				</div>;
-			})}
-		</div>;
-	}
-);
+				}
+				<Task
+					taskId={taskInfo.id}
+					dayName={dayName}
+				/>
+			</div>;
+		})}
+	</div>;
+}
