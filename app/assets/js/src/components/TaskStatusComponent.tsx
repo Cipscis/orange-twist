@@ -119,12 +119,13 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	 * Ask for confirmation, then delete the task.
 	 */
 	const removeTaskEntirely = useCallback(async () => {
+		setIsInChangeMode(false);
+
 		if (!await ui.confirm('Are you sure you want to delete this task?')) {
 			return;
 		}
 
 		deleteTask(taskId);
-		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
 	}, [taskId, setIsInChangeMode]);
 
