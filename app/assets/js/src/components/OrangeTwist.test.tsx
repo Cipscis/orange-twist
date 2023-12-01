@@ -11,7 +11,7 @@ import {
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, render } from '@testing-library/preact';
+import { act, cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
 import { randomUUID } from 'node:crypto';
@@ -22,6 +22,7 @@ import { Command } from 'types/Command';
 import {
 	clear,
 	getAllDayTaskInfo,
+	getAllTaskInfo,
 	getDayInfo,
 } from 'data';
 import { KeyboardShortcutName, addKeyboardShortcutListener } from 'registers/keyboard-shortcuts';
@@ -129,11 +130,14 @@ describe('OrangeTwist', () => {
 		});
 	});
 
-	test('sets up the command to create a new task', () => {
+	test('sets up the command to create a new task', async () => {
+		const user = userEvent.setup();
 		render(<OrangeTwist />);
 
-		fireCommand(Command.TASK_ADD_NEW, '2023-11-26');
+		await act(() => fireCommand(Command.TASK_ADD_NEW, '2023-11-26'));
+		await user.keyboard('Test event{Enter}');
 
 		expect(getAllDayTaskInfo({ dayName: '2023-11-26' }).length).toBe(1);
+		expect(getAllTaskInfo()?.[0]?.name).toBe('Test event');
 	});
 });
