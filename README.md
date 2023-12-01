@@ -63,8 +63,6 @@ This file is intended to differ from environment to environment, so it is ignore
 
 * [marked](https://marked.js.org/): A Markdown compiler.
 
-* [classnames](https://www.npmjs.com/package/classnames): Utility library for combining CSS classnames.
-
 ## Dev Dependencies
 
 ### Development
@@ -95,6 +93,8 @@ These dependencies are used when working on the project locally.
 
 	* [@testing-library/user-event](https://testing-library.com/docs/user-event/intro/): Utilities for simulating user interaction during tests
 
+	* [jsdom-testing-mocks](https://www.npmjs.com/package/jsdom-testing-mocks): Mocks some browser APIs that aren't implemented in jsdom
+
 * [esbuild](https://esbuild.github.io/): Bundling tool
 
 * [sass](https://www.npmjs.com/package/sass): Compiling CSS from [Sass](https://sass-lang.com/)
@@ -116,6 +116,8 @@ These dependencies are used when working on the project locally.
 	* [eslint-plugin-react](https://www.npmjs.com/package/eslint-plugin-react): Provides React/Preact linting rules
 
 	* [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks): Provides React/Preact linting rules
+
+	* [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest): Provides Jest linting rules
 
 * [stylelint](https://www.npmjs.com/package/stylelint): Linting CSS
 

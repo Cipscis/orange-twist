@@ -1,4 +1,4 @@
-.toast {
+.toast__container {
 	position: fixed;
 	bottom: 1rem;
 	right: 1rem;
@@ -8,10 +8,25 @@
 	gap: 1rem;
 }
 
-.toast__message {
+.toast {
+	display: grid;
+	> * {
+		grid-area: 1 / 1;
+	}
+
 	@include contrast-secondary;
 	@include font-base-body;
-	padding: 0.5rem 1rem;
+	border-radius: 0.2em;
+	overflow: hidden;
 
 	animation: appearUp 0.3s ease-in-out;
+}
+
+.toast__progress {
+	background-color: rgb(from var(--colour) r g b / 0.1);
+	pointer-events: none;
+}
+
+.toast__message {
+	padding: 0.5rem 1rem;
 }

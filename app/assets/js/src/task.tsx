@@ -13,7 +13,15 @@ const taskIdParam = queryParams.get('id');
 const taskId = taskIdParam === null ? null : Number(taskIdParam);
 
 render(<OrangeTwist>
-	<TaskDetail
-		taskId={taskId}
-	/>
+	{taskId === null
+		? (
+			// TODO: Show nicer error message
+			<h1>This task doesn't exist</h1>
+		)
+		: (
+			<TaskDetail
+				taskId={taskId}
+			/>
+		)
+	}
 </OrangeTwist>, main);

@@ -22,12 +22,12 @@ import { KeyboardShortcutName, registerKeyboardShortcut } from 'registers/keyboa
 
 import { Note } from './Note';
 
-beforeAll(() => {
-	// jsdom hasn't implemented window.scrollTo, so mock it to hide console errors
-	window.scrollTo = jest.fn();
-});
-
 describe('Note', () => {
+	beforeAll(() => {
+		// jsdom hasn't implemented window.scrollTo, so mock it to hide console errors
+		window.scrollTo = jest.fn();
+	});
+
 	afterEach(() => {
 		cleanup();
 	});

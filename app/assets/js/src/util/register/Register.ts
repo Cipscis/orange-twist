@@ -9,9 +9,12 @@ import { assertAllUnionMembersHandled } from '../assertAllUnionMembersHandled';
  * values for the event object passed to listeners for that type of event.
  */
 interface RegisterEventMap<K, V> {
-	'set':    { key: K; value: V; };
-	'delete': { key: K; value: V; };
-	'change': { key: K; value: V; };
+	// Technically 'set' only ever receives a tuple with one member,
+	// but TypeScript seems to have trouble with that approach. I belive
+	// it may be related to this issue:
+	// https://github.com/microsoft/TypeScript/issues/51693
+	'set':    { key: K; value: V; }[];
+	'delete': { key: K; value: V; }[];
 }
 
 interface RegisterAddEventListenerOptions {
@@ -59,7 +62,6 @@ export class Register<K, V> {
 
 		this.#setListeners = new Set();
 		this.#deleteListeners = new Set();
-		this.#changeListeners = new Set();
 	}
 
 	/**
@@ -84,13 +86,6 @@ export class Register<K, V> {
 	#deleteListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'delete'; }>[1]>;
 
 	/**
-	 * @internal
-	 *
-	 * Event listeners for 'change' events.
-	 */
-	#changeListeners: Set<Extract<RegisterEventBindingArguments<K, V>, { 0: 'change'; }>[1]>;
-
-	/**
 	 * Retrieve the value for a given key. If the key does not exist, returns `undefined`.
 	 */
 	get(key: K): V | undefined {
@@ -102,24 +97,38 @@ export class Register<K, V> {
 	 *
 	 * If the value passed is the same as the existing value of the key, nothing will change.
 	 */
-	set(key: K, value: V): void {
-		if (
-			// We check `has` in case the value is `undefined`
-			this.#map.has(key) &&
-			this.#map.get(key) === value
-		) {
-			// Don't do anything.
+	set(key: K, value: V): void;
+	set(entries: readonly (readonly [key: K, value: V])[]): void;
+	set(...args: [K, V] | [readonly (readonly [K, V])[]]): void {
+		const entriesToSet: (readonly [K, V])[] = [];
+		const setEntries: { key: K; value: V; }[] = [];
+
+		if (args.length === 2) {
+			entriesToSet.push(args);
+		} else {
+			entriesToSet.push(...args[0]);
+		}
+
+		for (const [key, value] of entriesToSet) {
+			if (
+				// We check `has` in case the value is `undefined`
+				this.#map.has(key) &&
+				this.#map.get(key) === value
+			) {
+				// Don't do anything.
+				continue;
+			}
+
+			this.#map.set(key, value);
+			setEntries.push({ key, value });
+		}
+
+		if (setEntries.length === 0) {
 			return;
 		}
 
-		this.#map.set(key, value);
-
 		for (const listener of this.#setListeners.values()) {
-			listener({ key, value });
-		}
-
-		for (const listener of this.#changeListeners.values()) {
-			listener({ key, value });
+			listener(setEntries);
 		}
 	}
 
@@ -131,26 +140,67 @@ export class Register<K, V> {
 	}
 
 	/**
+	 * Deletes a key from the Register.
+	 *
 	 * @returns `true` if an element in the Register existed and has been removed, or `false`
 	 * if the element does not exist.
 	 */
-	delete(key: K): boolean {
-		if (this.#map.has(key)) {
-			// This type assertion is safe because we've already checked `has`
-			const value = this.#map.get(key) as V;
-			const result = this.#map.delete(key);
+	delete(key: K): boolean;
+	/**
+	 * Deletes multiple keys from the Register.
+	 *
+	 * @returns `true` if any elements were removed from the Register, or `false` otherwise.
+	 */
+	delete(...keys: K[]): boolean;
+	delete(...keys: K[]): boolean {
+		let deletedAnything = false;
+		const deletions: { key: K; value: V; }[] = [];
 
+		for (const key of keys) {
+			if (this.#map.has(key)) {
+				// This type assertion is safe because we've already checked `has`
+				const value = this.#map.get(key) as V;
+				const result = this.#map.delete(key);
+				if (result) {
+					deletedAnything = true;
+				}
+
+				deletions.push({ key, value });
+			}
+		}
+
+		if (deletions.length > 0) {
 			for (const listener of this.#deleteListeners.values()) {
-				listener({ key, value });
+				listener(deletions);
 			}
+		}
 
-			for (const listener of this.#changeListeners.values()) {
-				listener({ key, value });
-			}
+		return deletedAnything;
+	}
 
-			return result;
-		} else {
-			return false;
+	/**
+	 * Removes all entries from the Register.
+	 */
+	clear(): void {
+		const deletedEntries: {
+			key: K;
+			value: V;
+		}[] = [];
+
+		for (const [key, value] of this.#map.entries()) {
+			deletedEntries.push({
+				key,
+				value,
+			});
+			this.#map.delete(key);
+		}
+
+		if (deletedEntries.length === 0) {
+			return;
+		}
+
+		for (const listener of this.#deleteListeners.values()) {
+			listener([...deletedEntries]);
 		}
 	}
 
@@ -159,6 +209,20 @@ export class Register<K, V> {
 	 */
 	entries(): IterableIterator<[K, V]> {
 		return this.#map.entries();
+	}
+
+	/**
+	 * Returns an iterable of the Register's keys.
+	 */
+	keys(): IterableIterator<K> {
+		return this.#map.keys();
+	}
+
+	/**
+	 * Returns an iterable of the Register's values.
+	 */
+	values(): IterableIterator<V> {
+		return this.#map.values();
 	}
 
 	/**
@@ -180,8 +244,6 @@ export class Register<K, V> {
 			this.#setListeners.add(callback);
 		} else if (type === 'delete') {
 			this.#deleteListeners.add(callback);
-		} else if (type === 'change') {
-			this.#changeListeners.add(callback);
 		} else {
 			/* istanbul ignore next */
 			assertAllUnionMembersHandled(
@@ -191,7 +253,15 @@ export class Register<K, V> {
 		}
 
 		if (options?.signal) {
-			options.signal.addEventListener('abort', () => this.removeEventListener(type, callback));
+			options.signal.addEventListener(
+				'abort',
+				() => this.removeEventListener(
+					// This type assertion is necessary because TypeScript loses
+					// information about linked types of tuple type members
+					// https://github.com/microsoft/TypeScript/issues/55344
+					...[type, callback] as RegisterEventBindingArguments<K, V>
+				)
+			);
 		}
 	}
 
@@ -206,8 +276,6 @@ export class Register<K, V> {
 			this.#setListeners.delete(callback);
 		} else if (type === 'delete') {
 			this.#deleteListeners.delete(callback);
-		} else if (type === 'change') {
-			this.#changeListeners.delete(callback);
 		} else {
 			/* istanbul ignore next */
 			assertAllUnionMembersHandled(

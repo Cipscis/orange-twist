@@ -1,9 +1,9 @@
 import { h, type ComponentChildren, type JSX } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
-import classNames from 'classnames';
+import { classNames, useBlurCallback } from 'util/index';
 
-import { getDeepActiveElement, nodeHasAncestor } from '../../util';
+import { getDeepActiveElement } from '../../util';
 
 interface ModalProps {
 	/** The Modal is only rendered when `open` is `true`. */
@@ -79,7 +79,7 @@ export function Modal(props: ModalProps): JSX.Element {
 		}
 	}, [open, onOpen]);
 
-	// Handle and closing behaviour
+	// Handle closing on Escape
 	useEffect(() => {
 		if (!open) {
 			return;
@@ -88,36 +88,16 @@ export function Modal(props: ModalProps): JSX.Element {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		const modalEl = modalRef.current;
-
 		// Close on Escape key
 		document.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape') {
 				onClose();
 			}
 		}, { signal });
-
-		// Close when focus leaves the modal
-		modalEl?.addEventListener('focusout', (e) => {
-			// Ignore `focusout` triggered by focus leaving the viewport,
-			// such as switching to another tab or focusing on the dev tools
-			const activeElement = document.activeElement;
-
-			if (
-				activeElement === modalEl ||
-				(
-					activeElement &&
-					nodeHasAncestor(activeElement, modalEl)
-				)
-			) {
-				return;
-			}
-
-			onClose();
-		}, { signal });
-
-		return () => controller.abort();
 	}, [open, onClose]);
+
+	// Handle closing on blur
+	useBlurCallback(modalRef, onClose, open);
 
 	return <>
 		{

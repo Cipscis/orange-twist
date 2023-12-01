@@ -1,4 +1,4 @@
-import type { EnumTypeOf } from '../util';
+import type { EnumTypeOf } from 'util/index';
 
 export const TaskStatus = {
 	TODO: 'todo',
@@ -12,3 +12,8 @@ export const TaskStatus = {
 	WILL_NOT_DO: 'will-not-do',
 } as const;
 export type TaskStatus = EnumTypeOf<typeof TaskStatus>;
+
+export const CompletedTaskStatuses: ReadonlySet<TaskStatus> = new Set([
+	TaskStatus.COMPLETED,
+	TaskStatus.WILL_NOT_DO,
+]);
