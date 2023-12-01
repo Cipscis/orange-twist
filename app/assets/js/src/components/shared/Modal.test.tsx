@@ -145,24 +145,6 @@ describe('Modal', () => {
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
 
-	test('calls onClose when losing focus', async () => {
-		const user = userEvent.setup();
-		const spy = jest.fn();
-
-		render(
-			<Modal
-				open
-				onClose={spy}
-			/>
-		);
-
-		expect(spy).not.toHaveBeenCalled();
-
-		await user.click(document.body);
-
-		expect(spy).toHaveBeenCalledTimes(1);
-	});
-
 	test('calls onOpen when opening, including on initial render', () => {
 		const spy = jest.fn();
 

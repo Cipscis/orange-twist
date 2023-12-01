@@ -1,10 +1,9 @@
 import { h, type ComponentChildren, type JSX } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
-import { classNames } from 'util/index';
+import { classNames, useBlurCallback } from 'util/index';
 
-import { getDeepActiveElement, nodeHasAncestor } from '../../util';
-import { nextFrame } from 'util/nextFrame';
+import { getDeepActiveElement } from '../../util';
 
 interface ModalProps {
 	/** The Modal is only rendered when `open` is `true`. */
@@ -80,7 +79,7 @@ export function Modal(props: ModalProps): JSX.Element {
 		}
 	}, [open, onOpen]);
 
-	// Handle and closing behaviour
+	// Handle closing on Escape
 	useEffect(() => {
 		if (!open) {
 			return;
@@ -89,54 +88,16 @@ export function Modal(props: ModalProps): JSX.Element {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		const modalEl = modalRef.current;
-
-		const isInModal = (el: unknown) => {
-			if (!modalEl) {
-				return false;
-			}
-
-			return el === modalEl || (
-				el instanceof Node &&
-				nodeHasAncestor(el, modalEl)
-			);
-		};
-
 		// Close on Escape key
 		document.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape') {
 				onClose();
 			}
 		}, { signal });
-
-		// Close when focus leaves the modal
-		modalEl?.addEventListener('focusout', async (e) => {
-			const elementReceivingFocus = e.relatedTarget;
-
-			// Don't close if focus is still in the modal
-			if (isInModal(elementReceivingFocus)) {
-				return;
-			}
-
-			// Wait until we've completed the event loop,
-			// so we can check what element now has focus
-			await new Promise<void>((resolve) => queueMicrotask(resolve));
-			const elementReceivedFocus = document.activeElement;
-
-			// Don't close if focus has left the tab but
-			// will return to modal when the tab regains it
-			if (
-				elementReceivingFocus === null &&
-				isInModal(elementReceivedFocus)
-			) {
-				return;
-			}
-
-			onClose();
-		}, { signal });
-
-		return () => controller.abort();
 	}, [open, onClose]);
+
+	// Handle closing on blur
+	useBlurCallback(modalRef, onClose, open);
 
 	return <>
 		{

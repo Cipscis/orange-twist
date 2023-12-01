@@ -9,6 +9,7 @@ export { isZodSchemaType } from './isZodSchemaType';
 export { nodeHasAncestor } from './nodeHasAncestor';
 export { useAsyncData } from './useAsyncData';
 export type { AsyncDataState } from './useAsyncData';
+export { useBlurCallback } from './useBlurCallback';
 export { useViewTransition } from './useViewTransition';
 
 export { CSSKeyframes } from './CSSKeyframes';
