@@ -24,6 +24,7 @@ import {
 } from 'data';
 
 import {
+	fireCommand,
 	registerCommand,
 	useCommand,
 } from 'registers/commands';
@@ -176,11 +177,18 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	}, []);
 	useCommand(Command.DAY_ADD_NEW, addNewDay);
 
-	const createNewTask = useCallback((dayName?: string) => {
-		const taskId = createTask();
+	const createNewTask = useCallback(async (dayName?: string) => {
+		const name = await ui.prompt('Task name');
+		if (!name) {
+			return;
+		}
+
+		const taskId = createTask({ name });
 		if (dayName) {
 			setDayTaskInfo({ dayName, taskId }, {});
 		}
+
+		fireCommand(Command.DATA_SAVE);
 	}, []);
 	useCommand(Command.TASK_ADD_NEW, createNewTask);
 
