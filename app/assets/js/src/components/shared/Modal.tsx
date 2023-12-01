@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'preact/hooks';
 import { classNames } from 'util/index';
 
 import { getDeepActiveElement, nodeHasAncestor } from '../../util';
+import { nextFrame } from 'util/nextFrame';
 
 interface ModalProps {
 	/** The Modal is only rendered when `open` is `true`. */
@@ -90,6 +91,17 @@ export function Modal(props: ModalProps): JSX.Element {
 
 		const modalEl = modalRef.current;
 
+		const isInModal = (el: unknown) => {
+			if (!modalEl) {
+				return false;
+			}
+
+			return el === modalEl || (
+				el instanceof Node &&
+				nodeHasAncestor(el, modalEl)
+			);
+		};
+
 		// Close on Escape key
 		document.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape') {
@@ -98,17 +110,24 @@ export function Modal(props: ModalProps): JSX.Element {
 		}, { signal });
 
 		// Close when focus leaves the modal
-		modalEl?.addEventListener('focusout', (e) => {
-			// Ignore `focusout` triggered by focus leaving the viewport,
-			// such as switching to another tab or focusing on the dev tools
-			const activeElement = e.relatedTarget;
+		modalEl?.addEventListener('focusout', async (e) => {
+			const elementReceivingFocus = e.relatedTarget;
 
+			// Don't close if focus is still in the modal
+			if (isInModal(elementReceivingFocus)) {
+				return;
+			}
+
+			// Wait until we've completed the event loop,
+			// so we can check what element now has focus
+			await new Promise<void>((resolve) => queueMicrotask(resolve));
+			const elementReceivedFocus = document.activeElement;
+
+			// Don't close if focus has left the tab but
+			// will return to modal when the tab regains it
 			if (
-				activeElement === modalEl ||
-				(
-					activeElement instanceof Node &&
-					nodeHasAncestor(activeElement, modalEl)
-				)
+				elementReceivingFocus === null &&
+				isInModal(elementReceivedFocus)
 			) {
 				return;
 			}
