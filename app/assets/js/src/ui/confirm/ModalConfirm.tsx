@@ -56,16 +56,19 @@ export function ModalConfirm(props: ModalConfirmProps): JSX.Element {
 	return <Modal
 		open={isOpen}
 		onClose={cancel}
+		class="modal-confirm"
 	>
 		{message}
 
-		<button
-			type="button"
-			onClick={confirm}
-		>Confirm</button>
-		<button
-			type="button"
-			onClick={cancel}
-		>Cancel</button>
+		<div class="modal-confirm__actions">
+			<button
+				type="button"
+				onClick={cancel}
+			>Cancel</button>
+			<button
+				type="button"
+				onClick={confirm}
+			>Confirm</button>
+		</div>
 	</Modal>;
 }
