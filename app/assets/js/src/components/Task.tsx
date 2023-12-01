@@ -6,7 +6,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { classNames } from 'util/index';
+import { classNames, useBlurCallback } from 'util/index';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -85,6 +85,13 @@ export function Task(props: TaskProps): JSX.Element | null {
 		saveChanges();
 		setIsInEditMode(false);
 	}, [saveChanges]);
+
+	// Leave edit mode on blur, but not when the tab loses focus
+	useBlurCallback(
+		inputRef,
+		leaveEditMode,
+		isInEditMode,
+	);
 
 	// Remember the previous name when the input is focused.
 	const rememberPreviousName = useCallback((e: FocusEvent) => {
@@ -166,7 +173,6 @@ export function Task(props: TaskProps): JSX.Element | null {
 							onFocus={rememberPreviousName}
 							onInput={nameChangeHandler}
 							onKeyDown={keydownHandler}
-							onBlur={leaveEditMode}
 						/>
 					}
 
