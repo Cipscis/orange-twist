@@ -7,7 +7,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { nodeHasAncestor } from '../../util/nodeHasAncestor';
+import { nodeHasAncestor, useBlurCallback } from 'util/index';
 import { KeyboardShortcutName, useKeyboardShortcut } from 'registers/keyboard-shortcuts';
 
 import { Markdown } from './Markdown';
@@ -142,7 +142,7 @@ export function Note(props: NoteProps): JSX.Element {
 		setIsEditing(true);
 	}, []);
 
-	// Set up event listeners to stop editing
+	// Set up event listener to manage tab insertion
 	useEffect(() => {
 		const textarea = textareaRef.current;
 		if (!textarea) {
@@ -154,11 +154,6 @@ export function Note(props: NoteProps): JSX.Element {
 
 		// If we've just entered editing mode
 		if (isEditing) {
-			textarea.addEventListener(
-				'blur',
-				(e) => leaveEditingMode(),
-				{ signal },
-			);
 			textarea.addEventListener(
 				'keydown',
 				(e) => {
@@ -190,6 +185,13 @@ export function Note(props: NoteProps): JSX.Element {
 			controller.abort();
 		};
 	}, [isEditing, leaveEditingMode]);
+
+	// Leave editing mode when losing focus, but not when the tab loses focus
+	useBlurCallback(
+		textareaRef,
+		leaveEditingMode,
+		isEditing,
+	);
 
 	// Move focus into textarea when we start editing.
 	useEffect(() => {
