@@ -158,7 +158,7 @@ describe('Modal', () => {
 
 		expect(spy).not.toHaveBeenCalled();
 
-		await act(() => user.click(document.body));
+		await user.click(document.body);
 
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
