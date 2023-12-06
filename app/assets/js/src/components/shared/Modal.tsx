@@ -1,7 +1,11 @@
 import { h, type ComponentChildren, type JSX } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
-import { classNames, useBlurCallback } from 'util/index';
+import {
+	classNames,
+	useBlurCallback,
+	useCloseWatcher,
+} from 'util/index';
 
 import { getDeepActiveElement } from '../../util';
 
@@ -80,21 +84,7 @@ export function Modal(props: ModalProps): JSX.Element {
 	}, [open, onOpen]);
 
 	// Handle closing on Escape
-	useEffect(() => {
-		if (!open) {
-			return;
-		}
-
-		const controller = new AbortController();
-		const { signal } = controller;
-
-		// Close on Escape key
-		document.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape') {
-				onClose();
-			}
-		}, { signal });
-	}, [open, onClose]);
+	useCloseWatcher(onClose, open);
 
 	// Handle closing on blur
 	useBlurCallback(modalRef, onClose, open);
