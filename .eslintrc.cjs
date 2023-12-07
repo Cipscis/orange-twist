@@ -452,10 +452,10 @@ module.exports = {
 		'@stylistic/jsx-tag-spacing': [
 			'error',
 			{
-				"closingSlash": "never",
-				"beforeSelfClosing": "always",
-				"afterOpening": "never",
-				"beforeClosing": "allow"
+				'closingSlash': 'never',
+				'beforeSelfClosing': 'always',
+				'afterOpening': 'never',
+				'beforeClosing': 'allow'
 			},
 		],
 	},
@@ -465,6 +465,6 @@ module.exports = {
 			files: ['*.{spec,test}.{j,t}{s,sx}'],
 			plugins: ['jest'],
 			extends: ['plugin:jest/recommended'],
-		}
+		},
 	],
 };
