@@ -23,7 +23,8 @@ export function KeyboardShortcutModal(): JSX.Element {
 	const [open, setOpen] = useState(false);
 	useKeyboardShortcut(
 		KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN,
-		() => setOpen(true)
+		() => setOpen(true),
+		!open
 	);
 
 	const keyboardShortcutsInfo = useKeyboardShortcuts();

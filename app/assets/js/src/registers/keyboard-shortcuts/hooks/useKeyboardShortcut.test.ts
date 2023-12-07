@@ -76,4 +76,60 @@ describe('useKeyboardShortcut', () => {
 
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
+
+	describe('if the condition is false', () => {
+		test('doesn\'t bind a keyboard shortcut to a listener', async () => {
+			const user = userEvent.setup();
+			const spy = jest.fn();
+
+			const { rerender } = renderHook(
+				(condition) => useKeyboardShortcut(
+					KeyboardShortcutName.DATA_SAVE,
+					spy,
+					condition
+				),
+				{ initialProps: true }
+			);
+
+			expect(spy).not.toHaveBeenCalled();
+
+			await user.keyboard('a');
+
+			expect(spy).toHaveBeenCalledTimes(1);
+
+			rerender(false);
+
+			await user.keyboard('a');
+
+			expect(spy).toHaveBeenCalledTimes(1);
+		});
+
+		test('doesn\'t bind a keyboard shortcut to a command', async () => {
+			const user = userEvent.setup();
+			const spy = jest.fn();
+
+			addCommandListener('__TEST_COMMAND_A__', spy);
+
+			const { rerender } = renderHook(
+				(condition) => useKeyboardShortcut(
+					KeyboardShortcutName.DATA_SAVE,
+					'__TEST_COMMAND_A__',
+					condition
+				),
+				{ initialProps: true }
+			);
+
+			expect(spy).not.toHaveBeenCalled();
+
+			await user.keyboard('a');
+
+			expect(spy).toHaveBeenCalledTimes(1);
+
+			rerender(false);
+
+			await user.keyboard('a');
+
+			expect(spy).toHaveBeenCalledTimes(1);
+		});
+	});
 });
