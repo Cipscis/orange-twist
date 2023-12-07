@@ -28,6 +28,4 @@ export function useCloseWatcher(callback: () => void, condition?: boolean): void
 			controller.abort();
 		};
 	}, [condition, callback]);
-
-	document.createElement('div').onclick;
 }
