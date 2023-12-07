@@ -15,7 +15,7 @@ describe('useCloseWatcher', () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
-		renderHook(() => useCloseWatcher(spy));
+		renderHook(() => useCloseWatcher(spy, true));
 		expect(spy).not.toHaveBeenCalled();
 
 		await user.keyboard('{Escape}');
