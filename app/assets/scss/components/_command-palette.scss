@@ -1,3 +1,8 @@
+@use "../scaffolding/theme/typography";
+@use "../scaffolding/theme/palette";
+@use "../scaffolding/tools/reset" as *;
+@use "../extendables/list-reset" as *;
+
 .command-palette {
 	background: transparent;
 }
@@ -5,7 +10,7 @@
 .command-palette__field,
 .command-palette__options {
 	backdrop-filter: blur(2px);
-	@include contrast-secondary;
+	@include palette.secondary;
 
 	// Use a pseudoelement to make the background semitransparent
 	background: transparent;
@@ -29,7 +34,7 @@
 	pointer-events: auto;
 	cursor: text;
 
-	@include font-base-large;
+	@include typography.base-large;
 	padding: 0.2em 0.5em;
 
 	&:focus-visible {
@@ -51,7 +56,7 @@
 	align-items: center;
 	width: 100%;
 
-	@include font-base-large;
+	@include typography.base-large;
 
 	padding: 0.2em 0.5em;
 	&:not(:last-child) {

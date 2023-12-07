@@ -1,3 +1,6 @@
+@use "../scaffolding/theme/palette";
+@use "../scaffolding/tools/reset" as *;
+
 .button {
 	@include reset;
 	cursor: pointer;
@@ -5,7 +8,7 @@
 	padding: 0.5em 0.7em;
 	border-radius: 0.2em;
 
-	@include contrast-secondary(true);
+	@include palette.secondary(true);
 	transition:
 		0.2s background-color ease-in-out,
 		0.2s color ease-in-out;

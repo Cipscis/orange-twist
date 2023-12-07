@@ -1,16 +1,20 @@
+@use "../scaffolding/theme/typography";
+@use "../scaffolding/theme/layout";
+@use "../extendables/icon-button" as *;
+
 .orange-twist {
 	// Since we need `margin-inline: auto;` here, the
 	// gutter needs to occupy the element's padding.
 	// To prevent it affecting the width, we use
 	// `box-sizing: content-box;` for this element only.
 	box-sizing: content-box;
-	@include layout-wrapper;
+	@include layout.wrapper;
 
 	padding-block: 1rem;
 }
 
 .orange-twist__heading {
-	@include font-heading-1;
+	@include typography.heading-1;
 	margin-bottom: 2rem;
 }
 
@@ -29,7 +33,7 @@
 }
 
 .orange-twist__title {
-	@include font-heading-2;
+	@include typography.heading-2;
 
 	summary > & {
 		display: inline-block;

@@ -1,7 +1,9 @@
+@use "../tools/rem" as *;
+
 // Font families
-$font-base: "Arial", "Helvetica", sans-serif;
-$font-heading: "Arial", "Helvetica", sans-serif;
-$font-monospace: monospace;
+$family-base: "Arial", "Helvetica", sans-serif;
+$family-heading: "Arial", "Helvetica", sans-serif;
+$family-monospace: monospace;
 
 // Font weights
 $regular: 400;
@@ -12,8 +14,8 @@ $bold: 700;
 // Heading //
 /////////////
 
-@mixin font-heading-1 {
-	font-family: $font-heading;
+@mixin heading-1 {
+	font-family: $family-heading;
 	font-weight: $bold;
 	font-size: rem(36px);
 
@@ -21,8 +23,8 @@ $bold: 700;
 	line-height: var(--line-height, 1.5);
 }
 
-@mixin font-heading-2 {
-	font-family: $font-heading;
+@mixin heading-2 {
+	font-family: $family-heading;
 	font-weight: $bold;
 	font-size: rem(32px);
 
@@ -30,8 +32,8 @@ $bold: 700;
 	line-height: var(--line-height, 1.5);
 }
 
-@mixin font-heading-3 {
-	font-family: $font-heading;
+@mixin heading-3 {
+	font-family: $family-heading;
 	font-weight: $bold;
 	font-size: rem(28px);
 
@@ -43,8 +45,8 @@ $bold: 700;
 // Base //
 //////////
 
-@mixin font-base-body {
-	font-family: $font-base;
+@mixin base-body {
+	font-family: $family-base;
 	font-weight: $regular;
 	font-size: rem(18px);
 
@@ -52,8 +54,8 @@ $bold: 700;
 	line-height: var(--line-height, 1.4);
 }
 
-@mixin font-base-large {
-	font-family: $font-base;
+@mixin base-large {
+	font-family: $family-base;
 	font-weight: $regular;
 	font-size: rem(32px);
 

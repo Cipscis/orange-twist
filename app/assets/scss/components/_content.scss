@@ -1,10 +1,13 @@
+@use "../scaffolding/theme/typography";
+@use "../scaffolding/theme/palette";
+
 /// HTML in a content element may be user-generated,
 /// so styles will need to be applied based on tag name.
 .content {
-	@include font-base-body;
+	@include typography.base-body;
 
 	a {
-		@include link;
+		@include palette.link;
 	}
 
 	p:not(:last-child) {
@@ -39,7 +42,7 @@
 	}
 
 	code {
-		@include contrast-secondary;
+		@include palette.secondary;
 		// About enough to compensate for "`"
 		padding: 0 0.5ch;
 		border-radius: 0.2em;

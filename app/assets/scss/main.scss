@@ -1,35 +1,44 @@
-@layer reset, theme;
+@use "sass:meta";
 
-// Scaffolding
-@import "scaffolding";
+@layer reset, theme, components;
 
-// Base
-@import "base/animations";
-@import "base/palette";
-@import "base/reset";
-@import "base/typography";
-@import "base/theme";
+@layer reset {
+	// Scaffolding
+	@include meta.load-css("scaffolding");
 
-// Extendables
-@import "extendables/icon-button";
-@import "extendables/list-reset";
+	// Base
+	@include meta.load-css("base/animations");
+	@include meta.load-css("base/palette");
+	@include meta.load-css("base/reset");
+}
 
-// Patterns
-@import "patterns/button";
+@layer theme {
+	@include meta.load-css("base/typography");
+	@include meta.load-css("base/theme");
 
-// Sub-components
-@import "components/content";
-@import "components/modal";
-@import "components/modal-confirm";
-@import "components/modal-prompt";
-@import "components/toast";
+	// Extendables
+	@include meta.load-css("extendables/icon-button");
+	@include meta.load-css("extendables/list-reset");
 
-// Components
-@import "components/command-palette";
-@import "components/day";
-@import "components/keyboard-shortcuts-modal";
-@import "components/note";
-@import "components/orange-twist";
-@import "components/task";
-@import "components/task-list";
-@import "components/task-status";
+	// Patterns
+	@include meta.load-css("patterns/button");
+}
+
+@layer components {
+	// Sub-components
+	@include meta.load-css("components/content");
+	@include meta.load-css("components/modal");
+	@include meta.load-css("components/modal-confirm");
+	@include meta.load-css("components/modal-prompt");
+	@include meta.load-css("components/toast");
+
+	// Components
+	@include meta.load-css("components/command-palette");
+	@include meta.load-css("components/day");
+	@include meta.load-css("components/keyboard-shortcuts-modal");
+	@include meta.load-css("components/note");
+	@include meta.load-css("components/orange-twist");
+	@include meta.load-css("components/task");
+	@include meta.load-css("components/task-list");
+	@include meta.load-css("components/task-status");
+}

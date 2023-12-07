@@ -1,4 +1,6 @@
+@use "../scaffolding/theme/palette";
+
 body {
-	@include contrast-primary;
+	@include palette.primary;
 	accent-color: var(--accent);
 }

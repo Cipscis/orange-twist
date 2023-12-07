@@ -1,3 +1,6 @@
+@use "../tools/active" as *;
+@use "../tools/use-var" as *;
+
 ////////////////////
 // Colour palette //
 ////////////////////
@@ -51,7 +54,7 @@ $colour-tertiary--active--light: $black;
 
 
 /// The colours to use in the light colour scheme
-@mixin palette-light {
+@mixin light {
 	color-scheme: light;
 	--theme: light;
 
@@ -110,7 +113,7 @@ $bg-tertiary--active--dark: $grey--darkish;
 $colour-tertiary--active--dark: $white;
 
 /// The colours to use in the dark colour scheme
-@mixin palette-dark {
+@mixin dark {
 	color-scheme: dark;
 	--theme: dark;
 
@@ -154,7 +157,7 @@ $colour-tertiary--active--dark: $white;
 
 /// The main background/colour pair.
 /// @param {boolean} $active [false] - Whether or not the "active" contrast pair should be used on hover and focus.
-@mixin contrast-primary($active: false) {
+@mixin primary($active: false) {
 	--bg: var(--bg-primary);
 	--colour: var(--colour-primary);
 
@@ -166,13 +169,13 @@ $colour-tertiary--active--dark: $white;
 
 	@if ($active == true) {
 		@include active {
-			@include contrast-primary--active;
+			@include primary--active;
 		}
 	}
 }
 
 /// An "active" variant of the main background/colour pair.
-@mixin contrast-primary--active {
+@mixin primary--active {
 	--bg: var(--bg-primary--active);
 	--colour: var(--colour-primary--active);
 
@@ -185,7 +188,7 @@ $colour-tertiary--active--dark: $white;
 
 /// A secondary background-colour pair to contrast with a primary contrast area.
 /// @param {boolean} $active [false] - Whether or not the "active" contrast pair should be used on hover and focus.
-@mixin contrast-secondary($active: false) {
+@mixin secondary($active: false) {
 	--bg: var(--bg-secondary);
 	--colour: var(--colour-secondary);
 
@@ -197,13 +200,13 @@ $colour-tertiary--active--dark: $white;
 
 	@if ($active == true) {
 		@include active {
-			@include contrast-secondary--active;
+			@include secondary--active;
 		}
 	}
 }
 
 /// An "active" variant of the secondary background/colour pair.
-@mixin contrast-secondary--active {
+@mixin secondary--active {
 	--bg: var(--bg-secondary--active);
 	--colour: var(--colour-secondary--active);
 
@@ -216,7 +219,7 @@ $colour-tertiary--active--dark: $white;
 
 /// A tertiary background-colour pair to contrast with a primary contrast area.
 /// @param {boolean} $active [false] - Whether or not the "active" contrast pair should be used on hover and focus.
-@mixin contrast-tertiary($active: false) {
+@mixin tertiary($active: false) {
 	--bg: var(--bg-tertiary);
 	--colour: var(--colour-tertiary);
 
@@ -228,13 +231,13 @@ $colour-tertiary--active--dark: $white;
 
 	@if ($active == true) {
 		@include active {
-			@include contrast-tertiary--active;
+			@include tertiary--active;
 		}
 	}
 }
 
 /// An "active" variant of the tertiary background/colour pair.
-@mixin contrast-tertiary--active {
+@mixin tertiary--active {
 	--bg: var(--bg-tertiary--active);
 	--colour: var(--colour-tertiary--active);
 

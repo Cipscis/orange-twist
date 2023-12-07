@@ -1,3 +1,5 @@
+@use "../scaffolding/theme/typography";
+
 .keyboard-shortcuts__list {
 	margin: 0;
 
@@ -7,7 +9,7 @@
 }
 
 .keyboard-shortcuts__item {
-	@include font-base-body;
+	@include typography.base-body;
 
 	grid-column: 1 / -1;
 
