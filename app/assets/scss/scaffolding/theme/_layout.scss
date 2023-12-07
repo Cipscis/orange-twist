@@ -1,9 +1,11 @@
-$layout-max-width: rem(800px);
-$layout-gutter: 1rem;
+@use "../tools/rem" as *;
+
+$max-width: rem(800px);
+$gutter: 1rem;
 
 :root {
-	--layout-max-width: #{$layout-max-width};
-	--layout-gutter: #{$layout-gutter};
+	--max-width: #{$max-width};
+	--gutter: #{$gutter};
 }
 
 ///////////////////
@@ -11,21 +13,21 @@ $layout-gutter: 1rem;
 ///////////////////
 
 /// A horizontally centred area with a maximum width
-/// @param {length} $width [var(--layout-max-width] - The maximum width of the wrapper
-@mixin layout-wrapper-flush($width: var(--layout-max-width)) {
+/// @param {length} $width [var(--max-width] - The maximum width of the wrapper
+@mixin wrapper-flush($width: var(--layout-max-width)) {
 	max-width: $width;
 	margin-inline: auto;
 }
 
 /// The standard side padding
-@mixin layout-wrapper-gutter() {
+@mixin wrapper-gutter() {
 	padding-left: var(--layout-gutter);
 	padding-right: var(--layout-gutter);
 }
 
 /// A horizontally centred area with a maximum width and the standard side padding
 /// @param {length} $width [var(--layout-max-width] - The maximum width of the wrapper
-@mixin layout-wrapper($width: var(--layout-max-width)) {
-	@include layout-wrapper-flush($width);
-	@include layout-wrapper-gutter;
+@mixin wrapper($width: var(--max-width)) {
+	@include wrapper-flush($width);
+	@include wrapper-gutter;
 }

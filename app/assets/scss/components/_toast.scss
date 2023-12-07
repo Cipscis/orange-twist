@@ -1,3 +1,6 @@
+@use "../scaffolding/theme/typography";
+@use "../scaffolding/theme/palette";
+
 .toast__container {
 	position: fixed;
 	bottom: 1rem;
@@ -14,8 +17,8 @@
 		grid-area: 1 / 1;
 	}
 
-	@include contrast-secondary;
-	@include font-base-body;
+	@include palette.secondary;
+	@include typography.base-body;
 	border-radius: 0.2em;
 	overflow: hidden;
 

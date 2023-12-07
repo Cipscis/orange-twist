@@ -1,3 +1,7 @@
+@use "../scaffolding/theme/typography";
+@use "../scaffolding/tools/reset" as *;
+@use "../extendables/icon-button" as *;
+
 .task {
 	display: grid;
 	align-items: center;
@@ -29,7 +33,7 @@
 	.task__name-display {
 		grid-area: 1 / 1 / -1 / -1;
 
-		@include font-base-body;
+		@include typography.base-body;
 		border: 0;
 		padding: 0.1em 0.2em;
 	}

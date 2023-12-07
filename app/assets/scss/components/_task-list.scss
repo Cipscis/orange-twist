@@ -1,3 +1,5 @@
+@use "../scaffolding/theme/palette";
+
 .task-list {
 	display: flex;
 	flex-direction: column;
@@ -16,7 +18,7 @@
 
 	cursor: move;
 
-	@include contrast-primary;
+	@include palette.primary;
 
 	display: grid;
 	place-content: center;

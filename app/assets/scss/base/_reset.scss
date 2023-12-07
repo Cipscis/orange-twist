@@ -1,27 +1,27 @@
-@layer reset {
-	* {
-		box-sizing: border-box;
-	}
+@use "../scaffolding/theme/typography";
 
-	html {
-		color-scheme: light dark;
+* {
+	box-sizing: border-box;
+}
 
-		font-family: $font-base;
-	}
+html {
+	color-scheme: light dark;
 
-	body {
-		margin: 0;
-	}
+	font-family: typography.$family-base;
+}
 
-	h1, h2, h3, h4, h5, h6 {
-		margin: 0;
-	}
+body {
+	margin: 0;
+}
 
-	p {
-		margin: 0;
-	}
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+}
 
-	summary {
-		cursor: pointer;
-	}
+p {
+	margin: 0;
+}
+
+summary {
+	cursor: pointer;
 }

@@ -2,6 +2,6 @@
 /// @see `CSSKeyframes.ts` for where the names of these animations are exposed to JavaScript.
 ////
 
-@import "animations/spin";
-@import "animations/slide";
-@import "animations/screen";
+@forward "animations/spin";
+@forward "animations/slide";
+@forward "animations/screen";

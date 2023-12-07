@@ -1,3 +1,6 @@
+@use "../scaffolding/theme/typography";
+@use "../scaffolding/theme/palette";
+
 .modal {
 	position: fixed;
 	z-index: 1;
@@ -8,14 +11,14 @@
 
 	pointer-events: none;
 
-	background: rgba($white, 0.4);
+	background: rgba(palette.$white, 0.4);
 	@container style(--theme: dark) {
-		background: rgba($black, 0.4);
+		background: rgba(palette.$black, 0.4);
 	}
 }
 
 .modal__body {
-	@include contrast-secondary;
+	@include palette.secondary;
 
 	padding: 20px;
 
@@ -33,6 +36,6 @@
 }
 
 .modal__title {
-	@include font-heading-2;
+	@include typography.heading-2;
 	margin-bottom: 1em;
 }

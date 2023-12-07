@@ -1,3 +1,8 @@
+@use "../scaffolding/theme/palette";
+@use "../scaffolding/tools/active" as *;
+@use "../extendables/icon-button" as *;
+@use "../extendables/list-reset" as *;
+
 .task-status {
 	position: relative;
 }
@@ -10,7 +15,7 @@
 	cursor: pointer;
 	// TODO: This is a messy way of overriding %icon-button to remove its active state
 	@include active {
-		@include contrast-secondary;
+		@include palette.secondary;
 	}
 }
 
@@ -25,7 +30,7 @@
 	display: flex;
 	gap: 0.5rem;
 
-	@include contrast-secondary;
+	@include palette.secondary;
 	background-color: transparent;
 	&::before {
 		content: "";
@@ -65,5 +70,5 @@
 
 .task-status__option-button {
 	@extend %icon-button;
-	@include contrast-tertiary(true);
+	@include palette.tertiary(true);
 }

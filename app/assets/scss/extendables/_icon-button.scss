@@ -1,3 +1,6 @@
+@use "../scaffolding/theme/palette";
+@use "../scaffolding/tools/reset" as *;
+
 %icon-button {
 	@include reset;
 	cursor: pointer;
@@ -9,7 +12,7 @@
 	aspect-ratio: 1 / 1;
 	border-radius: 25%;
 
-	@include contrast-secondary(true);
+	@include palette.secondary(true);
 	transition:
 		0.2s background-color ease-in-out,
 		0.2s color ease-in-out;

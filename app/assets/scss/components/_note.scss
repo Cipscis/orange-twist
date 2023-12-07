@@ -1,5 +1,9 @@
+@use "../scaffolding/theme/typography";
+@use "../scaffolding/theme/palette";
+@use "../extendables/icon-button" as *;
+
 .note {
-	@include font-base-body;
+	@include typography.base-body;
 
 	width: 100%;
 
@@ -64,7 +68,7 @@
 	textarea {
 		grid-area: 1 / -1 / -1 / -1;
 
-		@include font-base-body;
+		@include typography.base-body;
 		padding: var(--_gutter);
 	}
 
@@ -76,12 +80,12 @@
 	}
 
 	textarea {
-		@include contrast-primary;
+		@include palette.primary;
 		resize: none;
 		overflow: hidden;
 		border: 0;
 
-		@include font-base-body;
+		@include typography.base-body;
 	}
 }
 
