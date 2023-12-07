@@ -1,6 +1,6 @@
-@use "../scaffolding/theme/typography";
-@use "../scaffolding/theme/palette";
-@use "../scaffolding/tools/reset" as *;
+@use "../theme/typography";
+@use "../theme/palette";
+@use "../tools/reset" as *;
 @use "../extendables/list-reset" as *;
 
 .command-palette {

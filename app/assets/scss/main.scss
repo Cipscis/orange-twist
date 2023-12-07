@@ -3,9 +3,6 @@
 @layer reset, theme, components;
 
 @layer reset {
-	// Scaffolding
-	@include meta.load-css("scaffolding");
-
 	// Base
 	@include meta.load-css("base/animations");
 	@include meta.load-css("base/palette");
@@ -13,7 +10,7 @@
 }
 
 @layer theme {
-	@include meta.load-css("base/typography");
+	@include meta.load-css("theme/typography");
 	@include meta.load-css("base/theme");
 
 	// Extendables

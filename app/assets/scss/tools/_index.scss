@@ -1,7 +1,7 @@
 // # Tools
 // Tool files contain only mixins and functions, so they will not generate any CSS on their own.
 // These mixins and functions are general purpose, and shouldn't need to change from theme to theme.
-@forward "scaffolding/tools/active";
-@forward "scaffolding/tools/rem";
-@forward "scaffolding/tools/reset";
-@forward "scaffolding/tools/use-var";
+@forward "tools/active";
+@forward "tools/rem";
+@forward "tools/reset";
+@forward "tools/use-var";
