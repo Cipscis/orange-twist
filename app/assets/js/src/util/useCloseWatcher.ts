@@ -1,6 +1,15 @@
 import { useEffect } from 'preact/hooks';
 
-export function useCloseWatcher(callback: () => void, condition?: boolean): void {
+/**
+ * Configure a callback to be called when a UI component should be closed.
+ * If supported, this will use the
+ * [`CloseWatcher`](https://html.spec.whatwg.org/multipage/interaction.html#the-closewatcher-interface)
+ * API. Otherwise, an event listener will be set up for the "Escape" key.
+ *
+ * @param callback The function that should be called to close the UI component.
+ * @param condition Whether or not the UI component is currently open.
+ */
+export function useCloseWatcher(callback: () => void, condition: boolean): void {
 	useEffect(() => {
 		if (condition === false) {
 			return;
