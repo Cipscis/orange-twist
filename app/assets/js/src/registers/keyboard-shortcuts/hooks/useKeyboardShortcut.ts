@@ -15,18 +15,23 @@ import { bindKeyboardShortcutToCommand } from '../listeners/bindKeyboardShortcut
 /**
  * Bind a callback to a keyboard shortcut, within a Preact component.
  */
-export function useKeyboardShortcut(name: KeyboardShortcutName, listener: () => void): void;
+export function useKeyboardShortcut(name: KeyboardShortcutName, listener: () => void, condition?: boolean): void;
 /**
  * Bind a keyboard shortcut to fire a command, within a Preact component.
  *
  * For binding callbacks to commands, see {@linkcode useCommand}
  */
-export function useKeyboardShortcut(name: KeyboardShortcutName, command: CommandId): void;
+export function useKeyboardShortcut(name: KeyboardShortcutName, command: CommandId, condition?: boolean): void;
 export function useKeyboardShortcut(
 	name: KeyboardShortcutName,
 	listenerOrCommand: (() => void) | CommandId,
+	condition?: boolean
 ): void {
 	useEffect(() => {
+		if (condition === false) {
+			return;
+		}
+
 		const controller = new AbortController();
 		const { signal } = controller;
 
@@ -37,5 +42,5 @@ export function useKeyboardShortcut(
 		}
 
 		return () => controller.abort();
-	}, [name, listenerOrCommand]);
+	}, [condition, name, listenerOrCommand]);
 }
