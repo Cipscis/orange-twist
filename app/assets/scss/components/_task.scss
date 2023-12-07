@@ -1,5 +1,5 @@
-@use "../scaffolding/theme/typography";
-@use "../scaffolding/tools/reset" as *;
+@use "../theme/typography";
+@use "../tools/reset" as *;
 @use "../extendables/icon-button" as *;
 
 .task {

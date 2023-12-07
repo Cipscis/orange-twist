@@ -1,5 +1,5 @@
-@use "../scaffolding/theme/typography";
-@use "../scaffolding/theme/palette";
+@use "../theme/typography";
+@use "../theme/palette";
 
 /// HTML in a content element may be user-generated,
 /// so styles will need to be applied based on tag name.

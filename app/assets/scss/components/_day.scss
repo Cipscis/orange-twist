@@ -1,6 +1,6 @@
-@use "../scaffolding/theme/typography";
-@use "../scaffolding/theme/palette";
-@use "../scaffolding/tools/rem" as *;
+@use "../theme/typography";
+@use "../theme/palette";
+@use "../tools/rem" as *;
 
 .day {
 	margin: 2rem 0;
