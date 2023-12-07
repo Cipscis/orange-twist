@@ -1,6 +1,6 @@
 @use "../theme/typography";
 @use "../theme/palette";
-@use "../extendables/icon-button" as *;
+@use "../patterns/icon-button" as *;
 
 .note {
 	@include typography.base-body;
@@ -16,45 +16,6 @@
 	}
 	.content:not(:empty) {
 		padding: var(--_gutter);
-	}
-
-	.content {
-		blockquote {
-			margin-block: calc(1em * var(--line-height));
-			&:first-child {
-				margin-block-start: 0;
-			}
-			&:last-child {
-				margin-block-end: 0;
-			}
-
-			// About enough to compensate for "> "
-			margin-inline-start: 1.5ch;
-		}
-
-		ul {
-			// About enough to compensate for bullets
-			padding-left: 1.2ch;
-
-			margin-block: calc(1em * var(--line-height));
-			&:first-child {
-				margin-block-start: 0;
-			}
-			&:last-child {
-				margin-block-end: 0;
-			}
-		}
-
-		// This is how `marked` renders code blocks
-		pre > code {
-			margin-block: calc(2em * var(--line-height));
-			&:first-child {
-				margin-block-start: 0;
-			}
-			&:last-child {
-				margin-block-end: 0;
-			}
-		}
 	}
 }
 
@@ -94,7 +55,7 @@
 }
 
 .note__edit {
-	@extend %icon-button;
+	@include icon-button;
 
 	&:not(:first-child:last-child) {
 		position: absolute;

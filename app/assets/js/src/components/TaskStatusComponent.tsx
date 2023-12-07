@@ -257,15 +257,19 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 					</ul>
 				</li>
 
-				<li class="task-status__option">
-					<button
-						type="button"
-						class="task-status__option-button"
-						title="Delete"
-						onClick={onDeleteButtonClick}
-					>
-						<span aria-hidden>❌</span>
-					</button>
+				<li class="task-status__optgroup">
+					<ul class="task-status__optgroup-list">
+						<li class="task-status__option">
+							<button
+								type="button"
+								class="task-status__option-button"
+								title="Delete"
+								onClick={onDeleteButtonClick}
+							>
+								<span aria-hidden>❌</span>
+							</button>
+						</li>
+					</ul>
 				</li>
 			</ul>
 		}

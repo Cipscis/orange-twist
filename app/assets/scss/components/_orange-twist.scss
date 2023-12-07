@@ -1,16 +1,9 @@
 @use "../theme/typography";
 @use "../theme/layout";
-@use "../extendables/icon-button" as *;
+@use "../patterns";
 
 .orange-twist {
-	// Since we need `margin-inline: auto;` here, the
-	// gutter needs to occupy the element's padding.
-	// To prevent it affecting the width, we use
-	// `box-sizing: content-box;` for this element only.
-	box-sizing: content-box;
 	@include layout.wrapper;
-
-	padding-block: 1rem;
 }
 
 .orange-twist__heading {
@@ -34,28 +27,7 @@
 
 .orange-twist__title {
 	@include typography.heading-2;
-
-	summary > & {
-		display: inline-block;
-
-		&::after {
-			content: "";
-			display: inline-block;
-			margin-left: 1ch;
-			vertical-align: middle;
-
-			border: 0.25em solid transparent;
-
-			transition: transform 0.1s ease-in-out;
-		}
-		details > &::after {
-			border-left-color: currentColor;
-			border-right-width: 0;
-		}
-		details[open] > &::after {
-			transform: rotate(90deg);
-		}
-	}
+	@include patterns.disclosure-title;
 }
 
 .orange-twist__loader {
@@ -93,7 +65,7 @@
 }
 
 .orange-twist__save {
-	@extend %icon-button;
+	@include patterns.icon-button;
 
 	position: sticky;
 	bottom: 1rem;

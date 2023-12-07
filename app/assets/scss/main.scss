@@ -13,10 +13,6 @@
 	@include meta.load-css("theme/typography");
 	@include meta.load-css("base/theme");
 
-	// Extendables
-	@include meta.load-css("extendables/icon-button");
-	@include meta.load-css("extendables/list-reset");
-
 	// Patterns
 	@include meta.load-css("patterns/button");
 }

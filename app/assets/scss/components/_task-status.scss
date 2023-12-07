@@ -1,26 +1,22 @@
 @use "../theme/palette";
 @use "../tools/active" as *;
-@use "../extendables/icon-button" as *;
-@use "../extendables/list-reset" as *;
+@use "../patterns/icon-button" as *;
+@use "../tools/list-reset" as *;
 
 .task-status {
 	position: relative;
 }
 
-.task-status__indicator {
-	@extend %icon-button;
+.task-status__indicator:not(.task-status__indicator--readonly) {
+	@include icon-button;
 }
 
 .task-status__indicator--readonly {
-	cursor: pointer;
-	// TODO: This is a messy way of overriding %icon-button to remove its active state
-	@include active {
-		@include palette.secondary;
-	}
+	@include icon-button(false);
 }
 
 .task-status__options {
-	@extend %list-reset;
+	@include list-reset;
 	position: absolute;
 	bottom: 100%;
 	margin-bottom: 0.5rem;
@@ -48,20 +44,14 @@
 }
 
 .task-status__optgroup {
-	padding-inline: 0.5rem;
-	border-inline: 1px solid var(--accent);
-	&:first-child {
-		padding-inline-start: 0;
-		border-inline-start: 0;
-	}
-	&:last-child {
-		padding-inline-end: 0;
-		border-inline-end: 0;
+	& + & {
+		padding-inline-start: 0.5rem;
+		border-inline-start: 1px solid var(--accent);
 	}
 }
 
 .task-status__optgroup-list {
-	@extend %list-reset;
+	@include list-reset;
 	display: flex;
 	gap: 0.5rem;
 }
@@ -69,6 +59,6 @@
 .task-status__option {}
 
 .task-status__option-button {
-	@extend %icon-button;
+	@include icon-button;
 	@include palette.tertiary(true);
 }

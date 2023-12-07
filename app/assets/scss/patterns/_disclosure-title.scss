@@ -1,0 +1,23 @@
+@mixin disclosure-title {
+	summary > & {
+		display: inline-block;
+
+		&::after {
+			content: "";
+			display: inline-block;
+			margin-left: 1ch;
+			vertical-align: middle;
+
+			border: 0.25em solid transparent;
+
+			transition: transform 0.1s ease-in-out;
+		}
+		details > &::after {
+			border-left-color: currentColor;
+			border-right-width: 0;
+		}
+		details[open] > &::after {
+			transform: rotate(90deg);
+		}
+	}
+}
