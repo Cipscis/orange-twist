@@ -126,7 +126,11 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		() => setCommandPaletteOpen(false),
 		[]
 	);
-	useKeyboardShortcut(KeyboardShortcutName.COMMAND_PALETTE_OPEN, openCommandPalette);
+	useKeyboardShortcut(
+		KeyboardShortcutName.COMMAND_PALETTE_OPEN,
+		openCommandPalette,
+		!commandPaletteOpen
+	);
 
 	/**
 	 * Save all day and task data, while giving the user feedback.
