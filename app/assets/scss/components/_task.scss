@@ -1,6 +1,6 @@
 @use "../theme/typography";
 @use "../tools/reset" as *;
-@use "../extendables/icon-button" as *;
+@use "../patterns/icon-button" as *;
 
 .task {
 	display: grid;
@@ -16,7 +16,7 @@
 }
 
 .task__detail-link {
-	@extend %icon-button;
+	@include icon-button;
 }
 
 .task__name {
@@ -58,7 +58,7 @@
 }
 
 .task__name-edit {
-	@extend %icon-button;
+	@include icon-button;
 
 	position: absolute;
 	right: 0;

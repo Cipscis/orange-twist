@@ -1,9 +1,11 @@
 @use "../theme/palette";
 @use "../tools/reset" as *;
 
-%icon-button {
+@mixin icon-button($active: true) {
 	@include reset;
-	cursor: pointer;
+	@if ($active == true) {
+		cursor: pointer;
+	}
 
 	display: grid;
 	place-items: center;
@@ -12,7 +14,7 @@
 	aspect-ratio: 1 / 1;
 	border-radius: 25%;
 
-	@include palette.secondary(true);
+	@include palette.secondary($active);
 	transition:
 		0.2s background-color ease-in-out,
 		0.2s color ease-in-out;

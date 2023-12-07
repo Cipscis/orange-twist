@@ -1,15 +1,21 @@
 @use "../theme/palette";
 @use "../tools/reset" as *;
 
-.button {
+@mixin button($active: true) {
 	@include reset;
-	cursor: pointer;
+	@if ($active == true) {
+		cursor: pointer;
+	}
 
 	padding: 0.5em 0.7em;
 	border-radius: 0.2em;
 
-	@include palette.secondary(true);
+	@include palette.secondary(active);
 	transition:
 		0.2s background-color ease-in-out,
 		0.2s color ease-in-out;
+}
+
+.button {
+	@include button;
 }
