@@ -90,14 +90,20 @@ document.addEventListener('keydown', (e) => {
 	const shortcuts = Array.from(keyboardShortcutsRegister.values());
 	const matchingShortcuts = shortcuts.filter((item) => keyboardShortcutWasPressed(item, e));
 
-	if (matchingShortcuts.length > 0) {
+	const matchingShortcutListeners = matchingShortcuts.flatMap(({ listeners }) => listeners);
+
+	const hasListeners = matchingShortcutListeners.length > 0;
+	const isEscape = e.key === 'Escape';
+	// The escape key is hooked up to important accessibility features,
+	// so its default action shouldn't be prevented
+	const shouldPreventDefault = hasListeners && !isEscape;
+
+	if (shouldPreventDefault) {
 		e.preventDefault();
 	}
 
 	// Fire all listeners for pressed shortcuts
-	for (const shortcut of matchingShortcuts) {
-		for (const listener of shortcut.listeners) {
-			listener();
-		}
+	for (const listener of matchingShortcutListeners) {
+		listener();
 	}
 });

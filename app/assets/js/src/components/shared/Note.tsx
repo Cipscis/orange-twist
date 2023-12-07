@@ -101,7 +101,11 @@ export function Note(props: NoteProps): JSX.Element {
 	}, [leaveEditingMode]);
 
 	// Leave editing on keyboard shortcut
-	useKeyboardShortcut(KeyboardShortcutName.EDITING_FINISH, leaveEditingModeFromTextarea);
+	useKeyboardShortcut(
+		KeyboardShortcutName.EDITING_FINISH,
+		leaveEditingModeFromTextarea,
+		isEditing
+	);
 
 	/**
 	 * Enter edit mode on click, unless the user was selecting
