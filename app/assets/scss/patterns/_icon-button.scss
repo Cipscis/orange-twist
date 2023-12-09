@@ -5,7 +5,7 @@
 @use "../tools" as *;
 
 /// A button that contains a single icon, which should be centred.
-@mixin icon-button($active: true) {
+@mixin icon-button($active: true, $palette: secondary) {
 	@include reset;
 	@if ($active == true) {
 		cursor: pointer;
@@ -18,7 +18,14 @@
 	aspect-ratio: 1 / 1;
 	border-radius: radius.$md-rel;
 
-	@include palette.secondary($active);
+	@if ($palette == primary) {
+		@include palette.primary($active);
+	} @else if ($palette == secondary) {
+		@include palette.secondary($active);
+	} @else if ($palette == tertiary) {
+		@include palette.tertiary($active);
+	}
+
 	transition:
 		background-color animation.$speed-fast animation.$easing-default,
 		color animation.$speed-fast animation.$easing-default;
