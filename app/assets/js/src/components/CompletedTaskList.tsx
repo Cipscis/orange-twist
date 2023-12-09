@@ -11,7 +11,7 @@ import { TaskList } from './TaskList';
  */
 export function CompletedTaskList(): JSX.Element | null {
 	return <details class="orange-twist__section">
-		<summary class="orange-twist__section-summary">
+		<summary>
 			<h2 class="orange-twist__title">Completed tasks</h2>
 		</summary>
 

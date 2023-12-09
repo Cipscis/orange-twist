@@ -1,9 +1,15 @@
+@use "../theme/spacing";
+@use "../theme/typography";
+
+@use "../tools" as *;
+@use "../patterns";
+
 .task {
 	display: grid;
 	align-items: center;
 
 	grid-template-columns: auto auto 1fr;
-	grid-gap: 0.5rem;
+	grid-gap: spacing.$sm;
 }
 
 .task__status {
@@ -12,7 +18,7 @@
 }
 
 .task__detail-link {
-	@extend %icon-button;
+	@include patterns.icon-button;
 }
 
 .task__name {
@@ -27,11 +33,11 @@
 	// Stack them on top of each other
 	.task__name-input,
 	.task__name-display {
-		grid-area: 1 / 1 / -1 / -1;
+		grid-area: 1 / -1;
 
-		@include font-base-body;
+		@include typography.base-body;
 		border: 0;
-		padding: 0.1em 0.2em;
+		padding: spacing.$xs-rel;
 	}
 }
 
@@ -54,7 +60,7 @@
 }
 
 .task__name-edit {
-	@extend %icon-button;
+	@include patterns.icon-button;
 
 	position: absolute;
 	right: 0;
@@ -64,12 +70,4 @@
 		width: 0;
 		height: 0;
 	}
-}
-
-.task__notes {
-	grid-column: 1 / -1;
-}
-
-.task__subtasks {
-	grid-column: 1 / -1;
 }

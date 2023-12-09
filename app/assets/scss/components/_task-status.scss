@@ -1,69 +1,61 @@
+@use "../theme/animation";
+@use "../theme/palette";
+@use "../theme/shadow";
+@use "../theme/spacing";
+
+@use "../patterns";
+@use "../tools" as *;
+
 .task-status {
 	position: relative;
+
+	--_gap: #{spacing.$sm};
 }
 
-.task-status__indicator {
-	@extend %icon-button;
+.task-status__indicator:not(.task-status__indicator--readonly) {
+	@include patterns.icon-button;
 }
 
 .task-status__indicator--readonly {
-	cursor: pointer;
-	// TODO: This is a messy way of overriding %icon-button to remove its active state
-	@include active {
-		@include contrast-secondary;
-	}
+	@include patterns.icon-button(false);
 }
 
 .task-status__options {
-	@extend %list-reset;
+	@include list-reset;
 	position: absolute;
 	bottom: 100%;
-	margin-bottom: 0.5rem;
-	z-index: 2;
-	padding: 0.5em;
+	margin-bottom: spacing.$sm;
+	z-index: 1;
+	padding: var(--_gap);
 
 	display: flex;
-	gap: 0.5rem;
+	gap: var(--_gap);
 
-	@include contrast-secondary;
-	background-color: transparent;
-	&::before {
-		content: "";
-		position: absolute;
-		z-index: -1;
-		inset: 0;
-		background-color: var(--bg);
-		opacity: 0.5;
-	}
-	backdrop-filter: blur(2px);
+	@include palette.secondary;
+	@include patterns.frosted-glass;
+
 	border: 1px solid var(--accent);
-	box-shadow: 0 0 5px color-mix(in sRGB, var(--accent), white);
 
-	animation: 0.2s appearScreen, ease-in-out;
+	box-shadow: shadow.$accent;
+	animation: appearScreen animation.$speed-medium animation.$easing-default;
 }
 
 .task-status__optgroup {
-	padding-inline: 0.5rem;
-	border-inline: 1px solid var(--accent);
-	&:first-child {
-		padding-inline-start: 0;
-		border-inline-start: 0;
-	}
-	&:last-child {
-		padding-inline-end: 0;
-		border-inline-end: 0;
+	& + & {
+		padding-inline-start: var(--_gap);
+		border-inline-start: 1px solid var(--accent);
 	}
 }
 
 .task-status__optgroup-list {
-	@extend %list-reset;
+	@include list-reset;
 	display: flex;
-	gap: 0.5rem;
+	gap: var(--_gap);
 }
 
 .task-status__option {}
 
 .task-status__option-button {
-	@extend %icon-button;
-	@include contrast-tertiary(true);
+	@include patterns.icon-button;
+	@include palette.tertiary(true);
 }

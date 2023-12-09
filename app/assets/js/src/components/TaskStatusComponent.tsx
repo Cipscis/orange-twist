@@ -11,6 +11,7 @@ import {
 	animate,
 	nodeHasAncestor,
 	CSSKeyframes,
+	useCloseWatcher,
 } from 'util/index';
 
 import { TaskStatus } from 'types/TaskStatus';
@@ -95,8 +96,12 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		setIsInChangeModeInternal(value);
 	}, [setIsInChangeModeInternal]);
 
+	const exitChangeMode = useCallback(() => {
+		setIsInChangeMode(false);
+	}, [setIsInChangeMode]);
+
 	/**
-	 * Update task data to reflect new status
+	 * Update task data to reflect new status.
 	 */
 	const changeStatus = useCallback((status: TaskStatus) => {
 		if (!taskInfo) {
@@ -111,63 +116,50 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		} else {
 			setTaskInfo(taskId, { status });
 		}
-		setIsInChangeMode(false);
+		exitChangeMode();
 		fireCommand(Command.DATA_SAVE);
-	}, [dayName, taskId, taskInfo, setIsInChangeMode]);
+	}, [dayName, taskId, taskInfo, exitChangeMode]);
 
 	/**
 	 * Ask for confirmation, then delete the task.
 	 */
 	const removeTaskEntirely = useCallback(async () => {
-		setIsInChangeMode(false);
-
 		if (!await ui.confirm('Are you sure you want to delete this task?')) {
 			return;
 		}
 
 		deleteTask(taskId);
 		fireCommand(Command.DATA_SAVE);
-	}, [taskId, setIsInChangeMode]);
+	}, [taskId]);
 
 	/**
 	 * Ask for confirmation, then remove a task from this component's day.
 	 */
 	const removeTaskFromDay = useCallback(async () => {
-		if (!await ui.confirm(`Are you sure you want to remove this task from ${dayName}?`)) {
-			return;
-		}
-
 		if (!dayName) {
 			return;
 		}
 
+		if (!await ui.confirm(`Are you sure you want to remove this task from ${dayName}?`)) {
+			return;
+		}
+
 		deleteDayTask({ dayName, taskId });
-		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
-	}, [dayName, taskId, setIsInChangeMode]);
+	}, [dayName, taskId]);
 
 	/**
 	 * Remove the task from the current day, if there is one,
 	 * otherwise delete it entirely.
 	 */
 	const onDeleteButtonClick = useCallback(() => {
+		exitChangeMode();
 		if (dayName) {
 			removeTaskFromDay();
 		} else {
 			removeTaskEntirely();
 		}
-	}, [dayName, removeTaskFromDay, removeTaskEntirely]);
-
-	// TODO: Turn the selector part into a custom element, using shadow DOM
-
-	/**
-	 * Detect if a keypress was "Escape". If it was, exit change mode.
-	 */
-	const exitChangeModeOnEscape = useCallback((e: KeyboardEvent) => {
-		if (e.key === 'Escape') {
-			setIsInChangeMode(false);
-		}
-	}, [setIsInChangeMode]);
+	}, [exitChangeMode, dayName, removeTaskFromDay, removeTaskEntirely]);
 
 	/**
 	 * Detect if a click was outside the component. If it was, exit change mode.
@@ -178,32 +170,33 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			e.target instanceof Element
 		) {
 			if (!nodeHasAncestor(e.target, rootRef.current)) {
-				setIsInChangeMode(false);
+				exitChangeMode();
 			}
 		}
-	}, [setIsInChangeMode]);
+	}, [exitChangeMode]);
 
 	// Set up event listeners for exiting change mode.
 	useEffect(() => {
-		const eventListenerAbortController = new AbortController();
-		const { signal } = eventListenerAbortController;
+		const controller = new AbortController();
+		const { signal } = controller;
 
 		if (isInChangeMode) {
-			document.addEventListener('keydown', exitChangeModeOnEscape, { signal });
 			document.addEventListener('click', exitChangeModeOnOutsideClick, { signal });
 		}
 
 		return () => {
-			eventListenerAbortController.abort();
+			controller.abort();
 		};
-	}, [isInChangeMode, exitChangeModeOnEscape, exitChangeModeOnOutsideClick]);
+	}, [isInChangeMode, exitChangeModeOnOutsideClick]);
+
+	useCloseWatcher(exitChangeMode, isInChangeMode);
 
 	const status = (() => {
 		if (dayName) {
 			return getTaskStatusForDay({ dayName, taskId });
 		}
 
-		return taskInfo?.status;
+		return taskInfo?.status ?? null;
 	})();
 
 	if (!status) {
@@ -212,6 +205,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 
 	const statusSymbol = taskStatusSymbols[status];
 
+	// TODO: Turn the selector part into a custom element, using shadow DOM
 	return <span
 		class="task-status"
 		ref={rootRef}
@@ -257,15 +251,19 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 					</ul>
 				</li>
 
-				<li class="task-status__option">
-					<button
-						type="button"
-						class="task-status__option-button"
-						title="Delete"
-						onClick={onDeleteButtonClick}
-					>
-						<span aria-hidden>❌</span>
-					</button>
+				<li class="task-status__optgroup">
+					<ul class="task-status__optgroup-list">
+						<li class="task-status__option">
+							<button
+								type="button"
+								class="task-status__option-button"
+								title="Delete"
+								onClick={onDeleteButtonClick}
+							>
+								<span aria-hidden>❌</span>
+							</button>
+						</li>
+					</ul>
 				</li>
 			</ul>
 		}

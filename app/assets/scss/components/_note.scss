@@ -1,10 +1,16 @@
+@use "../theme/palette";
+@use "../theme/spacing";
+@use "../theme/typography";
+
+@use "../patterns";
+
 .note {
-	@include font-base-body;
+	@include typography.base-body;
 
 	width: 100%;
 
 	position: relative;
-	--_gutter: 0.5em;
+	--_gutter: #{spacing.$sm-rel};
 
 	textarea,
 	.content:not(:empty) {
@@ -12,45 +18,6 @@
 	}
 	.content:not(:empty) {
 		padding: var(--_gutter);
-	}
-
-	.content {
-		blockquote {
-			margin-block: calc(1em * var(--line-height));
-			&:first-child {
-				margin-block-start: 0;
-			}
-			&:last-child {
-				margin-block-end: 0;
-			}
-
-			// About enough to compensate for "> "
-			margin-inline-start: 1.5ch;
-		}
-
-		ul {
-			// About enough to compensate for bullets
-			padding-left: 1.2ch;
-
-			margin-block: calc(1em * var(--line-height));
-			&:first-child {
-				margin-block-start: 0;
-			}
-			&:last-child {
-				margin-block-end: 0;
-			}
-		}
-
-		// This is how `marked` renders code blocks
-		pre > code {
-			margin-block: calc(2em * var(--line-height));
-			&:first-child {
-				margin-block-start: 0;
-			}
-			&:last-child {
-				margin-block-end: 0;
-			}
-		}
 	}
 }
 
@@ -62,9 +29,9 @@
 	// Stack them on top of each other
 	&::before,
 	textarea {
-		grid-area: 1 / -1 / -1 / -1;
+		grid-area: 1 / -1;
 
-		@include font-base-body;
+		@include typography.base-body;
 		padding: var(--_gutter);
 	}
 
@@ -76,12 +43,12 @@
 	}
 
 	textarea {
-		@include contrast-primary;
+		@include palette.primary;
 		resize: none;
 		overflow: hidden;
 		border: 0;
 
-		@include font-base-body;
+		@include typography.base-body;
 	}
 }
 
@@ -90,13 +57,14 @@
 }
 
 .note__edit {
-	@extend %icon-button;
+	@include patterns.icon-button;
 
-	&:not(:first-child:last-child) {
+	&:not(:only-child) {
 		position: absolute;
 		bottom: 0;
 		right: 0;
 
+		// Make it focusable, but only visibly shown while focused
 		&:not(:focus) {
 			overflow: hidden;
 			width: 0;

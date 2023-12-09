@@ -1,19 +1,22 @@
 @use "../theme/animation";
 @use "../theme/palette";
 @use "../theme/radius";
-@use "../theme/spacing";
 
 @use "../tools" as *;
 
-@mixin button($active: true, $palette: secondary) {
+/// A button that contains a single icon, which should be centred.
+@mixin icon-button($active: true, $palette: secondary) {
 	@include reset;
 	@if ($active == true) {
 		cursor: pointer;
 	}
 
-	padding-block: spacing.$sm-rel;
-	padding-inline: spacing.$md-rel;
-	border-radius: radius.$sm-rel;
+	display: grid;
+	place-items: center;
+
+	height: 2em;
+	aspect-ratio: 1 / 1;
+	border-radius: radius.$md-rel;
 
 	@if ($palette == primary) {
 		@include palette.primary($active);

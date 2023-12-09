@@ -1,7 +1,10 @@
+@use "../theme/palette";
+@use "../theme/spacing";
+
 .task-list {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5em;
+	gap: spacing.$sm;
 }
 
 .task-list__item {
@@ -16,7 +19,7 @@
 
 	cursor: move;
 
-	@include contrast-primary;
+	@include palette.primary;
 
 	display: grid;
 	place-content: center;

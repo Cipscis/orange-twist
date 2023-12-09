@@ -1,11 +1,17 @@
+@use "../theme/animation";
+@use "../theme/palette";
+@use "../theme/radius";
+@use "../theme/spacing";
+@use "../theme/typography";
+
 .toast__container {
 	position: fixed;
-	bottom: 1rem;
-	right: 1rem;
+	bottom: spacing.$md;
+	right: spacing.$md;
 
 	display: grid;
 	grid-template-columns: 1fr;
-	gap: 1rem;
+	gap: spacing.$md;
 }
 
 .toast {
@@ -14,12 +20,12 @@
 		grid-area: 1 / 1;
 	}
 
-	@include contrast-secondary;
-	@include font-base-body;
-	border-radius: 0.2em;
+	@include palette.secondary;
+	@include typography.base-body;
+	border-radius: radius.$sm-rel;
 	overflow: hidden;
 
-	animation: appearUp 0.3s ease-in-out;
+	animation: appearUp animation.$speed-medium animation.$easing-default;
 }
 
 .toast__progress {
@@ -28,5 +34,6 @@
 }
 
 .toast__message {
-	padding: 0.5rem 1rem;
+	padding-block: spacing.$sm;
+	padding-inline: spacing.$md;
 }

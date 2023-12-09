@@ -32,8 +32,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 
 	return <section class="orange-twist__section">
 		<Markdown
-			class="orange-twist__title"
-			content={`## ${taskInfo.name}`}
+			content={`<h2 class="orange-twist__title">${taskInfo.name}</h2>`}
 			inline
 		/>
 		{dayTasksInfo.map(({ dayName, taskId, note }, i, arr) => (
