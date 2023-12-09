@@ -63,6 +63,18 @@ describe('Note', () => {
 		expect(queryByText(note)).toBeInTheDocument();
 	});
 
+	test('renders any specified CSS classes', () => {
+		render(<Note
+			note={'Test note'}
+			onNoteChange={() => {}}
+			saveChanges={() => {}}
+
+			class="test-class"
+		/>);
+
+		expect(document.querySelector('.test-class')).toBeInTheDocument();
+	});
+
 	test('enters edit mode when edit button is clicked', async () => {
 		const user = userEvent.setup();
 

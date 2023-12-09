@@ -26,6 +26,7 @@
 	@include meta.load-css("components/note");
 	@include meta.load-css("components/orange-twist");
 	@include meta.load-css("components/task");
+	@include meta.load-css("components/task-detail");
 	@include meta.load-css("components/task-list");
 	@include meta.load-css("components/task-status");
 }
