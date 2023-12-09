@@ -111,13 +111,8 @@
 			left: 0;
 			width: 0.5ch;
 
-			@supports (background-color: rgb(from red r g b / 0.5)) {
-				background-color: rgb(from var(--colour) r g b / 0.5);
-			}
-			@supports not (background-color: rgb(from red r g b / 0.5)) {
-				background-color: var(--colour);
-				opacity: 0.5;
-			}
+			background-color: currentColor;
+			opacity: 0.5;
 		}
 	}
 }
