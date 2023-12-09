@@ -7,8 +7,15 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { nodeHasAncestor, useBlurCallback } from 'util/index';
-import { KeyboardShortcutName, useKeyboardShortcut } from 'registers/keyboard-shortcuts';
+import {
+	classNames,
+	nodeHasAncestor,
+	useBlurCallback,
+} from 'util/index';
+import {
+	KeyboardShortcutName,
+	useKeyboardShortcut,
+} from 'registers/keyboard-shortcuts';
 
 import { Markdown } from './Markdown';
 
@@ -16,6 +23,8 @@ interface NoteProps {
 	note: string | null;
 	onNoteChange: (note: string) => void;
 	saveChanges: () => void;
+
+	class?: string;
 }
 
 /**
@@ -222,7 +231,7 @@ export function Note(props: NoteProps): JSX.Element {
 		}
 	}, [isEditing]);
 
-	return <div class="note">
+	return <div class={classNames('note', props.class)}>
 		{isEditing
 			? <div
 				class="note__edit-content"
