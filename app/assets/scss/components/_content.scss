@@ -73,6 +73,7 @@
 
 	// This is how `marked` renders code blocks
 	pre > code {
+		display: inline-block;
 		// Enough to compensate for "```"
 		margin-block: calc(2em * var(--line-height));
 		&:first-child {
