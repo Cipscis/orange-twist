@@ -63,10 +63,12 @@ export function ModalConfirm(props: ModalConfirmProps): JSX.Element {
 		<div class="modal-confirm__actions">
 			<button
 				type="button"
+				class="modal-confirm__button"
 				onClick={cancel}
 			>Cancel</button>
 			<button
 				type="button"
+				class="modal-confirm__button"
 				onClick={confirm}
 			>Confirm</button>
 		</div>

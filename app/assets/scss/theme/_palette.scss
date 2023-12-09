@@ -18,8 +18,8 @@ $grey--dark: #555555;
 $grey--darker: #333333;
 $grey--darkest: #121212;
 
-// TODO
-$orange: orange;
+// TODO Pick theme colours instead of just using named CSS colours
+$orange--light: orange;
 $orange--dark: orangered;
 
 
@@ -29,8 +29,8 @@ $orange--dark: orangered;
 
 // Supplementary colours
 ////////////////////////
-$link-base--light: $orange;
-$accent-base--light: $orange;
+$link-base--light: $orange--light;
+$accent-base--light: $orange--light;
 
 // Contrast pairs
 /////////////////

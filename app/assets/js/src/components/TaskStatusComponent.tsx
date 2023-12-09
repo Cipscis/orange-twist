@@ -96,8 +96,12 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		setIsInChangeModeInternal(value);
 	}, [setIsInChangeModeInternal]);
 
+	const exitChangeMode = useCallback(() => {
+		setIsInChangeMode(false);
+	}, [setIsInChangeMode]);
+
 	/**
-	 * Update task data to reflect new status
+	 * Update task data to reflect new status.
 	 */
 	const changeStatus = useCallback((status: TaskStatus) => {
 		if (!taskInfo) {
@@ -112,56 +116,50 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		} else {
 			setTaskInfo(taskId, { status });
 		}
-		setIsInChangeMode(false);
+		exitChangeMode();
 		fireCommand(Command.DATA_SAVE);
-	}, [dayName, taskId, taskInfo, setIsInChangeMode]);
+	}, [dayName, taskId, taskInfo, exitChangeMode]);
 
 	/**
 	 * Ask for confirmation, then delete the task.
 	 */
 	const removeTaskEntirely = useCallback(async () => {
-		setIsInChangeMode(false);
-
 		if (!await ui.confirm('Are you sure you want to delete this task?')) {
 			return;
 		}
 
 		deleteTask(taskId);
 		fireCommand(Command.DATA_SAVE);
-	}, [taskId, setIsInChangeMode]);
+	}, [taskId]);
 
 	/**
 	 * Ask for confirmation, then remove a task from this component's day.
 	 */
 	const removeTaskFromDay = useCallback(async () => {
-		if (!await ui.confirm(`Are you sure you want to remove this task from ${dayName}?`)) {
-			return;
-		}
-
 		if (!dayName) {
 			return;
 		}
 
+		if (!await ui.confirm(`Are you sure you want to remove this task from ${dayName}?`)) {
+			return;
+		}
+
 		deleteDayTask({ dayName, taskId });
-		setIsInChangeMode(false);
 		fireCommand(Command.DATA_SAVE);
-	}, [dayName, taskId, setIsInChangeMode]);
+	}, [dayName, taskId]);
 
 	/**
 	 * Remove the task from the current day, if there is one,
 	 * otherwise delete it entirely.
 	 */
 	const onDeleteButtonClick = useCallback(() => {
+		exitChangeMode();
 		if (dayName) {
 			removeTaskFromDay();
 		} else {
 			removeTaskEntirely();
 		}
-	}, [dayName, removeTaskFromDay, removeTaskEntirely]);
-
-	const exitChangeMode = useCallback(() => {
-		setIsInChangeMode(false);
-	}, [setIsInChangeMode]);
+	}, [exitChangeMode, dayName, removeTaskFromDay, removeTaskEntirely]);
 
 	/**
 	 * Detect if a click was outside the component. If it was, exit change mode.
@@ -179,15 +177,15 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 
 	// Set up event listeners for exiting change mode.
 	useEffect(() => {
-		const eventListenerAbortController = new AbortController();
-		const { signal } = eventListenerAbortController;
+		const controller = new AbortController();
+		const { signal } = controller;
 
 		if (isInChangeMode) {
 			document.addEventListener('click', exitChangeModeOnOutsideClick, { signal });
 		}
 
 		return () => {
-			eventListenerAbortController.abort();
+			controller.abort();
 		};
 	}, [isInChangeMode, exitChangeModeOnOutsideClick]);
 
@@ -198,7 +196,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			return getTaskStatusForDay({ dayName, taskId });
 		}
 
-		return taskInfo?.status;
+		return taskInfo?.status ?? null;
 	})();
 
 	if (!status) {
