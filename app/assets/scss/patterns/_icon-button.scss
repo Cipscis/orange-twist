@@ -2,7 +2,7 @@
 @use "../theme/palette";
 @use "../theme/radius";
 
-@use "../tools/reset" as *;
+@use "../tools" as *;
 
 /// A button that contains a single icon, which should be centred.
 @mixin icon-button($active: true) {
