@@ -11,6 +11,7 @@ import {
 	animate,
 	nodeHasAncestor,
 	CSSKeyframes,
+	useCloseWatcher,
 } from 'util/index';
 
 import { TaskStatus } from 'types/TaskStatus';
@@ -158,15 +159,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		}
 	}, [dayName, removeTaskFromDay, removeTaskEntirely]);
 
-	// TODO: Turn the selector part into a custom element, using shadow DOM
-
-	/**
-	 * Detect if a keypress was "Escape". If it was, exit change mode.
-	 */
-	const exitChangeModeOnEscape = useCallback((e: KeyboardEvent) => {
-		if (e.key === 'Escape') {
-			setIsInChangeMode(false);
-		}
+	const exitChangeMode = useCallback(() => {
+		setIsInChangeMode(false);
 	}, [setIsInChangeMode]);
 
 	/**
@@ -178,10 +172,10 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			e.target instanceof Element
 		) {
 			if (!nodeHasAncestor(e.target, rootRef.current)) {
-				setIsInChangeMode(false);
+				exitChangeMode();
 			}
 		}
-	}, [setIsInChangeMode]);
+	}, [exitChangeMode]);
 
 	// Set up event listeners for exiting change mode.
 	useEffect(() => {
@@ -189,14 +183,15 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		const { signal } = eventListenerAbortController;
 
 		if (isInChangeMode) {
-			document.addEventListener('keydown', exitChangeModeOnEscape, { signal });
 			document.addEventListener('click', exitChangeModeOnOutsideClick, { signal });
 		}
 
 		return () => {
 			eventListenerAbortController.abort();
 		};
-	}, [isInChangeMode, exitChangeModeOnEscape, exitChangeModeOnOutsideClick]);
+	}, [isInChangeMode, exitChangeModeOnOutsideClick]);
+
+	useCloseWatcher(exitChangeMode, isInChangeMode);
 
 	const status = (() => {
 		if (dayName) {
@@ -212,6 +207,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 
 	const statusSymbol = taskStatusSymbols[status];
 
+	// TODO: Turn the selector part into a custom element, using shadow DOM
 	return <span
 		class="task-status"
 		ref={rootRef}
