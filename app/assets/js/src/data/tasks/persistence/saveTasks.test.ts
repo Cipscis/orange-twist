@@ -17,12 +17,14 @@ const firstTaskInfo: TaskInfo = {
 	id: 1,
 	name: 'First task',
 	status: TaskStatus.TODO,
+	note: '',
 };
 
 const secondTaskInfo: TaskInfo = {
 	id: 2,
 	name: 'Second task',
 	status: TaskStatus.IN_PROGRESS,
+	note: 'Note',
 };
 
 describe('saveDays', () => {
