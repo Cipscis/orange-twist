@@ -1,4 +1,4 @@
-@use "../theme/typography";
+@use "theme/typography";
 
 * {
 	box-sizing: border-box;
@@ -23,5 +23,6 @@ p {
 }
 
 summary {
+	list-style: none;
 	cursor: pointer;
 }

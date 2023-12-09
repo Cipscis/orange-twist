@@ -1,33 +1,16 @@
+@use "../theme/spacing";
+
 @use "../tools/rem" as *;
 
-$max-width: rem(800px);
-$gutter: 1rem;
-
 :root {
-	--max-width: #{$max-width};
-	--layout-gutter: #{$gutter};
+	--max-width: #{rem(800px)};
+	--layout-gutter: #{spacing.$md};
 }
 
-///////////////////
-// Layout Mixins //
-///////////////////
-
-/// A horizontally centred area with a maximum width
-/// @param {length} $width [var(--max-width] - The maximum width of the wrapper
-@mixin wrapper-flush($width: var(--layout-max-width)) {
-	max-width: $width;
-	margin-inline: auto;
-}
-
-/// The standard side padding
-@mixin wrapper-gutter() {
-	padding-left: var(--layout-gutter);
-	padding-right: var(--layout-gutter);
-}
-
-/// A horizontally centred area with a maximum width and the standard side padding
-/// @param {length} $width [var(--layout-max-width] - The maximum width of the wrapper
-@mixin wrapper($width: var(--max-width)) {
-	@include wrapper-flush($width);
-	@include wrapper-gutter;
+@mixin grid {
+	display: grid;
+	grid-template-columns:
+		[full-width-start] 1fr var(--layout-gutter)
+		[main-start] minmax(auto, var(--max-width)) [main-end]
+		var(--layout-gutter) 1fr [full-width-end];
 }

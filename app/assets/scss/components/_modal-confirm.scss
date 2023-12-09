@@ -1,6 +1,8 @@
+@use "../theme/spacing";
+
 .modal-confirm {
 	display: grid;
-	gap: 1rem;
+	gap: spacing.$md;
 }
 
 .modal-confirm__actions {

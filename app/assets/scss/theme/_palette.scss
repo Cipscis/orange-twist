@@ -247,3 +247,42 @@ $colour-tertiary--active--dark: $white;
 	@include use-var(background-color, --bg, $bg-tertiary--active--light);
 	@include use-var(color, --colour, $colour-tertiary--active--light);
 }
+
+:root {
+	@include light;
+}
+
+html {
+	color-scheme: light;
+}
+
+@media not print {
+	@media (prefers-color-scheme: dark) {
+		:root {
+			@include dark;
+		}
+	}
+
+	.light {
+		@include light;
+	}
+	body {
+		@container style(--theme: light) {
+			@include light;
+		}
+	}
+	.dark {
+		@include dark;
+	}
+	body {
+		@container style(--theme: dark) {
+			@include dark;
+		}
+	}
+	.colour-scheme--default {
+		@include light;
+		@media (prefers-color-scheme: dark) {
+			@include dark;
+		}
+	}
+}

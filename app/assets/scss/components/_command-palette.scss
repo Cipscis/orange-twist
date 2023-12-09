@@ -1,45 +1,37 @@
-@use "../theme/typography";
+@use "../theme/animation";
 @use "../theme/palette";
+@use "../theme/shadow";
+@use "../theme/spacing";
+@use "../theme/typography";
+
 @use "../tools" as *;
+@use "../patterns" as *;
 
 .command-palette {
+	// Override default modal background
 	background: transparent;
 }
 
 .command-palette__field,
 .command-palette__options {
-	backdrop-filter: blur(2px);
 	@include palette.secondary;
+	@include frosted-glass;
 
-	@supports (background-color: rgb(from red r g b / 0.5)) {
-		// Make the background semitransparent
-		background: rgb(from var(--bg) r g b / 0.7);
-	}
+	box-shadow: shadow.$accent;
+}
 
-	@supports not (background-color: rgb(from red r g b / 0.5)) {
-		// Use a pseudoelement to make the background semitransparent
-		background: transparent;
-		position: relative;
-		&::before {
-			content: "";
-			position: absolute;
-			inset: 0;
-			z-index: -1;
-			background: var(--bg);
-			opacity: 0.7;
-		}
-	}
+.command-palette__field-input,
+.command-palette__option {
+	@include reset;
+	@include typography.base-large;
 
-	box-shadow: 0 0 5px var(--accent);
+	padding-block: spacing.$xs-rel;
+	padding-inline: spacing.$sm-rel;
 }
 
 .command-palette__field-input {
-	@include reset;
 	pointer-events: auto;
 	cursor: text;
-
-	@include typography.base-large;
-	padding: 0.2em 0.5em;
 
 	&:focus-visible {
 		outline: none;
@@ -48,24 +40,24 @@
 
 .command-palette__options {
 	@include list-reset;
-
-	margin-top: 2rem;
+	margin-top: spacing.$lg;
 }
 
 .command-palette__option {
-	@include reset;
 	cursor: pointer;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
 
-	@include typography.base-large;
-
-	padding: 0.2em 0.5em;
 	&:not(:last-child) {
 		border-bottom: 1px solid var(--accent);
 	}
+
+	transition:
+		background-color
+		animation.$speed-fast
+		animation.$easing-default;
 }
 
 .command-palette__option--active {

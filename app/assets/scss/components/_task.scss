@@ -1,4 +1,6 @@
+@use "../theme/spacing";
 @use "../theme/typography";
+
 @use "../tools/reset" as *;
 @use "../patterns/icon-button" as *;
 
@@ -7,7 +9,7 @@
 	align-items: center;
 
 	grid-template-columns: auto auto 1fr;
-	grid-gap: 0.5rem;
+	grid-gap: spacing.$sm;
 }
 
 .task__status {
@@ -31,11 +33,11 @@
 	// Stack them on top of each other
 	.task__name-input,
 	.task__name-display {
-		grid-area: 1 / 1 / -1 / -1;
+		grid-area: 1 / -1;
 
 		@include typography.base-body;
 		border: 0;
-		padding: 0.1em 0.2em;
+		padding: spacing.$xs-rel;
 	}
 }
 
@@ -68,12 +70,4 @@
 		width: 0;
 		height: 0;
 	}
-}
-
-.task__notes {
-	grid-column: 1 / -1;
-}
-
-.task__subtasks {
-	grid-column: 1 / -1;
 }

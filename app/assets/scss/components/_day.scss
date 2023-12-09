@@ -1,46 +1,51 @@
-@use "../theme/typography";
 @use "../theme/palette";
+@use "../theme/spacing";
+@use "../theme/typography";
+
 @use "../patterns";
+
 @use "../tools/rem" as *;
 
+@mixin _day-heading {
+	@include typography.heading-3;
+}
+$_day-margin: spacing.$lg;
+
 .day {
-	margin: 2rem 0;
+	margin: $_day-margin 0;
 
 	isolation: isolate;
 
 	&:not([open]) {
+		// Use the mixin to set font size and line height custom properties
+		@include _day-heading;
+
 		// Tell the browser to not render closed days outside the viewport
 		content-visibility: auto;
-		// Padding plus heading size
-		contain-intrinsic-height: 2rem + rem(28px) * 1.5;
+		// Spacing plus heading size
+		contain-intrinsic-height: calc($_day-margin + var(--font-size) * var(--line-height));
 	}
 }
 
 .day__summary {
 	@include palette.primary;
 
-	list-style: none;
-
 	position: sticky;
-	z-index: 2;
-	top: -1px;
-	padding-top: 1px;
-	margin-inline: -1px;
-	padding-inline: 1px;
+	top: 0;
+	z-index: 1;
 }
 
 .day__body {
 	display: grid;
 	justify-items: start;
 	grid-template-columns: minmax(0, 1fr);
-	gap: 1rem;
+	gap: spacing.$md;
+	padding-top: spacing.$md;
 }
 
 .day__heading {
-	@include typography.heading-3;
+	@include _day-heading;
 	@include patterns.disclosure-title;
 
 	width: 100%;
-
-	padding-bottom: 0.2em;
 }

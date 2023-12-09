@@ -3,18 +3,14 @@
 @layer reset, theme, components;
 
 @layer reset {
-	// Base
-	@include meta.load-css("base/animations");
-	@include meta.load-css("base/palette");
-	@include meta.load-css("base/reset");
+	@include meta.load-css("reset");
 }
 
 @layer theme {
+	@include meta.load-css("theme/animation");
+	@include meta.load-css("theme/base");
+	@include meta.load-css("theme/palette");
 	@include meta.load-css("theme/typography");
-	@include meta.load-css("base/theme");
-
-	// Patterns
-	@include meta.load-css("patterns/button");
 }
 
 @layer components {

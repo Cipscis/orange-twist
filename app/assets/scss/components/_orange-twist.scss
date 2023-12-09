@@ -1,28 +1,25 @@
-@use "../theme/typography";
 @use "../theme/layout";
+@use "../theme/spacing";
+@use "../theme/typography";
+
 @use "../patterns";
 
 .orange-twist {
-	@include layout.wrapper;
+	@include layout.grid;
+	> * {
+		grid-column: main;
+	}
 }
 
 .orange-twist__heading {
 	@include typography.heading-1;
-	margin-bottom: 2rem;
+	margin-bottom: spacing.$md-rel;
 }
 
 .orange-twist__section {
 	+ .orange-twist__section {
-		margin-top: 2rem;
+		margin-top: spacing.$lg;
 	}
-}
-
-.orange-twist__section--loading {
-	display: grid;
-}
-
-.orange-twist__section-summary {
-	list-style: none;
 }
 
 .orange-twist__title {
@@ -30,46 +27,6 @@
 	@include patterns.disclosure-title;
 }
 
-.orange-twist__loader {
-	display: grid;
-	place-items: center;
-
-	min-height: 10rem;
-	cursor: wait;
-
-	&::before {
-		content: "";
-		animation: spinCW 1s linear infinite;
-
-		font-size: 4rem;
-		color: var(--accent);
-
-		width: 1em;
-		aspect-ratio: 1 / 1;
-		border-radius: 50%;
-
-		border: 0.1em solid transparent;
-		border-top-color: currentColor;
-
-		filter: drop-shadow(0 0 0.15em var(--accent));
-		@container style(--theme: dark) {
-			filter: drop-shadow(0 0 0.15em color-mix(in sRGB, var(--accent), white));
-		}
-	}
-}
-
-.orange-twist__error {}
-
 .orange-twist__task-list {
-	margin-block: 1rem;
-}
-
-.orange-twist__save {
-	@include patterns.icon-button;
-
-	position: sticky;
-	bottom: 1rem;
-	margin-left: 1rem;
-
-	font-size: 3rem;
+	margin-block: spacing.$md;
 }
