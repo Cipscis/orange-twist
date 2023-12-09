@@ -1,0 +1,5 @@
+@use "../patterns";
+
+.button {
+	@include patterns.button;
+}

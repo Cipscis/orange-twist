@@ -1,0 +1,16 @@
+@use "../theme/spacing";
+
+@use "../tools" as *;
+
+:root {
+	--max-width: #{rem(800px)};
+	--layout-gutter: #{spacing.$md};
+}
+
+@mixin grid {
+	display: grid;
+	grid-template-columns:
+		[full-width-start] 1fr var(--layout-gutter)
+		[main-start] minmax(auto, var(--max-width)) [main-end]
+		var(--layout-gutter) 1fr [full-width-end];
+}

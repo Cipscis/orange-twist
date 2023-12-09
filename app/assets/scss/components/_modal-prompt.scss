@@ -1,9 +1,17 @@
+@use "../theme/spacing";
+
+@use "../patterns";
+
 .modal-prompt__form {
 	display: grid;
-	gap: 1rem;
+	gap: spacing.$md;
 }
 
 .modal-prompt__message {
 	display: block;
-	margin-bottom: 0.5rem;
+	margin-bottom: spacing.$sm;
+}
+
+.modal-prompt__button {
+	@include patterns.button(true, tertiary);
 }

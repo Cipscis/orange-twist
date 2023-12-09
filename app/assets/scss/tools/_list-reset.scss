@@ -1,0 +1,8 @@
+/// Applies some reset styles for `ul` and `ol` elements,
+/// when they are being used semantically but their default
+/// styling is not desirable.
+@mixin list-reset {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}

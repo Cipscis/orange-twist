@@ -1,0 +1,26 @@
+/// Intended to be used on direct children of a `<summary>` element.
+/// Displays a triangle after the element, which rotates based on
+/// whether its parent `<details>` element is open or closed.
+@mixin disclosure-title {
+	summary > & {
+		display: inline-block;
+
+		&::after {
+			content: "";
+			display: inline-block;
+			margin-left: 1ch;
+			vertical-align: middle;
+
+			border: 0.25em solid transparent;
+
+			transition: transform 0.1s ease-in-out;
+		}
+		details > &::after {
+			border-left-color: currentColor;
+			border-right-width: 0;
+		}
+		details[open] > &::after {
+			transform: rotate(90deg);
+		}
+	}
+}

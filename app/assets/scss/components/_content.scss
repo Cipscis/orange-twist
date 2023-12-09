@@ -1,10 +1,13 @@
+@use "../theme/typography";
+@use "../theme/palette";
+
 /// HTML in a content element may be user-generated,
 /// so styles will need to be applied based on tag name.
 .content {
-	@include font-base-body;
+	@include typography.base-body;
 
 	a {
-		@include link;
+		@include palette.link;
 	}
 
 	p:not(:last-child) {
@@ -38,8 +41,29 @@
 		}
 	}
 
+	ul {
+		// About enough to compensate for bullets
+		padding-left: 1.2ch;
+	}
+
+	ol {
+		// About enough to compensate for numbers with dots
+		padding-left: 2ch;
+	}
+
+	ul,
+	ol {
+		margin-block: calc(1em * var(--line-height));
+		&:first-child {
+			margin-block-start: 0;
+		}
+		&:last-child {
+			margin-block-end: 0;
+		}
+	}
+
 	code {
-		@include contrast-secondary;
+		@include palette.secondary;
 		// About enough to compensate for "`"
 		padding: 0 0.5ch;
 		border-radius: 0.2em;
@@ -49,11 +73,15 @@
 
 	// This is how `marked` renders code blocks
 	pre > code {
-		display: block;
-		width: fit-content;
-		max-width: 100%;
-		overflow: auto;
-		tab-size: 4;
+		display: inline-block;
+		// Enough to compensate for "```"
+		margin-block: calc(2em * var(--line-height));
+		&:first-child {
+			margin-block-start: 0;
+		}
+		&:last-child {
+			margin-block-end: 0;
+		}
 	}
 
 	kbd {
@@ -62,5 +90,29 @@
 		padding: 0 0.5ch;
 		border: 1px solid currentColor;
 		border-radius: 0.5em;
+	}
+
+	blockquote {
+		margin: calc(1em * var(--line-height)) 0;
+		&:first-child {
+			margin-block-start: 0;
+		}
+		&:last-child {
+			margin-block-end: 0;
+		}
+
+		// About enough to compensate for "> "
+		padding-inline-start: 1.5ch;
+		position: relative;
+		&::before {
+			content: "";
+			position: absolute;
+			inset-block: 0;
+			left: 0;
+			width: 0.5ch;
+
+			background-color: currentColor;
+			opacity: 0.5;
+		}
 	}
 }

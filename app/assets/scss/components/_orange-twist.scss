@@ -1,99 +1,32 @@
-.orange-twist {
-	// Since we need `margin-inline: auto;` here, the
-	// gutter needs to occupy the element's padding.
-	// To prevent it affecting the width, we use
-	// `box-sizing: content-box;` for this element only.
-	box-sizing: content-box;
-	@include layout-wrapper;
+@use "../theme/layout";
+@use "../theme/spacing";
+@use "../theme/typography";
 
-	padding-block: 1rem;
+@use "../patterns";
+
+.orange-twist {
+	@include layout.grid;
+	> * {
+		grid-column: main;
+	}
 }
 
 .orange-twist__heading {
-	@include font-heading-1;
-	margin-bottom: 2rem;
+	@include typography.heading-1;
+	margin-bottom: spacing.$md-rel;
 }
 
 .orange-twist__section {
 	+ .orange-twist__section {
-		margin-top: 2rem;
+		margin-top: spacing.$lg;
 	}
-}
-
-.orange-twist__section--loading {
-	display: grid;
-}
-
-.orange-twist__section-summary {
-	list-style: none;
 }
 
 .orange-twist__title {
-	@include font-heading-2;
-
-	summary > & {
-		display: inline-block;
-
-		&::after {
-			content: "";
-			display: inline-block;
-			margin-left: 1ch;
-			vertical-align: middle;
-
-			border: 0.25em solid transparent;
-
-			transition: transform 0.1s ease-in-out;
-		}
-		details > &::after {
-			border-left-color: currentColor;
-			border-right-width: 0;
-		}
-		details[open] > &::after {
-			transform: rotate(90deg);
-		}
-	}
+	@include typography.heading-2;
+	@include patterns.disclosure-title;
 }
-
-.orange-twist__loader {
-	display: grid;
-	place-items: center;
-
-	min-height: 10rem;
-	cursor: wait;
-
-	&::before {
-		content: "";
-		animation: spinCW 1s linear infinite;
-
-		font-size: 4rem;
-		color: var(--accent);
-
-		width: 1em;
-		aspect-ratio: 1 / 1;
-		border-radius: 50%;
-
-		border: 0.1em solid transparent;
-		border-top-color: currentColor;
-
-		filter: drop-shadow(0 0 0.15em var(--accent));
-		@container style(--theme: dark) {
-			filter: drop-shadow(0 0 0.15em color-mix(in sRGB, var(--accent), white));
-		}
-	}
-}
-
-.orange-twist__error {}
 
 .orange-twist__task-list {
-	margin-block: 1rem;
-}
-
-.orange-twist__save {
-	@extend %icon-button;
-
-	position: sticky;
-	bottom: 1rem;
-	margin-left: 1rem;
-
-	font-size: 3rem;
+	margin-block: spacing.$md;
 }
