@@ -3,7 +3,7 @@
 @use "../theme/radius";
 @use "../theme/spacing";
 
-@use "../tools/reset" as *;
+@use "../tools" as *;
 
 @mixin button($active: true, $palette: secondary) {
 	@include reset;

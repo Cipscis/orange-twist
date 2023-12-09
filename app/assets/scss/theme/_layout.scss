@@ -1,6 +1,6 @@
 @use "../theme/spacing";
 
-@use "../tools/rem" as *;
+@use "../tools" as *;
 
 :root {
 	--max-width: #{rem(800px)};

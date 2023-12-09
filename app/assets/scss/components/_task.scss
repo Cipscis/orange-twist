@@ -1,8 +1,8 @@
 @use "../theme/spacing";
 @use "../theme/typography";
 
-@use "../tools/reset" as *;
-@use "../patterns/icon-button" as *;
+@use "../tools" as *;
+@use "../patterns";
 
 .task {
 	display: grid;
@@ -18,7 +18,7 @@
 }
 
 .task__detail-link {
-	@include icon-button;
+	@include patterns.icon-button;
 }
 
 .task__name {
@@ -60,7 +60,7 @@
 }
 
 .task__name-edit {
-	@include icon-button;
+	@include patterns.icon-button;
 
 	position: absolute;
 	right: 0;

@@ -5,7 +5,7 @@
 @use "../theme/typography";
 
 @use "../tools" as *;
-@use "../patterns" as *;
+@use "../patterns";
 
 .command-palette {
 	// Override default modal background
@@ -15,7 +15,7 @@
 .command-palette__field,
 .command-palette__options {
 	@include palette.secondary;
-	@include frosted-glass;
+	@include patterns.frosted-glass;
 
 	box-shadow: shadow.$accent;
 }

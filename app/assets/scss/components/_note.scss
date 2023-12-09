@@ -2,7 +2,7 @@
 @use "../theme/spacing";
 @use "../theme/typography";
 
-@use "../patterns/icon-button" as *;
+@use "../patterns";
 
 .note {
 	@include typography.base-body;
@@ -57,7 +57,7 @@
 }
 
 .note__edit {
-	@include icon-button;
+	@include patterns.icon-button;
 
 	&:not(:only-child) {
 		position: absolute;

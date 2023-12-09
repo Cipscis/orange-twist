@@ -3,7 +3,7 @@
 @use "../theme/shadow";
 @use "../theme/spacing";
 
-@use "../patterns" as *;
+@use "../patterns";
 @use "../tools" as *;
 
 .task-status {
@@ -13,11 +13,11 @@
 }
 
 .task-status__indicator:not(.task-status__indicator--readonly) {
-	@include icon-button;
+	@include patterns.icon-button;
 }
 
 .task-status__indicator--readonly {
-	@include icon-button(false);
+	@include patterns.icon-button(false);
 }
 
 .task-status__options {
@@ -32,7 +32,7 @@
 	gap: var(--_gap);
 
 	@include palette.secondary;
-	@include frosted-glass;
+	@include patterns.frosted-glass;
 
 	border: 1px solid var(--accent);
 
@@ -56,6 +56,6 @@
 .task-status__option {}
 
 .task-status__option-button {
-	@include icon-button;
+	@include patterns.icon-button;
 	@include palette.tertiary(true);
 }
