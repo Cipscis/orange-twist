@@ -22,7 +22,7 @@ describe('animate', () => {
 		const testElement = document.createElement('div');
 		document.body.append(testElement);
 
-		const result = animate(testElement, CSSKeyframes.SPIN_CW);
+		const result = animate(testElement, CSSKeyframes.DISAPPEAR_UP);
 
 		expect(result).toBeInstanceOf(Promise);
 

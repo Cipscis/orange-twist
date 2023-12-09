@@ -7,10 +7,8 @@
 }
 
 @layer theme {
-	@include meta.load-css("theme/animation");
 	@include meta.load-css("theme/base");
-	@include meta.load-css("theme/palette");
-	@include meta.load-css("theme/typography");
+	@include meta.load-css("patterns/base");
 }
 
 @layer components {

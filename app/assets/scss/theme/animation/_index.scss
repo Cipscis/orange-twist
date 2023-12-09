@@ -1,10 +1,2 @@
-////
-/// @see `CSSKeyframes.ts` for where the names of these animations are exposed to JavaScript.
-////
-
-@forward "spin";
-@forward "slide";
-@forward "screen";
-
 @forward "speed" as speed-*;
 @forward "easing" as easing-*;

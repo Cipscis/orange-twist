@@ -1,6 +1,0 @@
-@use "../theme/palette";
-
-body {
-	@include palette.primary;
-	accent-color: var(--accent);
-}
