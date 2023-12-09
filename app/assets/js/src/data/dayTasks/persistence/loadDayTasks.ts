@@ -30,12 +30,11 @@ export async function loadDayTasks(): Promise<void> {
 	const serialisedDayTasksInfo = localStorage.getItem('day-tasks');
 
 	if (!serialisedDayTasksInfo) {
+		dayTasksRegister.clear();
 		return;
 	}
 
 	const persistedDayTasksInfo = JSON.parse(serialisedDayTasksInfo) as unknown;
-
-	dayTasksRegister.clear();
 
 	if (!(
 		Array.isArray(persistedDayTasksInfo) &&
@@ -44,5 +43,6 @@ export async function loadDayTasks(): Promise<void> {
 		throw new Error(`Persisted day tasks data is invalid: ${serialisedDayTasksInfo}`);
 	}
 
+	dayTasksRegister.clear();
 	dayTasksRegister.set(persistedDayTasksInfo);
 }

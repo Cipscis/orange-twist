@@ -1,4 +1,5 @@
 export { animate } from './animate';
+export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 export { classNames } from './classNames';
 export { escapeRegExpString } from './escapeRegExpString';
 export { getCurrentDateDayName } from './getCurrentDateDayName';

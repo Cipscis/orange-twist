@@ -18,12 +18,14 @@ const firstTaskInfo: TaskInfo = {
 	id: 1,
 	name: 'First task',
 	status: TaskStatus.TODO,
+	note: '',
 };
 
 const secondTaskInfo: TaskInfo = {
 	id: 1,
 	name: 'Second task',
 	status: TaskStatus.IN_PROGRESS,
+	note: 'Note',
 };
 
 describe('loadTasks', () => {

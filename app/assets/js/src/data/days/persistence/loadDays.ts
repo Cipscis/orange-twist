@@ -16,12 +16,11 @@ export async function loadDays(): Promise<void> {
 	const serialisedDaysInfo = localStorage.getItem('days');
 
 	if (!serialisedDaysInfo) {
+		daysRegister.clear();
 		return;
 	}
 
 	const persistedDaysInfo = JSON.parse(serialisedDaysInfo) as unknown;
-
-	daysRegister.clear();
 
 	if (!(
 		Array.isArray(persistedDaysInfo) &&
@@ -32,5 +31,6 @@ export async function loadDays(): Promise<void> {
 		throw new Error(`Persisted days data is invalid: ${serialisedDaysInfo}`);
 	}
 
+	daysRegister.clear();
 	daysRegister.set(persistedDaysInfo);
 }
