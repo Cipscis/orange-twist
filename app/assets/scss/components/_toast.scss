@@ -22,7 +22,7 @@
 
 	@include palette.secondary;
 	@include typography.base-body;
-	border-radius: radius.$relative;
+	border-radius: radius.$sm-rel;
 	overflow: hidden;
 
 	animation: appearUp animation.$speed-medium animation.$easing-default;

@@ -1,19 +1,30 @@
+@use "../theme/animation";
 @use "../theme/palette";
+@use "../theme/radius";
+@use "../theme/spacing";
+
 @use "../tools/reset" as *;
 
-@mixin button($active: true) {
+@mixin button($active: true, $palette: secondary) {
 	@include reset;
 	@if ($active == true) {
 		cursor: pointer;
 	}
 
-	padding: 0.5em 0.7em;
-	border-radius: 0.2em;
+	padding-block: spacing.$sm-rel;
+	padding-inline: spacing.$md-rel;
+	border-radius: radius.$sm-rel;
 
-	@include palette.secondary(active);
+	@if ($palette == primary) {
+		@include palette.primary($active);
+	} @else if ($palette == secondary) {
+		@include palette.secondary($active);
+	} @else if ($palette == tertiary) {
+		@include palette.tertiary($active);
+	}
 	transition:
-		0.2s background-color ease-in-out,
-		0.2s color ease-in-out;
+		background-color animation.$speed-fast animation.$easing-default,
+		color animation.$speed-fast animation.$easing-default;
 }
 
 .button {

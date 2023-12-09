@@ -74,7 +74,7 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 				/>
 			</label>
 
-			<button type="submit">Okay</button>
+			<button type="submit" class="modal-prompt__button">Okay</button>
 		</form>
 	</Modal>;
 }

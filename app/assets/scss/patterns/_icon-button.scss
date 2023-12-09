@@ -1,6 +1,10 @@
+@use "../theme/animation";
 @use "../theme/palette";
+@use "../theme/radius";
+
 @use "../tools/reset" as *;
 
+/// A button that contains a single icon, which should be centred.
 @mixin icon-button($active: true) {
 	@include reset;
 	@if ($active == true) {
@@ -12,10 +16,10 @@
 
 	height: 2em;
 	aspect-ratio: 1 / 1;
-	border-radius: 25%;
+	border-radius: radius.$md-rel;
 
 	@include palette.secondary($active);
 	transition:
-		0.2s background-color ease-in-out,
-		0.2s color ease-in-out;
+		background-color animation.$speed-fast animation.$easing-default,
+		color animation.$speed-fast animation.$easing-default;
 }
