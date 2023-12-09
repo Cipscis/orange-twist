@@ -10,6 +10,18 @@ $weight-regular: 400;
 $weight-semibold: 600;
 $weight-bold: 700;
 
+// Line heights
+$_line-height-heading: 1.5;
+$_line-height-body: 1.4;
+
+@mixin _font-size($size, $line-height) {
+	--font-size: #{$size};
+	font-size: var(--font-size, #{$size});
+
+	--line-height: #{$line-height};
+	line-height: var(--line-height, #{$line-height});
+}
+
 /////////////
 // Heading //
 /////////////
@@ -17,28 +29,19 @@ $weight-bold: 700;
 @mixin heading-1 {
 	font-family: $family-heading;
 	font-weight: $weight-bold;
-	font-size: rem(36px);
-
-	--line-height: 1.5;
-	line-height: var(--line-height, 1.5);
+	@include _font-size(rem(36px), $_line-height-heading);
 }
 
 @mixin heading-2 {
 	font-family: $family-heading;
 	font-weight: $weight-bold;
-	font-size: rem(32px);
-
-	--line-height: 1.5;
-	line-height: var(--line-height, 1.5);
+	@include _font-size(rem(32px), $_line-height-heading);
 }
 
 @mixin heading-3 {
 	font-family: $family-heading;
 	font-weight: $weight-bold;
-	font-size: rem(28px);
-
-	--line-height: 1.5;
-	line-height: var(--line-height, 1.5);
+	@include _font-size(rem(28px), $_line-height-heading);
 }
 
 //////////
@@ -48,17 +51,11 @@ $weight-bold: 700;
 @mixin base-body {
 	font-family: $family-base;
 	font-weight: $weight-regular;
-	font-size: rem(18px);
-
-	--line-height: 1.4;
-	line-height: var(--line-height, 1.4);
+	@include _font-size(rem(18px), $_line-height-body);
 }
 
 @mixin base-large {
 	font-family: $family-base;
 	font-weight: $weight-regular;
-	font-size: rem(32px);
-
-	--line-height: 1.4;
-	line-height: var(--line-height, 1.4);
+	@include _font-size(rem(32px), $_line-height-body);
 }

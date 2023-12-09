@@ -1,0 +1,28 @@
+@use "../tools" as *;
+
+/// Extra small spacing that doesn't scale with font size
+$xs-abs: 4px;
+/// Small spacing that doesn't scale with font size
+$sm-abs: 8px;
+/// Medium spacing that doesn't scale with font size
+$md-abs: 16px;
+/// Large spacing that doesn't scale with font size
+$lg-abs: 32px;
+
+/// Extra small spacing that scales with default font size
+$xs: rem($xs-abs);
+/// Small spacing that scales with default font size
+$sm: rem($sm-abs);
+/// Medium spacing that scales with default font size
+$md: rem($md-abs);
+/// Large spacing that scales with default font size
+$lg: rem($lg-abs);
+
+/// Extra small spacing that scales with current font size
+$xs-rel: em($xs-abs);
+/// Small spacing that scales with current font size
+$sm-rel: em($sm-abs);
+/// Medium spacing that scales with current font size
+$md-rel: em($md-abs);
+/// Large spacing that scales with current font size
+$lg-rel: em($lg-abs);

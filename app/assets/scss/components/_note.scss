@@ -1,5 +1,7 @@
-@use "../theme/typography";
 @use "../theme/palette";
+@use "../theme/spacing";
+@use "../theme/typography";
+
 @use "../patterns/icon-button" as *;
 
 .note {
@@ -8,7 +10,7 @@
 	width: 100%;
 
 	position: relative;
-	--_gutter: 0.5em;
+	--_gutter: #{spacing.$sm-rel};
 
 	textarea,
 	.content:not(:empty) {
@@ -27,7 +29,7 @@
 	// Stack them on top of each other
 	&::before,
 	textarea {
-		grid-area: 1 / -1 / -1 / -1;
+		grid-area: 1 / -1;
 
 		@include typography.base-body;
 		padding: var(--_gutter);
@@ -57,11 +59,12 @@
 .note__edit {
 	@include icon-button;
 
-	&:not(:first-child:last-child) {
+	&:not(:only-child) {
 		position: absolute;
 		bottom: 0;
 		right: 0;
 
+		// Make it focusable, but only visibly shown while focused
 		&:not(:focus) {
 			overflow: hidden;
 			width: 0;

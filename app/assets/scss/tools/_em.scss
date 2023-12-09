@@ -1,0 +1,16 @@
+@use "sass:math";
+
+/// Convert a value in `px` to an equivalent value in `em`, assuming a current font size of `16px`
+/// @param {length} $value - A `px` value to convert to `em`
+@function em($value) {
+	$value-units: $value * 0 + 1;
+	$value-unitless: math.div($value, $value-units);
+
+	// 16px is the default base font size
+	$base-font-size-unitless: 16;
+	$value-unitless-scaled: math.div($value-unitless, $base-font-size-unitless);
+
+	$value-scaled-em: $value-unitless-scaled * 1em;
+
+	@return $value-scaled-em;
+}
