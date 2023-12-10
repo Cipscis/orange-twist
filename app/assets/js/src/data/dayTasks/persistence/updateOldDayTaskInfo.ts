@@ -2,31 +2,23 @@ import { z } from 'zod';
 
 import { assertAllUnionMembersHandled } from 'util/index';
 
+import { isDayTaskInfo, type DayTaskInfo } from '../types/DayTaskInfo';
 import { TaskStatus } from 'types/TaskStatus';
-import { isTaskInfo, type TaskInfo } from './types/TaskInfo';
 
 /**
  * An array of tuples of schema version numbers and definitions,
  * used to match old data against to determine how it needs to
  * be updated.
  */
-const oldTaskInfoSchemas = [
+const oldDayTaskInfoSchemas = [
 	[
 		1,
 		z.object({
-			id: z.number(),
-			name: z.string(),
-			status: z.nativeEnum(TaskStatus),
-		}).strict(),
-	],
-	[
-		2,
-		z.object({
-			id: z.number(),
-			name: z.string(),
+			dayName: z.string(),
+			taskId: z.number(),
 			status: z.nativeEnum(TaskStatus),
 			note: z.string(),
-		}).strict(),
+		}),
 	],
 ] as const satisfies ReadonlyArray<readonly [number, z.ZodType]>;
 
@@ -34,31 +26,31 @@ const oldTaskInfoSchemas = [
  * Use an immediately indexed mapped function to construct a
  * discriminated union of tuple types that can be used to
  * return a linked version number and parsed value from
- * {@linkcode getOldTaskInfoSchemaVersion}.
+ * {@linkcode getOldDayTaskInfoSchemaVersion}.
  */
-type GetOldTaskInfoSchemaVersionResult = {
-	[K in keyof typeof oldTaskInfoSchemas & number]: [
-		typeof oldTaskInfoSchemas[K][0],
-		z.infer<typeof oldTaskInfoSchemas[K][1]>
+type GetOldDayTaskInfoSchemaVersionResult = {
+	[K in keyof typeof oldDayTaskInfoSchemas & number]: [
+		typeof oldDayTaskInfoSchemas[K][0],
+		z.infer<typeof oldDayTaskInfoSchemas[K][1]>
 	];
-}[keyof typeof oldTaskInfoSchemas & number];
+}[keyof typeof oldDayTaskInfoSchemas & number];
 
 /**
- * Attempts to determine which old task schema version some
+ * Attempts to determine which old day task schema version some
  * unknown data matches. If a match is found, returns a tuple
  * of the version number and parsed data.
  *
  * If no match is found, throws an error.
  */
-function getOldTaskInfoSchemaVersion(val: unknown): GetOldTaskInfoSchemaVersionResult {
-	for (const [version, schema] of oldTaskInfoSchemas) {
+function getOldDayTaskInfoSchemaVersion(val: unknown): GetOldDayTaskInfoSchemaVersionResult {
+	for (const [version, schema] of oldDayTaskInfoSchemas) {
 		const parsedSchema = schema.safeParse(val);
 		if (parsedSchema.success) {
 			return [version, parsedSchema.data];
 		}
 	}
 
-	throw new Error('No valid old task info recognised');
+	throw new Error('No valid old day task info recognised');
 }
 
 /**
@@ -66,28 +58,25 @@ function getOldTaskInfoSchemaVersion(val: unknown): GetOldTaskInfoSchemaVersionR
  *
  * If the data doesn't match a previous schema, throws an error.
  */
-export function updateOldTaskInfo(val: unknown): TaskInfo {
-	// Once we've constructed valid task info, stop updating
-	if (isTaskInfo(val)) {
+export function updateOldDayTaskInfo(val: unknown): DayTaskInfo {
+	// Once we've constructed valid day task info, stop updating
+	if (isDayTaskInfo(val)) {
 		return val;
 	}
 
-	const [oldTaskInfoVersion, oldVal] = getOldTaskInfoSchemaVersion(val);
+	const [oldDayTaskInfoVersion, oldVal] = getOldDayTaskInfoSchemaVersion(val);
 
 	let newVal: unknown;
 	// Based on the detected old schema version,
 	// update the data to the next version
-	if (oldTaskInfoVersion === 1) {
-		newVal = {
-			...oldVal,
-			note: '',
-		};
-	} else if (oldTaskInfoVersion === 2) {
+	// Based on the detected old schema version,
+	// update the data to the next version
+	if (oldDayTaskInfoVersion === 1) {
 		// No migration currently needed
 	} else {
-		assertAllUnionMembersHandled(oldTaskInfoVersion);
+		assertAllUnionMembersHandled(oldDayTaskInfoVersion);
 	}
 
 	// Update recursively in case multiple migration steps are needed
-	return updateOldTaskInfo(newVal);
+	return updateOldDayTaskInfo(newVal);
 }

@@ -1,5 +1,4 @@
 import { tasksRegister } from '../tasksRegister';
-import { isTaskInfo, type TaskInfo } from '../types/TaskInfo';
 import { updateOldTaskInfo } from '../updateOldTaskInfo';
 
 /**
@@ -9,12 +8,14 @@ import { updateOldTaskInfo } from '../updateOldTaskInfo';
  * @returns A Promise which resolves when tasks info has finished loading,
  * or rejects when tasks info fails to load.
  */
-export async function loadTasks(): Promise<void> {
+export async function loadTasks(serialisedTasksInfo?: string): Promise<void> {
 	// Until we use an asynchronous API to store this data, emulate
 	// it by using the microtask queue.
 	await new Promise<void>((resolve) => queueMicrotask(resolve));
 
-	const serialisedTasksInfo = localStorage.getItem('tasks');
+	if (typeof serialisedTasksInfo === 'undefined') {
+		serialisedTasksInfo = localStorage.getItem('tasks') ?? undefined;
+	}
 
 	if (!serialisedTasksInfo) {
 		tasksRegister.clear();
