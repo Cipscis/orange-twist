@@ -131,4 +131,23 @@ describe('loadDayTasks', () => {
 			['2023-11-13_2', secondDayTaskInfo],
 		]);
 	});
+
+	test('can be passed serialised data as an argument', async () => {
+		await loadDayTasks(JSON.stringify([
+			['2023-12-10_1', {
+				dayName: '2023-12-10',
+				taskId: 1,
+				status: TaskStatus.IN_PROGRESS,
+				note: '',
+			}],
+		]));
+		expect(Array.from(dayTasksRegister.entries())).toEqual([
+			['2023-12-10_1', {
+				dayName: '2023-12-10',
+				taskId: 1,
+				status: TaskStatus.IN_PROGRESS,
+				note: '',
+			}],
+		]);
+	});
 });
