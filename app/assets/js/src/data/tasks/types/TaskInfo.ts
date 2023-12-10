@@ -7,6 +7,7 @@ export const taskInfoSchema = z.object({
 	id: z.number(),
 	name: z.string(),
 	status: z.nativeEnum(TaskStatus),
+	note: z.string(),
 });
 
 /**

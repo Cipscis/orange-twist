@@ -1,0 +1,5 @@
+@use "../theme/spacing";
+
+.task-detail__note {
+	margin-top: spacing.$sm;
+}

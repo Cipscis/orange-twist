@@ -113,4 +113,21 @@ describe('loadDays', () => {
 			['2023-11-10', { name: '2023-11-10', ...tenthDayInfo }],
 		]);
 	});
+
+	test('can be passed serialised data as an argument', async () => {
+		await loadDays(JSON.stringify([
+			['2023-12-10', {
+				name: '2023-12-10',
+				note: '',
+				tasks: [],
+			}],
+		]));
+		expect(Array.from(daysRegister.entries())).toEqual([
+			['2023-12-10', {
+				name: '2023-12-10',
+				note: '',
+				tasks: [],
+			}],
+		]);
+	});
 });
