@@ -14,3 +14,5 @@ export {
 	loadDayTasks,
 	saveDayTasks,
 } from './persistence';
+
+export { encodeDayTaskKey } from './util';

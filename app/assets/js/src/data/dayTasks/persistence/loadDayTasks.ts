@@ -35,7 +35,7 @@ export async function loadDayTasks(serialisedDayTasksInfo?: string): Promise<voi
 		return;
 	}
 
-	const persistedDayTasksInfo = JSON.parse(serialisedDayTasksInfo) as unknown;
+	const persistedDayTasksInfo = JSON.parse(serialisedDayTasksInfo);
 
 	if (!(
 		Array.isArray(persistedDayTasksInfo) &&

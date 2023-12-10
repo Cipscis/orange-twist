@@ -1,5 +1,6 @@
 export { animate } from './animate';
 export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
+export { chooseFile } from './chooseFile';
 export { classNames } from './classNames';
 export { escapeRegExpString } from './escapeRegExpString';
 export { getCurrentDateDayName } from './getCurrentDateDayName';
@@ -8,8 +9,8 @@ export { getPromiseWithResolver } from './getPromiseWithResolver';
 export { isValidDateString } from './isValidDateString';
 export { isZodSchemaType } from './isZodSchemaType';
 export { nodeHasAncestor } from './nodeHasAncestor';
-export { useAsyncData } from './useAsyncData';
-export type { AsyncDataState } from './useAsyncData';
+export { readFileAsString } from './readFileAsString';
+export { useAsyncData, type AsyncDataState } from './useAsyncData';
 export { useBlurCallback } from './useBlurCallback';
 export { useViewTransition } from './useViewTransition';
 export { useCloseWatcher } from './useCloseWatcher';
