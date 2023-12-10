@@ -30,6 +30,7 @@ describe('setTaskInfo', () => {
 			{
 				name: 'Task name',
 				status: TaskStatus.IN_PROGRESS,
+				note: 'Task note',
 			} satisfies Omit<TaskInfo, 'id'> // <- Ensure we're testing every option
 		);
 
@@ -37,6 +38,7 @@ describe('setTaskInfo', () => {
 			id: 1,
 			name: 'Task name',
 			status: TaskStatus.IN_PROGRESS,
+			note: 'Task note',
 		});
 	});
 
@@ -44,6 +46,7 @@ describe('setTaskInfo', () => {
 		setTaskInfo(1, {
 			name: 'Task name',
 			status: TaskStatus.TODO,
+			note: 'Task note',
 		} satisfies Omit<TaskInfo, 'id'>);
 
 		setTaskInfo(1, {
@@ -54,6 +57,7 @@ describe('setTaskInfo', () => {
 			id: 1,
 			name: 'Updated name',
 			status: TaskStatus.TODO,
+			note: 'Task note',
 		});
 	});
 

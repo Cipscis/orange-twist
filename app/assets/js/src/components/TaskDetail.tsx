@@ -1,10 +1,15 @@
 import { h, type JSX } from 'preact';
+import { useCallback } from 'preact/hooks';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
-import { useTaskInfo } from 'data/tasks';
-import { setDayTaskInfo, useAllDayTaskInfo } from 'data/dayTasks';
+import {
+	setDayTaskInfo,
+	setTaskInfo,
+	useAllDayTaskInfo,
+	useTaskInfo,
+} from 'data';
 
 import { Note } from './shared/Note';
 import { Markdown } from './shared/Markdown';
@@ -26,6 +31,15 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 	const taskInfo = useTaskInfo(taskId);
 	const dayTasksInfo = useAllDayTaskInfo({ taskId });
 
+	const setTaskNote = useCallback(
+		(note: string) => {
+			setTaskInfo(taskId, { note });
+		},
+		[taskId]
+	);
+
+	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
+
 	if (!taskInfo) {
 		return null;
 	}
@@ -34,6 +48,12 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 		<Markdown
 			content={`<h2 class="orange-twist__title">${taskInfo.name}</h2>`}
 			inline
+		/>
+		<Note
+			class="task-detail__note"
+			note={taskInfo.note}
+			onNoteChange={setTaskNote}
+			saveChanges={saveChanges}
 		/>
 		{dayTasksInfo.map(({ dayName, taskId, note }, i, arr) => (
 			<details

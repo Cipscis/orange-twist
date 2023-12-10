@@ -40,6 +40,7 @@ describe('createTask', () => {
 			id: newId,
 			name: 'New task',
 			status: TaskStatus.TODO,
+			note: '',
 		});
 	});
 
@@ -52,17 +53,20 @@ describe('createTask', () => {
 			id: newIdPartial,
 			name: 'Custom task name',
 			status: TaskStatus.TODO,
+			note: '',
 		});
 
 		const newIdFull = createTask({
 			name: 'Custom task name',
 			status: TaskStatus.IN_PROGRESS,
+			note: 'Custom task note',
 		} satisfies Omit<TaskInfo, 'id'>);
 
 		expect(getTaskInfo(newIdFull)).toEqual({
 			id: newIdFull,
 			name: 'Custom task name',
 			status: TaskStatus.IN_PROGRESS,
+			note: 'Custom task note',
 		});
 	});
 

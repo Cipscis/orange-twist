@@ -18,12 +18,14 @@ const firstTaskInfo: TaskInfo = {
 	id: 1,
 	name: 'First task',
 	status: TaskStatus.TODO,
+	note: '',
 };
 
 const secondTaskInfo: TaskInfo = {
 	id: 1,
 	name: 'Second task',
 	status: TaskStatus.IN_PROGRESS,
+	note: 'Note',
 };
 
 describe('loadTasks', () => {
@@ -43,8 +45,7 @@ describe('loadTasks', () => {
 
 		expect(Array.from(tasksRegister.entries())).toEqual([]);
 
-		const loadTasksResult = await loadTasksPromise;
-		expect(loadTasksResult).toBeUndefined();
+		await expect(loadTasksPromise).resolves.toBeUndefined();
 
 		expect(Array.from(tasksRegister.entries())).toEqual([
 			[1, firstTaskInfo],
@@ -62,8 +63,7 @@ describe('loadTasks', () => {
 
 		expect(Array.from(tasksRegister.entries())).toEqual([]);
 
-		const loadTasksResult = await loadTasksPromise;
-		expect(loadTasksResult).toBeUndefined();
+		await expect(loadTasksPromise).resolves.toBeUndefined();
 
 		expect(Array.from(tasksRegister.entries())).toEqual([]);
 	});
@@ -117,6 +117,25 @@ describe('loadTasks', () => {
 		expect(Array.from(tasksRegister.entries())).toEqual([
 			[1, firstTaskInfo],
 			[2, secondTaskInfo],
+		]);
+	});
+
+	test('can be passed serialised data as an argument', async () => {
+		await loadTasks(JSON.stringify([
+			[1, {
+				id: 1,
+				name: 'Task name',
+				status: TaskStatus.IN_PROGRESS,
+				note: '',
+			}],
+		]));
+		expect(Array.from(tasksRegister.entries())).toEqual([
+			[1, {
+				id: 1,
+				name: 'Task name',
+				status: TaskStatus.IN_PROGRESS,
+				note: '',
+			}],
 		]);
 	});
 });
