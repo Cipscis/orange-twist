@@ -73,6 +73,7 @@ export function updateOldDayTaskInfo(val: unknown): DayTaskInfo {
 	// update the data to the next version
 	if (oldDayTaskInfoVersion === 1) {
 		// No migration currently needed
+		newVal = oldVal;
 	} else {
 		assertAllUnionMembersHandled(oldDayTaskInfoVersion);
 	}

@@ -84,6 +84,7 @@ export function updateOldTaskInfo(val: unknown): TaskInfo {
 		};
 	} else if (oldTaskInfoVersion === 2) {
 		// No migration currently needed
+		newVal = oldVal;
 	} else {
 		assertAllUnionMembersHandled(oldTaskInfoVersion);
 	}
