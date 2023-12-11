@@ -33,6 +33,4 @@ export async function importData(): Promise<void> {
 		ui.alert('Failed to reload data after failed import. Please refresh');
 		return;
 	}
-
-	fireCommand(Command.DATA_SAVE);
 }
