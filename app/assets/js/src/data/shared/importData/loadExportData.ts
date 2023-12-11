@@ -1,5 +1,8 @@
 import type { ExportData } from '../types/ExportData';
 
+import { Command } from 'types/Command';
+import { fireCommand } from 'registers/commands';
+
 import { loadDays } from '../../days';
 import { loadTasks } from '../../tasks';
 import { loadDayTasks } from '../../dayTasks';
@@ -26,7 +29,8 @@ export async function loadExportData(
 		if (backup) {
 			// If something went wrong, try to restore the backup
 			await loadExportData(backup, true);
-			return;
+			// Then re-throw error so it bubbles up
+			throw e;
 		}
 
 		// If restoring the backup failed, try to load persisted data again
@@ -36,4 +40,6 @@ export async function loadExportData(
 			loadDayTasks(),
 		]);
 	}
+
+	fireCommand(Command.DATA_SAVE);
 }
