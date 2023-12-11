@@ -1,6 +1,8 @@
 import { chooseFile, readFileAsString } from 'util/index';
 import * as ui from 'ui';
 
+import { isExportData } from './types/ExportData';
+
 import { loadDays } from '../days';
 import { loadTasks } from '../tasks';
 import { loadDayTasks } from '../dayTasks';
@@ -21,14 +23,7 @@ export async function importData(): Promise<void> {
 		const dataString = await readFileAsString(file);
 		const data = JSON.parse(dataString);
 
-		// TODO: Use a Zod schema to validate this data
-		if (!(
-			data &&
-			typeof data === 'object' &&
-			'days' in data &&
-			'tasks' in data &&
-			'dayTasks' in data
-		)) {
+		if (!isExportData(data)) {
 			ui.alert('Cannot import invalid data');
 			return;
 		}
@@ -39,7 +34,6 @@ export async function importData(): Promise<void> {
 			loadDayTasks(JSON.stringify(data.dayTasks)),
 		]);
 	} catch (e) {
-		// TODO: Handle error
 		if (e instanceof Error) {
 			ui.alert(e.message);
 		}
