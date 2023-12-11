@@ -1,8 +1,5 @@
 import * as ui from 'ui';
 
-import { Command } from 'types/Command';
-import { fireCommand } from 'registers/commands';
-
 import { readExportDataFromFile } from './readExportDataFromFile';
 import { loadExportData } from './loadExportData';
 
@@ -31,6 +28,5 @@ export async function importData(): Promise<void> {
 		await loadExportData(data);
 	} catch (e) {
 		ui.alert('Failed to reload data after failed import. Please refresh');
-		return;
 	}
 }
