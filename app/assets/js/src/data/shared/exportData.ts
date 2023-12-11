@@ -7,15 +7,28 @@ import { getAllDayInfo } from '../days';
 import { encodeDayTaskKey, getAllDayTaskInfo } from '../dayTasks';
 
 /**
- * Export all data to a file.
+ * Write all data in memory to an ExportData object.
  */
-export function exportData(): void {
+function writeExportData(): ExportData {
 	const data: ExportData = {
-		days: getAllDayInfo().map((dayInfo) => [dayInfo.name, dayInfo]),
-		tasks: getAllTaskInfo().map((taskInfo) => [taskInfo.id, taskInfo]),
-		dayTasks: getAllDayTaskInfo().map((dayTaskInfo) => [encodeDayTaskKey(dayTaskInfo), dayTaskInfo]),
+		days: getAllDayInfo().map(
+			(dayInfo) => [dayInfo.name, dayInfo]
+		),
+		tasks: getAllTaskInfo().map(
+			(taskInfo) => [taskInfo.id, taskInfo]
+		),
+		dayTasks: getAllDayTaskInfo().map(
+			(dayTaskInfo) => [encodeDayTaskKey(dayTaskInfo), dayTaskInfo]
+		),
 	};
 
+	return data;
+}
+
+/**
+ * Save an ExportData object to a file.
+ */
+function saveExportDataAsFile(data: ExportData): void {
 	const blob = new Blob(
 		[JSON.stringify(data)],
 		{ type: 'application/json' }
@@ -29,4 +42,12 @@ export function exportData(): void {
 	downloadLink.click();
 
 	URL.revokeObjectURL(dataUrl);
+}
+
+/**
+ * Export all data to a file.
+ */
+export function exportData(): void {
+	const data = writeExportData();
+	saveExportDataAsFile(data);
 }
