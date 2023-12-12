@@ -46,7 +46,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 
 	return <section class="orange-twist__section">
 		<Markdown
-			content={`<h2 class="orange-twist__title">${taskInfo.name}</h2>`}
+			content={`## ${taskInfo.name}`}
 			inline
 		/>
 		<Note
