@@ -71,11 +71,8 @@ describe('loadExportData', () => {
 
 	test('returns a Promise that rejects when incorrect export data is passed', async () => {
 		const result = loadExportData({
-			// @ts-expect-error Checking invalid data
 			days: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			tasks: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			dayTasks: [[true, null]],
 		});
 
@@ -107,11 +104,8 @@ describe('loadExportData', () => {
 		setDayTaskInfo(testDayTask, testDayTask);
 
 		const result = loadExportData({
-			// @ts-expect-error Checking invalid data
 			days: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			tasks: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			dayTasks: [[true, null]],
 		});
 
@@ -156,11 +150,8 @@ describe('loadExportData', () => {
 		}, { forCurrentDay: false });
 
 		const result = loadExportData({
-			// @ts-expect-error Checking invalid data
 			days: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			tasks: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			dayTasks: [[true, null]],
 		});
 
@@ -191,7 +182,6 @@ describe('loadExportData', () => {
 
 		const result = loadExportData({
 			days: [[testDay.name, testDay]],
-			// @ts-expect-error Using old form of data
 			tasks: [[testTask.id, testTask]],
 			dayTasks: [[`${testDay.name}_${testTask.id}`, testDayTask]],
 		});

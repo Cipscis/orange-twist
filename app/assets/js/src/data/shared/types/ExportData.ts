@@ -5,8 +5,12 @@ import { isZodSchemaType } from 'util/index';
 import { dayInfoSchema } from 'data/days/types/DayInfo';
 import { taskInfoSchema } from 'data/tasks/types/TaskInfo';
 import { dayTaskInfoSchema } from 'data/dayTasks/types/DayTaskInfo';
+import { exportDataLikeSchema } from './ExportDataLike';
 
-const exportDataSchema = z.object({
+/**
+ * Strict export data format used when constructing export data.
+ */
+const exportDataSchema = exportDataLikeSchema.extend({
 	days: z.array(
 		z.tuple([
 			z.string(),
@@ -26,7 +30,6 @@ const exportDataSchema = z.object({
 		]),
 	),
 });
-
 export type ExportData = z.infer<typeof exportDataSchema>;
-
 export const isExportData = isZodSchemaType(exportDataSchema);
+
