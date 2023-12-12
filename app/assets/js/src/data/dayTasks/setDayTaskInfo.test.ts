@@ -46,6 +46,7 @@ describe('setDayTaskInfo', () => {
 			name: 'New task',
 			status: TaskStatus.IN_PROGRESS,
 			note: '',
+			sortIndex: -1,
 		});
 
 		expect(getDayInfo('2023-11-12')).toEqual({
