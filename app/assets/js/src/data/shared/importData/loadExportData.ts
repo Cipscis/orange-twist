@@ -10,35 +10,41 @@ import { loadDayTasks } from '../../dayTasks';
 import { writeExportData } from '../exportData/writeExportData';
 
 /**
- * Load ExportData into memory.
+ * Try to load a set of data into memory. If it fails, the Promise
+ * it returns will reject.
  */
-export async function loadExportData(
-	data: ExportData,
-	isRevert = false
-): Promise<void> {
+async function restoreBackup(data: ExportData): Promise<void> {
+	await Promise.all([
+		loadDays(JSON.stringify(data.days)),
+		loadTasks(JSON.stringify(data.tasks)),
+		loadDayTasks(JSON.stringify(data.dayTasks)),
+	]);
+}
+
+/**
+ * Load ExportData into memory. If it fails, restores a backup.
+ */
+export async function loadExportData(data: ExportData): Promise<void> {
 	// If we're not reverting, take a backup
-	const backup = isRevert ? null : writeExportData();
+	const backup = writeExportData();
 
 	try {
-		await Promise.all([
-			loadDays(JSON.stringify(data.days)),
-			loadTasks(JSON.stringify(data.tasks)),
-			loadDayTasks(JSON.stringify(data.dayTasks)),
-		]);
+		await restoreBackup(data);
 	} catch (e) {
-		if (backup) {
+		try {
 			// If something went wrong, try to restore the backup
-			await loadExportData(backup, true);
-			// Then re-throw error so it bubbles up
-			throw e;
+			await restoreBackup(backup);
+		} catch (e) {
+			// If restoring the backup failed, try to load persisted data again
+			await Promise.all([
+				loadDays(),
+				loadTasks(),
+				loadDayTasks(),
+			]);
 		}
 
-		// If restoring the backup failed, try to load persisted data again
-		await Promise.all([
-			loadDays(),
-			loadTasks(),
-			loadDayTasks(),
-		]);
+		// Then re-throw error so it bubbles up
+		throw e;
 	}
 
 	fireCommand(Command.DATA_SAVE);
