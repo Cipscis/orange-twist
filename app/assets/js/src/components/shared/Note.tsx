@@ -199,6 +199,26 @@ export function Note(props: NoteProps): JSX.Element {
 		};
 	}, [isEditing, leaveEditingMode]);
 
+	// Prompt the user about losing unsaved changes if the tab is closed in edit mode
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		if (isEditing) {
+			window.addEventListener(
+				'beforeunload',
+				(e) => {
+					if (dirtyFlag.current) {
+						e.preventDefault();
+					}
+				},
+				{ signal }
+			);
+		}
+
+		return () => controller.abort();
+	}, [isEditing]);
+
 	// Leave editing mode when losing focus, but not when the tab loses focus
 	useBlurCallback(
 		textareaRef,
@@ -258,7 +278,9 @@ export function Note(props: NoteProps): JSX.Element {
 					class="note__edit"
 					title="Edit note"
 					onClick={() => setIsEditing(true)}
-				>✏️</button>
+				>
+					<span aria-hidden>✏️</span>
+				</button>
 			</div>
 		}
 	</div>;
