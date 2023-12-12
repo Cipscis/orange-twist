@@ -84,4 +84,6 @@ describe('TaskList', () => {
 			'Task two',
 		]);
 	});
+
+	test.todo('fires onreorder event when sorting');
 });
