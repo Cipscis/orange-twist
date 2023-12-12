@@ -57,8 +57,13 @@ export function TaskList(
 			};
 		}
 
-		// Otherwise, don't apply any sorting rules
-		return null;
+		// Otherwise, sort by sortIndex
+		return (
+			{ sortIndex: indexA }: TaskInfo,
+			{ sortIndex: indexB }: TaskInfo
+		) => {
+			return indexA - indexB;
+		};
 	}, [matcher]);
 
 	// Sort task info if necessary
