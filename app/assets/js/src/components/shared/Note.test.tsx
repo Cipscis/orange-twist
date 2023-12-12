@@ -34,7 +34,7 @@ describe('Note', () => {
 
 	test('renders edit button if no note', () => {
 		const {
-			queryByTitle,
+			getByRole,
 		} = render(
 			<Note
 				note={null}
@@ -43,7 +43,7 @@ describe('Note', () => {
 			/>
 		);
 
-		const editButton = queryByTitle('Edit note');
+		const editButton = getByRole('button', { name: 'Edit note' });
 		expect(editButton).toBeInTheDocument();
 	});
 
@@ -81,8 +81,7 @@ describe('Note', () => {
 		const note = 'Test note';
 
 		const {
-			queryByRole,
-			queryByTitle,
+			getByRole,
 		} = render(
 			<Note
 				note={note}
@@ -91,10 +90,10 @@ describe('Note', () => {
 			/>
 		);
 
-		const editButton = queryByTitle('Edit note')!;
+		const editButton = getByRole('button', { name: 'Edit note' });
 		await user.click(editButton);
 
-		const textarea = queryByRole('textbox') as HTMLTextAreaElement;
+		const textarea = getByRole('textbox') as HTMLTextAreaElement;
 
 		expect(textarea).toBeInTheDocument();
 		expect(textarea.value).toBe(note);
@@ -107,7 +106,7 @@ describe('Note', () => {
 
 		const {
 			queryByRole,
-			queryByText,
+			getByText,
 		} = render(
 			<Note
 				note={note}
@@ -116,8 +115,8 @@ describe('Note', () => {
 			/>
 		);
 
-		const noteContent = queryByText(note);
-		await user.click(noteContent!);
+		const noteContent = getByText(note);
+		await user.click(noteContent);
 
 		const textarea = queryByRole('textbox') as HTMLTextAreaElement;
 
@@ -132,8 +131,8 @@ describe('Note', () => {
 		const noteWithLink = 'This note has [a link](#)';
 
 		const {
+			getByRole,
 			queryByRole,
-			queryByTitle,
 		} = render(
 			<Note
 				note={noteWithLink}
@@ -142,16 +141,16 @@ describe('Note', () => {
 			/>
 		);
 
-		const linkInContent = queryByRole('link')!;
+		const linkInContent = getByRole('link');
 		expect(linkInContent).toBeInTheDocument();
 		await user.click(linkInContent);
 
 		expect(queryByRole('textbox')).not.toBeInTheDocument();
 
-		const editButton = queryByTitle('Edit note')!;
+		const editButton = getByRole('button', { name: 'Edit note' });
 		await user.click(editButton);
 
-		const textarea = queryByRole('textbox') as HTMLTextAreaElement;
+		const textarea = getByRole('textbox') as HTMLTextAreaElement;
 
 		expect(textarea).toBeInTheDocument();
 		expect(textarea.value).toBe(noteWithLink);
@@ -162,8 +161,7 @@ describe('Note', () => {
 		const spy = jest.fn();
 
 		const {
-			queryByRole,
-			queryByTitle,
+			getByRole,
 		} = render(
 			<Note
 				note={null}
@@ -172,10 +170,10 @@ describe('Note', () => {
 			/>
 		);
 
-		const editButton = queryByTitle('Edit note')!;
+		const editButton = getByRole('button', { name: 'Edit note' });
 		await user.click(editButton);
 
-		const textarea = queryByRole('textbox') as HTMLTextAreaElement;
+		const textarea = getByRole('textbox') as HTMLTextAreaElement;
 		await user.type(textarea, 'abcd');
 
 		expect(spy).toHaveBeenCalledWith('a');
@@ -196,8 +194,8 @@ describe('Note', () => {
 		);
 
 		const {
+			getByRole,
 			queryByRole,
-			queryByTitle,
 		} = render(
 			<Note
 				note={null}
@@ -206,7 +204,7 @@ describe('Note', () => {
 			/>
 		);
 
-		const editButton = queryByTitle('Edit note')!;
+		const editButton = getByRole('button', { name: 'Edit note' });
 		await user.click(editButton);
 		expect(queryByRole('textbox')).toBeInTheDocument();
 
@@ -229,8 +227,8 @@ describe('Note', () => {
 		const user = userEvent.setup();
 
 		const {
+			getByRole,
 			queryByRole,
-			queryByTitle,
 		} = render(
 			<Note
 				note={null}
@@ -239,7 +237,7 @@ describe('Note', () => {
 			/>
 		);
 
-		const editButton = queryByTitle('Edit note')!;
+		const editButton = getByRole('button', { name: 'Edit note' });
 		await user.click(editButton);
 
 		expect(queryByRole('textbox')).toBeInTheDocument();
@@ -254,8 +252,7 @@ describe('Note', () => {
 		const spy = jest.fn();
 
 		const {
-			queryByRole,
-			queryByTitle,
+			getByRole,
 		} = render(
 			<Note
 				note={null}
@@ -264,9 +261,9 @@ describe('Note', () => {
 			/>
 		);
 
-		const editButton = queryByTitle('Edit note')!;
+		const editButton = getByRole('button', { name: 'Edit note' });
 		await user.click(editButton);
-		const textarea = queryByRole('textbox');
+		const textarea = getByRole('textbox');
 
 		expect(textarea).toHaveFocus();
 
@@ -282,8 +279,8 @@ describe('Note', () => {
 		const spy = jest.fn();
 
 		const {
+			getByRole,
 			queryByRole,
-			queryByTitle,
 		} = render(
 			<Note
 				note={null}
@@ -292,7 +289,7 @@ describe('Note', () => {
 			/>
 		);
 
-		const editButton = queryByTitle('Edit note')!;
+		const editButton = getByRole('button', { name: 'Edit note' });
 		await user.click(editButton);
 
 		expect(queryByRole('textbox')).toBeInTheDocument();
@@ -329,9 +326,9 @@ describe('Note', () => {
 			/>;
 		};
 
-		const { getByRole, getByTitle } = render(<NoteContainer />);
+		const { getByRole } = render(<NoteContainer />);
 
-		const editButton = getByTitle('Edit note')!;
+		const editButton = getByRole('button', { name: 'Edit note' });
 		await user.click(editButton);
 
 		const textarea = getByRole('textbox') as HTMLTextAreaElement;
