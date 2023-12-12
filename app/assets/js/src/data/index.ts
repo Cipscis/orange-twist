@@ -47,5 +47,7 @@ export {
 
 export {
 	clear,
+	exportData,
 	getTaskStatusForDay,
+	importData,
 } from './shared';

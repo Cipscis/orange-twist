@@ -22,7 +22,7 @@ export async function loadTasks(serialisedTasksInfo?: string): Promise<void> {
 		return;
 	}
 
-	const persistedTasksInfo = JSON.parse(serialisedTasksInfo) as unknown;
+	const persistedTasksInfo = JSON.parse(serialisedTasksInfo);
 
 	if (!(
 		Array.isArray(persistedTasksInfo) &&
