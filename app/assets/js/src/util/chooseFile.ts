@@ -1,8 +1,6 @@
 /**
  * Prompt the user to select a file, and load it as a `File` object.
- * If the user doesn't select a file, this Promise will eventually
- * resolve to `null`, but that resolution may be delayed after the
- * file picker window is closed.
+ * If the user doesn't select a file, resolves to `null` instead.
  *
  * @param [type] A string to be used for an HTMLInputElement's "accept" attribute
  */

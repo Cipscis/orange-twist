@@ -10,10 +10,10 @@ import { loadDayTasks } from '../../dayTasks';
 import { writeExportData } from '../exportData/writeExportData';
 
 /**
- * Try to load a set of data into memory. If it fails, the Promise
- * it returns will reject.
+ * Try to load a set of data directly into memory.
+ * If it fails, the Promise it returns will reject.
  */
-async function restoreBackup(data: ExportData): Promise<void> {
+async function loadExportDataDirect(data: ExportData): Promise<void> {
 	await Promise.all([
 		loadDays(JSON.stringify(data.days)),
 		loadTasks(JSON.stringify(data.tasks)),
@@ -22,18 +22,19 @@ async function restoreBackup(data: ExportData): Promise<void> {
 }
 
 /**
- * Load ExportData into memory. If it fails, restores a backup.
+ * Try to load a set of data directly into memory.
+ * If it fails, restores a backup.
  */
 export async function loadExportData(data: ExportData): Promise<void> {
-	// If we're not reverting, take a backup
+	// Take a backup in case we hit an error
 	const backup = writeExportData();
 
 	try {
-		await restoreBackup(data);
+		await loadExportDataDirect(data);
 	} catch (e) {
 		try {
 			// If something went wrong, try to restore the backup
-			await restoreBackup(backup);
+			await loadExportDataDirect(backup);
 		} catch (e) {
 			// If restoring the backup failed, try to load persisted data again
 			await Promise.all([
