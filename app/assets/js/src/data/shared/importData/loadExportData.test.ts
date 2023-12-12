@@ -101,7 +101,7 @@ describe('loadExportData', () => {
 			status: TaskStatus.TODO,
 		};
 
-		setTaskInfo(testTask.id, testTask);
+		setTaskInfo(testTask.id, testTask, { forCurrentDay: false });
 		setDayInfo(testDay.name, testDay);
 		setDayTaskInfo(testDayTask, testDayTask);
 
@@ -140,7 +140,7 @@ describe('loadExportData', () => {
 			status: TaskStatus.TODO,
 		};
 
-		setTaskInfo(testTask.id, testTask);
+		setTaskInfo(testTask.id, testTask, { forCurrentDay: false });
 		setDayInfo(testDay.name, testDay);
 		setDayTaskInfo(testDayTask, testDayTask);
 
@@ -151,7 +151,7 @@ describe('loadExportData', () => {
 		setTaskInfo(testTask.id, {
 			// @ts-expect-error Testing invalid data
 			id: 'Invalid id',
-		});
+		}, { forCurrentDay: false });
 
 		const result = loadExportData({
 			// @ts-expect-error Checking invalid data

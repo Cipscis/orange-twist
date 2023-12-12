@@ -21,7 +21,7 @@ describe('writeExportData', () => {
 			name: 'Test task',
 			note: 'Task note',
 			status: TaskStatus.TODO,
-		});
+		}, { forCurrentDay: false });
 		setDayInfo('2023-12-11', {
 			note: 'Day note',
 			tasks: [1],
