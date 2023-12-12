@@ -7,7 +7,7 @@ import { isExportData, type ExportData } from '../types/ExportData';
  * contents as ExportData.
  */
 export async function readExportDataFromFile(): Promise<ExportData | null> {
-	const file = await chooseFile();
+	const file = await chooseFile('application/json');
 	if (!file) {
 		return null;
 	}
