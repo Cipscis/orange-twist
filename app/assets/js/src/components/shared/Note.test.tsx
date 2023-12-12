@@ -364,5 +364,28 @@ describe('Note', () => {
 			window.dispatchEvent(event);
 			expect(event.defaultPrevented).toBe(true);
 		});
+
+		test('if there are no unsaved changes, does not cancel the event', async () => {
+			const user = userEvent.setup();
+
+			const note = 'Test note';
+
+			const {
+				getByRole,
+			} = render(
+				<Note
+					note={note}
+					onNoteChange={() => {}}
+					saveChanges={() => {}}
+				/>
+			);
+
+			const editButton = getByRole('button', { name: 'Edit note' });
+			await user.click(editButton);
+
+			const event = new Event('beforeunload', { cancelable: true });
+			window.dispatchEvent(event);
+			expect(event.defaultPrevented).toBe(false);
+		});
 	});
 });
