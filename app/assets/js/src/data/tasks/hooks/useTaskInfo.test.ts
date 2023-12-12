@@ -22,6 +22,7 @@ const firstTaskInfo: TaskInfo = {
 	name: 'First task',
 	status: TaskStatus.TODO,
 	note: '',
+	sortIndex: -1,
 };
 
 const secondTaskInfo: TaskInfo = {
@@ -29,6 +30,7 @@ const secondTaskInfo: TaskInfo = {
 	name: 'Second task',
 	status: TaskStatus.IN_PROGRESS,
 	note: 'Note',
+	sortIndex: -1,
 };
 
 const thirdTaskInfo: TaskInfo = {
@@ -36,6 +38,7 @@ const thirdTaskInfo: TaskInfo = {
 	name: 'Third task',
 	status: TaskStatus.COMPLETED,
 	note: 'Task note',
+	sortIndex: -1,
 };
 
 describe('useTaskInfo', () => {

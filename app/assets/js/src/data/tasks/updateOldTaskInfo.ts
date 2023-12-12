@@ -28,6 +28,16 @@ const oldTaskInfoSchemas = [
 			note: z.string(),
 		}).strict(),
 	],
+	[
+		3,
+		z.object({
+			id: z.number(),
+			name: z.string(),
+			status: z.nativeEnum(TaskStatus),
+			note: z.string(),
+			sortIndex: z.number(),
+		}).strict(),
+	],
 ] as const satisfies ReadonlyArray<readonly [number, z.ZodType]>;
 
 /**
@@ -83,6 +93,11 @@ export function updateOldTaskInfo(val: unknown): TaskInfo {
 			note: '',
 		};
 	} else if (oldTaskInfoVersion === 2) {
+		newVal = {
+			...oldVal,
+			sortIndex: -1,
+		};
+	} else if (oldTaskInfoVersion === 3) {
 		// No migration currently needed
 		newVal = oldVal;
 	} else {

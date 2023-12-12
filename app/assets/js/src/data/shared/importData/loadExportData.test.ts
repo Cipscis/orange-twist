@@ -88,6 +88,7 @@ describe('loadExportData', () => {
 			name: 'Task name',
 			note: 'Task note',
 			status: TaskStatus.TODO,
+			sortIndex: -1,
 		};
 		const testDay: DayInfo = {
 			name: '2023-12-11',
@@ -127,6 +128,7 @@ describe('loadExportData', () => {
 			name: 'Task name',
 			note: 'Task note',
 			status: TaskStatus.TODO,
+			sortIndex: -1,
 		};
 		const testDay: DayInfo = {
 			name: '2023-12-11',
@@ -199,6 +201,7 @@ describe('loadExportData', () => {
 		expect(getAllTaskInfo()).toEqual([{
 			...testTask,
 			note: '',
+			sortIndex: -1,
 		}]);
 		expect(getAllDayInfo()).toEqual([testDay]);
 		expect(getAllDayTaskInfo()).toEqual([testDayTask]);

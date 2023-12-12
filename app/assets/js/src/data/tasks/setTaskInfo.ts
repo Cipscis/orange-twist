@@ -10,6 +10,7 @@ const defaultTaskInfo = {
 	name: 'New task',
 	status: TaskStatus.TODO,
 	note: '',
+	sortIndex: -1,
 } as const satisfies Omit<TaskInfo, 'id'>;
 
 interface SetTaskInfoOptions {
@@ -51,6 +52,7 @@ export function setTaskInfo(
 		name: taskInfo.name ?? existingTaskInfo?.name ?? defaultTaskInfo.name,
 		status: taskInfo.status ?? existingTaskInfo?.status ?? defaultTaskInfo.status,
 		note: taskInfo.note ?? existingTaskInfo?.note ?? defaultTaskInfo.note,
+		sortIndex: taskInfo.sortIndex ?? existingTaskInfo?.sortIndex ?? defaultTaskInfo.sortIndex,
 	});
 
 	if (consolidatedOptions.forCurrentDay && taskInfo.status) {
