@@ -342,4 +342,30 @@ describe('Note', () => {
 		expect(spy).toHaveBeenCalledWith('cab');
 		expect(spy).toHaveBeenCalledWith('cdab');
 	});
+
+	describe('if the tab is unloaded while in editing mode', () => {
+		test('if there are unsaved changes, cancels the event', async () => {
+			const user = userEvent.setup();
+
+			const note = 'Test note';
+
+			const {
+				getByRole,
+			} = render(
+				<Note
+					note={note}
+					onNoteChange={() => {}}
+					saveChanges={() => {}}
+				/>
+			);
+
+			const editButton = getByRole('button', { name: 'Edit note' });
+			await user.click(editButton);
+			await user.keyboard('abcd');
+
+			const event = new Event('beforeunload', { cancelable: true });
+			window.dispatchEvent(event);
+			expect(event.defaultPrevented).toBe(true);
+		});
+	});
 });
