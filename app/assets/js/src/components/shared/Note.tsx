@@ -278,7 +278,9 @@ export function Note(props: NoteProps): JSX.Element {
 					class="note__edit"
 					title="Edit note"
 					onClick={() => setIsEditing(true)}
-				>✏️</button>
+				>
+					<span aria-hidden>✏️</span>
+				</button>
 			</div>
 		}
 	</div>;
