@@ -21,6 +21,9 @@ import {
 	loadDayTasks,
 	saveDayTasks,
 	setDayTaskInfo,
+
+	exportData,
+	importData,
 } from 'data';
 
 import {
@@ -34,7 +37,10 @@ import {
 	useKeyboardShortcut,
 } from 'registers/keyboard-shortcuts';
 
-import { getCurrentDateDayName, isValidDateString } from 'util/index';
+import {
+	getCurrentDateDayName,
+	isValidDateString,
+} from 'util/index';
 import * as ui from 'ui';
 
 import { CommandPalette } from './CommandPalette';
@@ -67,6 +73,8 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
+		registerCommand(Command.DATA_EXPORT, { name: 'Export data' });
+		registerCommand(Command.DATA_IMPORT, { name: 'Import data' });
 		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
 		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
 		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
@@ -133,7 +141,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	);
 
 	/**
-	 * Save all day and task data, while giving the user feedback.
+	 * Save all data, while giving the user feedback.
 	 */
 	const saveData = useCallback(
 		async () => {
@@ -155,6 +163,9 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	);
 	useCommand(Command.DATA_SAVE, saveData);
 	useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
+
+	useCommand(Command.DATA_EXPORT, exportData);
+	useCommand(Command.DATA_IMPORT, importData);
 
 	/**
 	 * Ask the user what day to add, then add it to the register.

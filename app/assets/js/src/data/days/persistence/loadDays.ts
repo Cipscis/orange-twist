@@ -22,7 +22,7 @@ export async function loadDays(serialisedDaysInfo?: string): Promise<void> {
 		return;
 	}
 
-	const persistedDaysInfo = JSON.parse(serialisedDaysInfo) as unknown;
+	const persistedDaysInfo = JSON.parse(serialisedDaysInfo);
 
 	if (!(
 		Array.isArray(persistedDaysInfo) &&
