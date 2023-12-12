@@ -6,6 +6,14 @@
 .content {
 	@include typography.base-body;
 
+	h1 {
+		@include typography.heading-1;
+	}
+
+	h2 {
+		@include typography.heading-2;
+	}
+
 	a {
 		@include palette.link;
 	}
