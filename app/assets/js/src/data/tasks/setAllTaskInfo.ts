@@ -7,9 +7,9 @@ import { getTaskInfo } from 'data';
 /**
  * Sets or updates task info for multiple tasks.
  */
-export function setAllTaskInfo(entries: [
+export function setAllTaskInfo(entries: readonly (readonly[
 	taskId: number, taskInfo: Partial<Omit<TaskInfo, 'id'>>
-][]): void {
+])[]): void {
 	const fullEntries = entries.map(([taskId, taskInfo]) => {
 		const existingTaskInfo = getTaskInfo(taskId);
 		if (existingTaskInfo) {

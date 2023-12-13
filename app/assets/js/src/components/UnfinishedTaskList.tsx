@@ -4,7 +4,7 @@ import { useCallback } from 'preact/hooks';
 import { classNames } from 'util/index';
 
 import { CompletedTaskStatuses } from 'types/TaskStatus';
-import { setTaskInfo, type TaskInfo } from 'data';
+import { setAllTaskInfo, type TaskInfo } from 'data';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -29,9 +29,10 @@ export function UnfinishedTaskList(): JSX.Element {
 			)}
 			className="orange-twist__task-list"
 			onReorder={(taskIds) => {
-				taskIds.forEach((taskId, sortIndex) => {
-					setTaskInfo(taskId, { sortIndex });
-				});
+				const entries = taskIds.map(
+					(taskId, sortIndex) => [taskId, { sortIndex }] as const
+				);
+				setAllTaskInfo(entries);
 				fireCommand(Command.DATA_SAVE);
 			}}
 		/>
