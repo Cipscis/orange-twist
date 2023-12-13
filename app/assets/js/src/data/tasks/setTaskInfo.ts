@@ -6,12 +6,17 @@ import { tasksRegister } from './tasksRegister';
 import { TaskStatus } from 'types/TaskStatus';
 import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
 
-const defaultTaskInfo = {
-	name: 'New task',
-	status: TaskStatus.TODO,
-	note: '',
-	sortIndex: -1,
-} as const satisfies Omit<TaskInfo, 'id'>;
+/**
+ * Determine default task info, used to fill in any blanks.
+ */
+function getDefaultTaskInfo(taskId: number): Omit<TaskInfo, 'id'> {
+	return {
+		name: 'New task',
+		status: TaskStatus.TODO,
+		note: '',
+		sortIndex: -Math.abs(taskId),
+	};
+}
 
 interface SetTaskInfoOptions {
 	/**
@@ -46,6 +51,7 @@ export function setTaskInfo(
 	};
 
 	const existingTaskInfo = tasksRegister.get(taskId);
+	const defaultTaskInfo = getDefaultTaskInfo(taskId);
 	tasksRegister.set(taskId, {
 		id: taskId,
 

@@ -65,6 +65,12 @@ describe('setTaskInfo', () => {
 		});
 	});
 
+	test('defaults sortIndex based on task ID', () => {
+		setTaskInfo(3, {});
+
+		expect(getTaskInfo(3)?.sortIndex).toBe(-3);
+	});
+
 	describe('when setting the status for a task', () => {
 		test('if the "forCurrentDay" option is absent or true, also updates the day task for the current day', () => {
 			const currentDayName = getCurrentDateDayName();
