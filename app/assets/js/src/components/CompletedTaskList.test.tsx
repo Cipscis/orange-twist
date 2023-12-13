@@ -55,6 +55,4 @@ describe('CompletedTaskList', () => {
 		expect(queryByText('Task one')).not.toBeInTheDocument();
 		expect(queryByText('Task four')).not.toBeInTheDocument();
 	});
-
-	test.todo('updates tasks\' sortIndices and saves when reordering');
 });
