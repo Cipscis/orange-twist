@@ -3,20 +3,8 @@ import type { TaskInfo } from './types';
 import { getCurrentDateDayName } from 'util/index';
 
 import { tasksRegister } from './tasksRegister';
-import { TaskStatus } from 'types/TaskStatus';
 import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
-
-/**
- * Determine default task info, used to fill in any blanks.
- */
-function getDefaultTaskInfo(taskId: number): Omit<TaskInfo, 'id'> {
-	return {
-		name: 'New task',
-		status: TaskStatus.TODO,
-		note: '',
-		sortIndex: -Math.abs(taskId),
-	};
-}
+import { getDefaultTaskInfo } from './getDefaultTaskInfo';
 
 interface SetTaskInfoOptions {
 	/**
@@ -51,15 +39,26 @@ export function setTaskInfo(
 	};
 
 	const existingTaskInfo = tasksRegister.get(taskId);
-	const defaultTaskInfo = getDefaultTaskInfo(taskId);
-	tasksRegister.set(taskId, {
-		id: taskId,
+	if (existingTaskInfo) {
+		tasksRegister.set(taskId, {
+			id: taskId,
 
-		name: taskInfo.name ?? existingTaskInfo?.name ?? defaultTaskInfo.name,
-		status: taskInfo.status ?? existingTaskInfo?.status ?? defaultTaskInfo.status,
-		note: taskInfo.note ?? existingTaskInfo?.note ?? defaultTaskInfo.note,
-		sortIndex: taskInfo.sortIndex ?? existingTaskInfo?.sortIndex ?? defaultTaskInfo.sortIndex,
-	});
+			name: taskInfo.name ?? existingTaskInfo?.name,
+			status: taskInfo.status ?? existingTaskInfo?.status,
+			note: taskInfo.note ?? existingTaskInfo?.note,
+			sortIndex: taskInfo.sortIndex ?? existingTaskInfo?.sortIndex,
+		});
+	} else {
+		const defaultTaskInfo = getDefaultTaskInfo(taskId);
+		tasksRegister.set(taskId, {
+			id: taskId,
+
+			name: taskInfo.name ?? defaultTaskInfo.name,
+			status: taskInfo.status ?? defaultTaskInfo.status,
+			note: taskInfo.note ?? defaultTaskInfo.note,
+			sortIndex: taskInfo.sortIndex ?? defaultTaskInfo.sortIndex,
+		});
+	}
 
 	if (consolidatedOptions.forCurrentDay && taskInfo.status) {
 		const dayName = getCurrentDateDayName();
