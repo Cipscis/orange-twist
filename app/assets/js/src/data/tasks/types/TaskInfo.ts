@@ -8,6 +8,8 @@ export const taskInfoSchema = z.object({
 	name: z.string(),
 	status: z.nativeEnum(TaskStatus),
 	note: z.string(),
+	/** Used for sorting tasks. */
+	sortIndex: z.number(),
 });
 
 /**

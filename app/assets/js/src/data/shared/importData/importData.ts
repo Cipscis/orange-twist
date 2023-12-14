@@ -15,6 +15,7 @@ export async function importData(): Promise<void> {
 			return await readExportDataFromFile();
 		} catch (e) {
 			ui.alert('Selected file doesn\'t contain valid data');
+			console.error(e);
 			return;
 		}
 	})();
