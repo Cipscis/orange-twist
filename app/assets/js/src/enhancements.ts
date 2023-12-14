@@ -6,4 +6,4 @@
  * libraries, to keep its file size to an absolute minimum.
  */
 
-navigator.serviceWorker?.register('/service-worker.js');
+navigator.serviceWorker?.register('/orange-twist/service-worker.js');
