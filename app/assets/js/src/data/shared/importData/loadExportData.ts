@@ -1,4 +1,4 @@
-import type { ExportData } from '../types/ExportData';
+import type { ExportDataLike } from '../types/ExportDataLike';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -13,7 +13,7 @@ import { writeExportData } from '../exportData/writeExportData';
  * Try to load a set of data directly into memory.
  * If it fails, the Promise it returns will reject.
  */
-async function loadExportDataDirect(data: ExportData): Promise<void> {
+async function loadExportDataDirect(data: ExportDataLike): Promise<void> {
 	await Promise.all([
 		loadDays(JSON.stringify(data.days)),
 		loadTasks(JSON.stringify(data.tasks)),
@@ -25,7 +25,7 @@ async function loadExportDataDirect(data: ExportData): Promise<void> {
  * Try to load a set of data directly into memory.
  * If it fails, restores a backup.
  */
-export async function loadExportData(data: ExportData): Promise<void> {
+export async function loadExportData(data: ExportDataLike): Promise<void> {
 	// Take a backup in case we hit an error
 	const backup = writeExportData();
 

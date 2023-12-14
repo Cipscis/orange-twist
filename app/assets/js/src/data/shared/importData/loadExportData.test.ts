@@ -71,11 +71,8 @@ describe('loadExportData', () => {
 
 	test('returns a Promise that rejects when incorrect export data is passed', async () => {
 		const result = loadExportData({
-			// @ts-expect-error Checking invalid data
 			days: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			tasks: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			dayTasks: [[true, null]],
 		});
 
@@ -88,6 +85,7 @@ describe('loadExportData', () => {
 			name: 'Task name',
 			note: 'Task note',
 			status: TaskStatus.TODO,
+			sortIndex: -1,
 		};
 		const testDay: DayInfo = {
 			name: '2023-12-11',
@@ -106,11 +104,8 @@ describe('loadExportData', () => {
 		setDayTaskInfo(testDayTask, testDayTask);
 
 		const result = loadExportData({
-			// @ts-expect-error Checking invalid data
 			days: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			tasks: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			dayTasks: [[true, null]],
 		});
 
@@ -127,6 +122,7 @@ describe('loadExportData', () => {
 			name: 'Task name',
 			note: 'Task note',
 			status: TaskStatus.TODO,
+			sortIndex: -1,
 		};
 		const testDay: DayInfo = {
 			name: '2023-12-11',
@@ -154,11 +150,8 @@ describe('loadExportData', () => {
 		}, { forCurrentDay: false });
 
 		const result = loadExportData({
-			// @ts-expect-error Checking invalid data
 			days: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			tasks: [[true, null]],
-			// @ts-expect-error Checking invalid data
 			dayTasks: [[true, null]],
 		});
 
@@ -189,7 +182,6 @@ describe('loadExportData', () => {
 
 		const result = loadExportData({
 			days: [[testDay.name, testDay]],
-			// @ts-expect-error Using old form of data
 			tasks: [[testTask.id, testTask]],
 			dayTasks: [[`${testDay.name}_${testTask.id}`, testDayTask]],
 		});
@@ -199,6 +191,7 @@ describe('loadExportData', () => {
 		expect(getAllTaskInfo()).toEqual([{
 			...testTask,
 			note: '',
+			sortIndex: -1,
 		}]);
 		expect(getAllDayInfo()).toEqual([testDay]);
 		expect(getAllDayTaskInfo()).toEqual([testDayTask]);

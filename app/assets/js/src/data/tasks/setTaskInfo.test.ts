@@ -31,6 +31,7 @@ describe('setTaskInfo', () => {
 				name: 'Task name',
 				status: TaskStatus.IN_PROGRESS,
 				note: 'Task note',
+				sortIndex: -1,
 			} satisfies Omit<TaskInfo, 'id'> // <- Ensure we're testing every option
 		);
 
@@ -39,6 +40,7 @@ describe('setTaskInfo', () => {
 			name: 'Task name',
 			status: TaskStatus.IN_PROGRESS,
 			note: 'Task note',
+			sortIndex: -1,
 		});
 	});
 
@@ -47,6 +49,7 @@ describe('setTaskInfo', () => {
 			name: 'Task name',
 			status: TaskStatus.TODO,
 			note: 'Task note',
+			sortIndex: -1,
 		} satisfies Omit<TaskInfo, 'id'>);
 
 		setTaskInfo(1, {
@@ -58,7 +61,14 @@ describe('setTaskInfo', () => {
 			name: 'Updated name',
 			status: TaskStatus.TODO,
 			note: 'Task note',
+			sortIndex: -1,
 		});
+	});
+
+	test('defaults sortIndex based on task ID', () => {
+		setTaskInfo(3, {});
+
+		expect(getTaskInfo(3)?.sortIndex).toBe(-3);
 	});
 
 	describe('when setting the status for a task', () => {
