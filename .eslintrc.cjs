@@ -38,6 +38,7 @@ module.exports = {
 	},
 	ignorePatterns: [
 		'*.md',
+		'tsconfig.json',
 		'.eslintrc.cjs',
 		'stylelint.config.cjs',
 		'jest.config.js',
