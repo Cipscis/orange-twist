@@ -3,11 +3,11 @@ on:
   push:
     branches:
       - main
-permissions:
-  contents: write
 jobs:
   build-and-test:
 
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
 
     strategy:
@@ -33,29 +33,23 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifact
-          path: |
-            app
-            !app/assets/js/src
-            !app/assets/scss
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v2
 
   deploy:
     needs: build-and-test
 
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifact
-          path: app
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: app
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v3
