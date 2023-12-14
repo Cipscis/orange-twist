@@ -6,5 +6,10 @@ import { cacheName } from './cacheName';
 export async function addToCache(request: Request, response: Response): Promise<void> {
 	const cache = await caches.open(cacheName);
 
-	await cache.put(request, response);
+	try {
+		await cache.put(request, response);
+	} catch (e) {
+		// Adding some pairs to the cache will fail, e.g. for
+		// chrome-extension:// URLs. Just let them fail silently
+	}
 }

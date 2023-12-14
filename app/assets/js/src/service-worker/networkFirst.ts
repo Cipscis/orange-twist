@@ -7,8 +7,6 @@ import { getCachedResponse } from './getCachedResponse';
  */
 export async function networkFirst(request: Request): Promise<Response> {
 	try {
-		// TODO: Make sure all task detail pages use the same cache entry
-
 		const networkResponse = await fetch(request);
 
 		if (networkResponse.ok) {

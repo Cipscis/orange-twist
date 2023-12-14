@@ -5,6 +5,6 @@ import { cacheName } from './cacheName';
  */
 export async function getCachedResponse(request: Request): Promise<Response | undefined> {
 	const cache = await caches.open(cacheName);
-	const cachedResponse = await cache.match(request);
+	const cachedResponse = await cache.match(request, { ignoreSearch: true });
 	return cachedResponse;
 }
