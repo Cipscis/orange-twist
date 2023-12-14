@@ -69,28 +69,35 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 			? content.split('\n')[0]
 			: content;
 
-		let renderedContent = marked
-			.parse(contentToRender, {
+		(async () => {
+			let renderedContent = marked.parse(contentToRender, {
 				breaks: true,
-			})
-			// Stupid fucking plugin replaces tabs with spaces
-			.replace(/ {4}/g, '\t')
-			// To allow HTML tags to be written as text in task names,
-			// I replace `<` with `&lt;`. So, when displaying the rendered
-			// content, reverse it. This also means if I were type "&amp;lt;"
-			// in a task name it would become "<" but that's fine)
-			.replace(/&amp;lt;/g, '&lt;');
+			});
 
-		if (inline) {
-			renderedContent = renderedContent.replace(/<p>(.+)<\/p>\n?/, '$1');
-		}
+			if (typeof renderedContent !== 'string') {
+				renderedContent = await renderedContent;
+			}
 
-		if (wrapper.setHTML) {
-			wrapper.setHTML(renderedContent);
-		} else {
-			// `setHTML` is not supported, so falling back to vulnerable method'
-			wrapper.innerHTML = renderedContent;
-		}
+			renderedContent = renderedContent
+				// Stupid fucking plugin replaces tabs with spaces
+				.replace(/ {4}/g, '\t')
+				// To allow HTML tags to be written as text in task names,
+				// I replace `<` with `&lt;`. So, when displaying the rendered
+				// content, reverse it. This also means if I were type "&amp;lt;"
+				// in a task name it would become "<" but that's fine)
+				.replace(/&amp;lt;/g, '&lt;');
+
+			if (inline) {
+				renderedContent = renderedContent.replace(/<p>(.+)<\/p>\n?/, '$1');
+			}
+
+			if (wrapper.setHTML) {
+				wrapper.setHTML(renderedContent);
+			} else {
+				// `setHTML` is not supported, so falling back to vulnerable method'
+				wrapper.innerHTML = renderedContent;
+			}
+		})();
 	}, [content, inline]);
 
 	return <div
