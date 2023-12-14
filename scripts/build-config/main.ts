@@ -12,8 +12,9 @@ export const config: BuildOptions = {
 	entryPoints: [
 		`${src}/priority.ts`,
 		`${src}/enhancements.ts`,
-		`${src}/main.tsx`,
-		`${src}/task.tsx`,
+		`${src}/pages/main.tsx`,
+		`${src}/pages/task.tsx`,
+		`${src}/pages/404.tsx`,
 	],
 	outdir: dist,
 	bundle: true,
