@@ -1,29 +1,26 @@
-import { addToCache } from './addToCache';
-import { getCachedResponse } from './getCachedResponse';
+import { addToCache, getCachedResponse } from '../cache';
 
 /**
  * Attempt to return a regular network `Response`, but if something goes
  * wrong return a cached `Response` instead, if possible.
  */
-export async function networkFirst(request: Request): Promise<Response> {
+export async function networkFirst({ preloadResponse, request }: FetchEvent): Promise<Response> {
 	try {
-		const networkResponse = await fetch(request);
-
-		if (networkResponse.ok) {
-			// If the response arrived, cache it and return it
-			await addToCache(request, networkResponse.clone());
-
-			return networkResponse;
-		} else {
-			// If the request should be in the cache, try to return a cached response
-			const cachedResponse = await getCachedResponse(request);
-			if (cachedResponse) {
-				return cachedResponse;
+		const networkResponse = await (async () => {
+			// If a response was preloaded, return it
+			const preloadedNetworkResponse = await preloadResponse as unknown;
+			if (preloadedNetworkResponse instanceof Response) {
+				return preloadedNetworkResponse;
 			}
 
-			// If we don't have a cached response, return back to the network response
-			return networkResponse;
-		}
+			// Otherwise, make the request and return its response
+			return await fetch(request);
+		})();
+
+		// If the response arrived, cache it and return it immediately
+		//  without waiting for it to be added to the cache
+		addToCache(request, networkResponse.clone());
+		return networkResponse;
 	} catch (error) {
 		// `fetch` can throw an error if there was a network error
 
