@@ -2,6 +2,7 @@
 
 import { deleteOldCaches } from './deleteOldCaches';
 import { networkFirst } from './networkFirst';
+import { populateCache } from './populateCache';
 
 // TODO: I'm not sure why my IDE breaks without that triple slash directive.
 // The `tsconfig.workers.json` file already specifies the `WebWorker` lib,
@@ -24,6 +25,7 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
 	e.waitUntil(Promise.all([
 		deleteOldCaches(),
+		populateCache(),
 		// If any tabs are still open using a previous version of
 		// the service worker, claim them with this new version
 		self.clients.claim(),
