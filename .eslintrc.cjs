@@ -466,5 +466,11 @@ module.exports = {
 			plugins: ['jest'],
 			extends: ['plugin:jest/recommended'],
 		},
+		{
+			files: ['scripts/**/*'],
+			rules: {
+				'no-console': 'off',
+			},
+		},
 	],
 };
