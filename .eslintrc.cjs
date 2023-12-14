@@ -376,6 +376,9 @@ module.exports = {
 				exceptions: [
 					'/',
 				],
+				markers: [
+					'/',
+				],
 				block: {
 					balanced: true,
 				},

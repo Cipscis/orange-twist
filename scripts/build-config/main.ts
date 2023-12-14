@@ -1,22 +1,21 @@
 import type { BuildOptions } from 'esbuild';
-
 import dotenv from 'dotenv';
+
+import { dist, src } from './paths.js';
+
 dotenv.config();
 
 const { MODE } = process.env;
-
-const srcPath = 'app/assets/js/src';
-const dstPath = 'app/assets/js/dist';
-
 const isDev = MODE === 'development';
 
 export const config: BuildOptions = {
 	entryPoints: [
-		`${srcPath}/priority.ts`,
-		`${srcPath}/main.tsx`,
-		`${srcPath}/task.tsx`,
+		`${src}/priority.ts`,
+		`${src}/enhancements.ts`,
+		`${src}/main.tsx`,
+		`${src}/task.tsx`,
 	],
-	outdir: dstPath,
+	outdir: dist,
 	bundle: true,
 	sourcemap: 'linked',
 
