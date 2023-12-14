@@ -5,12 +5,11 @@ import {
 	beforeEach,
 	describe,
 	expect,
-	jest,
 	test,
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, fireEvent, render } from '@testing-library/preact';
+import { cleanup, render } from '@testing-library/preact';
 
 import { TaskStatus } from 'types/TaskStatus';
 import { clear, setTaskInfo } from 'data';
