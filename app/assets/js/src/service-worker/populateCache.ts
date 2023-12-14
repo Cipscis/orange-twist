@@ -5,4 +5,5 @@ export async function populateCache(): Promise<void> {
 
 	cache.add(new URL('/orange-twist/', self.location.origin));
 	cache.add(new URL('/orange-twist/task/', self.location.origin));
+	cache.add(new URL('/orange-twist/404.html', self.location.origin));
 }

@@ -33,7 +33,14 @@ export async function networkFirst(request: Request): Promise<Response> {
 			return cachedResponse;
 		}
 
-		// TODO: If the request is for a page, and we don't have a cached response, try to return a generic network error page
+		if (request.destination === 'document') {
+			// If the request is for a page, and we don't have a cached
+			// response, try to return a generic network error page
+			const errorResponse = await getCachedResponse(new URL('/orange-twist/404.html', self.location.origin));
+			if (errorResponse) {
+				return errorResponse;
+			}
+		}
 
 		// Otherwise, return a generic network error in plain text instead
 		const message = error instanceof Error ? error.message : 'Network error';
