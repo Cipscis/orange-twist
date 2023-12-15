@@ -1,7 +1,7 @@
 import type { TaskInfo } from './types';
 
 import { tasksRegister } from './tasksRegister';
-import { getDefaultTaskInfo } from './getDefaultTaskInfo';
+import { completePartialTask, getDefaultTaskInfo } from './util';
 import { getTaskInfo } from 'data';
 
 /**
@@ -15,36 +15,14 @@ export function setAllTaskInfo(entries: readonly (readonly[
 		if (existingTaskInfo) {
 			return [
 				taskId,
-				{
-					id: taskId,
-					name: taskInfo.name ?? existingTaskInfo.name,
-					status: taskInfo.status ?? existingTaskInfo.status,
-					note: taskInfo.note ?? existingTaskInfo.note,
-					sortIndex: taskInfo.sortIndex ?? existingTaskInfo.sortIndex,
-
-					parent: typeof taskInfo.parent !== 'undefined'
-						? taskInfo.parent
-						: existingTaskInfo.parent,
-					children: taskInfo.children ?? existingTaskInfo.children,
-				},
+				completePartialTask(taskInfo, existingTaskInfo),
 			] as const;
 		}
 
 		const defaultTaskInfo = getDefaultTaskInfo(taskId);
 		return [
 			taskId,
-			{
-				id: taskId,
-				name: taskInfo.name ?? defaultTaskInfo.name,
-				status: taskInfo.status ?? defaultTaskInfo.status,
-				note: taskInfo.note ?? defaultTaskInfo.note,
-				sortIndex: taskInfo.sortIndex ?? defaultTaskInfo.sortIndex,
-
-				parent: typeof taskInfo.parent !== 'undefined'
-					? taskInfo.parent
-					: defaultTaskInfo.parent,
-				children: taskInfo.children ?? defaultTaskInfo.children,
-			},
+			completePartialTask(taskInfo, defaultTaskInfo),
 		] as const;
 	});
 
