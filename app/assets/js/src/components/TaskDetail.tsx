@@ -1,10 +1,13 @@
 import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
+import * as ui from 'ui';
+
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
 import {
+	createTask,
 	setDayTaskInfo,
 	setTaskInfo,
 	useAllDayTaskInfo,
@@ -15,6 +18,8 @@ import { Note } from './shared/Note';
 import { Markdown } from './shared/Markdown';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
+import { Task } from './Task';
+import { TaskList } from './TaskList';
 
 interface TaskDetailProps {
 	taskId: number;
@@ -55,6 +60,34 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 			onNoteChange={setTaskNote}
 			saveChanges={saveChanges}
 		/>
+		{
+			taskInfo.parent &&
+			<section>
+				<h2>Parent</h2>
+				<Task taskId={taskInfo.parent} />
+			</section>
+		}
+		<section>
+			<h2>Children</h2>
+			<TaskList
+				matcher={taskInfo.children}
+				onReorder={(taskIds) => {
+					setTaskInfo(taskId, { children: taskIds });
+					fireCommand(Command.DATA_SAVE);
+				}}
+			/>
+			<button
+				type="button"
+				onClick={async () => {
+					const name = await ui.prompt('Child name');
+					if (name === null) {
+						return;
+					}
+
+					createTask({ name, parent: taskId });
+				}}
+			>Create child</button>
+		</section>
 		{dayTasksInfo.map(({ dayName, taskId, note }, i, arr) => (
 			<details
 				key={dayName}

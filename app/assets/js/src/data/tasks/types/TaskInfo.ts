@@ -13,7 +13,7 @@ export const taskInfoSchema = z.object({
 	/** The ID of the task's parent, or `null` if it has no parent. */
 	parent: z.number().nullable(),
 	/** An array of child tasks' IDs. */
-	children: z.array(z.number()),
+	children: z.array(z.number()).readonly(),
 });
 
 /**
