@@ -1,11 +1,11 @@
 /// <reference lib="WebWorker" />
 
+// TODO: I'm not sure why my IDE breaks without that triple slash directive.
+// The relevant `tsconfig.json` file already specifies the `WebWorker` lib,
+// and the project can compile just fine. But my IDE doesn't seem to understand
+
 import { deleteOldCaches, populateCache } from './cache';
 import { networkFirst } from './strategy';
-
-// TODO: I'm not sure why my IDE breaks without that triple slash directive.
-// The `tsconfig.workers.json` file already specifies the `WebWorker` lib,
-// and the project can compile just fine. But my IDE doesn't seem to understand
 
 // TypeScript doesn't have a Service Worker specific library.
 // This declaration is necessary to update the types of `self`
