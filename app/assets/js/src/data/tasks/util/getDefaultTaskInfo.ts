@@ -1,11 +1,12 @@
 import { TaskStatus } from 'types/TaskStatus';
-import type { TaskInfo } from './types';
+import type { TaskInfo } from '../types';
 
 /**
  * Determine default task info, used to fill in any blanks.
  */
-export function getDefaultTaskInfo(taskId: number): Omit<TaskInfo, 'id'> {
+export function getDefaultTaskInfo(taskId: number): TaskInfo {
 	return {
+		id: taskId,
 		name: 'New task',
 		status: TaskStatus.TODO,
 		note: '',

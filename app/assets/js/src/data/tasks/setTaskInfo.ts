@@ -4,7 +4,7 @@ import { getCurrentDateDayName } from 'util/index';
 
 import { tasksRegister } from './tasksRegister';
 import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
-import { getDefaultTaskInfo } from './getDefaultTaskInfo';
+import { completePartialTask, getDefaultTaskInfo } from './util';
 
 interface SetTaskInfoOptions {
 	/**
@@ -38,37 +38,19 @@ export function setTaskInfo(
 		...options,
 	};
 
-	const existingTaskInfo = tasksRegister.get(taskId);
-	if (existingTaskInfo) {
-		tasksRegister.set(taskId, {
-			id: taskId,
+	const newTaskInfo = (() => {
+		// If there is existing task info, use that
+		const existingTaskInfo = tasksRegister.get(taskId);
+		if (existingTaskInfo) {
+			return completePartialTask(taskInfo, existingTaskInfo);
+		}
 
-			name: taskInfo.name ?? existingTaskInfo?.name,
-			status: taskInfo.status ?? existingTaskInfo?.status,
-			note: taskInfo.note ?? existingTaskInfo?.note,
-			sortIndex: taskInfo.sortIndex ?? existingTaskInfo?.sortIndex,
-
-			parent: typeof taskInfo.parent !== 'undefined'
-				? taskInfo.parent
-				: existingTaskInfo.parent,
-			children: taskInfo.children ?? existingTaskInfo.children,
-		});
-	} else {
+		// Otherwise, use default task info to fill in the blanks
 		const defaultTaskInfo = getDefaultTaskInfo(taskId);
-		tasksRegister.set(taskId, {
-			id: taskId,
+		return completePartialTask(taskInfo, defaultTaskInfo);
+	})();
 
-			name: taskInfo.name ?? defaultTaskInfo.name,
-			status: taskInfo.status ?? defaultTaskInfo.status,
-			note: taskInfo.note ?? defaultTaskInfo.note,
-			sortIndex: taskInfo.sortIndex ?? defaultTaskInfo.sortIndex,
-
-			parent: typeof taskInfo.parent !== 'undefined'
-				? taskInfo.parent
-				: defaultTaskInfo.parent,
-			children: taskInfo.children ?? defaultTaskInfo.children,
-		});
-	}
+	tasksRegister.set(taskId, newTaskInfo);
 
 	if (consolidatedOptions.forCurrentDay && taskInfo.status) {
 		const dayName = getCurrentDateDayName();
