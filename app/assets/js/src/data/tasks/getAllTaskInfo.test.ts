@@ -19,6 +19,8 @@ const firstTaskInfo: TaskInfo = {
 	status: TaskStatus.TODO,
 	note: '',
 	sortIndex: -1,
+	parent: null,
+	children: [],
 };
 
 const secondTaskInfo: TaskInfo = {
@@ -27,6 +29,8 @@ const secondTaskInfo: TaskInfo = {
 	status: TaskStatus.IN_PROGRESS,
 	note: 'Note',
 	sortIndex: -1,
+	parent: null,
+	children: [],
 };
 
 describe('getAllTaskInfo', () => {

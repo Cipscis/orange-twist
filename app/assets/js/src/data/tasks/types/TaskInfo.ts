@@ -10,6 +10,10 @@ export const taskInfoSchema = z.object({
 	note: z.string(),
 	/** Used for sorting tasks. */
 	sortIndex: z.number(),
+	/** The ID of the task's parent, or `null` if it has no parent. */
+	parent: z.number().nullable(),
+	/** An array of child tasks' IDs. */
+	children: z.array(z.number()),
 });
 
 /**

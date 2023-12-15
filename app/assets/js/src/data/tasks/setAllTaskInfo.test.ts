@@ -30,6 +30,8 @@ describe('setAllTaskInfo', () => {
 				note: '',
 				status: TaskStatus.TODO,
 				sortIndex: -1,
+				parent: null,
+				children: [],
 			},
 			{
 				id: 2,
@@ -37,6 +39,8 @@ describe('setAllTaskInfo', () => {
 				note: '',
 				status: TaskStatus.TODO,
 				sortIndex: -2,
+				parent: null,
+				children: [],
 			},
 		]);
 	});
@@ -57,6 +61,8 @@ describe('setAllTaskInfo', () => {
 			note: 'Task note',
 			status: TaskStatus.IN_PROGRESS,
 			sortIndex: 1,
+			parent: null,
+			children: [],
 		});
 	});
 
@@ -69,6 +75,8 @@ describe('setAllTaskInfo', () => {
 			note: '',
 			status: TaskStatus.TODO,
 			sortIndex: -2,
+			parent: null,
+			children: [],
 		});
 	});
 
@@ -92,6 +100,8 @@ describe('setAllTaskInfo', () => {
 					note: '',
 					status: TaskStatus.TODO,
 					sortIndex: -1,
+					parent: null,
+					children: [],
 				},
 			},
 			{
@@ -102,6 +112,8 @@ describe('setAllTaskInfo', () => {
 					note: '',
 					status: TaskStatus.TODO,
 					sortIndex: -2,
+					parent: null,
+					children: [],
 				},
 			},
 		]);

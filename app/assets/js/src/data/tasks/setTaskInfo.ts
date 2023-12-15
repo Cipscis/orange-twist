@@ -47,6 +47,11 @@ export function setTaskInfo(
 			status: taskInfo.status ?? existingTaskInfo?.status,
 			note: taskInfo.note ?? existingTaskInfo?.note,
 			sortIndex: taskInfo.sortIndex ?? existingTaskInfo?.sortIndex,
+
+			parent: typeof taskInfo.parent !== 'undefined'
+				? taskInfo.parent
+				: existingTaskInfo.parent,
+			children: taskInfo.children ?? existingTaskInfo.children,
 		});
 	} else {
 		const defaultTaskInfo = getDefaultTaskInfo(taskId);
@@ -57,6 +62,11 @@ export function setTaskInfo(
 			status: taskInfo.status ?? defaultTaskInfo.status,
 			note: taskInfo.note ?? defaultTaskInfo.note,
 			sortIndex: taskInfo.sortIndex ?? defaultTaskInfo.sortIndex,
+
+			parent: typeof taskInfo.parent !== 'undefined'
+				? taskInfo.parent
+				: defaultTaskInfo.parent,
+			children: taskInfo.children ?? defaultTaskInfo.children,
 		});
 	}
 

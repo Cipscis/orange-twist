@@ -32,6 +32,8 @@ describe('setTaskInfo', () => {
 				status: TaskStatus.IN_PROGRESS,
 				note: 'Task note',
 				sortIndex: -1,
+				parent: null,
+				children: [],
 			} satisfies Omit<TaskInfo, 'id'> // <- Ensure we're testing every option
 		);
 
@@ -41,6 +43,8 @@ describe('setTaskInfo', () => {
 			status: TaskStatus.IN_PROGRESS,
 			note: 'Task note',
 			sortIndex: -1,
+			parent: null,
+			children: [],
 		});
 	});
 
@@ -50,6 +54,8 @@ describe('setTaskInfo', () => {
 			status: TaskStatus.TODO,
 			note: 'Task note',
 			sortIndex: -1,
+			parent: null,
+			children: [],
 		} satisfies Omit<TaskInfo, 'id'>);
 
 		setTaskInfo(1, {
@@ -62,6 +68,8 @@ describe('setTaskInfo', () => {
 			status: TaskStatus.TODO,
 			note: 'Task note',
 			sortIndex: -1,
+			parent: null,
+			children: [],
 		});
 	});
 
