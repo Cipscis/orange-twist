@@ -17,9 +17,11 @@ export async function networkFirst({ preloadResponse, request }: FetchEvent): Pr
 			return await fetch(request);
 		})();
 
-		// If the response arrived, cache it and return it immediately
-		//  without waiting for it to be added to the cache
-		addToCache(request, networkResponse.clone());
+		// If the response arrived, cache it if it was okay, and return
+		// it immediately without waiting for it to be added to the cache
+		if (networkResponse.ok) {
+			addToCache(request, networkResponse.clone());
+		}
 		return networkResponse;
 	} catch (error) {
 		// `fetch` can throw an error if there was a network error
