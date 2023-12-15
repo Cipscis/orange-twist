@@ -112,4 +112,42 @@ describe('setTaskInfo', () => {
 			expect(getDayInfo(currentDayName)?.tasks.includes(1)).toBeFalsy();
 		});
 	});
+
+	test('when setting the parent, updates any old and new parents\' children', () => {
+		setTaskInfo(1, { name: 'First parent' });
+		setTaskInfo(2, { name: 'Second parent' });
+		expect(getTaskInfo(1)?.children).toEqual([]);
+		expect(getTaskInfo(2)?.children).toEqual([]);
+
+		setTaskInfo(3, { name: 'Child task', parent: 1 });
+		expect(getTaskInfo(1)?.children).toEqual([3]);
+		expect(getTaskInfo(2)?.children).toEqual([]);
+
+		setTaskInfo(3, { name: 'Child task', parent: 2 });
+		expect(getTaskInfo(1)?.children).toEqual([]);
+		expect(getTaskInfo(2)?.children).toEqual([3]);
+
+		setTaskInfo(3, { name: 'Child task', parent: null });
+		expect(getTaskInfo(1)?.children).toEqual([]);
+		expect(getTaskInfo(2)?.children).toEqual([]);
+	});
+
+	test('when setting the children, updates any old and new children\'s parents', () => {
+		setTaskInfo(1, { name: 'First child' });
+		setTaskInfo(2, { name: 'Second child' });
+		expect(getTaskInfo(1)?.parent).toBeNull();
+		expect(getTaskInfo(2)?.parent).toBeNull();
+
+		setTaskInfo(3, { name: 'Parent task', children: [1] });
+		expect(getTaskInfo(1)?.parent).toBe(3);
+		expect(getTaskInfo(2)?.parent).toBeNull();
+
+		setTaskInfo(3, { name: 'Parent task', children: [2, 1] });
+		expect(getTaskInfo(1)?.parent).toBe(3);
+		expect(getTaskInfo(2)?.parent).toBe(3);
+
+		setTaskInfo(3, { name: 'Parent task', children: [] });
+		expect(getTaskInfo(1)?.parent).toBeNull();
+		expect(getTaskInfo(2)?.parent).toBeNull();
+	});
 });
