@@ -9,6 +9,6 @@ export async function populateCache(): Promise<void> {
 	cache.addAll([
 		'/orange-twist/',
 		'/orange-twist/task/',
-		'/orange-twist/404.html',
+		'/orange-twist/408.html',
 	]);
 }
