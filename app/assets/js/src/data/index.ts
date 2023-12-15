@@ -18,7 +18,6 @@ export {
 
 	createTask,
 	setTaskInfo,
-	setAllTaskInfo,
 	deleteTask,
 	getTaskInfo,
 	getAllTaskInfo,
