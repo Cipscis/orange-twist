@@ -2,9 +2,15 @@ import type { TaskInfo } from './types';
 
 import { getCurrentDateDayName } from 'util/index';
 
-import { tasksRegister } from './tasksRegister';
 import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
-import { completePartialTask, getDefaultTaskInfo } from './util';
+
+import { tasksRegister } from './tasksRegister';
+import {
+	completePartialTask,
+	getDefaultTaskInfo,
+	updateRelationships,
+} from './util';
+import { getTaskInfo } from './getTaskInfo';
 
 interface SetTaskInfoOptions {
 	/**
@@ -38,9 +44,10 @@ export function setTaskInfo(
 		...options,
 	};
 
+	const existingTaskInfo = getTaskInfo(taskId);
+
 	const newTaskInfo = (() => {
 		// If there is existing task info, use that
-		const existingTaskInfo = tasksRegister.get(taskId);
 		if (existingTaskInfo) {
 			return completePartialTask(taskInfo, existingTaskInfo);
 		}
@@ -50,7 +57,16 @@ export function setTaskInfo(
 		return completePartialTask(taskInfo, defaultTaskInfo);
 	})();
 
+	// If we're not changing anything, do nothing
+	if (existingTaskInfo) {
+		if (JSON.stringify(existingTaskInfo) === JSON.stringify(newTaskInfo)) {
+			return;
+		}
+	}
+
 	tasksRegister.set(taskId, newTaskInfo);
+
+	updateRelationships(newTaskInfo, existingTaskInfo);
 
 	if (consolidatedOptions.forCurrentDay && taskInfo.status) {
 		const dayName = getCurrentDateDayName();
