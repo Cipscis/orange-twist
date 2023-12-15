@@ -47,7 +47,7 @@ const oldTaskInfoSchemas = [
 			note: z.string(),
 			sortIndex: z.number(),
 			parent: z.number().nullable(),
-			children: z.array(z.number()),
+			children: z.array(z.number()).readonly(),
 		}).strict(),
 	],
 ] as const satisfies ReadonlyArray<readonly [number, z.ZodType]>;

@@ -49,7 +49,8 @@ export function updateRelationships(
 		const parentChildren = parentInfo.children;
 		if (!parentChildren.includes(taskId)) {
 			setTaskInfo(newTaskInfo.parent, {
-				children: [...parentChildren, taskId],
+				// Add new children to the top of the list
+				children: [taskId, ...parentChildren],
 			});
 		}
 	}
