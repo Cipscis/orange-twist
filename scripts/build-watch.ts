@@ -1,9 +1,10 @@
 import * as esbuild from 'esbuild';
 
-import { config } from './build-config.js';
+import { config as mainConfig } from './build-config/main.js';
+import { config as serviceWorkerConfig } from './build-config/service-worker.js';
 
-const context = await esbuild.context({
-	...config,
-});
+const mainContext = await esbuild.context({ ...mainConfig });
+const serviceWorkerContext = await esbuild.context({ ...serviceWorkerConfig });
 
-context.watch();
+mainContext.watch();
+serviceWorkerContext.watch();
