@@ -33,9 +33,15 @@ export async function networkFirst({ preloadResponse, request }: FetchEvent): Pr
 		if (request.destination === 'document') {
 			// If the request is for a page, and we don't have a cached
 			// response, try to return a generic network error page
-			const errorResponse = await getCachedResponse(new URL('/orange-twist/404.html', self.location.origin));
+			const errorResponse = await getCachedResponse(
+				new URL('/orange-twist/408.html', self.location.origin)
+			);
+
 			if (errorResponse) {
-				return errorResponse;
+				return new Response(errorResponse.clone().body, {
+					...errorResponse,
+					status: 408, // REQUEST_TIMEOUT
+				});
 			}
 		}
 
