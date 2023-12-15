@@ -50,6 +50,8 @@ describe('writeExportData', () => {
 				note: 'Task note',
 				status: TaskStatus.TODO,
 				sortIndex: -1,
+				parent: null,
+				children: [],
 			}]],
 			dayTasks: [['2023-12-11_1', {
 				dayName: '2023-12-11',

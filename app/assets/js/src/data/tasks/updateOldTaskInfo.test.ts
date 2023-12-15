@@ -24,6 +24,8 @@ describe('updateOldTaskInfo', () => {
 			status: TaskStatus.IN_PROGRESS,
 			note: '',
 			sortIndex: -1,
+			parent: null,
+			children: [],
 		});
 	});
 
@@ -41,6 +43,28 @@ describe('updateOldTaskInfo', () => {
 			status: TaskStatus.IN_PROGRESS,
 			note: 'Task note',
 			sortIndex: -1,
+			parent: null,
+			children: [],
+		});
+	});
+
+	test('correctly migrates task data from schema version 3', () => {
+		const result = updateOldTaskInfo({
+			id: 1,
+			name: 'Task name',
+			status: TaskStatus.IN_PROGRESS,
+			note: 'Task note',
+			sortIndex: 2,
+		});
+
+		expect(result).toEqual({
+			id: 1,
+			name: 'Task name',
+			status: TaskStatus.IN_PROGRESS,
+			note: 'Task note',
+			sortIndex: 2,
+			parent: null,
+			children: [],
 		});
 	});
 });

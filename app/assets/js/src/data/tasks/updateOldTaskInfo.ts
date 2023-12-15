@@ -38,6 +38,18 @@ const oldTaskInfoSchemas = [
 			sortIndex: z.number(),
 		}).strict(),
 	],
+	[
+		4,
+		z.object({
+			id: z.number(),
+			name: z.string(),
+			status: z.nativeEnum(TaskStatus),
+			note: z.string(),
+			sortIndex: z.number(),
+			parent: z.number().nullable(),
+			children: z.array(z.number()),
+		}).strict(),
+	],
 ] as const satisfies ReadonlyArray<readonly [number, z.ZodType]>;
 
 /**
@@ -98,8 +110,16 @@ export function updateOldTaskInfo(val: unknown): TaskInfo {
 			sortIndex: -1,
 		};
 	} else if (oldTaskInfoVersion === 3) {
+		newVal = {
+			...oldVal,
+			parent: null,
+			children: [],
+		};
+	} else if (oldTaskInfoVersion === 4) {
 		// No migration currently needed
-		newVal = oldVal;
+		newVal = {
+			...oldVal,
+		};
 	} else {
 		assertAllUnionMembersHandled(oldTaskInfoVersion);
 	}

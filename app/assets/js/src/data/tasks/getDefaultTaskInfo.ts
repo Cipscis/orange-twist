@@ -10,5 +10,7 @@ export function getDefaultTaskInfo(taskId: number): Omit<TaskInfo, 'id'> {
 		status: TaskStatus.TODO,
 		note: '',
 		sortIndex: -Math.abs(taskId),
+		parent: null,
+		children: [],
 	};
 }
