@@ -9,6 +9,7 @@ import { setAllTaskInfo, type TaskInfo } from 'data';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
+import { Button } from './shared/Button';
 import { TaskList } from './TaskList';
 
 /**
@@ -37,10 +38,8 @@ export function UnfinishedTaskList(): JSX.Element {
 			}}
 		/>
 
-		<button
-			type="button"
-			class="button"
+		<Button
 			onClick={() => fireCommand(Command.TASK_ADD_NEW)}
-		>Add new task</button>
+		>Add new task</Button>
 	</section>;
 }

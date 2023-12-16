@@ -12,6 +12,7 @@ import {
 
 import * as ui from 'ui';
 
+import { Button } from './shared/Button';
 import { DayNote } from './DayNote';
 import { TaskList } from './TaskList';
 
@@ -63,11 +64,9 @@ export const Day = (props: DayProps): JSX.Element => {
 		</summary>
 
 		<div class="day__body">
-			<button
-				type="button"
-				class="button"
+			<Button
 				onClick={removeDay}
-			>Remove day</button>
+			>Remove day</Button>
 
 			<DayNote day={day} />
 
@@ -77,14 +76,12 @@ export const Day = (props: DayProps): JSX.Element => {
 				onReorder={reorderTasks}
 			/>
 
-			<button
-				type="button"
-				class="button"
+			<Button
 				onClick={useCallback(
 					() => fireCommand(Command.TASK_ADD_NEW, name),
 					[name]
 				)}
-			>Add new task</button>
+			>Add new task</Button>
 		</div>
 	</details>;
 };
