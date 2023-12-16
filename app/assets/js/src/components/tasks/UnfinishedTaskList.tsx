@@ -9,7 +9,7 @@ import { setAllTaskInfo, type TaskInfo } from 'data';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import { Button } from './shared/Button';
+import { Button } from '../shared/Button';
 import { TaskList } from './TaskList';
 
 /**

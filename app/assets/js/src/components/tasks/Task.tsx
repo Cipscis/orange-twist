@@ -18,7 +18,7 @@ import {
 } from 'data';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
-import { Markdown } from './shared/Markdown';
+import { Markdown } from '../shared/Markdown';
 
 interface TaskProps {
 	taskId: number;
