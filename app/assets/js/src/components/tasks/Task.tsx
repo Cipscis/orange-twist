@@ -154,11 +154,11 @@ export function Task(props: TaskProps): JSX.Element | null {
 					taskId={taskInfo.id}
 					dayName={dayName}
 				/>
-				<a
+				<IconButton
 					href={`/task/?id=${taskInfo.id}`}
-					class="task__detail-link"
 					title="View task"
-				>📄</a>
+					icon="📄"
+				/>
 				<form
 					class="task__name"
 				>

@@ -80,7 +80,7 @@ describe('TaskStatusComponent', () => {
 			readonly
 		/>);
 
-		expect(queryByRole('button')).not.toBeInTheDocument();
+		expect(queryByRole('button')).toBeDisabled();
 	});
 
 	describe('when not passed a day name', () => {

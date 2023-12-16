@@ -17,10 +17,6 @@
 	cursor: pointer;
 }
 
-.task__detail-link {
-	@include patterns.icon-button;
-}
-
 .task__name {
 	// Using this approach:
 	// https://css-tricks.com/auto-growing-inputs-textareas/
