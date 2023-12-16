@@ -38,13 +38,6 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 		setIsOpen(true);
 	}, [resolve]);
 
-	// Focus on input immediately when opened
-	useEffect(() => {
-		if (isOpen) {
-			resultElRef.current?.focus();
-		}
-	}, [isOpen]);
-
 	return <Modal
 		open={isOpen}
 		onClose={useCallback(() => {
@@ -69,9 +62,9 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 			<label>
 				<div class="modal-prompt__message">{message}</div>
 				<input
-					ref={resultElRef}
 					type="text"
 					name="result"
+					ref={resultElRef}
 				/>
 			</label>
 

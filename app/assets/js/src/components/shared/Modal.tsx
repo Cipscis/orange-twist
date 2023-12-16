@@ -1,13 +1,10 @@
 import { h, type ComponentChildren, type JSX } from 'preact';
-import { useEffect, useRef } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
 
 import {
 	classNames,
-	useBlurCallback,
-	useCloseWatcher,
+	getDeepActiveElement,
 } from 'util/index';
-
-import { getDeepActiveElement } from '../../util';
 
 interface ModalProps {
 	/** The Modal is only rendered when `open` is `true`. */
@@ -57,58 +54,76 @@ export function Modal(props: ModalProps): JSX.Element {
 		title,
 	} = props;
 
-	const modalRef = useRef<HTMLDivElement>(null);
+	const modalRef = useRef<HTMLDialogElement>(null);
 	const preFocusEl = useRef<Element | null>(null);
 
-	// Handle automatic focus management when opening and closing
-	useEffect(() => {
+	// Integrate with `HTMLDialogElement` API, and handle
+	// automatic focus management when opening and closing
+	useLayoutEffect(() => {
 		if (open) {
 			preFocusEl.current = getDeepActiveElement();
-			modalRef.current?.focus();
-		} else if (
-			(
-				document.activeElement === null ||
-				document.activeElement === document.body
-			) &&
-			preFocusEl.current instanceof HTMLElement
-		) {
-			preFocusEl.current.focus();
+			modalRef.current?.showModal();
+		} else {
+			modalRef.current?.close();
+			if (preFocusEl.current instanceof HTMLElement) {
+				preFocusEl.current.focus();
+			}
 		}
 	}, [open]);
 
-	// Handle opening callback
+	// Initialise previous open state to `false`
+	// so `onOpen` can run on initial render
+	const previousOpenStateRef = useRef(false);
+
+	// Handle opening and closing callbacks
 	useEffect(() => {
+		if (open === previousOpenStateRef.current) {
+			return;
+		}
+
 		if (open && onOpen) {
 			onOpen();
+		} else if (!open && onClose) {
+			onClose();
 		}
-	}, [open, onOpen]);
 
-	// Handle closing on Escape
-	useCloseWatcher(onClose, open);
+		previousOpenStateRef.current = open;
+	}, [open, onOpen, onClose]);
 
-	// Handle closing on blur
-	useBlurCallback(modalRef, onClose, open);
+	// Handle close event
+	useEffect(() => {
+		if (!modalRef.current) {
+			return;
+		}
 
-	return <>
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		modalRef.current.addEventListener(
+			'close',
+			onClose,
+			{ signal }
+		);
+
+		return () => controller.abort();
+	}, [onClose]);
+
+	return <dialog
+		class={classNames('modal', className)}
+		tabIndex={-1}
+		ref={modalRef}
+		data-testid="modal"
+	>
 		{
 			open &&
-			<div
-				class="modal"
-			>
-				<div
-					class={classNames('modal__body', className)}
-					tabIndex={-1}
-					ref={modalRef}
-					data-testid="modal"
-				>
-					{
-						title &&
-						<h2 class="modal__title">{title}</h2>
-					}
+			<>
+				{
+					title &&
+					<h2 class="modal__title">{title}</h2>
+				}
 
-					{children}
-				</div>
-			</div>
+				{children}
+			</>
 		}
-	</>;
+	</dialog>;
 }
