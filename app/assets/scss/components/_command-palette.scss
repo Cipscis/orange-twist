@@ -60,6 +60,8 @@
 		animation.$easing-default;
 }
 
+.command-palette__option:hover,
+.command-palette__option:focus-visible,
 .command-palette__option--active {
 	background: var(--bg);
 }
