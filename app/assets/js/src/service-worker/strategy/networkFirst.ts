@@ -36,7 +36,7 @@ export async function networkFirst({ preloadResponse, request }: FetchEvent): Pr
 			// If the request is for a page, and we don't have a cached
 			// response, try to return a generic network error page
 			const errorResponse = await getCachedResponse(
-				new URL('/orange-twist/408.html', self.location.origin)
+				new URL('/408.html', self.location.origin)
 			);
 
 			if (errorResponse) {

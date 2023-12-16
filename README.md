@@ -48,7 +48,6 @@ Used by [Express](https://expressjs.com/) to determine which port to use when ru
 An example `.env` file you can use for development is:
 
 ```
-PROJECT_NAME = "orange-twist"
 MODE = "development"
 PORT = "8080"
 ```
