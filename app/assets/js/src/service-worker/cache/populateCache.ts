@@ -7,8 +7,8 @@ export async function populateCache(): Promise<void> {
 	const cache = await caches.open(cacheName);
 
 	cache.addAll([
-		'/orange-twist/',
-		'/orange-twist/task/',
-		'/orange-twist/408.html',
+		'/',
+		'/task/',
+		'/408.html',
 	]);
 }

@@ -7,5 +7,5 @@
  */
 
 if (navigator.serviceWorker) {
-	navigator.serviceWorker.register('/orange-twist/service-worker.js');
+	navigator.serviceWorker.register('/service-worker.js');
 }
