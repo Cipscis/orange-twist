@@ -27,12 +27,16 @@ interface IconButtonProps extends IconButtonPropsBase {
 	class?: string;
 	variant?: ButtonVariant;
 
+	/** If set, element will be a link instead of a button */
 	href?: string;
 
 	icon: JSX.Element | string;
 	title: string;
 }
 
+/**
+ * Renders an icon-style button.
+ */
 export function IconButton(props: IconButtonProps): JSX.Element {
 	const {
 		icon,
