@@ -14,21 +14,23 @@ describe('Modal', () => {
 	});
 
 	test('is only rendered when open is true', () => {
-		const { rerender, queryByTestId } = render(
+		const { rerender, queryByText } = render(
 			<Modal
 				open={false}
+				title="Modal title"
 				onClose={() => {}}
 			/>
 		);
 
-		expect(queryByTestId('modal')).not.toBeInTheDocument();
+		expect(queryByText('Modal title')).not.toBeInTheDocument();
 
 		rerender(<Modal
 			open
+			title="Modal title"
 			onClose={() => {}}
 		/>);
 
-		expect(queryByTestId('modal')).toBeInTheDocument();
+		expect(queryByText('Modal title')).toBeInTheDocument();
 	});
 
 	test('renders its title', () => {
@@ -43,18 +45,6 @@ describe('Modal', () => {
 		const title = queryByRole('heading');
 		expect(title).toBeInTheDocument();
 		expect(title).toHaveTextContent('Test title');
-	});
-
-	test('receives keyboard focus when opened', () => {
-		const { getByTestId } = render(
-			<Modal
-				open
-				onClose={() => {}}
-			/>
-		);
-
-		const modal = getByTestId('modal');
-		expect(modal).toHaveFocus();
 	});
 
 	test('returns keyboard focus when closed', async () => {

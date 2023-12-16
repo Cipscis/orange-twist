@@ -19,6 +19,7 @@ module.exports = {
 		project: [
 			'./tsconfig.json',
 			'./scripts/tsconfig.json',
+			'./test/tsconfig.json',
 		],
 	},
 	extends: [

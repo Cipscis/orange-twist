@@ -1,6 +1,6 @@
 @use "sass:meta";
 
-@layer reset, theme, components;
+@layer reset, theme, subComponents, components;
 
 @layer reset {
 	@include meta.load-css("reset");
@@ -10,16 +10,18 @@
 	@include meta.load-css("theme/base");
 }
 
-@layer components {
+@layer subComponents {
 	// Sub-components
-	@include meta.load-css("components/button");
-	@include meta.load-css("components/content");
-	@include meta.load-css("components/icon-button");
-	@include meta.load-css("components/modal");
-	@include meta.load-css("components/modal-confirm");
-	@include meta.load-css("components/modal-prompt");
-	@include meta.load-css("components/toast");
+	@include meta.load-css("sub-components/button");
+	@include meta.load-css("sub-components/content");
+	@include meta.load-css("sub-components/icon-button");
+	@include meta.load-css("sub-components/modal");
+	@include meta.load-css("sub-components/modal-confirm");
+	@include meta.load-css("sub-components/modal-prompt");
+	@include meta.load-css("sub-components/toast");
+}
 
+@layer components {
 	// Components
 	@include meta.load-css("components/command-palette");
 	@include meta.load-css("components/day");

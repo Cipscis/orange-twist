@@ -260,9 +260,6 @@ describe('TaskStatusComponent', () => {
 		});
 
 		test('can remove a task from that day', async () => {
-			const originalConfirm = window.confirm;
-			window.confirm = () => true;
-
 			const user = userEvent.setup();
 			const saveSpy = jest.fn();
 			addCommandListener(Command.DATA_SAVE, saveSpy);
@@ -294,7 +291,6 @@ describe('TaskStatusComponent', () => {
 			expect(getDayInfo('2023-11-26')?.tasks.includes(1)).toBe(false);
 
 			removeCommandListener(Command.DATA_SAVE, saveSpy);
-			window.confirm = originalConfirm;
 		});
 	});
 });

@@ -1,6 +1,11 @@
 import { h } from 'preact';
 
-import { describe, expect, jest, test } from '@jest/globals';
+import {
+	describe,
+	expect,
+	jest,
+	test,
+} from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
 import { render } from '@testing-library/preact';

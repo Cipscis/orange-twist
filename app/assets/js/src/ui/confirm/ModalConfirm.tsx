@@ -44,15 +44,9 @@ export function ModalConfirm(props: ModalConfirmProps): JSX.Element {
 		}
 
 		previousResolver.current = resolve;
+		// Open when passed a new resolve callback
 		setIsOpen(true);
 	}, [resolve]);
-
-	// Open when passed a new resolve callback
-	useEffect(() => {
-		setIsOpen(true);
-	}, [resolve]);
-
-
 
 	return <Modal
 		open={isOpen}
