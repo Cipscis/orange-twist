@@ -25,9 +25,13 @@ interface ButtonProps extends ButtonPropsBase {
 	class?: string;
 	variant?: ButtonVariant;
 
+	/** If set, element will be a link instead of a button */
 	href?: string;
 }
 
+/**
+ * Renders a button with consistent design.
+ */
 export function Button(props: ButtonProps): JSX.Element {
 	const {
 		href,
