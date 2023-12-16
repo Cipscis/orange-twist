@@ -44,6 +44,7 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 			setIsOpen(false);
 			resolve(null);
 		}, [resolve])}
+		closeButton
 	>
 		<form
 			onSubmit={useCallback((e: Event) => {

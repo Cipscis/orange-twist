@@ -4,7 +4,14 @@
 
 @use "../patterns";
 
-.modal[open] {
+.modal {
+	&::backdrop {
+		@include patterns.backdrop(--bg-primary);
+	}
+}
+
+.modal__body {
+	position: relative;
 	@include palette.secondary;
 
 	padding: spacing.$md-abs;
@@ -20,17 +27,15 @@
 	max-height: 100dvh;
 	max-width: min(80vw, calc(var(--layout-max-width) * 0.8));
 	overflow: auto;
-
-	&::backdrop {
-		@include patterns.backdrop(--bg-primary);
-	}
-}
-
-.modal__body {
-	display: contents;
 }
 
 .modal__title {
 	@include typography.heading-2;
 	margin-bottom: spacing.$md;
+}
+
+.modal__close {
+	position: absolute;
+	top: 0;
+	right: 0;
 }

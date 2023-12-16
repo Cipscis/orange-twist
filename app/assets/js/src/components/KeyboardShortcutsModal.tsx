@@ -33,6 +33,7 @@ export function KeyboardShortcutModal(): JSX.Element {
 		open={open}
 		onClose={() => setOpen(false)}
 		title="Keyboard shortcuts"
+		closeButton
 	>
 		<dl class="keyboard-shortcuts__list">
 			{keyboardShortcutsInfo

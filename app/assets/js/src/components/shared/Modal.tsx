@@ -5,6 +5,7 @@ import {
 	classNames,
 	getDeepActiveElement,
 } from 'util/index';
+import { IconButton } from './IconButton';
 
 interface ModalProps {
 	/** The Modal is only rendered when `open` is `true`. */
@@ -37,6 +38,11 @@ interface ModalProps {
 	class?: string;
 	/** A title to display as an `<h2>` within the Modal's body element. */
 	title?: string;
+	/**
+	 * Whether or not to display a button that closes the Modal.
+	 * @default false
+	 */
+	closeButton?: boolean;
 }
 
 /**
@@ -52,6 +58,7 @@ export function Modal(props: ModalProps): JSX.Element {
 		children,
 		class: className,
 		title,
+		closeButton,
 	} = props;
 
 	const modalRef = useRef<HTMLDialogElement>(null);
@@ -108,6 +115,28 @@ export function Modal(props: ModalProps): JSX.Element {
 		return () => controller.abort();
 	}, [onClose]);
 
+	// Add "light dismiss" behaviour - close when clicking backdrop
+	useEffect(() => {
+		if (!(open && modalRef.current)) {
+			return;
+		}
+
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		modalRef.current.addEventListener(
+			'click',
+			function (e) {
+				if (e.target === this) {
+					this.close();
+				}
+			},
+			{ signal }
+		);
+
+		return () => controller.abort();
+	}, [open]);
+
 	return <dialog
 		class={classNames('modal', className)}
 		tabIndex={-1}
@@ -116,14 +145,22 @@ export function Modal(props: ModalProps): JSX.Element {
 	>
 		{
 			open &&
-			<>
+			<div class="modal__body">
+				{
+					closeButton &&
+					<IconButton
+						title="Close modal"
+						icon="❌"
+						class="modal__close"
+					/>
+				}
 				{
 					title &&
 					<h2 class="modal__title">{title}</h2>
 				}
 
 				{children}
-			</>
+			</div>
 		}
 	</dialog>;
 }

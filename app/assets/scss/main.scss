@@ -1,6 +1,6 @@
 @use "sass:meta";
 
-@layer reset, theme, subComponents, components;
+@layer reset, theme, sub-components, components;
 
 @layer reset {
 	@include meta.load-css("reset");
@@ -10,7 +10,7 @@
 	@include meta.load-css("theme/base");
 }
 
-@layer subComponents {
+@layer sub-components {
 	// Sub-components
 	@include meta.load-css("sub-components/button");
 	@include meta.load-css("sub-components/content");
