@@ -1,0 +1,9 @@
+@use "../patterns";
+
+.button--primary {
+	@include patterns.button(true, secondary);
+}
+
+.button--secondary {
+	@include patterns.button(true, tertiary);
+}

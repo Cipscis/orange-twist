@@ -7,6 +7,7 @@ import {
 } from 'preact/hooks';
 
 import { Modal } from 'components/shared/Modal';
+import { Button } from 'components/shared/Button';
 
 interface ModalPromptProps {
 	message: string;
@@ -74,7 +75,7 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 				/>
 			</label>
 
-			<button type="submit" class="modal-prompt__button">Okay</button>
+			<Button variant="secondary" type="submit">Okay</Button>
 		</form>
 	</Modal>;
 }

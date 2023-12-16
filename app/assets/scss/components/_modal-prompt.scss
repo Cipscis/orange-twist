@@ -11,7 +11,3 @@
 	display: block;
 	margin-bottom: spacing.$sm;
 }
-
-.modal-prompt__button {
-	@include patterns.button(true, tertiary);
-}

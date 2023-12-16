@@ -6,6 +6,7 @@ import { fireCommand } from 'registers/commands';
 
 import { useAllDayInfo } from 'data';
 
+import { Button } from './shared/Button';
 import { Day } from './Day';
 
 /**
@@ -29,10 +30,8 @@ export function DayList(): JSX.Element {
 			/>
 		))}
 
-		<button
-			type="button"
-			class="button"
+		<Button
 			onClick={() => fireCommand(Command.DAY_ADD_NEW)}
-		>Add day</button>
+		>Add day</Button>
 	</section>;
 }
