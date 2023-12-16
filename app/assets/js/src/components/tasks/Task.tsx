@@ -19,6 +19,7 @@ import {
 
 import { TaskStatusComponent } from './TaskStatusComponent';
 import { Markdown } from '../shared/Markdown';
+import { IconButton } from 'components/shared/IconButton';
 
 interface TaskProps {
 	taskId: number;
@@ -196,14 +197,12 @@ export function Task(props: TaskProps): JSX.Element | null {
 						data-testid="task-component-name"
 					/>
 
-					<button
-						type="button"
-						class="task__name-edit js-task__name-edit"
+					<IconButton
+						class="task__name-edit"
 						title="Edit task name"
+						icon="✏️"
 						onClick={() => setIsInEditMode(true)}
-					>
-						<span aria-hidden>✏️</span>
-					</button>
+					/>
 				</form>
 			</>;
 		})()}

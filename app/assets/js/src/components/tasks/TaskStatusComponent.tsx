@@ -29,6 +29,7 @@ import {
 } from 'data';
 
 import * as ui from 'ui';
+import { IconButton } from 'components/shared/IconButton';
 
 interface TaskStatusComponentProps {
 	taskId: number;
@@ -211,18 +212,16 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		ref={rootRef}
 	>
 		{readonly
-			? <span
-				class="task-status__indicator task-status__indicator--readonly"
+			? <IconButton
+				disabled
 				title={status}
-			>{statusSymbol}</span>
-			: <button
-				type="button"
-				class="task-status__indicator"
+				icon={statusSymbol}
+			/>
+			: <IconButton
 				title={`${status} (click to edit)`}
+				icon={statusSymbol}
 				onClick={() => setIsInChangeMode(!isInChangeMode)}
-			>
-				<span aria-hidden>{statusSymbol}</span>
-			</button>
+			/>
 		}
 
 		{
@@ -238,14 +237,12 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 								key={taskStatus}
 								class="task-status__option"
 							>
-								<button
-									type="button"
-									class="task-status__option-button"
+								<IconButton
+									variant="secondary"
 									title={taskStatus}
+									icon={taskStatusSymbols[taskStatus]}
 									onClick={() => changeStatus(taskStatus)}
-								>
-									<span aria-hidden>{taskStatusSymbols[taskStatus]}</span>
-								</button>
+								/>
 							</li>
 						))}
 					</ul>
@@ -254,14 +251,12 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 				<li class="task-status__optgroup">
 					<ul class="task-status__optgroup-list">
 						<li class="task-status__option">
-							<button
-								type="button"
-								class="task-status__option-button"
+							<IconButton
+								variant="secondary"
 								title="Delete"
+								icon="❌"
 								onClick={onDeleteButtonClick}
-							>
-								<span aria-hidden>❌</span>
-							</button>
+							/>
 						</li>
 					</ul>
 				</li>

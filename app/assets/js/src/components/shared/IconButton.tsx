@@ -9,28 +9,37 @@ import { ButtonVariant } from './types';
 
 function getVariantClass(variant: ButtonVariant): string {
 	if (variant === ButtonVariant.PRIMARY) {
-		return 'button--primary';
+		return 'icon-button--primary';
 	} else if (variant === ButtonVariant.SECONDARY) {
-		return 'button--secondary';
+		return 'icon-button--secondary';
 	} else {
 		assertAllUnionMembersHandled(variant);
 	}
 }
 
-interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
+interface IconButtonProps extends Omit<JSX.HTMLAttributes<HTMLButtonElement>, 'icon' | 'children'> {
 	class?: string;
 	variant?: ButtonVariant;
+
+	icon: JSX.Element | string;
+	title: string;
 }
 
-export function Button(props: ButtonProps): JSX.Element {
+export function IconButton(props: IconButtonProps): JSX.Element {
+	const {
+		icon,
+
+		...passthroughProps
+	} = props;
+
 	return <button
 		type="button"
-		{...props}
+		{...passthroughProps}
 		class={classNames(
 			props.class,
 			getVariantClass(props.variant ?? ButtonVariant.PRIMARY),
 		)}
 	>
-		{props.children}
+		<span aria-hidden>{icon}</span>
 	</button>;
 }

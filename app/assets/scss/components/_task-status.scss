@@ -12,14 +12,6 @@
 	--_gap: #{spacing.$sm};
 }
 
-.task-status__indicator:not(.task-status__indicator--readonly) {
-	@include patterns.icon-button;
-}
-
-.task-status__indicator--readonly {
-	@include patterns.icon-button(false);
-}
-
 .task-status__options {
 	@include list-reset;
 	position: absolute;
@@ -54,8 +46,3 @@
 }
 
 .task-status__option {}
-
-.task-status__option-button {
-	@include patterns.icon-button;
-	@include palette.tertiary(true);
-}
