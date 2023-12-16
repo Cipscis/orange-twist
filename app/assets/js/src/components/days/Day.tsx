@@ -12,9 +12,9 @@ import {
 
 import * as ui from 'ui';
 
-import { Button } from './shared/Button';
+import { Button } from '../shared/Button';
 import { DayNote } from './DayNote';
-import { TaskList } from './TaskList';
+import { TaskList } from '../tasks/TaskList';
 
 interface DayProps extends h.JSX.HTMLAttributes<HTMLDetailsElement> {
 	day: Readonly<DayInfo>;

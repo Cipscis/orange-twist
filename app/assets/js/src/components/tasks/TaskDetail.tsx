@@ -11,8 +11,8 @@ import {
 	useTaskInfo,
 } from 'data';
 
-import { Note } from './shared/Note';
-import { Markdown } from './shared/Markdown';
+import { Note } from '../shared/Note';
+import { Markdown } from '../shared/Markdown';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
 
