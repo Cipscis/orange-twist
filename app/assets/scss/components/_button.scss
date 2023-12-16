@@ -1,9 +1,19 @@
 @use "../patterns";
 
 .button--primary {
-	@include patterns.button(true, secondary);
+	&:enabled {
+		@include patterns.button(true, secondary);
+	}
+	&:disabled {
+		@include patterns.button(false, secondary);
+	}
 }
 
 .button--secondary {
-	@include patterns.button(true, tertiary);
+	&:enabled {
+		@include patterns.button(true, tertiary);
+	}
+	&:disabled {
+		@include patterns.button(false, tertiary);
+	}
 }

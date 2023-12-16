@@ -14,6 +14,7 @@
 	// Sub-components
 	@include meta.load-css("components/button");
 	@include meta.load-css("components/content");
+	@include meta.load-css("components/icon-button");
 	@include meta.load-css("components/modal");
 	@include meta.load-css("components/modal-confirm");
 	@include meta.load-css("components/modal-prompt");

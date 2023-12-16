@@ -1,0 +1,19 @@
+@use "../patterns";
+
+.icon-button--primary {
+	&:enabled {
+		@include patterns.icon-button(true, secondary);
+	}
+	&:disabled {
+		@include patterns.icon-button(false, secondary);
+	}
+}
+
+.icon-button--secondary {
+	&:enabled {
+		@include patterns.icon-button(true, tertiary);
+	}
+	&:disabled {
+		@include patterns.icon-button(false, tertiary);
+	}
+}

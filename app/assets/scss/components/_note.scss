@@ -57,8 +57,6 @@
 }
 
 .note__edit {
-	@include patterns.icon-button;
-
 	&:not(:only-child) {
 		position: absolute;
 		bottom: 0;

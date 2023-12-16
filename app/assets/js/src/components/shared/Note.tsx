@@ -18,6 +18,7 @@ import {
 } from 'registers/keyboard-shortcuts';
 
 import { Markdown } from './Markdown';
+import { IconButton } from './IconButton';
 
 interface NoteProps {
 	note: string | null;
@@ -273,14 +274,12 @@ export function Note(props: NoteProps): JSX.Element {
 						onClick={enterEditModeOnClick}
 					/>
 				}
-				<button
-					type="button"
+				<IconButton
 					class="note__edit"
 					title="Edit note"
+					icon="✏️"
 					onClick={() => setIsEditing(true)}
-				>
-					<span aria-hidden>✏️</span>
-				</button>
+				/>
 			</div>
 		}
 	</div>;
