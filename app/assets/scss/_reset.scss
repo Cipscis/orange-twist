@@ -29,4 +29,12 @@ summary {
 
 dialog {
 	border: 0;
+	padding: 0;
+}
+
+label[for] {
+	cursor: pointer;
+}
+label:has(:where(input, textarea, select)) {
+	cursor: pointer;
 }
