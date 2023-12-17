@@ -20,5 +20,7 @@
 		animation: spinCW animation.$speed-slow animation.$easing-linear infinite;
 	}
 
-	animation: appearFade animation.$speed-medium 0.5s animation.$easing-default backwards;
+	&:not(.loader--immediate) {
+		animation: appearFade animation.$speed-medium 0.5s animation.$easing-default backwards;
+	}
 }

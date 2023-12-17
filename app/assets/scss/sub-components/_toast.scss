@@ -29,6 +29,8 @@
 }
 
 .toast__progress {
+	// Start at width 0 so there's no 1 frame flash after rendering
+	width: 0;
 	background-color: rgb(from var(--colour) r g b / 0.1);
 	pointer-events: none;
 }
@@ -36,4 +38,7 @@
 .toast__message {
 	padding-block: spacing.$sm;
 	padding-inline: spacing.$md;
+
+	display: flex;
+	gap: 1ch;
 }
