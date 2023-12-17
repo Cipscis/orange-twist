@@ -11,7 +11,6 @@ import '@testing-library/jest-dom/jest-globals';
 import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
-import { escapeRegExpString } from 'util/index';
 import { TaskStatus } from 'types/TaskStatus';
 import {
 	clear,
@@ -48,9 +47,7 @@ describe('Task', () => {
 
 		const { getByTitle } = render(<Task taskId={0} />);
 
-		expect(getByTitle(
-			new RegExp(escapeRegExpString(TaskStatus.IN_PROGRESS))
-		)).toBeInTheDocument();
+		expect(getByTitle(/In progress/)).toBeInTheDocument();
 	});
 
 	test('renders the task status for the specified day', async () => {
@@ -64,9 +61,7 @@ describe('Task', () => {
 			taskId={1}
 			dayName="2023-11-25"
 		/>);
-		expect(getByTitle(
-			new RegExp(escapeRegExpString(TaskStatus.IN_PROGRESS))
-		)).toBeInTheDocument();
+		expect(getByTitle(/In progress/)).toBeInTheDocument();
 
 		await act(() => {
 			setDayTaskInfo(
@@ -74,9 +69,7 @@ describe('Task', () => {
 				{ status: TaskStatus.IN_REVIEW }
 			);
 		});
-		expect(getByTitle(
-			new RegExp(escapeRegExpString(TaskStatus.IN_REVIEW))
-		)).toBeInTheDocument();
+		expect(getByTitle(/In review/)).toBeInTheDocument();
 
 		await act(() => {
 			setDayTaskInfo(
@@ -84,9 +77,7 @@ describe('Task', () => {
 				{ status: TaskStatus.COMPLETED }
 			);
 		});
-		expect(getByTitle(
-			new RegExp(escapeRegExpString(TaskStatus.COMPLETED))
-		)).toBeInTheDocument();
+		expect(getByTitle(/Completed/)).toBeInTheDocument();
 	});
 
 	test('opens edit mode when edit button is clicked', async () => {

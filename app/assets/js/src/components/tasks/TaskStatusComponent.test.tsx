@@ -29,8 +29,14 @@ import {
 import { Command } from 'types/Command';
 
 import { TaskStatus } from 'types/TaskStatus';
-import { clear, getDayInfo, getDayTaskInfo, getTaskInfo, setDayTaskInfo, setTaskInfo } from 'data';
-import { escapeRegExpString } from 'util/index';
+import {
+	clear,
+	getDayInfo,
+	getDayTaskInfo,
+	getTaskInfo,
+	setDayTaskInfo,
+	setTaskInfo,
+} from 'data';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
 
@@ -89,16 +95,12 @@ describe('TaskStatusComponent', () => {
 				taskId={1}
 			/>);
 
-			expect(getByTitle(
-				new RegExp(escapeRegExpString(TaskStatus.COMPLETED))
-			)).toBeInTheDocument();
+			expect(getByTitle(/Completed/)).toBeInTheDocument();
 
 			await act(() => {
 				setTaskInfo(1, { status: TaskStatus.WILL_NOT_DO });
 			});
-			expect(getByTitle(
-				new RegExp(escapeRegExpString(TaskStatus.WILL_NOT_DO))
-			)).toBeInTheDocument();
+			expect(getByTitle(/Will not do/)).toBeInTheDocument();
 		});
 
 		test('edits a task\'s status directly', async () => {
@@ -111,21 +113,21 @@ describe('TaskStatusComponent', () => {
 			/>);
 
 			const editButton = getByRole('button', {
-				name: `${TaskStatus.COMPLETED} (click to edit)`,
+				name: `Completed (click to edit)`,
 			});
 			expect(editButton).toBeInTheDocument();
 
 			await user.click(editButton);
 
 			const inProgressStatusButton = getByRole('button', {
-				name: TaskStatus.IN_PROGRESS,
+				name: 'In progress',
 			});
 			expect(inProgressStatusButton).toBeInTheDocument();
 
 			await user.click(inProgressStatusButton);
 			expect(saveSpy).toHaveBeenCalledTimes(1);
 			expect(getByRole('button', {
-				name: `${TaskStatus.IN_PROGRESS} (click to edit)`,
+				name: `In progress (click to edit)`,
 			})).toBeInTheDocument();
 			expect(getTaskInfo(1)?.status).toBe(TaskStatus.IN_PROGRESS);
 
@@ -142,7 +144,7 @@ describe('TaskStatusComponent', () => {
 			/>);
 
 			const editButton = getByRole('button', {
-				name: `${TaskStatus.COMPLETED} (click to edit)`,
+				name: `Completed (click to edit)`,
 			});
 			expect(editButton).toBeInTheDocument();
 
@@ -169,25 +171,19 @@ describe('TaskStatusComponent', () => {
 				dayName="2023-11-20"
 			/>);
 
-			expect(getByTitle(
-				new RegExp(escapeRegExpString(TaskStatus.TODO))
-			)).toBeInTheDocument();
+			expect(getByTitle(/Todo/)).toBeInTheDocument();
 
 			rerender(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-25"
 			/>);
-			expect(getByTitle(
-				new RegExp(escapeRegExpString(TaskStatus.IN_PROGRESS))
-			)).toBeInTheDocument();
+			expect(getByTitle(/In progress/)).toBeInTheDocument();
 
 			rerender(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-27"
 			/>);
-			expect(getByTitle(
-				new RegExp(escapeRegExpString(TaskStatus.COMPLETED))
-			)).toBeInTheDocument();
+			expect(getByTitle(/Completed/)).toBeInTheDocument();
 		});
 
 		test('renders nothing if given a day before the task existed', () => {
@@ -206,7 +202,7 @@ describe('TaskStatusComponent', () => {
 			/>);
 
 			expect(getByRole('button', {
-				name: `${TaskStatus.TODO} (click to edit)`,
+				name: `Todo (click to edit)`,
 			})).toBeInTheDocument();
 
 			await act(() => {
@@ -217,7 +213,7 @@ describe('TaskStatusComponent', () => {
 			});
 
 			expect(getByRole('button', {
-				name: `${TaskStatus.IN_PROGRESS} (click to edit)`,
+				name: `In progress (click to edit)`,
 			})).toBeInTheDocument();
 		});
 
@@ -232,21 +228,21 @@ describe('TaskStatusComponent', () => {
 			/>);
 
 			const editButton = getByRole('button', {
-				name: `${TaskStatus.IN_PROGRESS} (click to edit)`,
+				name: `In progress (click to edit)`,
 			});
 			expect(editButton).toBeInTheDocument();
 
 			await user.click(editButton);
 
 			const inReviewStatusButton = getByRole('button', {
-				name: TaskStatus.IN_REVIEW,
+				name: 'In review',
 			});
 			expect(inReviewStatusButton).toBeInTheDocument();
 
 			await user.click(inReviewStatusButton);
 			expect(saveSpy).toHaveBeenCalledTimes(1);
 			expect(getByRole('button', {
-				name: `${TaskStatus.IN_REVIEW} (click to edit)`,
+				name: `In review (click to edit)`,
 			})).toBeInTheDocument();
 
 			// Task status should be unchanged
@@ -270,7 +266,7 @@ describe('TaskStatusComponent', () => {
 			/>);
 
 			const editButton = getByRole('button', {
-				name: `${TaskStatus.COMPLETED} (click to edit)`,
+				name: `Completed (click to edit)`,
 			});
 			expect(editButton).toBeInTheDocument();
 

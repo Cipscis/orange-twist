@@ -50,6 +50,18 @@ const taskStatusSymbols = {
 	[TaskStatus.WILL_NOT_DO]: '🚫',
 } as const satisfies Record<TaskStatus, string>;
 
+const taskStatusNames = {
+	[TaskStatus.TODO]: 'Todo',
+	[TaskStatus.IN_PROGRESS]: 'In progress',
+	[TaskStatus.COMPLETED]: 'Completed',
+
+	[TaskStatus.INVESTIGATING]: 'Investigating',
+	[TaskStatus.IN_REVIEW]: 'In review',
+	[TaskStatus.READY_TO_TEST]: 'Ready to test',
+	[TaskStatus.APPROVED_TO_DEPLOY]: 'Approved to deploy',
+	[TaskStatus.WILL_NOT_DO]: 'Will not do',
+} as const satisfies Record<TaskStatus, string>;
+
 /**
  * Renders the status for a specified task, optionally
  * for a specified day.
@@ -205,8 +217,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	}
 
 	const statusSymbol = taskStatusSymbols[status];
+	const statusName = taskStatusNames[status];
 
-	// TODO: Turn the selector part into a custom element, using shadow DOM
 	return <span
 		class="task-status"
 		ref={rootRef}
@@ -214,11 +226,11 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		{readonly
 			? <IconButton
 				disabled
-				title={status}
+				title={statusName}
 				icon={statusSymbol}
 			/>
 			: <IconButton
-				title={`${status} (click to edit)`}
+				title={`${statusName} (click to edit)`}
 				icon={statusSymbol}
 				onClick={() => setIsInChangeMode(!isInChangeMode)}
 			/>
@@ -239,7 +251,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 							>
 								<IconButton
 									variant="secondary"
-									title={taskStatus}
+									title={taskStatusNames[taskStatus]}
 									icon={taskStatusSymbols[taskStatus]}
 									onClick={() => changeStatus(taskStatus)}
 								/>
