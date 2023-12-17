@@ -5,8 +5,6 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { Command } from 'types/Command';
-
 import {
 	getAllDayInfo,
 	getDayInfo,
@@ -26,6 +24,7 @@ import {
 	importData,
 } from 'data';
 
+import { Command } from 'types/Command';
 import {
 	fireCommand,
 	registerCommand,
@@ -41,7 +40,9 @@ import {
 	getCurrentDateDayName,
 	isValidDateString,
 } from 'util/index';
+
 import * as ui from 'ui';
+import { Loader } from './shared/Loader';
 
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
@@ -152,8 +153,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		async () => {
 			const id = `saving-${crypto.randomUUID()}`;
 
-			// TODO: Show a nicer loader
-			ui.alert('Saving...', { id });
+			ui.alert(<>
+				<span>Saving...</span>
+				<Loader immediate />
+			</>, { id, duration: null });
 			await Promise.all([
 				saveDays(),
 				saveTasks(),
