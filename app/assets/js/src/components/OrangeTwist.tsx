@@ -45,6 +45,7 @@ import * as ui from 'ui';
 
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
+import { OrangeTwistContext } from './OrangeTwistContext';
 
 interface OrangeTwistProps {
 	children?: ComponentChildren;
@@ -57,17 +58,21 @@ interface OrangeTwistProps {
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const { children } = props;
 
+	const [isLoading, setIsLoading] = useState(true);
+
 	// Load persisted data
 	useEffect(() => {
-		loadDays().then(() => {
-			// If there's no info for the current day, set up a stub
-			const currentDateDayName = getCurrentDateDayName();
-			if (getDayInfo(currentDateDayName) === null) {
-				setDayInfo(currentDateDayName, {});
-			}
-		});
-		loadTasks();
-		loadDayTasks();
+		Promise.all([
+			loadDays().then(() => {
+				// If there's no info for the current day, set up a stub
+				const currentDateDayName = getCurrentDateDayName();
+				if (getDayInfo(currentDateDayName) === null) {
+					setDayInfo(currentDateDayName, {});
+				}
+			}),
+			loadTasks(),
+			loadDayTasks(),
+		]).then(() => setIsLoading(false));
 	}, []);
 
 	// Register all commands and keyboard shortcuts
@@ -207,7 +212,11 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	}, []);
 	useCommand(Command.TASK_ADD_NEW, createNewTask);
 
-	return <>
+	return <OrangeTwistContext.Provider
+		value={{
+			isLoading,
+		}}
+	>
 		<CommandPalette
 			open={commandPaletteOpen}
 			onClose={closeCommandPalette}
@@ -220,5 +229,5 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		</div>
 
 		<KeyboardShortcutModal />
-	</>;
+	</OrangeTwistContext.Provider>;
 }

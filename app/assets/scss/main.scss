@@ -15,9 +15,11 @@
 	@include meta.load-css("sub-components/button");
 	@include meta.load-css("sub-components/content");
 	@include meta.load-css("sub-components/icon-button");
+	@include meta.load-css("sub-components/loader");
 	@include meta.load-css("sub-components/modal");
 	@include meta.load-css("sub-components/modal-confirm");
 	@include meta.load-css("sub-components/modal-prompt");
+	@include meta.load-css("sub-components/notice");
 	@include meta.load-css("sub-components/toast");
 }
 

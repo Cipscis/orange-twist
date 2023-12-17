@@ -1,0 +1,10 @@
+@use "../theme/typography";
+
+// TODO: Style notice properly
+.notice {
+	@include typography.base-large;
+}
+
+.notice--error {}
+
+.notice--warning {}
