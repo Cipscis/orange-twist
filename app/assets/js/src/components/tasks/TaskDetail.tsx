@@ -1,5 +1,5 @@
 import { h, type JSX } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useContext } from 'preact/hooks';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -13,8 +13,11 @@ import {
 
 import { Note } from '../shared/Note';
 import { Markdown } from '../shared/Markdown';
+import { Notice } from '../shared/Notice';
+import { Loader } from '../shared/Loader';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
+import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 interface TaskDetailProps {
 	taskId: number;
@@ -28,6 +31,10 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 		taskId,
 	} = props;
 
+	const {
+		isLoading,
+	} = useContext(OrangeTwistContext);
+
 	const taskInfo = useTaskInfo(taskId);
 	const dayTasksInfo = useAllDayTaskInfo({ taskId });
 
@@ -40,8 +47,14 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 
 	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
 
+	if (isLoading) {
+		return <Loader />;
+	}
+
 	if (!taskInfo) {
-		return null;
+		return <Notice
+			message={`No task with ID ${taskId} exists`}
+		/>;
 	}
 
 	return <section class="orange-twist__section">

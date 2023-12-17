@@ -18,5 +18,6 @@ export { useCloseWatcher } from './useCloseWatcher';
 export { CSSKeyframes } from './CSSKeyframes';
 
 export type { DeepPartial } from './DeepPartial';
+export type { DefaultsFor } from './DefaultsFor';
 export type { EnumTypeOf } from './EnumTypeOf';
 export type { ExpandType } from './ExpandType';
