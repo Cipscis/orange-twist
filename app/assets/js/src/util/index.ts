@@ -10,6 +10,7 @@ export { isValidDateString } from './isValidDateString';
 export { isZodSchemaType } from './isZodSchemaType';
 export { nodeHasAncestor } from './nodeHasAncestor';
 export { readFileAsString } from './readFileAsString';
+export { tryStartViewTransition } from './tryStartViewTransition';
 export { useAsyncData, type AsyncDataState } from './useAsyncData';
 export { useBlurCallback } from './useBlurCallback';
 export { useViewTransition } from './useViewTransition';
