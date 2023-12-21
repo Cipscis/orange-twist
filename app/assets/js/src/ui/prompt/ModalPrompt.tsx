@@ -21,7 +21,6 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 	} = props;
 
 	const [isOpen, setIsOpen] = useState(true);
-	const resultElRef = useRef<HTMLInputElement>(null);
 
 	const previousResolver = useRef<
 	((result: string | null) => void) | null
@@ -47,15 +46,21 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 		closeButton
 	>
 		<form
-			onSubmit={useCallback((e: Event) => {
+			onSubmit={useCallback<
+				NonNullable<JSX.DOMAttributes<HTMLFormElement>['onSubmit']>
+			>((e) => {
 				e.preventDefault();
 
-				const result = resultElRef.current?.value ?? null;
-				if (!result) {
+				const form = e.currentTarget;
+				const formData = new FormData(form);
+
+				const result = formData.get('result');
+				if (typeof result === 'string') {
+					resolve(result);
+				} else {
 					resolve(null);
 				}
 
-				resolve(result);
 				setIsOpen(false);
 			}, [resolve])}
 			class="modal-prompt__form"
@@ -65,7 +70,7 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 				<input
 					type="text"
 					name="result"
-					ref={resultElRef}
+					autofocus
 				/>
 			</label>
 
