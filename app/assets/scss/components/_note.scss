@@ -38,6 +38,7 @@
 	// Simulate content of textarea with visibility hidden, to auto-expand content
 	&::before {
 		content: attr(data-content) " ";
+		white-space-collapse: preserve;
 		word-break: break-word;
 		visibility: hidden;
 	}
