@@ -14,7 +14,11 @@ import {
 	useCloseWatcher,
 } from 'util/index';
 
-import { TaskStatus } from 'types/TaskStatus';
+import {
+	TaskStatus,
+	TaskStatusName,
+	TaskStatusSymbol,
+} from 'types/TaskStatus';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
@@ -30,6 +34,7 @@ import {
 
 import * as ui from 'ui';
 import { IconButton } from 'components/shared/IconButton';
+import { TaskStatusButton } from './TaskStatusButton';
 
 interface TaskStatusComponentProps {
 	taskId: number;
@@ -37,30 +42,6 @@ interface TaskStatusComponentProps {
 	/** @default false */
 	readonly?: boolean;
 }
-
-const taskStatusSymbols = {
-	[TaskStatus.TODO]: '☐',
-	[TaskStatus.IN_PROGRESS]: '▶️',
-	[TaskStatus.COMPLETED]: '☑️',
-
-	[TaskStatus.INVESTIGATING]: '🔍',
-	[TaskStatus.IN_REVIEW]: '👀',
-	[TaskStatus.READY_TO_TEST]: '🧪',
-	[TaskStatus.APPROVED_TO_DEPLOY]: '🟢',
-	[TaskStatus.WILL_NOT_DO]: '🚫',
-} as const satisfies Record<TaskStatus, string>;
-
-const taskStatusNames = {
-	[TaskStatus.TODO]: 'Todo',
-	[TaskStatus.IN_PROGRESS]: 'In progress',
-	[TaskStatus.COMPLETED]: 'Completed',
-
-	[TaskStatus.INVESTIGATING]: 'Investigating',
-	[TaskStatus.IN_REVIEW]: 'In review',
-	[TaskStatus.READY_TO_TEST]: 'Ready to test',
-	[TaskStatus.APPROVED_TO_DEPLOY]: 'Approved to deploy',
-	[TaskStatus.WILL_NOT_DO]: 'Will not do',
-} as const satisfies Record<TaskStatus, string>;
 
 /**
  * Renders the status for a specified task, optionally
@@ -111,6 +92,10 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 
 	const exitChangeMode = useCallback(() => {
 		setIsInChangeMode(false);
+	}, [setIsInChangeMode]);
+
+	const enterChangeMode = useCallback(() => {
+		setIsInChangeMode(true);
 	}, [setIsInChangeMode]);
 
 	/**
@@ -216,8 +201,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		return null;
 	}
 
-	const statusSymbol = taskStatusSymbols[status];
-	const statusName = taskStatusNames[status];
+	const statusSymbol = TaskStatusSymbol[status];
+	const statusName = TaskStatusName[status];
 
 	return <span
 		class="task-status"
@@ -232,7 +217,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			: <IconButton
 				title={`${statusName} (click to edit)`}
 				icon={statusSymbol}
-				onClick={() => setIsInChangeMode(!isInChangeMode)}
+				onClick={enterChangeMode}
 			/>
 		}
 
@@ -249,11 +234,9 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 								key={taskStatus}
 								class="task-status__option"
 							>
-								<IconButton
-									variant="secondary"
-									title={taskStatusNames[taskStatus]}
-									icon={taskStatusSymbols[taskStatus]}
-									onClick={() => changeStatus(taskStatus)}
+								<TaskStatusButton
+									status={taskStatus}
+									onStatusSelect={changeStatus}
 								/>
 							</li>
 						))}
