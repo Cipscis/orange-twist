@@ -153,10 +153,10 @@ module.exports = {
 		// It automatically picks up our configured `pragma: 'h'` configuration
 		'react/react-in-jsx-scope': 'error',
 		'react/display-name': ['warn', { ignoreTranspilerName: false }],
+		// Modified to only ignore refs and DOM components
 		'react/jsx-no-bind': ['warn', {
 			ignoreRefs: true,
-			allowFunctions: true,
-			allowArrowFunctions: true
+			ignoreDOMComponents: true,
 		}],
 		'react/jsx-no-comment-textnodes': 'error',
 		'react/jsx-no-duplicate-props': 'error',
@@ -470,6 +470,14 @@ module.exports = {
 			files: ['*.{spec,test}.{j,t}{s,sx}'],
 			plugins: ['jest'],
 			extends: ['plugin:jest/recommended'],
+			rules: {
+				// This is a performance concern that doesn't matter as much in tests
+				'react/jsx-no-bind': ['warn', {
+					ignoreRefs: true,
+					allowFunctions: true,
+					allowArrowFunctions: true,
+				}],
+			},
 		},
 		{
 			files: ['scripts/**/*'],

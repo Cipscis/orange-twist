@@ -24,13 +24,13 @@ export function CompletedTaskList(): JSX.Element | null {
 				[]
 			)}
 			className="orange-twist__task-list"
-			onReorder={(taskIds) => {
+			onReorder={useCallback((taskIds: readonly number[]) => {
 				const entries = taskIds.map(
 					(taskId, sortIndex) => [taskId, { sortIndex }] as const
 				);
 				setAllTaskInfo(entries);
 				fireCommand(Command.DATA_SAVE);
-			}}
+			}, [])}
 		/>
 	</details>;
 }
