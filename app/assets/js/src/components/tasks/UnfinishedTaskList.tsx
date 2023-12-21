@@ -29,17 +29,17 @@ export function UnfinishedTaskList(): JSX.Element {
 				[]
 			)}
 			className="orange-twist__task-list"
-			onReorder={(taskIds) => {
+			onReorder={useCallback((taskIds: readonly number[]) => {
 				const entries = taskIds.map(
 					(taskId, sortIndex) => [taskId, { sortIndex }] as const
 				);
 				setAllTaskInfo(entries);
 				fireCommand(Command.DATA_SAVE);
-			}}
+			}, [])}
 		/>
 
 		<Button
-			onClick={() => fireCommand(Command.TASK_ADD_NEW)}
+			onClick={useCallback(() => fireCommand(Command.TASK_ADD_NEW), [])}
 		>Add new task</Button>
 	</section>;
 }
