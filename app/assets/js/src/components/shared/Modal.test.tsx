@@ -93,7 +93,7 @@ describe('Modal', () => {
 			/>
 		);
 
-		const modal = getByTestId('modal');
+		const modal = getByTestId('modal__body');
 		expect(modal.classList.contains('test-class')).toBe(true);
 		expect(modal.classList.contains('another-class')).toBe(true);
 	});

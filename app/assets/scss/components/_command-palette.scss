@@ -8,10 +8,8 @@
 @use "../patterns";
 
 .command-palette {
-	.modal__body {
-		// Override default modal background
-		background: transparent;
-	}
+	// Override default modal background
+	background: transparent;
 }
 
 .command-palette__field,
