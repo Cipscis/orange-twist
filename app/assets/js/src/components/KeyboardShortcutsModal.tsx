@@ -1,5 +1,5 @@
 import { h, type JSX } from 'preact';
-import { useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 
 import {
 	KeyboardShortcutName,
@@ -31,7 +31,7 @@ export function KeyboardShortcutModal(): JSX.Element {
 
 	return <Modal
 		open={open}
-		onClose={() => setOpen(false)}
+		onClose={useCallback(() => setOpen(false), [])}
 		title="Keyboard shortcuts"
 		closeButton
 	>

@@ -1,5 +1,5 @@
 import { type JSX, h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -31,7 +31,7 @@ export function DayList(): JSX.Element {
 		))}
 
 		<Button
-			onClick={() => fireCommand(Command.DAY_ADD_NEW)}
+			onClick={useCallback(() => fireCommand(Command.DAY_ADD_NEW), [])}
 		>Add day</Button>
 	</section>;
 }

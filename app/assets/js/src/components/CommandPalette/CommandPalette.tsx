@@ -208,11 +208,7 @@ export function CommandPalette(props: CommandPaletteProps): JSX.Element {
 						queryPattern={queryPattern}
 						isActive={activeDescendant !== null && optionsRef.current[i].current === activeDescendant}
 
-						closeCommandPalette={() => {
-							if (onClose) {
-								onClose();
-							}
-						}}
+						closeCommandPalette={onClose}
 					/>
 				))}
 			</div>
