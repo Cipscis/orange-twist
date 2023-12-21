@@ -44,13 +44,6 @@ export function Task(props: TaskProps): JSX.Element | null {
 
 	const [isInEditMode, setIsInEditMode] = useState(false);
 
-	// Automatically focus on input when entering edit mode
-	useEffect(() => {
-		if (isInEditMode) {
-			inputRef.current?.focus();
-		}
-	}, [isInEditMode]);
-
 	/**
 	 * Blur the input after the component re-renders.
 	 */
@@ -79,6 +72,26 @@ export function Task(props: TaskProps): JSX.Element | null {
 		previousName.current = null;
 	}, [taskInfo]);
 
+	/** Enter edit mode. */
+	const enterEditMode = useCallback(() => {
+		setIsInEditMode(true);
+	}, []);
+
+	/**
+	 * Enter edit mode when clicking the name, *unless* a link was clicked.
+	 */
+	const enterEditModeOnNameClick = useCallback(({ target }: Event) => {
+		if (
+			target instanceof HTMLAnchorElement ||
+			target instanceof Element && target.matches('a *')
+		) {
+			// If we clicked within a link, don't enter edit mode
+			return;
+		}
+
+		enterEditMode();
+	}, [enterEditMode]);
+
 	/**
 	 * Save any change, and leave edit mode.
 	 */
@@ -86,13 +99,6 @@ export function Task(props: TaskProps): JSX.Element | null {
 		saveChanges();
 		setIsInEditMode(false);
 	}, [saveChanges]);
-
-	// Leave edit mode on blur, but not when the tab loses focus
-	useBlurCallback(
-		inputRef,
-		leaveEditMode,
-		isInEditMode,
-	);
 
 	// Remember the previous name when the input is focused.
 	const rememberPreviousName = useCallback((e: FocusEvent) => {
@@ -143,68 +149,67 @@ export function Task(props: TaskProps): JSX.Element | null {
 		}
 	}, [taskInfo, blurOnNextRender]);
 
+	// Automatically focus on input when entering edit mode
+	useEffect(() => {
+		if (isInEditMode) {
+			inputRef.current?.focus();
+		}
+	}, [isInEditMode]);
+
+	// Leave edit mode on blur, but not when the tab loses focus
+	useBlurCallback(
+		inputRef,
+		leaveEditMode,
+		isInEditMode,
+	);
+
 	if (!taskInfo) {
 		return null;
 	}
 
 	return <div class="task">
-		{(() => {
-			return <>
-				<TaskStatusComponent
-					taskId={taskInfo.id}
-					dayName={dayName}
+		<TaskStatusComponent
+			taskId={taskInfo.id}
+			dayName={dayName}
+		/>
+		<IconButton
+			href={`/task/?id=${taskInfo.id}`}
+			title="View task"
+			icon="📄"
+		/>
+		<form
+			class="task__name"
+		>
+			{
+				isInEditMode &&
+				<input
+					ref={inputRef}
+					type="text"
+					class="task__name-input"
+					value={taskInfo.name}
+					placeholder="Task name"
+					size={1}
+					onFocus={rememberPreviousName}
+					onInput={nameChangeHandler}
+					onKeyDown={keydownHandler}
 				/>
-				<IconButton
-					href={`/task/?id=${taskInfo.id}`}
-					title="View task"
-					icon="📄"
-				/>
-				<form
-					class="task__name"
-				>
-					{
-						isInEditMode &&
-						<input
-							ref={inputRef}
-							type="text"
-							class="task__name-input"
-							value={taskInfo.name}
-							placeholder="Task name"
-							size={1}
-							onFocus={rememberPreviousName}
-							onInput={nameChangeHandler}
-							onKeyDown={keydownHandler}
-						/>
-					}
+			}
 
-					<Markdown
-						content={taskInfo.name.replace(/</g, '&lt;')}
-						class={classNames('task__name-display', {
-							'task__name-display--hidden': isInEditMode,
-						})}
-						onClick={(e) => {
-							const target = e.target;
-							if (
-								target instanceof HTMLAnchorElement ||
-								target instanceof Element && target.matches('a *')
-							) {
-								// If we clicked within a link, don't enter edit mode
-								return;
-							}
+			<Markdown
+				content={taskInfo.name.replace(/</g, '&lt;')}
+				class={classNames('task__name-display', {
+					'task__name-display--hidden': isInEditMode,
+				})}
+				onClick={enterEditModeOnNameClick}
+				data-testid="task-component-name"
+			/>
 
-							setIsInEditMode(true);
-						}}
-						data-testid="task-component-name"
-					/>
-
-					<IconButton
-						class="task__name-edit"
-						title="Edit task name"
-						icon="✏️"
-						onClick={() => setIsInEditMode(true)}
-					/>
-				</form>
-			</>;
-		})()}
+			<IconButton
+				class="task__name-edit"
+				title="Edit task name"
+				icon="✏️"
+				onClick={enterEditMode}
+			/>
+		</form>
 	</div>;
 }
