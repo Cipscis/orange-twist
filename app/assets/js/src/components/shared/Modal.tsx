@@ -138,14 +138,17 @@ export function Modal(props: ModalProps): JSX.Element {
 	}, [open]);
 
 	return <dialog
-		class={classNames('modal', className)}
+		class="modal"
 		tabIndex={-1}
 		ref={modalRef}
 		data-testid="modal"
 	>
 		{
 			open &&
-			<div class="modal__body">
+			<div
+				class={classNames('modal__body', className)}
+				data-testid="modal__body"
+			>
 				{
 					closeButton &&
 					<IconButton
