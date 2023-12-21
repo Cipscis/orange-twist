@@ -110,18 +110,18 @@ export function Note(props: NoteProps): JSX.Element {
 		}
 	}, [leaveEditingMode]);
 
-	// Leave editing on keyboard shortcut
-	useKeyboardShortcut(
-		KeyboardShortcutName.EDITING_FINISH,
-		leaveEditingModeFromTextarea,
-		isEditing
-	);
+	/**
+	 * Enter editing mode.
+	 */
+	const enterEditingMode = useCallback(() => {
+		setIsEditing(true);
+	}, []);
 
 	/**
-	 * Enter edit mode on click, unless the user was selecting
+	 * Enter editing mode on click, unless the user was selecting
 	 * text and included text outside the note.
 	 */
-	const enterEditModeOnClick = useCallback((e: MouseEvent) => {
+	const enterEditingModeOnNoteClick = useCallback((e: MouseEvent) => {
 		const target = e.target;
 		if (
 			target instanceof HTMLAnchorElement ||
@@ -137,7 +137,7 @@ export function Note(props: NoteProps): JSX.Element {
 		if (!hasSelection) {
 			// If there's nothing selected, enter edit mode
 			e.preventDefault();
-			setIsEditing(true);
+			enterEditingMode();
 			return;
 		}
 
@@ -153,8 +153,15 @@ export function Note(props: NoteProps): JSX.Element {
 		}
 
 		e.preventDefault();
-		setIsEditing(true);
-	}, []);
+		enterEditingMode();
+	}, [enterEditingMode]);
+
+	// Leave editing on keyboard shortcut
+	useKeyboardShortcut(
+		KeyboardShortcutName.EDITING_FINISH,
+		leaveEditingModeFromTextarea,
+		isEditing
+	);
 
 	// Set up event listener to manage tab insertion
 	useEffect(() => {
@@ -271,14 +278,14 @@ export function Note(props: NoteProps): JSX.Element {
 					note &&
 					<Markdown
 						content={note}
-						onClick={enterEditModeOnClick}
+						onClick={enterEditingModeOnNoteClick}
 					/>
 				}
 				<IconButton
 					class="note__edit"
 					title="Edit note"
 					icon="✏️"
-					onClick={() => setIsEditing(true)}
+					onClick={enterEditingMode}
 				/>
 			</div>
 		}

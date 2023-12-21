@@ -50,6 +50,15 @@ function polyfillDialogElement() {
 	});
 }
 
+/**
+ * jsdom hasn't implemented window.scrollTo, so replace it
+ * with a mocked function so it won't cause JavaScript errors.
+ */
+function polyfillWindowScrollto() {
+	window.scrollTo = jest.fn();
+}
+
 beforeAll(() => {
 	polyfillDialogElement();
+	polyfillWindowScrollto();
 });
