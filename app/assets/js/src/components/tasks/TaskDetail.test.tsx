@@ -11,6 +11,7 @@ import { render } from '@testing-library/preact';
 import '@testing-library/jest-dom/jest-globals';
 
 import { clear, createTask } from 'data';
+import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import { TaskDetail } from './TaskDetail';
 
@@ -24,7 +25,13 @@ describe('TaskDetail', () => {
 			note: 'Task note',
 		});
 
-		const { getByText } = render(<TaskDetail taskId={taskId} />);
+		const { getByText } = render(<OrangeTwistContext.Provider
+			value={{
+				isLoading: false,
+			}}
+		>
+			<TaskDetail taskId={taskId} />
+		</OrangeTwistContext.Provider>);
 
 		expect(getByText('Task note')).toBeInTheDocument();
 	});
