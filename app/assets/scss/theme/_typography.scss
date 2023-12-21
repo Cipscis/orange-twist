@@ -82,6 +82,5 @@ $_line-height-monospace: 1.4;
 @mixin monospace-medium {
 	font-family: $family-monospace;
 	font-weight: $weight-monospace;
-	// Roboto Mono appears larger than Roboto, so use a slightly smaller font size
-	@include _font-size(rem(16px), $_line-height-monospace);
+	@include _font-size(rem(18px), $_line-height-monospace);
 }
