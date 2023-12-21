@@ -5,19 +5,18 @@ import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
 import {
-	setDayTaskInfo,
 	setTaskInfo,
 	useAllDayTaskInfo,
 	useTaskInfo,
 } from 'data';
 
-import { Note } from '../shared/Note';
-import { Markdown } from '../shared/Markdown';
-import { Notice } from '../shared/Notice';
-import { Loader } from '../shared/Loader';
+import { Note } from '../../shared/Note';
+import { Markdown } from '../../shared/Markdown';
+import { Notice } from '../../shared/Notice';
+import { Loader } from '../../shared/Loader';
 
-import { TaskStatusComponent } from './TaskStatusComponent';
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
+import { DayTaskDetail } from './DayTaskDetail';
 
 interface TaskDetailProps {
 	taskId: number;
@@ -68,25 +67,19 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 			onNoteChange={setTaskNote}
 			saveChanges={saveChanges}
 		/>
-		{dayTasksInfo.map(({ dayName, taskId, note }, i, arr) => (
+		{dayTasksInfo.map((dayTaskInfo, i, arr) => (
 			<details
-				key={dayName}
+				key={dayTaskInfo.dayName}
 				class="day"
 				open={i === arr.length-1}
 			>
 				<summary class="day__summary">
-					<h3 class="day__heading">{dayName}</h3>
+					<h3 class="day__heading">{dayTaskInfo.dayName}</h3>
 				</summary>
 
 				<div class="day__body">
-					<TaskStatusComponent
-						taskId={taskId}
-						dayName={dayName}
-					/>
-					<Note
-						note={note}
-						onNoteChange={(note) => setDayTaskInfo({ dayName, taskId }, { note })}
-						saveChanges={() => fireCommand(Command.DATA_SAVE)}
+					<DayTaskDetail
+						dayTaskInfo={dayTaskInfo}
 					/>
 				</div>
 			</details>
