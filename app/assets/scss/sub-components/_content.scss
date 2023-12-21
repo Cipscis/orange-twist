@@ -18,7 +18,7 @@
 		@include palette.link;
 	}
 
-	p:not(:last-child) {
+	:is(p, pre):not(:last-child) {
 		margin-bottom: calc(1em * var(--line-height));
 	}
 
