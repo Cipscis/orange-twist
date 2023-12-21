@@ -62,6 +62,10 @@ This file is intended to differ from environment to environment, so it is ignore
 
 * [marked](https://marked.js.org/): A Markdown compiler.
 
+* [marked-highlight](https://www.npmjs.com/package/marked-highlight): A plugin for marked that allows syntax highlighting to be applied.
+
+* [highlight.js](https://highlightjs.org/): A library for providing syntax highlighting to code.
+
 ## Dev Dependencies
 
 ### Development

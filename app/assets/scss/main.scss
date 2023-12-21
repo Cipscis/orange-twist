@@ -1,9 +1,23 @@
 @use "sass:meta";
 
-@layer reset, theme, sub-components, components;
+@layer reset, packages, theme, sub-components, components;
 
 @layer reset {
 	@include meta.load-css("reset");
+}
+
+@layer packages {
+	body {
+		@container style(--theme: light) {
+			@include meta.load-css("../../../node_modules/highlight.js/scss/a11y-light.scss");
+		}
+	}
+
+	body {
+		@container style(--theme: dark) {
+			@include meta.load-css("../../../node_modules/highlight.js/scss/a11y-dark.scss");
+		}
+	}
 }
 
 @layer theme {
