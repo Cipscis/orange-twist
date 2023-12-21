@@ -38,7 +38,7 @@ import {
 	setTaskInfo,
 } from 'data';
 
-import { TaskStatusComponent } from './TaskStatusComponent';
+import { TaskStatusComponent } from '.';
 
 configMocks({
 	afterEach,
