@@ -49,6 +49,9 @@
 		border: 0;
 
 		@include typography.base-body;
+
+		// Make it look focused even if the tab itself doesn't have focus
+		outline: auto;
 	}
 }
 
