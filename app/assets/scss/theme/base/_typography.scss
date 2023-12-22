@@ -36,17 +36,17 @@
 // Heading
 @font-face {
 	font-family: typography.$font-face-heading;
-	font-weight: typography.$weight-base--bold;
+	font-weight: typography.$weight-base;
 	font-style: normal;
-	src: url("/assets/fonts/nunito/nunito-regular.woff2") format("woff2");
+	src: url("/assets/fonts/nunito/nunito-bold.woff2") format("woff2");
 	font-display: auto;
 }
 
 @font-face {
 	font-family: typography.$font-face-heading;
-	font-weight: typography.$weight-base--bold;
+	font-weight: typography.$weight-base;
 	font-style: italic;
-	src: url("/assets/fonts/nunito/nunito-italic.woff2") format("woff2");
+	src: url("/assets/fonts/nunito/nunito-bolditalic.woff2") format("woff2");
 	font-display: auto;
 }
 
