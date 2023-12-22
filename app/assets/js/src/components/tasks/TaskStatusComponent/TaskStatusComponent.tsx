@@ -231,6 +231,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			class="task-status__popover"
 			ref={popoverRef}
 			data-animate={canAnimateRef.current}
+			tabindex={-1}
 		>
 			{
 				isInChangeMode &&
