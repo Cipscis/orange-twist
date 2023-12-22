@@ -155,6 +155,7 @@ export function Modal(props: ModalProps): JSX.Element {
 						title="Close modal"
 						icon="❌"
 						class="modal__close"
+						onClick={onClose}
 					/>
 				}
 				{

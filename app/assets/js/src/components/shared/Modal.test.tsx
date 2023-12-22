@@ -130,7 +130,27 @@ describe('Modal', () => {
 
 		expect(spy).not.toHaveBeenCalled();
 
-		await act(() => user.keyboard('{Escape}'));
+		await user.keyboard('{Escape}');
+
+		expect(spy).toHaveBeenCalledTimes(1);
+	});
+
+	test('calls onClose when pressing the close button', async () => {
+		const user = userEvent.setup();
+		const spy = jest.fn();
+
+		const { getByRole } = render(
+			<Modal
+				open
+				closeButton
+				onClose={spy}
+			/>
+		);
+
+		expect(spy).not.toHaveBeenCalled();
+
+		const closeButton = getByRole('button', { name: 'Close modal' });
+		await user.click(closeButton);
 
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
