@@ -12,12 +12,31 @@
 	--_gap: #{spacing.$sm};
 }
 
-.task-status__options {
-	@include list-reset;
+.task-status__popover {
 	position: absolute;
 	bottom: 100%;
 	margin-bottom: spacing.$sm;
 	z-index: 1;
+
+	&[data-animate] {
+		// Override the browser setting display: none, so we can animate out
+		display: grid;
+		&:not([open]) {
+			opacity: 0;
+			pointer-events: none;
+		}
+	}
+
+	&[open] {
+		animation: appearScreen animation.$speed-medium animation.$easing-default;
+	}
+	&:not([open]) {
+		animation: disappearScreen animation.$speed-medium animation.$easing-default;
+	}
+}
+
+.task-status__options {
+	@include list-reset;
 	padding: var(--_gap);
 
 	display: flex;
@@ -29,7 +48,6 @@
 	border: 1px solid var(--accent);
 
 	box-shadow: shadow.$accent;
-	animation: appearScreen animation.$speed-medium animation.$easing-default;
 }
 
 .task-status__optgroup {

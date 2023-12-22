@@ -8,9 +8,7 @@ import {
 } from 'preact/hooks';
 
 import {
-	animate,
 	nodeHasAncestor,
-	CSSKeyframes,
 	useCloseWatcher,
 } from 'util/index';
 
@@ -72,31 +70,21 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	const readonly = props.readonly ?? false;
 
 	const rootRef = useRef<HTMLElement>(null);
+	const popoverRef = useRef<HTMLDialogElement>(null);
 	const optionsRef = useRef<HTMLUListElement>(null);
 
-	const [isInChangeMode, setIsInChangeModeInternal] = useState(false);
+	// Used to prevent a closing animation display on initial render
+	const canAnimateRef = useRef<null | true>(null);
 
-	/**
-	 * Modify change mode with an exit animation
-	 */
-	const setIsInChangeMode = useCallback(async (value: boolean) => {
-		if (value || !optionsRef.current) {
-			setIsInChangeModeInternal(value);
-			return;
-		}
-
-		// If we're leaving change mode and the options are visible, animate them out
-		await animate(optionsRef.current, CSSKeyframes.DISAPPEAR_SCREEN);
-		setIsInChangeModeInternal(value);
-	}, [setIsInChangeModeInternal]);
+	const [isInChangeMode, setIsInChangeMode] = useState(false);
 
 	const exitChangeMode = useCallback(() => {
 		setIsInChangeMode(false);
-	}, [setIsInChangeMode]);
+	}, []);
 
 	const enterChangeMode = useCallback(() => {
 		setIsInChangeMode(true);
-	}, [setIsInChangeMode]);
+	}, []);
 
 	/**
 	 * Update task data to reflect new status.
@@ -173,7 +161,24 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		}
 	}, [exitChangeMode]);
 
-	// Set up event listeners for exiting change mode.
+	// Show and hide the popover when we enter or leave change mode
+	useEffect(() => {
+		if (!canAnimateRef.current && isInChangeMode) {
+			canAnimateRef.current = true;
+		}
+
+		if (!popoverRef.current) {
+			return;
+		}
+
+		if (isInChangeMode) {
+			popoverRef.current.show();
+		} else {
+			popoverRef.current.close();
+		}
+	}, [isInChangeMode]);
+
+	// Add "light dismiss" behaviour - close when clicking outside popover
 	useEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
@@ -187,6 +192,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		};
 	}, [isInChangeMode, exitChangeModeOnOutsideClick]);
 
+	// Set up event listeners for closing the popover on UI signals like pressing the "Escape" key
 	useCloseWatcher(exitChangeMode, isInChangeMode);
 
 	const status = (() => {
@@ -221,41 +227,47 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			/>
 		}
 
-		{
-			isInChangeMode &&
-			<ul
-				class="task-status__options"
-				ref={optionsRef}
-			>
-				<li class="task-status__optgroup">
-					<ul class="task-status__optgroup-list">
-						{Object.values(TaskStatus).map((taskStatus) => (
-							<li
-								key={taskStatus}
-								class="task-status__option"
-							>
-								<TaskStatusButton
-									status={taskStatus}
-									onStatusSelect={changeStatus}
+		<dialog
+			class="task-status__popover"
+			ref={popoverRef}
+			data-animate={canAnimateRef.current}
+		>
+			{
+				isInChangeMode &&
+				<ul
+					class="task-status__options"
+					ref={optionsRef}
+				>
+					<li class="task-status__optgroup">
+						<ul class="task-status__optgroup-list">
+							{Object.values(TaskStatus).map((taskStatus) => (
+								<li
+									key={taskStatus}
+									class="task-status__option"
+								>
+									<TaskStatusButton
+										status={taskStatus}
+										onStatusSelect={changeStatus}
+									/>
+								</li>
+							))}
+						</ul>
+					</li>
+
+					<li class="task-status__optgroup">
+						<ul class="task-status__optgroup-list">
+							<li class="task-status__option">
+								<IconButton
+									variant="secondary"
+									title="Delete"
+									icon="❌"
+									onClick={onDeleteButtonClick}
 								/>
 							</li>
-						))}
-					</ul>
-				</li>
-
-				<li class="task-status__optgroup">
-					<ul class="task-status__optgroup-list">
-						<li class="task-status__option">
-							<IconButton
-								variant="secondary"
-								title="Delete"
-								icon="❌"
-								onClick={onDeleteButtonClick}
-							/>
-						</li>
-					</ul>
-				</li>
-			</ul>
-		}
+						</ul>
+					</li>
+				</ul>
+			}
+		</dialog>
 	</span>;
 }
