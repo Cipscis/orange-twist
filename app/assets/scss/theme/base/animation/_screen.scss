@@ -1,8 +1,5 @@
-@mixin _screen-end {
-	scale: 1 0;
-	transform: scaleX(1.5);
-	opacity: 0;
-	filter: invert(50%) brightness(200%);
+@mixin _screen-start {
+	opacity: 1;
 }
 
 @mixin _screen-mid {
@@ -11,12 +8,21 @@
 	filter: invert(50%) brightness(200%);
 }
 
+@mixin _screen-end {
+	scale: 1 0;
+	transform: scaleX(1.5);
+	opacity: 0;
+	filter: invert(50%) brightness(200%);
+}
+
 @keyframes appearScreen {
 	from { @include _screen-end; }
 	50% { @include _screen-mid; }
+	to { @include _screen-start; }
 }
 
 @keyframes disappearScreen {
-	to { @include _screen-end; }
+	from { @include _screen-start; }
 	50% { @include _screen-mid; }
+	to { @include _screen-end; }
 }
