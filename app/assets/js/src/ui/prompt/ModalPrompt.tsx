@@ -70,6 +70,7 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 				<input
 					type="text"
 					name="result"
+					class="modal-prompt__input"
 					autofocus
 				/>
 			</label>

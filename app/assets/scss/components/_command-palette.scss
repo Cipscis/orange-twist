@@ -14,7 +14,6 @@
 
 .command-palette__field,
 .command-palette__options {
-	@include palette.secondary;
 	@include patterns.frosted-glass;
 
 	box-shadow: shadow.$accent;
@@ -22,11 +21,8 @@
 
 .command-palette__field-input,
 .command-palette__option {
-	@include reset;
+	@include patterns.input;
 	@include typography.base-large;
-
-	padding-block: spacing.$xs-rel;
-	padding-inline: spacing.$sm-rel;
 }
 
 .command-palette__field-input {
@@ -60,8 +56,10 @@
 		animation.$easing-default;
 }
 
-.command-palette__option:hover,
-.command-palette__option:focus-visible,
-.command-palette__option--active {
-	background: var(--bg);
+.command-palette__option:not(:is(
+	:hover,
+	:focus-visible,
+	.command-palette__option--active
+)) {
+	background: transparent;
 }

@@ -11,3 +11,7 @@
 	display: block;
 	margin-bottom: spacing.$sm;
 }
+
+.modal-prompt__input {
+	@include patterns.input(tertiary);
+}

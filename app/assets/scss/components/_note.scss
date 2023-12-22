@@ -17,7 +17,8 @@
 		border: 1px solid var(--accent);
 	}
 	.content:not(:empty) {
-		padding: var(--_gutter);
+		// I'm not sure exactly why there's this 2px difference, but this offsets it
+		padding: var(--_gutter) var(--_gutter) calc(var(--_gutter) - 2px);
 	}
 }
 
@@ -47,7 +48,6 @@
 		@include palette.primary;
 		resize: none;
 		overflow: hidden;
-		border: 0;
 
 		@include typography.base-body;
 
