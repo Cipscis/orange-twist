@@ -123,8 +123,21 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			}
 		})();
 
+		// Insert a <style> tag to prevent transitions during theme toggle
+		const flashStyle = document.createElement('style');
+		flashStyle.innerHTML = `* {
+			transition: none !important;
+		}`;
+
+		htmlEl.append(flashStyle);
+
 		htmlEl.style.setProperty('--theme', newTheme);
+		htmlEl.classList.remove(currentTheme);
+		htmlEl.classList.add(newTheme);
 		localStorage.setItem('theme', newTheme);
+
+		// The <style> tag can't be removed synchronously or it's not used for the next paint
+		queueMicrotask(() => flashStyle.remove());
 	}, []);
 	useCommand(Command.THEME_TOGGLE, toggleTheme);
 

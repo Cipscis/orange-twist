@@ -12,6 +12,10 @@
 	background: transparent;
 }
 
+.command-palette__options {
+	@include palette.primary;
+}
+
 .command-palette__field,
 .command-palette__options {
 	@include patterns.frosted-glass;
