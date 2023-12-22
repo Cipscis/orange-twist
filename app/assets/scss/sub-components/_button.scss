@@ -2,12 +2,15 @@
 @use "../theme/palette";
 @use "../theme/radius";
 @use "../theme/spacing";
+@use "../theme/typography";
 
 @use "../tools" as *;
 
 .button--primary,
 .button--secondary {
 	@include reset;
+
+	@include typography.heading-base;
 
 	padding-block: spacing.$sm-rel;
 	padding-inline: spacing.$md-rel;

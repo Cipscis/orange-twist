@@ -59,6 +59,12 @@ $_line-height-monospace: 1.4;
 	@include _font-size(rem(28px), $_line-height-heading);
 }
 
+@mixin heading-base {
+	font-family: $family-heading;
+	font-weight: $weight-base;
+	@include _font-size(rem(18px), $_line-height-body);
+}
+
 //////////
 // Base //
 //////////
