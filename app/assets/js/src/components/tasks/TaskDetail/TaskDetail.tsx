@@ -1,19 +1,26 @@
 import { h, type JSX } from 'preact';
-import { useCallback, useContext } from 'preact/hooks';
+import { useCallback, useContext, useMemo } from 'preact/hooks';
+
+import { isValidDateString } from 'util/index';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
 import {
+	getDayTaskInfo,
+	setDayTaskInfo,
 	setTaskInfo,
 	useAllDayTaskInfo,
 	useTaskInfo,
 } from 'data';
 
-import { Note } from '../../shared/Note';
-import { Markdown } from '../../shared/Markdown';
-import { Notice } from '../../shared/Notice';
-import { Loader } from '../../shared/Loader';
+import * as ui from 'ui';
+
+import { Button } from 'components/shared/Button';
+import { Loader } from 'components/shared/Loader';
+import { Markdown } from 'components/shared/Markdown';
+import { Note } from 'components/shared/Note';
+import { Notice } from 'components/shared/Notice';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 import { DayTaskDetail } from './DayTaskDetail';
@@ -35,7 +42,11 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 	} = useContext(OrangeTwistContext);
 
 	const taskInfo = useTaskInfo(taskId);
-	const dayTasksInfo = useAllDayTaskInfo({ taskId });
+	const unsortedDayTasksInfo = useAllDayTaskInfo({ taskId });
+
+	const dayTasksInfo = useMemo(() => unsortedDayTasksInfo.toSorted(
+		({ dayName: dayNameA }, { dayName: dayNameB }) => dayNameA.localeCompare(dayNameB)
+	), [unsortedDayTasksInfo]);
 
 	const setTaskNote = useCallback(
 		(note: string) => {
@@ -45,6 +56,25 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 	);
 
 	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
+
+	const addNewDayTask = useCallback(async () => {
+		const dayName = await ui.prompt('What day?');
+		if (!dayName) {
+			return;
+		}
+		if (!isValidDateString(dayName)) {
+			ui.alert('Invalid day');
+			return;
+		}
+
+		const existingDayData = getDayTaskInfo({ taskId, dayName });
+		if (existingDayData) {
+			ui.alert('Day already exists');
+			return;
+		}
+
+		setDayTaskInfo({ dayName, taskId }, {});
+	}, [taskId]);
 
 	if (isLoading) {
 		return <Loader />;
@@ -84,5 +114,9 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 				</div>
 			</details>
 		))}
+
+		<Button
+			onClick={addNewDayTask}
+		>Add day</Button>
 	</section>;
 }
