@@ -13,7 +13,7 @@ const queryParams = new URLSearchParams(document.location.search);
 const taskIdParam = queryParams.get('id');
 const taskId = taskIdParam === null ? null : Number(taskIdParam);
 
-render(<OrangeTwist>
+render(<OrangeTwist backButton>
 	{taskId === null || isNaN(taskId)
 		? (
 			<Notice
