@@ -64,7 +64,5 @@ export function alert(
 		toasts.push(newToast);
 	}
 
-	renderToasts({
-		viewTransition: Boolean(existingToast),
-	});
+	renderToasts();
 }
