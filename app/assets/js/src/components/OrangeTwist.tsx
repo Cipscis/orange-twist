@@ -47,8 +47,14 @@ import { Loader } from './shared/Loader';
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
 import { OrangeTwistContext } from './OrangeTwistContext';
+import { IconButton } from './shared/IconButton';
 
 interface OrangeTwistProps {
+	/**
+	 * If present, a back button will be shown.
+	 */
+	backButton?: boolean;
+
 	children?: ComponentChildren;
 }
 
@@ -57,7 +63,10 @@ interface OrangeTwistProps {
  * app-wide tools such as the command palette.
  */
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
-	const { children } = props;
+	const {
+		backButton,
+		children,
+	} = props;
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -239,7 +248,19 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		/>
 
 		<div class="orange-twist">
-			<h1 class="orange-twist__heading">Orange Twist</h1>
+			<div class="orange-twist__head">
+				{
+					backButton &&
+					<IconButton
+						icon="<"
+						title="Back"
+						href="../"
+						class="orange-twist__back"
+					/>
+				}
+
+				<h1 class="orange-twist__heading">Orange Twist</h1>
+			</div>
 
 			{children}
 		</div>

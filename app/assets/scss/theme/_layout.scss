@@ -1,11 +1,7 @@
 @use "../theme/spacing";
-
 @use "../tools" as *;
 
-:root {
-	--max-width: #{rem(800px)};
-	--layout-gutter: #{spacing.$md};
-}
+$max-width: rem(800px);
 
 @mixin grid {
 	display: grid;
