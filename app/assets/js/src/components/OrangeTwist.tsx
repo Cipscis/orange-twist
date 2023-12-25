@@ -141,7 +141,9 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		htmlEl.append(flashStyle);
 
 		htmlEl.style.setProperty('--theme', newTheme);
-		htmlEl.classList.remove(currentTheme);
+		if (currentTheme) {
+			htmlEl.classList.remove(currentTheme);
+		}
 		htmlEl.classList.add(newTheme);
 		localStorage.setItem('theme', newTheme);
 
