@@ -58,7 +58,16 @@ function polyfillWindowScrollto() {
 	window.scrollTo = jest.fn();
 }
 
+/**
+ * jsdom hasn't implemented Element.scrollIntoView, so replace it
+ * with a mocked function so it won't cause JavaScript errors.
+ */
+function polyfillElementScrollIntoView() {
+	window.Element.prototype.scrollIntoView = jest.fn();
+}
+
 beforeAll(() => {
 	polyfillDialogElement();
 	polyfillWindowScrollto();
+	polyfillElementScrollIntoView();
 });
