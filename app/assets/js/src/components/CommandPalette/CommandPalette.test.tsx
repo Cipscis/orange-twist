@@ -40,14 +40,14 @@ describe('CommandPalette', () => {
 			/>
 		);
 
-		expect(queryByTestId('command-palette')).not.toBeInTheDocument();
+		expect(queryByTestId('command-palette__field')).not.toBeInTheDocument();
 
 		rerender(<CommandPalette
 			open
 			onClose={() => {}}
 		/>);
 
-		expect(queryByTestId('command-palette')).toBeInTheDocument();
+		expect(queryByTestId('command-palette__field')).toBeInTheDocument();
 	});
 
 	test('calls onClose when closed internally', async () => {

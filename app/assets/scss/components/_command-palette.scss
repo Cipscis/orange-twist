@@ -10,10 +10,17 @@
 .command-palette {
 	// Override default modal background
 	background: transparent;
+
+	max-height: 100svh;
+	display: grid;
+	grid-template-rows: auto 1fr;
+	gap: spacing.$lg;
 }
 
 .command-palette__options {
+	@include list-reset;
 	@include palette.primary;
+	overflow: auto;
 }
 
 .command-palette__field,
@@ -37,11 +44,6 @@
 	&:focus-visible {
 		outline: none;
 	}
-}
-
-.command-palette__options {
-	@include list-reset;
-	margin-top: spacing.$lg;
 }
 
 .command-palette__option {
