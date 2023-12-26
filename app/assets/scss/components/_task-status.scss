@@ -59,7 +59,14 @@
 
 .task-status__optgroup-list {
 	@include list-reset;
-	display: flex;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	&:has(> :only-child) {
+		grid-template-columns: 1fr;
+	}
+	&:has(> :first-child + :last-child) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 	gap: var(--_gap);
 }
 
