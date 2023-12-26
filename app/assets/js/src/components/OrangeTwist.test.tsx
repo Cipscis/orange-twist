@@ -81,7 +81,7 @@ describe('OrangeTwist', () => {
 
 		await user.keyboard('\\');
 
-		expect(getByTestId('command-palette')).toBeInTheDocument();
+		expect(getByTestId('command-palette__field')).toBeInTheDocument();
 	});
 
 	test('sets up the keyboard shortcuts to finish editing', async () => {

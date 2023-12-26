@@ -188,43 +188,41 @@ export function CommandPalette(props: CommandPaletteProps): JSX.Element {
 		onClose={onClose}
 		class="command-palette"
 	>
-		<div data-testid="command-palette">
-			<div class="command-palette__field">
-				<input
-					ref={fieldRef}
-					type="text"
-					class="command-palette__field-input"
+		<div class="command-palette__field" data-testid="command-palette__field">
+			<input
+				ref={fieldRef}
+				type="text"
+				class="command-palette__field-input"
 
-					aria-role="combobox"
-					aria-expanded="true"
-					aria-haspopoup="listbox"
-					aria-controls="command-palette__options"
-					aria-activedescendant={activeDescendant?.id ?? undefined}
+				aria-role="combobox"
+				aria-expanded="true"
+				aria-haspopoup="listbox"
+				aria-controls="command-palette__options"
+				aria-activedescendant={activeDescendant?.id ?? undefined}
 
-					onInput={(e) => {
-						setQuery(e.currentTarget.value);
-					}}
+				onInput={(e) => {
+					setQuery(e.currentTarget.value);
+				}}
+			/>
+		</div>
+		<div
+			id="command-palette__options"
+			class="command-palette__options"
+			role="listbox"
+		>
+			{matchingCommands.map((command, i) => (
+				<CommandPaletteItem
+					key={command.id}
+					ref={optionsRef.current[i]}
+
+					commandInfo={command}
+					query={query}
+					queryPattern={queryPattern}
+					isActive={activeDescendant !== null && optionsRef.current[i].current === activeDescendant}
+
+					closeCommandPalette={onClose}
 				/>
-			</div>
-			<div
-				id="command-palette__options"
-				class="command-palette__options"
-				role="listbox"
-			>
-				{matchingCommands.map((command, i) => (
-					<CommandPaletteItem
-						key={command.id}
-						ref={optionsRef.current[i]}
-
-						commandInfo={command}
-						query={query}
-						queryPattern={queryPattern}
-						isActive={activeDescendant !== null && optionsRef.current[i].current === activeDescendant}
-
-						closeCommandPalette={onClose}
-					/>
-				))}
-			</div>
+			))}
 		</div>
 	</Modal>;
 }
