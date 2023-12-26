@@ -20,7 +20,7 @@ import { Modal } from '../shared/Modal';
 import { CommandPaletteItem } from './CommandPaletteItem';
 
 interface CommandPaletteProps {
-	/** The CommandPallete is only rendered when `open` is `true`. */
+	/** The CommandPalette is only rendered when `open` is `true`. */
 	open: boolean;
 
 	/**

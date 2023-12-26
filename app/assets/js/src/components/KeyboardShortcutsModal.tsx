@@ -1,17 +1,33 @@
 import { h, type JSX } from 'preact';
-import { useCallback, useState } from 'preact/hooks';
 
-import {
-	KeyboardShortcutName,
-	registerKeyboardShortcut,
-	useKeyboardShortcut,
-	useKeyboardShortcuts,
-} from '../registers/keyboard-shortcuts';
+import { useKeyboardShortcuts } from '../registers/keyboard-shortcuts';
 
 import { Modal } from './shared/Modal';
 import { KeyboardShortcutCombos } from './shared/KeyboardShortcutCombos';
 
-registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
+interface KeyboardShortcutsModalProps {
+	/** The KeyboardShortcutsModal is only rendered when `open` is `true`. */
+	open: boolean;
+
+	/**
+	 * Called when internal behaviour determines that the KeyboardShortcutsModal
+	 * should be closed. Can be used in the parent component to
+	 * update the `open` prop.
+	 *
+	 * @example
+	 * ```tsx
+	 * const [open, setOpen] = useState(false);
+	 *
+	 * return <KeyboardShortcutsModal
+	 *     open={open}
+	 *     onClose={() => setOpen(false)}
+	 * />;
+	 * ```
+	 */
+	onClose: () => void;
+}
+
+
 
 /**
  * Renders a keyboard shortcuts modal, which displays
@@ -19,19 +35,17 @@ registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ 
  *
  * This component is only intended to be used once per page.
  */
-export function KeyboardShortcutModal(): JSX.Element {
-	const [open, setOpen] = useState(false);
-	useKeyboardShortcut(
-		KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN,
-		() => setOpen(true),
-		!open
-	);
+export function KeyboardShortcutModal(props: KeyboardShortcutsModalProps): JSX.Element {
+	const {
+		open,
+		onClose,
+	} = props;
 
 	const keyboardShortcutsInfo = useKeyboardShortcuts();
 
 	return <Modal
 		open={open}
-		onClose={useCallback(() => setOpen(false), [])}
+		onClose={onClose}
 		title="Keyboard shortcuts"
 		closeButton
 	>

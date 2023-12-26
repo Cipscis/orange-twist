@@ -51,16 +51,19 @@ export const CommandPaletteItem = forwardRef(
 				query={query}
 				queryPattern={queryPattern}
 			/>
-			<span class="content">
-				{Array.from(
-					commandInfo.shortcuts.values()
-				).map((shortcut, i) => (
-					<KeyboardShortcutCombos
-						key={i}
-						keyboardShortcutName={shortcut}
-					/>
-				))}
-			</span>
+			{
+				commandInfo.shortcuts.size > 0 &&
+				<span class="content">
+					{Array.from(
+						commandInfo.shortcuts.values()
+					).map((shortcut, i) => (
+						<KeyboardShortcutCombos
+							key={i}
+							keyboardShortcutName={shortcut}
+						/>
+					))}
+				</span>
+			}
 		</button>;
 	}
 );

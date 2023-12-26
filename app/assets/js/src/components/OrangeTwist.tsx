@@ -93,6 +93,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
 		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
 		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
+		registerCommand(Command.KEYBOARD_SHORTCUT_SHOW, { name: 'Show keyboard shortcuts' });
 
 		registerKeyboardShortcut(
 			KeyboardShortcutName.COMMAND_PALETTE_OPEN,
@@ -100,6 +101,8 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				key: '\\',
 			}],
 		);
+		registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
+
 		registerKeyboardShortcut(
 			KeyboardShortcutName.DATA_SAVE,
 			[{
@@ -168,6 +171,25 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		KeyboardShortcutName.COMMAND_PALETTE_OPEN,
 		openCommandPalette,
 		!commandPaletteOpen
+	);
+
+	// Open keyboard shortcuts modal on keyboard shortcut
+	const [keyboardShortcutsModalOpen, setKeyboardShortcutsModalOpen] = useState(false);
+	/** Open the keyboard shortcuts modal. */
+	const openKeyboardShortcutsModal = useCallback(
+		() => setKeyboardShortcutsModalOpen(true),
+		[]
+	);
+	/** Close the keyboard shortcuts modal. */
+	const closeKeyboardShortcutsModal = useCallback(
+		() => setKeyboardShortcutsModalOpen(false),
+		[],
+	);
+	useCommand(Command.KEYBOARD_SHORTCUT_SHOW, openKeyboardShortcutsModal);
+	useKeyboardShortcut(
+		KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN,
+		Command.KEYBOARD_SHORTCUT_SHOW,
+		!keyboardShortcutsModalOpen
 	);
 
 	/**
@@ -262,9 +284,26 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 
 			<h1 class="orange-twist__heading">Orange Twist</h1>
 
+			<div class="orange-twist__tools">
+				<IconButton
+					icon="\"
+					title="Open command prompt"
+					onClick={openCommandPalette}
+				/>
+
+				<IconButton
+					icon="?"
+					title="Show keyboard shortcuts"
+					onClick={openKeyboardShortcutsModal}
+				/>
+			</div>
+
 			{children}
 		</div>
 
-		<KeyboardShortcutModal />
+		<KeyboardShortcutModal
+			open={keyboardShortcutsModalOpen}
+			onClose={closeKeyboardShortcutsModal}
+		/>
 	</OrangeTwistContext.Provider>;
 }

@@ -32,6 +32,7 @@
 .command-palette__field-input {
 	pointer-events: auto;
 	cursor: text;
+	width: 100%;
 
 	&:focus-visible {
 		outline: none;

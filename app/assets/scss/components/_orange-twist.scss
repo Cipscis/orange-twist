@@ -21,6 +21,18 @@
 	}
 }
 
+.orange-twist__tools {
+	grid-column: button-right;
+	@include layout.bp-large {
+		position: sticky;
+		top: spacing.$md;
+	}
+
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: spacing.$sm;
+}
+
 .orange-twist__heading {
 	@include typography.heading-1;
 	grid-column: heading;
