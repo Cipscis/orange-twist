@@ -81,6 +81,11 @@
 		word-break: break-word;
 	}
 
+	a > code {
+		text-decoration-line: underline;
+		text-decoration-color: var(--link);
+	}
+
 	// This is how `marked` renders code blocks
 	pre > code {
 		display: inline-block;
