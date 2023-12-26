@@ -105,27 +105,40 @@ export function CommandPalette(props: CommandPaletteProps): JSX.Element {
 
 			e.preventDefault();
 
-			if (!activeDescendant) {
+			let newActiveDescendant: HTMLElement | null;
+			if (activeDescendant) {
+				// Find existing index, modify it, then update `activeDescendant`
+				const currentActiveDescendantIndex = optionsRef.current.findIndex(
+					(ref) => ref.current === activeDescendant
+				);
+
+				if (currentActiveDescendantIndex === -1) {
+					newActiveDescendant = null;
+				} else {
+					// Set new `activeDescendant`
+					const numOptions = optionsRef.current.length;
+					if (e.key === 'ArrowDown') {
+						const newActiveDescendantIndex = (currentActiveDescendantIndex + 1) % numOptions;
+						newActiveDescendant = optionsRef.current[newActiveDescendantIndex].current;
+					} else {
+						const newActiveDescendantIndex = (currentActiveDescendantIndex + numOptions - 1) % numOptions;
+						newActiveDescendant = optionsRef.current[newActiveDescendantIndex].current;
+					}
+				}
+			} else {
 				// Set it to the first or last, based on what was pressed
 				if (e.key === 'ArrowDown') {
-					setActiveDescendant(optionsRef.current[0].current);
+					newActiveDescendant = optionsRef.current[0].current;
 				} else {
-					setActiveDescendant(optionsRef.current[optionsRef.current.length - 1].current);
+					newActiveDescendant = optionsRef.current[optionsRef.current.length - 1].current;
 				}
 			}
 
-			// Find existing index, modify it, then update `activeDescendant`
-			const currentActiveDescendantIndex = optionsRef.current.findIndex((ref) => ref.current === activeDescendant);
-			if (currentActiveDescendantIndex !== -1) {
-				// Set new `activeDescendant`
-				const numOptions = optionsRef.current.length;
-				if (e.key === 'ArrowDown') {
-					const newActiveDescendantIndex = (currentActiveDescendantIndex + 1) % numOptions;
-					setActiveDescendant(optionsRef.current[newActiveDescendantIndex].current);
-				} else {
-					const newActiveDescendantIndex = (currentActiveDescendantIndex + numOptions - 1) % numOptions;
-					setActiveDescendant(optionsRef.current[newActiveDescendantIndex].current);
-				}
+			setActiveDescendant(newActiveDescendant);
+			if (newActiveDescendant) {
+				// Scroll into view, but keep the item at the
+				// bottom to encourage text input to stay in view
+				newActiveDescendant.scrollIntoView({ block: 'end', inline: 'nearest' });
 			}
 		}, { signal });
 
