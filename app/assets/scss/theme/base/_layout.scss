@@ -3,5 +3,5 @@
 
 :root {
 	--max-width: #{layout.$max-width};
-	--layout-gutter: #{spacing.$md};
+	--layout-gutter: #{layout.$gutter};
 }

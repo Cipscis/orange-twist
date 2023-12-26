@@ -250,19 +250,17 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		/>
 
 		<div class="orange-twist">
-			<div class="orange-twist__head">
-				{
-					backButton &&
-					<IconButton
-						icon="<"
-						title="Back"
-						href="../"
-						class="orange-twist__back"
-					/>
-				}
+			{
+				backButton &&
+				<IconButton
+					icon="<"
+					title="Back"
+					href="../"
+					class="orange-twist__back"
+				/>
+			}
 
-				<h1 class="orange-twist__heading">Orange Twist</h1>
-			</div>
+			<h1 class="orange-twist__heading">Orange Twist</h1>
 
 			{children}
 		</div>

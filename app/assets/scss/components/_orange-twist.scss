@@ -1,4 +1,3 @@
-@use "../theme/breakpoint";
 @use "../theme/layout";
 @use "../theme/spacing";
 @use "../theme/typography";
@@ -14,30 +13,24 @@
 	position: relative;
 }
 
-// Max width + button width + gutter on either side,
-// then with the extra bit doubled so it can work as a breakpoint
-$_back-button-width: 2rem;
-$_back-button-gap: spacing.$md;
-$_back-button-bp: layout.$max-width + ($_back-button-gap * 2 + $_back-button-width) * 2;
-.orange-twist__head:has(.orange-twist__back) {
-	display: grid;
-	grid-template-columns: auto 1fr;
-	align-items: center;
-	gap: spacing.$md;
-}
-@include breakpoint.from($_back-button-bp) {
-	.orange-twist__head:has(.orange-twist__back) {
-		// Button width plus gap
-		margin-left: -($_back-button-width + $_back-button-gap);
+.orange-twist__back {
+	grid-column: button-left;
+	@include layout.bp-large {
+		position: sticky;
+		top: spacing.$md;
 	}
-}
-
-.orange-twist__head {
-	margin-bottom: spacing.$md-rel;
 }
 
 .orange-twist__heading {
 	@include typography.heading-1;
+	grid-column: heading;
+	&:first-child {
+		// If the heading is first, then there's no back button
+		grid-column: main;
+	}
+	// Hack to make top of text flush with top of box
+	// until text-box-trim is supported
+	margin-top: -0.3em;
 }
 
 .orange-twist__section {

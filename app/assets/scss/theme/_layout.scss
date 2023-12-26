@@ -1,12 +1,49 @@
+@use "../theme/breakpoint";
 @use "../theme/spacing";
 @use "../tools" as *;
 
 $max-width: rem(800px);
+$gutter: spacing.$md;
+
+$_button-width: 2rem;
+$_max-bp-width: $max-width + 2 * ($gutter + $_button-width + $gutter);
+
+@mixin bp-small {
+	@include breakpoint.to($_max-bp-width) {
+		@content;
+	}
+}
+
+@mixin bp-large {
+	@include breakpoint.from($_max-bp-width) {
+		@content;
+	}
+}
 
 @mixin grid {
 	display: grid;
-	grid-template-columns:
-		[full-width-start] 1fr var(--layout-gutter)
-		[main-start] minmax(auto, var(--max-width)) [main-end]
-		var(--layout-gutter) 1fr [full-width-end];
+	@include breakpoint.to($_max-bp-width) {
+		// Buttons eating into heading, inset into main
+		grid-template-columns:
+			[full-width-start] var(--layout-gutter)
+			[button-left-start breakout-start main-start] $_button-width [button-left-end]
+			var(--layout-gutter)
+			[heading-start] minmax(auto, var(--max-width)) [heading-end]
+			var(--layout-gutter)
+			[button-right-start] $_button-width [button-right-end breakout-end main-end]
+			var(--layout-gutter) [full-width-end];
+	}
+	@include breakpoint.from($_max-bp-width) {
+		// Buttons alongside main, heading as wide as main
+		grid-template-columns:
+			[full-width-start] 1fr
+			var(--layout-gutter)
+			[button-left-start breakout-start] $_button-width [button-left-end]
+			var(--layout-gutter)
+			[main-start heading-start] minmax(auto, var(--max-width)) [main-end heading-end]
+			var(--layout-gutter)
+			[button-right-start] $_button-width [button-right-end breakout-end]
+			var(--layout-gutter)
+			1fr [full-width-end];
+	}
 }
