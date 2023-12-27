@@ -6,6 +6,7 @@
 
 .orange-twist {
 	@include layout.grid;
+	overflow-x: clip;
 	> * {
 		grid-column: main;
 	}
@@ -13,33 +14,8 @@
 	position: relative;
 }
 
-.orange-twist__back {
-	grid-column: button-left;
-	@include layout.bp-large {
-		position: sticky;
-		top: spacing.$md;
-	}
-}
-
-.orange-twist__tools {
-	grid-column: button-right;
-	@include layout.bp-large {
-		position: sticky;
-		top: spacing.$md;
-	}
-
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: spacing.$sm;
-}
-
 .orange-twist__heading {
 	@include typography.heading-1;
-	grid-column: heading;
-	&:first-child {
-		// If the heading is first, then there's no back button
-		grid-column: main;
-	}
 	// Hack to make top of text flush with top of box
 	// until text-box-trim is supported
 	margin-top: -0.3em;
