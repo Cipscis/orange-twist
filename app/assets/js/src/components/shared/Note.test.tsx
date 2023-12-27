@@ -3,7 +3,6 @@ import { useState } from 'preact/hooks';
 
 import {
 	afterEach,
-	beforeAll,
 	describe,
 	expect,
 	jest,
@@ -23,11 +22,6 @@ import { KeyboardShortcutName, registerKeyboardShortcut } from 'registers/keyboa
 import { Note } from './Note';
 
 describe('Note', () => {
-	beforeAll(() => {
-		// jsdom hasn't implemented window.scrollTo, so mock it to hide console errors
-		window.scrollTo = jest.fn();
-	});
-
 	afterEach(() => {
 		cleanup();
 	});

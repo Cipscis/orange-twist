@@ -10,11 +10,21 @@
 .command-palette {
 	// Override default modal background
 	background: transparent;
+
+	max-height: 100svh;
+	display: grid;
+	grid-template-rows: auto 1fr;
+	gap: spacing.$lg;
+}
+
+.command-palette__options {
+	@include list-reset;
+	@include palette.primary;
+	overflow: auto;
 }
 
 .command-palette__field,
 .command-palette__options {
-	@include palette.secondary;
 	@include patterns.frosted-glass;
 
 	box-shadow: shadow.$accent;
@@ -22,25 +32,18 @@
 
 .command-palette__field-input,
 .command-palette__option {
-	@include reset;
+	@include patterns.input;
 	@include typography.base-large;
-
-	padding-block: spacing.$xs-rel;
-	padding-inline: spacing.$sm-rel;
 }
 
 .command-palette__field-input {
 	pointer-events: auto;
 	cursor: text;
+	width: 100%;
 
 	&:focus-visible {
 		outline: none;
 	}
-}
-
-.command-palette__options {
-	@include list-reset;
-	margin-top: spacing.$lg;
 }
 
 .command-palette__option {
@@ -60,6 +63,10 @@
 		animation.$easing-default;
 }
 
-.command-palette__option--active {
-	background: var(--bg);
+.command-palette__option:not(:is(
+	:hover,
+	:focus-visible,
+	.command-palette__option--active
+)) {
+	background: transparent;
 }

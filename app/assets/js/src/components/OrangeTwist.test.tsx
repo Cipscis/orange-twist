@@ -81,7 +81,7 @@ describe('OrangeTwist', () => {
 
 		await user.keyboard('\\');
 
-		expect(getByTestId('command-palette')).toBeInTheDocument();
+		expect(getByTestId('command-palette__field')).toBeInTheDocument();
 	});
 
 	test('sets up the keyboard shortcuts to finish editing', async () => {
@@ -139,5 +139,13 @@ describe('OrangeTwist', () => {
 
 		expect(getAllDayTaskInfo({ dayName: '2023-11-26' }).length).toBe(1);
 		expect(getAllTaskInfo()?.[0]?.name).toBe('Test event');
+	});
+
+	test('renders a back button if passed a "backButton" prop', () => {
+		const { queryByRole, rerender } = render(<OrangeTwist />);
+		expect(queryByRole('link', { name: 'Back' })).not.toBeInTheDocument();
+
+		rerender(<OrangeTwist backButton />);
+		expect(queryByRole('link', { name: 'Back' })).toBeInTheDocument();
 	});
 });

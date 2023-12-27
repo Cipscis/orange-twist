@@ -46,6 +46,7 @@ $_day-margin: spacing.$lg;
 .day__heading {
 	@include _day-heading;
 	@include patterns.disclosure-title;
+	font-variant-numeric: tabular-nums;
 
 	width: 100%;
 }

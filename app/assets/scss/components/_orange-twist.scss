@@ -6,14 +6,19 @@
 
 .orange-twist {
 	@include layout.grid;
+	overflow-x: clip;
 	> * {
 		grid-column: main;
 	}
+	padding-block: spacing.$lg;
+	position: relative;
 }
 
 .orange-twist__heading {
 	@include typography.heading-1;
-	margin-bottom: spacing.$md-rel;
+	// Hack to make top of text flush with top of box
+	// until text-box-trim is supported
+	margin-top: -0.3em;
 }
 
 .orange-twist__section {

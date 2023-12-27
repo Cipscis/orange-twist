@@ -7,6 +7,7 @@ import {
 } from 'preact/hooks';
 
 import { Modal } from 'components/shared/Modal';
+import { Button } from 'components/shared/Button';
 
 interface ModalConfirmProps {
 	message: string;
@@ -43,15 +44,9 @@ export function ModalConfirm(props: ModalConfirmProps): JSX.Element {
 		}
 
 		previousResolver.current = resolve;
+		// Open when passed a new resolve callback
 		setIsOpen(true);
 	}, [resolve]);
-
-	// Open when passed a new resolve callback
-	useEffect(() => {
-		setIsOpen(true);
-	}, [resolve]);
-
-
 
 	return <Modal
 		open={isOpen}
@@ -61,16 +56,14 @@ export function ModalConfirm(props: ModalConfirmProps): JSX.Element {
 		{message}
 
 		<div class="modal-confirm__actions">
-			<button
-				type="button"
-				class="modal-confirm__button"
+			<Button
+				variant="secondary"
 				onClick={cancel}
-			>Cancel</button>
-			<button
-				type="button"
-				class="modal-confirm__button"
+			>Cancel</Button>
+			<Button
+				variant="secondary"
 				onClick={confirm}
-			>Confirm</button>
+			>Confirm</Button>
 		</div>
 	</Modal>;
 }

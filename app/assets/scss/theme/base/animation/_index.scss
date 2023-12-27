@@ -2,5 +2,7 @@
 /// @see `CSSKeyframes.ts` for where the names of these animations are exposed to JavaScript.
 ////
 
+@use "fade";
 @use "screen";
 @use "slide";
+@use "spin";

@@ -4,6 +4,8 @@ import { classNames } from 'util/index';
 
 import { marked } from 'marked';
 import { useLayoutEffect, useRef } from 'preact/hooks';
+import { markedHighlight } from 'marked-highlight';
+import hljs from 'highlight.js';
 
 interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	/**
@@ -46,6 +48,14 @@ marked.use({
 		},
 	},
 });
+
+marked.use(markedHighlight({
+	langPrefix: 'hljs language-',
+	highlight(code, lang, info) {
+		const language = hljs.getLanguage(lang)?.name ?? 'plaintext';
+		return hljs.highlight(code, { language }).value;
+	},
+}));
 
 export function Markdown(props: MarkdownProps): JSX.Element {
 	const {
