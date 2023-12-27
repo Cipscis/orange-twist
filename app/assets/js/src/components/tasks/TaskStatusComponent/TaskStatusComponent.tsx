@@ -232,43 +232,41 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			ref={popoverRef}
 			data-animate={canAnimateRef.current}
 			tabindex={-1}
+			inert={!isInChangeMode}
 		>
-			{
-				isInChangeMode &&
-				<ul
-					class="task-status__options"
-					ref={optionsRef}
-				>
-					<li class="task-status__optgroup">
-						<ul class="task-status__optgroup-list">
-							{Object.values(TaskStatus).map((taskStatus) => (
-								<li
-									key={taskStatus}
-									class="task-status__option"
-								>
-									<TaskStatusButton
-										status={taskStatus}
-										onStatusSelect={changeStatus}
-									/>
-								</li>
-							))}
-						</ul>
-					</li>
-
-					<li class="task-status__optgroup">
-						<ul class="task-status__optgroup-list">
-							<li class="task-status__option">
-								<IconButton
-									variant="secondary"
-									title="Delete"
-									icon="❌"
-									onClick={onDeleteButtonClick}
+			<ul
+				class="task-status__options"
+				ref={optionsRef}
+			>
+				<li class="task-status__optgroup">
+					<ul class="task-status__optgroup-list">
+						{Object.values(TaskStatus).map((taskStatus) => (
+							<li
+								key={taskStatus}
+								class="task-status__option"
+							>
+								<TaskStatusButton
+									status={taskStatus}
+									onStatusSelect={changeStatus}
 								/>
 							</li>
-						</ul>
-					</li>
-				</ul>
-			}
+						))}
+					</ul>
+				</li>
+
+				<li class="task-status__optgroup">
+					<ul class="task-status__optgroup-list">
+						<li class="task-status__option">
+							<IconButton
+								variant="secondary"
+								title="Delete"
+								icon="❌"
+								onClick={onDeleteButtonClick}
+							/>
+						</li>
+					</ul>
+				</li>
+			</ul>
 		</dialog>
 	</span>;
 }
