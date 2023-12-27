@@ -23,26 +23,24 @@ $_max-bp-width: $max-width + 2 * ($gutter + $_button-width + $gutter);
 @mixin grid {
 	display: grid;
 	@include breakpoint.to($_max-bp-width) {
-		// Buttons eating into heading, inset into main
+		// Tool gutters 0 width on the edge
 		grid-template-columns:
-			[full-width-start] var(--layout-gutter)
-			[button-left-start breakout-start main-start] $_button-width [button-left-end]
+			[full-width-start breakout-left-start breakout-start tools-left-start] 0 [tools-left-end]
 			var(--layout-gutter)
-			[heading-start] minmax(auto, var(--max-width)) [heading-end]
+			[main-start breakout-right-start] minmax(auto, var(--max-width)) [main-end breakout-left-end]
 			var(--layout-gutter)
-			[button-right-start] $_button-width [button-right-end breakout-end main-end]
-			var(--layout-gutter) [full-width-end];
+			[tools-right-start] 0 [tools-right-end breakout-end breakout-right-end full-width-end];
 	}
 	@include breakpoint.from($_max-bp-width) {
-		// Buttons alongside main, heading as wide as main
+		// Tool gutters on either side of main
 		grid-template-columns:
 			[full-width-start] 1fr
 			var(--layout-gutter)
-			[button-left-start breakout-start] $_button-width [button-left-end]
+			[tools-left-start breakout-start] $_button-width [tools-left-end]
 			var(--layout-gutter)
-			[main-start heading-start] minmax(auto, var(--max-width)) [main-end heading-end]
+			[main-start breakout-right-start] minmax(auto, var(--max-width)) [main-end breakout-left-end]
 			var(--layout-gutter)
-			[button-right-start] $_button-width [button-right-end breakout-end]
+			[tools-right-start] $_button-width [tools-right-end breakout-end breakout-right-end]
 			var(--layout-gutter)
 			1fr [full-width-end];
 	}

@@ -43,11 +43,13 @@ import {
 
 import * as ui from 'ui';
 import { Loader } from './shared/Loader';
+import { IconButton } from './shared/IconButton';
+
+import { OrangeTwistContext } from './OrangeTwistContext';
 
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
-import { OrangeTwistContext } from './OrangeTwistContext';
-import { IconButton } from './shared/IconButton';
+import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
 
 interface OrangeTwistProps {
 	/**
@@ -272,19 +274,20 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		/>
 
 		<div class="orange-twist">
-			{
-				backButton &&
-				<IconButton
-					icon="<"
-					title="Back"
-					href="../"
-					class="orange-twist__back"
-				/>
-			}
+			<ToolDrawer side={ToolDrawerPlacement.LEFT}>
+				{
+					backButton &&
+					<IconButton
+						icon="<"
+						title="Back"
+						href="../"
+					/>
+				}
+			</ToolDrawer>
 
 			<h1 class="orange-twist__heading">Orange Twist</h1>
 
-			<div class="orange-twist__tools">
+			<ToolDrawer side={ToolDrawerPlacement.RIGHT}>
 				<IconButton
 					icon="\"
 					title="Open command prompt"
@@ -296,7 +299,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 					title="Show keyboard shortcuts"
 					onClick={openKeyboardShortcutsModal}
 				/>
-			</div>
+			</ToolDrawer>
 
 			{children}
 		</div>

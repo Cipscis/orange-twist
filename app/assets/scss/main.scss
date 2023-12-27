@@ -48,4 +48,5 @@
 	@include meta.load-css("components/task-detail");
 	@include meta.load-css("components/task-list");
 	@include meta.load-css("components/task-status");
+	@include meta.load-css("components/tool-drawer");
 }
