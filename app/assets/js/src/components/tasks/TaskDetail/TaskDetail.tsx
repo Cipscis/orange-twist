@@ -24,6 +24,7 @@ import { Notice } from 'components/shared/Notice';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 import { DayTaskDetail } from './DayTaskDetail';
+import { TaskStatusComponent } from '../TaskStatusComponent';
 
 interface TaskDetailProps {
 	taskId: number;
@@ -104,6 +105,10 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 				open={i === arr.length-1}
 			>
 				<summary class="day__summary">
+					<TaskStatusComponent
+						taskId={taskId}
+						dayName={dayTaskInfo.dayName}
+					/>
 					<h3 class="day__heading">{dayTaskInfo.dayName}</h3>
 				</summary>
 
