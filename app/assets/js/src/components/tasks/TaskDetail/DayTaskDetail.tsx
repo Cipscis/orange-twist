@@ -9,7 +9,6 @@ import {
 	type DayTaskInfo,
 } from 'data';
 
-import { TaskStatusComponent } from '../TaskStatusComponent';
 import { Note } from 'components/shared/Note';
 
 interface DayTaskDetailProps {
@@ -20,10 +19,6 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 	const { dayName, taskId, note } = props.dayTaskInfo;
 
 	return <>
-		<TaskStatusComponent
-			taskId={taskId}
-			dayName={dayName}
-		/>
 		<Note
 			note={note}
 			onNoteChange={useCallback((note: string) => {
