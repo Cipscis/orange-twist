@@ -219,11 +219,17 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 				disabled
 				title={statusName}
 				icon={statusSymbol}
+				style={{
+					color: `var(--colour-task--${status})`,
+				}}
 			/>
 			: <IconButton
 				title={`${statusName} (click to edit)`}
 				icon={statusSymbol}
 				onClick={enterChangeMode}
+				style={{
+					color: `var(--colour-task--${status})`,
+				}}
 			/>
 		}
 
