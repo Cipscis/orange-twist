@@ -3,6 +3,7 @@
 @use "../theme/palette";
 @use "../theme/radius";
 @use "../theme/spacing";
+@use "../theme/typography";
 
 @use "../patterns";
 
@@ -83,6 +84,11 @@ $_animation-speed: animation.$speed-fast;
 	position: absolute;
 	z-index: 1;
 	top: spacing.$sm;
+
+	&::before {
+		@include typography.icons;
+		font-size: 0.6em;
+	}
 
 	.tool-drawer--left & {
 		border-top-right-radius: $_border-radius;
