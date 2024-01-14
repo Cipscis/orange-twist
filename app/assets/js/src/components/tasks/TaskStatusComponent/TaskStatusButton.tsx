@@ -34,5 +34,8 @@ export function TaskStatusButton(props: TaskStatusButtonProps): JSX.Element {
 		onClick={useCallback(() => {
 			onStatusSelect(status);
 		}, [status, onStatusSelect])}
+		style={{
+			color: `var(--colour-task--${status})`,
+		}}
 	/>;
 }

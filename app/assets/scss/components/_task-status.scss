@@ -33,6 +33,11 @@
 	&:not([open]) {
 		animation: disappearScreen animation.$speed-medium animation.$easing-default;
 	}
+
+	// It's not interactive or tabbable, so let it have no focus style
+	&:focus-visible {
+		outline: none;
+	}
 }
 
 .task-status__options {

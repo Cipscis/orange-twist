@@ -4,23 +4,30 @@
 // Colour palette //
 ////////////////////
 
-$white: #ffffff;
-$black: #000000;
+$white: oklch(1, 0, 0);
+$black: oklch(0, 0, 0);
 
-$grey--lightest: #eeeeee;
-$grey--lighter: #d0d0d0;
-$grey--light: #bbbbbb;
-$grey--lightish: #999999;
+$grey--lightest: oklch(0.98, 0, 0);
+$grey--lighter: oklch(0.9, 0, 0);
+$grey--light: oklch(0.8, 0, 0);
+$grey--lightish: oklch(0.75, 0, 0);
 
-$grey--darkish: #777777;
-$grey--dark: #555555;
-$grey--darker: #333333;
-$grey--darkest: #121212;
+$grey--darkest: oklch(0.15, 0, 0);
+$grey--darker: oklch(0.3, 0, 0);
+$grey--dark: oklch(0.35, 0, 0);
+$grey--darkish: oklch(0.4, 0, 0);
 
-// TODO Pick theme colours instead of just using named CSS colours
-$orange--light: orange;
-$orange--dark: orangered;
+$orange--light: oklch(0.8 0.2 70);
+$orange--dark: oklch(0.7 0.15 70);
 
+$blue--light: oklch(0.27 0.3 225);
+$blue--dark: oklch(0.8 0.1 225);
+
+$green--light: oklch(0.27 0.3 150);
+$green--dark: oklch(0.8 0.1 150);
+
+$red--light: oklch(0.27 0.3 25);
+$red--dark: oklch(0.8 0.1 25);
 
 ////////////////
 // Light mode //
@@ -80,6 +87,18 @@ $colour-tertiary--active--light: $black;
 
 	--bg-tertiary--active: #{$bg-tertiary--active--light};
 	--colour-tertiary--active: #{$colour-tertiary--active--light};
+
+	// Task statuses
+	--colour-task--todo: #{$blue--light};
+	--colour-task--in-progress: #{$blue--light};
+	--colour-task--completed: #{$green--light};
+
+	--colour-task--investigating: #{$blue--light};
+	--colour-task--in-review: #{$blue--light};
+	--colour-task--ready-to-test: #{$green--light};
+	--colour-task--paused: #{$red--light};
+	--colour-task--approved-to-deploy: #{$green--light};
+	--colour-task--will-not-do: #{$red--light};
 }
 
 ///////////////
@@ -139,6 +158,18 @@ $colour-tertiary--active--dark: $white;
 
 	--bg-tertiary--active: #{$bg-tertiary--active--dark};
 	--colour-tertiary--active: #{$colour-tertiary--active--dark};
+
+	// Task statuses
+	--colour-task--todo: #{$blue--dark};
+	--colour-task--in-progress: #{$blue--dark};
+	--colour-task--completed: #{$green--dark};
+
+	--colour-task--investigating: #{$blue--dark};
+	--colour-task--in-review: #{$blue--dark};
+	--colour-task--ready-to-test: #{$green--dark};
+	--colour-task--paused: #{$red--dark};
+	--colour-task--approved-to-deploy: #{$green--dark};
+	--colour-task--will-not-do: #{$red--dark};
 }
 
 ////////////////////
