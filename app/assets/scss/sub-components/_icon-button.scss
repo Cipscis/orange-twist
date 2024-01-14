@@ -1,12 +1,15 @@
 @use "../theme/animation";
 @use "../theme/palette";
 @use "../theme/radius";
+@use "../theme/typography";
 
 @use "../tools" as *;
 
 .icon-button--primary,
 .icon-button--secondary {
 	@include reset;
+
+	@include typography.icons;
 
 	display: grid;
 	place-items: center;

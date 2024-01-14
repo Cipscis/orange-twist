@@ -11,6 +11,7 @@ $weight-bold: 700;
 $font-face-base: "Roboto";
 $font-face-heading: "Nunito";
 $font-face-monospace: "Roboto Mono";
+$font-face-icons: "Icons";
 
 $weight-base: $weight-regular;
 $weight-base--bold: $weight-bold;
@@ -22,6 +23,7 @@ $weight-monospace: $weight-regular;
 $family-base: $font-face-base, "Helvetica", sans-serif;
 $family-heading: $font-face-heading, "Helvetica", sans-serif;
 $family-monospace: $font-face-monospace, monospace;
+$family-icons: $font-face-icons, $family-base;
 
 // Line heights
 ///////////////
@@ -89,4 +91,12 @@ $_line-height-monospace: 1.4;
 	font-family: $family-monospace;
 	font-weight: $weight-monospace;
 	@include _font-size(rem(18px), $_line-height-monospace);
+}
+
+///////////
+// Icons //
+///////////
+
+@mixin icons {
+	font-family: $family-icons;
 }
