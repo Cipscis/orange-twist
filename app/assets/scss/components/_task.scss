@@ -21,6 +21,10 @@
 	// Using this approach:
 	// https://css-tricks.com/auto-growing-inputs-textareas/
 	display: inline-grid;
+	grid-template-columns: [content-start] 1fr [content-end edit-button-start] 1em [edit-button-end];
+	grid-template-rows: [content-start] 1fr [content-end];
+	gap: spacing.$sm;
+
 	width: fit-content;
 	min-width: 11ch;
 
@@ -29,7 +33,7 @@
 	// Stack them on top of each other
 	.task__name-input,
 	.task__name-display {
-		grid-area: 1 / -1;
+		grid-area: content;
 
 		@include typography.base-body;
 		border: 0;
@@ -56,8 +60,7 @@
 }
 
 .task__name-edit {
-	position: absolute;
-	right: 0;
+	grid-column: edit-button;
 
 	&:not(:focus) {
 		overflow: hidden;
