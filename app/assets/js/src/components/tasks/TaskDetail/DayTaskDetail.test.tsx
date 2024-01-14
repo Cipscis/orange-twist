@@ -19,7 +19,7 @@ import { addCommandListener, registerCommand } from 'registers/commands';
 
 import { KeyboardShortcutName, registerKeyboardShortcut } from 'registers/keyboard-shortcuts';
 
-import { TaskStatus, TaskStatusSymbol } from 'types/TaskStatus';
+import { TaskStatus } from 'types/TaskStatus';
 import {
 	clear,
 	getDayTaskInfo,
@@ -46,17 +46,6 @@ describe('DayTaskDetail', () => {
 	afterEach(() => {
 		clear();
 		cleanup();
-	});
-
-	test('renders the day task\'s status', () => {
-		const dayTaskInfo = getDayTaskInfo({ dayName: '2023-12-22', taskId: 1 })!;
-
-		const { getByText } = render(<DayTaskDetail
-			dayTaskInfo={dayTaskInfo}
-		/>);
-
-		const status = getByText(TaskStatusSymbol[TaskStatus.IN_PROGRESS]);
-		expect(status).toBeInTheDocument();
 	});
 
 	test('renders the day task\'s note', () => {

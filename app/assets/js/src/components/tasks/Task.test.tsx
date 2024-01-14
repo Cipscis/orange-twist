@@ -47,7 +47,7 @@ describe('Task', () => {
 
 		const { getByTitle } = render(<Task taskId={0} />);
 
-		expect(getByTitle(/In progress/)).toBeInTheDocument();
+		expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
 	});
 
 	test('renders the task status for the specified day', async () => {
@@ -61,7 +61,7 @@ describe('Task', () => {
 			taskId={1}
 			dayName="2023-11-25"
 		/>);
-		expect(getByTitle(/In progress/)).toBeInTheDocument();
+		expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
 
 		await act(() => {
 			setDayTaskInfo(
@@ -69,7 +69,7 @@ describe('Task', () => {
 				{ status: TaskStatus.IN_REVIEW }
 			);
 		});
-		expect(getByTitle(/In review/)).toBeInTheDocument();
+		expect(getByTitle('In review (click to edit)')).toBeInTheDocument();
 
 		await act(() => {
 			setDayTaskInfo(
@@ -77,7 +77,7 @@ describe('Task', () => {
 				{ status: TaskStatus.COMPLETED }
 			);
 		});
-		expect(getByTitle(/Completed/)).toBeInTheDocument();
+		expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
 	});
 
 	test('opens edit mode when edit button is clicked', async () => {

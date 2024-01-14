@@ -95,12 +95,12 @@ describe('TaskStatusComponent', () => {
 				taskId={1}
 			/>);
 
-			expect(getByTitle(/Completed/)).toBeInTheDocument();
+			expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
 
 			await act(() => {
 				setTaskInfo(1, { status: TaskStatus.WILL_NOT_DO });
 			});
-			expect(getByTitle(/Will not do/)).toBeInTheDocument();
+			expect(getByTitle('Will not do (click to edit)')).toBeInTheDocument();
 		});
 
 		test('edits a task\'s status directly', async () => {
@@ -171,19 +171,19 @@ describe('TaskStatusComponent', () => {
 				dayName="2023-11-20"
 			/>);
 
-			expect(getByTitle(/Todo/)).toBeInTheDocument();
+			expect(getByTitle('Todo (click to edit)')).toBeInTheDocument();
 
 			rerender(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-25"
 			/>);
-			expect(getByTitle(/In progress/)).toBeInTheDocument();
+			expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
 
 			rerender(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-27"
 			/>);
-			expect(getByTitle(/Completed/)).toBeInTheDocument();
+			expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
 		});
 
 		test('renders nothing if given a day before the task existed', () => {
