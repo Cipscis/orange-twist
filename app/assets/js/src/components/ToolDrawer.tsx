@@ -21,13 +21,13 @@ export type ToolDrawerPlacement = EnumTypeOf<typeof ToolDrawerPlacement>;
 interface ToolDrawerProps {
 	side: 'left' | 'right';
 
-	children: ComponentChildren;
+	children?: ComponentChildren;
 }
 
 /**
  * A tool drawer that should sit in a gutter column of an {@linkcode OrangeTwist} component.
  */
-export function ToolDrawer(props: ToolDrawerProps): JSX.Element {
+export function ToolDrawer(props: ToolDrawerProps): JSX.Element | null {
 	const {
 		side,
 	} = props;
@@ -35,6 +35,10 @@ export function ToolDrawer(props: ToolDrawerProps): JSX.Element {
 	/** Component children as an array, even if only one child was passed */
 	const children = (() => {
 		const { children } = props;
+		if (typeof children === 'undefined') {
+			return [];
+		}
+
 		if (!Array.isArray(children)) {
 			return [children];
 		}
@@ -82,6 +86,10 @@ export function ToolDrawer(props: ToolDrawerProps): JSX.Element {
 
 		return () => controller.abort();
 	}, [isOpen, closeSlideout]);
+
+	if (children.length === 0) {
+		return null;
+	}
 
 	return <div
 		class={classNames('tool-drawer', {
