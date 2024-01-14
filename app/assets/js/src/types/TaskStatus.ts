@@ -25,10 +25,10 @@ export const TaskStatusSymbol = {
 	[TaskStatus.COMPLETED]: '☑️',
 
 	[TaskStatus.INVESTIGATING]: '🔍',
-	[TaskStatus.IN_REVIEW]: '👀',
+	[TaskStatus.IN_REVIEW]: '👁️',
 	[TaskStatus.READY_TO_TEST]: '🧪',
 	[TaskStatus.PAUSED]: '⏸️',
-	[TaskStatus.APPROVED_TO_DEPLOY]: '🟢',
+	[TaskStatus.APPROVED_TO_DEPLOY]: '👍',
 	[TaskStatus.WILL_NOT_DO]: '🚫',
 } as const satisfies Record<TaskStatus, string>;
 
