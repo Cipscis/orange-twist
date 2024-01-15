@@ -74,6 +74,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 		}
 
 		setDayTaskInfo({ dayName, taskId }, {});
+		fireCommand(Command.DATA_SAVE);
 	}, [taskId]);
 
 	if (isLoading) {
