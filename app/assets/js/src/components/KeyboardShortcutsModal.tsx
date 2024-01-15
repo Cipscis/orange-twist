@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { useKeyboardShortcuts } from '../registers/keyboard-shortcuts';
+import { useKeyboardShortcuts } from 'registers/keyboard-shortcuts';
 
 import {
 	KeyboardShortcutCombos,
