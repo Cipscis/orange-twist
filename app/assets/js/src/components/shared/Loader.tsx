@@ -7,8 +7,9 @@ interface LoaderProps {
 }
 
 export function Loader(props: LoaderProps): JSX.Element {
-	return <div class={classNames('loader', {
-		'loader--immediate': props.immediate,
-	})}
+	return <div
+		class={classNames('loader', {
+			'loader--immediate': props.immediate,
+		})}
 	/>;
 }
