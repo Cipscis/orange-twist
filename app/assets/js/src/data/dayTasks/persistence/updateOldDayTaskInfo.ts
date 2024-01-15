@@ -20,6 +20,14 @@ const oldDayTaskInfoSchemas = [
 			note: z.string(),
 		}),
 	],
+	[
+		2,
+		z.object({
+			status: z.nativeEnum(TaskStatus),
+			note: z.string(),
+			summary: z.string(),
+		}),
+	],
 ] as const satisfies ReadonlyArray<readonly [number, z.ZodType]>;
 
 /**
@@ -72,6 +80,11 @@ export function updateOldDayTaskInfo(val: unknown): DayTaskInfo {
 	// Based on the detected old schema version,
 	// update the data to the next version
 	if (oldDayTaskInfoVersion === 1) {
+		newVal = {
+			...oldVal,
+			summary: null,
+		};
+	} else if (oldDayTaskInfoVersion === 2) {
 		// No migration currently needed
 		newVal = oldVal;
 	} else {

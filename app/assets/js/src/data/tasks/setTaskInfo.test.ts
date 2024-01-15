@@ -80,8 +80,9 @@ describe('setTaskInfo', () => {
 				dayName: currentDayName,
 				taskId: 1,
 
-				note: '',
 				status: TaskStatus.COMPLETED,
+				note: '',
+				summary: null,
 			});
 			expect(getDayInfo(currentDayName)?.tasks.includes(1)).toBe(true);
 
@@ -90,8 +91,9 @@ describe('setTaskInfo', () => {
 				dayName: currentDayName,
 				taskId: 2,
 
-				note: '',
 				status: TaskStatus.COMPLETED,
+				note: '',
+				summary: null,
 			});
 			expect(getDayInfo(currentDayName)?.tasks.includes(2)).toBe(true);
 		});

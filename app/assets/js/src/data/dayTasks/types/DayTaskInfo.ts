@@ -10,6 +10,7 @@ import { dayTaskIdentifierSchema } from './DayTaskIdentifier';
 export const dayTaskInfoSchema = dayTaskIdentifierSchema.extend({
 	status: z.nativeEnum(TaskStatus),
 	note: z.string(),
+	summary: z.string().nullable(),
 });
 
 /**
