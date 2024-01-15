@@ -8,7 +8,7 @@
 	// Using this approach:
 	// https://css-tricks.com/auto-growing-inputs-textareas/
 	display: inline-grid;
-	grid-template-columns: [content-start] 1fr [content-end edit-button-start] 1em [edit-button-end];
+	grid-template-columns: [content-start] 1fr [content-end edit-button-start] 2em [edit-button-end];
 	grid-template-rows: [content-start] 1fr [content-end];
 	gap: spacing.$sm;
 
@@ -36,12 +36,14 @@
 }
 
 .inline-note__display {
+	display: flex;
+	align-items: center;
+	overflow: hidden;
 	p {
 		white-space: pre;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-	overflow: hidden;
 }
 
 .inline-note__display--hidden {
@@ -51,9 +53,8 @@
 .inline-note__edit {
 	grid-column: edit-button;
 
-	&:not(:focus) {
+	&:not(:is(:focus, :only-child)) {
 		overflow: hidden;
 		width: 0;
-		height: 0;
 	}
 }

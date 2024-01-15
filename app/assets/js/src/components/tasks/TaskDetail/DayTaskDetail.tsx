@@ -11,6 +11,7 @@ import {
 
 import { Note } from 'components/shared/Note';
 import { TaskStatusComponent } from '../TaskStatusComponent';
+import { InlineNote } from 'components/shared/InlineNote';
 
 interface DayTaskDetailProps {
 	dayTaskInfo: DayTaskInfo;
@@ -28,6 +29,8 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 		note,
 	} = dayTaskInfo;
 
+	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
+
 	return <details
 		key={dayName}
 		class="day"
@@ -39,6 +42,15 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 				dayName={dayTaskInfo.dayName}
 			/>
 			<h3 class="day__heading">{dayTaskInfo.dayName}</h3>
+			<InlineNote
+				note={dayTaskInfo.summary}
+				onNoteChange={useCallback((summary: string | null) => {
+					setDayTaskInfo(dayTaskInfo, { summary });
+				}, [dayTaskInfo])}
+				saveChanges={saveChanges}
+				editButtonTitle="Edit summary"
+				placeholder="Summary"
+			/>
 		</summary>
 
 		<div class="day__body">
@@ -47,9 +59,7 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 				onNoteChange={useCallback((note: string) => {
 					setDayTaskInfo({ dayName, taskId }, { note });
 				}, [dayName, taskId])}
-				saveChanges={useCallback(() => {
-					fireCommand(Command.DATA_SAVE);
-				}, [])}
+				saveChanges={saveChanges}
 			/>
 		</div>
 	</details>;

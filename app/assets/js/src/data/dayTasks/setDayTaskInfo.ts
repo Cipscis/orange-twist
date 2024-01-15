@@ -39,9 +39,9 @@ export function setDayTaskInfo(
 		dayName,
 		taskId,
 
-		note: dayTaskInfo.note ?? existingDayTaskInfo?.note ?? defaultDayTaskInfo.note,
-		summary: null,
 		status: dayTaskInfo.status ?? existingDayTaskInfo?.status ?? defaultDayTaskInfo.status,
+		note: dayTaskInfo.note ?? existingDayTaskInfo?.note ?? defaultDayTaskInfo.note,
+		summary: dayTaskInfo.summary ?? existingDayTaskInfo?.summary ?? defaultDayTaskInfo.summary,
 	};
 
 	dayTasksRegister.set(key, newDayTaskInfo);
