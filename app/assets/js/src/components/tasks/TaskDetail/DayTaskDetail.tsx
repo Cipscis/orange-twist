@@ -9,9 +9,11 @@ import {
 	type DayTaskInfo,
 } from 'data';
 
-import { Note } from 'components/shared/Note';
+import {
+	InlineNote,
+	Note,
+} from 'components/shared';
 import { TaskStatusComponent } from '../TaskStatusComponent';
-import { InlineNote } from 'components/shared/InlineNote';
 
 interface DayTaskDetailProps {
 	dayTaskInfo: DayTaskInfo;

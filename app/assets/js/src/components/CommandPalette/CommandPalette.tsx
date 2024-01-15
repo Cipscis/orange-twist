@@ -16,7 +16,7 @@ import { escapeRegExpString } from 'util/index';
 
 import { fireCommand, useCommandInfo } from 'registers/commands';
 
-import { Modal } from '../shared/Modal';
+import { Modal } from '../shared';
 import { CommandPaletteItem } from './CommandPaletteItem';
 
 interface CommandPaletteProps {

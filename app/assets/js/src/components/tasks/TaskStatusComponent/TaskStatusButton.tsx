@@ -7,7 +7,7 @@ import {
 	TaskStatusSymbol,
 } from 'types/TaskStatus';
 
-import { IconButton } from 'components/shared/IconButton';
+import { IconButton } from 'components/shared';
 
 interface TaskStatusButtonProps {
 	status: TaskStatus;

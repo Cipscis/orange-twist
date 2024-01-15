@@ -17,7 +17,6 @@ import {
 	TaskStatusName,
 	TaskStatusSymbol,
 } from 'types/TaskStatus';
-import { ButtonVariant } from 'components/shared/types';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -33,7 +32,10 @@ import {
 } from 'data';
 
 import * as ui from 'ui';
-import { IconButton } from 'components/shared/IconButton';
+import {
+	ButtonVariant,
+	IconButton,
+} from 'components/shared';
 import { TaskStatusButton } from './TaskStatusButton';
 
 interface TaskStatusComponentProps {

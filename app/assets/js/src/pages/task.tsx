@@ -2,7 +2,7 @@ import { h, render } from 'preact';
 
 import { OrangeTwist } from 'components/OrangeTwist';
 import { TaskDetail } from 'components/tasks/TaskDetail';
-import { Notice } from 'components/shared/Notice';
+import { Notice } from 'components/shared';
 
 const main = document.getElementById('main');
 if (main === null) {

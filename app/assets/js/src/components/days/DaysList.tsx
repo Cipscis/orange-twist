@@ -6,7 +6,7 @@ import { fireCommand } from 'registers/commands';
 
 import { useAllDayInfo } from 'data';
 
-import { Button } from '../shared/Button';
+import { Button } from '../shared';
 import { Day } from './Day';
 
 /**
