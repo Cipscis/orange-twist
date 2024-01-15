@@ -111,7 +111,9 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 		saveChangesIfDirty,
 	]);
 
-	// Remember the previous name when the input is focused.
+	/**
+	 * Remember the previous name when the input is focused.
+	 */
 	const rememberPreviousName = useCallback((e: FocusEvent) => {
 		const input = e.target;
 		if (!(input instanceof HTMLInputElement)) {
@@ -121,7 +123,9 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 		previousName.current = input.value;
 	}, []);
 
-	// Blur on "Enter" or "Escape", either committing or discarding changes
+	/**
+	 * Blur on "Enter" or "Escape", either committing or discarding changes.
+	 */
 	const keydownHandler = useCallback((e: KeyboardEvent) => {
 		const input = e.target;
 		if (!(input instanceof HTMLInputElement)) {
