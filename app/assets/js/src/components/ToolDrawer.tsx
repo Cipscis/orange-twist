@@ -43,6 +43,8 @@ export function ToolDrawer(props: ToolDrawerProps): JSX.Element | null {
 			return [children];
 		}
 
+		// This type assertion is necessary because `Array.isArray` widens the type to `unknown[]`
+		// This type assertion is safe because it refers to the type of `props.children`
 		return children as Extract<typeof props.children, Array<unknown>>;
 	})();
 
