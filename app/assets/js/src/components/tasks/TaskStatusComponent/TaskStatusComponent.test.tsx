@@ -151,7 +151,7 @@ describe('TaskStatusComponent', () => {
 			await user.click(editButton);
 
 			const deleteButton = getByRole('button', {
-				name: 'Delete',
+				name: 'Delete task',
 			});
 			expect(deleteButton).toBeInTheDocument();
 
@@ -273,7 +273,7 @@ describe('TaskStatusComponent', () => {
 			await user.click(editButton);
 
 			const deleteButton = getByRole('button', {
-				name: 'Delete',
+				name: 'Remove task from day',
 			});
 			expect(deleteButton).toBeInTheDocument();
 

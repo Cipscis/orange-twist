@@ -148,6 +148,13 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	}, [exitChangeMode, dayName, removeTaskFromDay, removeTaskEntirely]);
 
 	/**
+	 * The text to use for the title of the delete button.
+	 */
+	const deleteButtonTitle = dayName
+		? 'Remove task from day'
+		: 'Delete task';
+
+	/**
 	 * Detect if a click was outside the component. If it was, exit change mode.
 	 */
 	const exitChangeModeOnOutsideClick = useCallback((e: MouseEvent) => {
@@ -265,8 +272,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 						<li class="task-status__option">
 							<IconButton
 								variant="secondary"
-								title="Delete"
-								icon="❌"
+								title={deleteButtonTitle}
+								icon="🗑️"
 								onClick={onDeleteButtonClick}
 							/>
 						</li>
