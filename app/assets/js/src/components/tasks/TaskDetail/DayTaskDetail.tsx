@@ -10,22 +10,47 @@ import {
 } from 'data';
 
 import { Note } from 'components/shared/Note';
+import { TaskStatusComponent } from '../TaskStatusComponent';
 
 interface DayTaskDetailProps {
 	dayTaskInfo: DayTaskInfo;
+	open?: boolean;
 }
 
 export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
-	const { dayName, taskId, note } = props.dayTaskInfo;
+	const {
+		dayTaskInfo,
+		open,
+	} = props;
+	const {
+		dayName,
+		taskId,
+		note,
+	} = dayTaskInfo;
 
-	return <>
-		<Note
-			note={note}
-			onNoteChange={useCallback((note: string) => {
-				setDayTaskInfo({ dayName, taskId }, { note });
-			}, [dayName, taskId])}
-			saveChanges={useCallback(() => {
-				fireCommand(Command.DATA_SAVE);
-			}, [])}
-		/></>;
+	return <details
+		key={dayName}
+		class="day"
+		open={open}
+	>
+		<summary class="day__summary">
+			<TaskStatusComponent
+				taskId={taskId}
+				dayName={dayTaskInfo.dayName}
+			/>
+			<h3 class="day__heading">{dayTaskInfo.dayName}</h3>
+		</summary>
+
+		<div class="day__body">
+			<Note
+				note={note}
+				onNoteChange={useCallback((note: string) => {
+					setDayTaskInfo({ dayName, taskId }, { note });
+				}, [dayName, taskId])}
+				saveChanges={useCallback(() => {
+					fireCommand(Command.DATA_SAVE);
+				}, [])}
+			/>
+		</div>
+	</details>;
 }
