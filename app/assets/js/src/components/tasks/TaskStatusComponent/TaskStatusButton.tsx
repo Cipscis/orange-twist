@@ -1,13 +1,13 @@
 import { h, type JSX } from 'preact';
-import type React from 'preact/compat';
+import { useCallback } from 'preact/hooks';
 
 import {
 	TaskStatus,
 	TaskStatusName,
 	TaskStatusSymbol,
 } from 'types/TaskStatus';
+
 import { IconButton } from 'components/shared/IconButton';
-import { useCallback } from 'preact/hooks';
 
 interface TaskStatusButtonProps {
 	status: TaskStatus;
@@ -35,7 +35,7 @@ export function TaskStatusButton(props: TaskStatusButtonProps): JSX.Element {
 			onStatusSelect(status);
 		}, [status, onStatusSelect])}
 		style={{
-			color: `var(--colour-task--${status})`,
+			'--colour': `var(--colour-task--${status})`,
 		}}
 	/>;
 }
