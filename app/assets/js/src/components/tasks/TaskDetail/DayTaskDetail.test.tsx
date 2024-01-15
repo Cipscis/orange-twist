@@ -38,8 +38,9 @@ describe('DayTaskDetail', () => {
 			dayName: '2023-12-22',
 			taskId: 1,
 		}, {
-			note: 'Task note',
 			status: TaskStatus.IN_PROGRESS,
+			note: 'Task note',
+			summary: 'Test summary',
 		});
 	});
 
@@ -57,6 +58,34 @@ describe('DayTaskDetail', () => {
 
 		const status = getByText('Task note');
 		expect(status).toBeInTheDocument();
+	});
+
+	test('renders the day task\'s status', () => {
+		const dayTaskInfo = getDayTaskInfo({ dayName: '2023-12-22', taskId: 1 })!;
+
+		const { getByRole } = render(<DayTaskDetail
+			dayTaskInfo={dayTaskInfo}
+		/>);
+
+		const statusEl = getByRole('button', { name: 'In progress (click to edit)' });
+		expect(statusEl).toBeInTheDocument();
+	});
+
+	test('renders the day task\'s summary and edit summary button', () => {
+		const dayTaskInfo = getDayTaskInfo({ dayName: '2023-12-22', taskId: 1 })!;
+
+		const {
+			getByRole,
+			getByText,
+		} = render(<DayTaskDetail
+			dayTaskInfo={dayTaskInfo}
+		/>);
+
+		const summaryText = getByText('Test summary');
+		expect(summaryText).toBeInTheDocument();
+
+		const summaryEditButton = getByRole('button', { name: 'Edit summary' });
+		expect(summaryEditButton).toBeInTheDocument();
 	});
 
 	test('updates the day task\'s note when it\'s changed', async () => {
