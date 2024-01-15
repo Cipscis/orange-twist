@@ -6,13 +6,8 @@
 
 @use "../tools" as *;
 
-@mixin _day-heading {
-	@include typography.heading-3;
-}
-$_day-margin: spacing.$lg;
-
 .day {
-	margin: $_day-margin 0;
+	margin: spacing.$lg 0;
 
 	isolation: isolate;
 }
@@ -39,9 +34,8 @@ $_day-margin: spacing.$lg;
 }
 
 .day__heading {
-	@include _day-heading;
+	@include typography.heading-3;
 	@include patterns.disclosure-title;
+	white-space: nowrap;
 	font-variant-numeric: tabular-nums;
-
-	width: 100%;
 }

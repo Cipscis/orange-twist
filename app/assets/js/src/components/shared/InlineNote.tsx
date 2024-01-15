@@ -12,7 +12,7 @@ import { IconButton } from './IconButton';
 
 interface InlineNoteProps {
 	note: string | null;
-	onNoteChange: (note: string) => void;
+	onNoteChange: (note: string | null) => void;
 	saveChanges: () => void;
 
 	placeholder?: string;
@@ -62,7 +62,9 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 	/**
 	 * Enter edit mode when clicking the name, *unless* a link was clicked.
 	 */
-	const enterEditModeOnNameClick = useCallback(({ target }: Event) => {
+	const enterEditModeOnNameClick = useCallback((e: Event) => {
+		const { target } = e;
+
 		if (
 			target instanceof HTMLAnchorElement ||
 			target instanceof Element && target.matches('a *')
@@ -71,6 +73,15 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 			return;
 		}
 
+		e.preventDefault();
+		enterEditMode();
+	}, [enterEditMode]);
+
+	/**
+	 * Enter edit mode when clicking the edit button.
+	 */
+	const enterEditModeOnButtonClick = useCallback((e: Event) => {
+		e.preventDefault();
 		enterEditMode();
 	}, [enterEditMode]);
 
@@ -88,12 +99,17 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 	}, []);
 
 	/**
-	 * Save any change, and leave edit mode.
+	 * Clean the note, save any change, and leave edit mode.
 	 */
 	const leaveEditMode = useCallback(() => {
+		onNoteChange(note?.trim() ?? null);
 		saveChangesIfDirty();
 		setIsEditing(false);
-	}, [saveChangesIfDirty]);
+	}, [
+		onNoteChange,
+		note,
+		saveChangesIfDirty,
+	]);
 
 	// Remember the previous name when the input is focused.
 	const rememberPreviousName = useCallback((e: FocusEvent) => {
@@ -124,6 +140,13 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 			return;
 		}
 	}, [updateNote, blurOnNextRender]);
+
+	// Prevent space from triggering a click event on certain types of parent element, e.g. `<summary>`
+	const keyupHandler = useCallback((e: KeyboardEvent) => {
+		if (e.key === ' ') {
+			e.preventDefault();
+		}
+	}, []);
 
 	// Automatically focus on input when entering edit mode
 	useEffect(() => {
@@ -174,23 +197,27 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 				onFocus={rememberPreviousName}
 				onInput={(e) => updateNote(e.currentTarget.value)}
 				onKeyDown={keydownHandler}
+				onKeyUp={keyupHandler}
 			/>
 		}
 
-		<Markdown
-			content={(note ?? '')?.replace(/</g, '&lt;')}
-			class={classNames('inline-note__display', {
-				'inline-note__display--hidden': isEditing,
-			})}
-			onClick={enterEditModeOnNameClick}
-			data-testid="inline-note__note"
-		/>
+		{
+			note &&
+			<Markdown
+				content={note?.replace(/</g, '&lt;')}
+				class={classNames('inline-note__display', {
+					'inline-note__display--hidden': isEditing,
+				})}
+				onClick={enterEditModeOnNameClick}
+				data-testid="inline-note__note"
+			/>
+		}
 
 		<IconButton
 			class="inline-note__edit"
 			title={props.editButtonTitle ?? 'Edit note'}
 			icon="✏️"
-			onClick={enterEditMode}
+			onClick={enterEditModeOnButtonClick}
 		/>
 	</form>;
 }
