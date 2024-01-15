@@ -29,16 +29,18 @@ describe('setDayTaskInfo', () => {
 				taskId: 1,
 			},
 			{
-				note: 'Test note',
 				status: TaskStatus.IN_PROGRESS,
+				note: 'Test note',
+				summary: null,
 			} satisfies Omit<DayTaskInfo, 'dayName' | 'taskId'> // <- Ensure we're testing every option
 		);
 
 		expect(getDayTaskInfo({ dayName: '2023-11-12', taskId: 1 })).toEqual({
 			dayName: '2023-11-12',
 			taskId: 1,
-			note: 'Test note',
 			status: TaskStatus.IN_PROGRESS,
+			note: 'Test note',
+			summary: null,
 		});
 
 		expect(getTaskInfo(1)).toEqual({
@@ -77,8 +79,9 @@ describe('setDayTaskInfo', () => {
 		const testDayTaskInfo: DayTaskInfo = {
 			dayName: '2000-01-01',
 			taskId: -1,
-			note: 'Test note',
 			status: TaskStatus.TODO,
+			note: 'Test note',
+			summary: null,
 		};
 		const testDayTaskIdentifier: DayTaskIdentifier = { dayName: '2023-11-16', taskId: 3 };
 
@@ -94,8 +97,9 @@ describe('setDayTaskInfo', () => {
 		const testTaskInfo: DayTaskInfo = {
 			dayName: '2023-11-16',
 			taskId: 1,
-			note: 'Test note',
 			status: TaskStatus.TODO,
+			note: 'Test note',
+			summary: null,
 		};
 
 		setDayTaskInfo(testTaskInfo, testTaskInfo);

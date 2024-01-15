@@ -19,16 +19,18 @@ const firstDayTaskInfo: DayTaskInfo = {
 	dayName: '2023-11-13',
 	taskId: 1,
 
-	note: 'First note',
 	status: TaskStatus.TODO,
+	note: 'First note',
+	summary: null,
 };
 
 const secondDayTaskInfo: DayTaskInfo = {
 	dayName: '2023-11-13',
 	taskId: 2,
 
-	note: 'Second note',
 	status: TaskStatus.IN_PROGRESS,
+	note: 'Second note',
+	summary: null,
 };
 
 describe('loadDayTasks', () => {
@@ -139,6 +141,7 @@ describe('loadDayTasks', () => {
 				taskId: 1,
 				status: TaskStatus.IN_PROGRESS,
 				note: '',
+				summary: null,
 			}],
 		]));
 		expect(Array.from(dayTasksRegister.entries())).toEqual([
@@ -147,6 +150,7 @@ describe('loadDayTasks', () => {
 				taskId: 1,
 				status: TaskStatus.IN_PROGRESS,
 				note: '',
+				summary: null,
 			}],
 		]);
 	});

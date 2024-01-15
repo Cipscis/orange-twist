@@ -97,6 +97,7 @@ describe('loadExportData', () => {
 			taskId: 1,
 			note: 'Day task note',
 			status: TaskStatus.TODO,
+			summary: null,
 		};
 
 		setTaskInfo(testTask.id, testTask, { forCurrentDay: false });
@@ -134,6 +135,7 @@ describe('loadExportData', () => {
 			taskId: 1,
 			note: 'Day task note',
 			status: TaskStatus.TODO,
+			summary: null,
 		};
 
 		setTaskInfo(testTask.id, testTask, { forCurrentDay: false });
@@ -178,6 +180,7 @@ describe('loadExportData', () => {
 			taskId: testTask.id,
 			note: 'Day task note',
 			status: TaskStatus.TODO,
+			summary: null,
 		};
 
 		const result = loadExportData({

@@ -17,16 +17,18 @@ const firstDayTaskInfo: DayTaskInfo = {
 	dayName: '2023-11-13',
 	taskId: 1,
 
-	note: 'First note',
 	status: TaskStatus.TODO,
+	note: 'First note',
+	summary: null,
 };
 
 const secondDayTaskInfo: DayTaskInfo = {
 	dayName: '2023-11-13',
 	taskId: 2,
 
-	note: 'Second note',
 	status: TaskStatus.TODO,
+	note: 'Second note',
+	summary: null,
 };
 
 describe('saveDayTasks', () => {
