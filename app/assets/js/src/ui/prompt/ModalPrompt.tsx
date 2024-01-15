@@ -6,6 +6,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
+import { ButtonVariant } from 'components/shared/types';
 import { Modal } from 'components/shared/Modal';
 import { Button } from 'components/shared/Button';
 
@@ -75,7 +76,7 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 				/>
 			</label>
 
-			<Button variant="secondary" type="submit">Okay</Button>
+			<Button variant={ButtonVariant.SECONDARY} type="submit">Okay</Button>
 		</form>
 	</Modal>;
 }

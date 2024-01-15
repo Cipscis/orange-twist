@@ -6,6 +6,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
+import { ButtonVariant } from 'components/shared/types';
 import { Modal } from 'components/shared/Modal';
 import { Button } from 'components/shared/Button';
 
@@ -57,11 +58,11 @@ export function ModalConfirm(props: ModalConfirmProps): JSX.Element {
 
 		<div class="modal-confirm__actions">
 			<Button
-				variant="secondary"
+				variant={ButtonVariant.SECONDARY}
 				onClick={cancel}
 			>Cancel</Button>
 			<Button
-				variant="secondary"
+				variant={ButtonVariant.SECONDARY}
 				onClick={confirm}
 			>Confirm</Button>
 		</div>

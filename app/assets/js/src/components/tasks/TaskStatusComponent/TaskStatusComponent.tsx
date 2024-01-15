@@ -17,6 +17,8 @@ import {
 	TaskStatusName,
 	TaskStatusSymbol,
 } from 'types/TaskStatus';
+import { ButtonVariant } from 'components/shared/types';
+
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
@@ -271,7 +273,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 					<ul class="task-status__optgroup-list">
 						<li class="task-status__option">
 							<IconButton
-								variant="secondary"
+								variant={ButtonVariant.SECONDARY}
 								title={deleteButtonTitle}
 								icon="🗑️"
 								onClick={onDeleteButtonClick}
