@@ -95,8 +95,8 @@ export function ToolDrawer(props: ToolDrawerProps): JSX.Element | null {
 
 	return <div
 		class={classNames('tool-drawer', {
-			'tool-drawer--left': side === 'left',
-			'tool-drawer--right': side === 'right',
+			'tool-drawer--left': side === ToolDrawerPlacement.LEFT,
+			'tool-drawer--right': side === ToolDrawerPlacement.RIGHT,
 			'tool-drawer--open': isOpen,
 		})}
 		ref={rootRef}
