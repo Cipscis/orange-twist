@@ -45,11 +45,12 @@ export function Task(props: TaskProps): JSX.Element | null {
 	}, [taskInfo]);
 
 	/** Update the name. */
-	const nameChangeHandler = useCallback((name: string) => {
+	const nameChangeHandler = useCallback((newName: string | null) => {
 		if (!taskInfo) {
 			return;
 		}
 
+		const name = newName ?? '';
 		setTaskInfo(taskInfo.id, { name });
 	}, [taskInfo]);
 
