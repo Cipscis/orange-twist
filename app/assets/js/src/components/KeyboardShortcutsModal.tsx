@@ -2,8 +2,10 @@ import { h, type JSX } from 'preact';
 
 import { useKeyboardShortcuts } from '../registers/keyboard-shortcuts';
 
-import { Modal } from './shared/Modal';
-import { KeyboardShortcutCombos } from './shared/KeyboardShortcutCombos';
+import {
+	KeyboardShortcutCombos,
+	Modal,
+} from './shared';
 
 interface KeyboardShortcutsModalProps {
 	/** The KeyboardShortcutsModal is only rendered when `open` is `true`. */

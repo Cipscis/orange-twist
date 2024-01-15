@@ -12,7 +12,7 @@ import {
 
 import * as ui from 'ui';
 
-import { Button } from '../shared/Button';
+import { Button } from '../shared';
 import { DayNote } from './DayNote';
 import { TaskList } from '../tasks/TaskList';
 

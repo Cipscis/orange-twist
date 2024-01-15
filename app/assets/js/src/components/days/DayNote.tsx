@@ -8,7 +8,7 @@ import {
 	type DayInfo,
 } from 'data';
 
-import { Note } from '../shared/Note';
+import { Note } from '../shared';
 import { useCallback } from 'preact/hooks';
 
 interface DayNoteProps {

@@ -13,8 +13,10 @@ import {
 } from 'data';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
-import { IconButton } from 'components/shared/IconButton';
-import { InlineNote } from 'components/shared/InlineNote';
+import {
+	IconButton,
+	InlineNote,
+} from 'components/shared';
 
 interface TaskProps {
 	taskId: number;

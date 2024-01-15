@@ -6,9 +6,11 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { ButtonVariant } from 'components/shared/types';
-import { Modal } from 'components/shared/Modal';
-import { Button } from 'components/shared/Button';
+import {
+	Button,
+	ButtonVariant,
+	Modal,
+} from 'components/shared';
 
 interface ModalPromptProps {
 	message: string;

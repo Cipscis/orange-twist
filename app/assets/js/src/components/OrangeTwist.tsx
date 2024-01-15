@@ -42,8 +42,10 @@ import {
 } from 'util/index';
 
 import * as ui from 'ui';
-import { Loader } from './shared/Loader';
-import { IconButton } from './shared/IconButton';
+import {
+	IconButton,
+	Loader,
+} from './shared';
 
 import { OrangeTwistContext } from './OrangeTwistContext';
 

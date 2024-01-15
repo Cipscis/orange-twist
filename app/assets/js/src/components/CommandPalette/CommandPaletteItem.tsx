@@ -7,7 +7,7 @@ import { fireCommand } from 'registers/commands';
 import type { CommandInfo } from 'registers/commands/types/CommandInfo';
 
 
-import { KeyboardShortcutCombos } from '../shared/KeyboardShortcutCombos';
+import { KeyboardShortcutCombos } from '../shared';
 import { CommandPaletteItemName } from './CommandPaletteItemName';
 
 interface CommandPaletteItemProps {

@@ -16,11 +16,13 @@ import {
 
 import * as ui from 'ui';
 
-import { Button } from 'components/shared/Button';
-import { Loader } from 'components/shared/Loader';
-import { Markdown } from 'components/shared/Markdown';
-import { Note } from 'components/shared/Note';
-import { Notice } from 'components/shared/Notice';
+import {
+	Button,
+	Loader,
+	Markdown,
+	Note,
+	Notice,
+} from 'components/shared';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 import { DayTaskDetail } from './DayTaskDetail';
