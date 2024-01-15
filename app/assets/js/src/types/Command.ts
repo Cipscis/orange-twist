@@ -7,6 +7,7 @@ export const Command = {
 	DATA_EXPORT: 'data-export',
 	DATA_IMPORT: 'data-import',
 	THEME_TOGGLE: 'theme-toggle',
+	KEYBOARD_SHORTCUT_SHOW: 'keyboard-shortcut-show',
 } as const;
 export type Command = EnumTypeOf<typeof Command>;
 
@@ -18,5 +19,6 @@ declare module 'registers/commands' {
 		[Command.DATA_EXPORT]: [];
 		[Command.DATA_IMPORT]: [];
 		[Command.THEME_TOGGLE]: [];
+		[Command.KEYBOARD_SHORTCUT_SHOW]: [];
 	}
 }

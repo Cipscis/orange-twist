@@ -9,7 +9,7 @@ export interface ToastProps {
 	 * Automatically generated IDs are numbers, specified IDs are strings.
 	 */
 	id: number | string;
-	message: string;
+	message: string | JSX.Element;
 	/**
 	 * The duration, in milliseconds, that a toast should stay on-screen.
 	 * If the toast is ever re-rendered, the duration will be restarted.

@@ -1,6 +1,7 @@
 @use "../palette";
 
-:root {
+:root,
+::backdrop {
 	@include palette.light;
 }
 
@@ -10,7 +11,8 @@ html {
 
 @media not print {
 	@media (prefers-color-scheme: dark) {
-		:root {
+		:root,
+		::backdrop {
 			@include palette.dark;
 		}
 	}

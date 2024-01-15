@@ -11,4 +11,5 @@ import { isTheme } from './types/Theme';
 const theme = localStorage.getItem('theme');
 if (isTheme(theme)) {
 	document.documentElement.style.setProperty('--theme', theme);
+	document.documentElement.classList.add(theme);
 }

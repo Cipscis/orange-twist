@@ -1,21 +1,35 @@
 @use "../tools" as *;
 
-// Font families
-$family-base: "Arial", "Helvetica", sans-serif;
-$family-heading: "Arial", "Helvetica", sans-serif;
-$family-monospace: monospace;
-
 // Font weights
+///////////////
 $weight-regular: 400;
 $weight-semibold: 600;
 $weight-bold: 700;
 
-$_weight-base: $weight-regular;
-$_weight-heading: $weight-bold;
+// Font face definitions
+////////////////////////
+$font-face-base: "Roboto";
+$font-face-heading: "Nunito";
+$font-face-monospace: "Roboto Mono";
+$font-face-icons: "Icons";
+
+$weight-base: $weight-regular;
+$weight-base--bold: $weight-bold;
+$weight-heading: $weight-bold;
+$weight-monospace: $weight-regular;
+
+// Font families
+////////////////
+$family-base: $font-face-base, "Helvetica", sans-serif;
+$family-heading: $font-face-heading, "Helvetica", sans-serif;
+$family-monospace: $font-face-monospace, monospace;
+$family-icons: $font-face-icons, $family-base;
 
 // Line heights
+///////////////
 $_line-height-heading: 1.5;
 $_line-height-body: 1.4;
+$_line-height-monospace: 1.4;
 
 @mixin _font-size($size, $line-height) {
 	--font-size: #{$size};
@@ -31,20 +45,26 @@ $_line-height-body: 1.4;
 
 @mixin heading-1 {
 	font-family: $family-heading;
-	font-weight: $_weight-heading;
+	font-weight: $weight-heading;
 	@include _font-size(rem(36px), $_line-height-heading);
 }
 
 @mixin heading-2 {
 	font-family: $family-heading;
-	font-weight: $_weight-heading;
+	font-weight: $weight-heading;
 	@include _font-size(rem(32px), $_line-height-heading);
 }
 
 @mixin heading-3 {
 	font-family: $family-heading;
-	font-weight: $_weight-heading;
+	font-weight: $weight-heading;
 	@include _font-size(rem(28px), $_line-height-heading);
+}
+
+@mixin heading-base {
+	font-family: $family-heading;
+	font-weight: $weight-base;
+	@include _font-size(rem(18px), $_line-height-body);
 }
 
 //////////
@@ -53,12 +73,30 @@ $_line-height-body: 1.4;
 
 @mixin base-body {
 	font-family: $family-base;
-	font-weight: $_weight-base;
+	font-weight: $weight-base;
 	@include _font-size(rem(18px), $_line-height-body);
 }
 
 @mixin base-large {
 	font-family: $family-base;
-	font-weight: $_weight-base;
+	font-weight: $weight-base;
 	@include _font-size(rem(32px), $_line-height-body);
+}
+
+///////////////
+// Monospace //
+///////////////
+
+@mixin monospace-medium {
+	font-family: $family-monospace;
+	font-weight: $weight-monospace;
+	@include _font-size(rem(18px), $_line-height-monospace);
+}
+
+///////////
+// Icons //
+///////////
+
+@mixin icons {
+	font-family: $family-icons;
 }

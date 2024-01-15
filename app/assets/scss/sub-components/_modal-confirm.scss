@@ -1,0 +1,13 @@
+@use "../theme/spacing";
+@use "../patterns";
+
+.modal-confirm {
+	display: grid;
+	gap: spacing.$md;
+}
+
+.modal-confirm__actions {
+	display: flex;
+	gap: spacing.$md;
+	justify-content: space-between;
+}

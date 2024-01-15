@@ -1,0 +1,49 @@
+@use "../theme/animation";
+@use "../theme/palette";
+@use "../theme/radius";
+@use "../theme/spacing";
+@use "../theme/typography";
+
+@use "../tools" as *;
+
+.button--primary,
+.button--secondary {
+	@include reset;
+
+	@include typography.heading-base;
+
+	padding-block: spacing.$sm-rel;
+	padding-inline: spacing.$md-rel;
+	border-radius: radius.$sm-rel;
+
+	text-align: center;
+
+	transition:
+		background-color animation.$speed-fast animation.$easing-default,
+		color animation.$speed-fast animation.$easing-default;
+
+	// Not using `:enabled` because this could be an <a>
+	&:not(:disabled) {
+		cursor: pointer;
+	}
+}
+
+.button--primary {
+	// Not using `:enabled` because this could be an <a>
+	&:not(:disabled) {
+		@include palette.secondary(true);
+	}
+	&:disabled {
+		@include palette.secondary(false);
+	}
+}
+
+.button--secondary {
+	// Not using `:enabled` because this could be an <a>
+	&:not(:disabled) {
+		@include palette.tertiary(true);
+	}
+	&:disabled {
+		@include palette.tertiary(false);
+	}
+}

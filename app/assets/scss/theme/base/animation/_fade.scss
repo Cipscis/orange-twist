@@ -1,0 +1,11 @@
+@keyframes appearFade {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes disappearFade {
+	to {
+		opacity: 0;
+	}
+}

@@ -1,4 +1,5 @@
 import { h, render } from 'preact';
+
 import { Toast, type ToastProps } from './Toast';
 
 export const toasts: Array<ToastProps> = [];

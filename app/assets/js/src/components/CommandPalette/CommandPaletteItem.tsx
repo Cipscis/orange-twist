@@ -7,7 +7,7 @@ import { fireCommand } from 'registers/commands';
 import type { CommandInfo } from 'registers/commands/types/CommandInfo';
 
 
-import { KeyboardShortcutCombos } from '../shared/KeyboardShortcutCombos';
+import { KeyboardShortcutCombos } from '../shared';
 import { CommandPaletteItemName } from './CommandPaletteItemName';
 
 interface CommandPaletteItemProps {
@@ -51,16 +51,19 @@ export const CommandPaletteItem = forwardRef(
 				query={query}
 				queryPattern={queryPattern}
 			/>
-			<span class="content">
-				{Array.from(
-					commandInfo.shortcuts.values()
-				).map((shortcut, i) => (
-					<KeyboardShortcutCombos
-						key={i}
-						keyboardShortcutName={shortcut}
-					/>
-				))}
-			</span>
+			{
+				commandInfo.shortcuts.size > 0 &&
+				<span class="content">
+					{Array.from(
+						commandInfo.shortcuts.values()
+					).map((shortcut, i) => (
+						<KeyboardShortcutCombos
+							key={i}
+							keyboardShortcutName={shortcut}
+						/>
+					))}
+				</span>
+			}
 		</button>;
 	}
 );

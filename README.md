@@ -62,6 +62,10 @@ This file is intended to differ from environment to environment, so it is ignore
 
 * [marked](https://marked.js.org/): A Markdown compiler.
 
+* [marked-highlight](https://www.npmjs.com/package/marked-highlight): A plugin for marked that allows syntax highlighting to be applied.
+
+* [highlight.js](https://highlightjs.org/): A library for providing syntax highlighting to code.
+
 ## Dev Dependencies
 
 ### Development
@@ -132,4 +136,4 @@ These dependencies are used for deploying the project to GitHub Pages.
 
 * [upload-pages-artifact](https://github.com/marketplace/actions/upload-github-pages-artifact): Used to upload an artifact to use for deploying to GitHub Pages.
 
-* [actions/deploy-pages](https://github.com/marketplace/actions/deploy-github-pages-site): Used to deploy the artifact to GitHub Pages.
+* [deploy-pages](https://github.com/marketplace/actions/deploy-github-pages-site): Used to deploy the artifact to GitHub Pages.

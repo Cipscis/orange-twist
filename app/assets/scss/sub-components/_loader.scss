@@ -1,0 +1,26 @@
+@use "../theme/animation";
+
+.loader {
+	display: grid;
+	place-items: center;
+
+	&::before {
+		content: "";
+		display: block;
+
+		width: 1em;
+		aspect-ratio: 1 / 1;
+		border-radius: 1em;
+
+		border: 0.2em solid var(--accent);
+		border-top-color: transparent;
+
+		filter: drop-shadow(0 0 0.3em var(--accent));
+
+		animation: spinCW animation.$speed-slow animation.$easing-linear infinite;
+	}
+
+	&:not(.loader--immediate) {
+		animation: appearFade animation.$speed-medium 0.5s animation.$easing-default backwards;
+	}
+}

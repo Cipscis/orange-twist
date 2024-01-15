@@ -1,8 +1,6 @@
 @use "../theme/spacing";
-@use "../theme/typography";
 
 @use "../tools" as *;
-@use "../patterns";
 
 .task {
 	display: grid;
@@ -15,59 +13,4 @@
 .task__status {
 	@include reset;
 	cursor: pointer;
-}
-
-.task__detail-link {
-	@include patterns.icon-button;
-}
-
-.task__name {
-	// Using this approach:
-	// https://css-tricks.com/auto-growing-inputs-textareas/
-	display: inline-grid;
-	width: fit-content;
-	min-width: 11ch;
-
-	position: relative;
-
-	// Stack them on top of each other
-	.task__name-input,
-	.task__name-display {
-		grid-area: 1 / -1;
-
-		@include typography.base-body;
-		border: 0;
-		padding: spacing.$xs-rel;
-	}
-}
-
-.task__name-input {
-	@include reset;
-	cursor: text;
-}
-
-.task__name-display {
-	p {
-		white-space: pre;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	overflow: hidden;
-}
-
-.task__name-display--hidden {
-	visibility: hidden;
-}
-
-.task__name-edit {
-	@include patterns.icon-button;
-
-	position: absolute;
-	right: 0;
-
-	&:not(:focus) {
-		overflow: hidden;
-		width: 0;
-		height: 0;
-	}
 }
