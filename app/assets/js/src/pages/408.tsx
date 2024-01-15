@@ -1,6 +1,6 @@
 import { h, render } from 'preact';
 
-import { OrangeTwist } from '../components/OrangeTwist';
+import { OrangeTwist } from 'components/OrangeTwist';
 
 const main = document.getElementById('main');
 if (main === null) {
