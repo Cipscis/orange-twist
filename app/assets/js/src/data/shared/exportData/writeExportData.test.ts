@@ -54,8 +54,9 @@ describe('writeExportData', () => {
 			dayTasks: [['2023-12-11_1', {
 				dayName: '2023-12-11',
 				taskId: 1,
-				note: 'Day task note',
 				status: TaskStatus.TODO,
+				note: 'Day task note',
+				summary: null,
 			}]],
 		});
 	});

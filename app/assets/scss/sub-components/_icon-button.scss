@@ -1,0 +1,49 @@
+@use "../theme/animation";
+@use "../theme/palette";
+@use "../theme/radius";
+@use "../theme/typography";
+
+@use "../tools" as *;
+
+.icon-button--primary,
+.icon-button--secondary {
+	@include reset;
+
+	@include typography.icons;
+
+	display: grid;
+	place-items: center;
+
+	height: 2em;
+	aspect-ratio: 1 / 1;
+	border-radius: radius.$md-rel;
+
+	transition:
+		background-color animation.$speed-fast animation.$easing-default,
+		color animation.$speed-fast animation.$easing-default;
+
+	// Not using `:enabled` because this could be an <a>
+	&:not(:disabled) {
+		cursor: pointer;
+	}
+}
+
+.icon-button--primary {
+	// Not using `:enabled` because this could be an <a>
+	&:not(:disabled) {
+		@include palette.secondary(true);
+	}
+	&:disabled {
+		@include palette.secondary(false);
+	}
+}
+
+.icon-button--secondary {
+	// Not using `:enabled` because this could be an <a>
+	&:not(:disabled) {
+		@include palette.tertiary(true);
+	}
+	&:disabled {
+		@include palette.tertiary(false);
+	}
+}

@@ -38,7 +38,8 @@
 	// Simulate content of textarea with visibility hidden, to auto-expand content
 	&::before {
 		content: attr(data-content) " ";
-		white-space: pre-wrap;
+		white-space-collapse: preserve;
+		word-break: break-word;
 		visibility: hidden;
 	}
 
@@ -46,19 +47,20 @@
 		@include palette.primary;
 		resize: none;
 		overflow: hidden;
-		border: 0;
 
 		@include typography.base-body;
+
+		// Make it look focused even if the tab itself doesn't have focus
+		outline: auto;
 	}
 }
 
 .note__display-content {
+	word-break: break-word;
 	position: relative;
 }
 
 .note__edit {
-	@include patterns.icon-button;
-
 	&:not(:only-child) {
 		position: absolute;
 		bottom: 0;

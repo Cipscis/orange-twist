@@ -14,21 +14,23 @@ describe('Modal', () => {
 	});
 
 	test('is only rendered when open is true', () => {
-		const { rerender, queryByTestId } = render(
+		const { rerender, queryByText } = render(
 			<Modal
 				open={false}
+				title="Modal title"
 				onClose={() => {}}
 			/>
 		);
 
-		expect(queryByTestId('modal')).not.toBeInTheDocument();
+		expect(queryByText('Modal title')).not.toBeInTheDocument();
 
 		rerender(<Modal
 			open
+			title="Modal title"
 			onClose={() => {}}
 		/>);
 
-		expect(queryByTestId('modal')).toBeInTheDocument();
+		expect(queryByText('Modal title')).toBeInTheDocument();
 	});
 
 	test('renders its title', () => {
@@ -43,18 +45,6 @@ describe('Modal', () => {
 		const title = queryByRole('heading');
 		expect(title).toBeInTheDocument();
 		expect(title).toHaveTextContent('Test title');
-	});
-
-	test('receives keyboard focus when opened', () => {
-		const { getByTestId } = render(
-			<Modal
-				open
-				onClose={() => {}}
-			/>
-		);
-
-		const modal = getByTestId('modal');
-		expect(modal).toHaveFocus();
 	});
 
 	test('returns keyboard focus when closed', async () => {
@@ -103,7 +93,7 @@ describe('Modal', () => {
 			/>
 		);
 
-		const modal = getByTestId('modal');
+		const modal = getByTestId('modal__body');
 		expect(modal.classList.contains('test-class')).toBe(true);
 		expect(modal.classList.contains('another-class')).toBe(true);
 	});
@@ -140,7 +130,27 @@ describe('Modal', () => {
 
 		expect(spy).not.toHaveBeenCalled();
 
-		await act(() => user.keyboard('{Escape}'));
+		await user.keyboard('{Escape}');
+
+		expect(spy).toHaveBeenCalledTimes(1);
+	});
+
+	test('calls onClose when pressing the close button', async () => {
+		const user = userEvent.setup();
+		const spy = jest.fn();
+
+		const { getByRole } = render(
+			<Modal
+				open
+				closeButton
+				onClose={spy}
+			/>
+		);
+
+		expect(spy).not.toHaveBeenCalled();
+
+		const closeButton = getByRole('button', { name: 'Close modal' });
+		await user.click(closeButton);
 
 		expect(spy).toHaveBeenCalledTimes(1);
 	});

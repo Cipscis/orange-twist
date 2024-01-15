@@ -5,8 +5,6 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { Command } from 'types/Command';
-
 import {
 	getAllDayInfo,
 	getDayInfo,
@@ -26,6 +24,7 @@ import {
 	importData,
 } from 'data';
 
+import { Command } from 'types/Command';
 import {
 	fireCommand,
 	registerCommand,
@@ -41,12 +40,25 @@ import {
 	getCurrentDateDayName,
 	isValidDateString,
 } from 'util/index';
+
 import * as ui from 'ui';
+import {
+	IconButton,
+	Loader,
+} from './shared';
+
+import { OrangeTwistContext } from './OrangeTwistContext';
 
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
+import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
 
 interface OrangeTwistProps {
+	/**
+	 * If present, a back button will be shown.
+	 */
+	backButton?: boolean;
+
 	children?: ComponentChildren;
 }
 
@@ -55,19 +67,26 @@ interface OrangeTwistProps {
  * app-wide tools such as the command palette.
  */
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
-	const { children } = props;
+	const {
+		backButton,
+		children,
+	} = props;
+
+	const [isLoading, setIsLoading] = useState(true);
 
 	// Load persisted data
 	useEffect(() => {
-		loadDays().then(() => {
-			// If there's no info for the current day, set up a stub
-			const currentDateDayName = getCurrentDateDayName();
-			if (getDayInfo(currentDateDayName) === null) {
-				setDayInfo(currentDateDayName, {});
-			}
-		});
-		loadTasks();
-		loadDayTasks();
+		Promise.all([
+			loadDays().then(() => {
+				// If there's no info for the current day, set up a stub
+				const currentDateDayName = getCurrentDateDayName();
+				if (getDayInfo(currentDateDayName) === null) {
+					setDayInfo(currentDateDayName, {});
+				}
+			}),
+			loadTasks(),
+			loadDayTasks(),
+		]).then(() => setIsLoading(false));
 	}, []);
 
 	// Register all commands and keyboard shortcuts
@@ -78,6 +97,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
 		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
 		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
+		registerCommand(Command.KEYBOARD_SHORTCUT_SHOW, { name: 'Show keyboard shortcuts' });
 
 		registerKeyboardShortcut(
 			KeyboardShortcutName.COMMAND_PALETTE_OPEN,
@@ -85,6 +105,8 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				key: '\\',
 			}],
 		);
+		registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
+
 		registerKeyboardShortcut(
 			KeyboardShortcutName.DATA_SAVE,
 			[{
@@ -117,8 +139,23 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			}
 		})();
 
+		// Insert a <style> tag to prevent transitions during theme toggle
+		const flashStyle = document.createElement('style');
+		flashStyle.innerHTML = `* {
+			transition: none !important;
+		}`;
+
+		htmlEl.append(flashStyle);
+
 		htmlEl.style.setProperty('--theme', newTheme);
+		if (currentTheme) {
+			htmlEl.classList.remove(currentTheme);
+		}
+		htmlEl.classList.add(newTheme);
 		localStorage.setItem('theme', newTheme);
+
+		// The <style> tag can't be removed synchronously or it's not used for the next paint
+		queueMicrotask(() => flashStyle.remove());
 	}, []);
 	useCommand(Command.THEME_TOGGLE, toggleTheme);
 
@@ -140,6 +177,25 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		!commandPaletteOpen
 	);
 
+	// Open keyboard shortcuts modal on keyboard shortcut
+	const [keyboardShortcutsModalOpen, setKeyboardShortcutsModalOpen] = useState(false);
+	/** Open the keyboard shortcuts modal. */
+	const openKeyboardShortcutsModal = useCallback(
+		() => setKeyboardShortcutsModalOpen(true),
+		[]
+	);
+	/** Close the keyboard shortcuts modal. */
+	const closeKeyboardShortcutsModal = useCallback(
+		() => setKeyboardShortcutsModalOpen(false),
+		[],
+	);
+	useCommand(Command.KEYBOARD_SHORTCUT_SHOW, openKeyboardShortcutsModal);
+	useKeyboardShortcut(
+		KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN,
+		Command.KEYBOARD_SHORTCUT_SHOW,
+		!keyboardShortcutsModalOpen
+	);
+
 	/**
 	 * Save all data, while giving the user feedback.
 	 */
@@ -147,8 +203,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		async () => {
 			const id = `saving-${crypto.randomUUID()}`;
 
-			// TODO: Show a nicer loader
-			ui.alert('Saving...', { id });
+			ui.alert(<>
+				<span>Saving...</span>
+				<Loader immediate />
+			</>, { id, duration: null });
 			await Promise.all([
 				saveDays(),
 				saveTasks(),
@@ -207,18 +265,50 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	}, []);
 	useCommand(Command.TASK_ADD_NEW, createNewTask);
 
-	return <>
+	return <OrangeTwistContext.Provider
+		value={{
+			isLoading,
+		}}
+	>
 		<CommandPalette
 			open={commandPaletteOpen}
 			onClose={closeCommandPalette}
 		/>
 
 		<div class="orange-twist">
+			<ToolDrawer side={ToolDrawerPlacement.LEFT}>
+				{
+					backButton &&
+					<IconButton
+						icon="<"
+						title="Back"
+						href="../"
+					/>
+				}
+			</ToolDrawer>
+
 			<h1 class="orange-twist__heading">Orange Twist</h1>
+
+			<ToolDrawer side={ToolDrawerPlacement.RIGHT}>
+				<IconButton
+					icon="\"
+					title="Open command prompt"
+					onClick={openCommandPalette}
+				/>
+
+				<IconButton
+					icon="?"
+					title="Show keyboard shortcuts"
+					onClick={openKeyboardShortcutsModal}
+				/>
+			</ToolDrawer>
 
 			{children}
 		</div>
 
-		<KeyboardShortcutModal />
-	</>;
+		<KeyboardShortcutModal
+			open={keyboardShortcutsModalOpen}
+			onClose={closeKeyboardShortcutsModal}
+		/>
+	</OrangeTwistContext.Provider>;
 }

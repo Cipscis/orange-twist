@@ -1,7 +1,8 @@
 import { h, render } from 'preact';
 
-import { OrangeTwist } from '../components/OrangeTwist';
-import { TaskDetail } from '../components/TaskDetail';
+import { OrangeTwist } from 'components/OrangeTwist';
+import { TaskDetail } from 'components/tasks/TaskDetail';
+import { Notice } from 'components/shared';
 
 const main = document.getElementById('main');
 if (main === null) {
@@ -12,11 +13,12 @@ const queryParams = new URLSearchParams(document.location.search);
 const taskIdParam = queryParams.get('id');
 const taskId = taskIdParam === null ? null : Number(taskIdParam);
 
-render(<OrangeTwist>
-	{taskId === null
+render(<OrangeTwist backButton>
+	{taskId === null || isNaN(taskId)
 		? (
-			// TODO: Show nicer error message
-			<h1>This task doesn't exist</h1>
+			<Notice
+				message="A valid task ID is required"
+			/>
 		)
 		: (
 			<TaskDetail

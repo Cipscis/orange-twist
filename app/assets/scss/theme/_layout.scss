@@ -1,16 +1,47 @@
+@use "../theme/breakpoint";
 @use "../theme/spacing";
-
 @use "../tools" as *;
 
-:root {
-	--max-width: #{rem(800px)};
-	--layout-gutter: #{spacing.$md};
+$max-width: rem(800px);
+$gutter: spacing.$md;
+
+$_button-width: 2rem;
+$_max-bp-width: $max-width + 2 * ($gutter + $_button-width + $gutter);
+
+@mixin bp-small {
+	@include breakpoint.to($_max-bp-width) {
+		@content;
+	}
+}
+
+@mixin bp-large {
+	@include breakpoint.from($_max-bp-width) {
+		@content;
+	}
 }
 
 @mixin grid {
 	display: grid;
-	grid-template-columns:
-		[full-width-start] 1fr var(--layout-gutter)
-		[main-start] minmax(auto, var(--max-width)) [main-end]
-		var(--layout-gutter) 1fr [full-width-end];
+	@include breakpoint.to($_max-bp-width) {
+		// Tool gutters 0 width on the edge
+		grid-template-columns:
+			[full-width-start breakout-left-start breakout-start tools-left-start] 0 [tools-left-end]
+			var(--layout-gutter)
+			[main-start breakout-right-start] minmax(auto, var(--max-width)) [main-end breakout-left-end]
+			var(--layout-gutter)
+			[tools-right-start] 0 [tools-right-end breakout-end breakout-right-end full-width-end];
+	}
+	@include breakpoint.from($_max-bp-width) {
+		// Tool gutters on either side of main
+		grid-template-columns:
+			[full-width-start] 1fr
+			var(--layout-gutter)
+			[tools-left-start breakout-start] $_button-width [tools-left-end]
+			var(--layout-gutter)
+			[main-start breakout-right-start] minmax(auto, var(--max-width)) [main-end breakout-left-end]
+			var(--layout-gutter)
+			[tools-right-start] $_button-width [tools-right-end breakout-end breakout-right-end]
+			var(--layout-gutter)
+			1fr [full-width-end];
+	}
 }

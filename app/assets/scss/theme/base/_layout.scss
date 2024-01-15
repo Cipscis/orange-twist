@@ -1,0 +1,7 @@
+@use "../layout";
+@use "../spacing";
+
+:root {
+	--max-width: #{layout.$max-width};
+	--layout-gutter: #{layout.$gutter};
+}

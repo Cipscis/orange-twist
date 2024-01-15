@@ -1,27 +1,47 @@
 @use "sass:meta";
 
-@layer reset, theme, components;
+@layer reset, packages, theme, sub-components, components;
 
 @layer reset {
 	@include meta.load-css("reset");
 }
 
+@layer packages {
+	body {
+		@container style(--theme: light) {
+			@include meta.load-css("../../../node_modules/highlight.js/scss/a11y-light.scss");
+		}
+	}
+
+	body {
+		@container style(--theme: dark) {
+			@include meta.load-css("../../../node_modules/highlight.js/scss/a11y-dark.scss");
+		}
+	}
+}
+
 @layer theme {
 	@include meta.load-css("theme/base");
-	@include meta.load-css("patterns/base");
+}
+
+@layer sub-components {
+	// Sub-components
+	@include meta.load-css("sub-components/button");
+	@include meta.load-css("sub-components/content");
+	@include meta.load-css("sub-components/icon-button");
+	@include meta.load-css("sub-components/loader");
+	@include meta.load-css("sub-components/modal");
+	@include meta.load-css("sub-components/modal-confirm");
+	@include meta.load-css("sub-components/modal-prompt");
+	@include meta.load-css("sub-components/notice");
+	@include meta.load-css("sub-components/toast");
 }
 
 @layer components {
-	// Sub-components
-	@include meta.load-css("components/content");
-	@include meta.load-css("components/modal");
-	@include meta.load-css("components/modal-confirm");
-	@include meta.load-css("components/modal-prompt");
-	@include meta.load-css("components/toast");
-
 	// Components
 	@include meta.load-css("components/command-palette");
 	@include meta.load-css("components/day");
+	@include meta.load-css("components/inline-note");
 	@include meta.load-css("components/keyboard-shortcuts-modal");
 	@include meta.load-css("components/note");
 	@include meta.load-css("components/orange-twist");
@@ -29,4 +49,5 @@
 	@include meta.load-css("components/task-detail");
 	@include meta.load-css("components/task-list");
 	@include meta.load-css("components/task-status");
+	@include meta.load-css("components/tool-drawer");
 }

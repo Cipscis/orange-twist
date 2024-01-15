@@ -12,20 +12,36 @@
 	--_gap: #{spacing.$sm};
 }
 
-.task-status__indicator:not(.task-status__indicator--readonly) {
-	@include patterns.icon-button;
-}
-
-.task-status__indicator--readonly {
-	@include patterns.icon-button(false);
-}
-
-.task-status__options {
-	@include list-reset;
+.task-status__popover {
 	position: absolute;
 	bottom: 100%;
 	margin-bottom: spacing.$sm;
 	z-index: 1;
+
+	&[data-animate] {
+		// Override the browser setting display: none, so we can animate out
+		display: grid;
+		&:not([open]) {
+			opacity: 0;
+			pointer-events: none;
+		}
+	}
+
+	&[open] {
+		animation: appearScreen animation.$speed-medium animation.$easing-default;
+	}
+	&:not([open]) {
+		animation: disappearScreen animation.$speed-medium animation.$easing-default;
+	}
+
+	// It's not interactive or tabbable, so let it have no focus style
+	&:focus-visible {
+		outline: none;
+	}
+}
+
+.task-status__options {
+	@include list-reset;
 	padding: var(--_gap);
 
 	display: flex;
@@ -37,7 +53,6 @@
 	border: 1px solid var(--accent);
 
 	box-shadow: shadow.$accent;
-	animation: appearScreen animation.$speed-medium animation.$easing-default;
 }
 
 .task-status__optgroup {
@@ -49,13 +64,15 @@
 
 .task-status__optgroup-list {
 	@include list-reset;
-	display: flex;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	&:has(> :only-child) {
+		grid-template-columns: 1fr;
+	}
+	&:has(> :first-child + :last-child) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 	gap: var(--_gap);
 }
 
 .task-status__option {}
-
-.task-status__option-button {
-	@include patterns.icon-button;
-	@include palette.tertiary(true);
-}

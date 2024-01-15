@@ -8,8 +8,9 @@ import { getDayInfo, setDayInfo } from 'data/days';
 import { getAllDayTaskInfo } from './getAllDayTaskInfo';
 
 const defaultDayTaskInfo = {
-	note: '',
 	status: TaskStatus.TODO,
+	note: '',
+	summary: null,
 } as const satisfies Omit<DayTaskInfo, 'dayName' | 'taskId'>;
 
 /**
@@ -38,8 +39,9 @@ export function setDayTaskInfo(
 		dayName,
 		taskId,
 
-		note: dayTaskInfo.note ?? existingDayTaskInfo?.note ?? defaultDayTaskInfo.note,
 		status: dayTaskInfo.status ?? existingDayTaskInfo?.status ?? defaultDayTaskInfo.status,
+		note: dayTaskInfo.note ?? existingDayTaskInfo?.note ?? defaultDayTaskInfo.note,
+		summary: dayTaskInfo.summary ?? existingDayTaskInfo?.summary ?? defaultDayTaskInfo.summary,
 	};
 
 	dayTasksRegister.set(key, newDayTaskInfo);

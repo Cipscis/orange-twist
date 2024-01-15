@@ -17,32 +17,36 @@ const firstDayTaskInfo = {
 	dayName: '2023-11-12',
 	taskId: 1,
 
-	note: 'Test note',
 	status: TaskStatus.IN_PROGRESS,
+	note: 'Test note',
+	summary: null,
 } as const satisfies DayTaskInfo;
 
 const secondDayTaskInfo = {
 	dayName: '2023-11-12',
 	taskId: 2,
 
-	note: 'Test note 2',
 	status: TaskStatus.COMPLETED,
+	note: 'Test note 2',
+	summary: null,
 } as const satisfies DayTaskInfo;
 
 const thirdDayTaskInfo = {
 	dayName: '2023-11-16',
 	taskId: 1,
 
-	note: 'Test note 3',
 	status: TaskStatus.COMPLETED,
+	note: 'Test note 3',
+	summary: null,
 } as const satisfies DayTaskInfo;
 
 const fourthDayTaskInfo = {
 	dayName: '2023-11-16',
 	taskId: 2,
 
-	note: 'Test note 4',
 	status: TaskStatus.COMPLETED,
+	note: 'Test note 4',
+	summary: null,
 } as const satisfies DayTaskInfo;
 
 describe('getDayTaskInfo', () => {

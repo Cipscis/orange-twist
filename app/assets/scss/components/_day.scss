@@ -6,33 +6,23 @@
 
 @use "../tools" as *;
 
-@mixin _day-heading {
-	@include typography.heading-3;
-}
-$_day-margin: spacing.$lg;
-
 .day {
-	margin: $_day-margin 0;
+	margin: spacing.$lg 0;
 
 	isolation: isolate;
-
-	&:not([open]) {
-		// Use the mixin to set font size and line height custom properties
-		@include _day-heading;
-
-		// Tell the browser to not render closed days outside the viewport
-		content-visibility: auto;
-		// Spacing plus heading size
-		contain-intrinsic-height: calc($_day-margin + var(--font-size) * var(--line-height));
-	}
 }
 
 .day__summary {
 	@include palette.primary;
+	@include typography.heading-base;
 
 	position: sticky;
 	top: 0;
 	z-index: 1;
+
+	display: flex;
+	gap: spacing.$sm;
+	align-items: center;
 }
 
 .day__body {
@@ -44,8 +34,8 @@ $_day-margin: spacing.$lg;
 }
 
 .day__heading {
-	@include _day-heading;
+	@include typography.heading-3;
 	@include patterns.disclosure-title;
-
-	width: 100%;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
 }

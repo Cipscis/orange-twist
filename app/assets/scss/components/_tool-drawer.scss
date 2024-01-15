@@ -1,0 +1,143 @@
+@use "../theme/animation";
+@use "../theme/layout";
+@use "../theme/palette";
+@use "../theme/radius";
+@use "../theme/spacing";
+@use "../theme/typography";
+
+@use "../patterns";
+
+@use "../tools" as *;
+
+$_offset-large: spacing.$md;
+$_padding-small: spacing.$sm;
+$_offset-small: $_offset-large - $_padding-small;
+
+$_animation-speed: animation.$speed-fast;
+
+.tool-drawer {
+	width: min-content;
+
+	position: sticky;
+	top: $_offset-large;
+	z-index: 2;
+
+	transition: transform $_animation-speed animation.$easing-default;
+
+	&.tool-drawer--left {
+		grid-column: tools-left;
+	}
+	&.tool-drawer--right {
+		grid-column: tools-right;
+	}
+
+	@include layout.bp-small {
+		top: $_offset-small;
+	}
+}
+
+.tool-drawer__items {
+	@include list-reset;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: spacing.$sm;
+
+	@include layout.bp-small {
+		padding: $_padding-small;
+		@include patterns.frosted-glass;
+		border: 1px solid var(--accent);
+
+		.tool-drawer--left & {
+			border-left: 0;
+			border-top-right-radius: radius.$sm;
+			border-bottom-right-radius: radius.$sm;
+		}
+		.tool-drawer--right & {
+			border-right: 0;
+			border-top-left-radius: radius.$sm;
+			border-bottom-left-radius: radius.$sm;
+		}
+
+		transition: visibility ($_animation-speed * 2) animation.$easing-default;
+		.tool-drawer:not(.tool-drawer--open) & {
+			visibility: hidden;
+		}
+	}
+}
+
+.tool-drawer__toggle {
+	$_border-radius: 80% 30%;
+
+	@include reset;
+	display: grid;
+	place-items: center;
+
+	// Match button height
+	height: 2rem;
+	// Don't completely fill gutter
+	width: layout.$gutter * 0.8;
+
+	@include patterns.frosted-glass;
+	border: 1px solid var(--accent);
+
+	position: absolute;
+	z-index: 1;
+	top: spacing.$sm;
+
+	&::before {
+		@include typography.icons;
+		font-size: 0.6em;
+	}
+
+	.tool-drawer--left & {
+		border-top-right-radius: $_border-radius;
+		border-bottom-right-radius: $_border-radius;
+		border-left-color: var(--bg);
+
+		left: calc(100% - 1px);
+		&::before {
+			content: ">";
+		}
+		&:is(.tool-drawer--open *) {
+			&::before {
+				content: "<";
+			}
+		}
+	}
+	.tool-drawer--right & {
+		border-top-left-radius: $_border-radius;
+		border-bottom-left-radius: $_border-radius;
+		border-right-color: var(--bg);
+
+		right: calc(100% - 1px);
+		&::before {
+			content: "<";
+		}
+		&:is(.tool-drawer--open *) {
+			&::before {
+				content: ">";
+			}
+		}
+	}
+
+	@include layout.bp-large {
+		display: none;
+	}
+}
+
+@include layout.bp-small {
+	.tool-drawer {
+		&:not(.tool-drawer--open) {
+			&.tool-drawer--left {
+				transform: translateX(-100%);
+			}
+		}
+
+		&.tool-drawer--open {
+			&.tool-drawer--right {
+				transform: translateX(-100%);
+			}
+		}
+	}
+}

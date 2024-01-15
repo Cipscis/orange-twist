@@ -6,7 +6,11 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { Modal } from 'components/shared/Modal';
+import {
+	Button,
+	ButtonVariant,
+	Modal,
+} from 'components/shared';
 
 interface ModalPromptProps {
 	message: string;
@@ -20,7 +24,6 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 	} = props;
 
 	const [isOpen, setIsOpen] = useState(true);
-	const resultElRef = useRef<HTMLInputElement>(null);
 
 	const previousResolver = useRef<
 	((result: string | null) => void) | null
@@ -37,30 +40,30 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 		setIsOpen(true);
 	}, [resolve]);
 
-	// Focus on input immediately when opened
-	useEffect(() => {
-		if (isOpen) {
-			resultElRef.current?.focus();
-		}
-	}, [isOpen]);
-
 	return <Modal
 		open={isOpen}
 		onClose={useCallback(() => {
 			setIsOpen(false);
 			resolve(null);
 		}, [resolve])}
+		closeButton
 	>
 		<form
-			onSubmit={useCallback((e: Event) => {
+			onSubmit={useCallback<
+				NonNullable<JSX.DOMAttributes<HTMLFormElement>['onSubmit']>
+			>((e) => {
 				e.preventDefault();
 
-				const result = resultElRef.current?.value ?? null;
-				if (!result) {
+				const form = e.currentTarget;
+				const formData = new FormData(form);
+
+				const result = formData.get('result');
+				if (typeof result === 'string') {
+					resolve(result);
+				} else {
 					resolve(null);
 				}
 
-				resolve(result);
 				setIsOpen(false);
 			}, [resolve])}
 			class="modal-prompt__form"
@@ -68,13 +71,14 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 			<label>
 				<div class="modal-prompt__message">{message}</div>
 				<input
-					ref={resultElRef}
 					type="text"
 					name="result"
+					class="modal-prompt__input"
+					autofocus
 				/>
 			</label>
 
-			<button type="submit" class="modal-prompt__button">Okay</button>
+			<Button variant={ButtonVariant.SECONDARY} type="submit">Okay</Button>
 		</form>
 	</Modal>;
 }

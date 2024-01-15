@@ -1,4 +1,7 @@
-import type { ExpandType } from 'util/index';
+import type {
+	DefaultsFor,
+	ExpandType,
+} from 'util/index';
 import type { ToastProps } from './Toast';
 import {
 	getNextId,
@@ -8,25 +11,37 @@ import {
 
 type ToastOptions = ExpandType<Partial<Omit<ToastProps, 'message'>>>;
 
+const defaults = {
+	duration: 2000,
+} as const satisfies DefaultsFor<Omit<ToastOptions, 'id'>>;
+
 /**
  * Show a new "toast" alert with a specified message and duration.
  */
-export function alert(message: string, duration?: ToastProps['duration']): void;
+export function alert(
+	message: ToastProps['message'],
+	duration?: ToastProps['duration']
+): void;
 /**
  * Show a "toast" alert with a specified message. An ID can be passed to
  * create a toast that can be updated by calling this function again
  * with the same ID, if it still exists.
  */
-export function alert(message: string, options?: ToastOptions): void;
-export function alert(message: string, optionsArg?: ToastProps['duration'] | ToastOptions): void {
+export function alert(
+	message: ToastProps['message'],
+	options?: ToastOptions
+): void;
+export function alert(
+	message: ToastProps['message'],
+	optionsArg?: ToastProps['duration'] | ToastOptions
+): void {
 	// Start by consolidating arguments
-	const options = typeof optionsArg === 'number' ? { duration: optionsArg } : { ...optionsArg };
-
-	// Use a default duration of 2000ms
-	// TODO: Need a better approach to this - make dismissable toasts maybe?
-	if (!options.duration) {
-		options.duration = 2000;
-	}
+	const options = typeof optionsArg === 'number'
+		? { duration: optionsArg }
+		: {
+			...defaults,
+			...optionsArg,
+		};
 
 	const existingToast = (() => {
 		if (typeof options?.id !== 'undefined') {
