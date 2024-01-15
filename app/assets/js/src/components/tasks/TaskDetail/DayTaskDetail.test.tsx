@@ -111,4 +111,26 @@ describe('DayTaskDetail', () => {
 
 		controller.abort();
 	});
+
+	test('renders an open or closed details based on the "open" prop', () => {
+		const dayTaskInfo = getDayTaskInfo({ dayName: '2023-12-22', taskId: 1 })!;
+
+		const {
+			getByRole,
+			rerender,
+		} = render(<DayTaskDetail
+			dayTaskInfo={dayTaskInfo}
+		/>);
+
+		const details = getByRole('group') as HTMLDetailsElement;
+		expect(details).toBeInTheDocument();
+		expect(details.open).toBe(false);
+
+		rerender(<DayTaskDetail
+			dayTaskInfo={dayTaskInfo}
+			open
+		/>);
+
+		expect(details.open).toBe(true);
+	});
 });
