@@ -9,7 +9,6 @@ import {
 import '@testing-library/jest-dom/jest-globals';
 
 import { cleanup, render } from '@testing-library/preact';
-import userEvent from '@testing-library/user-event';
 
 import { TaskStatus } from 'types/TaskStatus';
 import {
@@ -37,7 +36,7 @@ describe('Task', () => {
 			<Task taskId={0} />
 		);
 
-		const content = getByTestId('task-component-name');
+		const content = getByTestId('inline-note__note');
 		expect(content).toBeInTheDocument();
 		expect(content.innerHTML.trim()).toBe('<p><strong>Bold</strong> <em>italic</em> <code>code</code></p>');
 	});
@@ -78,64 +77,5 @@ describe('Task', () => {
 			);
 		});
 		expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
-	});
-
-	test('opens edit mode when edit button is clicked', async () => {
-		const user = userEvent.setup();
-
-		setTaskInfo(0, {
-			name: 'Task name',
-			status: TaskStatus.TODO,
-		});
-
-		const { getByRole } = render(
-			<Task taskId={0} />
-		);
-
-		const editButton = getByRole('button', { name: 'Edit task name' });
-		await user.click(editButton);
-
-		const inputEl = getByRole('textbox');
-		expect(inputEl).toHaveFocus();
-		expect(inputEl).toHaveValue('Task name');
-	});
-
-	test('opens edit mode when name is clicked', async () => {
-		const user = userEvent.setup();
-
-		setTaskInfo(0, {
-			name: 'Task name',
-			status: TaskStatus.TODO,
-		});
-
-		const { getByRole, getByText } = render(
-			<Task taskId={0} />
-		);
-
-		const name = getByText('Task name');
-		await user.click(name);
-
-		const inputEl = getByRole('textbox');
-		expect(inputEl).toHaveFocus();
-		expect(inputEl).toHaveValue('Task name');
-	});
-
-	test('doesn\'t open edit mode when a link inside is clicked', async () => {
-		const user = userEvent.setup();
-
-		setTaskInfo(0, {
-			name: '[Link text](#)',
-			status: TaskStatus.TODO,
-		});
-
-		const { getByRole, queryByRole } = render(
-			<Task taskId={0} />
-		);
-
-		const name = getByRole('link', { name: 'Link text' });
-		await user.click(name);
-
-		const inputEl = queryByRole('textbox');
-		expect(inputEl).not.toBeInTheDocument();
 	});
 });

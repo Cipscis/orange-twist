@@ -41,6 +41,7 @@
 	// Components
 	@include meta.load-css("components/command-palette");
 	@include meta.load-css("components/day");
+	@include meta.load-css("components/inline-note");
 	@include meta.load-css("components/keyboard-shortcuts-modal");
 	@include meta.load-css("components/note");
 	@include meta.load-css("components/orange-twist");
