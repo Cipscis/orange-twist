@@ -7,7 +7,10 @@ import {
 	TaskStatusSymbol,
 } from 'types/TaskStatus';
 
-import { IconButton } from 'components/shared';
+import {
+	ButtonVariant,
+	IconButton,
+} from 'components/shared';
 
 interface TaskStatusButtonProps {
 	status: TaskStatus;
@@ -28,7 +31,7 @@ export function TaskStatusButton(props: TaskStatusButtonProps): JSX.Element {
 	const statusSymbol = TaskStatusSymbol[status];
 
 	return <IconButton
-		variant="secondary"
+		variant={ButtonVariant.SECONDARY}
 		title={statusName}
 		icon={statusSymbol}
 		onClick={useCallback(() => {
