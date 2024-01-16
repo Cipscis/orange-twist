@@ -31,7 +31,6 @@ jobs:
           name: 'build'
           path: './app'
 
-jobs:
   test:
     runs-on: ubuntu-latest
     permissions:
