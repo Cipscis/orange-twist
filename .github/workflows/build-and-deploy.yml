@@ -53,6 +53,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Rebuild
+        run: npm rebuild
+
       - name: Test
         run: npm test
 
