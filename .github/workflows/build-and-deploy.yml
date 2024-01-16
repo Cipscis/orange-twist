@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,42 +22,21 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install and build
+      - name: Build
         run: |
           npm ci
           npm run build
         env:
           MODE: production
 
+      - name: Test
+        run: npm test
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: 'build'
           path: './'
-
-  test:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    needs: build
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: 'build'
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Rebuild
-        run: npm rebuild
-
-      - name: Test
-        run: npm test
 
   deploy:
     runs-on: ubuntu-latest
@@ -66,7 +45,7 @@ jobs:
       pages: write
       id-token: write
 
-    needs: [build, test]
+    needs: build-and-test
     if: github.ref == 'refs/heads/main'
 
     environment:
