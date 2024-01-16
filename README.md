@@ -134,6 +134,10 @@ These dependencies are used for deploying the project to GitHub Pages.
 
 * [setup-node](https://github.com/marketplace/actions/setup-node-js-environment): Use to set up a Node.JS environment for the build and test scripts to run on during the deployment process.
 
+* [upload-artifact](https://github.com/marketplace/actions/upload-a-build-artifact): Used to upload a build artifact to be reused across multiple CI/CD jobs.
+
+* [download-artifact](https://github.com/marketplace/actions/download-artifact): Used to download a build artifact.
+
 * [upload-pages-artifact](https://github.com/marketplace/actions/upload-github-pages-artifact): Used to upload an artifact to use for deploying to GitHub Pages.
 
 * [deploy-pages](https://github.com/marketplace/actions/deploy-github-pages-site): Used to deploy the artifact to GitHub Pages.
