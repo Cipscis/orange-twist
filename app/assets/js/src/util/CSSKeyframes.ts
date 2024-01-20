@@ -1,7 +1,7 @@
 import type { EnumTypeOf } from './EnumTypeOf';
 
 /**
- * Names of CSS animations defined using `@keyframes` in `_animations.scss`.
+ * Names of CSS animations defined using `@keyframes` in `base/animation/_index.scss`.
  */
 export const CSSKeyframes = {
 	APPEAR_FADE: 'appearFade',
