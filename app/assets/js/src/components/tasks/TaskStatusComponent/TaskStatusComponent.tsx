@@ -8,6 +8,8 @@ import {
 } from 'preact/hooks';
 
 import {
+	animate,
+	CSSKeyframes,
 	nodeHasAncestor,
 	useCloseWatcher,
 } from 'util/index';
@@ -174,18 +176,23 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 
 	// Show and hide the popover when we enter or leave change mode
 	useEffect(() => {
-		if (!canAnimateRef.current && isInChangeMode) {
+		if (!canAnimateRef.current) {
+			if (!isInChangeMode) {
+				return;
+			}
 			canAnimateRef.current = true;
 		}
 
-		if (!popoverRef.current) {
+		const popover = popoverRef.current;
+		if (!popover) {
 			return;
 		}
 
 		if (isInChangeMode) {
-			popoverRef.current.show();
+			popover.show();
 		} else {
-			popoverRef.current.close();
+			animate(popover, CSSKeyframes.DISAPPEAR_SCREEN)
+				.then(() => popover.close());
 		}
 	}, [isInChangeMode]);
 
@@ -247,7 +254,6 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		<dialog
 			class="task-status__popover"
 			ref={popoverRef}
-			data-animate={canAnimateRef.current}
 			tabindex={-1}
 			inert={!isInChangeMode}
 		>

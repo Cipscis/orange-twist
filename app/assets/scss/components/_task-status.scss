@@ -18,20 +18,8 @@
 	margin-bottom: spacing.$sm;
 	z-index: 1;
 
-	&[data-animate] {
-		// Override the browser setting display: none, so we can animate out
-		display: grid;
-		&:not([open]) {
-			opacity: 0;
-			pointer-events: none;
-		}
-	}
-
 	&[open] {
 		animation: appearScreen animation.$speed-medium animation.$easing-default;
-	}
-	&:not([open]) {
-		animation: disappearScreen animation.$speed-medium animation.$easing-default;
 	}
 
 	// It's not interactive or tabbable, so let it have no focus style
