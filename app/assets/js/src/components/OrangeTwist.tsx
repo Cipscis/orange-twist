@@ -52,6 +52,12 @@ import { OrangeTwistContext } from './OrangeTwistContext';
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
 import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
+import {
+	MessageType,
+	channel,
+	isMessage,
+	postMessage,
+} from 'channel';
 
 interface OrangeTwistProps {
 	/**
@@ -74,9 +80,13 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 
 	const [isLoading, setIsLoading] = useState(true);
 
-	// Load persisted data
-	useEffect(() => {
-		Promise.all([
+	/**
+	 * Load persisted data into each register.
+	 *
+	 * This function does **not** interact with loading state.
+	 */
+	const loadAllData = useCallback(async () => {
+		await Promise.all([
 			loadDays().then(() => {
 				// If there's no info for the current day, set up a stub
 				const currentDateDayName = getCurrentDateDayName();
@@ -86,8 +96,43 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			}),
 			loadTasks(),
 			loadDayTasks(),
-		]).then(() => setIsLoading(false));
+		]);
 	}, []);
+
+	// Load persisted data on initial load
+	useEffect(() => {
+		loadAllData()
+			.then(() => setIsLoading(false));
+	}, [
+		loadAllData,
+	]);
+
+	// Load persisted data when serialised data
+	// is updated from another source
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		channel.addEventListener(
+			'message',
+			({ data }) => {
+				if (!isMessage(data)) {
+					return;
+				}
+
+				if (data.type === MessageType.UPDATE) {
+					setIsLoading(true);
+					loadAllData()
+						.then(() => setIsLoading(false));
+				}
+			},
+			{ signal }
+		);
+
+		return () => controller.abort();
+	}, [
+		loadAllData,
+	]);
 
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
@@ -216,6 +261,8 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				duration: 2000,
 				id,
 			});
+
+			postMessage({ type: MessageType.UPDATE });
 		},
 		[]
 	);
