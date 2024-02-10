@@ -53,11 +53,9 @@ import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
 import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
 import {
-	MessageType,
-	channel,
-	isMessage,
-	postMessage,
-} from 'channel';
+	syncUpdate,
+	onSyncUpdate,
+} from 'sync';
 
 interface OrangeTwistProps {
 	/**
@@ -113,18 +111,11 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		channel.addEventListener(
-			'message',
-			({ data }) => {
-				if (!isMessage(data)) {
-					return;
-				}
-
-				if (data.type === MessageType.UPDATE) {
-					setIsLoading(true);
-					loadAllData()
-						.then(() => setIsLoading(false));
-				}
+		onSyncUpdate(
+			() => {
+				setIsLoading(true);
+				loadAllData()
+					.then(() => setIsLoading(false));
 			},
 			{ signal }
 		);
@@ -262,7 +253,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				id,
 			});
 
-			postMessage({ type: MessageType.UPDATE });
+			syncUpdate();
 		},
 		[]
 	);
