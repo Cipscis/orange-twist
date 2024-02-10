@@ -74,6 +74,7 @@
 		display: inline-block;
 		@include palette.secondary;
 		@include typography.monospace-medium;
+		tab-size: 4;
 		// About enough to compensate for "`"
 		padding: 0 0.5ch;
 		border-radius: 0.2em;
