@@ -77,7 +77,6 @@ export function addCommandListener(
  *
  * @param command A string ID identifying a command.
  * @param listener A function to be called whenever the specified command is fired.
- * @param [options] An object containing options.
  */
 export function removeCommandListener(...[command, listener]: RemoveCommandListenerArgs): void {
 	const commandInfo = commandsRegister.get(command);
