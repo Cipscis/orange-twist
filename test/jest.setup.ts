@@ -66,6 +66,32 @@ function polyfillElementScrollIntoView() {
 	window.Element.prototype.scrollIntoView = jest.fn();
 }
 
+class BroadcastChannel {
+	constructor(name: string) {
+		this.name = name;
+	}
+
+	name: string;
+
+	onmessage = jest.fn();
+	onmessageerror = jest.fn();
+	close = jest.fn();
+	postMessage = jest.fn();
+	addEventListener = jest.fn();
+	removeEventListener = jest.fn();
+	dispatchEvent = () => true;
+}
+
+/**
+ * jsdom hasn't implemented the BroadcastChannel API, so replace it
+ * with a mocked version so it won't cause JavaScript errors.
+ */
+function polyfillBroadcastChannelApi() {
+	window.BroadcastChannel = BroadcastChannel;
+}
+
+polyfillBroadcastChannelApi();
+
 beforeAll(() => {
 	polyfillDialogElement();
 	polyfillWindowScrollto();
