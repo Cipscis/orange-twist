@@ -154,9 +154,15 @@ export function TaskList(
 		isInDraggingMode.current = false;
 
 		// Construct a new order of tasks to send to `onReorder`
-		const newTasksOrder = itemsRef.current.map(
-			(element) => Number(element?.dataset.taskListItemId)
-		);
+		const newTasksOrder = itemsRef.current
+			// First, remove null entries
+			.filter(Boolean)
+			// Then, map to ID
+			.map(
+				(element) => {
+					return Number(element.dataset.taskListItemId);
+				}
+			);
 
 		// Determine the positions of the dragged element and drop targe
 		// to determine where to move the dragged element from and to
