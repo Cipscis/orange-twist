@@ -22,7 +22,10 @@ export function animate(
 
 	// Try to use the animation duration specified in CSS by default
 	if (typeof options === 'undefined') {
-		options = getElementAnimationDuration(element) ?? 0;
+		const cssAnimationDuration = getElementAnimationDuration(element);
+		if (cssAnimationDuration !== null) {
+			options = cssAnimationDuration;
+		}
 	}
 
 	const animation = element.animate(keyframes, options);
