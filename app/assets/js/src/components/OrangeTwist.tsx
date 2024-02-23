@@ -52,6 +52,7 @@ import { OrangeTwistContext } from './OrangeTwistContext';
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
 import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
+import { Footer } from './Footer';
 import {
 	syncUpdate,
 	onSyncUpdate,
@@ -330,7 +331,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			<ToolDrawer side={ToolDrawerPlacement.RIGHT}>
 				<IconButton
 					icon="\"
-					title="Open command prompt"
+					title="Open command palette"
 					onClick={openCommandPalette}
 				/>
 
@@ -342,6 +343,8 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			</ToolDrawer>
 
 			{children}
+
+			<Footer />
 		</div>
 
 		<KeyboardShortcutModal
