@@ -23,7 +23,7 @@ export function DayList(): JSX.Element {
 		<h2 class="orange-twist__title">Days</h2>
 
 		{days.length <= 1 && (
-			<p>It looks like it might be your first time here. If you need help getting started, try <a href="/help">the help page</a>.</p>
+			<p>If you need help getting started, try <a href="/help">the help page</a>.</p>
 		)}
 
 		{days.map((day, i) => (
