@@ -83,6 +83,12 @@ $_line-height-monospace: 1.4;
 	@include _font-size(rem(32px), $_line-height-body);
 }
 
+@mixin base-small {
+	font-family: $family-base;
+	font-weight: $weight-base;
+	@include _font-size(rem(16px), $_line-height-body);
+}
+
 ///////////////
 // Monospace //
 ///////////////
