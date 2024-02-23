@@ -270,7 +270,9 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const addNewDay = useCallback(async (dayNameArg?: string) => {
 		const days = getAllDayInfo();
 
-		const dayName = dayNameArg ?? await ui.prompt('What day?');
+		const dayName = dayNameArg ?? await ui.prompt('What day?', {
+			placeholder: 'YYYY-MM-DD',
+		});
 		if (!dayName) {
 			return;
 		}
