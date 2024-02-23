@@ -11,6 +11,7 @@ import { nextFrame } from './nextFrame';
  */
 export function animate(element: HTMLElement, keyframesName: CSSKeyframes): Promise<void> {
 	return new Promise((resolve) => {
+		const initialAnimationName = element.style.animationName;
 		element.style.animationName = keyframesName;
 		// TODO: Currently this relies on an element having an existing animation duration. We should set one if it's not already set
 		// Wait for the next frame to ensure the animation has been added
@@ -21,12 +22,16 @@ export function animate(element: HTMLElement, keyframesName: CSSKeyframes): Prom
 
 			// If there's no animation, resolve immediately
 			if (!newestAnimation) {
+				element.style.animationName = initialAnimationName;
 				resolve();
 				return;
 			}
 
 			// If there is an animation, resolve when it finishes
-			newestAnimation.finished.then(() => resolve());
+			newestAnimation.finished.then(() => {
+				element.style.animationName = initialAnimationName;
+				resolve();
+			});
 		});
 	});
 }
