@@ -2,7 +2,7 @@
 
 ![Build and deploy status badge](https://github.com/cipscis/orange-twist/actions/workflows/build-and-deploy.yml/badge.svg)
 
-[Orange Twist](https://cipscis.github.io/orange-twist/)
+[Orange Twist](https://orange-twist.curly.kiwi/)
 
 ## Development
 
