@@ -14,12 +14,19 @@ import {
 
 interface ModalPromptProps {
 	message: string;
+	placeholder?: string;
 	resolve: (result: string | null) => void;
 }
 
+/**
+ * A prompt that asks the user to enter a string. The `resolve` prop
+ * will be called when the prompt is closed, either with the string
+ * entered by the user or `null` if the prompt was cancelled.
+ */
 export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 	const {
 		message,
+		placeholder,
 		resolve,
 	} = props;
 
@@ -74,6 +81,7 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 					type="text"
 					name="result"
 					class="modal-prompt__input"
+					placeholder={placeholder}
 					autofocus
 				/>
 			</label>

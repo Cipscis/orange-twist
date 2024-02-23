@@ -14,12 +14,19 @@
 		@include typography.heading-2;
 	}
 
+	h3 {
+		@include typography.heading-3;
+	}
+
 	a {
 		@include palette.link;
 	}
 
 	:is(p, pre):not(:last-child) {
 		margin-bottom: calc(1em * var(--line-height));
+	}
+	+ .content {
+		margin-top: calc(1em * var(--line-height));
 	}
 
 	hr {
