@@ -191,8 +191,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		if (isInChangeMode) {
 			popover.show();
 		} else {
-			animate(popover, CSSKeyframes.DISAPPEAR_SCREEN)
-				.then(() => popover.close());
+			const animation = animate(popover, CSSKeyframes.DISAPPEAR_SCREEN);
+			animation.finished.then(() => popover.close());
 		}
 	}, [isInChangeMode]);
 
