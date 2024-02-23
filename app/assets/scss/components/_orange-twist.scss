@@ -35,3 +35,26 @@
 .orange-twist__task-list {
 	margin-block: spacing.$md;
 }
+
+.orange-twist__footer {
+	margin-top: spacing.$lg;
+	border-top: 1px solid var(--accent);
+	padding-top: spacing.$lg;
+
+	display: flex;
+	flex-direction: column;
+	gap: spacing.$sm;
+
+	@include typography.base-small;
+}
+
+.orange-twist__footer-row {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: spacing.$sm;
+}
+
+.orange-twist__footer-author {}
+
+.orange-twist__footer-version {}
