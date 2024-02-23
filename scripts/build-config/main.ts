@@ -14,6 +14,7 @@ export const config: BuildOptions = {
 		`${src}/enhancements.ts`,
 		`${src}/pages/main.tsx`,
 		`${src}/pages/task.tsx`,
+		`${src}/pages/help.tsx`,
 
 		`${src}/pages/404.tsx`,
 		`${src}/pages/408.tsx`,
