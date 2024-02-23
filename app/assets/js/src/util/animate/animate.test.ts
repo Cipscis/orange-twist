@@ -7,9 +7,9 @@ import {
 } from '@jest/globals';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
 
-import { CSSKeyframes } from './CSSKeyframes';
+import { CSSKeyframes } from '../CSSKeyframes';
 
-import { animate } from './animate';
+import { animate } from '.';
 
 configMocks({
 	afterEach,
@@ -18,15 +18,12 @@ configMocks({
 mockAnimationsApi();
 
 describe('animate', () => {
-	test('returns a Promise', async () => {
+	test('returns an Animation', () => {
 		const testElement = document.createElement('div');
 		document.body.append(testElement);
 
 		const result = animate(testElement, CSSKeyframes.DISAPPEAR_UP);
 
-		expect(result).toBeInstanceOf(Promise);
-
-		// Let Jest ensure that the promise resolves
-		return result;
+		expect(result).toBeInstanceOf(Animation);
 	});
 });

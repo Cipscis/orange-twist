@@ -49,7 +49,8 @@ export function Toast(props: ToastProps): JSX.Element {
 			progressAnimationRef.current.finished.then(async () => {
 				if (toastRef.current) {
 					// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
-					await animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
+					const animation = animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
+					await animation.finished;
 				}
 
 				removeToast(id);
