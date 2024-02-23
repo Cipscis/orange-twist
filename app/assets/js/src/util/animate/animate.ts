@@ -10,6 +10,9 @@ import { getElementAnimationDuration } from './getElementAnimationDuration';
  *
  * If no keyframes can be found, an empty `Animation` will be used.
  *
+ * If no duration is specified, but an animation duration is specified
+ * in CSS, that CSS duration will be used instead if possible.
+ *
  * @see {@linkcode CSSKeyframes} for a list of named CSS animations.
  */
 export function animate(
@@ -21,10 +24,17 @@ export function animate(
 	const keyframes = rules.get(keyframesName) ?? null;
 
 	// Try to use the animation duration specified in CSS by default
-	if (typeof options === 'undefined') {
+	if (
+		typeof options === 'undefined' ||
+		(
+			typeof options === 'object' &&
+			typeof options.duration === 'undefined'
+		)
+	) {
 		const cssAnimationDuration = getElementAnimationDuration(element);
 		if (cssAnimationDuration !== null) {
-			options = cssAnimationDuration;
+			options = options ?? {};
+			options.duration = cssAnimationDuration;
 		}
 	}
 
