@@ -4,7 +4,7 @@ import { h, type JSX } from 'preact';
  * Renders static footer content.
  */
 export function Footer(): JSX.Element {
-	return <footer class="orange-twist__footer">
+	return <footer class="orange-twist__footer content">
 		<div class="orange-twist__footer-row">
 			<span class="orange-twist__footer-version">by Mark Hanna</span>
 			<span class="orange-twist__footer-version">version 1.0.0</span>
