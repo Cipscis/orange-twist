@@ -8,6 +8,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 * New tasks now get added to the start of a day, not the end
 
+### Added
+
+* Completed tasks are now sorted by date of last update
+* Main view scrolls to current day automatically
+
 ### Fixed
 
 * Applied correct font preload hints
