@@ -1,9 +1,19 @@
 import { h } from 'preact';
 
-import { afterEach, describe, expect, jest, test } from '@jest/globals';
+import {
+	afterEach,
+	describe,
+	expect,
+	jest,
+	test,
+} from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { act, cleanup, render } from '@testing-library/preact';
+import {
+	act,
+	cleanup,
+	render,
+} from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import { Modal } from './Modal';

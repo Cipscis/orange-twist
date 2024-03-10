@@ -1,4 +1,8 @@
-import { h, type ComponentChildren, type JSX } from 'preact';
+import {
+	h,
+	type ComponentChildren,
+	type JSX,
+} from 'preact';
 import {
 	useCallback,
 	useEffect,
@@ -11,15 +15,12 @@ import {
 	loadDays,
 	saveDays,
 	setDayInfo,
-
 	createTask,
 	loadTasks,
 	saveTasks,
-
 	loadDayTasks,
 	saveDayTasks,
 	setDayTaskInfo,
-
 	exportData,
 	importData,
 } from 'data';
