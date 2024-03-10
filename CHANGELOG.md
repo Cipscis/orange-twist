@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+* Resolved random sync failures in multi-tab editing caused by browser race condition
 * Applied correct font preload hints
 * Don't show "first visit" UI during loading
 * The current day expands by default, even if future days exist
