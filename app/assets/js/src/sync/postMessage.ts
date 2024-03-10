@@ -1,5 +1,5 @@
 import { channel } from './channel';
-import { LocalStorageKey } from './localStorageKey';
+import { LocalStorageKey } from './LocalStorageKey';
 import { MessageType, type Message } from './types';
 
 export function postMessage(message: Message): void {

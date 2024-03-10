@@ -1,4 +1,4 @@
-import { LocalStorageKey } from './localStorageKey';
+import { LocalStorageKey } from './LocalStorageKey';
 import { MessageType, isMessage } from './types';
 
 export const syncCallbacks = new Set<() => void>();
