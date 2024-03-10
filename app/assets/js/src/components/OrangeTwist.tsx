@@ -6,6 +6,7 @@ import {
 import {
 	useCallback,
 	useEffect,
+	useRef,
 	useState,
 } from 'preact/hooks';
 
@@ -106,6 +107,24 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	}, [
 		loadAllData,
 	]);
+
+	// Scroll to first open day when initial loading is complete
+	const hasDoneInitialScroll = useRef(false);
+	useEffect(() => {
+		if (hasDoneInitialScroll.current) {
+			return;
+		}
+
+		if (!isLoading) {
+			const firstOpenDay = document.querySelector('.js-day[open]');
+			if (firstOpenDay) {
+				firstOpenDay.scrollIntoView({
+					behavior: 'instant',
+				});
+			}
+			hasDoneInitialScroll.current = true;
+		}
+	}, [isLoading]);
 
 	// Load persisted data when serialised data
 	// is updated from another source
