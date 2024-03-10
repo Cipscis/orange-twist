@@ -5,7 +5,10 @@ import {
 import { fireCommand } from '../../commands';
 
 import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
-import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from './addKeyboardShortcutListener';
+import {
+	addKeyboardShortcutListener,
+	removeKeyboardShortcutListener,
+} from './addKeyboardShortcutListener';
 
 /**
  * Functions that can be used to fire commands.

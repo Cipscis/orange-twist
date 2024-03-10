@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from 'preact/hooks';
 
 import {
 	type DayTaskIdentifier,

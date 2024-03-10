@@ -12,7 +12,11 @@ import { cleanup, render } from '@testing-library/preact';
 import '@testing-library/jest-dom/jest-globals';
 
 import { TaskStatus } from 'types/TaskStatus';
-import { clear, createTask, setDayTaskInfo } from 'data';
+import {
+	clear,
+	createTask,
+	setDayTaskInfo,
+} from 'data';
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import { TaskDetail } from './TaskDetail';

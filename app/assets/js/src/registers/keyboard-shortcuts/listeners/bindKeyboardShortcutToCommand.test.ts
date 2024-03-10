@@ -17,7 +17,10 @@ import {
 	unregisterCommand,
 } from 'registers/commands';
 
-import { bindKeyboardShortcutToCommand, unbindKeyboardShortcutFromCommand } from './bindKeyboardShortcutToCommand';
+import {
+	bindKeyboardShortcutToCommand,
+	unbindKeyboardShortcutFromCommand,
+} from './bindKeyboardShortcutToCommand';
 import userEvent from '@testing-library/user-event';
 
 describe('bindKeyboardShortcutToCommand', () => {
