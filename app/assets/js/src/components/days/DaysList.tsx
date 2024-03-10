@@ -1,11 +1,18 @@
 import { type JSX, h } from 'preact';
-import { useCallback, useMemo } from 'preact/hooks';
+import {
+	useCallback,
+	useContext,
+	useMemo,
+} from 'preact/hooks';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
+import { getCurrentDateDayName } from 'util/index';
+
 import { useAllDayInfo } from 'data';
 
+import { OrangeTwistContext } from '../OrangeTwistContext';
 import { Button } from '../shared';
 import { Day } from './Day';
 
@@ -15,14 +22,35 @@ import { Day } from './Day';
 export function DayList(): JSX.Element {
 	const unsortedDays = useAllDayInfo();
 
+	const { isLoading } = useContext(OrangeTwistContext);
+
 	const days = useMemo(() => unsortedDays.sort(
 		({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB)
 	), [unsortedDays]);
 
+	const currentDayName = getCurrentDateDayName();
+
+	const expandedDayIndex = useMemo(
+		() => {
+			// If the days list includes the current day, expand it
+			const currentDayIndex = days.findIndex(
+				({ name }) => name === currentDayName
+			);
+
+			if (currentDayIndex !== -1) {
+				return currentDayIndex;
+			}
+
+			// Otherwise, expand the last day
+			return days.length - 1;
+		},
+		[days, currentDayName]
+	);
+
 	return <section class="orange-twist__section">
 		<h2 class="orange-twist__title">Days</h2>
 
-		{days.length <= 1 && (
+		{!isLoading && days.length <= 1 && (
 			<div class="content">
 				<p>If you need help getting started, try <a href="/help">the help page</a>.</p>
 			</div>
@@ -32,7 +60,7 @@ export function DayList(): JSX.Element {
 			<Day
 				key={day.name}
 				day={day}
-				open={i === days.length-1}
+				open={i === expandedDayIndex}
 			/>
 		))}
 

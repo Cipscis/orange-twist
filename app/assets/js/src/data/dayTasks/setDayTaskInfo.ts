@@ -53,7 +53,7 @@ export function setDayTaskInfo(
 	} else if (dayInfo.tasks.indexOf(taskId) === -1) {
 		// If a day exists but it doesn't have this task, add it
 		setDayInfo(dayName, {
-			tasks: [...dayInfo.tasks, taskId],
+			tasks: [taskId, ...dayInfo.tasks],
 		});
 	}
 
