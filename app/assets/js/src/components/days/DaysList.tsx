@@ -4,6 +4,8 @@ import { useCallback, useMemo } from 'preact/hooks';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
+import { getCurrentDateDayName } from 'util/index';
+
 import { useAllDayInfo } from 'data';
 
 import { Button } from '../shared';
@@ -19,6 +21,22 @@ export function DayList(): JSX.Element {
 		({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB)
 	), [unsortedDays]);
 
+	const currentDayName = getCurrentDateDayName();
+
+	const expandedDayIndex = (() => {
+		// If the days list includes the current day, expand it
+		const currentDayIndex = days.findIndex(
+			({ name }) => name === currentDayName
+		);
+
+		if (currentDayIndex !== -1) {
+			return currentDayIndex;
+		}
+
+		// Otherwise, expand the last day
+		return days.length - 1;
+	})();
+
 	return <section class="orange-twist__section">
 		<h2 class="orange-twist__title">Days</h2>
 
@@ -30,7 +48,7 @@ export function DayList(): JSX.Element {
 			<Day
 				key={day.name}
 				day={day}
-				open={i === days.length-1}
+				open={i === expandedDayIndex}
 			/>
 		))}
 
