@@ -10,6 +10,7 @@ module.exports = {
 		'@typescript-eslint',
 		'react',
 		'react-hooks',
+		'import-newlines',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -111,6 +112,18 @@ module.exports = {
 		// asynchronous, but which is planned to eventually become asynchronous, in order to provide
 		// a consistent interface
 		'@typescript-eslint/require-await': 'warn',
+
+		/////////////
+		// Plugins //
+		/////////////
+		'import-newlines/enforce': [
+			'warn',
+			{
+				items: 2,
+				'max-len': 100,
+				forceSingleLine: false,
+			},
+		],
 
 		////////////////////////
 		// Debugging warnings //

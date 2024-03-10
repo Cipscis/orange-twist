@@ -9,7 +9,11 @@ import {
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { act, cleanup, render } from '@testing-library/preact';
+import {
+	act,
+	cleanup,
+	render,
+} from '@testing-library/preact';
 
 import { CommandPalette } from './CommandPalette';
 import userEvent from '@testing-library/user-event';

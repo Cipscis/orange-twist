@@ -1,5 +1,13 @@
-import { h, type ComponentChildren, type JSX } from 'preact';
-import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
+import {
+	h,
+	type ComponentChildren,
+	type JSX,
+} from 'preact';
+import {
+	useEffect,
+	useLayoutEffect,
+	useRef,
+} from 'preact/hooks';
 
 import {
 	classNames,

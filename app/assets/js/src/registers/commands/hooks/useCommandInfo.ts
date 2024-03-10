@@ -1,4 +1,8 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useState,
+} from 'preact/hooks';
 
 import type { CommandInfo } from '../types/CommandInfo';
 import type { CommandId } from '../types/CommandId';

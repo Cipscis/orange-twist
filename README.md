@@ -122,6 +122,8 @@ These dependencies are used when working on the project locally.
 
 	* [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest): Provides Jest linting rules
 
+	* [eslint-plugin-import-newlines](https://www.npmjs.com/package/eslint-import-newlines): Provides a linting rule for named imports
+
 * [stylelint](https://www.npmjs.com/package/stylelint): Linting CSS
 
 	* [stylelint-config-recommended-scss](https://www.npmjs.com/package/stylelint-config-recommended-scss): Allows `stylelint` to lint SCSS files, and provides a base set of SCSS linting rules
