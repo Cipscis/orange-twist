@@ -20,6 +20,13 @@ interface TaskListProps {
 	 * whether or not a task should be displayed.
 	 */
 	matcher: readonly number[] | ((task: TaskInfo) => boolean);
+	/**
+	 * A function to be used to determine the sorting order of tasks.
+	 * If ommitted, tasks will be sorted by their `sortIndex`.
+	 *
+	 * Ignored if `matcher` is an array of task IDs.
+	 */
+	sorter?: ((taskA: TaskInfo, TaskB: TaskInfo) => number);
 	dayName?: string;
 	className?: string;
 
@@ -35,6 +42,7 @@ export function TaskList(
 ): JSX.Element {
 	const {
 		matcher,
+		sorter,
 		dayName,
 		className,
 
@@ -57,6 +65,11 @@ export function TaskList(
 			};
 		}
 
+		// If there is a sorter function, use that
+		if (sorter) {
+			return sorter;
+		}
+
 		// Otherwise, sort by sortIndex
 		return (
 			{ sortIndex: indexA }: TaskInfo,
@@ -64,7 +77,7 @@ export function TaskList(
 		) => {
 			return indexA - indexB;
 		};
-	}, [matcher]);
+	}, [matcher, sorter]);
 
 	// Sort task info if necessary
 	const tasksInfo = useMemo(() => {

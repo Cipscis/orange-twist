@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Added
 
+* Completed tasks are now sorted by date of last update
 * Main view scrolls to current day automatically
 
 ### Fixed
