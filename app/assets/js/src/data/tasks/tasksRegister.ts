@@ -1,4 +1,4 @@
-import { Register } from 'util/register/Register';
+import { Register } from 'utils';
 
 import type { TaskInfo } from './types';
 

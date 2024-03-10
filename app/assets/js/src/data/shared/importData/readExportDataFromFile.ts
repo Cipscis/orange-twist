@@ -1,4 +1,4 @@
-import { chooseFile, readFileAsString } from 'util/index';
+import { chooseFile, readFileAsString } from 'utils';
 
 import { isExportDataLike, type ExportDataLike } from '../types/ExportDataLike';
 

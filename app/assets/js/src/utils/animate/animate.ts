@@ -1,4 +1,4 @@
-import type { StringWithAutocomplete } from 'util/index';
+import type { StringWithAutocomplete } from 'utils';
 
 import { type CSSKeyframes } from '../CSSKeyframes';
 import { getAllKeyframesRules } from './getAllKeyframesRules';

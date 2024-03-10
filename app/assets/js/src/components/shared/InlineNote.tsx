@@ -6,7 +6,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { classNames, useBlurCallback } from 'util/index';
+import { classNames, useBlurCallback } from 'utils';
 import { Markdown } from './Markdown';
 import { IconButton } from './IconButton';
 

@@ -1,4 +1,4 @@
-import { assertAllUnionMembersHandled } from 'util/index';
+import { assertAllUnionMembersHandled } from 'utils';
 
 import { MessageType, isMessage } from './types';
 import { LocalStorageKey } from './LocalStorageKey';

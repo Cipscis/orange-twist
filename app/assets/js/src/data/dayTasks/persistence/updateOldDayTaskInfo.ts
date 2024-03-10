@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { assertAllUnionMembersHandled } from 'util/index';
+import { assertAllUnionMembersHandled } from 'utils';
 
 import { isDayTaskInfo, type DayTaskInfo } from '../types/DayTaskInfo';
 import { TaskStatus } from 'types/TaskStatus';
