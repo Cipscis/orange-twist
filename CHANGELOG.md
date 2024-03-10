@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [1.1.0] - 2024-03-10
 
+### Changed
+
+* New tasks now get added to the start of a day, not the end
+
 ### Added
 
 * Completed tasks are now sorted by date of last update

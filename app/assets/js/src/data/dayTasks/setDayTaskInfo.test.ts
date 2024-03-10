@@ -58,10 +58,10 @@ describe('setDayTaskInfo', () => {
 		});
 
 		setDayTaskInfo({ dayName: '2023-11-12', taskId: 2 }, { status: TaskStatus.COMPLETED });
-		expect(getDayInfo('2023-11-12')?.tasks).toEqual([1, 2]);
+		expect(getDayInfo('2023-11-12')?.tasks).toEqual([2, 1]);
 
 		setDayTaskInfo({ dayName: '2023-11-12', taskId: 1 }, { status: TaskStatus.COMPLETED });
-		expect(getDayInfo('2023-11-12')?.tasks).toEqual([1, 2]);
+		expect(getDayInfo('2023-11-12')?.tasks).toEqual([2, 1]);
 	});
 
 	test('adds the task to the specified day, if it wasn\'t there already', () => {
@@ -69,10 +69,10 @@ describe('setDayTaskInfo', () => {
 		expect(getDayInfo('2023-11-18')?.tasks).toEqual([1]);
 
 		setDayTaskInfo({ dayName: '2023-11-18', taskId: 2 }, { status: TaskStatus.TODO });
-		expect(getDayInfo('2023-11-18')?.tasks).toEqual([1, 2]);
+		expect(getDayInfo('2023-11-18')?.tasks).toEqual([2, 1]);
 
 		setDayTaskInfo({ dayName: '2023-11-18', taskId: 2 }, { status: TaskStatus.COMPLETED });
-		expect(getDayInfo('2023-11-18')?.tasks).toEqual([1, 2]);
+		expect(getDayInfo('2023-11-18')?.tasks).toEqual([2, 1]);
 	});
 
 	test('doesn\'t allow the dayName or taskId properties to be overridden', () => {
