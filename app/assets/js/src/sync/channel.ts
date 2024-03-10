@@ -1,5 +1,7 @@
-import { LocalStorageKey } from './LocalStorageKey';
+import { assertAllUnionMembersHandled } from 'util/index';
+
 import { MessageType, isMessage } from './types';
+import { LocalStorageKey } from './LocalStorageKey';
 
 export const syncCallbacks = new Set<() => void>();
 
@@ -36,6 +38,8 @@ channel.addEventListener(
 					{ once: true }
 				);
 			}
+		} else {
+			assertAllUnionMembersHandled(message.type);
 		}
 	}
 );
