@@ -1,5 +1,9 @@
 import { h, type JSX } from 'preact';
-import { useCallback, useContext, useMemo } from 'preact/hooks';
+import {
+	useCallback,
+	useContext,
+	useMemo,
+} from 'preact/hooks';
 
 import { isValidDateString } from 'util/index';
 
