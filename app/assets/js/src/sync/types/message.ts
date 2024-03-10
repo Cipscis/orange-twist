@@ -7,9 +7,16 @@ export const MessageType = {
 } as const;
 export type MessageType = EnumTypeOf<typeof MessageType>;
 
-const messageSchema = z.object({
+const baseMessageSchema = z.object({
 	type: z.nativeEnum(MessageType),
 });
+
+const syncUpdateMessageSchema = baseMessageSchema.extend({
+	data: z.string(),
+});
+
+const messageSchema = syncUpdateMessageSchema;
+
 export type Message = z.infer<typeof messageSchema>;
 
 export const isMessage = isZodSchemaType(messageSchema);
