@@ -8,8 +8,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 * Completed tasks are now sorted by date of last update
 
-## [1.0.2] - 2024-03-10
-
 ### Fixed
 
 * Applied correct font preload hints
