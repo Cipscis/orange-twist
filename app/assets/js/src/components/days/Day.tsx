@@ -56,7 +56,7 @@ export const Day = (props: DayProps): JSX.Element => {
 	}, [name]);
 
 	return <details
-		class="day"
+		class="day js-day"
 		{...passthroughProps}
 	>
 		<summary class="day__summary">

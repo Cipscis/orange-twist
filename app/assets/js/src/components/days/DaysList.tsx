@@ -1,5 +1,9 @@
 import { type JSX, h } from 'preact';
-import { useCallback, useContext, useMemo } from 'preact/hooks';
+import {
+	useCallback,
+	useContext,
+	useMemo,
+} from 'preact/hooks';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
