@@ -2,6 +2,24 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2024-03-10
+
+### Changed
+
+* New tasks now get added to the start of a day, not the end
+
+### Added
+
+* Completed tasks are now sorted by date of last update
+* Main view scrolls to current day automatically
+
+### Fixed
+
+* Resolved random sync failures in multi-tab editing caused by browser race condition
+* Applied correct font preload hints
+* Don't show "first visit" UI during loading
+* The current day expands by default, even if future days exist
+
 ## [1.0.1] - 2024-03-10
 
 ### Fixed

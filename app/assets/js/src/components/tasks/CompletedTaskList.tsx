@@ -2,10 +2,10 @@ import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
 import { CompletedTaskStatuses } from 'types/TaskStatus';
-import { setAllTaskInfo, type TaskInfo } from 'data';
-
-import { Command } from 'types/Command';
-import { fireCommand } from 'registers/commands';
+import {
+	getAllDayTaskInfo,
+	type TaskInfo,
+} from 'data';
 
 import { TaskList } from './TaskList';
 
@@ -23,14 +23,27 @@ export function CompletedTaskList(): JSX.Element | null {
 				({ status }: TaskInfo) => CompletedTaskStatuses.has(status),
 				[]
 			)}
+			sorter={useCallback(
+				(taskA: TaskInfo, taskB: TaskInfo): number => {
+					// First, sort by last updated date
+					const dayTasksA = getAllDayTaskInfo({ taskId: taskA.id });
+					const dayTasksB = getAllDayTaskInfo({ taskId: taskB.id });
+
+					const lastUpdatedA = dayTasksA[dayTasksA.length - 1].dayName;
+					const lastUpdatedB = dayTasksB[dayTasksB.length - 1].dayName;
+
+					const comparison = lastUpdatedA.localeCompare(lastUpdatedB);
+
+					if (comparison !== 0) {
+						return comparison;
+					}
+
+					// Then, sort by sort index
+					return taskA.sortIndex - taskB.sortIndex;
+				},
+				[]
+			)}
 			className="orange-twist__task-list"
-			onReorder={useCallback((taskIds: readonly number[]) => {
-				const entries = taskIds.map(
-					(taskId, sortIndex) => [taskId, { sortIndex }] as const
-				);
-				setAllTaskInfo(entries);
-				fireCommand(Command.DATA_SAVE);
-			}, [])}
 		/>
 	</details>;
 }
