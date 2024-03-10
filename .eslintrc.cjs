@@ -119,8 +119,9 @@ module.exports = {
 		'import-newlines/enforce': [
 			'warn',
 			{
-				'items': 2,
+				items: 2,
 				'max-len': 100,
+				forceSingleLine: false,
 			},
 		],
 
