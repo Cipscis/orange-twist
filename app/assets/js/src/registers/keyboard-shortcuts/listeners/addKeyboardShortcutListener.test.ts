@@ -12,7 +12,10 @@ import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
 import { registerKeyboardShortcut } from '../registerKeyboardShortcut';
 import { getKeyboardShortcut } from '../getKeyboardShortcut';
 
-import { addKeyboardShortcutListener, removeKeyboardShortcutListener } from './addKeyboardShortcutListener';
+import {
+	addKeyboardShortcutListener,
+	removeKeyboardShortcutListener,
+} from './addKeyboardShortcutListener';
 
 beforeAll(() => {
 	registerKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, [{ key: 'a' }]);
