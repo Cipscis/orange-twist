@@ -4,7 +4,7 @@ import {
 	classNames,
 	type DefaultsFor,
 	type EnumTypeOf,
-} from 'util/index';
+} from 'utils';
 
 const NoticeVariant = {
 	ERROR: 'error',

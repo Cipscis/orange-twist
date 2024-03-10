@@ -6,9 +6,9 @@ import {
 	useRef,
 } from 'preact/hooks';
 
-import { classNames } from 'util/index';
+import { classNames } from 'utils';
 
-import { useViewTransition } from 'util/index';
+import { useViewTransition } from 'utils';
 
 import { useAllTaskInfo, type TaskInfo } from 'data';
 

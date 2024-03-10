@@ -6,7 +6,7 @@ import {
 
 import { z } from 'zod';
 
-import { isZodSchemaType } from 'util/index';
+import { isZodSchemaType } from 'utils';
 
 describe('isZodSchemaType', () => {
 	test('constructs a typeguard function when passed a Zod schema', () => {

@@ -1,7 +1,7 @@
 import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import { getCurrentDateDayName } from 'util/index';
+import { getCurrentDateDayName } from 'utils';
 
 import { useDayInfo } from 'data';
 

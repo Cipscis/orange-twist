@@ -4,7 +4,7 @@ import { useMemo } from 'preact/hooks';
 import {
 	assertAllUnionMembersHandled,
 	classNames,
-} from 'util/index';
+} from 'utils';
 
 import { ButtonVariant } from './types';
 

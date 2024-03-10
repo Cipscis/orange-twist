@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isZodSchemaType } from 'util/index';
+import { isZodSchemaType } from 'utils';
 
 export const dayInfoSchema = z.object({
 	name: z.string(),
