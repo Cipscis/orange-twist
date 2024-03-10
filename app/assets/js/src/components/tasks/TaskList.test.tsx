@@ -84,4 +84,19 @@ describe('TaskList', () => {
 			'Task two',
 		]);
 	});
+
+	test('when using a sorting function, sorts tasks by that function', () => {
+		const { queryAllByText } = render(<TaskList
+			matcher={() => true}
+			sorter={(taskA, taskB) => taskB.name.localeCompare(taskA.name)}
+		/>);
+
+		const tasks = queryAllByText(/^Task /);
+		expect(tasks.map(({ textContent }) => textContent)).toEqual([
+			'Task two',
+			'Task three',
+			'Task one',
+			'Task four',
+		]);
+	});
 });
