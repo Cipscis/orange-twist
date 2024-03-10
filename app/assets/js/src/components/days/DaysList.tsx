@@ -23,19 +23,22 @@ export function DayList(): JSX.Element {
 
 	const currentDayName = getCurrentDateDayName();
 
-	const expandedDayIndex = (() => {
-		// If the days list includes the current day, expand it
-		const currentDayIndex = days.findIndex(
-			({ name }) => name === currentDayName
-		);
+	const expandedDayIndex = useMemo(
+		() => {
+			// If the days list includes the current day, expand it
+			const currentDayIndex = days.findIndex(
+				({ name }) => name === currentDayName
+			);
 
-		if (currentDayIndex !== -1) {
-			return currentDayIndex;
-		}
+			if (currentDayIndex !== -1) {
+				return currentDayIndex;
+			}
 
-		// Otherwise, expand the last day
-		return days.length - 1;
-	})();
+			// Otherwise, expand the last day
+			return days.length - 1;
+		},
+		[days, currentDayName]
+	);
 
 	return <section class="orange-twist__section">
 		<h2 class="orange-twist__title">Days</h2>
