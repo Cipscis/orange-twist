@@ -6,9 +6,13 @@ labels: bug
 assignees: ''
 ---
 
-## The problem
+## What happened
 
-<!-- Describe the bug you have observed. Be as specific as you can. It helps to describe any actions you've taken, what you expected to see, and what you saw instead. -->
+<!-- Describe the bug you have observed. Be as specific as you can. It helps to describe any actions you've taken, as well as what you saw. -->
+
+## What should have happened
+
+<!-- Describe what behaviour you expected to see instead. Again, be as specific as you can. -->
 
 ## Steps to replicate
 

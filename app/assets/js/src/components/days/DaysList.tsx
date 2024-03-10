@@ -1,5 +1,5 @@
 import { type JSX, h } from 'preact';
-import { useCallback, useMemo } from 'preact/hooks';
+import { useCallback, useContext, useMemo } from 'preact/hooks';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -8,6 +8,7 @@ import { getCurrentDateDayName } from 'util/index';
 
 import { useAllDayInfo } from 'data';
 
+import { OrangeTwistContext } from '../OrangeTwistContext';
 import { Button } from '../shared';
 import { Day } from './Day';
 
@@ -16,6 +17,8 @@ import { Day } from './Day';
  */
 export function DayList(): JSX.Element {
 	const unsortedDays = useAllDayInfo();
+
+	const { isLoading } = useContext(OrangeTwistContext);
 
 	const days = useMemo(() => unsortedDays.sort(
 		({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB)
@@ -43,7 +46,7 @@ export function DayList(): JSX.Element {
 	return <section class="orange-twist__section">
 		<h2 class="orange-twist__title">Days</h2>
 
-		{days.length <= 1 && (
+		{!isLoading && days.length <= 1 && (
 			<p>If you need help getting started, try <a href="/help">the help page</a>.</p>
 		)}
 
