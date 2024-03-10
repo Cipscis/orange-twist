@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { onSyncUpdate } from './onSyncUpdate';
 
-import { LocalStorageKey } from './localStorageKey';
+import { LocalStorageKey } from './LocalStorageKey';
 
 import { postMessage } from './postMessage';
 import { MessageType } from './types';
