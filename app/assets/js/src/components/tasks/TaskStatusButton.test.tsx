@@ -11,7 +11,11 @@ import '@testing-library/jest-dom/jest-globals';
 import { render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
-import { TaskStatus, TaskStatusName, TaskStatusSymbol } from 'types/TaskStatus';
+import {
+	TaskStatus,
+	TaskStatusName,
+	TaskStatusSymbol,
+} from 'types/TaskStatus';
 
 import { TaskStatusButton } from './TaskStatusComponent/TaskStatusButton';
 

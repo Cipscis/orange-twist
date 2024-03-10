@@ -11,7 +11,11 @@ import {
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { act, cleanup, render } from '@testing-library/preact';
+import {
+	act,
+	cleanup,
+	render,
+} from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
 import { randomUUID } from 'node:crypto';

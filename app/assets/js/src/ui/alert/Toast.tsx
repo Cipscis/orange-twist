@@ -1,5 +1,9 @@
 import { h, type JSX } from 'preact';
-import { useCallback, useEffect, useRef } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useRef,
+} from 'preact/hooks';
 
 import { animate, CSSKeyframes } from 'util/index';
 import { removeToast, renderToasts } from './toast-controller';

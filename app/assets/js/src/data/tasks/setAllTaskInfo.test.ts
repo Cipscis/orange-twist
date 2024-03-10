@@ -9,7 +9,12 @@ import {
 import { tasksRegister } from './tasksRegister';
 
 import { setAllTaskInfo } from './setAllTaskInfo';
-import { clear, getAllTaskInfo, getTaskInfo, setTaskInfo } from 'data';
+import {
+	clear,
+	getAllTaskInfo,
+	getTaskInfo,
+	setTaskInfo,
+} from 'data';
 import { TaskStatus } from 'types/TaskStatus';
 
 describe('setAllTaskInfo', () => {
