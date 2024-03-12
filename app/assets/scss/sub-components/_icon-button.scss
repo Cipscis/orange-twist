@@ -8,10 +8,6 @@
 .icon-button--primary,
 .icon-button--secondary {
 	@include reset;
-	// Not using `:enabled` because this could be an <a>
-	&:not(:disabled) {
-		cursor: pointer;
-	}
 
 	@include typography.icons;
 

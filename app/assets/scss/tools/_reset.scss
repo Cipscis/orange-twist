@@ -8,4 +8,10 @@
 	&:focus-visible {
 		outline: auto;
 	}
+	&:where(
+		button:enabled,
+		a:not(:disabled)
+	) {
+		cursor: pointer;
+	}
 }

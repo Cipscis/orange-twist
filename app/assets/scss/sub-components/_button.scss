@@ -21,11 +21,6 @@
 	transition:
 		background-color animation.$speed-fast animation.$easing-default,
 		color animation.$speed-fast animation.$easing-default;
-
-	// Not using `:enabled` because this could be an <a>
-	&:not(:disabled) {
-		cursor: pointer;
-	}
 }
 
 .button--primary {
