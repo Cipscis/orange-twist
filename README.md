@@ -58,6 +58,8 @@ This file is intended to differ from environment to environment, so it is ignore
 
 * [Preact](https://preactjs.com/): Rendering framework, alternative to React.
 
+* [preact-render-to-string](https://www.npmjs.com/package/preact-render-to-string): Preact's server-side rendering framework.
+
 * [zod](https://zod.dev/): A library for writing type schemas, designed for working with TypeScript.
 
 * [marked](https://marked.js.org/): A Markdown compiler.
