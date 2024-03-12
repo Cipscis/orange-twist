@@ -7,7 +7,7 @@ export function Footer(): JSX.Element {
 	return <footer class="orange-twist__footer content">
 		<div class="orange-twist__footer-row">
 			<span class="orange-twist__footer-version">by Mark Hanna</span>
-			<span class="orange-twist__footer-version">version 1.1.0</span>
+			<span class="orange-twist__footer-version">version 1.1.1</span>
 		</div>
 		<div class="orange-twist__footer-row">
 			<a href="/help/">
