@@ -13,10 +13,13 @@ import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import { Markdown } from './Markdown';
+import { clear, setTaskInfo } from 'data';
+import { TaskStatus, TaskStatusSymbol } from 'types/TaskStatus';
 
 describe('Markdown', () => {
 	afterEach(() => {
 		cleanup();
+		clear();
 	});
 
 	test('renders its content, converted to HTML', () => {
@@ -144,5 +147,36 @@ this is the second line`;
 
 		const contentEl = getByTestId('markdown-content');
 		expect(contentEl.innerHTML).toBe('This is <strong>the</strong> <em>first</em> <code>line</code>');
+	});
+
+	describe('renders task links', () => {
+		test('for a valid task ID', () => {
+			setTaskInfo(1, {
+				name: 'Task name',
+				status: TaskStatus.IN_PROGRESS,
+			});
+
+			const { getByTestId } = render(
+				<Markdown
+					content="Here's a task link: [[1]] *what do you think?*"
+					data-testid="markdown-content"
+				/>
+			);
+
+			const content = getByTestId('markdown-content');
+			expect(content).toMatchSnapshot();
+		});
+
+		test('for an invalid task ID', () => {
+			const { getByTestId } = render(
+				<Markdown
+					content="Here's a task link: [[1]] *what do you think?*"
+					data-testid="markdown-content"
+				/>
+			);
+
+			const content = getByTestId('markdown-content');
+			expect(content).toMatchSnapshot();
+		});
 	});
 });
