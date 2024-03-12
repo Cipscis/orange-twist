@@ -20,8 +20,7 @@ function TaskLink(props: TaskLinkProps): JSX.Element {
 	const taskInfo = useTaskInfo(taskId);
 
 	if (!taskInfo) {
-		// TODO: Needs styling
-		return <span>No task with ID ${taskId}</span>;
+		return <span class="task-link task-link--invalid">No task with ID {taskId}</span>;
 	}
 
 	return <a

@@ -39,8 +39,10 @@ exports[`Markdown renders task links for an invalid task ID 1`] = `
 >
   <p>
     Here's a task link: 
-    <span>
-      No task with ID $1
+    <span
+      class="task-link task-link--invalid"
+    >
+      No task with ID 1
     </span>
      
     <em>
