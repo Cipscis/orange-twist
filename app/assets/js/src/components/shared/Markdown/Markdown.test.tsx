@@ -14,7 +14,7 @@ import userEvent from '@testing-library/user-event';
 
 import { Markdown } from './Markdown';
 import { clear, setTaskInfo } from 'data';
-import { TaskStatus, TaskStatusSymbol } from 'types/TaskStatus';
+import { TaskStatus } from 'types/TaskStatus';
 
 describe('Markdown', () => {
 	afterEach(() => {
