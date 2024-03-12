@@ -68,6 +68,7 @@
 		"marked": "^11.1.0",
 		"marked-highlight": "^2.1.0",
 		"preact": "^10.19.3",
+		"preact-render-to-string": "^6.4.0",
 		"zod": "^3.22.4"
 	}
 }
