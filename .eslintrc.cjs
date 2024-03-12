@@ -44,6 +44,7 @@ module.exports = {
 		'.eslintrc.cjs',
 		'stylelint.config.cjs',
 		'jest.config.js',
+		'*.snap',
 	],
 	rules: {
 		/////////////////////////
