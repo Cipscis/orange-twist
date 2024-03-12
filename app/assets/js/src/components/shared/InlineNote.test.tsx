@@ -30,7 +30,7 @@ describe('InlineNote', () => {
 
 		const content = getByTestId('inline-note__note');
 		expect(content).toBeInTheDocument();
-		expect(content.innerHTML.trim()).toBe('<p><strong>Bold</strong> <em>italic</em> <code>code</code></p>');
+		expect(content.innerHTML.trim()).toBe('<strong>Bold</strong> <em>italic</em> <code>code</code>');
 	});
 
 	test('renders any specific CSS classes', () => {
