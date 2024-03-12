@@ -10,7 +10,7 @@
 	}
 	&:where(
 		button:enabled,
-		a:not(:disabled)
+		a
 	) {
 		cursor: pointer;
 	}
