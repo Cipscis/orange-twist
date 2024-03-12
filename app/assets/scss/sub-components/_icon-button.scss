@@ -24,21 +24,22 @@
 }
 
 .icon-button--primary {
-	// Not using `:enabled` because this could be an <a>
-	&:not(:disabled) {
+	// Handle different types of disabled element
+	&:not(:disabled, [aria-disabled="true"]) {
 		@include palette.secondary(true);
 	}
-	&:disabled {
+	&:is(:disabled, [aria-disabled="true"]) {
 		@include palette.secondary(false);
+		cursor: not-allowed;
 	}
 }
 
 .icon-button--secondary {
-	// Not using `:enabled` because this could be an <a>
-	&:not(:disabled) {
+	// Handle different types of disabled element
+	&:not(:disabled, [aria-disabled="true"]) {
 		@include palette.tertiary(true);
 	}
-	&:disabled {
+	&:is(:disabled, [aria-disabled="true"]) {
 		@include palette.tertiary(false);
 	}
 }
