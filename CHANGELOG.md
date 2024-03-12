@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2024-03-12
+
+### Fixed
+
+* Tool drawer toggle buttons use a pointer cursor
+
 ## [1.1.0] - 2024-03-10
 
 ### Changed
