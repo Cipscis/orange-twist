@@ -8,7 +8,11 @@ import { useDayInfo } from 'data';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import { Button, Loader, Note } from 'components/shared';
+import {
+	Button,
+	Loader,
+	Note,
+} from 'components/shared';
 import { Day } from 'components/days/Day';
 import { UnfinishedTaskList } from 'components/tasks/UnfinishedTaskList';
 
@@ -24,6 +28,8 @@ export function Help(): JSX.Element {
 	const createToday = useCallback(() => {
 		fireCommand(Command.DAY_ADD_NEW, getCurrentDateDayName());
 	}, []);
+
+	const noop = useCallback(() => {}, []);
 
 	return <>
 		<section class="orange-twist__section">
@@ -91,8 +97,8 @@ export function Help(): JSX.Element {
 				? <Loader />
 				: <Note
 					note="[[1]]"
-					onNoteChange={() => {}}
-					saveChanges={() => {}}
+					onNoteChange={noop}
+					saveChanges={noop}
 				/>
 			}
 
