@@ -209,6 +209,7 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 			note &&
 			<Markdown
 				content={note?.replace(/</g, '&lt;')}
+				inline
 				class={classNames('inline-note__display', {
 					'inline-note__display--hidden': isEditing,
 				})}
