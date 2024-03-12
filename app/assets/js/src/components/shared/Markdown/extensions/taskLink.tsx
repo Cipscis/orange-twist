@@ -1,7 +1,37 @@
+import { h, type JSX } from 'preact';
+import { renderToStaticMarkup } from 'preact-render-to-string';
+
 import type { TokenizerAndRendererExtension } from 'marked';
 
-import { getTaskInfo } from 'data';
+import { useTaskInfo } from 'data';
 import { TaskStatusSymbol } from 'types/TaskStatus';
+
+interface TaskLinkProps {
+	taskId: number;
+}
+
+/**
+ * Task link component rendered by Preact for ease of maintenance,
+ * always rendered as static markup so it can be used by Marked.
+ */
+function TaskLink(props: TaskLinkProps): JSX.Element {
+	const { taskId } = props;
+
+	const taskInfo = useTaskInfo(taskId);
+
+	if (!taskInfo) {
+		// TODO: Needs styling
+		return <span>No task with ID ${taskId}</span>;
+	}
+
+	return <a
+		href={`/task?id=${taskId}`}
+		class="task-link"
+	>
+		<span class="task-link__status">{TaskStatusSymbol[taskInfo.status]}</span>
+		<span class="task-link__name">{taskInfo.name}</span>
+	</a>;
+}
 
 export const taskLink: TokenizerAndRendererExtension = {
 	name: 'taskLink',
@@ -32,23 +62,9 @@ export const taskLink: TokenizerAndRendererExtension = {
 		return token;
 	},
 	renderer(token) {
-		const taskLink = (() => {
-			const taskId = Number(token.taskId);
-			if (isNaN(taskId)) {
-				// TODO: Needs styling
-				return `Invalid task ID ${token.taskId}`;
-			}
-
-			const taskInfo = getTaskInfo(taskId);
-			if (!taskInfo) {
-				// TODO: Needs styling
-				return `No task with ID ${taskId}`;
-			}
-
-			// TODO: Needs styling
-			const taskLink = `<a href="/task?id=${token.taskId}" class="task-link"><span class="task-link__status">${TaskStatusSymbol[taskInfo.status]}</span> <span class="task-link__name">${taskInfo.name}</span></a>`;
-			return taskLink;
-		})()
+		const taskLink = renderToStaticMarkup(<TaskLink
+			taskId={Number(token.taskId)}
+		/>);
 
 		const remainder = this.parser.parseInline(token.tokens ?? []);
 		return `${taskLink}${remainder}`;

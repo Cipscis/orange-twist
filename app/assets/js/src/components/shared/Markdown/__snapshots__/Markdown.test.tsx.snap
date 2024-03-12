@@ -16,7 +16,6 @@ exports[`Markdown renders task links for a valid task ID 1`] = `
       >
         ▶️
       </span>
-       
       <span
         class="task-link__name"
       >
@@ -39,7 +38,11 @@ exports[`Markdown renders task links for an invalid task ID 1`] = `
   data-testid="markdown-content"
 >
   <p>
-    Here's a task link: No task with ID 1 
+    Here's a task link: 
+    <span>
+      No task with ID $1
+    </span>
+     
     <em>
       what do you think?
     </em>
