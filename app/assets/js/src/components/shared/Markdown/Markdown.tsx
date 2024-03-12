@@ -79,9 +79,15 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 			return;
 		}
 
-		const contentToRender = inline
-			? content.split('\n')[0]
-			: content;
+		const contentToRender = (() => {
+			if (inline) {
+				const firstLine = content.split('\n')[0];
+				// Insert zero-width space to prevent task link shortcode
+				return firstLine.replace(/\[\[(\d)/g, '[[&ZeroWidthSpace;$1');
+			}
+
+			return content;
+		})();
 
 		(async () => {
 			let renderedContent = marked.parse(contentToRender, {
@@ -103,6 +109,8 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 			if (inline) {
 				renderedContent = renderedContent.replace(/<p>(.+)<\/p>\n?/, '$1');
+				// Remove any zero-width spaces used to prevent task link shortcode
+				renderedContent = renderedContent.replace(/\[\[&ZeroWidthSpace;(\d)/g, '[[$1');
 			}
 
 			if (wrapper.setHTML) {
