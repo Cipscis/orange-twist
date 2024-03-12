@@ -70,6 +70,10 @@ $_animation-speed: animation.$speed-fast;
 	$_border-radius: 80% 30%;
 
 	@include reset;
+	&:enabled {
+		cursor: pointer;
+	}
+
 	display: grid;
 	place-items: center;
 
