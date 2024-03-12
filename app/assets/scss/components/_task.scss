@@ -12,7 +12,4 @@
 
 .task__status {
 	@include reset;
-	&:enabled {
-		cursor: pointer;
-	}
 }
