@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2024-03-12
+
+### Added
+
+* Added shortcodes for linking to tasks, e.g. `[[36]]`
+
 ## [1.1.0] - 2024-03-10
 
 ### Changed
