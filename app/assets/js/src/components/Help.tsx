@@ -1,5 +1,5 @@
 import { h, type JSX } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useContext } from 'preact/hooks';
 
 import { getCurrentDateDayName } from 'utils';
 
@@ -8,14 +8,18 @@ import { useDayInfo } from 'data';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import { Button } from 'components/shared';
+import { Button, Loader, Note } from 'components/shared';
 import { Day } from 'components/days/Day';
 import { UnfinishedTaskList } from 'components/tasks/UnfinishedTaskList';
+
+import { OrangeTwistContext } from './OrangeTwistContext';
 
 /**
  * Render static content for the Help page.
  */
 export function Help(): JSX.Element {
+	const { isLoading } = useContext(OrangeTwistContext);
+
 	const today = useDayInfo(getCurrentDateDayName());
 	const createToday = useCallback(() => {
 		fireCommand(Command.DAY_ADD_NEW, getCurrentDateDayName());
@@ -58,7 +62,7 @@ export function Help(): JSX.Element {
 			}
 
 			<div className="content">
-				<p>You can add notes against a day by pressing the edit button. For formatting these notes, you can use <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">Markdown</a>.</p>
+				<p>You can add notes against a day by pressing the edit button. See <a href="#notes">Notes</a> for more information.</p>
 
 				<h3 id="organisation-tasks">Organisation - Tasks</h3>
 
@@ -70,12 +74,29 @@ export function Help(): JSX.Element {
 			<div class="content">
 				<p>Although they can exist on their own, tasks are designed to be added against each day when you work on them.</p>
 
-				<p>Like a day's notes, tasks' names can also use Markdown. Tasks also have a status, and keep track of the status they had on each day they were worked on.</p>
+				<p>Like <a href="#notes">notes</a>, tasks' names can also use Markdown. Tasks also have a status, and keep track of the status they had on each day they were worked on.</p>
 
 				<p>On a task's detail page, you can view and edit a task's notes and its daily statuses.</p>
 
 				<p>On <a href="/">Orange Twist's main page</a>, tasks are organised at the bottom into open and completed tasks. You can add an existing task to your current day by selecting a status for it in the open tasks list, or by going to its detail view and using the "Add day" button.</p>
 
+				<h3 id="notes">Notes</h3>
+
+				<p>Several areas of Orange Twist allow for notes to be added and edited. You can use <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">Markdown</a> to format these notes.</p>
+
+				<p>If you want to link to a specific task, you can use a "[[taskId]]" shortcode, e.g. "[[1]]" would generate a link to task 1 like this:</p>
+			</div>
+
+			{isLoading
+				? <Loader />
+				: <Note
+					note="[[1]]"
+					onNoteChange={() => {}}
+					saveChanges={() => {}}
+				/>
+			}
+
+			<div class="content">
 				<h3 id="command-palette">Command Palette</h3>
 
 				<p>The command palette can be used to quickly perform actions with the keyboard, or to perform certain advanced actions.</p>
