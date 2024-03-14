@@ -1,4 +1,4 @@
-import type { EnumTypeOf } from '../util/EnumTypeOf';
+import type { EnumTypeOf } from 'utils';
 
 export const Theme = {
 	LIGHT: 'light',

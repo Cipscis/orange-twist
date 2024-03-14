@@ -1,6 +1,6 @@
 import { h, render } from 'preact';
 
-import { getPromiseWithResolver } from 'util/index';
+import { getPromiseWithResolver } from 'utils';
 
 import { ModalPrompt } from './ModalPrompt';
 

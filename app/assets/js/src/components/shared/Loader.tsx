@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { classNames } from 'util/index';
+import { classNames } from 'utils';
 
 interface LoaderProps {
 	immediate?: boolean;

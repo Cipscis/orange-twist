@@ -11,7 +11,7 @@ import {
 	classNames,
 	nodeHasAncestor,
 	useBlurCallback,
-} from 'util/index';
+} from 'utils';
 import {
 	KeyboardShortcutName,
 	useKeyboardShortcut,

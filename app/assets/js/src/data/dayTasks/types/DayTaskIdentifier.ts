@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isZodSchemaType } from 'util/index';
+import { isZodSchemaType } from 'utils';
 
 export const dayTaskIdentifierSchema = z.object({
 	/** The name of the day this day task is for. */

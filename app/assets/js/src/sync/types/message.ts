@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { isZodSchemaType, type EnumTypeOf } from 'util/index';
+import { isZodSchemaType, type EnumTypeOf } from 'utils';
 
 export const MessageType = {
 	SYNC_UPDATE: 'sync update',

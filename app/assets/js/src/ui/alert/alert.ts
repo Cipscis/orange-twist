@@ -1,7 +1,7 @@
 import type {
 	DefaultsFor,
 	ExpandType,
-} from 'util/index';
+} from 'utils';
 import type { ToastProps } from './Toast';
 import {
 	getNextId,
