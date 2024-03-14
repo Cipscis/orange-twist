@@ -12,7 +12,7 @@ import {
 import {
 	classNames,
 	getDeepActiveElement,
-} from 'util/index';
+} from 'utils';
 import { IconButton } from './IconButton';
 
 interface ModalProps {

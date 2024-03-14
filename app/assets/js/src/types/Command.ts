@@ -1,4 +1,4 @@
-import type { EnumTypeOf } from 'util/index';
+import type { EnumTypeOf } from 'utils';
 
 export const Command = {
 	DAY_ADD_NEW: 'day-add-new',

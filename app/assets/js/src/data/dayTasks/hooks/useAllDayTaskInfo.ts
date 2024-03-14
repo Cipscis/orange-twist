@@ -9,7 +9,7 @@ import {
 	type DayTaskIdentifier,
 	type DayTaskInfo,
 } from '../types';
-import type { RegisterKey } from 'util/register';
+import type { RegisterKey } from 'utils';
 
 import { dayTasksRegister } from '../dayTasksRegister';
 import { decodeDayTaskKey } from '../util';

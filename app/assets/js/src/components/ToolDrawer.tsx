@@ -19,7 +19,7 @@ import {
 	useCloseWatcher,
 	type EnumTypeOf,
 	nodeHasAncestor,
-} from 'util/index';
+} from 'utils';
 
 export const ToolDrawerPlacement = {
 	LEFT: 'left',

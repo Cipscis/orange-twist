@@ -41,7 +41,7 @@ import {
 import {
 	getCurrentDateDayName,
 	isValidDateString,
-} from 'util/index';
+} from 'utils';
 
 import * as ui from 'ui';
 import {

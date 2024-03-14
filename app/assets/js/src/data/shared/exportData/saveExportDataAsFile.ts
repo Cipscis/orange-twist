@@ -1,4 +1,4 @@
-import { getCurrentDateDayName } from 'util/index';
+import { getCurrentDateDayName } from 'utils';
 
 import type { ExportData } from '../types/ExportData';
 

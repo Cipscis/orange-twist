@@ -5,7 +5,7 @@ import {
 	useMemo,
 } from 'preact/hooks';
 
-import { isValidDateString } from 'util/index';
+import { isValidDateString } from 'utils';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';

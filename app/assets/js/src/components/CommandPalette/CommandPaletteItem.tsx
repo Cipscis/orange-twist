@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { forwardRef } from 'preact/compat';
 
-import { classNames } from 'util/index';
+import { classNames } from 'utils';
 
 import { fireCommand } from 'registers/commands';
 import type { CommandInfo } from 'registers/commands/types/CommandInfo';
