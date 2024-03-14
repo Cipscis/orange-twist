@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 * Added shortcodes for linking to tasks, e.g. `[[36]]`
 
+### Fixed
+
+* Tool drawer toggle buttons use a pointer cursor
+
 ## [1.1.0] - 2024-03-10
 
 ### Changed
