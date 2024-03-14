@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Markdown renders task links for a valid task ID 1`] = `
+<div
+  class="content"
+  data-testid="markdown-content"
+>
+  <p>
+    Here's a task link: 
+    <a
+      class="task-link"
+      href="/task?id=1"
+    >
+      <span
+        class="task-link__status"
+        style="--colour:var(--colour-task--in-progress);"
+      >
+        ▶️
+      </span>
+      <span
+        class="task-link__name"
+      >
+        Task name
+      </span>
+    </a>
+     
+    <em>
+      what do you think?
+    </em>
+  </p>
+  
+
+</div>
+`;
+
+exports[`Markdown renders task links for an invalid task ID 1`] = `
+<div
+  class="content"
+  data-testid="markdown-content"
+>
+  <p>
+    Here's a task link: 
+    <span
+      class="task-link task-link--invalid"
+    >
+      No task with ID 1
+    </span>
+     
+    <em>
+      what do you think?
+    </em>
+  </p>
+  
+
+</div>
+`;
