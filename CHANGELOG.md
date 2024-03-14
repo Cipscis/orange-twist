@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2024-03-14
+
+### Fixed
+
+* Fixed incorrect rendering of task links in some circumstances
+
 ## [1.2.0] - 2024-03-14
 
 ### Added
