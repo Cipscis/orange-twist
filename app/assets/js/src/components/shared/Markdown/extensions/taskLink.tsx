@@ -50,7 +50,7 @@ export const taskLink: TokenizerAndRendererExtension = {
 		// Expression for complete token, from its start
 		// Match a number in double square braces, and collect any following text
 		// e.g. "[[48]]"
-		const rule = /^(\[\[(\d+)\]\])(.*)$/m;
+		const rule = /^(\[\[(\d+)\]\])/;
 		const match = rule.exec(src);
 		if (!match) {
 			return undefined;
@@ -60,19 +60,14 @@ export const taskLink: TokenizerAndRendererExtension = {
 			type: 'taskLink',
 			raw: match[0],
 			taskId: match[2],
-			remainder: match[3],
 			tokens: [],
 		};
-		// Tell the lexer to parse anything in the remainder
-		this.lexer.inline(token.remainder, token.tokens);
 		return token;
 	},
 	renderer(token) {
 		const taskLink = renderToStaticMarkup(<TaskLink
 			taskId={Number(token.taskId)}
 		/>);
-
-		const remainder = this.parser.parseInline(token.tokens ?? []);
-		return `${taskLink}${remainder}`;
+		return taskLink;
 	},
 };
