@@ -80,7 +80,7 @@
 	code {
 		display: inline-block;
 		@include palette.secondary;
-		@include typography.monospace-medium;
+		@include typography.monospace-inherit;
 		tab-size: 4;
 		// About enough to compensate for "`"
 		padding: 0 0.5ch;
