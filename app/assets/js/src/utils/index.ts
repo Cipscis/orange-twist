@@ -1,4 +1,9 @@
 export { animate } from './animate';
+export {
+	Register,
+	type RegisterKey,
+} from './register';
+
 export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 export { chooseFile } from './chooseFile';
 export { classNames } from './classNames';

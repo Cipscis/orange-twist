@@ -5,7 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import { getCurrentDateDayName } from 'util/index';
+import { getCurrentDateDayName } from 'utils';
 
 import type { TaskInfo } from './types';
 import { TaskStatus } from 'types/TaskStatus';

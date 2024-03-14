@@ -1,6 +1,6 @@
 import type { DayInfo } from './types';
 
-import { isValidDateString } from 'util/index';
+import { isValidDateString } from 'utils';
 
 import { daysRegister } from './daysRegister';
 import {

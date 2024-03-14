@@ -8,7 +8,7 @@ import {
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import { getCurrentDateDayName } from 'util/index';
+import { getCurrentDateDayName } from 'utils';
 
 import { useAllDayInfo } from 'data';
 

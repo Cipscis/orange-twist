@@ -5,7 +5,7 @@ import {
 	useRef,
 } from 'preact/hooks';
 
-import { animate, CSSKeyframes } from 'util/index';
+import { animate, CSSKeyframes } from 'utils';
 import { removeToast, renderToasts } from './toast-controller';
 
 export interface ToastProps {

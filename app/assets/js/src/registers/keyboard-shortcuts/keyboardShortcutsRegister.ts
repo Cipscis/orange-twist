@@ -2,7 +2,7 @@
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { registerKeyboardShortcut } from './registerKeyboardShortcut';
 
-import { getDeepActiveElement } from 'util/index';
+import { getDeepActiveElement } from 'utils';
 
 import type { KeyCombo, KeyboardShortcutInfo } from './types';
 import { KeyboardShortcutName } from './types';

@@ -12,7 +12,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { escapeRegExpString } from 'util/index';
+import { escapeRegExpString } from 'utils';
 
 import { fireCommand, useCommandInfo } from 'registers/commands';
 

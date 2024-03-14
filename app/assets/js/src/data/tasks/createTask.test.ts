@@ -11,7 +11,7 @@ import { TaskStatus } from 'types/TaskStatus';
 import { tasksRegister } from './tasksRegister';
 import { getTaskInfo } from './getTaskInfo';
 import { clear } from '../shared';
-import { getCurrentDateDayName } from 'util/index';
+import { getCurrentDateDayName } from 'utils';
 
 import { createTask } from './createTask';
 import { getDayInfo, setDayInfo } from 'data';
