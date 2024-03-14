@@ -1,11 +1,14 @@
 import { h, type JSX } from 'preact';
+import { useLayoutEffect, useRef } from 'preact/hooks';
 
 import { classNames } from 'util/index';
 
 import { marked } from 'marked';
-import { useLayoutEffect, useRef } from 'preact/hooks';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
+
+import { taskLink } from './extensions/taskLink';
+import { renderer } from './renderer';
 
 interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	/**
@@ -22,31 +25,8 @@ interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 marked.use({
-	renderer: {
-		link(href, title, text) {
-			try {
-				const url = new URL(href, location.origin);
-				const isExternal = url.origin !== location.origin;
-
-				return `<a href="${href}"${
-					isExternal
-						? ' target="_blank"'
-						: ''
-				}${
-					title
-						? ` title="${title}"`
-						: ''
-				}>${text}</a>`;
-			} catch (e) {
-				// Could not construct a valid URL
-				return `<a href="${href}"${
-					title
-						? ` title="${title}"`
-						: ''
-				}>${text}</a>`;
-			}
-		},
-	},
+	renderer,
+	extensions: [taskLink],
 });
 
 marked.use(markedHighlight({
@@ -75,9 +55,15 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 			return;
 		}
 
-		const contentToRender = inline
-			? content.split('\n')[0]
-			: content;
+		const contentToRender = (() => {
+			if (inline) {
+				const firstLine = content.split('\n')[0];
+				// Insert zero-width space to prevent task link shortcode
+				return firstLine.replace(/\[\[(\d)/g, '[[&ZeroWidthSpace;$1');
+			}
+
+			return content;
+		})();
 
 		(async () => {
 			let renderedContent = marked.parse(contentToRender, {
@@ -99,6 +85,8 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 			if (inline) {
 				renderedContent = renderedContent.replace(/<p>(.+)<\/p>\n?/, '$1');
+				// Remove any zero-width spaces used to prevent task link shortcode
+				renderedContent = renderedContent.replace(/\[\[&ZeroWidthSpace;(\d)/g, '[[$1');
 			}
 
 			if (wrapper.setHTML) {
