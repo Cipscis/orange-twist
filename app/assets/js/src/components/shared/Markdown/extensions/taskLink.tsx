@@ -23,13 +23,20 @@ function TaskLink(props: TaskLinkProps): JSX.Element {
 		return <span class="task-link task-link--invalid">No task with ID {taskId}</span>;
 	}
 
-	return <a
-		href={`/task?id=${taskId}`}
-		class="task-link"
-	>
-		<span class="task-link__status">{TaskStatusSymbol[taskInfo.status]}</span>
-		<span class="task-link__name">{taskInfo.name}</span>
-	</a>;
+	return <>
+		<a
+			href={`/task?id=${taskId}`}
+			class="task-link"
+		>
+			<span
+				class="task-link__status"
+				style={{
+					'--colour': `var(--colour-task--${taskInfo.status})`,
+				}}
+			>{TaskStatusSymbol[taskInfo.status]}</span>
+			<span class="task-link__name">{taskInfo.name}</span>
+		</a>
+	</>;
 }
 
 export const taskLink: TokenizerAndRendererExtension = {
@@ -43,7 +50,7 @@ export const taskLink: TokenizerAndRendererExtension = {
 		// Expression for complete token, from its start
 		// Match a number in double square braces, and collect any following text
 		// e.g. "[[48]]"
-		const rule = /^(\[\[(\d+)\]\])(.*?)(?:$|\n)/;
+		const rule = /^(\[\[(\d+)\]\])(.*)$/m;
 		const match = rule.exec(src);
 		if (!match) {
 			return undefined;

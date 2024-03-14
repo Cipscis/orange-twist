@@ -1,22 +1,31 @@
+@use "../theme/animation";
+@use "../theme/palette";
 @use "../theme/typography";
 
 .task-link {
 	text-decoration: none;
-	color: inherit;
 	border: 2px solid var(--link);
 	border-radius: 0.2em;
 	padding-inline: 0.3ch;
+
+	@include palette.primary(true);
+	transition: background-color animation.$speed-fast animation.$easing-default;
 }
 
 .task-link__status {
 	display: inline-block;
 	vertical-align: middle;
+	// Manual adjustment to improve apparent vertical alignment
+	margin-top: -0.1em;
+	line-height: 1;
+	color: var(--colour);
 
 	@include typography.icons;
 }
 
 .task-link__name {
 	padding-inline-start: 1ch;
+	color: inherit;
 }
 
 .task-link--invalid {
