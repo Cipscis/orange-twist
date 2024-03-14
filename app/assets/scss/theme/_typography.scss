@@ -99,6 +99,12 @@ $_line-height-monospace: 1.4;
 	@include _font-size(rem(18px), $_line-height-monospace);
 }
 
+@mixin monospace-inherit {
+	font-family: $family-monospace;
+	font-weight: $weight-monospace;
+	@include _font-size(1em, $_line-height-monospace);
+}
+
 ///////////
 // Icons //
 ///////////
