@@ -13,6 +13,7 @@ exports[`Markdown renders task links for a valid task ID 1`] = `
     >
       <span
         class="task-link__status"
+        style="--colour:var(--colour-task--in-progress);"
       >
         ▶️
       </span>
