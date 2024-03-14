@@ -8,8 +8,16 @@
 	border-radius: 0.2em;
 	padding-inline: 0.3ch;
 
-	@include palette.primary(true);
-	transition: background-color animation.$speed-fast animation.$easing-default;
+	&:where(:not(.task-link--invalid)) {
+		@include palette.primary(true);
+		transition: background-color animation.$speed-fast animation.$easing-default;
+	}
+	&:where(task-link--invalid) {
+		@include palette.primary(false);
+
+		border-color: currentColor;
+		font-style: italic;
+	}
 }
 
 .task-link__status {
@@ -26,9 +34,4 @@
 .task-link__name {
 	padding-inline-start: 1ch;
 	color: inherit;
-}
-
-.task-link--invalid {
-	border-color: currentColor;
-	font-style: italic;
 }
