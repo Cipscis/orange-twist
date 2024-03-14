@@ -12,7 +12,7 @@ import {
 	CSSKeyframes,
 	nodeHasAncestor,
 	useCloseWatcher,
-} from 'util/index';
+} from 'utils';
 
 import {
 	TaskStatus,

@@ -6,7 +6,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { classNames, useBlurCallback } from 'util/index';
+import { classNames, useBlurCallback } from 'utils';
 import { Markdown } from './Markdown';
 import { IconButton } from './IconButton';
 
@@ -209,6 +209,7 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 			note &&
 			<Markdown
 				content={note?.replace(/</g, '&lt;')}
+				inline
 				class={classNames('inline-note__display', {
 					'inline-note__display--hidden': isEditing,
 				})}

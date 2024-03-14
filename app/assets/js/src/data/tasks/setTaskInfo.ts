@@ -1,6 +1,6 @@
 import type { TaskInfo } from './types';
 
-import { getCurrentDateDayName } from 'util/index';
+import { getCurrentDateDayName } from 'utils';
 
 import { tasksRegister } from './tasksRegister';
 import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';

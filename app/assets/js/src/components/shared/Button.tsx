@@ -3,7 +3,7 @@ import { h, type JSX } from 'preact';
 import {
 	assertAllUnionMembersHandled,
 	classNames,
-} from 'util/index';
+} from 'utils';
 
 import { ButtonVariant } from './types';
 

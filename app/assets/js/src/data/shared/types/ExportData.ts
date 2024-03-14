@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { isZodSchemaType } from 'util/index';
+import { isZodSchemaType } from 'utils';
 
 import { dayInfoSchema } from 'data/days/types/DayInfo';
 import { taskInfoSchema } from 'data/tasks/types/TaskInfo';
