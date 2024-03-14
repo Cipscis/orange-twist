@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Fixed
 
 * Tool drawer toggle buttons use a pointer cursor
+* Inline code in task names won't appear small on task detail page
 
 ## [1.1.0] - 2024-03-10
 
