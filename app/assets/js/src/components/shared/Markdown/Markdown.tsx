@@ -8,6 +8,7 @@ import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 
 import { taskLink } from './extensions/taskLink';
+import { template } from './extensions/template';
 import { renderer } from './renderer';
 
 interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
@@ -26,7 +27,10 @@ interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 
 marked.use({
 	renderer,
-	extensions: [taskLink],
+	extensions: [
+		taskLink,
+		template,
+	],
 });
 
 marked.use(markedHighlight({
