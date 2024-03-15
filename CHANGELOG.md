@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2024-03-15
+
+### Fixed
+
+* Fixed collapsed space between formatted parts of task names
+
 ## [1.2.1] - 2024-03-14
 
 ### Fixed
