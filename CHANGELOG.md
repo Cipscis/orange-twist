@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2024-03-18
+
+### Fixed
+
+* Fixed collapsed space between formatted parts of task names
+
+### Added
+
+* Task detail view scrolls to current day automatically
+
 ## [1.2.1] - 2024-03-14
 
 ### Fixed
