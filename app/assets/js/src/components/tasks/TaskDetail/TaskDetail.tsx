@@ -5,7 +5,7 @@ import {
 	useMemo,
 } from 'preact/hooks';
 
-import { isValidDateString } from 'utils';
+import { getCurrentDateDayName, isValidDateString } from 'utils';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -83,6 +83,25 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 		fireCommand(Command.DATA_SAVE);
 	}, [taskId]);
 
+	const currentDayName = getCurrentDateDayName();
+
+	const expandedDayTaskIndex = useMemo(
+		() => {
+			// If the day tasks list includes the current day, expand it
+			const currentDayIndex = dayTasksInfo.findIndex(
+				({ dayName }) => dayName === currentDayName
+			);
+
+			if (currentDayIndex !== -1) {
+				return currentDayIndex;
+			}
+
+			// Otherwise, expand the last day task
+			return dayTasksInfo.length - 1;
+		},
+		[dayTasksInfo, currentDayName]
+	);
+
 	if (isLoading) {
 		return <Loader />;
 	}
@@ -108,7 +127,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 			<DayTaskDetail
 				key={dayTaskInfo.dayName}
 				dayTaskInfo={dayTaskInfo}
-				open={i === arr.length-1}
+				open={i === expandedDayTaskIndex}
 			/>
 		))}
 
