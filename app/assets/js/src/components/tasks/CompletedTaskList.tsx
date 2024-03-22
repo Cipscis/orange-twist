@@ -29,8 +29,8 @@ export function CompletedTaskList(): JSX.Element | null {
 					const dayTasksA = getAllDayTaskInfo({ taskId: taskA.id });
 					const dayTasksB = getAllDayTaskInfo({ taskId: taskB.id });
 
-					const lastUpdatedA = dayTasksA[dayTasksA.length - 1].dayName;
-					const lastUpdatedB = dayTasksB[dayTasksB.length - 1].dayName;
+					const lastUpdatedA = dayTasksA.at(-1)?.dayName ?? '0001-01-01';
+					const lastUpdatedB = dayTasksB.at(-1)?.dayName ?? '0001-01-01';
 
 					const comparison = lastUpdatedA.localeCompare(lastUpdatedB);
 
