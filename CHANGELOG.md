@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2024-03-22
+
+### Fixed
+
+* Fixed an error that could be caused by re-opening a completed task
+
 ## [1.3.0] - 2024-03-18
 
 ### Fixed
