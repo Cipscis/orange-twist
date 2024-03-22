@@ -83,6 +83,12 @@ describe('CompletedTaskList', () => {
 		}, {
 			status: TaskStatus.COMPLETED,
 		});
+
+		setTaskInfo(6, {
+			name: 'Task six',
+			status: TaskStatus.COMPLETED,
+			note: 'No day task info',
+		}, { forCurrentDay: false });
 	});
 
 	afterEach(() => {
@@ -105,6 +111,7 @@ describe('CompletedTaskList', () => {
 
 		const tasks = queryAllByText(/^Task /);
 		expect(tasks.map(({ textContent }) => textContent)).toEqual([
+			'Task six',
 			'Task five',
 			'Task three',
 			'Task two',
