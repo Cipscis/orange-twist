@@ -12,8 +12,10 @@ const oldTemplateInfoSchemas = [
 	[
 		1,
 		z.object({
+			id: z.number(),
 			name: z.string(),
 			template: z.string(),
+			sortIndex: z.number(),
 		}).strict(),
 	],
 ] as const satisfies ReadonlyArray<readonly [number, z.ZodType]>;

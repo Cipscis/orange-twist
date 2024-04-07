@@ -20,7 +20,7 @@ export function useAllTemplateInfo(): TemplateInfo[] {
 	/**
 	 * Update the template info if and only if the relevant template has changed.
 	 */
-	const handleTemplateInfoUpdate = useCallback((changes: { key: string; }[]) => {
+	const handleTemplateInfoUpdate = useCallback((changes: { key: number; }[]) => {
 		setThisTemplateInfo(getAllTemplateInfo());
 	}, []);
 

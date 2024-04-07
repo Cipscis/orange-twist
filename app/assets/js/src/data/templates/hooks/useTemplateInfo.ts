@@ -14,15 +14,15 @@ import {
 /**
  * Provides up to date information on a single template.
  *
- * @param templateName The name of the specified template.
+ * @param templateId The name of the specified template.
  */
-export function useTemplateInfo(templateName: string): TemplateInfo | null {
-	// Initialise thisTemplateInfo based on the passed templateName
-	const [thisTemplateInfo, setThisTemplateInfo] = useState(() => getTemplateInfo(templateName));
+export function useTemplateInfo(templateId: number): TemplateInfo | null {
+	// Initialise thisTemplateInfo based on the passed templateId
+	const [thisTemplateInfo, setThisTemplateInfo] = useState(() => getTemplateInfo(templateId));
 
 	const doneInitialRender = useRef(false);
 
-	// Update thisTemplateInfo if templateName changes
+	// Update thisTemplateInfo if templateId changes
 	useEffect(() => {
 		// Don't re-set the state during the initial render
 		if (!doneInitialRender.current) {
@@ -30,18 +30,19 @@ export function useTemplateInfo(templateName: string): TemplateInfo | null {
 			return;
 		}
 
-		setThisTemplateInfo(getTemplateInfo(templateName));
-	}, [templateName]);
+		setThisTemplateInfo(getTemplateInfo(templateId));
+	}, [templateId]);
 
 	/**
 	 * Update the template info if and only if the relevant template has changed.
 	 */
-	const handleTemplateInfoUpdate = useCallback((changes: { key: string; }[]) => {
-		const hasChanged = Boolean(changes.find(({ key }) => key === templateName));
+	const handleTemplateInfoUpdate = useCallback((changes: { key: number; }[]) => {
+		const hasChanged = Boolean(changes.find(({ key }) => key === templateId));
 		if (hasChanged) {
-			setThisTemplateInfo(getTemplateInfo(templateName));
+			const updatedTemplateInfo = getTemplateInfo(templateId);
+			setThisTemplateInfo(updatedTemplateInfo);
 		}
-	}, [templateName]);
+	}, [templateId]);
 
 	// Listen for relevant changes on templatesRegister
 	useEffect(() => {

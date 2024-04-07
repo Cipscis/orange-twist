@@ -49,6 +49,7 @@ export {
 export {
 	type TemplateInfo,
 
+	createTemplate,
 	setTemplateInfo,
 	deleteTemplate,
 	getTemplateInfo,
