@@ -5,8 +5,8 @@ import { templatesRegister } from './templatesRegister';
 /**
  * Returns information for the specified template, if any exists.
  *
- * @param templateName The name of the template to fetch information for.
+ * @param id The ID of the template to fetch information for.
  */
-export function getTemplateInfo(templateName: string): Readonly<TemplateInfo> | null {
-	return templatesRegister.get(templateName) ?? null;
+export function getTemplateInfo(id: number): Readonly<TemplateInfo> | null {
+	return templatesRegister.get(id) ?? null;
 }

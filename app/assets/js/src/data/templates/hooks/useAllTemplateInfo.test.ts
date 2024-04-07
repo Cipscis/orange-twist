@@ -15,19 +15,23 @@ import {
 	useAllTemplateInfo,
 } from 'data';
 
-const firstTemplateInfo: Omit<TemplateInfo, 'name'> = {
+const firstTemplateInfo: Omit<TemplateInfo, 'id'> = {
+	name: 'example template',
 	template: '{{{0}}}',
+	sortIndex: -1,
 };
 
-const secondTemplateInfo: Omit<TemplateInfo, 'name'> = {
+const secondTemplateInfo: Omit<TemplateInfo, 'id'> = {
+	name: 'another template',
 	template: '<a href="{{{0}}}">{{{1}}}</a>',
+	sortIndex: -1,
 };
 
 describe('useAllTemplateInfo', () => {
 	beforeEach(() => {
 		templatesRegister.set([
-			['example template', { name: 'example template', ...firstTemplateInfo }],
-			['another template', { name: 'another template', ...secondTemplateInfo }],
+			[1, { id: 1, ...firstTemplateInfo }],
+			[2, { id: 2, ...secondTemplateInfo }],
 		]);
 	});
 
@@ -47,11 +51,11 @@ describe('useAllTemplateInfo', () => {
 
 		expect(result.current).toEqual([
 			{
-				name: 'example template',
+				id: 1,
 				...firstTemplateInfo,
 			},
 			{
-				name: 'another template',
+				id: 2,
 				...secondTemplateInfo,
 			},
 		]);

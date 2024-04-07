@@ -8,7 +8,6 @@ import {
 
 import { act, renderHook } from '@testing-library/preact';
 
-import { templatesRegister } from '../templatesRegister';
 import {
 	type TemplateInfo,
 	clear,
@@ -16,37 +15,39 @@ import {
 	setTemplateInfo,
 } from 'data';
 
-const firstTemplateInfo: Omit<TemplateInfo, 'name'> = {
+const firstTemplateInfo: Omit<TemplateInfo, 'id'> = {
+	name: 'example template',
 	template: '{{{0}}}',
+	sortIndex: -1,
 };
 
-const secondTemplateInfo: Omit<TemplateInfo, 'name'> = {
+const secondTemplateInfo: Omit<TemplateInfo, 'id'> = {
+	name: 'another template',
 	template: '<a href="{{{0}}}">{{{1}}}</a>',
+	sortIndex: -1,
 };
 
 describe('useTemplateInfo', () => {
 	beforeEach(() => {
-		templatesRegister.set([
-			['example template', { name: 'example template', ...firstTemplateInfo }],
-			['another template', { name: 'another template', ...secondTemplateInfo }],
-		]);
+		setTemplateInfo(1, firstTemplateInfo);
+		setTemplateInfo(2, secondTemplateInfo);
 	});
 
 	afterEach(() => {
 		clear();
 	});
 
-	test('when passed a template name that has no matching template, returns null', () => {
-		const { result } = renderHook(() => useTemplateInfo('2023-11-08'));
+	test('when passed a template ID that has no matching template, returns null', () => {
+		const { result } = renderHook(() => useTemplateInfo(-1));
 
 		expect(result.current).toBeNull();
 	});
 
-	test('when passed a template name that has a matching template, returns that template\'s info', () => {
-		const { result } = renderHook(() => useTemplateInfo('example template'));
+	test('when passed a template ID that has a matching template, returns that template\'s info', () => {
+		const { result } = renderHook(() => useTemplateInfo(1));
 
 		expect(result.current).toEqual({
-			name: 'example template',
+			id: 1,
 			...firstTemplateInfo,
 		});
 	});
@@ -55,23 +56,23 @@ describe('useTemplateInfo', () => {
 		let renderCount = 0;
 		const { result } = renderHook(() => {
 			renderCount += 1;
-			return useTemplateInfo('example template');
+			return useTemplateInfo(1);
 		});
 
 		expect(result.current).toEqual({
-			name: 'example template',
+			id: 1,
 			...firstTemplateInfo,
 		});
 		expect(renderCount).toBe(1);
 
 		// Updating a different template shouldn't cause re-renders
-		await act(() => setTemplateInfo('another template', { template: '*{{{0}}}*' }));
+		await act(() => setTemplateInfo(2, { template: '*{{{0}}}*' }));
 		expect(renderCount).toBe(1);
 
 		// Updating the watched template should cause re-render with new info
-		await act(() => setTemplateInfo('example template', { template: '*{{{0}}}' }));
+		await act(() => setTemplateInfo(1, { template: '*{{{0}}}' }));
 		expect(result.current).toEqual({
-			name: 'example template',
+			id: 1,
 			...firstTemplateInfo,
 			template: '*{{{0}}}',
 		});
@@ -82,17 +83,18 @@ describe('useTemplateInfo', () => {
 			rerender,
 			result,
 		} = renderHook(
-			(templateName) => useTemplateInfo(templateName),
-			{ initialProps: 'example template' }
+			(templateId) => useTemplateInfo(templateId),
+			{ initialProps: 1 }
 		);
 		expect(result.current).toEqual({
-			name: 'example template',
+			id: 1,
 			...firstTemplateInfo,
 		});
 
-		rerender('another template');
+
+		rerender(2);
 		expect(result.current).toEqual({
-			name: 'another template',
+			id: 2,
 			...secondTemplateInfo,
 		});
 	});

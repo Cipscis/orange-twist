@@ -26,10 +26,10 @@ export async function loadTemplates(serialisedTemplatesInfo?: string): Promise<v
 
 	if (!(
 		Array.isArray(persistedTemplatesInfo) &&
-		persistedTemplatesInfo.every((el): el is [string, unknown] => (
+		persistedTemplatesInfo.every((el): el is [number, unknown] => (
 			Array.isArray(el) &&
 			el.length === 2 &&
-			typeof el[0] === 'string'
+			typeof el[0] === 'number'
 		))
 	)) {
 		throw new Error(`Persisted templates data is invalid: ${serialisedTemplatesInfo}`);

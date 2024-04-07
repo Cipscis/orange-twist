@@ -17,39 +17,49 @@ describe('setTemplateInfo', () => {
 		clear();
 	});
 
-	test('when passed a template name without existing data, creates a new template with default information filling in the blanks', () => {
-		expect(getTemplateInfo('example template')).toBeNull();
+	test('when passed a template ID without existing data, creates a new template with default information filling in the blanks', () => {
+		expect(getTemplateInfo(1)).toBeNull();
 
 		setTemplateInfo(
-			'example template',
+			1,
 			{
+				name: 'example template',
 				template: '{{{0}}}',
-			} satisfies Omit<TemplateInfo, 'name'> // <- Ensure we're testing every option
+				sortIndex: 1,
+			} satisfies Omit<TemplateInfo, 'id'> // <- Ensure we're testing every option
 		);
 
-		expect(getTemplateInfo('example template')).toEqual({
+		expect(getTemplateInfo(1)).toEqual({
+			id: 1,
 			name: 'example template',
 			template: '{{{0}}}',
+			sortIndex: 1,
 		});
 	});
 
-	test('when passed a template name with existing data, updates that template with the passed data', () => {
-		setTemplateInfo('example template', {
-			template: '{{{0}}}',
-		} satisfies Omit<TemplateInfo, 'name'>);
-
-		expect(getTemplateInfo('example template')).toEqual({
+	test('when passed a template ID with existing data, updates that template with the passed data', () => {
+		setTemplateInfo(1, {
 			name: 'example template',
 			template: '{{{0}}}',
+			sortIndex: 1,
+		} satisfies Omit<TemplateInfo, 'id'>);
+
+		expect(getTemplateInfo(1)).toEqual({
+			id: 1,
+			name: 'example template',
+			template: '{{{0}}}',
+			sortIndex: 1,
 		});
 
-		setTemplateInfo('example template', {
+		setTemplateInfo(1, {
 			template: '<a href="{{{0}}}">{{{1}}}</a>',
 		});
 
-		expect(getTemplateInfo('example template')).toEqual({
+		expect(getTemplateInfo(1)).toEqual({
+			id: 1,
 			name: 'example template',
 			template: '<a href="{{{0}}}">{{{1}}}</a>',
+			sortIndex: 1,
 		});
 	});
 });

@@ -13,19 +13,23 @@ import {
 	loadTemplates,
 } from 'data';
 
-const firstTemplateInfo: Omit<TemplateInfo, 'name'> = {
+const firstTemplateInfo: Omit<TemplateInfo, 'id'> = {
+	name: 'example template',
 	template: '{{{0}}}',
+	sortIndex: -1,
 };
 
-const secondTemplateInfo: Omit<TemplateInfo, 'name'> = {
+const secondTemplateInfo: Omit<TemplateInfo, 'id'> = {
+	name: 'another template',
 	template: '<a href="{{{0}}}">{{{1}}}</a>',
+	sortIndex: -1,
 };
 
 describe('loadTemplates', () => {
 	beforeEach(() => {
 		localStorage.setItem('templates', JSON.stringify([
-			['example name', { name: 'example name', ...firstTemplateInfo }],
-			['another name', { name: 'another name', ...secondTemplateInfo }],
+			[1, { id: 1, ...firstTemplateInfo }],
+			[2, { id: 2, ...secondTemplateInfo }],
 		]));
 		clear();
 	});
@@ -42,8 +46,8 @@ describe('loadTemplates', () => {
 		expect(loadTemplatesResult).toBeUndefined();
 
 		expect(Array.from(templatesRegister.entries())).toEqual([
-			['example name', { name: 'example name', ...firstTemplateInfo }],
-			['another name', { name: 'another name', ...secondTemplateInfo }],
+			[1, { id: 1, ...firstTemplateInfo }],
+			[2, { id: 2, ...secondTemplateInfo }],
 		]);
 	});
 
@@ -100,8 +104,8 @@ describe('loadTemplates', () => {
 
 	test('overwrites any existing data in the register', async () => {
 		const testData = [
-			['example name', { name: 'example name', ...firstTemplateInfo }],
-			['another name', { name: 'example name', ...firstTemplateInfo }],
+			[1, { id: 1, ...firstTemplateInfo }],
+			[2, { id: 1, ...firstTemplateInfo }],
 		] as const;
 
 		templatesRegister.set(testData);
@@ -110,22 +114,26 @@ describe('loadTemplates', () => {
 		await loadTemplates();
 
 		expect(Array.from(templatesRegister.entries())).toEqual([
-			['example name', { name: 'example name', ...firstTemplateInfo }],
-			['another name', { name: 'another name', ...secondTemplateInfo }],
+			[1, { id: 1, ...firstTemplateInfo }],
+			[2, { id: 2, ...secondTemplateInfo }],
 		]);
 	});
 
 	test('can be passed serialised data as an argument', async () => {
 		await loadTemplates(JSON.stringify([
-			['custom template', {
+			[1, {
+				id: 1,
 				name: 'custom template',
 				template: '*{{{0}}}*',
+				sortIndex: 2,
 			}],
 		]));
 		expect(Array.from(templatesRegister.entries())).toEqual([
-			['custom template', {
+			[1, {
+				id: 1,
 				name: 'custom template',
 				template: '*{{{0}}}*',
+				sortIndex: 2,
 			}],
 		]);
 	});

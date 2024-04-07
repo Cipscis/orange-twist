@@ -22,8 +22,8 @@ describe('clear', () => {
 		setDayTaskInfo({ dayName: '2023-11-25', taskId: 1 }, {});
 		setDayTaskInfo({ dayName: '2023-11-26', taskId: 2 }, {});
 
-		setTemplateInfo('example template', {});
-		setTemplateInfo('another template', {});
+		setTemplateInfo(1, {});
+		setTemplateInfo(2, {});
 
 		clear();
 

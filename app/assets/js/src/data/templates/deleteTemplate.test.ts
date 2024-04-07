@@ -19,17 +19,17 @@ describe('deleteTemplate', () => {
 
 	test('when passed a template name without any template data, does nothing', () => {
 		expect(() => {
-			deleteTemplate('example template');
+			deleteTemplate(1);
 		}).not.toThrow();
 	});
 
 	test('when passed a template name that has template data, removes that template from the register', () => {
-		setTemplateInfo('example template', {
+		setTemplateInfo(1, {
 			template: '{{{0}}}',
 		});
-		expect(getTemplateInfo('example template')).not.toBeNull();
+		expect(getTemplateInfo(1)).not.toBeNull();
 
-		deleteTemplate('example template');
-		expect(getTemplateInfo('example template')).toBeNull();
+		deleteTemplate(1);
+		expect(getTemplateInfo(1)).toBeNull();
 	});
 });

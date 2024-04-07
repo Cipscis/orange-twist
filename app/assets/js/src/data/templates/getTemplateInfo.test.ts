@@ -14,27 +14,33 @@ import {
 describe('getTemplateInfo', () => {
 	beforeAll(() => {
 		setTemplateInfo(
-			'example name',
+			1,
 			{
+				name: 'Example template',
 				template: '{{{0}}}',
-			} satisfies Omit<TemplateInfo, 'name'> // <- Ensure we're testing every option
+				sortIndex: 1,
+			} satisfies Omit<TemplateInfo, 'id'> // <- Ensure we're testing every option
 		);
 		setTemplateInfo(
-			'2023-11-08',
+			2,
 			{
+				name: 'Another template',
 				template: '<a href="{{{0}}}">{{{1}}}</a>',
-			} satisfies Omit<TemplateInfo, 'name'> // <- Ensure we're testing every option
+				sortIndex: 2,
+			} satisfies Omit<TemplateInfo, 'id'> // <- Ensure we're testing every option
 		);
 	});
 
 	test('when passed a template name that has no matching template, returns null', () => {
-		expect(getTemplateInfo('Invalid template')).toBeNull();
+		expect(getTemplateInfo(-1)).toBeNull();
 	});
 
 	test('when passed a template name that has a matching template, returns that template\'s info', () => {
-		expect(getTemplateInfo('example name')).toEqual({
-			name: 'example name',
+		expect(getTemplateInfo(1)).toEqual({
+			id: 1,
+			name: 'Example template',
 			template: '{{{0}}}',
+			sortIndex: 1,
 		});
 	});
 });
