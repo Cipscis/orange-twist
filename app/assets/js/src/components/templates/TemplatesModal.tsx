@@ -1,6 +1,13 @@
 import { h, type JSX } from 'preact';
 
-import { Modal } from './shared';
+import {
+	Button,
+	Modal,
+} from '../shared';
+
+import { createTemplate, useAllTemplateInfo } from 'data';
+
+import { Template } from './Template';
 
 interface TemplatesModalProps {
 	/** The TemplatesModal is only rendered when `open` is `true`. */
@@ -36,6 +43,8 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 		onClose,
 	} = props;
 
+	const allTemplateInfo = useAllTemplateInfo();
+
 	return <Modal
 		open={open}
 		onClose={onClose}
@@ -44,5 +53,14 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 	>
 		{/* TODO: Display templates */}
 		<p>Put some stuff here</p>
+
+		{allTemplateInfo.map(({ id }) => (
+			<Template key={id} id={id} />
+		))}
+
+		<Button onClick={() => {
+			createTemplate();
+		}}
+		>Add new template</Button>
 	</Modal>;
 }

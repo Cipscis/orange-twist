@@ -55,7 +55,7 @@ import { OrangeTwistContext } from './OrangeTwistContext';
 
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
-import { TemplatesModal } from './TemplatesModal';
+import { TemplatesModal } from './templates/TemplatesModal';
 import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
 import { Footer } from './Footer';
 import {
