@@ -76,7 +76,7 @@ export function Template(props: TemplateProps): JSX.Element | null {
 		return null;
 	}
 
-	// TODO: Re-render notes when templates are changed
+	// TODO: Re-render Markup components when templates are changed
 	// TODO: Styling
 	return <div class="template">
 		<InlineNote
