@@ -159,6 +159,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
 		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
 		registerCommand(Command.KEYBOARD_SHORTCUT_SHOW, { name: 'Show keyboard shortcuts' });
+		registerCommand(Command.TEMPLATES_EDIT, { name: 'Edit templates' });
 
 		registerKeyboardShortcut(
 			KeyboardShortcutName.COMMAND_PALETTE_OPEN,
@@ -257,14 +258,18 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		!keyboardShortcutsModalOpen
 	);
 
-	// TODO: Should start closed
-	// TODO: Needs some way to open, maybe via a command?
-	const [templatesModalOpen, setTemplatesModalOpen] = useState(true);
+	const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
+	/** Open the templates modal. */
+	const openTemplatesModal = useCallback(
+		() => setTemplatesModalOpen(true),
+		[]
+	);
 	/** Close the templates modal. */
 	const closeTemplatesModal = useCallback(
 		() => setTemplatesModalOpen(false),
 		[],
 	);
+	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
 
 	/**
 	 * Save all data, while giving the user feedback.
