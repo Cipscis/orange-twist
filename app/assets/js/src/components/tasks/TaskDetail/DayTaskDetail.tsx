@@ -35,7 +35,7 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 
 	return <details
 		key={dayName}
-		class="day"
+		class="day js-day"
 		open={open}
 	>
 		<summary class="day__summary">
