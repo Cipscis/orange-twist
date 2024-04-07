@@ -51,13 +51,15 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 		title="Edit templates"
 		closeButton
 	>
-		{/* TODO: Display templates */}
 		<p>Put some stuff here</p>
 
+		{/* TODO: Sort by sortIndex */}
+		{/* TODO: Allow sorting */}
 		{allTemplateInfo.map(({ id }) => (
 			<Template key={id} id={id} />
 		))}
 
+		{/* TODO: Clean this up */}
 		<Button onClick={() => {
 			createTemplate();
 		}}
