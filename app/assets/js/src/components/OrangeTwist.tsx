@@ -291,7 +291,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		const days = getAllDayInfo();
 
 		const dayName = dayNameArg ?? await ui.prompt('What day?', {
-			placeholder: 'YYYY-MM-DD',
+			type: 'date',
 		});
 		if (!dayName) {
 			return;
