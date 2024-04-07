@@ -2,11 +2,27 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.2] - 2024-04-07
+## [1.3.2] - 2024-04-07
 
 ### Changed
 
 * "Add day" form now uses a date input
+
+## [1.3.1] - 2024-03-22
+
+### Fixed
+
+* Fixed an error that could be caused by re-opening a completed task
+
+## [1.3.0] - 2024-03-18
+
+### Fixed
+
+* Fixed collapsed space between formatted parts of task names
+
+### Added
+
+* Task detail view scrolls to current day automatically
 
 ## [1.2.1] - 2024-03-14
 

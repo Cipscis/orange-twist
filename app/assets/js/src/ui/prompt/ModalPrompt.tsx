@@ -15,6 +15,8 @@ import {
 interface ModalPromptProps {
 	message: string;
 	placeholder?: string;
+	/** @default 'text' */
+	type?: string;
 	resolve: (result: string | null) => void;
 }
 
@@ -27,6 +29,7 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 	const {
 		message,
 		placeholder,
+		type,
 		resolve,
 	} = props;
 
@@ -78,7 +81,7 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 			<label>
 				<div class="modal-prompt__message">{message}</div>
 				<input
-					type="text"
+					type={type ?? 'text'}
 					name="result"
 					class="modal-prompt__input"
 					placeholder={placeholder}
