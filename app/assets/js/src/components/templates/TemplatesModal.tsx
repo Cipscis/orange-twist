@@ -51,6 +51,7 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 
 	const addNewTemplate = useCallback(() => createTemplate(), []);
 
+	// TODO: Styling/layout
 	return <Modal
 		open={open}
 		onClose={onClose}
@@ -64,7 +65,6 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 			<Template key={id} id={id} />
 		))}
 
-		{/* TODO: Clean this up */}
 		<Button onClick={addNewTemplate}>Add new template</Button>
 	</Modal>;
 }
