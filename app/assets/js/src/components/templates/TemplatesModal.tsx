@@ -1,4 +1,5 @@
 import { h, type JSX } from 'preact';
+import { useCallback } from 'preact/hooks';
 
 import {
 	Button,
@@ -43,7 +44,12 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 		onClose,
 	} = props;
 
-	const allTemplateInfo = useAllTemplateInfo();
+	const allTemplateInfoUnsorted = useAllTemplateInfo();
+	const allTemplateInfo = allTemplateInfoUnsorted.toSorted(
+		(a, b) => a.sortIndex - b.sortIndex
+	);
+
+	const addNewTemplate = useCallback(() => createTemplate(), []);
 
 	return <Modal
 		open={open}
@@ -53,16 +59,12 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 	>
 		<p>Put some stuff here</p>
 
-		{/* TODO: Sort by sortIndex */}
-		{/* TODO: Allow sorting */}
+		{/* TODO: Allow reordering */}
 		{allTemplateInfo.map(({ id }) => (
 			<Template key={id} id={id} />
 		))}
 
 		{/* TODO: Clean this up */}
-		<Button onClick={() => {
-			createTemplate();
-		}}
-		>Add new template</Button>
+		<Button onClick={addNewTemplate}>Add new template</Button>
 	</Modal>;
 }

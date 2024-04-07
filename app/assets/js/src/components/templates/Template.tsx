@@ -48,6 +48,18 @@ export function Template(props: TemplateProps): JSX.Element | null {
 		setTemplateInfo(templateInfo.id, { name });
 	}, [templateInfo]);
 
+	const updateTemplate = useCallback<
+		JSX.GenericEventHandler<HTMLTextAreaElement>
+	>((e) => {
+		if (!templateInfo) {
+			return;
+		}
+
+		const template = e.currentTarget.value;
+
+		setTemplateInfo(templateInfo.id, { template });
+	}, [templateInfo]);
+
 	if (!templateInfo) {
 		return null;
 	}
@@ -67,5 +79,7 @@ export function Template(props: TemplateProps): JSX.Element | null {
 
 			class="template__name"
 		/>
+
+		<textarea onChange={updateTemplate}>{templateInfo.template}</textarea>
 	</div>;
 }

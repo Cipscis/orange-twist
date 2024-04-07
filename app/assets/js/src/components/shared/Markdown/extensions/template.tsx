@@ -1,16 +1,10 @@
 import type { TokenizerAndRendererExtension } from 'marked';
 
-// TODO: Make templates user-editable
+import { getAllTemplateInfo } from 'data';
+
 // TODO: Keep the templates map up to date as templates are changed
 // TODO: Add documentation
 // TODO: Add tests
-const templatesMap = new Map<string, string>([
-	['template', 'first arg: "{{{0}}}", second arg: "{{{1|default}}}", first again: "{{{0|default this time}}}"'],
-	['another-template', 'this is another template'],
-	['issue', '[GitHub issue {{{0}}}](https://github.com/Cipscis/orange-twist/issues/{{{0}}})'],
-	['pr', '[PR {{{0}}}](https://github.com/Cipscis/orange-twist/pull/{{{0}}})'],
-	['em', '*{{{0}}}*'],
-]);
 
 export const template: TokenizerAndRendererExtension = {
 	name: 'template',
@@ -29,9 +23,11 @@ export const template: TokenizerAndRendererExtension = {
 			return;
 		}
 
-		const name = match[2];
-		const template = templatesMap.get(name.toLocaleLowerCase());
+		const templateName = match[2];
 
+		const template = getAllTemplateInfo().find(
+			({ name }) => name === templateName
+		)?.template;
 		if (typeof template === 'undefined') {
 			return;
 		}
