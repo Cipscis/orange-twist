@@ -1,12 +1,7 @@
 import type { TemplateInfo } from './types';
 
 import { templatesRegister } from './templatesRegister';
-
-const defaultTemplateInfo = {
-	name: 'New template',
-	template: '',
-	sortIndex: -1,
-} as const satisfies Omit<TemplateInfo, 'id'>;
+import { getDefaultTemplateInfo } from './getDefaultTemplateInfo';
 
 /**
  * Updates the specified template with the provided information. If the template
@@ -20,12 +15,22 @@ export function setTemplateInfo(
 	templateInfo: Partial<Omit<TemplateInfo, 'id'>>
 ): void {
 	const existingTemplateInfo = templatesRegister.get(templateId);
-	const newTemplateInfo: TemplateInfo = {
-		id: templateId,
+	if (existingTemplateInfo) {
+		templatesRegister.set(templateId, {
+			id: templateId,
 
-		name: templateInfo.name ?? existingTemplateInfo?.name ?? defaultTemplateInfo.name,
-		template: templateInfo.template ?? existingTemplateInfo?.template ?? defaultTemplateInfo.template,
-		sortIndex: templateInfo.sortIndex ?? existingTemplateInfo?.sortIndex ?? defaultTemplateInfo.sortIndex,
-	};
-	templatesRegister.set(templateId, newTemplateInfo);
+			name: templateInfo.name ?? existingTemplateInfo?.name,
+			template: templateInfo.template ?? existingTemplateInfo?.template,
+			sortIndex: templateInfo.sortIndex ?? existingTemplateInfo?.sortIndex,
+		});
+	} else {
+		const defaultTemplateInfo = getDefaultTemplateInfo(templateId);
+		templatesRegister.set(templateId, {
+			id: templateId,
+
+			name: templateInfo.name ?? defaultTemplateInfo.name,
+			template: templateInfo.template ?? defaultTemplateInfo.template,
+			sortIndex: templateInfo.sortIndex ?? defaultTemplateInfo.sortIndex,
+		});
+	}
 }
