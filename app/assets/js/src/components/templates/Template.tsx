@@ -52,6 +52,10 @@ export function Template(props: TemplateProps): JSX.Element | null {
 		return null;
 	}
 
+	// TODO: Delete template
+	// TODO: Allow editing template
+	// TODO: Re-render notes when templates are changed
+
 	return <div class="template">
 		<InlineNote
 			note={templateInfo.name}
