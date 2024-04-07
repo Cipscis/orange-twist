@@ -210,6 +210,8 @@ export function TaskList(
 				return null;
 			}
 
+			/* TODO: Refactor sorting functionality into
+			utility component so it can be reused by templates */
 			return <div
 				key={taskInfo.id}
 				class="task-list__item"
