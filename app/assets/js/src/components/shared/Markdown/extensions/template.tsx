@@ -2,6 +2,8 @@ import type { TokenizerAndRendererExtension } from 'marked';
 
 // TODO: Make templates user-editable
 // TODO: Keep the templates map up to date as templates are changed
+// TODO: Add documentation
+// TODO: Add tests
 const templatesMap = new Map<string, string>([
 	['template', 'first arg: "{{{0}}}", second arg: "{{{1|default}}}", first again: "{{{0|default this time}}}"'],
 	['another-template', 'this is another template'],
