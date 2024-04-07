@@ -53,6 +53,7 @@ import { OrangeTwistContext } from './OrangeTwistContext';
 
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
+import { TemplatesModal } from './TemplatesModal';
 import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
 import { Footer } from './Footer';
 import {
@@ -253,6 +254,15 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		!keyboardShortcutsModalOpen
 	);
 
+	// TODO: Should start closed
+	// TODO: Needs some way to open, maybe via a command?
+	const [templatesModalOpen, setTemplatesModalOpen] = useState(true);
+	/** Close the templates modal. */
+	const closeTemplatesModal = useCallback(
+		() => setTemplatesModalOpen(false),
+		[],
+	);
+
 	/**
 	 * Save all data, while giving the user feedback.
 	 */
@@ -372,6 +382,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		<KeyboardShortcutModal
 			open={keyboardShortcutsModalOpen}
 			onClose={closeKeyboardShortcutsModal}
+		/>
+		<TemplatesModal
+			open={templatesModalOpen}
+			onClose={closeTemplatesModal}
 		/>
 	</OrangeTwistContext.Provider>;
 }
