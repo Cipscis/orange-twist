@@ -2,9 +2,31 @@ import type { TokenizerAndRendererExtension } from 'marked';
 
 import { getAllTemplateInfo } from 'data';
 
-// TODO: Keep the templates map up to date as templates are changed
-// TODO: Add documentation
 // TODO: Add tests
+
+/**
+ * Get the template for a given name, if there is one.
+ * Case insensitive.
+ *
+ * If a template's content is an empty string, a default
+ * value will be used.
+ */
+function getTemplateByName(templateName: string): string | null {
+	const allTemplateInfo = getAllTemplateInfo();
+	const templateInfo = allTemplateInfo.find(
+		({ name }) => name.toLocaleLowerCase() === templateName.toLocaleLowerCase()
+	);
+
+	if (!templateInfo) {
+		return null;
+	}
+
+	if (templateInfo.template.trim() === '') {
+		return '<em>Empty template</em>';
+	}
+
+	return templateInfo.template;
+}
 
 export const template: TokenizerAndRendererExtension = {
 	name: 'template',
@@ -23,12 +45,9 @@ export const template: TokenizerAndRendererExtension = {
 			return;
 		}
 
-		const templateName = match[2];
-
-		const template = getAllTemplateInfo().find(
-			({ name }) => name === templateName
-		)?.template;
-		if (typeof template === 'undefined') {
+		const name = match[2];
+		const template = getTemplateByName(name);
+		if (template === null) {
 			return;
 		}
 

@@ -9,7 +9,9 @@ import {
 	setTemplateInfo,
 	useTemplateInfo,
 } from 'data';
-import { InlineNote } from 'components/shared';
+
+import * as ui from 'ui';
+import { Button, InlineNote } from 'components/shared';
 
 interface TemplateProps {
 	id: number;
@@ -60,14 +62,22 @@ export function Template(props: TemplateProps): JSX.Element | null {
 		setTemplateInfo(templateInfo.id, { template });
 	}, [templateInfo]);
 
+	const deleteThisTemplate = useCallback(async () => {
+		if (!templateInfo) {
+			return;
+		}
+
+		if (await ui.confirm('Are you sure you want to delete this template?')) {
+			deleteTemplate(templateInfo.id);
+		}
+	}, [templateInfo]);
+
 	if (!templateInfo) {
 		return null;
 	}
 
-	// TODO: Delete template
-	// TODO: Allow editing template
 	// TODO: Re-render notes when templates are changed
-
+	// TODO: Styling
 	return <div class="template">
 		<InlineNote
 			note={templateInfo.name}
@@ -81,5 +91,7 @@ export function Template(props: TemplateProps): JSX.Element | null {
 		/>
 
 		<textarea onChange={updateTemplate}>{templateInfo.template}</textarea>
+
+		<Button onClick={deleteThisTemplate}>Delete</Button>
 	</div>;
 }
