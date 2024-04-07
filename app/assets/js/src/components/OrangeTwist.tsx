@@ -22,6 +22,8 @@ import {
 	loadDayTasks,
 	saveDayTasks,
 	setDayTaskInfo,
+	loadTemplates,
+	saveTemplates,
 	exportData,
 	importData,
 } from 'data';
@@ -98,6 +100,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			}),
 			loadTasks(),
 			loadDayTasks(),
+			loadTemplates(),
 		]);
 	}, []);
 
@@ -278,6 +281,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				saveDays(),
 				saveTasks(),
 				saveDayTasks(),
+				saveTemplates(),
 			]);
 			ui.alert('Saved', {
 				duration: 2000,
