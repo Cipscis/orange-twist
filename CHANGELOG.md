@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2024-04-07
+
+### Changed
+
+* "Add day" form now uses a date input
+
 ## [1.2.1] - 2024-03-14
 
 ### Fixed
