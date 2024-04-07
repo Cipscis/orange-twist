@@ -2,8 +2,6 @@ import type { TokenizerAndRendererExtension } from 'marked';
 
 import { getAllTemplateInfo } from 'data';
 
-// TODO: Add tests
-
 /**
  * Get the template for a given name, if there is one.
  * Case insensitive.
