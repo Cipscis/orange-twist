@@ -41,6 +41,7 @@
 	// Components
 	@include meta.load-css("components/command-palette");
 	@include meta.load-css("components/day");
+	@include meta.load-css("components/drag-list");
 	@include meta.load-css("components/inline-note");
 	@include meta.load-css("components/keyboard-shortcuts-modal");
 	@include meta.load-css("components/note");
@@ -48,7 +49,6 @@
 	@include meta.load-css("components/task");
 	@include meta.load-css("components/task-detail");
 	@include meta.load-css("components/task-link");
-	@include meta.load-css("components/task-list");
 	@include meta.load-css("components/task-status");
 	@include meta.load-css("components/tool-drawer");
 }
