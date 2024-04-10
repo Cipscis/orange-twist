@@ -46,13 +46,11 @@ function getKey(
 }
 
 /**
- * Checks if a drag list key is valid. Strings that aren't empty,
- * and numbers that aren't NaN, are valid keys.
+ * Checks if a drag list key is valid.
+ * Numbers that aren't NaN are valid keys.
  */
 function isValidKey(key: number): boolean {
-	if (typeof key === 'string') {
-		return key !== '';
-	} else if (typeof key === 'number') {
+	if (typeof key === 'number') {
 		return !isNaN(key);
 	} else {
 		return false;
