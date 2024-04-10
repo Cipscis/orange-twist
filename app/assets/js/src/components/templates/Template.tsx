@@ -11,7 +11,11 @@ import {
 } from 'data';
 
 import * as ui from 'ui';
-import { Button, InlineNote } from 'components/shared';
+import {
+	Button,
+	ButtonVariant,
+	InlineNote,
+} from 'components/shared';
 
 interface TemplateProps {
 	id: number;
@@ -79,6 +83,9 @@ export function Template(props: TemplateProps): JSX.Element | null {
 	// TODO: Re-render Markup components when templates are changed
 	// TODO: Styling
 	return <div class="template">
+		{/* TODO: Apply constraint to name - lowercase and only \w- characters */}
+		{/* Should templates have a display name and a name to use generated from that?
+		e.g. "Template A" for a display name becomes "template-a" to actually use? */}
 		<InlineNote
 			note={templateInfo.name}
 			onNoteChange={nameChangeHandler}
@@ -90,8 +97,16 @@ export function Template(props: TemplateProps): JSX.Element | null {
 			class="template__name"
 		/>
 
-		<textarea onChange={updateTemplate}>{templateInfo.template}</textarea>
+		<textarea
+			class="template__definition"
+			onChange={updateTemplate}
+		>{templateInfo.template}</textarea>
 
-		<Button onClick={deleteThisTemplate}>Delete</Button>
+		<div class="template__actions">
+			<Button
+				onClick={deleteThisTemplate}
+				variant={ButtonVariant.SECONDARY}
+			>Delete</Button>
+		</div>
 	</div>;
 }

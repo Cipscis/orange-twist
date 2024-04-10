@@ -22,7 +22,9 @@ export function TemplatesList(props: TemplatesListProps): JSX.Element {
 		[]
 	);
 
-	return <DragList onReorder={updateTemplateOrder}>
+	return <DragList
+		onReorder={updateTemplateOrder}
+	>
 		{templates.map(({ id }) => (
 			<Template
 				key={id}
