@@ -1,5 +1,6 @@
 export { Button } from './Button';
 export { ButtonVariant } from './types/ButtonVariant';
+export { DragList } from './DragList';
 export { IconButton } from './IconButton';
 export { InlineNote } from './InlineNote';
 export { KeyboardShortcutCombos } from './KeyboardShortcutCombos';
