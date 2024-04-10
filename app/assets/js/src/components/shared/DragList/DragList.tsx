@@ -13,8 +13,10 @@ import {
 
 import { classNames, useViewTransition } from 'utils';
 
+const keyProp = 'data-drag-list-key';
+
 interface DragListChildProps {
-	['data-drag-list-key']: number;
+	[keyProp]: number;
 }
 
 interface DragListProps {
@@ -24,6 +26,44 @@ interface DragListProps {
 	children: VNode<DragListChildProps> | VNode<DragListChildProps>[];
 }
 
+const keyMap = new WeakMap<HTMLElement, number>();
+
+/**
+ * Get the drag list key of a child VNode or HTML element.
+ */
+function getKey(
+	el: VNode<DragListChildProps> | HTMLElement
+): number {
+	if (el instanceof HTMLElement) {
+		const key = keyMap.get(el);
+		if (typeof key === 'undefined') {
+			throw new Error(`Error: could not retrieve drag list key for element`);
+		}
+		return key;
+	} else {
+		return el.props[keyProp];
+	}
+}
+
+/**
+ * Checks if a drag list key is valid. Strings that aren't empty,
+ * and numbers that aren't NaN, are valid keys.
+ */
+function isValidKey(key: number): boolean {
+	if (typeof key === 'string') {
+		return key !== '';
+	} else if (typeof key === 'number') {
+		return !isNaN(key);
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Render a list of elements that can be dragged and dropped to
+ * call an `onReorder` callback. Each child element requires a
+ * `data-drag-list-key` prop with a unique numeric value.
+ */
 export function DragList(props: DragListProps): JSX.Element {
 	const {
 		class: className,
@@ -45,18 +85,15 @@ export function DragList(props: DragListProps): JSX.Element {
 	// pretty sure it's about this shortcoming
 	// https://github.com/microsoft/TypeScript/issues/21699
 	useEffect(() => {
-		const keys = children.map((child) => child.props['data-drag-list-key']);
+		const keys = children.map(getKey);
 
-		const invalidKeys = keys.filter((key) => (
-			typeof key !== 'number' ||
-			isNaN(key)
-		));
+		const invalidKeys = keys.filter((key) => !isValidKey(key));
 		if (invalidKeys.length) {
 			/* @ts-expect-error This is for catching error TypeScript misses */
 			if (invalidKeys.indexOf(undefined) !== -1) {
-				console.error(`Error: Missing prop. Every child in a DragList component must have a data-drag-list-key prop.`);
+				throw new Error(`Error: Missing prop. Every child in a DragList component must have a ${keyProp} prop.`);
 			} else {
-				console.error(`Error: Invalid prop ${invalidKeys[0]}. Every child in a DragList component must have a numeric data-drag-list-key prop.`);
+				throw new Error(`Error: Invalid prop ${invalidKeys[0]}. Every child in a DragList component must have a numeric ${keyProp} prop.`);
 			}
 			return;
 		}
@@ -64,14 +101,14 @@ export function DragList(props: DragListProps): JSX.Element {
 		const keysSet = new Set(keys);
 		if (keys.length !== keysSet.size) {
 			const dupe = keys.find((el) => keys.indexOf(el) !== keys.lastIndexOf(el));
-			console.error(`Error: Duplicate prop ${dupe}. Every child in a DragList component must have a unique data-drag-list-key prop.`);
+			throw new Error(`Error: Duplicate prop ${dupe}. Every child in a DragList component must have a unique ${keyProp} prop.`);
 		}
 	}, [children]);
 
 	const idBase = useId();
 
 	const itemsRef = useRef<(HTMLLIElement | null)[]>([]);
-	const isInDraggingMode = useRef(false);
+	const draggedItemKeyRef = useRef<number | null>(null);
 
 	const {
 		startViewTransition,
@@ -93,12 +130,10 @@ export function DragList(props: DragListProps): JSX.Element {
 			return;
 		}
 
-		isInDraggingMode.current = true;
+		draggedItemKeyRef.current = getKey(itemEl);
 
 		dataTransfer.dropEffect = 'move';
 		dataTransfer.setDragImage(itemEl, 0, 0);
-		dataTransfer.clearData();
-		dataTransfer.setData('text/plain', itemEl.dataset.dragListKey ?? '');
 	}, []);
 
 	/**
@@ -110,7 +145,7 @@ export function DragList(props: DragListProps): JSX.Element {
 			return;
 		}
 
-		if (!isInDraggingMode.current) {
+		if (draggedItemKeyRef.current === null) {
 			return;
 		}
 
@@ -128,51 +163,39 @@ export function DragList(props: DragListProps): JSX.Element {
 		if (!(
 			onReorder &&
 			(e.target instanceof Element) &&
-			e.dataTransfer
+			draggedItemKeyRef.current !== null
 		)) {
-			console.error('fail at start');
 			return;
 		}
 
 		const dropTarget = e.target.closest('[data-drag-list-drop-target]');
-		const dropData = e.dataTransfer.getData('text/plain');
-		const draggedElement = document.querySelector<HTMLElement>(`[data-drag-list-key="${dropData}"]`);
-
-		if (!(
-			(dropTarget instanceof HTMLElement)
-			&& draggedElement
-		)) {
+		if (!(dropTarget instanceof HTMLElement)) {
 			return;
 		}
 
-		isInDraggingMode.current = false;
-
+		const draggedItemKey = draggedItemKeyRef.current;
+		draggedItemKeyRef.current = null;
 		const newOrder = itemsRef.current
 			// First, remove null entries
 			.filter((el): el is NonNullable<typeof el> => (
 				el !== null && typeof el !== 'undefined'
 			))
 			// Then, map to key
-			.map(
-				(element) => {
-					return Number(element.dataset.dragListKey);
-				}
-			);
+			.map((el) => getKey(el));
 
 		// Determine the positions of the dragged element and drop target
 		// to determine where to move the dragged element from and to
-		const dropTargetKey = Number(dropTarget.dataset.dragListKey);
-		const draggedElementKey = Number(draggedElement.dataset.dragListKey);
+		const dropTargetKey = getKey(dropTarget);
 
 		const dropTargetIndex = newOrder.indexOf(dropTargetKey);
-		const draggedElementIndex = newOrder.indexOf(draggedElementKey);
+		const draggedElementIndex = newOrder.indexOf(draggedItemKey);
 
 		// Removing first then adding back at the target index
 		// means it will get inserted before if dragged back or
 		// inserted after if dragged forwards without needing
 		// an extra check
 		newOrder.splice(draggedElementIndex, 1);
-		newOrder.splice(dropTargetIndex, 0, Number(draggedElement.dataset.dragListKey));
+		newOrder.splice(dropTargetIndex, 0, draggedItemKey);
 
 		startViewTransition(() => onReorder(newOrder));
 	}, [onReorder, startViewTransition]);
@@ -186,13 +209,17 @@ export function DragList(props: DragListProps): JSX.Element {
 			child &&
 			<li
 				class="drag-list__item"
-				key={child.props['data-drag-list-key']}
-				ref={(ref) => itemsRef.current[i] = ref}
+				key={getKey(child)}
+				ref={(ref) => {
+					itemsRef.current[i] = ref;
+					if (ref) {
+						keyMap.set(ref, getKey(child));
+					}
+				}}
 				data-drag-list-drop-target
-				data-drag-list-key={child.props['data-drag-list-key']}
 				style={{
 					viewTransitionName: isInViewTransition
-						? `${idBase}-${child.props['data-drag-list-key']}`
+						? `${idBase}-${getKey(child)}`
 						: 'none',
 				}}
 			>
