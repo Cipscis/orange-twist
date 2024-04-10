@@ -76,8 +76,8 @@ export function DragList(props: DragListProps): JSX.Element {
 		}
 	}, [props.children]);
 
-	// Check every child has a unique data-drag-list-key prop
-	// Ideally its presence would be enforced by TypeScript,
+	// Check every child has a unique numeric data-drag-list-key
+	// prop. Ideally its presence would be enforced by TypeScript,
 	// but it's not. This issue from 2018 does an absolutely
 	// terrible job of communicating anything at all but I'm
 	// pretty sure it's about this shortcoming
@@ -233,7 +233,3 @@ export function DragList(props: DragListProps): JSX.Element {
 		))}
 	</ul>;
 }
-
-<DragList>
-	<li />
-</DragList>;
