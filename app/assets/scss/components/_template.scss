@@ -1,0 +1,34 @@
+@use "../theme/palette";
+@use "../theme/spacing";
+@use "../theme/typography";
+
+.template {
+	flex-grow: 1;
+
+	display: grid;
+	grid-template-areas:
+		"name actions"
+		"definition definition";
+	grid-template-columns: 1fr auto;
+	gap: spacing.$sm;
+	align-items: start;
+}
+
+.template__name {
+	grid-area: name;
+}
+
+.template__definition {
+	grid-area: definition;
+	resize: vertical;
+	min-height: 1lh;
+
+	border: none;
+	@include palette.tertiary;
+	@include typography.monospace-inherit;
+	tab-size: 4;
+}
+
+.template__actions {
+	grid-area: actions;
+}

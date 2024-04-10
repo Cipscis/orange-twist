@@ -3,6 +3,7 @@ import { useCallback } from 'preact/hooks';
 
 import {
 	Button,
+	ButtonVariant,
 	Modal,
 } from '../shared';
 
@@ -53,15 +54,19 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 
 	// TODO: Styling/layout
 	return <Modal
+		class="templates-modal"
 		open={open}
 		onClose={onClose}
 		title="Edit templates"
 		closeButton
 	>
-		<p>Put some stuff here</p>
+		<div class="templates-modal__actions">
+			<Button
+				onClick={addNewTemplate}
+				variant={ButtonVariant.SECONDARY}
+			>Add new template</Button>
+		</div>
 
 		<TemplatesList templates={allTemplateInfo} />
-
-		<Button onClick={addNewTemplate}>Add new template</Button>
 	</Modal>;
 }
