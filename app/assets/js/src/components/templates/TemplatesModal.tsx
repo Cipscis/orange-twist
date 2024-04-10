@@ -8,7 +8,7 @@ import {
 
 import { createTemplate, useAllTemplateInfo } from 'data';
 
-import { Template } from './Template';
+import { TemplatesList } from './TemplatesList';
 
 interface TemplatesModalProps {
 	/** The TemplatesModal is only rendered when `open` is `true`. */
@@ -60,10 +60,7 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 	>
 		<p>Put some stuff here</p>
 
-		{/* TODO: Allow reordering */}
-		{allTemplateInfo.map(({ id }) => (
-			<Template key={id} id={id} />
-		))}
+		<TemplatesList templates={allTemplateInfo} />
 
 		<Button onClick={addNewTemplate}>Add new template</Button>
 	</Modal>;

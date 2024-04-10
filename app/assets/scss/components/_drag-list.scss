@@ -23,8 +23,6 @@
 
 	cursor: move;
 
-	@include palette.primary;
-
 	display: grid;
 	place-content: center;
 	overflow: hidden;
