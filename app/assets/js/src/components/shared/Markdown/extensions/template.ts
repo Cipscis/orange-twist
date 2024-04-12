@@ -1,5 +1,6 @@
 import type { TokenizerAndRendererExtension } from 'marked';
 
+import { getTemplateAlias } from 'utils';
 import { getAllTemplateInfo } from 'data';
 
 /**
@@ -12,7 +13,7 @@ import { getAllTemplateInfo } from 'data';
 function getTemplateByName(templateName: string): string | null {
 	const allTemplateInfo = getAllTemplateInfo();
 	const templateInfo = allTemplateInfo.find(
-		({ name }) => name.toLocaleLowerCase() === templateName.toLocaleLowerCase()
+		({ name }) => getTemplateAlias(name) === getTemplateAlias(templateName)
 	);
 
 	if (!templateInfo) {
@@ -37,7 +38,7 @@ export const template: TokenizerAndRendererExtension = {
 		// Expression for complete token, from its start
 		// Match a name in double braces, optionally with one or more parameters separated by pipes
 		// e.g. "{{template-name|1|title}}"
-		const rule = /^(\{\{([\w-]+)(\|(.+))?}})/;
+		const rule = /^(\{\{([^{|}]+)(\|(.+))?}})/;
 		const match = rule.exec(src);
 		if (!match) {
 			return;
