@@ -8,7 +8,9 @@
 	display: grid;
 	grid-template-areas:
 		"name actions"
-		"definition definition";
+		"definition definition"
+		"alias alias"
+		"preview preview";
 	grid-template-columns: 1fr auto;
 	gap: spacing.$sm;
 	align-items: start;
@@ -16,6 +18,11 @@
 
 .template__name {
 	grid-area: name;
+}
+
+.template__alias {
+	grid-area: alias;
+	@include typography.monospace-inherit();
 }
 
 .template__definition {
@@ -27,6 +34,10 @@
 	@include palette.tertiary;
 	@include typography.monospace-inherit;
 	tab-size: 4;
+}
+
+.template__preview {
+	grid-area: preview;
 }
 
 .template__actions {
