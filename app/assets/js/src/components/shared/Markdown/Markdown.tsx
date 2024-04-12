@@ -11,6 +11,8 @@ import { taskLink } from './extensions/taskLink';
 import { template } from './extensions/template';
 import { renderer } from './renderer';
 
+import { useAllTemplateInfo } from 'data';
+
 interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	/**
 	 * The markdown content to be rendered as HTML.
@@ -50,6 +52,10 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
 
+	// Re-render whenever a template changes
+	const templates = useAllTemplateInfo();
+
+	// Render content as markup
 	// Using `useLayoutEffect` prevents jittering caused by `setHTML` running after Preact renders
 	useLayoutEffect(() => {
 		const wrapper = wrapperRef.current;
@@ -100,7 +106,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 				wrapper.innerHTML = renderedContent;
 			}
 		})();
-	}, [content, inline]);
+	}, [content, inline, templates]);
 
 	return <div
 		ref={wrapperRef}
