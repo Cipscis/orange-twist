@@ -9,5 +9,7 @@ export function getTemplateAlias(templateName: string): string {
 		// Remove characters in the Combining Diacritical Marks Unicode block
 		.replace(/[\u0300-\u036f]/g, '')
 		// Replace any remaining non-word characters with hyphens
-		.replace(/\W+/g, '-');
+		.replace(/\W+/g, '-')
+		// Remove any leading or trailing hyphens
+		.replace(/^-|-$/g, '');
 }
