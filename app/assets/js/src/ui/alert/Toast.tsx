@@ -40,17 +40,20 @@ export function Toast(props: ToastProps): JSX.Element {
 
 	// After the initial render, start the animation
 	useEffect(() => {
+		const progressEl = progressRef.current;
+
 		if (
 			duration &&
-			progressRef.current &&
+			progressEl &&
 			!progressAnimationRef.current
 		) {
-			progressAnimationRef.current = progressRef.current.animate([
+			progressAnimationRef.current = progressEl.animate([
 				{ width: 0 },
 				{ width: '100%' },
 			], { duration });
 
 			progressAnimationRef.current.finished.then(async () => {
+				progressEl.style.width = '100%';
 				if (toastRef.current) {
 					// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
 					const animation = animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);

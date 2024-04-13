@@ -9,6 +9,8 @@ document.body.append(promptContainer);
 
 interface PromptOptions {
 	placeholder?: string;
+	/** @default 'text' */
+	type?: string;
 }
 
 /**
@@ -25,6 +27,7 @@ export async function prompt(
 	render(<ModalPrompt
 		message={message}
 		placeholder={options?.placeholder}
+		type={options?.type ?? 'text'}
 		resolve={resolve}
 	/>, promptContainer);
 
