@@ -39,14 +39,14 @@ describe('useAllTemplateInfo', () => {
 		clear();
 	});
 
-	test('when passed no arguments, if there are no templates, returns an empty array', () => {
+	test('if there are no templates, returns an empty array', () => {
 		clear();
 
 		const { result } = renderHook(() => useAllTemplateInfo());
 		expect(result.current).toEqual([]);
 	});
 
-	test('when passed no arguments, returns an array of info on all templates', () => {
+	test('returns an array of info on all templates', () => {
 		const { result } = renderHook(() => useAllTemplateInfo());
 
 		expect(result.current).toEqual([

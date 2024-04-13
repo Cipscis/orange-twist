@@ -14,14 +14,13 @@ import {
  * Provides up to date information on all templates.
  */
 export function useAllTemplateInfo(): TemplateInfo[] {
-	// Initialise thisTemplateInfo based on the passed templateName
-	const [thisTemplateInfo, setThisTemplateInfo] = useState(() => getAllTemplateInfo());
+	const [allTemplateInfo, setAllTemplateInfo] = useState(() => getAllTemplateInfo());
 
 	/**
-	 * Update the template info if and only if the relevant template has changed.
+	 * Update the template info any time a template changes.
 	 */
-	const handleTemplateInfoUpdate = useCallback((changes: { key: number; }[]) => {
-		setThisTemplateInfo(getAllTemplateInfo());
+	const handleTemplateInfoUpdate = useCallback(() => {
+		setAllTemplateInfo(getAllTemplateInfo());
 	}, []);
 
 	// Listen for relevant changes on templatesRegister
@@ -44,5 +43,5 @@ export function useAllTemplateInfo(): TemplateInfo[] {
 		return () => controller.abort();
 	}, [handleTemplateInfoUpdate]);
 
-	return thisTemplateInfo;
+	return allTemplateInfo;
 }

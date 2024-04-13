@@ -31,11 +31,11 @@ describe('getTemplateInfo', () => {
 		);
 	});
 
-	test('when passed a template name that has no matching template, returns null', () => {
+	test('when passed a template ID that has no matching template, returns null', () => {
 		expect(getTemplateInfo(-1)).toBeNull();
 	});
 
-	test('when passed a template name that has a matching template, returns that template\'s info', () => {
+	test('when passed a template ID that has a matching template, returns that template\'s info', () => {
 		expect(getTemplateInfo(1)).toEqual({
 			id: 1,
 			name: 'Example template',

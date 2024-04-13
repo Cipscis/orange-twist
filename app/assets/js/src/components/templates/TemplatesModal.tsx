@@ -52,7 +52,6 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 
 	const addNewTemplate = useCallback(() => createTemplate(), []);
 
-	// TODO: Styling/layout
 	return <Modal
 		class="templates-modal"
 		open={open}
