@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2] - 2024-04-13
+
+### Changed
+
+* Adding a new day task now uses a date picker
+
 ## [1.3.1] - 2024-03-22
 
 ### Fixed
