@@ -2,6 +2,7 @@ import { h } from 'preact';
 
 import {
 	afterEach,
+	beforeEach,
 	describe,
 	expect,
 	jest,
@@ -13,7 +14,11 @@ import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import { Markdown } from './Markdown';
-import { clear, setTaskInfo } from 'data';
+import {
+	clear,
+	setTaskInfo,
+	setTemplateInfo,
+} from 'data';
 import { TaskStatus } from 'types/TaskStatus';
 
 describe('Markdown', () => {
@@ -171,6 +176,91 @@ this is the second line`;
 			const { getByTestId } = render(
 				<Markdown
 					content="Here's a task link: [[1]] *what do you think?*"
+					data-testid="markdown-content"
+				/>
+			);
+
+			const content = getByTestId('markdown-content');
+			expect(content).toMatchSnapshot();
+		});
+	});
+
+	describe('renders templates', () => {
+		beforeEach(() => {
+			setTemplateInfo(1, {
+				name: 'simple',
+				template: '**simple**',
+			});
+			setTemplateInfo(2, {
+				name: 'args',
+				template: '*{{{0}}}* *{{{1}}}*',
+			});
+			setTemplateInfo(3, {
+				name: 'args-defaults',
+				template: '<a href="{{{0}}}">{{{1|default}}}</a>',
+			});
+			setTemplateInfo(4, {
+				name: 'empty',
+				template: ' ',
+			});
+		});
+
+		afterEach(() => {
+			clear();
+		});
+
+		test('ignores unrecognised templates', () => {
+			const { getByTestId } = render(
+				<Markdown
+					content="{{no-template}}"
+					data-testid="markdown-content"
+				/>
+			);
+
+			const content = getByTestId('markdown-content');
+			expect(content).toMatchSnapshot();
+		});
+
+		test('with a recognised name', () => {
+			const { getByTestId } = render(
+				<Markdown
+					content="{{simple}}"
+					data-testid="markdown-content"
+				/>
+			);
+
+			const content = getByTestId('markdown-content');
+			expect(content).toMatchSnapshot();
+		});
+
+		test('with numbered arguments', () => {
+			const { getByTestId } = render(
+				<Markdown
+					content="{{args|arg0|arg1}}"
+					data-testid="markdown-content"
+				/>
+			);
+
+			const content = getByTestId('markdown-content');
+			expect(content).toMatchSnapshot();
+		});
+
+		test('with default argument values', () => {
+			const { getByTestId } = render(
+				<Markdown
+					content="{{args-defaults|https://www.example.com}}"
+					data-testid="markdown-content"
+				/>
+			);
+
+			const content = getByTestId('markdown-content');
+			expect(content).toMatchSnapshot();
+		});
+
+		test('renders message for empty templates', () => {
+			const { getByTestId } = render(
+				<Markdown
+					content="{{empty}}"
 					data-testid="markdown-content"
 				/>
 			);

@@ -1,25 +1,28 @@
 @use "../theme/palette";
 @use "../theme/spacing";
 
-.task-list {
+@use "../tools" as *;
+
+.drag-list {
+	@include list-reset;
+
 	display: flex;
 	flex-direction: column;
 	gap: spacing.$sm;
 }
 
-.task-list__item {
+.drag-list__item {
 	display: flex;
 	align-items: stretch;
 }
 
-.task-list__drag-handle {
+.drag-list__drag-handle {
+	flex-grow: 0;
 	flex-shrink: 0;
 
 	margin-right: 1ch;
 
 	cursor: move;
-
-	@include palette.primary;
 
 	display: grid;
 	place-content: center;

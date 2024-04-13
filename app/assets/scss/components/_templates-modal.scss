@@ -1,0 +1,9 @@
+@use "../theme/spacing";
+
+.templates-modal {
+	width: 100vw;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: spacing.$md;
+}

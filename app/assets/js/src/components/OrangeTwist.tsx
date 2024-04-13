@@ -22,6 +22,8 @@ import {
 	loadDayTasks,
 	saveDayTasks,
 	setDayTaskInfo,
+	loadTemplates,
+	saveTemplates,
 	exportData,
 	importData,
 } from 'data';
@@ -53,6 +55,7 @@ import { OrangeTwistContext } from './OrangeTwistContext';
 
 import { CommandPalette } from './CommandPalette';
 import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
+import { TemplatesModal } from './templates/TemplatesModal';
 import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
 import { Footer } from './Footer';
 import {
@@ -97,6 +100,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			}),
 			loadTasks(),
 			loadDayTasks(),
+			loadTemplates(),
 		]);
 	}, []);
 
@@ -155,6 +159,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
 		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
 		registerCommand(Command.KEYBOARD_SHORTCUT_SHOW, { name: 'Show keyboard shortcuts' });
+		registerCommand(Command.TEMPLATES_EDIT, { name: 'Edit templates' });
 
 		registerKeyboardShortcut(
 			KeyboardShortcutName.COMMAND_PALETTE_OPEN,
@@ -253,6 +258,19 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		!keyboardShortcutsModalOpen
 	);
 
+	const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
+	/** Open the templates modal. */
+	const openTemplatesModal = useCallback(
+		() => setTemplatesModalOpen(true),
+		[]
+	);
+	/** Close the templates modal. */
+	const closeTemplatesModal = useCallback(
+		() => setTemplatesModalOpen(false),
+		[],
+	);
+	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
+
 	/**
 	 * Save all data, while giving the user feedback.
 	 */
@@ -268,6 +286,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				saveDays(),
 				saveTasks(),
 				saveDayTasks(),
+				saveTemplates(),
 			]);
 			ui.alert('Saved', {
 				duration: 2000,
@@ -291,7 +310,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		const days = getAllDayInfo();
 
 		const dayName = dayNameArg ?? await ui.prompt('What day?', {
-			placeholder: 'YYYY-MM-DD',
+			type: 'date',
 		});
 		if (!dayName) {
 			return;
@@ -372,6 +391,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		<KeyboardShortcutModal
 			open={keyboardShortcutsModalOpen}
 			onClose={closeKeyboardShortcutsModal}
+		/>
+		<TemplatesModal
+			open={templatesModalOpen}
+			onClose={closeTemplatesModal}
 		/>
 	</OrangeTwistContext.Provider>;
 }
