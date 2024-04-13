@@ -2,7 +2,7 @@ import { deleteDayTask } from 'data/dayTasks';
 import { tasksRegister } from './tasksRegister';
 
 /**
- * Delete's all information associated with a task.
+ * Deletes all information associated with a task.
  *
  * @param taskId The string specifying the task to delete.
  */
