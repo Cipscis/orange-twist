@@ -10,6 +10,7 @@ import {
 	setDayInfo,
 	setDayTaskInfo,
 	setTaskInfo,
+	setTemplateInfo,
 } from 'data';
 
 import { writeExportData } from './writeExportData';
@@ -32,6 +33,10 @@ describe('writeExportData', () => {
 		}, {
 			note: 'Day task note',
 			status: TaskStatus.TODO,
+		});
+		setTemplateInfo(1, {
+			name: 'template',
+			template: 'Test template',
 		});
 	});
 
@@ -57,6 +62,12 @@ describe('writeExportData', () => {
 				status: TaskStatus.TODO,
 				note: 'Day task note',
 				summary: null,
+			}]],
+			templates: [[1, {
+				id: 1,
+				name: 'template',
+				template: 'Test template',
+				sortIndex: -1,
 			}]],
 		});
 	});

@@ -77,6 +77,6 @@ export function IconButton(props: IconButtonProps): JSX.Element {
 			disabled={disabled}
 			{...passthroughProps}
 			class={classString}
-		>{iconEl}</button>
+		>{iconEl}</button>;
 	}
 }
