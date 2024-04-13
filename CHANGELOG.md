@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2024-04-13
+
+### Fixed
+
+* Editing a template name no longer causes the "Saved" message to show on every character typed
+
 ## [1.4.0] - 2024-04-13
 
 ### Fixed
