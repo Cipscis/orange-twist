@@ -11,6 +11,7 @@ export const exportDataLikeSchema = z.object({
 	days: z.unknown(),
 	tasks: z.unknown(),
 	dayTasks: z.unknown(),
+	templates: z.unknown().optional(),
 });
 export type ExportDataLike = z.infer<typeof exportDataLikeSchema>;
 export const isExportDataLike = isZodSchemaType(exportDataLikeSchema);
