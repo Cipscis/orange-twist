@@ -6,7 +6,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+* The progress animation for toasts now works in Firefox
 * Animations for hiding toasts and closing the task status picker now work in Firefox
+* Improved spacing on help page
 
 ### Added
 
@@ -14,7 +16,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
-* "Add day" form now uses a date input
+* "Add day" forms now use a date input
 
 ## [1.3.1] - 2024-03-22
 
