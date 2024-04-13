@@ -52,7 +52,7 @@ describe('useTemplateInfo', () => {
 		});
 	});
 
-	test('when passed a template name, re-renders only when the matching template is changed', async () => {
+	test('when passed a template ID, re-renders only when the matching template is changed', async () => {
 		let renderCount = 0;
 		const { result } = renderHook(() => {
 			renderCount += 1;

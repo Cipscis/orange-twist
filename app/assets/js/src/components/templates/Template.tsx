@@ -133,8 +133,6 @@ export function Template(props: TemplateProps): JSX.Element | null {
 	const previewMd = `{{${getTemplateAlias(templateInfo.name)}${previewArgs}}}`;
 
 	return <div class="template">
-		{/* Should templates have a display name and a name to use generated from that?
-		e.g. "Template A" for a display name becomes "template-a" to actually use? */}
 		<InlineNote
 			note={templateInfo.name}
 			onNoteChange={nameChangeHandler}
