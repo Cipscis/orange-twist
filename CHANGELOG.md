@@ -2,11 +2,15 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.2] - 2024-04-13
+## [1.4.0] - 2024-04-13
+
+### Added
+
+* Added the ability to create custom templates
 
 ### Changed
 
-* Adding a new day task now uses a date picker
+* "Add day" forms now use a date input
 
 ## [1.3.1] - 2024-03-22
 
