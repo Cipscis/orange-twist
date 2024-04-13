@@ -1,6 +1,6 @@
 {
 	"name": "orange-twist",
-	"version": "1.3.2",
+	"version": "1.4.0",
 	"description": "A task management tool designed for my personal style of working.",
 	"private": true,
 	"type": "module",

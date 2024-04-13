@@ -28,6 +28,7 @@
 	// Sub-components
 	@include meta.load-css("sub-components/button");
 	@include meta.load-css("sub-components/content");
+	@include meta.load-css("sub-components/drag-list");
 	@include meta.load-css("sub-components/icon-button");
 	@include meta.load-css("sub-components/loader");
 	@include meta.load-css("sub-components/modal");
@@ -41,7 +42,6 @@
 	// Components
 	@include meta.load-css("components/command-palette");
 	@include meta.load-css("components/day");
-	@include meta.load-css("components/drag-list");
 	@include meta.load-css("components/inline-note");
 	@include meta.load-css("components/keyboard-shortcuts-modal");
 	@include meta.load-css("components/note");
@@ -50,5 +50,8 @@
 	@include meta.load-css("components/task-detail");
 	@include meta.load-css("components/task-link");
 	@include meta.load-css("components/task-status");
+	@include meta.load-css("components/template");
+	@include meta.load-css("components/templates-list");
+	@include meta.load-css("components/templates-modal");
 	@include meta.load-css("components/tool-drawer");
 }
