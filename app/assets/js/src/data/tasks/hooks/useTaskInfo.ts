@@ -16,7 +16,7 @@ import { getTaskInfo } from '../getTaskInfo';
  * @param taskId The ID of the specified task.
  */
 export function useTaskInfo(taskId: number): TaskInfo | null {
-	// Initialise thisTaskInfo based on the passed taskIds
+	// Initialise thisTaskInfo based on the passed taskId
 	const [thisTaskInfo, setThisTaskInfo] = useState(() => getTaskInfo(taskId));
 
 	const doneInitialRender = useRef(false);

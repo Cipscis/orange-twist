@@ -3,9 +3,12 @@ import type { ExportDataLike } from '../types/ExportDataLike';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import { loadDays } from '../../days';
-import { loadTasks } from '../../tasks';
-import { loadDayTasks } from '../../dayTasks';
+import {
+	loadDayTasks,
+	loadDays,
+	loadTasks,
+	loadTemplates,
+} from 'data';
 
 import { writeExportData } from '../exportData/writeExportData';
 
@@ -18,6 +21,7 @@ async function loadExportDataDirect(data: ExportDataLike): Promise<void> {
 		loadDays(JSON.stringify(data.days)),
 		loadTasks(JSON.stringify(data.tasks)),
 		loadDayTasks(JSON.stringify(data.dayTasks)),
+		loadTemplates(JSON.stringify(data.templates ?? [])),
 	]);
 }
 
@@ -41,6 +45,7 @@ export async function loadExportData(data: ExportDataLike): Promise<void> {
 				loadDays(),
 				loadTasks(),
 				loadDayTasks(),
+				loadTemplates(),
 			]);
 		}
 

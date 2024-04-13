@@ -47,6 +47,22 @@ export {
 } from './dayTasks';
 
 export {
+	type TemplateInfo,
+
+	createTemplate,
+	setTemplateInfo,
+	deleteTemplate,
+	getTemplateInfo,
+	getAllTemplateInfo,
+
+	useTemplateInfo,
+	useAllTemplateInfo,
+
+	loadTemplates,
+	saveTemplates,
+} from './templates';
+
+export {
 	clear,
 	exportData,
 	getTaskStatusForDay,
