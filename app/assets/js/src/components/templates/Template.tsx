@@ -60,7 +60,6 @@ export function Template(props: TemplateProps): JSX.Element | null {
 
 		const name = newName ?? '';
 		setTemplateInfo(templateInfo.id, { name });
-		fireCommand(Command.DATA_SAVE);
 	}, [templateInfo]);
 
 	const definitionChangeHandler = useCallback<
