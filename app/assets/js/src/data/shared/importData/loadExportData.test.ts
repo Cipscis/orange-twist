@@ -13,18 +13,22 @@ import { addCommandListener, registerCommand } from 'registers/commands';
 import { TaskStatus } from 'types/TaskStatus';
 import {
 	clear,
-	setTaskInfo,
+	type TaskInfo,
 	type DayInfo,
 	type DayTaskInfo,
-	type TaskInfo,
-	setDayTaskInfo,
+	type TemplateInfo,
+	setTaskInfo,
 	setDayInfo,
+	setDayTaskInfo,
+	setTemplateInfo,
 	getAllTaskInfo,
 	getAllDayInfo,
 	getAllDayTaskInfo,
-	saveDays,
+	getAllTemplateInfo,
 	saveTasks,
+	saveDays,
 	saveDayTasks,
+	saveTemplates,
 } from 'data';
 
 import { loadExportData } from './loadExportData';
@@ -40,13 +44,18 @@ describe('loadExportData', () => {
 	});
 
 	test('returns a Promise that resolves when correct export data is passed', async () => {
-		const result = loadExportData({
+		await expect(loadExportData({
 			days: [],
 			tasks: [],
 			dayTasks: [],
-		});
+		})).resolves.toBeUndefined();
 
-		await expect(result).resolves.toBeUndefined();
+		await expect(loadExportData({
+			days: [],
+			tasks: [],
+			dayTasks: [],
+			templates: [],
+		})).resolves.toBeUndefined();
 	});
 
 	test('saves changes if import was successful', async () => {
@@ -60,6 +69,7 @@ describe('loadExportData', () => {
 			days: [],
 			tasks: [],
 			dayTasks: [],
+			templates: [],
 		});
 
 		expect(spy).not.toHaveBeenCalled();
@@ -74,6 +84,7 @@ describe('loadExportData', () => {
 			days: [[true, null]],
 			tasks: [[true, null]],
 			dayTasks: [[true, null]],
+			templates: [[true, null]],
 		});
 
 		await expect(result).rejects.toBeInstanceOf(Error);
@@ -99,15 +110,23 @@ describe('loadExportData', () => {
 			status: TaskStatus.TODO,
 			summary: null,
 		};
+		const testTemplate: TemplateInfo = {
+			id: 1,
+			name: 'Template',
+			template: 'Test template',
+			sortIndex: -1,
+		};
 
 		setTaskInfo(testTask.id, testTask, { forCurrentDay: false });
 		setDayInfo(testDay.name, testDay);
 		setDayTaskInfo(testDayTask, testDayTask);
+		setTemplateInfo(testTemplate.id, testTemplate);
 
 		const result = loadExportData({
 			days: [[true, null]],
 			tasks: [[true, null]],
 			dayTasks: [[true, null]],
+			templates: [[true, null]],
 		});
 
 		await expect(result).rejects.toBeInstanceOf(Error);
@@ -115,6 +134,7 @@ describe('loadExportData', () => {
 		expect(getAllTaskInfo()).toEqual([testTask]);
 		expect(getAllDayInfo()).toEqual([testDay]);
 		expect(getAllDayTaskInfo()).toEqual([testDayTask]);
+		expect(getAllTemplateInfo()).toEqual([testTemplate]);
 	});
 
 	test('reverts to persisted data if reverting to backup failed', async () => {
@@ -137,14 +157,22 @@ describe('loadExportData', () => {
 			status: TaskStatus.TODO,
 			summary: null,
 		};
+		const testTemplate: TemplateInfo = {
+			id: 1,
+			name: 'Template',
+			template: 'Test template',
+			sortIndex: -1,
+		};
 
 		setTaskInfo(testTask.id, testTask, { forCurrentDay: false });
 		setDayInfo(testDay.name, testDay);
 		setDayTaskInfo(testDayTask, testDayTask);
+		setTemplateInfo(testTemplate.id, testTemplate);
 
 		saveTasks();
 		saveDays();
 		saveDayTasks();
+		saveTemplates();
 
 		setTaskInfo(testTask.id, {
 			// @ts-expect-error Testing invalid data
@@ -155,6 +183,7 @@ describe('loadExportData', () => {
 			days: [[true, null]],
 			tasks: [[true, null]],
 			dayTasks: [[true, null]],
+			templates: [[true, null]],
 		});
 
 		await expect(result).rejects.toBeInstanceOf(Error);
@@ -162,6 +191,7 @@ describe('loadExportData', () => {
 		expect(getAllTaskInfo()).toEqual([testTask]);
 		expect(getAllDayInfo()).toEqual([testDay]);
 		expect(getAllDayTaskInfo()).toEqual([testDayTask]);
+		expect(getAllTemplateInfo()).toEqual([testTemplate]);
 	});
 
 	test('updates old export data', async () => {
@@ -198,5 +228,6 @@ describe('loadExportData', () => {
 		}]);
 		expect(getAllDayInfo()).toEqual([testDay]);
 		expect(getAllDayTaskInfo()).toEqual([testDayTask]);
+		expect(getAllTemplateInfo()).toEqual([]);
 	});
 });

@@ -54,3 +54,82 @@ exports[`Markdown renders task links for an invalid task ID 1`] = `
 
 </div>
 `;
+
+exports[`Markdown renders templates ignores unrecognised templates 1`] = `
+<div
+  class="content"
+  data-testid="markdown-content"
+>
+  <p>
+    {{no-template}}
+  </p>
+  
+
+</div>
+`;
+
+exports[`Markdown renders templates renders message for empty templates 1`] = `
+<div
+  class="content"
+  data-testid="markdown-content"
+>
+  <p>
+    <em>
+      Empty template
+    </em>
+  </p>
+  
+
+</div>
+`;
+
+exports[`Markdown renders templates with a recognised name 1`] = `
+<div
+  class="content"
+  data-testid="markdown-content"
+>
+  <p>
+    <strong>
+      simple
+    </strong>
+  </p>
+  
+
+</div>
+`;
+
+exports[`Markdown renders templates with default argument values 1`] = `
+<div
+  class="content"
+  data-testid="markdown-content"
+>
+  <p>
+    <a
+      href="https://www.example.com"
+    >
+      default
+    </a>
+  </p>
+  
+
+</div>
+`;
+
+exports[`Markdown renders templates with numbered arguments 1`] = `
+<div
+  class="content"
+  data-testid="markdown-content"
+>
+  <p>
+    <em>
+      arg0
+    </em>
+     
+    <em>
+      arg1
+    </em>
+  </p>
+  
+
+</div>
+`;
