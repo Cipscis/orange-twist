@@ -32,7 +32,19 @@
 .toast__progress {
 	// Start at width 0 so there's no 1 frame flash after rendering
 	width: 0;
-	background-color: rgb(from var(--colour) r g b / 0.1);
+	@supports (background-color: rgb(from white r g b / 0.1)) {
+		background-color: rgb(from var(--colour) r g b / 0.1);
+	}
+	@supports not (background-color: rgb(from white r g b / 0.1)) {
+		position: relative;
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background-color: var(--colour);
+			opacity: 0.1;
+		}
+	}
 	pointer-events: none;
 }
 
