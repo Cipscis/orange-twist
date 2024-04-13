@@ -131,7 +131,7 @@ export function Help(): JSX.Element {
 
 				<pre><code>{`{{issue|99|custom templates}}`}</code></pre>
 
-				Try it out here:
+				<p>Try it out here:</p>
 
 				{isLoading
 					? <Loader />
