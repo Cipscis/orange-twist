@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Fixed
 
 * The progress animation for toasts now works in Firefox
+* Animations for hiding toasts and closing the task status picker now work in Firefox
 * Improved spacing on help page
 
 ### Added
