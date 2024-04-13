@@ -64,7 +64,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
 
 	const addNewDayTask = useCallback(async () => {
-		const dayName = await ui.prompt('What day?');
+		const dayName = await ui.prompt('What day?', { type: 'date' });
 		if (!dayName) {
 			return;
 		}
