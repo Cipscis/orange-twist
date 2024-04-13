@@ -37,14 +37,14 @@ describe('useAllDayInfo', () => {
 		clear();
 	});
 
-	test('when passed no arguments, if there are no days, returns an empty array', () => {
+	test('if there are no days, returns an empty array', () => {
 		clear();
 
 		const { result } = renderHook(() => useAllDayInfo());
 		expect(result.current).toEqual([]);
 	});
 
-	test('when passed no arguments, returns an array of info on all days', () => {
+	test('returns an array of info on all days', () => {
 		const { result } = renderHook(() => useAllDayInfo());
 
 		expect(result.current).toEqual([

@@ -1,5 +1,9 @@
 import { h, type JSX } from 'preact';
-import { useCallback, useContext } from 'preact/hooks';
+import {
+	useCallback,
+	useContext,
+	useState,
+} from 'preact/hooks';
 
 import { getCurrentDateDayName } from 'utils';
 
@@ -29,6 +33,12 @@ export function Help(): JSX.Element {
 		fireCommand(Command.DAY_ADD_NEW, getCurrentDateDayName());
 	}, []);
 
+	const editTemplates = useCallback(() => {
+		fireCommand(Command.TEMPLATES_EDIT);
+	}, []);
+
+	const [taskLinkNote, setTaskLinkNote] = useState('[[1]]');
+	const [templateNote, setTemplateNote] = useState('{{issue|99|custom templates}}');
 	const noop = useCallback(() => {}, []);
 
 	return <>
@@ -90,19 +100,56 @@ export function Help(): JSX.Element {
 
 				<p>Several areas of Orange Twist allow for notes to be added and edited. You can use <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">Markdown</a> to format these notes.</p>
 
-				<p>If you want to link to a specific task, you can use a "[[taskId]]" shortcode, e.g. "[[1]]" would generate a link to task 1 like this:</p>
+				<h4 id="notes-task-links">Task links</h4>
+
+				<p>If you want to link to a specific task, you can use a <code>[[taskId]]</code> shortcode, e.g. <code>[[1]]</code> would generate a link to task 1 like this:</p>
 			</div>
 
 			{isLoading
 				? <Loader />
 				: <Note
-					note="[[1]]"
-					onNoteChange={noop}
+					note={taskLinkNote}
+					onNoteChange={setTaskLinkNote}
 					saveChanges={noop}
 				/>
 			}
 
 			<div class="content">
+				<h4 id="notes-templates">Templates</h4>
+
+				<p>As well as the <code>[[taskId]]</code> shortcodes for task links, you can define custom templates using the edit templates command which you can access anywhere through the <a href="#command-palette">command palette</a>.</p>
+
+				<p><Button onClick={editTemplates}>Edit templates</Button></p>
+
+				<p>These templates use syntax similar to <a href="https://mediawiki.org/wiki/Help:Templates" target="_blank" rel="noreferrer">Wikimedia templates</a>.</p>
+
+				<p>For example, a template with the name "issue", which renders a link to a GitHub issue, could be defined like this:</p>
+
+				<pre><code>{`<a href="https://github.com/Cipscis/orange-twist/issues/{{{0}}}" target="_blank">{{{1|issue}}}</a>`}</code></pre>
+
+				<p>Once defined, that template will let you use a shortcode in any note, identifying the template and passing some arguments to render it, without having to write out the entire content each time. For example:</p>
+
+				<pre><code>{`{{issue|99|custom templates}}`}</code></pre>
+
+				<p>Try it out here:</p>
+
+				{isLoading
+					? <Loader />
+					: <Note
+						note={templateNote}
+						onNoteChange={setTemplateNote}
+						saveChanges={noop}
+					/>
+				}
+
+				<p>The supported syntax for templates includes:</p>
+
+				<ul>
+					<li>Templates are wrapped in double braces and identified by a case-insensitive name - <code>{`{{template-name}}`}</code></li>
+					<li>Templates support arguments. In the template, these are inserted using triple braces around numbers - <code>{`{{{0}}}`}</code>. When invoking a template, these are passed with pipes - <code>{`{{template-name|arg0|arg1}}`}</code></li>
+					<li>Template arguments can have default values where they are inserted, specified using a pipe - <code>{`{{{0|default}}}`}</code></li>
+				</ul>
+
 				<h3 id="command-palette">Command Palette</h3>
 
 				<p>The command palette can be used to quickly perform actions with the keyboard, or to perform certain advanced actions.</p>
