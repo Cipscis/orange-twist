@@ -5,6 +5,12 @@
 /// so styles will need to be applied based on tag name.
 .content {
 	@include typography.base-body;
+	&:not(:first-child) {
+		margin-top: 1lh;
+	}
+	&:not(:last-child) {
+		margin-bottom: 1lh;
+	}
 
 	h1 {
 		@include typography.heading-1;
@@ -23,10 +29,7 @@
 	}
 
 	:is(p, pre):not(:last-child) {
-		margin-bottom: calc(1em * var(--line-height));
-	}
-	+ .content {
-		margin-top: calc(1em * var(--line-height));
+		margin-bottom: 1lh;
 	}
 
 	hr {
