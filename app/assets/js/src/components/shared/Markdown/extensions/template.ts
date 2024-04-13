@@ -56,7 +56,6 @@ export const template: TokenizerAndRendererExtension = {
 
 		// Convert all {{{0|default}}} slots into numbers e.g. 0,
 		// for matching with the appropriately indexed arg
-		// TODO: Allow slots in default values, e.g. {{{1|PR {{{0}}}}}}
 		const slots = (output.match(/\{\{\{\d+(\|.+?)?}}}/g) ?? []).map(
 			(slot) => Number(
 				slot.replace(

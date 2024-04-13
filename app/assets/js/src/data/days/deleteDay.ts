@@ -2,7 +2,7 @@ import { deleteDayTask } from 'data/dayTasks';
 import { daysRegister } from './daysRegister';
 
 /**
- * Delete's all information associated with a day.
+ * Deletes all information associated with a day.
  *
  * @param dayName The string specifying the day to delete.
  */
