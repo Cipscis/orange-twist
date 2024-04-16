@@ -10,7 +10,7 @@ import { ls } from 'persist';
 
 const { localStorage } = window;
 
-describe('localStorage', () => {
+describe('ls', () => {
 	afterEach(() => {
 		window.localStorage = localStorage;
 		localStorage.clear();
@@ -59,7 +59,7 @@ describe('localStorage', () => {
 		test('returns a Promise that resolves with null if there is no persisted data', async () => {
 			expect(
 				await ls.get('nothing')
-			).toBeNull();
+			).toBeUndefined();
 		});
 
 		test('rejects if localStorage is not available', async () => {
@@ -84,7 +84,7 @@ describe('localStorage', () => {
 			expect(await result).toBeUndefined();
 			expect(
 				await ls.get('test')
-			).toBeNull();
+			).toBeUndefined();
 		});
 
 		test('does nothing if no data was persisted at the given key', async () => {

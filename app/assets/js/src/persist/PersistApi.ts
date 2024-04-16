@@ -15,7 +15,7 @@ export interface PersistApi {
 	 * @param key - The string key where the persisted data has been saved.
 	 *
 	 * @returns A `Promise` that resolves with the value that was saved against.
-	 * the specified key, or `null` if no data was persisted.
+	 * the specified key, or `undefined` if no data was persisted.
 	 */
 	get(key: string): Promise<unknown>;
 

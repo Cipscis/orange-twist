@@ -19,7 +19,7 @@ export async function loadTasks(serialisedTasksInfo?: string): Promise<void> {
 		return ls.get('tasks');
 	})();
 
-	if (persistedTasksInfo === null) {
+	if (typeof persistedTasksInfo === 'undefined') {
 		tasksRegister.clear();
 		return;
 	}
