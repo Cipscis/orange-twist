@@ -1,3 +1,5 @@
+import { ls } from 'persist';
+
 import { tasksRegister } from '../tasksRegister';
 import { updateOldTaskInfo } from '../updateOldTaskInfo';
 
@@ -9,20 +11,18 @@ import { updateOldTaskInfo } from '../updateOldTaskInfo';
  * or rejects when tasks info fails to load.
  */
 export async function loadTasks(serialisedTasksInfo?: string): Promise<void> {
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
+	const persistedTasksInfo = await (() => {
+		if (typeof serialisedTasksInfo !== 'undefined') {
+			return JSON.parse(serialisedTasksInfo);
+		}
 
-	if (typeof serialisedTasksInfo === 'undefined') {
-		serialisedTasksInfo = localStorage.getItem('tasks') ?? undefined;
-	}
+		return ls.get('tasks');
+	})();
 
-	if (!serialisedTasksInfo) {
+	if (persistedTasksInfo === null) {
 		tasksRegister.clear();
 		return;
 	}
-
-	const persistedTasksInfo = JSON.parse(serialisedTasksInfo);
 
 	if (!(
 		Array.isArray(persistedTasksInfo) &&

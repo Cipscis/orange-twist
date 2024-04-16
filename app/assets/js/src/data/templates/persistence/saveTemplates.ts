@@ -1,3 +1,5 @@
+import { ls } from 'persist';
+
 import { templatesRegister } from '../templatesRegister';
 
 /**
@@ -6,9 +8,5 @@ import { templatesRegister } from '../templatesRegister';
 export async function saveTemplates(): Promise<void> {
 	const templatesInfo = Array.from(templatesRegister.entries());
 
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
-
-	localStorage.setItem('templates', JSON.stringify(templatesInfo));
+	return ls.set('templates', templatesInfo);
 }
