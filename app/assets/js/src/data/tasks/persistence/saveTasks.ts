@@ -1,3 +1,5 @@
+import { ls } from 'persist';
+
 import { tasksRegister } from '../tasksRegister';
 
 /**
@@ -6,9 +8,5 @@ import { tasksRegister } from '../tasksRegister';
 export async function saveTasks(): Promise<void> {
 	const tasksInfo = Array.from(tasksRegister.entries());
 
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
-
-	localStorage.setItem('tasks', JSON.stringify(tasksInfo));
+	await ls.set('tasks', tasksInfo);
 }

@@ -1,3 +1,5 @@
+import { ls } from 'persist';
+
 import { dayTasksRegister } from '../dayTasksRegister';
 
 /**
@@ -6,9 +8,5 @@ import { dayTasksRegister } from '../dayTasksRegister';
 export async function saveDayTasks(): Promise<void> {
 	const dayTasksInfo = Array.from(dayTasksRegister.entries());
 
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
-
-	localStorage.setItem('day-tasks', JSON.stringify(dayTasksInfo));
+	await ls.set('day-tasks', dayTasksInfo);
 }
