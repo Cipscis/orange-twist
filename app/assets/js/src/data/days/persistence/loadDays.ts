@@ -19,7 +19,7 @@ export async function loadDays(serialisedDaysInfo?: string): Promise<void> {
 		return ls.get('days');
 	})();
 
-	if (persistedDaysInfo === null) {
+	if (typeof persistedDaysInfo === 'undefined') {
 		daysRegister.clear();
 		return;
 	}

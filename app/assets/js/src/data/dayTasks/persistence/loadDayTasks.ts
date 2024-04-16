@@ -32,7 +32,7 @@ export async function loadDayTasks(serialisedDayTasksInfo?: string): Promise<voi
 		return ls.get('day-tasks');
 	})();
 
-	if (persistedDayTasksInfo === null) {
+	if (typeof persistedDayTasksInfo === 'undefined') {
 		dayTasksRegister.clear();
 		return;
 	}

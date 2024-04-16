@@ -18,7 +18,7 @@ export async function loadTemplates(serialisedTemplatesInfo?: string): Promise<v
 		return ls.get('templates');
 	})();
 
-	if (persistedTemplatesInfo === null) {
+	if (typeof persistedTemplatesInfo === 'undefined') {
 		templatesRegister.clear();
 		return;
 	}
