@@ -1,3 +1,5 @@
+import { ls } from 'persist';
+
 import { daysRegister } from '../daysRegister';
 import { updateOldDayInfo } from './updateOldDayInfo';
 
@@ -9,20 +11,18 @@ import { updateOldDayInfo } from './updateOldDayInfo';
  * or rejects when days info fails to load.
  */
 export async function loadDays(serialisedDaysInfo?: string): Promise<void> {
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
+	const persistedDaysInfo = await (() => {
+		if (typeof serialisedDaysInfo !== 'undefined') {
+			return JSON.parse(serialisedDaysInfo);
+		}
 
-	if (typeof serialisedDaysInfo === 'undefined') {
-		serialisedDaysInfo = localStorage.getItem('days') ?? undefined;
-	}
+		return ls.get('days');
+	})();
 
-	if (!serialisedDaysInfo) {
+	if (persistedDaysInfo === null) {
 		daysRegister.clear();
 		return;
 	}
-
-	const persistedDaysInfo = JSON.parse(serialisedDaysInfo);
 
 	if (!(
 		Array.isArray(persistedDaysInfo) &&

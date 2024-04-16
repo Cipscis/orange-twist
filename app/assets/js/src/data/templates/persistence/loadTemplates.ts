@@ -1,3 +1,4 @@
+import { ls } from 'persist';
 import { templatesRegister } from '../templatesRegister';
 import { updateOldTemplateInfo } from './updateOldTemplateInfo';
 
@@ -9,20 +10,18 @@ import { updateOldTemplateInfo } from './updateOldTemplateInfo';
  * or rejects when templates info fails to load.
  */
 export async function loadTemplates(serialisedTemplatesInfo?: string): Promise<void> {
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
+	const persistedTemplatesInfo = await (() => {
+		if (typeof serialisedTemplatesInfo !== 'undefined') {
+			return JSON.parse(serialisedTemplatesInfo);
+		}
 
-	if (typeof serialisedTemplatesInfo === 'undefined') {
-		serialisedTemplatesInfo = localStorage.getItem('templates') ?? undefined;
-	}
+		return ls.get('templates');
+	})();
 
-	if (!serialisedTemplatesInfo) {
+	if (persistedTemplatesInfo === null) {
 		templatesRegister.clear();
 		return;
 	}
-
-	const persistedTemplatesInfo = JSON.parse(serialisedTemplatesInfo);
 
 	if (!(
 		Array.isArray(persistedTemplatesInfo) &&
