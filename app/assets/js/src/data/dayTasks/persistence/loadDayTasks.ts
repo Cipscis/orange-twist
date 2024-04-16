@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { isZodSchemaType } from 'utils';
 
+import { ls } from 'persist';
+
 import { dayTasksRegister } from '../dayTasksRegister';
 import { updateOldDayTaskInfo } from './updateOldDayTaskInfo';
 
@@ -22,20 +24,18 @@ const isSerialisedDayTasksEntrySchema = isZodSchemaType(serialisedDayTasksEntryS
  * loading, or rejects when day tasks info fails to load.
  */
 export async function loadDayTasks(serialisedDayTasksInfo?: string): Promise<void> {
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
+	const persistedDayTasksInfo = await (() => {
+		if (typeof serialisedDayTasksInfo !== 'undefined') {
+			return JSON.parse(serialisedDayTasksInfo);
+		}
 
-	if (typeof serialisedDayTasksInfo === 'undefined') {
-		serialisedDayTasksInfo = localStorage.getItem('day-tasks') ?? undefined;
-	}
+		return ls.get('day-tasks');
+	})();
 
-	if (!serialisedDayTasksInfo) {
+	if (persistedDayTasksInfo === null) {
 		dayTasksRegister.clear();
 		return;
 	}
-
-	const persistedDayTasksInfo = JSON.parse(serialisedDayTasksInfo);
 
 	if (!(
 		Array.isArray(persistedDayTasksInfo) &&

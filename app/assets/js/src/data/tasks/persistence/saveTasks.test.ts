@@ -36,18 +36,14 @@ describe('saveDays', () => {
 	});
 
 	test('returns a Promise that resolves when the content of the tasks register has been persisted', async () => {
+		expect(localStorage.getItem('tasks')).toBeNull();
+
 		setTaskInfo(1, firstTaskInfo);
 		setTaskInfo(2, secondTaskInfo);
 
-		expect(localStorage.getItem('tasks')).toBeNull();
-
 		const saveDaysPromise = saveTasks();
 		expect(saveDaysPromise).toBeInstanceOf(Promise);
-
-		expect(localStorage.getItem('tasks')).toBeNull();
-
-		const saveDaysResult = await saveDaysPromise;
-		expect(saveDaysResult).toBeUndefined();
+		await expect(saveDaysPromise).resolves.toBeUndefined();
 
 		expect(localStorage.getItem('tasks')).toEqual(JSON.stringify([
 			[1, firstTaskInfo],
