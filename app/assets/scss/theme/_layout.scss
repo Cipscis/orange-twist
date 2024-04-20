@@ -27,7 +27,7 @@ $_max-bp-width: $max-width + 2 * ($gutter + $_button-width + $gutter);
 		grid-template-columns:
 			[full-width-start breakout-left-start breakout-start tools-left-start] 0 [tools-left-end]
 			var(--layout-gutter)
-			[main-start breakout-right-start] minmax(auto, var(--max-width)) [main-end breakout-left-end]
+			[main-start breakout-right-start] minmax(auto, 100%) [main-end breakout-left-end]
 			var(--layout-gutter)
 			[tools-right-start] 0 [tools-right-end breakout-end breakout-right-end full-width-end];
 	}
