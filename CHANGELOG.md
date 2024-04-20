@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2024-04-20
+
+### Added
+
+* The footer now includes a link to the changelog
+
+### Changed
+
+* Bumped dependencies to latest versions
+* Version number in footer is now read from package.json
+
+### Fixed
+
+* "Request a feature" link now opens in a new tab
+* Nested markdown lists with checkboxes have better spacing
+* Tool drawers are larger and easier to open on intermediate devices
+
 ## [1.4.1] - 2024-04-13
 
 ### Fixed
