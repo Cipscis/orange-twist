@@ -3,7 +3,7 @@
 @use "../tools" as *;
 
 $max-width: rem(800px);
-$gutter: spacing.$md;
+$gutter: spacing.$lg;
 
 $_button-width: 2rem;
 $_max-bp-width: $max-width + 2 * ($gutter + $_button-width + $gutter);
@@ -22,12 +22,15 @@ $_max-bp-width: $max-width + 2 * ($gutter + $_button-width + $gutter);
 
 @mixin grid {
 	display: grid;
+	@include breakpoint.to(xs) {
+		--layout-gutter: #{spacing.$md};
+	}
 	@include breakpoint.to($_max-bp-width) {
 		// Tool gutters 0 width on the edge
 		grid-template-columns:
 			[full-width-start breakout-left-start breakout-start tools-left-start] 0 [tools-left-end]
 			var(--layout-gutter)
-			[main-start breakout-right-start] minmax(auto, var(--max-width)) [main-end breakout-left-end]
+			[main-start breakout-right-start] minmax(auto, 100%) [main-end breakout-left-end]
 			var(--layout-gutter)
 			[tools-right-start] 0 [tools-right-end breakout-end breakout-right-end full-width-end];
 	}
