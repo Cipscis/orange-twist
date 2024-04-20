@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 
 import { dist, src } from './paths.js';
 
+import packageJson from '../../package.json' with { type: 'json' };
+
+const { version } = packageJson;
+
 dotenv.config();
 
 const { MODE } = process.env;
@@ -24,4 +28,7 @@ export const config: BuildOptions = {
 	sourcemap: 'linked',
 
 	minify: !isDev,
+	define: {
+		['__VERSION__']: JSON.stringify(version),
+	},
 };

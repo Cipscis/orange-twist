@@ -31,6 +31,9 @@
 		// This code is not compiled using `tsc`
 		// https://www.typescriptlang.org/tsconfig#noEmit
 		"noEmit": true,
+		// Allow importing JSON files like package.json
+		// https://www.typescriptlang.org/tsconfig#resolveJsonModule
+		"resolveJsonModule": true,
 
 		// Include types for the latest ECMAScript features,
 		// but not DOM APIs
