@@ -1,6 +1,7 @@
 import {
 	useCallback,
 	useEffect,
+	useLayoutEffect,
 	useMemo,
 	useRef,
 	useState,
@@ -109,9 +110,10 @@ export function useAllTaskInfo(
 		const hasChanged = (() => {
 			return Boolean(changes.find(({ value }) => {
 				const matches = matcher(value);
+				const matchedPreviously = matchingTaskIds.current.includes(value.id);
 
 				// If the task matches, or if it did match previously
-				if (matches || matchingTaskIds.current.includes(value.id)) {
+				if (matches || matchedPreviously) {
 					return true;
 				}
 				return false;
@@ -124,7 +126,10 @@ export function useAllTaskInfo(
 	}, [matcher, updateThisTaskInfo]);
 
 	// Listen for relevant changes on tasksRegister
-	useEffect(() => {
+	// Use a layout effect so it doesn't wait for rendering,
+	// otherwise data could finish loading after we've read
+	// it but before we start listening for changes.
+	useLayoutEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 

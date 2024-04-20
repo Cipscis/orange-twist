@@ -1,6 +1,6 @@
 import {
 	useCallback,
-	useEffect,
+	useLayoutEffect,
 	useState,
 } from 'preact/hooks';
 
@@ -24,7 +24,10 @@ export function useAllDayInfo(): DayInfo[] {
 	}, []);
 
 	// Listen for relevant changes on daysRegister
-	useEffect(() => {
+	// Use a layout effect so it doesn't wait for rendering,
+	// otherwise data could finish loading after we've read
+	// it but before we start listening for changes.
+	useLayoutEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
