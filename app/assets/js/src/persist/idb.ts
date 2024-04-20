@@ -59,11 +59,11 @@ function doTransaction(
  * IndexedDB API.
  */
 export const idb: PersistApi = {
-	set(key, data) {
-		return doTransaction(
+	async set(key, data) {
+		await doTransaction(
 			'readwrite',
 			(objectStore) => objectStore.put(data, key)
-		) as Promise<void>; // <- Safe to treat any type as `void`
+		);
 	},
 
 	get(key) {
@@ -73,10 +73,10 @@ export const idb: PersistApi = {
 		);
 	},
 
-	delete(key) {
-		return doTransaction(
+	async delete(key) {
+		await doTransaction(
 			'readwrite',
 			(objectStore) => objectStore.delete(key)
-		) as Promise<void>; // <- Safe to treat any type as `void`
+		);
 	},
 };
