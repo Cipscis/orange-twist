@@ -50,7 +50,7 @@ function doTransaction(
 
 			request.addEventListener('success', () => resolve(request.result));
 			request.addEventListener('error', () => reject(request.error));
-		});
+		}).catch(reject);
 	});
 }
 
