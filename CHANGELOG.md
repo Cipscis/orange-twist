@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2024-04-20
+
+### Changed
+
+* Data is now stored in IndexedDB instead of LocalStorage
+
 ## [1.4.1] - 2024-04-13
 
 ### Fixed
