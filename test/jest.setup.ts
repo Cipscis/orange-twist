@@ -97,3 +97,8 @@ beforeAll(() => {
 	polyfillWindowScrollto();
 	polyfillElementScrollIntoView();
 });
+
+// Define global constants usually replaced using esbuild's "define" option
+Object.assign(global, {
+	__VERSION__: 'test',
+});
