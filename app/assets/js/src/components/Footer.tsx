@@ -19,7 +19,7 @@ export function Footer(): JSX.Element {
 			<a href="https://github.com/Cipscis/orange-twist/issues/new?labels=bug&template=bug-report.md" target="_blank" rel="noreferrer">
 				<span aria-hidden>🐛</span> Report a bug
 			</a>
-			<a href="https://github.com/Cipscis/orange-twist/issues/new?labels=enhancement&template=feature-request.md">
+			<a href="https://github.com/Cipscis/orange-twist/issues/new?labels=enhancement&template=feature-request.md" target="_blank" rel="noreferrer">
 				<span aria-hidden>✨</span> Request a feature
 			</a>
 		</div>
