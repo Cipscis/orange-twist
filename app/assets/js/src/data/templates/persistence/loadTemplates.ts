@@ -1,4 +1,5 @@
-import { ls } from 'persist';
+import { type PersistApi } from 'persist';
+
 import { templatesRegister } from '../templatesRegister';
 import { updateOldTemplateInfo } from './updateOldTemplateInfo';
 
@@ -9,13 +10,16 @@ import { updateOldTemplateInfo } from './updateOldTemplateInfo';
  * @returns A Promise which resolves when templates info has finished loading,
  * or rejects when templates info fails to load.
  */
-export async function loadTemplates(serialisedTemplatesInfo?: string): Promise<void> {
+export async function loadTemplates(
+	persist: PersistApi,
+	serialisedTemplatesInfo?: string
+): Promise<void> {
 	const persistedTemplatesInfo = await (() => {
 		if (typeof serialisedTemplatesInfo !== 'undefined') {
 			return JSON.parse(serialisedTemplatesInfo);
 		}
 
-		return ls.get('templates');
+		return persist.get('templates');
 	})();
 
 	if (typeof persistedTemplatesInfo === 'undefined') {

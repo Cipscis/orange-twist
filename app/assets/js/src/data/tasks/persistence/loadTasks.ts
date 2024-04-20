@@ -1,4 +1,4 @@
-import { ls } from 'persist';
+import { type PersistApi } from 'persist';
 
 import { tasksRegister } from '../tasksRegister';
 import { updateOldTaskInfo } from '../updateOldTaskInfo';
@@ -10,13 +10,16 @@ import { updateOldTaskInfo } from '../updateOldTaskInfo';
  * @returns A Promise which resolves when tasks info has finished loading,
  * or rejects when tasks info fails to load.
  */
-export async function loadTasks(serialisedTasksInfo?: string): Promise<void> {
+export async function loadTasks(
+	persist: PersistApi,
+	serialisedTasksInfo?: string
+): Promise<void> {
 	const persistedTasksInfo = await (() => {
 		if (typeof serialisedTasksInfo !== 'undefined') {
 			return JSON.parse(serialisedTasksInfo);
 		}
 
-		return ls.get('tasks');
+		return persist.get('tasks');
 	})();
 
 	if (typeof persistedTasksInfo === 'undefined') {

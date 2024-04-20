@@ -7,6 +7,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ls } from 'persist';
+
 import { Command } from 'types/Command';
 import { addCommandListener, registerCommand } from 'registers/commands';
 
@@ -44,13 +46,13 @@ describe('loadExportData', () => {
 	});
 
 	test('returns a Promise that resolves when correct export data is passed', async () => {
-		await expect(loadExportData({
+		await expect(loadExportData(ls, {
 			days: [],
 			tasks: [],
 			dayTasks: [],
 		})).resolves.toBeUndefined();
 
-		await expect(loadExportData({
+		await expect(loadExportData(ls, {
 			days: [],
 			tasks: [],
 			dayTasks: [],
@@ -65,7 +67,7 @@ describe('loadExportData', () => {
 		const spy = jest.fn();
 		addCommandListener(Command.DATA_SAVE, spy, { signal });
 
-		const result = loadExportData({
+		const result = loadExportData(ls, {
 			days: [],
 			tasks: [],
 			dayTasks: [],
@@ -80,7 +82,7 @@ describe('loadExportData', () => {
 	});
 
 	test('returns a Promise that rejects when incorrect export data is passed', async () => {
-		const result = loadExportData({
+		const result = loadExportData(ls, {
 			days: [[true, null]],
 			tasks: [[true, null]],
 			dayTasks: [[true, null]],
@@ -122,7 +124,7 @@ describe('loadExportData', () => {
 		setDayTaskInfo(testDayTask, testDayTask);
 		setTemplateInfo(testTemplate.id, testTemplate);
 
-		const result = loadExportData({
+		const result = loadExportData(ls, {
 			days: [[true, null]],
 			tasks: [[true, null]],
 			dayTasks: [[true, null]],
@@ -169,17 +171,17 @@ describe('loadExportData', () => {
 		setDayTaskInfo(testDayTask, testDayTask);
 		setTemplateInfo(testTemplate.id, testTemplate);
 
-		saveTasks();
-		saveDays();
-		saveDayTasks();
-		saveTemplates();
+		saveTasks(ls);
+		saveDays(ls);
+		saveDayTasks(ls);
+		saveTemplates(ls);
 
 		setTaskInfo(testTask.id, {
 			// @ts-expect-error Testing invalid data
 			id: 'Invalid id',
 		}, { forCurrentDay: false });
 
-		const result = loadExportData({
+		const result = loadExportData(ls, {
 			days: [[true, null]],
 			tasks: [[true, null]],
 			dayTasks: [[true, null]],
@@ -213,7 +215,7 @@ describe('loadExportData', () => {
 			summary: null,
 		};
 
-		const result = loadExportData({
+		const result = loadExportData(ls, {
 			days: [[testDay.name, testDay]],
 			tasks: [[testTask.id, testTask]],
 			dayTasks: [[`${testDay.name}_${testTask.id}`, testDayTask]],

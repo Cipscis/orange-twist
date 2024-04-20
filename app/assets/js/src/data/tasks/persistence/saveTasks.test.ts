@@ -5,6 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ls } from 'persist';
+
 import type { TaskInfo } from '../types';
 
 import { TaskStatus } from 'types/TaskStatus';
@@ -41,7 +43,7 @@ describe('saveDays', () => {
 		setTaskInfo(1, firstTaskInfo);
 		setTaskInfo(2, secondTaskInfo);
 
-		const saveDaysPromise = saveTasks();
+		const saveDaysPromise = saveTasks(ls);
 		expect(saveDaysPromise).toBeInstanceOf(Promise);
 		await expect(saveDaysPromise).resolves.toBeUndefined();
 
