@@ -6,6 +6,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ls } from 'persist';
+
 import type { TaskInfo } from '../types';
 
 import { TaskStatus } from 'types/TaskStatus';
@@ -42,7 +44,7 @@ describe('loadTasks', () => {
 	test('returns a Promise that resolves when the tasks register has been filled with the persisted tasks data', async () => {
 		expect(Array.from(tasksRegister.entries())).toEqual([]);
 
-		const loadTasksPromise = loadTasks();
+		const loadTasksPromise = loadTasks(ls);
 		expect(loadTasksPromise).toBeInstanceOf(Promise);
 
 		expect(Array.from(tasksRegister.entries())).toEqual([]);
@@ -60,7 +62,7 @@ describe('loadTasks', () => {
 
 		expect(Array.from(tasksRegister.entries())).toEqual([]);
 
-		const loadTasksPromise = loadTasks();
+		const loadTasksPromise = loadTasks(ls);
 		expect(loadTasksPromise).toBeInstanceOf(Promise);
 
 		expect(Array.from(tasksRegister.entries())).toEqual([]);
@@ -73,13 +75,13 @@ describe('loadTasks', () => {
 	test('returns a Promise that rejects if invalid JSON has been persisted', async () => {
 		localStorage.setItem('tasks', 'invalid JSON');
 
-		await expect(loadTasks()).rejects.toBeInstanceOf(Error);
+		await expect(loadTasks(ls)).rejects.toBeInstanceOf(Error);
 	});
 
 	test('returns a Promise that rejects if invalid data has been persisted', async () => {
 		localStorage.setItem('tasks', JSON.stringify(['Invalid data']));
 
-		await expect(loadTasks()).rejects.toBeInstanceOf(Error);
+		await expect(loadTasks(ls)).rejects.toBeInstanceOf(Error);
 	});
 
 	test('triggers up to a single "delete" event and a single "set" event', async () => {
@@ -87,7 +89,7 @@ describe('loadTasks', () => {
 		tasksRegister.addEventListener('delete', spy);
 		tasksRegister.addEventListener('set', spy);
 
-		await loadTasks();
+		await loadTasks(ls);
 
 		const entryObjArr = Array.from(
 			tasksRegister.entries()
@@ -98,7 +100,7 @@ describe('loadTasks', () => {
 		expect(spy).toHaveBeenCalledTimes(1);
 		expect(spy).toHaveBeenCalledWith(entryObjArr);
 
-		await loadTasks();
+		await loadTasks(ls);
 
 		expect(spy).toHaveBeenCalledTimes(3);
 		expect(spy).toHaveBeenNthCalledWith(2, entryObjArr);
@@ -114,7 +116,7 @@ describe('loadTasks', () => {
 		tasksRegister.set(testData);
 		expect(Array.from(tasksRegister.entries())).toEqual(testData);
 
-		await loadTasks();
+		await loadTasks(ls);
 
 		expect(Array.from(tasksRegister.entries())).toEqual([
 			[1, firstTaskInfo],
@@ -123,7 +125,7 @@ describe('loadTasks', () => {
 	});
 
 	test('can be passed serialised data as an argument', async () => {
-		await loadTasks(JSON.stringify([
+		await loadTasks(ls, JSON.stringify([
 			[1, {
 				id: 1,
 				name: 'Task name',

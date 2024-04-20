@@ -1,4 +1,4 @@
-import { ls } from 'persist';
+import { type PersistApi } from 'persist';
 
 import { daysRegister } from '../daysRegister';
 import { updateOldDayInfo } from './updateOldDayInfo';
@@ -10,13 +10,16 @@ import { updateOldDayInfo } from './updateOldDayInfo';
  * @returns A Promise which resolves when days info has finished loading,
  * or rejects when days info fails to load.
  */
-export async function loadDays(serialisedDaysInfo?: string): Promise<void> {
+export async function loadDays(
+	persist: PersistApi,
+	serialisedDaysInfo?: string
+): Promise<void> {
 	const persistedDaysInfo = await (() => {
 		if (typeof serialisedDaysInfo !== 'undefined') {
 			return JSON.parse(serialisedDaysInfo);
 		}
 
-		return ls.get('days');
+		return persist.get('days');
 	})();
 
 	if (typeof persistedDaysInfo === 'undefined') {

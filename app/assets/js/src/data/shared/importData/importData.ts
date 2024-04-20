@@ -1,3 +1,5 @@
+import { local } from 'persist';
+
 import * as ui from 'ui';
 
 import { readExportDataFromFile } from './readExportDataFromFile';
@@ -26,7 +28,7 @@ export async function importData(): Promise<void> {
 	}
 
 	try {
-		await loadExportData(data);
+		await loadExportData(local, data);
 	} catch (e) {
 		ui.alert('Failed to reload data after failed import. Please refresh');
 	}

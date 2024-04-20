@@ -18,7 +18,10 @@ import {
 } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
+
 import { randomUUID } from 'node:crypto';
+
+import { ls } from 'persist';
 
 import { addCommandListener, fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -54,7 +57,7 @@ describe('OrangeTwist', () => {
 
 	test('renders its children', () => {
 		const { getByTestId } = render(
-			<OrangeTwist>
+			<OrangeTwist persist={ls}>
 				<div data-testid="orange-twist-child-1" />
 				<div data-testid="orange-twist-child-2" />
 			</OrangeTwist>
@@ -65,7 +68,7 @@ describe('OrangeTwist', () => {
 	});
 
 	test('sets up the toggle theme command', () => {
-		render(<OrangeTwist />);
+		render(<OrangeTwist persist={ls} />);
 
 		fireCommand(Command.THEME_TOGGLE);
 		expect(
@@ -81,7 +84,7 @@ describe('OrangeTwist', () => {
 	test('sets up the keyboard shortcut to open the command palette', async () => {
 		const user = userEvent.setup();
 
-		const { getByTestId } = render(<OrangeTwist />);
+		const { getByTestId } = render(<OrangeTwist persist={ls} />);
 
 		await user.keyboard('\\');
 
@@ -96,7 +99,7 @@ describe('OrangeTwist', () => {
 
 		const spy = jest.fn();
 
-		render(<OrangeTwist />);
+		render(<OrangeTwist persist={ls} />);
 
 		addKeyboardShortcutListener(KeyboardShortcutName.EDITING_FINISH, spy, { signal });
 
@@ -111,7 +114,7 @@ describe('OrangeTwist', () => {
 	test('sets up the command and keyboard shortcut to save data', async () => {
 		const user = userEvent.setup();
 
-		render(<OrangeTwist />);
+		render(<OrangeTwist persist={ls} />);
 
 		const spy = jest.fn();
 		addCommandListener(Command.DATA_SAVE, spy);
@@ -123,7 +126,7 @@ describe('OrangeTwist', () => {
 	});
 
 	test('sets up the command to add a new day', () => {
-		render(<OrangeTwist />);
+		render(<OrangeTwist persist={ls} />);
 
 		fireCommand(Command.DAY_ADD_NEW, '2023-11-26');
 
@@ -136,7 +139,7 @@ describe('OrangeTwist', () => {
 
 	test('sets up the command to create a new task', async () => {
 		const user = userEvent.setup();
-		render(<OrangeTwist />);
+		render(<OrangeTwist persist={ls} />);
 
 		await act(() => fireCommand(Command.TASK_ADD_NEW, '2023-11-26'));
 		await user.keyboard('Test event{Enter}');
@@ -146,10 +149,10 @@ describe('OrangeTwist', () => {
 	});
 
 	test('renders a back button if passed a "backButton" prop', () => {
-		const { queryByRole, rerender } = render(<OrangeTwist />);
+		const { queryByRole, rerender } = render(<OrangeTwist persist={ls} />);
 		expect(queryByRole('link', { name: 'Back' })).not.toBeInTheDocument();
 
-		rerender(<OrangeTwist backButton />);
+		rerender(<OrangeTwist persist={ls} backButton />);
 		expect(queryByRole('link', { name: 'Back' })).toBeInTheDocument();
 	});
 });
