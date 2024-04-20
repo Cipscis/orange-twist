@@ -1,6 +1,7 @@
 import {
 	useCallback,
 	useEffect,
+	useLayoutEffect,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -61,7 +62,10 @@ export function useDayTaskInfo(identifier: DayTaskIdentifier): DayTaskInfo | nul
 	}, [identifier]);
 
 	// Listen for relevant changes on dayTasksRegister
-	useEffect(() => {
+	// Use a layout effect so it doesn't wait for rendering,
+	// otherwise data could finish loading after we've read
+	// it but before we start listening for changes.
+	useLayoutEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
