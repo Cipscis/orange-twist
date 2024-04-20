@@ -72,7 +72,8 @@
 	ul,
 	ol {
 		margin-block: calc(1em * var(--line-height));
-		&:first-child {
+		&:first-child,
+		&:is(input[type="checkbox"]:first-child + *) {
 			margin-block-start: 0;
 		}
 		&:last-child {
