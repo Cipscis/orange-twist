@@ -1,7 +1,6 @@
 import { assertAllUnionMembersHandled } from 'utils';
 
 import { MessageType, isMessage } from './types';
-import { LocalStorageKey } from './LocalStorageKey';
 
 export const syncCallbacks = new Set<() => void>();
 
@@ -26,18 +25,7 @@ channel.addEventListener(
 		}
 
 		if (message.type === MessageType.SYNC_UPDATE) {
-			const updateNumber = localStorage.getItem(
-				LocalStorageKey.UPDATE_NUMBER
-			);
-			if (updateNumber === message.data) {
-				callSyncCallbacks();
-			} else {
-				window.addEventListener(
-					'storage',
-					callSyncCallbacks,
-					{ once: true }
-				);
-			}
+			callSyncCallbacks();
 		} else {
 			assertAllUnionMembersHandled(message.type);
 		}
