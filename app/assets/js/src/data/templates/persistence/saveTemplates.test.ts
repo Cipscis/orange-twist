@@ -5,6 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ls } from 'persist';
+
 import {
 	type TemplateInfo,
 	clear,
@@ -36,7 +38,7 @@ describe('saveTemplates', () => {
 		setTemplateInfo(1, firstTemplateInfo);
 		setTemplateInfo(2, secondTemplateInfo);
 
-		const saveTemplatesPromise = saveTemplates();
+		const saveTemplatesPromise = saveTemplates(ls);
 		expect(saveTemplatesPromise).toBeInstanceOf(Promise);
 		await expect(saveTemplatesPromise).resolves.toBeUndefined();
 

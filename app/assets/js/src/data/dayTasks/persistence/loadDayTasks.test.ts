@@ -6,6 +6,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ls } from 'persist';
+
 import type { DayTaskInfo } from '../types';
 import { TaskStatus } from 'types/TaskStatus';
 
@@ -45,7 +47,7 @@ describe('loadDayTasks', () => {
 	test('returns a Promise that resolves when the day tasks register has been filled with the persisted days data', async () => {
 		expect(Array.from(dayTasksRegister.entries())).toEqual([]);
 
-		const loadDayTasksPromise = loadDayTasks();
+		const loadDayTasksPromise = loadDayTasks(ls);
 		expect(loadDayTasksPromise).toBeInstanceOf(Promise);
 
 		expect(Array.from(dayTasksRegister.entries())).toEqual([]);
@@ -64,7 +66,7 @@ describe('loadDayTasks', () => {
 
 		expect(Array.from(dayTasksRegister.entries())).toEqual([]);
 
-		const loadDayTasksPromise = loadDayTasks();
+		const loadDayTasksPromise = loadDayTasks(ls);
 		expect(loadDayTasksPromise).toBeInstanceOf(Promise);
 
 		expect(Array.from(dayTasksRegister.entries())).toEqual([]);
@@ -78,13 +80,13 @@ describe('loadDayTasks', () => {
 	test('returns a Promise that rejects if invalid JSON has been persisted', async () => {
 		localStorage.setItem('day-tasks', 'invalid JSON');
 
-		await expect(loadDayTasks()).rejects.toBeInstanceOf(Error);
+		await expect(loadDayTasks(ls)).rejects.toBeInstanceOf(Error);
 	});
 
 	test('returns a Promise that rejects if invalid data has been persisted', async () => {
 		localStorage.setItem('day-tasks', JSON.stringify(['Invalid data']));
 
-		await expect(loadDayTasks()).rejects.toBeInstanceOf(Error);
+		await expect(loadDayTasks(ls)).rejects.toBeInstanceOf(Error);
 	});
 
 	test('triggers up to a single "delete" event and a single "set" event', async () => {
@@ -92,7 +94,7 @@ describe('loadDayTasks', () => {
 		dayTasksRegister.addEventListener('delete', spy);
 		dayTasksRegister.addEventListener('set', spy);
 
-		await loadDayTasks();
+		await loadDayTasks(ls);
 
 		const entryObjArr = Array.from(
 			dayTasksRegister.entries()
@@ -103,7 +105,7 @@ describe('loadDayTasks', () => {
 		expect(spy).toHaveBeenCalledTimes(1);
 		expect(spy).toHaveBeenCalledWith(entryObjArr);
 
-		await loadDayTasks();
+		await loadDayTasks(ls);
 
 		expect(spy).toHaveBeenCalledTimes(3);
 		expect(spy).toHaveBeenNthCalledWith(2, entryObjArr);
@@ -126,7 +128,7 @@ describe('loadDayTasks', () => {
 			}],
 		]);
 
-		await loadDayTasks();
+		await loadDayTasks(ls);
 
 		expect(Array.from(dayTasksRegister.entries())).toEqual([
 			['2023-11-13_1', firstDayTaskInfo],
@@ -135,7 +137,7 @@ describe('loadDayTasks', () => {
 	});
 
 	test('can be passed serialised data as an argument', async () => {
-		await loadDayTasks(JSON.stringify([
+		await loadDayTasks(ls, JSON.stringify([
 			['2023-12-10_1', {
 				dayName: '2023-12-10',
 				taskId: 1,

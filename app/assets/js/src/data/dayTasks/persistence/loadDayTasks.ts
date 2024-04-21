@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { isZodSchemaType } from 'utils';
 
-import { ls } from 'persist';
+import { type PersistApi } from 'persist';
 
 import { dayTasksRegister } from '../dayTasksRegister';
 import { updateOldDayTaskInfo } from './updateOldDayTaskInfo';
@@ -23,16 +23,19 @@ const isSerialisedDayTasksEntrySchema = isZodSchemaType(serialisedDayTasksEntryS
  * @returns A Promise which resolves when day tasks info has finished
  * loading, or rejects when day tasks info fails to load.
  */
-export async function loadDayTasks(serialisedDayTasksInfo?: string): Promise<void> {
+export async function loadDayTasks(
+	persist: PersistApi,
+	serialisedDayTasksInfo?: string
+): Promise<void> {
 	const persistedDayTasksInfo = await (() => {
 		if (typeof serialisedDayTasksInfo !== 'undefined') {
 			return JSON.parse(serialisedDayTasksInfo);
 		}
 
-		return ls.get('day-tasks');
+		return persist.get('day-tasks');
 	})();
 
-	if (persistedDayTasksInfo === null) {
+	if (typeof persistedDayTasksInfo === 'undefined') {
 		dayTasksRegister.clear();
 		return;
 	}

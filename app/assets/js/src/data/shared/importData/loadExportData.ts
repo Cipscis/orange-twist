@@ -1,5 +1,7 @@
 import type { ExportDataLike } from '../types/ExportDataLike';
 
+import type { PersistApi } from 'persist';
+
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
@@ -16,12 +18,15 @@ import { writeExportData } from '../exportData/writeExportData';
  * Try to load a set of data directly into memory.
  * If it fails, the Promise it returns will reject.
  */
-async function loadExportDataDirect(data: ExportDataLike): Promise<void> {
+async function loadExportDataDirect(
+	persist: PersistApi,
+	data: ExportDataLike
+): Promise<void> {
 	await Promise.all([
-		loadDays(JSON.stringify(data.days)),
-		loadTasks(JSON.stringify(data.tasks)),
-		loadDayTasks(JSON.stringify(data.dayTasks)),
-		loadTemplates(JSON.stringify(data.templates ?? [])),
+		loadDays(persist, JSON.stringify(data.days)),
+		loadTasks(persist, JSON.stringify(data.tasks)),
+		loadDayTasks(persist, JSON.stringify(data.dayTasks)),
+		loadTemplates(persist, JSON.stringify(data.templates ?? [])),
 	]);
 }
 
@@ -29,23 +34,26 @@ async function loadExportDataDirect(data: ExportDataLike): Promise<void> {
  * Try to load a set of data directly into memory.
  * If it fails, restores a backup.
  */
-export async function loadExportData(data: ExportDataLike): Promise<void> {
+export async function loadExportData(
+	persist: PersistApi,
+	data: ExportDataLike
+): Promise<void> {
 	// Take a backup in case we hit an error
 	const backup = writeExportData();
 
 	try {
-		await loadExportDataDirect(data);
+		await loadExportDataDirect(persist, data);
 	} catch (e) {
 		try {
 			// If something went wrong, try to restore the backup
-			await loadExportDataDirect(backup);
+			await loadExportDataDirect(persist, backup);
 		} catch (e) {
 			// If restoring the backup failed, try to load persisted data again
 			await Promise.all([
-				loadDays(),
-				loadTasks(),
-				loadDayTasks(),
-				loadTemplates(),
+				loadDays(persist),
+				loadTasks(persist),
+				loadDayTasks(persist),
+				loadTemplates(persist),
 			]);
 		}
 
