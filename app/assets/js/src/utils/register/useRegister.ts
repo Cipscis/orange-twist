@@ -18,39 +18,65 @@ import { Register } from './Register';
  */
 export function useRegister<K, V>(
 	register: Register<K, V>,
-	matcher: (key: K) => boolean,
+	matcher: (key: K, value: V) => boolean,
 ): readonly V[] {
 	/**
-	 * Retrieve all values with keys matching the matcher.
+	 * Retrieve all entries matching the matcher.
 	 */
-	const getData = useCallback(() => {
+	const getMatchedEntries = useCallback(() => {
 		return [...register.entries()]
-			.filter(([key]) => matcher(key))
-			.map(([, value]) => value);
+			.filter(([key, value]) => matcher(key, value));
 	}, [register, matcher]);
 
 	/**
-	 * Check if any updated keys match the matcher.
+	 * Check if any updated entries match the matcher.
 	 */
-	const hasChanged = useCallback((changes: { key: K; }[]) => changes.some(({ key }) => matcher(key)), [matcher]);
+	const hasChanged = useCallback((changes: {
+		key: K;
+		value: V;
+	}[]) => changes.some(({ key, value }) => matcher(key, value)), [matcher]);
 
-	const [hookData, setHookData] = useState(() => getData());
+	/**
+	 * A list of matching entries' keys, used to detect when an
+	 * entry changes in a way that makes it no longer match.
+	 */
+	const matchedKeys = useRef<K[]>([]);
+
+	/**
+	 * Updates the list of matched entries' keys, and returns the new matched values.
+	 */
+	const processMatchedEntries = useCallback(() => {
+		const matchedEntries = getMatchedEntries();
+		matchedKeys.current = matchedEntries.map(([key]) => key);
+		return matchedEntries.map(([key, value]) => value);
+	}, [getMatchedEntries]);
+
+	/**
+	 * Update the list of matched entries' keys, and the `hookData` state variable.
+	 */
+	const updateHookData = useCallback(() => {
+		const matchedValues = processMatchedEntries();
+		setHookData(matchedValues);
+	}, [processMatchedEntries]);
+
+	const [hookData, setHookData] = useState(processMatchedEntries);
 
 	const doneInitialRender = useRef(false);
 
-	// Update hookInfo if getData method changes
+	// Update hookData if method of updating it changes
 	useEffect(() => {
-		// Don't re-set the state during the iniital render
+		// Don't re-set the state during the initial render
 		if (!doneInitialRender.current) {
 			doneInitialRender.current = true;
 			return;
 		}
 
-		setHookData(getData());
-	}, [getData]);
+		updateHookData();
+	}, [updateHookData]);
 
 	/**
-	 * Update the hook data if and only if the relevant data has changed.
+	 * Update the hook data on register changes if
+	 * and only if the relevant data has changed.
 	 */
 	const handleDataUpdate = useCallback((
 		changes: {
@@ -58,10 +84,21 @@ export function useRegister<K, V>(
 			value: V;
 		}[]
 	) => {
+		// If one of the changes matches our matcher, update
 		if (hasChanged(changes)) {
-			setHookData(getData());
+			updateHookData();
+			return;
 		}
-	}, [hasChanged, getData]);
+
+		// Otherwise, if any previously matched entry is changed,
+		// this means it no longer matches so we should update
+		const matchedPreviously = changes.some(
+			({ key }) => matchedKeys.current.includes(key)
+		);
+		if (matchedPreviously) {
+			updateHookData();
+		}
+	}, [hasChanged, updateHookData]);
 
 	// Listen for relevant changes on the register
 	// Use a layout effect so it doesn't wait for rendering,
