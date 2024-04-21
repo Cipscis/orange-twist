@@ -24,7 +24,7 @@ export function DayList(): JSX.Element {
 
 	const { isLoading } = useContext(OrangeTwistContext);
 
-	const days = useMemo(() => unsortedDays.sort(
+	const days = useMemo(() => unsortedDays.toSorted(
 		({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB)
 	), [unsortedDays]);
 
