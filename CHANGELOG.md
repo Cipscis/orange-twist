@@ -2,7 +2,7 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.4.2] - 2024-04-20
+## [1.5.0] - 2024-04-20
 
 ### Added
 
@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
+* Data is now stored in IndexedDB instead of LocalStorage
 * Bumped dependencies to latest versions
 * Version number in footer is now read from package.json
 

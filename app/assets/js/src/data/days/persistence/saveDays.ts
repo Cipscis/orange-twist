@@ -1,12 +1,12 @@
-import { ls } from 'persist';
+import { type PersistApi } from 'persist';
 
 import { daysRegister } from '../daysRegister';
 
 /**
  * Save the current days data in memory into persistent storage.
  */
-export async function saveDays(): Promise<void> {
+export async function saveDays(persist: PersistApi): Promise<void> {
 	const daysInfo = Array.from(daysRegister.entries());
 
-	await ls.set('days', daysInfo);
+	await persist.set('days', daysInfo);
 }

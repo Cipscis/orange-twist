@@ -5,6 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ls } from 'persist';
+
 import { setDayInfo } from '../setDayInfo';
 import { saveDays } from './saveDays';
 import { clear } from '../../shared';
@@ -31,7 +33,7 @@ describe('saveDays', () => {
 		setDayInfo('2023-11-09', ninthDayInfo);
 		setDayInfo('2023-11-10', tenthDayInfo);
 
-		const saveDaysPromise = saveDays();
+		const saveDaysPromise = saveDays(ls);
 		expect(saveDaysPromise).toBeInstanceOf(Promise);
 		await expect(saveDaysPromise).resolves.toBeUndefined();
 

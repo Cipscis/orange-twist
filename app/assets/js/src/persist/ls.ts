@@ -22,7 +22,7 @@ export const ls: PersistApi = {
 			try {
 				const jsonData = localStorage.getItem(key);
 				if (jsonData === null) {
-					resolve(null);
+					resolve(undefined);
 					return;
 				}
 				const data = JSON.parse(jsonData);

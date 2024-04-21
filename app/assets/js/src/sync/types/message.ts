@@ -12,7 +12,7 @@ const baseMessageSchema = z.object({
 });
 
 const syncUpdateMessageSchema = baseMessageSchema.extend({
-	data: z.string(),
+	type: z.literal(MessageType.SYNC_UPDATE),
 });
 
 const messageSchema = syncUpdateMessageSchema;
