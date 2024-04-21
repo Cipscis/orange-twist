@@ -25,12 +25,12 @@ describe('useRegister', () => {
 	});
 
 	test('updates only when relevant changes have been made', async () => {
-		const testRegister = new Register<string, unknown>([
+		const testRegister = new Register<string, number>([
 			['a', 1],
 			['b', 2],
 		]);
 
-		const matcher = (key: string) => key === 'a';
+		const matcher = (key: string, value: number) => key === 'a' && value <= 2;
 
 		let renderCount = 0;
 		const { result } = renderHook(() => {
@@ -49,6 +49,11 @@ describe('useRegister', () => {
 		await act(() => testRegister.set('a', 2));
 		expect(result.current).toEqual([2]);
 		expect(renderCount).toBe(2);
+
+		// Removing a previously matched entry should cause re-render with new info
+		await act(() => testRegister.set('a', 3));
+		expect(result.current).toEqual([]);
+		expect(renderCount).toBe(3);
 	});
 
 	test('when the matcher changes, returns updated information', () => {
