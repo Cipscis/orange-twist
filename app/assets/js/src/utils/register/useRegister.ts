@@ -1,74 +1,90 @@
-import { useEffect, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from 'preact/hooks';
 
 import { Register } from './Register';
 
 /**
- * A hook for observing all changes to a {@linkcode Register}.
+ * A hook for observing data in a {@linkcode Register}.
  *
- * @param register The `Register` to observe.
+ * @param register - The `Register` to observe.
+ * @param matcher - A function used to check if data for a key should be returned. **Important:** this function must be memoised.
  *
- * @returns An array containing all entries in the specified `Register`.
- */
-export function useRegister<K, V>(
-	register: Register<K, V>
-): readonly (readonly [K, V])[];
-/**
- * A hook for observing changes to a specific key in a {@linkcode Register}.
- *
- * @param register The `Register` to observe.
- * @param keyToObserve The key to observe.
- *
- * @returns The value of the element with the specified key in the specified `Register`.
+ * @returns An array containing all matching entries in the specified `Register`.
  */
 export function useRegister<K, V>(
 	register: Register<K, V>,
-	keyToObserve: K
-): V | undefined;
-export function useRegister<K, V>(
-	register: Register<K, V>,
-	keyToObserve?: K
-): readonly (readonly [K, V])[] | V | undefined {
-	// This value either stores the value of the specific key being observed,
-	// if there is one, or otherwise the entire contents of the `Register`
-	const [value, setValue] = useState(() => {
-		if (keyToObserve) {
-			return register.get(keyToObserve);
-		} else {
-			return Array.from(register.entries());
-		}
-	});
+	matcher: (key: K) => boolean,
+): readonly V[] {
+	/**
+	 * Retrieve all values with keys matching the matcher.
+	 */
+	const getData = useCallback(() => {
+		return [...register.entries()]
+			.filter(([key]) => matcher(key))
+			.map(([, value]) => value);
+	}, [register, matcher]);
 
-	// Add an event listener to update the value when there are changes
+	/**
+	 * Check if any updated keys match the matcher.
+	 */
+	const hasChanged = useCallback((changes: { key: K; }[]) => changes.some(({ key }) => matcher(key)), [matcher]);
+
+	const [hookData, setHookData] = useState(() => getData());
+
+	const doneInitialRender = useRef(false);
+
+	// Update hookInfo if getData method changes
 	useEffect(() => {
+		// Don't re-set the state during the iniital render
+		if (!doneInitialRender.current) {
+			doneInitialRender.current = true;
+			return;
+		}
+
+		setHookData(getData());
+	}, [getData]);
+
+	/**
+	 * Update the hook data if and only if the relevant data has changed.
+	 */
+	const handleDataUpdate = useCallback((
+		changes: {
+			key: K;
+			value: V;
+		}[]
+	) => {
+		if (hasChanged(changes)) {
+			setHookData(getData());
+		}
+	}, [hasChanged, getData]);
+
+	// Listen for relevant changes on the register
+	// Use a layout effect so it doesn't wait for rendering,
+	// otherwise data could finish loading after we've read
+	// it but before the start listening for changes
+	useLayoutEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		if (keyToObserve) {
-			// Observe a specific element only
-			register.addEventListener('set', ([{ key, value }]) => {
-				if (key === keyToObserve) {
-					setValue(value);
-				}
-			}, { signal });
+		register.addEventListener(
+			'set',
+			handleDataUpdate,
+			{ signal }
+		);
 
-			register.addEventListener('delete', ([{ key }]) => {
-				if (key === keyToObserve) {
-					setValue(undefined);
-				}
-			}, { signal });
-		} else {
-			// Observe the entire register
-			register.addEventListener('set', () => {
-				setValue(Array.from(register.entries()));
-			}, { signal });
-
-			register.addEventListener('delete', () => {
-				setValue(Array.from(register.entries()));
-			}, { signal });
-		}
+		register.addEventListener(
+			'delete',
+			handleDataUpdate,
+			{ signal }
+		);
 
 		return () => controller.abort();
-	}, [register, keyToObserve]);
+	}, [register, handleDataUpdate]);
 
-	return value;
+	return hookData;
 }
