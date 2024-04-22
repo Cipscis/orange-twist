@@ -9,3 +9,12 @@
 if (navigator.serviceWorker) {
 	navigator.serviceWorker.register('/service-worker.js');
 }
+
+if (__IS_DEV__) {
+	document.title += ' (Next)';
+
+	const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+	if (favicon) {
+		favicon.href = 'favicon-dev.svg';
+	}
+}
