@@ -27,21 +27,32 @@ interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	inline?: boolean;
 }
 
-marked.use({
-	renderer,
-	extensions: [
-		taskLink,
-		template,
-	],
-});
+let isMarkedInitialised = false;
+/**
+ * Initialise the "marked" package once before use.
+ */
+function initMarked() {
+	if (isMarkedInitialised) {
+		return;
+	}
+	isMarkedInitialised = true;
 
-marked.use(markedHighlight({
-	langPrefix: 'hljs language-',
-	highlight(code, lang, info) {
-		const language = hljs.getLanguage(lang)?.name ?? 'plaintext';
-		return hljs.highlight(code, { language }).value;
-	},
-}));
+	marked.use({
+		renderer,
+		extensions: [
+			taskLink,
+			template,
+		],
+	});
+
+	marked.use(markedHighlight({
+		langPrefix: 'hljs language-',
+		highlight(code, lang, info) {
+			const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+			return hljs.highlight(code, { language }).value;
+		},
+	}));
+}
 
 export function Markdown(props: MarkdownProps): JSX.Element {
 	const {
@@ -76,6 +87,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 		})();
 
 		(async () => {
+			initMarked();
 			let renderedContent = marked.parse(contentToRender, {
 				breaks: true,
 			});
