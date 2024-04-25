@@ -15,6 +15,6 @@ if (__IS_DEV__) {
 
 	const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
 	if (favicon) {
-		favicon.href = 'favicon-dev.svg';
+		favicon.href = '/favicon-dev.svg';
 	}
 }
