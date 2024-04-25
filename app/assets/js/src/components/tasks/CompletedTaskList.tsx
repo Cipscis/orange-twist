@@ -25,14 +25,14 @@ export function CompletedTaskList(): JSX.Element | null {
 			)}
 			sorter={useCallback(
 				(taskA: TaskInfo, taskB: TaskInfo): number => {
-					// First, sort by last updated date
+					// First, sort by last updated date, with more recent tasks first
 					const dayTasksA = getAllDayTaskInfo({ taskId: taskA.id });
 					const dayTasksB = getAllDayTaskInfo({ taskId: taskB.id });
 
 					const lastUpdatedA = dayTasksA.at(-1)?.dayName ?? '0001-01-01';
 					const lastUpdatedB = dayTasksB.at(-1)?.dayName ?? '0001-01-01';
 
-					const comparison = lastUpdatedA.localeCompare(lastUpdatedB);
+					const comparison = lastUpdatedB.localeCompare(lastUpdatedA);
 
 					if (comparison !== 0) {
 						return comparison;
