@@ -2,7 +2,7 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.5.0] - 2024-04-20
+## [1.5.0] - 2024-04-26
 
 ### Added
 
@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * "Request a feature" link now opens in a new tab
 * Nested markdown lists with checkboxes have better spacing
 * Tool drawers are larger and easier to open on intermediate devices
+* Pressing "Escape" to cancel changes to an inline note now works correctly
 
 ## [1.4.1] - 2024-04-13
 
