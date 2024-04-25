@@ -106,15 +106,15 @@ describe('CompletedTaskList', () => {
 		expect(queryByText('Task four')).not.toBeInTheDocument();
 	});
 
-	test('renders completed tasks in order of completion', () => {
+	test('renders completed tasks in reverse order of completion', () => {
 		const { queryAllByText } = render(<CompletedTaskList />);
 
 		const tasks = queryAllByText(/^Task /);
 		expect(tasks.map(({ textContent }) => textContent)).toEqual([
-			'Task six',
+			'Task two',
 			'Task five',
 			'Task three',
-			'Task two',
+			'Task six',
 		]);
 	});
 });
