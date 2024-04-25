@@ -5,12 +5,12 @@ import { dist, src } from './paths.js';
 
 import packageJson from '../../package.json' with { type: 'json' };
 
-const { version } = packageJson;
-
 dotenv.config();
 
 const { MODE } = process.env;
 const isDev = MODE === 'development';
+
+const version = packageJson.version + (isDev ? '-next' : '');
 
 export const config: BuildOptions = {
 	entryPoints: [
@@ -30,5 +30,6 @@ export const config: BuildOptions = {
 	minify: !isDev,
 	define: {
 		['__VERSION__']: JSON.stringify(version),
+		['__IS_DEV__']: JSON.stringify(isDev),
 	},
 };

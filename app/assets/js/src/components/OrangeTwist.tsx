@@ -372,6 +372,13 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			isLoading,
 		}}
 	>
+		{
+			__IS_DEV__ && <>
+				<link rel="stylesheet" href="/assets/css/dev.css" />
+				<span class="dev-ribbon">unreleased</span>
+			</>
+		}
+
 		<CommandPalette
 			open={commandPaletteOpen}
 			onClose={closeCommandPalette}
