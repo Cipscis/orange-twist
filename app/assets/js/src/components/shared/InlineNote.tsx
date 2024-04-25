@@ -28,41 +28,56 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 		saveChanges,
 	} = props;
 
-	const previousName = useRef<string | null>(null);
+	const previousNote = useRef<string | null>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const [isEditing, setIsEditing] = useState(false);
 	const dirtyFlag = useRef(false);
 
 	/**
-	 * Save changes if there were any, then clear `dirtyFlag`.
-	 */
-	const saveChangesIfDirty = useCallback(() => {
-		if (dirtyFlag.current) {
-			saveChanges();
-			dirtyFlag.current = false;
-		}
-	}, [saveChanges]);
-
-	/**
-	 * Update the note and, if there were changes, set the dirty flag.
+	 * Update the note and the dirty flag.
 	 */
 	const updateNote = useCallback((newNote: string) => {
 		onNoteChange(newNote);
-		if (!dirtyFlag.current && newNote !== note) {
-			dirtyFlag.current = true;
-		}
+
+		const isChangedFromLastUpdate = newNote !== note;
+		const isInitialNote = newNote === previousNote.current;
+		dirtyFlag.current = isChangedFromLastUpdate && !isInitialNote;
 	}, [note, onNoteChange]);
 
 	/** Enter edit mode. */
 	const enterEditMode = useCallback(() => {
+		previousNote.current = note;
 		setIsEditing(true);
-	}, []);
+	}, [note]);
 
 	/**
-	 * Enter edit mode when clicking the name, *unless* a link was clicked.
+	 * Clean the note, save any changes, and leave edit mode.
 	 */
-	const enterEditModeOnNameClick = useCallback((e: Event) => {
+	const leaveEditMode = useCallback(() => {
+		if (dirtyFlag.current) {
+			onNoteChange(note?.trim() ?? null);
+			saveChanges();
+			dirtyFlag.current = false;
+		}
+		setIsEditing(false);
+	}, [
+		onNoteChange,
+		note,
+		saveChanges,
+	]);
+
+	/**
+	 * Reset the note to its state when we entered edit mode.
+	 */
+	const discardChanges = useCallback(() => {
+		updateNote(previousNote.current ?? '');
+	}, [updateNote]);
+
+	/**
+	 * Enter edit mode when clicking the note, *unless* a link was clicked.
+	 */
+	const enterEditModeOnNoteClick = useCallback((e: Event) => {
 		const { target } = e;
 
 		if (
@@ -85,44 +100,6 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 		enterEditMode();
 	}, [enterEditMode]);
 
-	// Combine a state variable and `useEffect` to blur the input after re-render
-	const [blurOnRenderCount, setBlurOnRenderCount] = useState(0);
-	useEffect(() => {
-		inputRef.current?.blur();
-	}, [blurOnRenderCount]);
-
-	/**
-	 * Blur the input after the component re-renders.
-	 */
-	const blurOnNextRender = useCallback(() => {
-		setBlurOnRenderCount((val) => val + 1);
-	}, []);
-
-	/**
-	 * Clean the note, save any change, and leave edit mode.
-	 */
-	const leaveEditMode = useCallback(() => {
-		onNoteChange(note?.trim() ?? null);
-		saveChangesIfDirty();
-		setIsEditing(false);
-	}, [
-		onNoteChange,
-		note,
-		saveChangesIfDirty,
-	]);
-
-	/**
-	 * Remember the previous name when the input is focused.
-	 */
-	const rememberPreviousName = useCallback((e: FocusEvent) => {
-		const input = e.target;
-		if (!(input instanceof HTMLInputElement)) {
-			return;
-		}
-
-		previousName.current = input.value;
-	}, []);
-
 	/**
 	 * Blur on "Enter" or "Escape", either committing or discarding changes.
 	 */
@@ -133,17 +110,16 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 		}
 
 		if (e.key === 'Enter') {
-			input.blur();
+			leaveEditMode();
 			return;
 		}
 
 		if (e.key === 'Escape') {
-			const name = previousName.current ?? '';
-			updateNote(name);
-			blurOnNextRender();
+			discardChanges();
+			leaveEditMode();
 			return;
 		}
-	}, [updateNote, blurOnNextRender]);
+	}, [discardChanges, leaveEditMode]);
 
 	// Prevent space from triggering a click event on certain types of parent element, e.g. `<summary>`
 	const keyupHandler = useCallback((e: KeyboardEvent) => {
@@ -151,13 +127,6 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 			e.preventDefault();
 		}
 	}, []);
-
-	// Automatically focus on input when entering edit mode
-	useEffect(() => {
-		if (isEditing) {
-			inputRef.current?.focus();
-		}
-	}, [isEditing]);
 
 	// Leave edit mode on blur, but not when the tab loses focus
 	useBlurCallback(
@@ -186,6 +155,13 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 		return () => controller.abort();
 	}, [isEditing]);
 
+	// Automatically focus on input when entering edit mode
+	useEffect(() => {
+		if (isEditing) {
+			inputRef.current?.focus();
+		}
+	}, [isEditing]);
+
 	return <form
 		class={classNames('inline-note', props.class)}
 	>
@@ -198,7 +174,6 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 				value={note ?? ''}
 				placeholder={props.placeholder ?? 'Note'}
 				size={1}
-				onFocus={rememberPreviousName}
 				onInput={(e) => updateNote(e.currentTarget.value)}
 				onKeyDown={keydownHandler}
 				onKeyUp={keyupHandler}
@@ -213,7 +188,7 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 				class={classNames('inline-note__display', {
 					'inline-note__display--hidden': isEditing,
 				})}
-				onClick={enterEditModeOnNameClick}
+				onClick={enterEditModeOnNoteClick}
 				data-testid="inline-note__note"
 			/>
 		}
