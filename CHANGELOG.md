@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * Data is now stored in IndexedDB instead of LocalStorage
 * Bumped dependencies to latest versions
 * Version number in footer is now read from package.json
+* Completed tasks are now ordered with the most recent at the top
 
 ### Fixed
 
