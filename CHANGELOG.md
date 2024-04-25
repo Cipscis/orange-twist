@@ -20,6 +20,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * Nested markdown lists with checkboxes have better spacing
 * Tool drawers are larger and easier to open on intermediate devices
 * Pressing "Escape" to cancel changes to an inline note now works correctly
+* Syntax highlighting now works correctly for HTML and XML code blocks
 
 ## [1.4.1] - 2024-04-13
 
