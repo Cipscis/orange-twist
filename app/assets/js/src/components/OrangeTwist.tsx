@@ -6,6 +6,7 @@ import {
 import {
 	useCallback,
 	useEffect,
+	useMemo,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -97,7 +98,7 @@ const defaultProps = {
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const {
 		backButton,
-		persist,
+		persist: rawPersist,
 		children,
 	} = {
 		...defaultProps,
@@ -105,6 +106,13 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	};
 
 	const [isLoading, setIsLoading] = useState(true);
+
+	// TODO: Provide a way for the profile to be set
+	// TODO: Persist the profile - useStatePersist hook?
+	const [profile, setProfile] = useState(null);
+	const persist = useMemo(() => rawPersist.bake({
+		profile: profile ?? 'default',
+	}), [rawPersist, profile]);
 
 	/**
 	 * Load persisted data into each register.
