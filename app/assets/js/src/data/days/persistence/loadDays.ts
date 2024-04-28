@@ -1,4 +1,5 @@
 import { type PersistApi } from 'persist';
+import { loadRegister } from 'utils';
 
 import { daysRegister } from '../daysRegister';
 import { updateOldDayInfo } from './updateOldDayInfo';
@@ -14,34 +15,25 @@ export async function loadDays(
 	persist: PersistApi,
 	serialisedDaysInfo?: string
 ): Promise<void> {
-	const persistedDaysInfo = await (() => {
-		if (typeof serialisedDaysInfo !== 'undefined') {
-			return JSON.parse(serialisedDaysInfo);
+	const options = serialisedDaysInfo
+		? {
+			data: serialisedDaysInfo,
 		}
+		: {
+			persist,
+			key: 'days',
+		};
 
-		return persist.get('days');
-	})();
+	const isValidDayEntry = (entry: unknown): entry is [string, unknown] => {
+		return Array.isArray(entry) &&
+		entry.length === 2 &&
+		typeof entry[0] === 'string';
+	};
 
-	if (typeof persistedDaysInfo === 'undefined') {
-		daysRegister.clear();
-		return;
-	}
-
-	if (!(
-		Array.isArray(persistedDaysInfo) &&
-		persistedDaysInfo.every((el): el is [string, unknown] => (
-			Array.isArray(el) &&
-			el.length === 2 &&
-			typeof el[0] === 'string'
-		))
-	)) {
-		throw new Error(`Persisted days data is invalid: ${serialisedDaysInfo}`);
-	}
-
-	const newDaysInfo = persistedDaysInfo.map(
-		([dayName, dayInfo]) => [dayName, updateOldDayInfo(dayInfo)] as const
+	return loadRegister(
+		daysRegister,
+		isValidDayEntry,
+		updateOldDayInfo,
+		options
 	);
-
-	daysRegister.clear();
-	daysRegister.set(newDaysInfo);
 }

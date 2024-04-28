@@ -1,4 +1,5 @@
 import { type PersistApi } from 'persist';
+import { loadRegister } from 'utils';
 
 import { templatesRegister } from '../templatesRegister';
 import { updateOldTemplateInfo } from './updateOldTemplateInfo';
@@ -14,34 +15,25 @@ export async function loadTemplates(
 	persist: PersistApi,
 	serialisedTemplatesInfo?: string
 ): Promise<void> {
-	const persistedTemplatesInfo = await (() => {
-		if (typeof serialisedTemplatesInfo !== 'undefined') {
-			return JSON.parse(serialisedTemplatesInfo);
+	const options = serialisedTemplatesInfo
+		? {
+			data: serialisedTemplatesInfo,
 		}
+		: {
+			persist,
+			key: 'templates',
+		};
 
-		return persist.get('templates');
-	})();
-
-	if (typeof persistedTemplatesInfo === 'undefined') {
-		templatesRegister.clear();
-		return;
-	}
-
-	if (!(
-		Array.isArray(persistedTemplatesInfo) &&
-		persistedTemplatesInfo.every((el): el is [number, unknown] => (
-			Array.isArray(el) &&
-			el.length === 2 &&
-			typeof el[0] === 'number'
-		))
-	)) {
-		throw new Error(`Persisted templates data is invalid: ${serialisedTemplatesInfo}`);
-	}
-
-	const newTemplatesInfo = persistedTemplatesInfo.map(
-		([templateName, templateInfo]) => [templateName, updateOldTemplateInfo(templateInfo)] as const
+	const isValidTemplateEntry = (entry: unknown): entry is [number, unknown] => (
+		Array.isArray(entry) &&
+		entry.length === 2 &&
+		typeof entry[0] === 'number'
 	);
 
-	templatesRegister.clear();
-	templatesRegister.set(newTemplatesInfo);
+	return loadRegister(
+		templatesRegister,
+		isValidTemplateEntry,
+		updateOldTemplateInfo,
+		options
+	);
 }

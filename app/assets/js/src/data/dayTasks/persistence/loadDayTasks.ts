@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import { isZodSchemaType } from 'utils';
 
 import { type PersistApi } from 'persist';
+import { isZodSchemaType, loadRegister } from 'utils';
+
 
 import { dayTasksRegister } from '../dayTasksRegister';
 import { updateOldDayTaskInfo } from './updateOldDayTaskInfo';
@@ -27,30 +28,19 @@ export async function loadDayTasks(
 	persist: PersistApi,
 	serialisedDayTasksInfo?: string
 ): Promise<void> {
-	const persistedDayTasksInfo = await (() => {
-		if (typeof serialisedDayTasksInfo !== 'undefined') {
-			return JSON.parse(serialisedDayTasksInfo);
+	const options = serialisedDayTasksInfo
+		? {
+			data: serialisedDayTasksInfo,
 		}
+		: {
+			persist,
+			key: 'day-tasks',
+		};
 
-		return persist.get('day-tasks');
-	})();
-
-	if (typeof persistedDayTasksInfo === 'undefined') {
-		dayTasksRegister.clear();
-		return;
-	}
-
-	if (!(
-		Array.isArray(persistedDayTasksInfo) &&
-		persistedDayTasksInfo.every(isSerialisedDayTasksEntrySchema)
-	)) {
-		throw new Error(`Persisted day tasks data is invalid: ${serialisedDayTasksInfo}`);
-	}
-
-	const newDayTasksInfo = persistedDayTasksInfo.map(
-		([dayTaskKey, dayInfo]) => [dayTaskKey, updateOldDayTaskInfo(dayInfo)] as const
+	return loadRegister(
+		dayTasksRegister,
+		isSerialisedDayTasksEntrySchema,
+		updateOldDayTaskInfo,
+		options
 	);
-
-	dayTasksRegister.clear();
-	dayTasksRegister.set(newDayTasksInfo);
 }
