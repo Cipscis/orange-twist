@@ -1,6 +1,7 @@
 import { type PersistApi } from 'persist';
 import { loadRegister } from 'utils';
 
+import { StorageKey } from 'data/shared';
 import { tasksRegister } from '../tasksRegister';
 import { updateOldTaskInfo } from '../updateOldTaskInfo';
 
@@ -21,7 +22,7 @@ export async function loadTasks(
 		}
 		: {
 			persist,
-			key: 'tasks',
+			key: StorageKey.TASKS,
 		};
 
 	const isValidTaskEntry = (entry: unknown): entry is [number, unknown] => {

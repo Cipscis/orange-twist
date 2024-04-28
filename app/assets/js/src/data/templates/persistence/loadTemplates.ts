@@ -1,6 +1,7 @@
 import { type PersistApi } from 'persist';
 import { loadRegister } from 'utils';
 
+import { StorageKey } from 'data/shared';
 import { templatesRegister } from '../templatesRegister';
 import { updateOldTemplateInfo } from './updateOldTemplateInfo';
 
@@ -21,7 +22,7 @@ export async function loadTemplates(
 		}
 		: {
 			persist,
-			key: 'templates',
+			key: StorageKey.TEMPLATES,
 		};
 
 	const isValidTemplateEntry = (entry: unknown): entry is [number, unknown] => (
