@@ -3,6 +3,7 @@ export {
 	Register,
 	type RegisterKey,
 	saveRegister,
+	loadRegister,
 	useRegister,
 } from './register';
 
