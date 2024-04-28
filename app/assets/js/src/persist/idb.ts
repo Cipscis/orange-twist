@@ -1,4 +1,21 @@
-import type { PersistApi } from 'persist/PersistApi';
+import type { PersistApi, PersistOptions } from 'persist/PersistApi';
+import type { DefaultsFor } from 'utils';
+import { bake } from './bake';
+
+const defaultOptions = {
+	profile: 'default',
+} as const satisfies DefaultsFor<PersistOptions>;
+
+/**
+ * Determine what key to store data against, based on specified key and options.
+ */
+function getStorageKey(key: string, options: Required<PersistOptions>): string {
+	if (options.profile === 'default') {
+		return key;
+	} else {
+		return `${options.profile}__${key}`;
+	}
+}
 
 const dbName = 'orange-twist';
 const objectStoreName = 'orange-twist';
@@ -59,24 +76,46 @@ function doTransaction(
  * IndexedDB API.
  */
 export const idb: PersistApi = {
-	async set(key, data) {
+	async set(key, data, options) {
+		const fullOptions = {
+			...defaultOptions,
+			...options,
+		};
+		const storageKey = getStorageKey(key, fullOptions);
+
 		await doTransaction(
 			'readwrite',
-			(objectStore) => objectStore.put(data, key)
+			(objectStore) => objectStore.put(data, storageKey)
 		);
 	},
 
-	get(key) {
+	get(key, options) {
+		const fullOptions = {
+			...defaultOptions,
+			...options,
+		};
+		const storageKey = getStorageKey(key, fullOptions);
+
 		return doTransaction(
 			'readonly',
-			(objectStore) => objectStore.get(key)
+			(objectStore) => objectStore.get(storageKey)
 		);
 	},
 
-	async delete(key) {
+	async delete(key, options) {
+		const fullOptions = {
+			...defaultOptions,
+			...options,
+		};
+		const storageKey = getStorageKey(key, fullOptions);
+
 		await doTransaction(
 			'readwrite',
-			(objectStore) => objectStore.delete(key)
+			(objectStore) => objectStore.delete(storageKey)
 		);
+	},
+
+	bake(options) {
+		return bake(this, options);
 	},
 };
