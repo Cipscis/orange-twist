@@ -4,6 +4,11 @@ export {
 	type RegisterKey,
 } from './register';
 
+export {
+	doDatabaseTransaction,
+	ObjectStoreName,
+} from './indexedDB';
+
 export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 export { chooseFile } from './chooseFile';
 export { classNames } from './classNames';
