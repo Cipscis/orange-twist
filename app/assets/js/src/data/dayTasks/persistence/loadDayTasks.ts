@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { type PersistApi } from 'persist';
 import { isZodSchemaType, loadRegister } from 'utils';
 
-
+import { StorageKey } from 'data/shared';
 import { dayTasksRegister } from '../dayTasksRegister';
 import { updateOldDayTaskInfo } from './updateOldDayTaskInfo';
 
@@ -34,7 +34,7 @@ export async function loadDayTasks(
 		}
 		: {
 			persist,
-			key: 'day-tasks',
+			key: StorageKey.DAY_TASKS,
 		};
 
 	return loadRegister(

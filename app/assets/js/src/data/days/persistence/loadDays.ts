@@ -1,6 +1,7 @@
 import { type PersistApi } from 'persist';
 import { loadRegister } from 'utils';
 
+import { StorageKey } from 'data/shared';
 import { daysRegister } from '../daysRegister';
 import { updateOldDayInfo } from './updateOldDayInfo';
 
@@ -21,7 +22,7 @@ export async function loadDays(
 		}
 		: {
 			persist,
-			key: 'days',
+			key: StorageKey.DAYS,
 		};
 
 	const isValidDayEntry = (entry: unknown): entry is [string, unknown] => {
