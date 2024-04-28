@@ -2,7 +2,7 @@ import {
 	useMemo,
 } from 'preact/hooks';
 
-import { useRegister } from 'utils/register';
+import { useRegister } from 'utils';
 
 import {
 	type DayTaskIdentifier,
