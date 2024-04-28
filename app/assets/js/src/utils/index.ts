@@ -27,6 +27,7 @@ export { readFileAsString } from './readFileAsString';
 export { tryStartViewTransition } from './tryStartViewTransition';
 export { useAsyncData, type AsyncDataState } from './useAsyncData';
 export { useBlurCallback } from './useBlurCallback';
+export { useStatePersist } from './useStatePersist';
 export { useViewTransition } from './useViewTransition';
 export { useCloseWatcher } from './useCloseWatcher';
 
