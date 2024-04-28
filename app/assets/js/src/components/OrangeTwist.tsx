@@ -129,7 +129,17 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	// Load persisted data on initial load
 	useEffect(() => {
 		loadAllData()
-			.then(() => setIsLoading(false));
+			.then(() => setIsLoading(false))
+			.catch((e) => {
+				ui.alert(
+					'Failed to load',
+					{
+						duration: null,
+						dismissible: true,
+					}
+				);
+				console.error(e);
+			});
 	}, [
 		loadAllData,
 	]);
@@ -304,18 +314,27 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				<span>Saving...</span>
 				<Loader immediate />
 			</>, { id, duration: null });
-			await Promise.all([
-				saveDays(persist),
-				saveTasks(persist),
-				saveDayTasks(persist),
-				saveTemplates(persist),
-			]);
-			ui.alert('Saved', {
-				duration: 2000,
-				id,
-			});
+			try {
+				await Promise.all([
+					saveDays(persist),
+					saveTasks(persist),
+					saveDayTasks(persist),
+					saveTemplates(persist),
+				]);
+				ui.alert('Saved', {
+					duration: 2000,
+					id,
+				});
 
-			syncUpdate();
+				syncUpdate();
+			} catch (e) {
+				ui.alert('Failed to save', {
+					id,
+					duration: null,
+					dismissible: true,
+				});
+				console.error(e);
+			}
 		},
 		[persist]
 	);
