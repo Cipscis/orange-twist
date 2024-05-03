@@ -3,6 +3,7 @@
 /// the current version is not the public release
 
 @use "theme/palette";
+@use "theme/spacing";
 @use "theme/typography";
 
 .dev-ribbon {
@@ -25,4 +26,47 @@
 	font-size: clamp(0.5rem, 2vw, 2rem);
 	font-family: typography.$font-face-heading;
 	font-weight: typography.$weight-heading;
+}
+
+.fps {
+	position: fixed;
+	top: 0.5em;
+	left: 0.5em;
+	z-index: 1;
+
+	display: grid;
+	grid-template-areas:
+		"lowest current"
+	;
+	gap: 0.5ch;
+	align-items: end;
+
+	font-size: 1.5rem;
+
+	padding: spacing.$xs-rel;
+	border-radius: spacing.$sm-rel;
+
+	&:not(.fps--low) {
+		@include palette.okay;
+	}
+	&.fps--low {
+		@include palette.error;
+	}
+}
+
+.fps__number {
+	display: inline-block;
+	min-width: 2ch;
+	text-align: right;
+	@include typography.monospace-inherit;
+	line-height: 1;
+}
+
+.fps__lowest {
+	grid-area: lowest;
+}
+
+.fps__current {
+	grid-area: current;
+	font-size: 0.5em;
 }
