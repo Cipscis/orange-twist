@@ -3,6 +3,7 @@ import { h, type JSX } from 'preact';
 import {
 	useCallback,
 	useEffect,
+	useLayoutEffect,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -11,6 +12,7 @@ import {
 	classNames,
 	nodeHasAncestor,
 	useBlurCallback,
+	usePropAsRef,
 } from 'utils';
 import {
 	KeyboardShortcutName,
@@ -39,6 +41,11 @@ export function Note(props: NoteProps): JSX.Element {
 		saveChanges,
 	} = props;
 
+	// Launder `note` through a ref so it doesn't cause
+	// too many side effects every time it changes
+	const noteRef = usePropAsRef(note);
+
+	const spaceholderRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const displayNoteRef = useRef<HTMLDivElement>(null);
 
@@ -59,11 +66,41 @@ export function Note(props: NoteProps): JSX.Element {
 	 * Update the note and, if there were changes, set the dirty flag.
 	 */
 	const updateNote = useCallback((newNote: string) => {
-		if (newNote !== note) {
+		const isSameNote = (newNote === noteRef.current) ||
+			(
+				newNote === '' &&
+				noteRef.current === null
+			);
+
+		if (!isSameNote) {
 			onNoteChange(newNote);
 			dirtyFlag.current = true;
 		}
-	}, [note, onNoteChange]);
+	}, [onNoteChange, noteRef]);
+
+	const updateSpaceholderSize = useCallback((note: string) => {
+		const spaceholder = spaceholderRef.current;
+		if (!spaceholder) {
+			return;
+		}
+
+		// CSS causes this content to be rendered in a way that is hidden but occupies space
+		spaceholder.dataset.content = note;
+	}, []);
+
+	const noteInputHandler = useCallback<JSX.InputEventHandler<HTMLTextAreaElement>>(
+		(e) => {
+			const newNote = e.currentTarget.value;
+			updateSpaceholderSize(newNote);
+			if (newNote !== noteRef.current) {
+				dirtyFlag.current = true;
+			}
+		},
+		[
+			updateSpaceholderSize,
+			noteRef,
+		]
+	);
 
 	/**
 	 * Markdown doesn't render leading or trailing spaces, and treats
@@ -91,7 +128,7 @@ export function Note(props: NoteProps): JSX.Element {
 	const leaveEditingMode = useCallback(() => {
 		setIsEditing(false);
 		const cleanedNote = getCleanedNote();
-		if (cleanedNote) {
+		if (cleanedNote !== null) {
 			updateNote(cleanedNote);
 		}
 		saveChangesIfDirty();
@@ -162,6 +199,17 @@ export function Note(props: NoteProps): JSX.Element {
 		leaveEditingModeFromTextarea,
 		isEditing
 	);
+
+	// Initialise spaceholder size when entering editing mode
+	useLayoutEffect(() => {
+		if (isEditing) {
+			updateSpaceholderSize(noteRef.current ?? '');
+		}
+	}, [
+		isEditing,
+		updateSpaceholderSize,
+		noteRef,
+	]);
 
 	// Set up event listener to manage tab insertion
 	useEffect(() => {
@@ -263,11 +311,11 @@ export function Note(props: NoteProps): JSX.Element {
 		{isEditing
 			? <div
 				class="note__edit-content"
-				data-content={note}
+				ref={spaceholderRef}
 			>
 				<textarea
 					ref={textareaRef}
-					onInput={(e) => updateNote(e.currentTarget.value)}
+					onInput={noteInputHandler}
 				>{note}</textarea>
 			</div>
 			: <div
