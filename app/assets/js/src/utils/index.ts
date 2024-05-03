@@ -19,8 +19,9 @@ export { readFileAsString } from './readFileAsString';
 export { tryStartViewTransition } from './tryStartViewTransition';
 export { useAsyncData, type AsyncDataState } from './useAsyncData';
 export { useBlurCallback } from './useBlurCallback';
-export { useViewTransition } from './useViewTransition';
 export { useCloseWatcher } from './useCloseWatcher';
+export { usePropAsRef } from './usePropAsRef';
+export { useViewTransition } from './useViewTransition';
 
 export { CSSKeyframes } from './CSSKeyframes';
 
