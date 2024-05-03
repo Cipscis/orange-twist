@@ -99,6 +99,7 @@ describe('DayTaskDetail', () => {
 		const noteEditButton = getByRole('button', { name: 'Edit note' });
 		await user.click(noteEditButton);
 		await user.keyboard(' edited');
+		await user.click(document.body);
 
 		expect(getDayTaskInfo({ dayName: '2023-12-22', taskId: 1 })?.note).toBe('Task note edited');
 	});
