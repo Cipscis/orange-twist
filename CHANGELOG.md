@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 
 * The footer now includes a link to the changelog
+* Development mode now displays framerate information
 
 ### Changed
 
@@ -22,6 +23,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * Tool drawers are larger and easier to open on intermediate devices
 * Pressing "Escape" to cancel changes to an inline note now works correctly
 * Syntax highlighting now works correctly for HTML and XML code blocks
+* Improved performance of editing notes
 
 ## [1.4.1] - 2024-04-13
 
