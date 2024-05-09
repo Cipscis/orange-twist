@@ -6,14 +6,17 @@
 	display: grid;
 	grid-template-areas:
 		"lowest mean current"
+		"canvas canvas canvas"
 	;
 	gap: 0.5ch;
 	align-items: end;
 
 	font-size: 1.5rem;
 
-	padding: spacing.$xs-rel;
+	--_padding: #{spacing.$xs-rel};
+	padding: var(--_padding);
 	border-radius: spacing.$sm-rel;
+	overflow: hidden;
 
 	&:not(.fps--low) {
 		@include palette.okay;
@@ -42,4 +45,19 @@
 .fps__current {
 	grid-area: current;
 	font-size: 0.5em;
+}
+
+.fps__canvas-container {
+	grid-area: canvas;
+	position: relative;
+	height: 2rem;
+}
+
+.fps__canvas {
+	position: absolute;
+	width: calc(100% + 2 * var(--_padding));
+	height: calc(100% + var(--_padding));
+	inset: 0;
+	margin-inline: calc(-1 * var(--_padding));
+	margin-bottom: calc(-1 * var(--_padding));
 }

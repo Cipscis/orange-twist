@@ -1,3 +1,5 @@
+import { start } from './start';
+
 /**
  * A custom element for displaying frames per second information.
  */
@@ -8,6 +10,7 @@ export class FpsCounter extends HTMLElement {
 	#fpsTextLowestEl: HTMLElement | null;
 	#fpsTextMeanEl: HTMLElement | null;
 	#fpsTextCurrentEl: HTMLElement | null;
+	#canvas: HTMLCanvasElement | null;
 
 	#displayFpsAbortController: AbortController | null;
 
@@ -23,6 +26,7 @@ export class FpsCounter extends HTMLElement {
 		this.#fpsTextCurrentEl = null;
 		this.#fpsTextMeanEl = null;
 		this.#fpsTextLowestEl = null;
+		this.#canvas = null;
 
 		this.#displayFpsAbortController = null;
 
@@ -79,32 +83,52 @@ export class FpsCounter extends HTMLElement {
 				innerText: '-',
 			} satisfies Partial<HTMLSpanElement>
 		);
-		this.#rootEl.append(this.#fpsTextLowestEl, this.#fpsTextMeanEl, this.#fpsTextCurrentEl);
+
+		const canvasContainer = Object.assign(
+			document.createElement('div'),
+			{
+				className: 'fps__canvas-container',
+			}
+		);
+
+		this.#canvas = Object.assign(
+			document.createElement('canvas'),
+			{
+				className: 'fps__canvas',
+				width: 120,
+				height: 1,
+			}
+		);
+		canvasContainer.append(this.#canvas);
+
+		this.#rootEl.append(
+			this.#fpsTextLowestEl,
+			this.#fpsTextMeanEl,
+			this.#fpsTextCurrentEl,
+			canvasContainer
+		);
 	}
 
 	/**
 	 * Record and display FPS information each frame until aborted.
 	 */
-	#displayFps(time: number): void {
+	#displayFps(dt: number): void {
 		if (
 			this.#displayFpsAbortController?.signal.aborted ||
 			!(
 				this.#rootEl &&
 				this.#fpsTextCurrentEl &&
 				this.#fpsTextMeanEl &&
-				this.#fpsTextLowestEl
+				this.#fpsTextLowestEl &&
+				this.#canvas
 			)
 		) {
 			return;
 		}
 
-		const dt = time - this.#previousTime;
-		this.#previousTime = time;
-
-		const fps = Math.floor(1000 / dt);
+		const fps = Math.round(1000 / dt);
 		if (fps <= 0) {
 			// Assume this means the tab was inactive, so skip this frame
-			requestAnimationFrame((time) => this.#displayFps(time));
 			return;
 		}
 
@@ -137,7 +161,25 @@ export class FpsCounter extends HTMLElement {
 		const isLowFps = fpsLowest < 30;
 		this.#rootEl.classList.toggle('fps--low', isLowFps);
 
-		requestAnimationFrame((time) => this.#displayFps(time));
+		const context = this.#canvas.getContext('2d');
+		if (context) {
+			// Move the existing image data one pixel to the left
+			const imageData = context.getImageData(0, 0, this.#canvas.width, this.#canvas.height);
+			context.putImageData(imageData, -1, 0);
+
+			// Draw one new pixel on the right
+			const frameColour = (() => {
+				if (fps > 30) {
+					return '#006600';
+				} else if (fps > 15) {
+					return '#ffff00';
+				} else {
+					return '#ff0000';
+				}
+			})();
+			context.fillStyle = frameColour;
+			context.fillRect(this.#canvas.width - 1, 0, 1, this.#canvas.height);
+		}
 	}
 
 	connectedCallback(): void {
@@ -148,7 +190,7 @@ export class FpsCounter extends HTMLElement {
 		this.#fpsLog = [];
 		this.#previousTime = performance.now();
 
-		requestAnimationFrame((time) => this.#displayFps(time));
+		start(this.#displayFps.bind(this), { signal: this.#displayFpsAbortController.signal });
 	}
 
 	disconnectedCallback(): void {
