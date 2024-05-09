@@ -40,5 +40,7 @@ if (__IS_DEV__) {
 	};
 
 	displayDevMode();
-	displayFramesPerSecond();
+	if (__SHOW_FPS_COUNTER__) {
+		displayFramesPerSecond();
+	}
 }
