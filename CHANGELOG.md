@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * Pressing "Escape" to cancel changes to an inline note now works correctly
 * Syntax highlighting now works correctly for HTML and XML code blocks
 * Improved performance of editing notes
+* Cross-origin stylesheets being inserted (e.g. by browser extensions) longer cause JavaScript errors
 
 ## [1.4.1] - 2024-04-13
 
