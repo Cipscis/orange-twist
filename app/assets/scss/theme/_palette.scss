@@ -88,17 +88,22 @@ $colour-tertiary--active--light: $black;
 	--bg-tertiary--active: #{$bg-tertiary--active--light};
 	--colour-tertiary--active: #{$colour-tertiary--active--light};
 
-	// Task statuses
-	--colour-task--todo: #{$blue--light};
-	--colour-task--in-progress: #{$blue--light};
-	--colour-task--completed: #{$green--light};
+	// Colours
+	--blue: #{$blue--light};
+	--green: #{$green--light};
+	--red: #{$red--light};
 
-	--colour-task--investigating: #{$blue--light};
-	--colour-task--in-review: #{$blue--light};
-	--colour-task--ready-to-test: #{$green--light};
-	--colour-task--paused: #{$red--light};
-	--colour-task--approved-to-deploy: #{$green--light};
-	--colour-task--will-not-do: #{$red--light};
+	// Task statuses
+	--colour-task--todo: var(--blue);
+	--colour-task--in-progress: var(--blue);
+	--colour-task--completed: var(--green);
+
+	--colour-task--investigating: var(--blue);
+	--colour-task--in-review: var(--blue);
+	--colour-task--ready-to-test: var(--green);
+	--colour-task--paused: var(--red);
+	--colour-task--approved-to-deploy: var(--green);
+	--colour-task--will-not-do: var(--red);
 }
 
 ///////////////
@@ -159,17 +164,22 @@ $colour-tertiary--active--dark: $white;
 	--bg-tertiary--active: #{$bg-tertiary--active--dark};
 	--colour-tertiary--active: #{$colour-tertiary--active--dark};
 
-	// Task statuses
-	--colour-task--todo: #{$blue--dark};
-	--colour-task--in-progress: #{$blue--dark};
-	--colour-task--completed: #{$green--dark};
+	// Colours
+	--blue: #{$blue--dark};
+	--green: #{$green--dark};
+	--red: #{$red--dark};
 
-	--colour-task--investigating: #{$blue--dark};
-	--colour-task--in-review: #{$blue--dark};
-	--colour-task--ready-to-test: #{$green--dark};
-	--colour-task--paused: #{$red--dark};
-	--colour-task--approved-to-deploy: #{$green--dark};
-	--colour-task--will-not-do: #{$red--dark};
+	// Task statuses
+	--colour-task--todo: var(--blue);
+	--colour-task--in-progress: var(--blue);
+	--colour-task--completed: var(--green);
+
+	--colour-task--investigating: var(--blue);
+	--colour-task--in-review: var(--blue);
+	--colour-task--ready-to-test: var(--green);
+	--colour-task--paused: var(--red);
+	--colour-task--approved-to-deploy: var(--green);
+	--colour-task--will-not-do: var(--red);
 }
 
 ////////////////////
@@ -276,4 +286,40 @@ $colour-tertiary--active--dark: $white;
 
 	@include use-var(background-color, --bg, $bg-tertiary--active--light);
 	@include use-var(color, --colour, $colour-tertiary--active--light);
+}
+
+/// A green background.
+@mixin okay {
+	--bg: var(--green);
+	--colour: var(--bg-primary);
+
+	--accent: var(--green, #{$green--light});
+	--link: var(--link-base, #{$link-base--light});
+
+	@include use-var(background-color, --bg, $green--light);
+	@include use-var(color, --colour, $bg-primary--light);
+}
+
+// An orange background
+@mixin warn {
+	--bg: var(--orange);
+	--colour: var(--bg-primary);
+
+	--accent: var(--orange, #{$orange--light});
+	--link: var(--link-base, #{$link-base--light});
+
+	@include use-var(background-color, --bg, $orange--light);
+	@include use-var(color, --colour, $bg-primary--light);
+}
+
+// A red background
+@mixin error {
+	--bg: var(--red);
+	--colour: var(--bg-primary);
+
+	--accent: var(--red, #{$red--light});
+	--link: var(--link-base, #{$link-base--light});
+
+	@include use-var(background-color, --bg, $red--light);
+	@include use-var(color, --colour, $bg-primary--light);
 }

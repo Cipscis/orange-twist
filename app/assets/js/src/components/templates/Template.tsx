@@ -1,7 +1,6 @@
 import { h, type JSX } from 'preact';
 import {
 	useCallback,
-	useEffect,
 	useRef,
 } from 'preact/hooks';
 
@@ -62,7 +61,10 @@ export function Template(props: TemplateProps): JSX.Element | null {
 		setTemplateInfo(templateInfo.id, { name });
 	}, [templateInfo]);
 
-	const definitionChangeHandler = useCallback<
+	/**
+	 * Update template info as it's edited.
+	 */
+	const definitionInputHandler = useCallback<
 		JSX.GenericEventHandler<HTMLTextAreaElement>
 	>((e) => {
 		if (!templateInfo) {
@@ -74,25 +76,13 @@ export function Template(props: TemplateProps): JSX.Element | null {
 		setTemplateInfo(templateInfo.id, { template });
 	}, [templateInfo]);
 
-	// Save data when definition is changed
-	useEffect(() => {
-		if (!definitionRef.current) {
-			return;
-		}
-
-		const controller = new AbortController();
-		const { signal } = controller;
-
-		// Bind a "change" event handler. Can't use onChange because preact/compat makes
-		// Preact follow React's bone-headed way of binding that to "input" events instead
-		definitionRef.current.addEventListener(
-			'change',
-			() => fireCommand(Command.DATA_SAVE),
-			{ signal }
-		);
-
-		return () => controller.abort();
-	}, []);
+	/**
+	 * Save data when the definition is changed.
+	 */
+	const definitionChangeHandler = useCallback(
+		() => fireCommand(Command.DATA_SAVE),
+		[]
+	);
 
 	const deleteThisTemplate = useCallback(async () => {
 		if (!templateInfo) {
@@ -152,6 +142,7 @@ export function Template(props: TemplateProps): JSX.Element | null {
 
 		<textarea
 			class="template__definition"
+			onInput={definitionInputHandler}
 			onChange={definitionChangeHandler}
 			ref={definitionRef}
 		>{templateInfo.template}</textarea>
