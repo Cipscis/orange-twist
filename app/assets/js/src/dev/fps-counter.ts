@@ -1,4 +1,7 @@
-import { start } from './start';
+import {
+	createElement,
+	startAnimationLoop,
+} from 'utils';
 
 /**
  * A custom element for displaying frames per second information.
@@ -45,16 +48,16 @@ export class FpsCounter extends HTMLElement {
 
 		const shadowRoot = this.attachShadow({ mode: 'open' });
 
-		this.#rootEl = Object.assign(
-			document.createElement('div'),
+		this.#rootEl = createElement(
+			'div',
 			{
 				className: 'fps',
 			}
 		);
 		shadowRoot.append(this.#rootEl);
 
-		const style = Object.assign(
-			document.createElement('link'),
+		const style = createElement(
+			'link',
 			{
 				rel: 'stylesheet',
 				href: '/assets/css/fps.css',
@@ -62,37 +65,37 @@ export class FpsCounter extends HTMLElement {
 		);
 		shadowRoot.append(style);
 
-		this.#fpsTextLowestEl = Object.assign(
-			document.createElement('span'),
+		this.#fpsTextLowestEl = createElement(
+			'span',
 			{
 				className: 'fps__number fps__lowest',
 				innerText: '-',
-			} satisfies Partial<HTMLSpanElement>
+			}
 		);
-		this.#fpsTextMeanEl = Object.assign(
-			document.createElement('span'),
+		this.#fpsTextMeanEl = createElement(
+			'span',
 			{
 				className: 'fps__number fps__mean',
 				innerText: '-',
-			} satisfies Partial<HTMLSpanElement>
+			}
 		);
-		this.#fpsTextCurrentEl = Object.assign(
-			document.createElement('span'),
+		this.#fpsTextCurrentEl = createElement(
+			'span',
 			{
 				className: 'fps__number fps__current',
 				innerText: '-',
-			} satisfies Partial<HTMLSpanElement>
+			}
 		);
 
-		const canvasContainer = Object.assign(
-			document.createElement('div'),
+		const canvasContainer = createElement(
+			'div',
 			{
 				className: 'fps__canvas-container',
 			}
 		);
 
-		this.#canvas = Object.assign(
-			document.createElement('canvas'),
+		this.#canvas = createElement(
+			'canvas',
 			{
 				className: 'fps__canvas',
 				width: 120,
@@ -186,11 +189,12 @@ export class FpsCounter extends HTMLElement {
 		this.#constructMarkup();
 
 		this.#displayFpsAbortController = new AbortController();
+		const { signal } = this.#displayFpsAbortController;
 
 		this.#fpsLog = [];
 		this.#previousTime = performance.now();
 
-		start(this.#displayFps.bind(this), { signal: this.#displayFpsAbortController.signal });
+		startAnimationLoop(this.#displayFps.bind(this), { signal });
 	}
 
 	disconnectedCallback(): void {

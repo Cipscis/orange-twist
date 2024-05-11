@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'preact/hooks';
  * value of a given prop. This can be useful, for example, to
  * construct callbacks with `useCallback` without needing to
  * tell Preact to re-create them (possibly causing side effects
- * such as binding event listeners) whenver the prop changes.
+ * such as binding event listeners) whenever the prop changes.
  *
  * @example
  * ```typescript
