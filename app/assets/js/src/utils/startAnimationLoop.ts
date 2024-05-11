@@ -10,12 +10,23 @@ export function startAnimationLoop(
 	callback: (dt: number) => void,
 	options?: StartOptions
 ): void {
+	let animationFrame: number;
 	let previousTime = performance.now();
-	const frame = (time: number) => {
-		if (options?.signal?.aborted) {
+
+	if (options?.signal) {
+		// Don't even start if passed an already aborted signal
+		if (options.signal.aborted) {
 			return;
 		}
 
+		// Cancel the next frame when the signal is aborted
+		options.signal.addEventListener(
+			'abort',
+			() => cancelAnimationFrame(animationFrame)
+		);
+	}
+
+	const frame = (time: number) => {
 		const dt = time - previousTime;
 		previousTime = time;
 		if (dt > 0) {
@@ -25,7 +36,7 @@ export function startAnimationLoop(
 			*/
 			callback(dt);
 		}
-		requestAnimationFrame(frame);
+		animationFrame = requestAnimationFrame(frame);
 	};
-	requestAnimationFrame(frame);
+	animationFrame = requestAnimationFrame(frame);
 }
