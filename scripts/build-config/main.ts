@@ -7,8 +7,12 @@ import packageJson from '../../package.json' with { type: 'json' };
 
 dotenv.config();
 
-const { MODE } = process.env;
+const {
+	MODE,
+	SHOW_FPS,
+} = process.env;
 const isDev = MODE === 'development';
+const showFps = Boolean(SHOW_FPS && SHOW_FPS !== 'false');
 
 const version = packageJson.version + (isDev ? '-next' : '');
 
@@ -31,5 +35,6 @@ export const config: BuildOptions = {
 	define: {
 		['__VERSION__']: JSON.stringify(version),
 		['__IS_DEV__']: JSON.stringify(isDev),
+		['__SHOW_FPS_COUNTER__']: JSON.stringify(showFps),
 	},
 };

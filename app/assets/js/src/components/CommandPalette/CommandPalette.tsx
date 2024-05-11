@@ -213,7 +213,7 @@ export function CommandPalette(props: CommandPaletteProps): JSX.Element {
 			{matchingCommands.map((command, i) => (
 				<CommandPaletteItem
 					key={command.id}
-					ref={optionsRef.current[i]}
+					forwardedRef={optionsRef.current[i]}
 
 					commandInfo={command}
 					query={query}
