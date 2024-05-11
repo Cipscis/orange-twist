@@ -1,5 +1,7 @@
+import { z } from 'zod';
+
 import { type PersistApi } from 'persist';
-import { loadRegister } from 'utils';
+import { isZodSchemaType, loadRegister } from 'utils';
 
 import { StorageKey } from 'data/shared';
 import { daysRegister } from '../daysRegister';
@@ -25,11 +27,9 @@ export async function loadDays(
 			key: StorageKey.DAYS,
 		};
 
-	const isValidDayEntry = (entry: unknown): entry is [string, unknown] => {
-		return Array.isArray(entry) &&
-		entry.length === 2 &&
-		typeof entry[0] === 'string';
-	};
+	const isValidDayEntry = isZodSchemaType(
+		z.tuple([z.string(), z.unknown()])
+	);
 
 	return loadRegister(
 		daysRegister,

@@ -5,20 +5,19 @@ import {
 	jest,
 	test,
 } from '@jest/globals';
+import { z } from 'zod';
 
 import { ls } from 'persist';
+import { isZodSchemaType } from 'utils';
 
 import { loadRegister } from './loadRegister';
 import { Register } from './Register';
 
 const testRegister = new Register<string, number>();
 
-const isValidEntry = (entry: unknown): entry is [string, number] => {
-	return Array.isArray(entry) &&
-	entry.length === 2 &&
-	typeof entry[0] === 'string' &&
-	typeof entry[1] === 'number';
-};
+const isValidEntry = isZodSchemaType(
+	z.tuple([z.string(), z.number()])
+);
 const asNumber = (value: unknown) => Number(value);
 
 describe('loadRegister', () => {
@@ -122,9 +121,10 @@ describe('loadRegister', () => {
 	});
 
 	test('triggers up to a single "delete" event and a single "set" event', async () => {
-		const spy = jest.fn();
-		testRegister.addEventListener('delete', spy);
-		testRegister.addEventListener('set', spy);
+		const deleteSpy = jest.fn();
+		const setSpy = jest.fn();
+		testRegister.addEventListener('delete', deleteSpy);
+		testRegister.addEventListener('set', setSpy);
 
 		await loadRegister(
 			testRegister,
@@ -142,8 +142,8 @@ describe('loadRegister', () => {
 			([key, value]) => ({ key, value })
 		);
 
-		expect(spy).toHaveBeenCalledTimes(1);
-		expect(spy).toHaveBeenCalledWith(entryObjArr);
+		expect(setSpy).toHaveBeenCalledTimes(1);
+		expect(setSpy).toHaveBeenCalledWith(entryObjArr);
 
 		await loadRegister(
 			testRegister,
@@ -155,9 +155,11 @@ describe('loadRegister', () => {
 			}
 		);
 
-		expect(spy).toHaveBeenCalledTimes(3);
-		expect(spy).toHaveBeenNthCalledWith(2, entryObjArr);
-		expect(spy).toHaveBeenNthCalledWith(3, entryObjArr);
+		expect(setSpy).toHaveBeenCalledTimes(2);
+		expect(setSpy).toHaveBeenNthCalledWith(2, entryObjArr);
+
+		expect(deleteSpy).toHaveBeenCalledTimes(1);
+		expect(deleteSpy).toHaveBeenCalledWith(entryObjArr);
 	});
 
 	test('overwrites any existing data in the register', async () => {

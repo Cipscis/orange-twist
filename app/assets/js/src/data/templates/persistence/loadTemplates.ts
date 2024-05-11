@@ -1,5 +1,7 @@
+import { z } from 'zod';
+
 import { type PersistApi } from 'persist';
-import { loadRegister } from 'utils';
+import { isZodSchemaType, loadRegister } from 'utils';
 
 import { StorageKey } from 'data/shared';
 import { templatesRegister } from '../templatesRegister';
@@ -25,10 +27,8 @@ export async function loadTemplates(
 			key: StorageKey.TEMPLATES,
 		};
 
-	const isValidTemplateEntry = (entry: unknown): entry is [number, unknown] => (
-		Array.isArray(entry) &&
-		entry.length === 2 &&
-		typeof entry[0] === 'number'
+	const isValidTemplateEntry = isZodSchemaType(
+		z.tuple([z.number(), z.unknown()])
 	);
 
 	return loadRegister(
