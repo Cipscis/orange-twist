@@ -29,7 +29,6 @@ export { startAnimationLoop } from './startAnimationLoop';
 export { tryStartViewTransition } from './tryStartViewTransition';
 export { useAsyncData, type AsyncDataState } from './useAsyncData';
 export { useBlurCallback } from './useBlurCallback';
-export { useStatePersist } from './useStatePersist';
 export { useCloseWatcher } from './useCloseWatcher';
 export { usePropAsRef } from './usePropAsRef';
 export { useViewTransition } from './useViewTransition';
