@@ -1,5 +1,9 @@
-import { type PersistApi } from 'persist';
+import { z } from 'zod';
 
+import { type PersistApi } from 'persist';
+import { isZodSchemaType, loadRegister } from 'utils';
+
+import { StorageKey } from 'data/shared';
 import { templatesRegister } from '../templatesRegister';
 import { updateOldTemplateInfo } from './updateOldTemplateInfo';
 
@@ -14,34 +18,23 @@ export async function loadTemplates(
 	persist: PersistApi,
 	serialisedTemplatesInfo?: string
 ): Promise<void> {
-	const persistedTemplatesInfo = await (() => {
-		if (typeof serialisedTemplatesInfo !== 'undefined') {
-			return JSON.parse(serialisedTemplatesInfo);
+	const dataSource = serialisedTemplatesInfo
+		? {
+			data: serialisedTemplatesInfo,
 		}
+		: {
+			persist,
+			key: StorageKey.TEMPLATES,
+		};
 
-		return persist.get('templates');
-	})();
-
-	if (typeof persistedTemplatesInfo === 'undefined') {
-		templatesRegister.clear();
-		return;
-	}
-
-	if (!(
-		Array.isArray(persistedTemplatesInfo) &&
-		persistedTemplatesInfo.every((el): el is [number, unknown] => (
-			Array.isArray(el) &&
-			el.length === 2 &&
-			typeof el[0] === 'number'
-		))
-	)) {
-		throw new Error(`Persisted templates data is invalid: ${serialisedTemplatesInfo}`);
-	}
-
-	const newTemplatesInfo = persistedTemplatesInfo.map(
-		([templateName, templateInfo]) => [templateName, updateOldTemplateInfo(templateInfo)] as const
+	const isValidTemplateEntry = isZodSchemaType(
+		z.tuple([z.number(), z.unknown()])
 	);
 
-	templatesRegister.clear();
-	templatesRegister.set(newTemplatesInfo);
+	return loadRegister(
+		templatesRegister,
+		dataSource,
+		isValidTemplateEntry,
+		updateOldTemplateInfo,
+	);
 }

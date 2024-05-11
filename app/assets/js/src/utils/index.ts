@@ -2,7 +2,15 @@ export { animate } from './animate';
 export {
 	Register,
 	type RegisterKey,
+	saveRegister,
+	loadRegister,
+	useRegister,
 } from './register';
+
+export {
+	doDatabaseTransaction,
+	ObjectStoreName,
+} from './indexedDB';
 
 export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 export { chooseFile } from './chooseFile';

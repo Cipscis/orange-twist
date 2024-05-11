@@ -10,6 +10,10 @@ module.exports = {
 		// blocks are removed when SCSS is compiled anyway.
 		'block-no-empty': null,
 
+		// I like creating files for components even if there
+		// aren't any styles to apply in them right away.
+		'no-empty-source': null,
+
 		// If custom elements are used, there should be no
 		// problem with styling them.
 		'selector-type-no-unknown': [

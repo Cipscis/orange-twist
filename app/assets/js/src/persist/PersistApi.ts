@@ -1,3 +1,6 @@
+/**
+ * An interface used to save and load data to a persistent medium.
+ */
 export interface PersistApi {
 	/**
 	 * Saves data to persistent storage.

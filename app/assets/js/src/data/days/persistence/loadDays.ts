@@ -1,5 +1,9 @@
-import { type PersistApi } from 'persist';
+import { z } from 'zod';
 
+import { type PersistApi } from 'persist';
+import { isZodSchemaType, loadRegister } from 'utils';
+
+import { StorageKey } from 'data/shared';
 import { daysRegister } from '../daysRegister';
 import { updateOldDayInfo } from './updateOldDayInfo';
 
@@ -14,34 +18,23 @@ export async function loadDays(
 	persist: PersistApi,
 	serialisedDaysInfo?: string
 ): Promise<void> {
-	const persistedDaysInfo = await (() => {
-		if (typeof serialisedDaysInfo !== 'undefined') {
-			return JSON.parse(serialisedDaysInfo);
+	const dataSource = serialisedDaysInfo
+		? {
+			data: serialisedDaysInfo,
 		}
+		: {
+			persist,
+			key: StorageKey.DAYS,
+		};
 
-		return persist.get('days');
-	})();
-
-	if (typeof persistedDaysInfo === 'undefined') {
-		daysRegister.clear();
-		return;
-	}
-
-	if (!(
-		Array.isArray(persistedDaysInfo) &&
-		persistedDaysInfo.every((el): el is [string, unknown] => (
-			Array.isArray(el) &&
-			el.length === 2 &&
-			typeof el[0] === 'string'
-		))
-	)) {
-		throw new Error(`Persisted days data is invalid: ${serialisedDaysInfo}`);
-	}
-
-	const newDaysInfo = persistedDaysInfo.map(
-		([dayName, dayInfo]) => [dayName, updateOldDayInfo(dayInfo)] as const
+	const isValidDayEntry = isZodSchemaType(
+		z.tuple([z.string(), z.unknown()])
 	);
 
-	daysRegister.clear();
-	daysRegister.set(newDaysInfo);
+	return loadRegister(
+		daysRegister,
+		dataSource,
+		isValidDayEntry,
+		updateOldDayInfo,
+	);
 }
