@@ -33,10 +33,6 @@ Usually, you will just want to run `npm start`, but this project also provides t
 
 The `.env` file contains the following environment variables:
 
-* `PROJECT_NAME: string`
-
-If present, used by [Express](https://expressjs.com/) to set up redirects for emulating [GitHub Pages](#github-pages).
-
 * `MODE: 'development' | 'production'`
 
 Used to determine what optimisations to use when running the build process.
@@ -44,6 +40,10 @@ Used to determine what optimisations to use when running the build process.
 * `PORT: number`
 
 Used by [Express](https://expressjs.com/) to determine which port to use when running a local Node.js server.
+
+* `SHOW_FPS?: boolean`
+
+If true, an FPS counter will display in the top left corner in development mode.
 
 An example `.env` file you can use for development is:
 

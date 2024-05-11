@@ -1,5 +1,8 @@
-import { h } from 'preact';
-import { forwardRef } from 'preact/compat';
+import {
+	h,
+	type JSX,
+	type RefObject,
+} from 'preact';
 
 import { classNames } from 'utils';
 
@@ -15,44 +18,43 @@ interface CommandPaletteItemProps {
 	query: string;
 	queryPattern: RegExp | null;
 	isActive: boolean;
+	forwardedRef: RefObject<HTMLButtonElement>;
 
 	closeCommandPalette: () => void;
 }
 
-export const CommandPaletteItem = forwardRef(
-	function CommandPaletteItem(
-		props: CommandPaletteItemProps,
-		forwardedRef: React.ForwardedRef<HTMLButtonElement>
-	) {
-		const {
-			commandInfo,
-			query,
-			queryPattern,
-			isActive,
+export function CommandPaletteItem(props: CommandPaletteItemProps): JSX.Element {
+	const {
+		commandInfo,
+		query,
+		queryPattern,
+		isActive,
 
-			closeCommandPalette,
-		} = props;
+		closeCommandPalette,
 
-		return <button
-			type="button"
-			ref={forwardedRef}
-			id={commandInfo.id}
-			class={classNames({
-				'command-palette__option': true,
-				'command-palette__option--active': isActive,
-			})}
-			onClick={() => {
-				closeCommandPalette();
-				fireCommand(commandInfo.id);
-			}}
-		>
-			<CommandPaletteItemName
-				name={commandInfo.name}
-				query={query}
-				queryPattern={queryPattern}
-			/>
-			{
-				commandInfo.shortcuts.size > 0 &&
+		forwardedRef,
+	} = props;
+
+	return <button
+		type="button"
+		ref={forwardedRef}
+		id={commandInfo.id}
+		class={classNames({
+			'command-palette__option': true,
+			'command-palette__option--active': isActive,
+		})}
+		onClick={() => {
+			closeCommandPalette();
+			fireCommand(commandInfo.id);
+		}}
+	>
+		<CommandPaletteItemName
+			name={commandInfo.name}
+			query={query}
+			queryPattern={queryPattern}
+		/>
+		{
+			commandInfo.shortcuts.size > 0 &&
 				<span class="content">
 					{Array.from(
 						commandInfo.shortcuts.values()
@@ -63,7 +65,6 @@ export const CommandPaletteItem = forwardRef(
 						/>
 					))}
 				</span>
-			}
-		</button>;
-	}
-);
+		}
+	</button>;
+}
