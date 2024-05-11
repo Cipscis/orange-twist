@@ -36,8 +36,8 @@ export function ModalPrompt(props: ModalPromptProps): JSX.Element {
 	const [isOpen, setIsOpen] = useState(true);
 
 	const previousResolver = useRef<
-	((result: string | null) => void) | null
-		>(null);
+		((result: string | null) => void) | null
+	>(null);
 
 	// Whenever the resolve function is changed, call the
 	// previous resolve function and re-open the modal

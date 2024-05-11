@@ -5,7 +5,13 @@ import {
 	useRef,
 } from 'preact/hooks';
 
-import { animate, CSSKeyframes } from 'utils';
+import {
+	type DefaultsFor,
+	animate,
+	CSSKeyframes,
+} from 'utils';
+import { ButtonVariant, IconButton } from 'components/shared';
+
 import { removeToast, renderToasts } from './toast-controller';
 
 export interface ToastProps {
@@ -21,7 +27,17 @@ export interface ToastProps {
 	 * A `null` duration means the toast is persistent.
 	 */
 	duration: number | null;
+	/**
+	 * Whether or not the toast should be able to be dismissed manually.
+	 *
+	 * @default false
+	 */
+	dismissible?: boolean;
 }
+
+const defaultToastProps = {
+	dismissible: false,
+} as const satisfies DefaultsFor<ToastProps>;
 
 /**
  * Renders a toast, which may automatically hide itself after a delay.
@@ -31,12 +47,30 @@ export function Toast(props: ToastProps): JSX.Element {
 		id,
 		message,
 		duration,
-	} = props;
+		dismissible,
+	} = {
+		...defaultToastProps,
+		...props,
+	};
 
 	const toastRef = useRef<HTMLDivElement>(null);
 	const progressRef = useRef<HTMLSpanElement>(null);
 
 	const progressAnimationRef = useRef<Animation | null>(null);
+
+	/**
+	 * Animate the toast out and remove it.
+	 */
+	const dismissToast = useCallback(async () => {
+		if (toastRef.current) {
+			// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
+			const animation = animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
+			await animation.finished;
+		}
+
+		removeToast(id);
+		renderToasts();
+	}, [id]);
 
 	// After the initial render, start the animation
 	useEffect(() => {
@@ -52,19 +86,12 @@ export function Toast(props: ToastProps): JSX.Element {
 				{ width: '100%' },
 			], { duration });
 
-			progressAnimationRef.current.finished.then(async () => {
+			progressAnimationRef.current.finished.then(() => {
 				progressEl.style.width = '100%';
-				if (toastRef.current) {
-					// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
-					const animation = animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
-					await animation.finished;
-				}
-
-				removeToast(id);
-				renderToasts();
+				dismissToast();
 			});
 		}
-	}, [duration, id]);
+	}, [duration, dismissToast]);
 
 	/**
 	 * A set of reasons why the animation may need to be paused.
@@ -120,6 +147,33 @@ export function Toast(props: ToastProps): JSX.Element {
 		return () => controller.abort();
 	}, [canPlay]);
 
+	// Hide dismissible toasts when pressing "Escape"
+	useEffect(() => {
+		if (!dismissible) {
+			return;
+		}
+
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		document.addEventListener(
+			'keydown',
+			(e) => {
+				if (e.key !== 'Escape') {
+					return;
+				}
+
+				dismissToast();
+			},
+			{ signal }
+		);
+
+		return () => controller.abort();
+	}, [
+		dismissible,
+		dismissToast,
+	]);
+
 	return <div
 		ref={toastRef}
 		class="toast"
@@ -132,6 +186,18 @@ export function Toast(props: ToastProps): JSX.Element {
 				class="toast__progress"
 			/>
 		}
-		<span class="toast__message">{message}</span>
+		<div class="toast__body">
+			<span class="toast__message">{message}</span>
+			{
+				dismissible &&
+				<IconButton
+					class="toast__dismiss"
+					variant={ButtonVariant.SECONDARY}
+					icon="❌"
+					title="Dismiss"
+					onClick={dismissToast}
+				/>
+			}
+		</div>
 	</div>;
 }

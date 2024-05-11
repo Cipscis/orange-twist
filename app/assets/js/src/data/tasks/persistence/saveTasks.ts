@@ -1,12 +1,15 @@
 import { type PersistApi } from 'persist';
+import { saveRegister } from 'utils';
 
+import { StorageKey } from 'data/shared';
 import { tasksRegister } from '../tasksRegister';
 
 /**
  * Save the current tasks data in memory into persistent storage.
  */
-export async function saveTasks(persist: PersistApi): Promise<void> {
-	const tasksInfo = Array.from(tasksRegister.entries());
-
-	await persist.set('tasks', tasksInfo);
+export function saveTasks(persist: PersistApi): Promise<void> {
+	return saveRegister(tasksRegister, {
+		persist,
+		key: StorageKey.TASKS,
+	});
 }
