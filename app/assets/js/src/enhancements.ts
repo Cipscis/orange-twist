@@ -7,6 +7,7 @@
  */
 
 import { FpsCounter } from 'dev/fps-counter';
+import { createElement } from 'utils';
 
 if (navigator.serviceWorker) {
 	navigator.serviceWorker.register('/service-worker.js');
@@ -30,11 +31,11 @@ if (__IS_DEV__) {
 	 */
 	const displayFramesPerSecond = () => {
 		customElements.define('fps-counter', FpsCounter);
-		const fpsEl = Object.assign(
-			document.createElement('fps-counter'),
+		const fpsEl = createElement(
+			'fps-counter',
 			{
 				className: 'fps',
-			} satisfies Partial<HTMLElement>
+			}
 		);
 		document.body.prepend(fpsEl);
 	};

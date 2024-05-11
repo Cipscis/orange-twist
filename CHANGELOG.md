@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 
 * The footer now includes a link to the changelog
-* Development mode now displays framerate information
+* Development mode can now display framerate information
 
 ### Changed
 
