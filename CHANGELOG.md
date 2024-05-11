@@ -25,6 +25,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 * Syntax highlighting now works correctly for HTML and XML code blocks
 * Improved performance of editing notes
 * Cross-origin stylesheets being inserted (e.g. by browser extensions) longer cause JavaScript errors
+* If data fails to load or save, the UI now displays an error message
 
 ## [1.4.1] - 2024-04-13
 

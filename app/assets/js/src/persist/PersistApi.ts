@@ -7,7 +7,6 @@ export interface PersistApi {
 	 *
 	 * @param key - A string key to save data against for later retrieval
 	 * @param data - A JSON serialisable value to store.
-	 * @param options - An object to configure behaviour.
 	 *
 	 * @returns A `Promise` that resolves when the storage is complete.
 	 */
@@ -17,7 +16,6 @@ export interface PersistApi {
 	 * Retrives data from persistent storage.
 	 *
 	 * @param key - The string key where the persisted data has been saved.
-	 * @param options - An object to configure behaviour.
 	 *
 	 * @returns A `Promise` that resolves with the value that was saved against.
 	 * the specified key, or `undefined` if no data was persisted.
@@ -29,7 +27,6 @@ export interface PersistApi {
 	 * the specified key, this function does nothing.
 	 *
 	 * @param key - The string key where data should be deleted.
-	 * @param options - An object to configure behaviour.
 	 *
 	 * @returns A `Promise` that resolves when the value has been deleted.
 	 */
