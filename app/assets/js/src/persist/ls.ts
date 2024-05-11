@@ -1,38 +1,15 @@
-import type { PersistApi, PersistOptions } from 'persist/PersistApi';
-import type { DefaultsFor } from 'utils';
-import { bake } from './bake';
-
-const defaultOptions = {
-	profile: 'default',
-} as const satisfies DefaultsFor<PersistOptions>;
-
-/**
- * Determine what key to store data against, based on specified key and options.
- */
-function getStorageKey(key: string, options: Required<PersistOptions>): string {
-	if (options.profile === 'default') {
-		return key;
-	} else {
-		return `${options.profile}__${key}`;
-	}
-}
+import type { PersistApi } from 'persist/PersistApi';
 
 /**
  * A {@linkcode PersistApi} interface for working with the
  * localStorage API.
  */
 export const ls: PersistApi = {
-	set(key, data, options) {
-		const fullOptions = {
-			...defaultOptions,
-			...options,
-		};
-		const storageKey = getStorageKey(key, fullOptions);
-
+	set(key, data) {
 		return new Promise((resolve, reject) => {
 			try {
 				const jsonData = JSON.stringify(data);
-				localStorage.setItem(storageKey, jsonData);
+				localStorage.setItem(key, jsonData);
 				resolve();
 			} catch (e) {
 				reject(e);
@@ -40,16 +17,10 @@ export const ls: PersistApi = {
 		});
 	},
 
-	get(key, options) {
-		const fullOptions = {
-			...defaultOptions,
-			...options,
-		};
-		const storageKey = getStorageKey(key, fullOptions);
-
+	get(key) {
 		return new Promise((resolve, reject) => {
 			try {
-				const jsonData = localStorage.getItem(storageKey);
+				const jsonData = localStorage.getItem(key);
 				if (jsonData === null) {
 					resolve(undefined);
 					return;
@@ -62,24 +33,14 @@ export const ls: PersistApi = {
 		});
 	},
 
-	delete(key, options) {
-		const fullOptions = {
-			...defaultOptions,
-			...options,
-		};
-		const storageKey = getStorageKey(key, fullOptions);
-
+	delete(key) {
 		return new Promise((resolve, reject) => {
 			try {
-				localStorage.removeItem(storageKey);
+				localStorage.removeItem(key);
 				resolve();
 			} catch (e) {
 				reject(e);
 			}
 		});
-	},
-
-	bake(options) {
-		return bake(this, options);
 	},
 };
