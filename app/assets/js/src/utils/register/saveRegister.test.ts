@@ -18,8 +18,8 @@ describe('saveRegister', () => {
 		testRegister.clear();
 	});
 
-	test('returns a Promise that resolves when the content of the days register has been persisted', async () => {
-		expect(localStorage.getItem('days')).toBeNull();
+	test('returns a Promise that resolves when the content of the register has been persisted', async () => {
+		expect(localStorage.getItem('test')).toBeNull();
 
 		testRegister.set('first', 1);
 		testRegister.set('second', 2);

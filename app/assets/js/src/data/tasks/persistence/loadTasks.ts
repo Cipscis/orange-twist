@@ -1,5 +1,7 @@
+import { z } from 'zod';
+
 import { type PersistApi } from 'persist';
-import { loadRegister } from 'utils';
+import { isZodSchemaType, loadRegister } from 'utils';
 
 import { StorageKey } from 'data/shared';
 import { tasksRegister } from '../tasksRegister';
@@ -25,11 +27,9 @@ export async function loadTasks(
 			key: StorageKey.TASKS,
 		};
 
-	const isValidTaskEntry = (entry: unknown): entry is [number, unknown] => {
-		return Array.isArray(entry) &&
-		entry.length === 2 &&
-		typeof entry[0] === 'number';
-	};
+	const isValidTaskEntry = isZodSchemaType(
+		z.tuple([z.number(), z.unknown()])
+	);
 
 	return loadRegister(
 		tasksRegister,

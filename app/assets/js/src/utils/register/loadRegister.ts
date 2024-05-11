@@ -10,9 +10,9 @@ type LoadRegisterDataSource = {
 };
 
 /**
- * Asynchronously loads any persisted info from a specified key
- * into a specified register, overwriting any data currently in
- * that register.
+ * Asynchronously loads any persisted info from a specified storage
+ * location, or specific serialised data, into a specified register.
+ * Any data currently in that register will be overwritten.
  *
  * @param register - The register to load data into.
  * @param isValidKey - A function to check validity of persisted keys.
