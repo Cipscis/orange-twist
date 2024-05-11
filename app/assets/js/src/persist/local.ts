@@ -1,5 +1,4 @@
 import type { PersistApi } from './PersistApi';
-import { bake } from './bake';
 
 import { idb } from './idb';
 import { ls } from './ls';
@@ -14,32 +13,28 @@ import { ls } from './ls';
  * it in IndexedDB.
  */
 export const local: PersistApi = {
-	set(key, data, options) {
+	set(key, data) {
 		// Set IndexedDB only
-		return idb.set(key, data, options);
+		return idb.set(key, data);
 	},
 
-	async get(key, options) {
+	async get(key) {
 		// Try to read from IndexedDB first
-		const idbResult = await idb.get(key, options);
+		const idbResult = await idb.get(key);
 		if (typeof idbResult !== 'undefined') {
 			return idbResult;
 		}
 
 		// If that failed, read from LocalStorage
-		return await ls.get(key, options);
+		return await ls.get(key);
 	},
 
-	delete(key, options) {
+	delete(key) {
 		// Delete key from both IndexedDB and LocalStorage
 		return Promise.all([
-			idb.delete(key, options),
-			ls.delete(key, options),
+			idb.delete(key),
+			ls.delete(key),
 		]) as Promise<unknown> as Promise<void>;
 		// ^ It's safe to cast any Promise to void
-	},
-
-	bake(options) {
-		return bake(this, options);
 	},
 };

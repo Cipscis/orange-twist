@@ -41,19 +41,11 @@ describe('ls', () => {
 				ls.set('test', 1)
 			).rejects.toBeInstanceOf(Error);
 		});
-
-		test('stores data against a specified profile', async () => {
-			await ls.set('test', 1, { profile: 'profile' });
-			expect(
-				JSON.parse(localStorage.getItem('profile__test')!)
-			).toBe(1);
-		});
 	});
 
 	describe('get', () => {
 		beforeEach(() => {
 			ls.set('test', { foo: 'bar' });
-			ls.set('test', 'profile-data', { profile: 'profile' });
 		});
 
 		test('returns a Promise that resolves with persisted data', async () => {
@@ -78,17 +70,11 @@ describe('ls', () => {
 				ls.get('test')
 			).rejects.toBeInstanceOf(Error);
 		});
-
-		test('reads data from a specified profile', async () => {
-			const data = await ls.get('test', { profile: 'profile' });
-			expect(data).toBe('profile-data');
-		});
 	});
 
 	describe('delete', () => {
 		beforeEach(() => {
 			ls.set('test', { foo: 'bar' });
-			ls.set('profile__test', { foo: 'bar' });
 		});
 
 		test('returns a Promise that resolves when persisted data has been deleted', async () => {
@@ -114,26 +100,6 @@ describe('ls', () => {
 			await expect(
 				ls.delete('test')
 			).rejects.toBeInstanceOf(Error);
-		});
-
-		test('deletes data from a specified profile', async () => {
-			expect(localStorage.getItem('profile__test')).not.toBeNull();
-			await ls.delete('test', { profile: 'profile' });
-			expect(localStorage.getItem('profile__test')).toBeNull();
-		});
-	});
-
-	describe('bake', () => {
-		test('constructs a new PersistApi with options baked in', async () => {
-			const bakedPersist = ls.bake({ profile: 'profile' });
-
-			await bakedPersist.set('key', 'value');
-			expect(localStorage.getItem('profile__key')).toBe('"value"');
-
-			await expect(bakedPersist.get('key')).resolves.toBe('value');
-
-			await bakedPersist.delete('key');
-			expect(localStorage.getItem('profile__key')).toBeNull();
 		});
 	});
 });

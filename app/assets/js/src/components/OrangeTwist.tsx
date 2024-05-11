@@ -6,12 +6,9 @@ import {
 import {
 	useCallback,
 	useEffect,
-	useMemo,
 	useRef,
 	useState,
 } from 'preact/hooks';
-
-import { z } from 'zod';
 
 import {
 	getAllDayInfo,
@@ -47,8 +44,6 @@ import {
 	type DefaultsFor,
 	getCurrentDateDayName,
 	isValidDateString,
-	useStatePersist,
-	isZodSchemaType,
 } from 'utils';
 
 import { type PersistApi, local } from 'persist';
@@ -102,7 +97,7 @@ const defaultProps = {
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const {
 		backButton,
-		persist: rawPersist,
+		persist,
 		children,
 	} = {
 		...defaultProps,
@@ -110,17 +105,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	};
 
 	const [isLoading, setIsLoading] = useState(true);
-
-	// TODO: Provide a way for the profile to be set
-	const [profile, setProfile] = useStatePersist<string | null>(
-		// TODO: Don't use a magic string
-		'profile',
-		null,
-		isZodSchemaType(z.string().or(z.null()))
-	);
-	const persist = useMemo(() => rawPersist.bake({
-		profile: profile ?? 'default',
-	}), [rawPersist, profile]);
 
 	/**
 	 * Load persisted data into each register.

@@ -1,12 +1,3 @@
-import type { StringWithAutocomplete } from 'utils';
-
-/**
- * Options used to configure the behaviour of a {@linkcode PersistApi}.
- */
-export interface PersistOptions {
-	profile?: StringWithAutocomplete<'default'>;
-}
-
 /**
  * An interface used to save and load data to a persistent medium.
  */
@@ -20,7 +11,7 @@ export interface PersistApi {
 	 *
 	 * @returns A `Promise` that resolves when the storage is complete.
 	 */
-	set(key: string, data: unknown, options?: PersistOptions): Promise<void>;
+	set(key: string, data: unknown): Promise<void>;
 
 	/**
 	 * Retrives data from persistent storage.
@@ -31,7 +22,7 @@ export interface PersistApi {
 	 * @returns A `Promise` that resolves with the value that was saved against.
 	 * the specified key, or `undefined` if no data was persisted.
 	 */
-	get(key: string, options?: PersistOptions): Promise<unknown>;
+	get(key: string): Promise<unknown>;
 
 	/**
 	 * Deletes data from persistent storage. If no data is stored against
@@ -42,10 +33,5 @@ export interface PersistApi {
 	 *
 	 * @returns A `Promise` that resolves when the value has been deleted.
 	 */
-	delete(key: string, options?: PersistOptions): Promise<void>;
-
-	/**
-	 * Construct a modified {@linkcode PersistApi} with specified default options.
-	 */
-	bake(options: Partial<PersistOptions>): PersistApi;
+	delete(key: string): Promise<void>;
 }
