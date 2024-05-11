@@ -63,20 +63,33 @@ export function Note(props: NoteProps): JSX.Element {
 	}, [saveChanges]);
 
 	/**
+	 * Check whether or not a specified note string is different
+	 * from the note value passed as a prop.
+	 */
+	const hasNoteChanged = useCallback((newNote: string) => {
+		if (newNote === noteRef.current) {
+			return false;
+		}
+
+		if (
+			newNote === '' &&
+			noteRef.current === null
+		) {
+			return false;
+		}
+
+		return true;
+	}, [noteRef]);
+
+	/**
 	 * Update the note and, if there were changes, set the dirty flag.
 	 */
 	const updateNote = useCallback((newNote: string) => {
-		const isSameNote = (newNote === noteRef.current) ||
-			(
-				newNote === '' &&
-				noteRef.current === null
-			);
-
-		if (!isSameNote) {
+		if (hasNoteChanged(newNote)) {
 			onNoteChange(newNote);
 			dirtyFlag.current = true;
 		}
-	}, [onNoteChange, noteRef]);
+	}, [onNoteChange, hasNoteChanged]);
 
 	const updateSpaceholderSize = useCallback((note: string) => {
 		const spaceholder = spaceholderRef.current;
@@ -92,13 +105,13 @@ export function Note(props: NoteProps): JSX.Element {
 		(e) => {
 			const newNote = e.currentTarget.value;
 			updateSpaceholderSize(newNote);
-			if (newNote !== noteRef.current) {
+			if (hasNoteChanged(newNote)) {
 				dirtyFlag.current = true;
 			}
 		},
 		[
 			updateSpaceholderSize,
-			noteRef,
+			hasNoteChanged,
 		]
 	);
 
