@@ -8,5 +8,8 @@ import { daysRegister } from '../daysRegister';
  * Save the current days data in memory into persistent storage.
  */
 export function saveDays(persist: PersistApi): Promise<void> {
-	return saveRegister(daysRegister, StorageKey.DAYS, persist);
+	return saveRegister(daysRegister, {
+		persist,
+		key: StorageKey.DAYS,
+	});
 }

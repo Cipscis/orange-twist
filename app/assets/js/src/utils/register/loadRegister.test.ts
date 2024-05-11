@@ -34,12 +34,12 @@ describe('loadRegister', () => {
 
 		const loadRegisterPromise = loadRegister(
 			testRegister,
-			isValidEntry,
-			asNumber,
 			{
 				persist: ls,
 				key: 'test',
-			}
+			},
+			isValidEntry,
+			asNumber,
 		);
 		expect(loadRegisterPromise).toBeInstanceOf(Promise);
 
@@ -61,12 +61,12 @@ describe('loadRegister', () => {
 
 		const loadRegisterPromise = loadRegister(
 			testRegister,
-			isValidEntry,
-			asNumber,
 			{
 				persist: ls,
 				key: 'test',
-			}
+			},
+			isValidEntry,
+			asNumber,
 		);
 		expect(loadRegisterPromise).toBeInstanceOf(Promise);
 
@@ -83,12 +83,12 @@ describe('loadRegister', () => {
 
 		await expect(loadRegister(
 			testRegister,
-			isValidEntry,
-			asNumber,
 			{
 				persist: ls,
 				key: 'test',
-			}
+			},
+			isValidEntry,
+			asNumber,
 		)).rejects.toBeInstanceOf(Error);
 	});
 
@@ -97,26 +97,26 @@ describe('loadRegister', () => {
 
 		await expect(loadRegister(
 			testRegister,
-			isValidEntry,
-			asNumber,
 			{
 				persist: ls,
 				key: 'test',
-			}
+			},
+			isValidEntry,
+			asNumber,
 		)).rejects.toBeInstanceOf(Error);
 	});
 
 	test('returns a Promise that rejects if persisted data\'s values can\'t be updated', async () => {
 		await expect(loadRegister(
 			testRegister,
+			{
+				persist: ls,
+				key: 'test',
+			},
 			isValidEntry,
 			() => {
 				throw new Error('Can\'t do it');
 			},
-			{
-				persist: ls,
-				key: 'test',
-			}
 		)).rejects.toBeInstanceOf(Error);
 	});
 
@@ -128,12 +128,12 @@ describe('loadRegister', () => {
 
 		await loadRegister(
 			testRegister,
-			isValidEntry,
-			asNumber,
 			{
 				persist: ls,
 				key: 'test',
-			}
+			},
+			isValidEntry,
+			asNumber,
 		);
 
 		const entryObjArr = Array.from(
@@ -147,12 +147,12 @@ describe('loadRegister', () => {
 
 		await loadRegister(
 			testRegister,
-			isValidEntry,
-			asNumber,
 			{
 				persist: ls,
 				key: 'test',
-			}
+			},
+			isValidEntry,
+			asNumber,
 		);
 
 		expect(setSpy).toHaveBeenCalledTimes(2);
@@ -173,12 +173,12 @@ describe('loadRegister', () => {
 
 		await loadRegister(
 			testRegister,
-			isValidEntry,
-			asNumber,
 			{
 				persist: ls,
 				key: 'test',
-			}
+			},
+			isValidEntry,
+			asNumber,
 		);
 
 		expect(Array.from(testRegister.entries())).toEqual([
@@ -190,13 +190,13 @@ describe('loadRegister', () => {
 	test('can be passed serialised JSON data to load directly', async () => {
 		await loadRegister(
 			testRegister,
-			isValidEntry,
-			asNumber,
 			{
 				data: JSON.stringify([
 					['fifth', 5],
 				]),
-			}
+			},
+			isValidEntry,
+			asNumber,
 		);
 		expect(Array.from(testRegister.entries())).toEqual([
 			['fifth', 5],

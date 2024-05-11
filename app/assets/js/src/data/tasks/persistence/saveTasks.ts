@@ -8,5 +8,8 @@ import { tasksRegister } from '../tasksRegister';
  * Save the current tasks data in memory into persistent storage.
  */
 export function saveTasks(persist: PersistApi): Promise<void> {
-	return saveRegister(tasksRegister, StorageKey.TASKS, persist);
+	return saveRegister(tasksRegister, {
+		persist,
+		key: StorageKey.TASKS,
+	});
 }

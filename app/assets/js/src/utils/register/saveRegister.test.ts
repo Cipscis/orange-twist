@@ -24,7 +24,10 @@ describe('saveRegister', () => {
 		testRegister.set('first', 1);
 		testRegister.set('second', 2);
 
-		const saveRegisterPromise = saveRegister(testRegister, 'test', ls);
+		const saveRegisterPromise = saveRegister(testRegister, {
+			persist: ls,
+			key: 'test',
+		});
 		expect(saveRegisterPromise).toBeInstanceOf(Promise);
 		await expect(saveRegisterPromise).resolves.toBeUndefined();
 

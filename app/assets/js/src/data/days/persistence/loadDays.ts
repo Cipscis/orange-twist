@@ -18,7 +18,7 @@ export async function loadDays(
 	persist: PersistApi,
 	serialisedDaysInfo?: string
 ): Promise<void> {
-	const options = serialisedDaysInfo
+	const dataSource = serialisedDaysInfo
 		? {
 			data: serialisedDaysInfo,
 		}
@@ -33,8 +33,8 @@ export async function loadDays(
 
 	return loadRegister(
 		daysRegister,
+		dataSource,
 		isValidDayEntry,
 		updateOldDayInfo,
-		options
 	);
 }
