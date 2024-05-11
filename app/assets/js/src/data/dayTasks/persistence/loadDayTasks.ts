@@ -28,7 +28,7 @@ export async function loadDayTasks(
 	persist: PersistApi,
 	serialisedDayTasksInfo?: string
 ): Promise<void> {
-	const options = serialisedDayTasksInfo
+	const dataSource = serialisedDayTasksInfo
 		? {
 			data: serialisedDayTasksInfo,
 		}
@@ -39,8 +39,8 @@ export async function loadDayTasks(
 
 	return loadRegister(
 		dayTasksRegister,
+		dataSource,
 		isSerialisedDayTasksEntrySchema,
 		updateOldDayTaskInfo,
-		options
 	);
 }

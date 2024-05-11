@@ -15,19 +15,19 @@ type LoadRegisterDataSource = {
  * Any data currently in that register will be overwritten.
  *
  * @param register - The register to load data into.
- * @param isValidKey - A function to check validity of persisted keys.
- * @param updateOldValue - A function to update, and validate in the process, persisted values.
  * @param dataSource - An object containing either serialised data or
  * instructions on how to retrieve data from a storage medium.
+ * @param isValidKey - A function to check validity of persisted keys.
+ * @param updateOldValue - A function to update, and validate in the process, persisted values.
  *
  * @returns A Promise which resolves when info has finished loading,
  * or rejects when info fails to load.
  */
 export async function loadRegister<K, V>(
 	register: Register<K, V>,
+	dataSource: LoadRegisterDataSource,
 	isValidEntry: (entry: unknown) => entry is [K, unknown],
 	updateOldValue: (value: unknown) => V,
-	dataSource: LoadRegisterDataSource,
 ): Promise<void> {
 	const persistedInfo = await (() => {
 		if ('data' in dataSource) {

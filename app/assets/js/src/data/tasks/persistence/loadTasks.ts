@@ -18,7 +18,7 @@ export async function loadTasks(
 	persist: PersistApi,
 	serialisedTasksInfo?: string
 ): Promise<void> {
-	const options = serialisedTasksInfo
+	const dataSource = serialisedTasksInfo
 		? {
 			data: serialisedTasksInfo,
 		}
@@ -33,8 +33,8 @@ export async function loadTasks(
 
 	return loadRegister(
 		tasksRegister,
+		dataSource,
 		isValidTaskEntry,
 		updateOldTaskInfo,
-		options,
 	);
 }

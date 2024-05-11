@@ -18,7 +18,7 @@ export async function loadTemplates(
 	persist: PersistApi,
 	serialisedTemplatesInfo?: string
 ): Promise<void> {
-	const options = serialisedTemplatesInfo
+	const dataSource = serialisedTemplatesInfo
 		? {
 			data: serialisedTemplatesInfo,
 		}
@@ -33,8 +33,8 @@ export async function loadTemplates(
 
 	return loadRegister(
 		templatesRegister,
+		dataSource,
 		isValidTemplateEntry,
 		updateOldTemplateInfo,
-		options
 	);
 }
