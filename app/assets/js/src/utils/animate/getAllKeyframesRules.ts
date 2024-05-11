@@ -22,11 +22,18 @@ function extractGroupedRules(rule: CSSRule): CSSRule | CSSRule[] {
 export function getAllKeyframesRules(): Map<string, Keyframe[]> {
 	const keyframes = new Map<string, Keyframe[]>();
 
+	const origin = document.location.origin;
+
 	/** All CSS rules from all stylesheets. */
-	const rules = Array.from(document.styleSheets).flatMap(
-		({ cssRules }) => Array.from(cssRules)
-			.flatMap(extractGroupedRules)
-	);
+	const rules = Array.from(document.styleSheets)
+		.filter(
+			// Ignore cross-origin stylesheets
+			(stylesheet) => stylesheet.href && new URL(stylesheet.href).origin === origin
+		)
+		.flatMap(
+			({ cssRules }) => Array.from(cssRules)
+				.flatMap(extractGroupedRules)
+		);
 
 	for (const rule of rules) {
 		if (rule instanceof CSSKeyframesRule) {

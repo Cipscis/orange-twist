@@ -15,6 +15,7 @@ export {
 export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 export { chooseFile } from './chooseFile';
 export { classNames } from './classNames';
+export { createElement } from './createElement';
 export { escapeRegExpString } from './escapeRegExpString';
 export { getCurrentDateDayName } from './getCurrentDateDayName';
 export { getDeepActiveElement } from './getDeepActiveElement';
@@ -24,12 +25,14 @@ export { isValidDateString } from './isValidDateString';
 export { isZodSchemaType } from './isZodSchemaType';
 export { nodeHasAncestor } from './nodeHasAncestor';
 export { readFileAsString } from './readFileAsString';
+export { startAnimationLoop } from './startAnimationLoop';
 export { tryStartViewTransition } from './tryStartViewTransition';
 export { useAsyncData, type AsyncDataState } from './useAsyncData';
 export { useBlurCallback } from './useBlurCallback';
 export { useStatePersist } from './useStatePersist';
-export { useViewTransition } from './useViewTransition';
 export { useCloseWatcher } from './useCloseWatcher';
+export { usePropAsRef } from './usePropAsRef';
+export { useViewTransition } from './useViewTransition';
 
 export { CSSKeyframes } from './CSSKeyframes';
 
