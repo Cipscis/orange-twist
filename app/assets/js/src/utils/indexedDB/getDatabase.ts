@@ -20,6 +20,7 @@ export function getDatabase(): Promise<IDBDatabase> {
 		// Create the "data" object store when database is first created
 		request.addEventListener('upgradeneeded', (e) => {
 			request.result.createObjectStore(ObjectStoreName.DATA);
+			request.result.createObjectStore(ObjectStoreName.IMAGES);
 		});
 
 		// Handle success

@@ -14,6 +14,9 @@ import {
 	useBlurCallback,
 	usePropAsRef,
 } from 'utils';
+
+import { saveImage } from 'images';
+
 import {
 	KeyboardShortcutName,
 	useKeyboardShortcut,
@@ -318,6 +321,114 @@ export function Note(props: NoteProps): JSX.Element {
 				behavior: 'instant',
 			});
 		}
+	}, [isEditing]);
+
+	// Listen for pasted or dropped images
+	useEffect(() => {
+		const textarea = textareaRef.current;
+		if (!(
+			isEditing &&
+			textarea
+		)) {
+			return;
+		}
+
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		/**
+		 * Retrieves an image from a `DataTransfer` object, if it has one.
+		 */
+		const getImage = (
+			dataTransfer: DataTransfer | null
+		): File | null => {
+			const file = dataTransfer?.files?.[0];
+			if (!file) {
+				return null;
+			}
+
+			if (!file.type.startsWith('image/')) {
+				return null;
+			}
+
+			return file;
+		};
+
+		/**
+		 * Inserts text into the textarea to render a given image.
+		 */
+		const insertImage = async (file: File) => {
+			const hash = await saveImage(file);
+
+			const valueArr = [...textarea.value];
+			const { selectionStart, selectionEnd } = textarea;
+			const selectionSize = selectionEnd - selectionStart;
+
+			/*
+			TODO: Insert something that will work consistently,
+			using the hash to identify the file so it will work
+			across page loads
+			*/
+			const url = URL.createObjectURL(file);
+			const insertedContent = `![](${url})`;
+			valueArr.splice(selectionStart, selectionSize, insertedContent);
+
+			textarea.value = valueArr.join('');
+			// Insert selection where alt text will go
+			textarea.selectionStart = selectionStart + 2;
+			textarea.selectionEnd = selectionStart + 2;
+		};
+
+		// Listen for pasted images, and insert them.
+		textarea.addEventListener(
+			'paste',
+			(e) => {
+				const file = getImage(e.clipboardData);
+				if (!file) {
+					return;
+				}
+				insertImage(file);
+			},
+			{ signal }
+		);
+
+		// Allow images to be dragged and dropped into the textarea.
+		textarea.addEventListener(
+			'dragover',
+			(e) => {
+				const items = Array.from(e.dataTransfer?.items ?? []);
+				if (!items.some((item) => {
+					if (item.kind !== 'file') {
+						return false;
+					}
+					if (!item.type.startsWith('image/')) {
+						return false;
+					}
+					return true;
+				})) {
+					return;
+				}
+
+				e.preventDefault();
+			},
+			{ signal }
+		);
+
+		// Listen for images being dropped, and insert them.
+		textarea.addEventListener(
+			'drop',
+			(e) => {
+				const file = getImage(e.dataTransfer);
+				if (!file) {
+					return;
+				}
+				insertImage(file);
+				e.preventDefault();
+			},
+			{ signal }
+		);
+
+		return () => controller.abort();
 	}, [isEditing]);
 
 	return <div class={classNames('note', props.class)}>
