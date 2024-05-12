@@ -7,11 +7,14 @@ import { marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 
-import { taskLink } from './extensions/taskLink';
-import { template } from './extensions/template';
+import {
+	taskLink,
+	template,
+} from './extensions';
 import { renderer } from './renderer';
 
 import { useAllTemplateInfo } from 'data';
+import { getImage } from 'images';
 
 interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	/**
@@ -26,6 +29,11 @@ interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	 */
 	inline?: boolean;
 }
+
+/**
+ * A Map for keeping track of object URLs constructed for images.
+ */
+const objectUrls = new Map<string, string>();
 
 let isMarkedInitialised = false;
 /**
@@ -88,13 +96,17 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 		(async () => {
 			initMarked();
-			let renderedContent = marked.parse(contentToRender, {
-				breaks: true,
-			});
+			let renderedContent = await (async () => {
+				let renderedContent = marked.parse(contentToRender, {
+					breaks: true,
+				});
 
-			if (typeof renderedContent !== 'string') {
-				renderedContent = await renderedContent;
-			}
+				if (typeof renderedContent !== 'string') {
+					renderedContent = await renderedContent;
+				}
+
+				return renderedContent;
+			})();
 
 			renderedContent = renderedContent
 				// Stupid fucking plugin replaces tabs with spaces
@@ -117,6 +129,40 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 				// `setHTML` is not supported, so falling back to vulnerable method'
 				wrapper.innerHTML = renderedContent;
 			}
+
+			// Asynchronously replace image URLs
+			// TODO: Move this into a separate function
+			const imageUrlMatches = renderedContent.matchAll(/\bimage:([0-9a-f]{64})/g);
+			const promises: Promise<void>[] = [];
+			for (const imageUrlMatch of imageUrlMatches) {
+				const hash = imageUrlMatch[1];
+				const existingUrl = objectUrls.get(hash);
+				if (existingUrl) {
+					renderedContent = renderedContent.replace(`image:${hash}`, existingUrl);
+					continue;
+				}
+
+				promises.push(getImage(hash).then((image) => {
+					if (!image) {
+						// TODO: Handle error, e.g. use error image
+						console.error(`Could not find image with hash ${hash}`);
+						return;
+					}
+
+					const objectUrl = URL.createObjectURL(image);
+					objectUrls.set(hash, objectUrl);
+					renderedContent = renderedContent.replace(`image:${hash}`, objectUrl);
+				}));
+			}
+
+			Promise.allSettled(promises).then(() => {
+				if (wrapper.setHTML) {
+					wrapper.setHTML(renderedContent);
+				} else {
+					// `setHTML` is not supported, so falling back to vulnerable method'
+					wrapper.innerHTML = renderedContent;
+				}
+			});
 		})();
 	}, [content, inline, templates]);
 
