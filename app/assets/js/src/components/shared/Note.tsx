@@ -15,7 +15,7 @@ import {
 	usePropAsRef,
 } from 'utils';
 
-import { saveImage } from 'images';
+import { createImageUrlPlaceholder, saveImage } from 'images';
 
 import {
 	KeyboardShortcutName,
@@ -364,11 +364,8 @@ export function Note(props: NoteProps): JSX.Element {
 			const { selectionStart, selectionEnd } = textarea;
 			const selectionSize = selectionEnd - selectionStart;
 
-			/*
-			TODO: Create the image URL string in the same place
-			where the logic to replace it exists
-			*/
-			const insertedContent = `![](image:${hash})`;
+			const urlPlaceholder = createImageUrlPlaceholder(hash);
+			const insertedContent = `![](${urlPlaceholder})`;
 			valueArr.splice(selectionStart, selectionSize, insertedContent);
 
 			textarea.value = valueArr.join('');
