@@ -100,17 +100,13 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 		(async () => {
 			initMarked();
-			let renderedContent = await (async () => {
-				let renderedContent = marked.parse(contentToRender, {
-					breaks: true,
-				});
+			let renderedContent = marked.parse(contentToRender, {
+				breaks: true,
+			});
 
-				if (typeof renderedContent !== 'string') {
-					renderedContent = await renderedContent;
-				}
-
-				return renderedContent;
-			})();
+			if (typeof renderedContent !== 'string') {
+				renderedContent = await renderedContent;
+			}
 
 			renderedContent = renderedContent
 				// Stupid fucking plugin replaces tabs with spaces
@@ -131,6 +127,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 			// Asynchronously replace image URLs
 			renderedContent = await consumeAllImageUrlPlaceholders(renderedContent);
+			// TODO: This is breaking tests - unbinding listener perhaps?
 			updateRenderedContent(renderedContent);
 		})();
 	}, [content, inline, templates]);
