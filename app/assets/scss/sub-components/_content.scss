@@ -145,4 +145,8 @@
 			opacity: 0.5;
 		}
 	}
+
+	img[alt=""] {
+		outline: 2px solid var(--red);
+	}
 }
