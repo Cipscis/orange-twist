@@ -365,12 +365,10 @@ export function Note(props: NoteProps): JSX.Element {
 			const selectionSize = selectionEnd - selectionStart;
 
 			/*
-			TODO: Insert something that will work consistently,
-			using the hash to identify the file so it will work
-			across page loads
+			TODO: Create the image URL string in the same place
+			where the logic to replace it exists
 			*/
-			const url = URL.createObjectURL(file);
-			const insertedContent = `![](${url})`;
+			const insertedContent = `![](image:${hash})`;
 			valueArr.splice(selectionStart, selectionSize, insertedContent);
 
 			textarea.value = valueArr.join('');
