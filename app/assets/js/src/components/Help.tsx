@@ -115,6 +115,16 @@ export function Help(): JSX.Element {
 			}
 
 			<div class="content">
+				<h4 id="notes-images">Images</h4>
+
+				<p>Images can be embedded in notes by either pasting them in directly, or by dragging and dropping an image into a note that's in editing mode. While in editing mode, embedded images look like this:</p>
+
+				<p><code>![Alt text](image:abcdef12)</code></p>
+
+				<p>The <code>image</code> URL placeholder is a generated reference to your image, which you shouldn't change. If you want to embed the same image in multiple notes, you can either reuse this placeholder manually, or add the image again.</p>
+
+				<p>Images attached to notes are stored locally in your browser, and reusing the same image multiple times won't cause it to be stored more than once.</p>
+
 				<h4 id="notes-templates">Templates</h4>
 
 				<p>As well as the <code>[[taskId]]</code> shortcodes for task links, you can define custom templates using the edit templates command which you can access anywhere through the <a href="#command-palette">command palette</a>.</p>
