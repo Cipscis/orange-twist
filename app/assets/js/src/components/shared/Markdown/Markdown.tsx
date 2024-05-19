@@ -70,7 +70,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 	const templates = useAllTemplateInfo();
 
 	// Render content as markup
-	// Using `useLayoutEffect` prevents jittering caused by `setHTML` running after Preact renders
+	// Using `useLayoutEffect` prevents jittering caused by setting HTML after Preact renders
 	useLayoutEffect(() => {
 		const wrapper = wrapperRef.current;
 		if (!wrapper) {
@@ -90,12 +90,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 		})();
 
 		const updateRenderedContent = ((content: string) => {
-			if (wrapper.setHTML) {
-				wrapper.setHTML(content);
-			} else {
-				// `setHTML` is not supported, so falling back to vulnerable method'
-				wrapper.innerHTML = content;
-			}
+			wrapper.innerHTML = content;
 		});
 
 		(async () => {
@@ -125,10 +120,13 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 			updateRenderedContent(renderedContent);
 
-			// Asynchronously replace image URLs
-			renderedContent = await consumeAllImageUrlPlaceholders(renderedContent);
-			// TODO: This is breaking tests - unbinding listener perhaps?
-			updateRenderedContent(renderedContent);
+			if (!inline) {
+				// Asynchronously replace image URLs
+				const renderedContentWithImages = await consumeAllImageUrlPlaceholders(renderedContent);
+				if (renderedContentWithImages !== renderedContent) {
+					updateRenderedContent(renderedContentWithImages);
+				}
+			}
 		})();
 	}, [content, inline, templates]);
 
