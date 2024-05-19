@@ -15,12 +15,18 @@ import {
 	usePropAsRef,
 } from 'utils';
 
-import { createImageUrlPlaceholder, saveImage } from 'images';
+import {
+	createImageUrlPlaceholder,
+	hasImage,
+	saveImage,
+} from 'images';
 
 import {
 	KeyboardShortcutName,
 	useKeyboardShortcut,
 } from 'registers/keyboard-shortcuts';
+
+import * as ui from 'ui';
 
 import { Markdown } from './Markdown';
 import { IconButton } from './IconButton';
@@ -32,6 +38,8 @@ interface NoteProps {
 
 	class?: string;
 }
+
+const maxFileSize = 1024 * 1024 * 5; // 5 MB
 
 /**
  * Display a note as HTML, and provide options to edit
@@ -358,6 +366,17 @@ export function Note(props: NoteProps): JSX.Element {
 		 * Inserts text into the textarea to render a given image.
 		 */
 		const insertImage = async (file: File) => {
+			// If the image is too large, and hasn't been stored already,
+			// ask for confirmation before storing it
+			if (file.size > maxFileSize && !await hasImage(file)) {
+				const maxFileSizeString = `${(maxFileSize / (1024 * 1024)).toFixed(1)} MB`;
+				const thisFileSizeString = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+				const permission = await ui.confirm(`It's recommended that files be kept below ${maxFileSizeString}. This file is ${thisFileSizeString}, are you sure you want to upload it?`);
+
+				if (!permission) {
+					return;
+				}
+			}
 			const hash = await saveImage(file);
 
 			const valueArr = [...textarea.value];
@@ -382,6 +401,7 @@ export function Note(props: NoteProps): JSX.Element {
 				if (!file) {
 					return;
 				}
+
 				insertImage(file);
 			},
 			{ signal }
