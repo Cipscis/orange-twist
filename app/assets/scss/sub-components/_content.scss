@@ -1,3 +1,4 @@
+@use "../theme/layout";
 @use "../theme/typography";
 @use "../theme/palette";
 
@@ -143,6 +144,25 @@
 
 			background-color: currentColor;
 			opacity: 0.5;
+		}
+	}
+
+	img {
+		max-height: min(80vmax, layout.$max-width);
+		margin-inline: auto;
+	}
+	img[alt=""] {
+		outline: 2px solid var(--red);
+	}
+	p:has(img[src^="image:"]:only-child) {
+		&::before {
+			content: "Image not found";
+			display: block;
+			text-align: center;
+			font-style: italic;
+		}
+		img {
+			display: none;
 		}
 	}
 }

@@ -7,11 +7,14 @@ import { marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 
-import { taskLink } from './extensions/taskLink';
-import { template } from './extensions/template';
+import {
+	taskLink,
+	template,
+} from './extensions';
 import { renderer } from './renderer';
 
 import { useAllTemplateInfo } from 'data';
+import { consumeAllImageUrlPlaceholders } from 'images';
 
 interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	/**
@@ -67,7 +70,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 	const templates = useAllTemplateInfo();
 
 	// Render content as markup
-	// Using `useLayoutEffect` prevents jittering caused by `setHTML` running after Preact renders
+	// Using `useLayoutEffect` prevents jittering caused by setting HTML after Preact renders
 	useLayoutEffect(() => {
 		const wrapper = wrapperRef.current;
 		if (!wrapper) {
@@ -85,6 +88,10 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 			return content;
 		})();
+
+		const updateRenderedContent = ((content: string) => {
+			wrapper.innerHTML = content;
+		});
 
 		(async () => {
 			initMarked();
@@ -111,11 +118,14 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 				renderedContent = renderedContent.replace(/\[\[&ZeroWidthSpace;(\d)/g, '[[$1');
 			}
 
-			if (wrapper.setHTML) {
-				wrapper.setHTML(renderedContent);
-			} else {
-				// `setHTML` is not supported, so falling back to vulnerable method'
-				wrapper.innerHTML = renderedContent;
+			updateRenderedContent(renderedContent);
+
+			if (!inline) {
+				// Asynchronously replace image URLs
+				const renderedContentWithImages = await consumeAllImageUrlPlaceholders(renderedContent);
+				if (renderedContentWithImages !== renderedContent) {
+					updateRenderedContent(renderedContentWithImages);
+				}
 			}
 		})();
 	}, [content, inline, templates]);
