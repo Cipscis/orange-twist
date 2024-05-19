@@ -371,7 +371,7 @@ export function Note(props: NoteProps): JSX.Element {
 			if (file.size > maxFileSize && !await hasImage(file)) {
 				const maxFileSizeString = `${(maxFileSize / (1024 * 1024)).toFixed(1)} MB`;
 				const thisFileSizeString = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
-				const permission = await ui.confirm(`It's recommended that files be kept below ${maxFileSizeString}. This file is ${thisFileSizeString}, are you sure you want to upload it?`);
+				const permission = await ui.confirm(`It's recommended that files be kept below ${maxFileSizeString}. This file is ${thisFileSizeString}, are you sure you want to store it?`);
 
 				if (!permission) {
 					return;
@@ -388,7 +388,7 @@ export function Note(props: NoteProps): JSX.Element {
 			valueArr.splice(selectionStart, selectionSize, insertedContent);
 
 			textarea.value = valueArr.join('');
-			// Insert selection where alt text will go
+			// Move text cursor to where alt text will go
 			textarea.selectionStart = selectionStart + 2;
 			textarea.selectionEnd = selectionStart + 2;
 		};

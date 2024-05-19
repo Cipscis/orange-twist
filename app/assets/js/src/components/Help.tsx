@@ -121,7 +121,7 @@ export function Help(): JSX.Element {
 
 				<p><code>![Alt text](image:abcdef12)</code></p>
 
-				<p>The <code>image</code> URL placeholder is a generated reference to your image, which you shouldn't change. If you want to embed the same image in multiple notes, you can either reuse this placeholder manually, or add the image again.</p>
+				<p>The <code>image:</code> URL placeholder is a generated reference to your image, which you shouldn't change. If you want to embed the same image in multiple notes, you can either reuse this placeholder manually, or add the image again.</p>
 
 				<p>Images attached to notes are stored locally in your browser, and reusing the same image multiple times won't cause it to be stored more than once.</p>
 
