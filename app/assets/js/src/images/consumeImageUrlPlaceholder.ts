@@ -24,7 +24,6 @@ export async function consumeImageUrlPlaceholder(hash: string): Promise<string> 
 
 	const image = await getImage(hash);
 	if (!image) {
-		// TODO: Handle error, e.g. use error image
 		throw new Error(`Could not find an image with the hash ${hash}`);
 	}
 
