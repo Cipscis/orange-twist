@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Added
 
+* Images can now be embedded in notes
 * The footer now includes a link to the changelog
 * Development mode can now display framerate information
 

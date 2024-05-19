@@ -5,5 +5,6 @@ import type { EnumTypeOf } from 'utils/EnumTypeOf';
  */
 export const ObjectStoreName = {
 	DATA: 'data',
+	IMAGES: 'images',
 } as const;
 export type ObjectStoreName = EnumTypeOf<typeof ObjectStoreName>;
