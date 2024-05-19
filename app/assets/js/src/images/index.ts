@@ -1,4 +1,5 @@
 export { getImage } from './getImage';
+export { hasImage } from './hasImage';
 export { saveImage } from './saveImage';
 
 export { createImageUrlPlaceholder } from './createImageUrlPlaceholder';

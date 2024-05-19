@@ -3,7 +3,7 @@
 import type { getImage } from './getImage';
 
 import { ObjectStoreName, doDatabaseTransaction } from 'utils';
-import { sha256 } from './sha256';
+import { createImageHash } from './createImageHash';
 
 /**
  * Persist an image in IndexedDB, so it can be retrieved later.
@@ -16,12 +16,11 @@ import { sha256 } from './sha256';
  * @see {@linkcode getImage} For how to retrieve a stored image.
  */
 export async function saveImage(image: Blob): Promise<string> {
-	const hash = await sha256(image);
-	const truncatedHash = hash.slice(0, 8);
+	const hash = await createImageHash(image);
 	await doDatabaseTransaction(
 		'readwrite',
 		ObjectStoreName.IMAGES,
-		(store) => store.put(image, truncatedHash)
+		(store) => store.put(image, hash)
 	);
-	return truncatedHash;
+	return hash;
 }
