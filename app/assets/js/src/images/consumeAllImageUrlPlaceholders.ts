@@ -25,6 +25,6 @@ export async function consumeAllImageUrlPlaceholders(content: string): Promise<s
 		);
 	}
 
-	await Promise.all(promises);
+	await Promise.allSettled(promises);
 	return updatedContent;
 }
