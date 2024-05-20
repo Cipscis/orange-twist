@@ -1,14 +1,15 @@
+import { type PersistApi } from 'persist';
+import { saveRegister } from 'utils';
+
+import { StorageKey } from 'data/shared';
 import { dayTasksRegister } from '../dayTasksRegister';
 
 /**
  * Save the current day tasks data in memory into persistent storage.
  */
-export async function saveDayTasks(): Promise<void> {
-	const dayTasksInfo = Array.from(dayTasksRegister.entries());
-
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
-
-	localStorage.setItem('day-tasks', JSON.stringify(dayTasksInfo));
+export function saveDayTasks(persist: PersistApi): Promise<void> {
+	return saveRegister(dayTasksRegister, {
+		persist,
+		key: StorageKey.DAY_TASKS,
+	});
 }

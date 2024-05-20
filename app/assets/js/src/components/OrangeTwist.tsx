@@ -41,9 +41,16 @@ import {
 } from 'registers/keyboard-shortcuts';
 
 import {
+	type DefaultsFor,
 	getCurrentDateDayName,
 	isValidDateString,
 } from 'utils';
+
+import { type PersistApi, local } from 'persist';
+import {
+	syncUpdate,
+	onSyncUpdate,
+} from 'sync';
 
 import * as ui from 'ui';
 import {
@@ -58,19 +65,30 @@ import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
 import { TemplatesModal } from './templates/TemplatesModal';
 import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
 import { Footer } from './Footer';
-import {
-	syncUpdate,
-	onSyncUpdate,
-} from 'sync';
 
 interface OrangeTwistProps {
 	/**
 	 * If present, a back button will be shown.
+	 *
+	 * @default false
 	 */
 	backButton?: boolean;
+	/**
+	 * The method that should be used for persisting data.
+	 *
+	 * @default local
+	 */
+	persist?: PersistApi;
 
 	children?: ComponentChildren;
 }
+
+const defaultProps = {
+	backButton: false,
+	persist: local,
+} as const satisfies DefaultsFor<
+	Omit<OrangeTwistProps, 'children'>
+>;
 
 /**
  * Renders a standard page layout and sets up
@@ -79,8 +97,12 @@ interface OrangeTwistProps {
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const {
 		backButton,
+		persist,
 		children,
-	} = props;
+	} = {
+		...defaultProps,
+		...props,
+	};
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -91,23 +113,33 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 */
 	const loadAllData = useCallback(async () => {
 		await Promise.all([
-			loadDays().then(() => {
+			loadDays(persist).then(() => {
 				// If there's no info for the current day, set up a stub
 				const currentDateDayName = getCurrentDateDayName();
 				if (getDayInfo(currentDateDayName) === null) {
 					setDayInfo(currentDateDayName, {});
 				}
 			}),
-			loadTasks(),
-			loadDayTasks(),
-			loadTemplates(),
+			loadTasks(persist),
+			loadDayTasks(persist),
+			loadTemplates(persist),
 		]);
-	}, []);
+	}, [persist]);
 
 	// Load persisted data on initial load
 	useEffect(() => {
 		loadAllData()
-			.then(() => setIsLoading(false));
+			.then(() => setIsLoading(false))
+			.catch((e) => {
+				ui.alert(
+					'Failed to load',
+					{
+						duration: null,
+						dismissible: true,
+					}
+				);
+				console.error(e);
+			});
 	}, [
 		loadAllData,
 	]);
@@ -282,20 +314,29 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				<span>Saving...</span>
 				<Loader immediate />
 			</>, { id, duration: null });
-			await Promise.all([
-				saveDays(),
-				saveTasks(),
-				saveDayTasks(),
-				saveTemplates(),
-			]);
-			ui.alert('Saved', {
-				duration: 2000,
-				id,
-			});
+			try {
+				await Promise.all([
+					saveDays(persist),
+					saveTasks(persist),
+					saveDayTasks(persist),
+					saveTemplates(persist),
+				]);
+				ui.alert('Saved', {
+					duration: 2000,
+					id,
+				});
 
-			syncUpdate();
+				syncUpdate();
+			} catch (e) {
+				ui.alert('Failed to save', {
+					id,
+					duration: null,
+					dismissible: true,
+				});
+				console.error(e);
+			}
 		},
-		[]
+		[persist]
 	);
 	useCommand(Command.DATA_SAVE, saveData);
 	useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
@@ -350,6 +391,13 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			isLoading,
 		}}
 	>
+		{
+			__IS_DEV__ && <>
+				<link rel="stylesheet" href="/assets/css/dev.css" />
+				<span class="dev-ribbon">unreleased</span>
+			</>
+		}
+
 		<CommandPalette
 			open={commandPaletteOpen}
 			onClose={closeCommandPalette}

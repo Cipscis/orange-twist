@@ -13,6 +13,7 @@ type ToastOptions = ExpandType<Partial<Omit<ToastProps, 'message'>>>;
 
 const defaults = {
 	duration: 2000,
+	dismissible: false,
 } as const satisfies DefaultsFor<Omit<ToastOptions, 'id'>>;
 
 /**
@@ -37,7 +38,10 @@ export function alert(
 ): void {
 	// Start by consolidating arguments
 	const options = typeof optionsArg === 'number'
-		? { duration: optionsArg }
+		? {
+			...defaults,
+			duration: optionsArg,
+		}
 		: {
 			...defaults,
 			...optionsArg,
@@ -52,14 +56,17 @@ export function alert(
 
 	if (existingToast) {
 		existingToast.message = message;
-		if (typeof options.duration !== 'undefined') {
-			existingToast.duration = options.duration;
-		}
+		const {
+			id,
+			...propsToOverride
+		} = options;
+		Object.assign(existingToast, propsToOverride);
 	} else {
 		const newToast = {
 			id: options?.id ?? getNextId(),
 			message,
 			duration: options.duration ?? null,
+			dismissible: options.dismissible,
 		};
 		toasts.push(newToast);
 	}

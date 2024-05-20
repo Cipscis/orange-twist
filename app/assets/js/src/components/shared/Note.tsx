@@ -3,6 +3,7 @@ import { h, type JSX } from 'preact';
 import {
 	useCallback,
 	useEffect,
+	useLayoutEffect,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -11,11 +12,21 @@ import {
 	classNames,
 	nodeHasAncestor,
 	useBlurCallback,
+	usePropAsRef,
 } from 'utils';
+
+import {
+	createImageUrlPlaceholder,
+	hasImage,
+	saveImage,
+} from 'images';
+
 import {
 	KeyboardShortcutName,
 	useKeyboardShortcut,
 } from 'registers/keyboard-shortcuts';
+
+import * as ui from 'ui';
 
 import { Markdown } from './Markdown';
 import { IconButton } from './IconButton';
@@ -28,6 +39,8 @@ interface NoteProps {
 	class?: string;
 }
 
+const maxFileSize = 1024 * 1024 * 5; // 5 MB
+
 /**
  * Display a note as HTML, and provide options to edit
  * it in a textarea as Markdown.
@@ -39,6 +52,11 @@ export function Note(props: NoteProps): JSX.Element {
 		saveChanges,
 	} = props;
 
+	// Launder `note` through a ref so it doesn't cause
+	// too many side effects every time it changes
+	const noteRef = usePropAsRef(note);
+
+	const spaceholderRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const displayNoteRef = useRef<HTMLDivElement>(null);
 
@@ -56,14 +74,57 @@ export function Note(props: NoteProps): JSX.Element {
 	}, [saveChanges]);
 
 	/**
+	 * Check whether or not a specified note string is different
+	 * from the note value passed as a prop.
+	 */
+	const hasNoteChanged = useCallback((newNote: string) => {
+		if (newNote === noteRef.current) {
+			return false;
+		}
+
+		if (
+			newNote === '' &&
+			noteRef.current === null
+		) {
+			return false;
+		}
+
+		return true;
+	}, [noteRef]);
+
+	/**
 	 * Update the note and, if there were changes, set the dirty flag.
 	 */
 	const updateNote = useCallback((newNote: string) => {
-		if (newNote !== note) {
+		if (hasNoteChanged(newNote)) {
 			onNoteChange(newNote);
 			dirtyFlag.current = true;
 		}
-	}, [note, onNoteChange]);
+	}, [onNoteChange, hasNoteChanged]);
+
+	const updateSpaceholderSize = useCallback((note: string) => {
+		const spaceholder = spaceholderRef.current;
+		if (!spaceholder) {
+			return;
+		}
+
+		// CSS causes this content to be rendered in a way that is hidden but occupies space
+		spaceholder.dataset.content = note;
+	}, []);
+
+	const noteInputHandler = useCallback<JSX.InputEventHandler<HTMLTextAreaElement>>(
+		(e) => {
+			const newNote = e.currentTarget.value;
+			updateSpaceholderSize(newNote);
+			if (hasNoteChanged(newNote)) {
+				dirtyFlag.current = true;
+			}
+		},
+		[
+			updateSpaceholderSize,
+			hasNoteChanged,
+		]
+	);
 
 	/**
 	 * Markdown doesn't render leading or trailing spaces, and treats
@@ -91,7 +152,7 @@ export function Note(props: NoteProps): JSX.Element {
 	const leaveEditingMode = useCallback(() => {
 		setIsEditing(false);
 		const cleanedNote = getCleanedNote();
-		if (cleanedNote) {
+		if (cleanedNote !== null) {
 			updateNote(cleanedNote);
 		}
 		saveChangesIfDirty();
@@ -162,6 +223,17 @@ export function Note(props: NoteProps): JSX.Element {
 		leaveEditingModeFromTextarea,
 		isEditing
 	);
+
+	// Initialise spaceholder size when entering editing mode
+	useLayoutEffect(() => {
+		if (isEditing) {
+			updateSpaceholderSize(noteRef.current ?? '');
+		}
+	}, [
+		isEditing,
+		updateSpaceholderSize,
+		noteRef,
+	]);
 
 	// Set up event listener to manage tab insertion
 	useEffect(() => {
@@ -259,15 +331,130 @@ export function Note(props: NoteProps): JSX.Element {
 		}
 	}, [isEditing]);
 
+	// Listen for pasted or dropped images
+	useEffect(() => {
+		const textarea = textareaRef.current;
+		if (!(
+			isEditing &&
+			textarea
+		)) {
+			return;
+		}
+
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		/**
+		 * Retrieves an image from a `DataTransfer` object, if it has one.
+		 */
+		const getImage = (
+			dataTransfer: DataTransfer | null
+		): File | null => {
+			const file = dataTransfer?.files?.[0];
+			if (!file) {
+				return null;
+			}
+
+			if (!file.type.startsWith('image/')) {
+				return null;
+			}
+
+			return file;
+		};
+
+		/**
+		 * Inserts text into the textarea to render a given image.
+		 */
+		const insertImage = async (file: File) => {
+			// If the image is too large, and hasn't been stored already,
+			// ask for confirmation before storing it
+			if (file.size > maxFileSize && !await hasImage(file)) {
+				const maxFileSizeString = `${(maxFileSize / (1024 * 1024)).toFixed(1)} MB`;
+				const thisFileSizeString = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+				const permission = await ui.confirm(`It's recommended that files be kept below ${maxFileSizeString}. This file is ${thisFileSizeString}, are you sure you want to store it?`);
+
+				if (!permission) {
+					return;
+				}
+			}
+			const hash = await saveImage(file);
+
+			const valueArr = [...textarea.value];
+			const { selectionStart, selectionEnd } = textarea;
+			const selectionSize = selectionEnd - selectionStart;
+
+			const urlPlaceholder = createImageUrlPlaceholder(hash);
+			const insertedContent = `![](${urlPlaceholder})`;
+			valueArr.splice(selectionStart, selectionSize, insertedContent);
+
+			textarea.value = valueArr.join('');
+			// Move text cursor to where alt text will go
+			textarea.selectionStart = selectionStart + 2;
+			textarea.selectionEnd = selectionStart + 2;
+		};
+
+		// Listen for pasted images, and insert them.
+		textarea.addEventListener(
+			'paste',
+			(e) => {
+				const file = getImage(e.clipboardData);
+				if (!file) {
+					return;
+				}
+
+				insertImage(file);
+			},
+			{ signal }
+		);
+
+		// Allow images to be dragged and dropped into the textarea.
+		textarea.addEventListener(
+			'dragover',
+			(e) => {
+				const items = Array.from(e.dataTransfer?.items ?? []);
+				if (!items.some((item) => {
+					if (item.kind !== 'file') {
+						return false;
+					}
+					if (!item.type.startsWith('image/')) {
+						return false;
+					}
+					return true;
+				})) {
+					return;
+				}
+
+				e.preventDefault();
+			},
+			{ signal }
+		);
+
+		// Listen for images being dropped, and insert them.
+		textarea.addEventListener(
+			'drop',
+			(e) => {
+				const file = getImage(e.dataTransfer);
+				if (!file) {
+					return;
+				}
+				insertImage(file);
+				e.preventDefault();
+			},
+			{ signal }
+		);
+
+		return () => controller.abort();
+	}, [isEditing]);
+
 	return <div class={classNames('note', props.class)}>
 		{isEditing
 			? <div
 				class="note__edit-content"
-				data-content={note}
+				ref={spaceholderRef}
 			>
 				<textarea
 					ref={textareaRef}
-					onInput={(e) => updateNote(e.currentTarget.value)}
+					onInput={noteInputHandler}
 				>{note}</textarea>
 			</div>
 			: <div

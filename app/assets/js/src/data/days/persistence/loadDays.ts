@@ -1,3 +1,9 @@
+import { z } from 'zod';
+
+import { type PersistApi } from 'persist';
+import { isZodSchemaType, loadRegister } from 'utils';
+
+import { StorageKey } from 'data/shared';
 import { daysRegister } from '../daysRegister';
 import { updateOldDayInfo } from './updateOldDayInfo';
 
@@ -8,37 +14,27 @@ import { updateOldDayInfo } from './updateOldDayInfo';
  * @returns A Promise which resolves when days info has finished loading,
  * or rejects when days info fails to load.
  */
-export async function loadDays(serialisedDaysInfo?: string): Promise<void> {
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
+export async function loadDays(
+	persist: PersistApi,
+	serialisedDaysInfo?: string
+): Promise<void> {
+	const dataSource = serialisedDaysInfo
+		? {
+			data: serialisedDaysInfo,
+		}
+		: {
+			persist,
+			key: StorageKey.DAYS,
+		};
 
-	if (typeof serialisedDaysInfo === 'undefined') {
-		serialisedDaysInfo = localStorage.getItem('days') ?? undefined;
-	}
-
-	if (!serialisedDaysInfo) {
-		daysRegister.clear();
-		return;
-	}
-
-	const persistedDaysInfo = JSON.parse(serialisedDaysInfo);
-
-	if (!(
-		Array.isArray(persistedDaysInfo) &&
-		persistedDaysInfo.every((el): el is [string, unknown] => (
-			Array.isArray(el) &&
-			el.length === 2 &&
-			typeof el[0] === 'string'
-		))
-	)) {
-		throw new Error(`Persisted days data is invalid: ${serialisedDaysInfo}`);
-	}
-
-	const newDaysInfo = persistedDaysInfo.map(
-		([dayName, dayInfo]) => [dayName, updateOldDayInfo(dayInfo)] as const
+	const isValidDayEntry = isZodSchemaType(
+		z.tuple([z.string(), z.unknown()])
 	);
 
-	daysRegister.clear();
-	daysRegister.set(newDaysInfo);
+	return loadRegister(
+		daysRegister,
+		dataSource,
+		isValidDayEntry,
+		updateOldDayInfo,
+	);
 }

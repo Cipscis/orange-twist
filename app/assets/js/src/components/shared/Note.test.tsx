@@ -3,6 +3,7 @@ import { useState } from 'preact/hooks';
 
 import {
 	afterEach,
+	beforeAll,
 	describe,
 	expect,
 	jest,
@@ -22,6 +23,16 @@ import { KeyboardShortcutName, registerKeyboardShortcut } from 'registers/keyboa
 import { Note } from './Note';
 
 describe('Note', () => {
+	beforeAll(() => {
+		registerKeyboardShortcut(
+			KeyboardShortcutName.EDITING_FINISH,
+			[
+				{ key: 'Enter', ctrl: true },
+				{ key: 'Escape' },
+			]
+		);
+	});
+
 	afterEach(() => {
 		cleanup();
 	});
@@ -169,23 +180,16 @@ describe('Note', () => {
 
 		const textarea = getByRole('textbox') as HTMLTextAreaElement;
 		await user.type(textarea, 'abcd');
+		expect(spy).toHaveBeenCalledTimes(0);
 
-		expect(spy).toHaveBeenCalledWith('a');
-		expect(spy).toHaveBeenCalledWith('ab');
-		expect(spy).toHaveBeenCalledWith('abc');
+		// Click outside to blur element and cause change event
+		await user.click(document.body);
+		expect(spy).toHaveBeenCalledTimes(1);
 		expect(spy).toHaveBeenCalledWith('abcd');
 	});
 
 	test('leaves editing mode when pressing the "Finish editing" keyboard shortcut', async () => {
 		const user = userEvent.setup();
-
-		registerKeyboardShortcut(
-			KeyboardShortcutName.EDITING_FINISH,
-			[
-				{ key: 'Enter', ctrl: true },
-				{ key: 'Escape' },
-			]
-		);
 
 		const {
 			getByRole,
@@ -261,11 +265,11 @@ describe('Note', () => {
 
 		expect(textarea).toHaveFocus();
 
-		// An extra character is needed because the note is "cleaned" each time
-		await user.keyboard('{Tab}b');
-
-		expect(spy).toHaveBeenCalledWith('\tb');
+		// Extra characters are needed because the note is trimmed
+		await user.keyboard('a{Tab}b');
 		expect(textarea).toHaveFocus();
+		await user.click(document.body);
+		expect(spy).toHaveBeenCalledWith('a\tb');
 	});
 
 	test('calls saveChanges when leaving editing mode, if the note was changed', async () => {
@@ -327,10 +331,7 @@ describe('Note', () => {
 
 		const textarea = getByRole('textbox') as HTMLTextAreaElement;
 		await user.type(textarea, 'ab{ArrowLeft}{ArrowLeft}cd');
-
-		expect(spy).toHaveBeenCalledWith('a');
-		expect(spy).toHaveBeenCalledWith('ab');
-		expect(spy).toHaveBeenCalledWith('cab');
+		await user.click(document.body);
 		expect(spy).toHaveBeenCalledWith('cdab');
 	});
 

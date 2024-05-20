@@ -10,106 +10,71 @@ import { useRegister } from './useRegister';
 import { Register } from './Register';
 
 describe('useRegister', () => {
-	test('allows a specific value within a register to be observed', async () => {
-		const register = new Register<string, number>();
+	test('returns matching data from the register', () => {
+		const testRegister = new Register<string, unknown>([
+			['a', 1],
+			['b', 2],
+		]);
 
-		const { result } = renderHook(() => useRegister(register, 'test'));
+		const matcher = (key: string) => key === 'a';
 
-		expect(result.current).toBeUndefined();
-
-		await act(() => register.set('test', 1));
-
-		expect(result.current).toBe(1);
-
-		await act(() => register.set('test', 2));
-
-		expect(result.current).toBe(2);
-
-		await act(() => void register.delete('test'));
-
-		expect(result.current).toBeUndefined();
+		const { result } = renderHook(() => {
+			return useRegister(testRegister, matcher);
+		});
+		expect(result.current).toEqual([1]);
 	});
 
-	test('stops observing a specific value after unmounting', async () => {
-		const register = new Register<string, number>();
+	test('updates only when relevant changes have been made', async () => {
+		const testRegister = new Register<string, number>([
+			['a', 1],
+			['b', 2],
+		]);
 
-		const { result, unmount } = renderHook(() => useRegister(register, 'test'));
+		const matcher = (key: string, value: number) => key === 'a' && value <= 2;
 
-		expect(result.current).toBeUndefined();
+		let renderCount = 0;
+		const { result } = renderHook(() => {
+			renderCount += 1;
+			return useRegister(testRegister, matcher);
+		});
 
-		await act(() => register.set('test', 1));
+		expect(result.current).toEqual([1]);
+		expect(renderCount).toBe(1);
 
-		expect(result.current).toBe(1);
+		// Updating a different entry shouldn't cause rerenders
+		await act(() => testRegister.set('b', 3));
+		expect(renderCount).toBe(1);
 
-		unmount();
-		await act(() => register.set('test', 2));
+		// Updating a matching entry should cause re-render with new info
+		await act(() => testRegister.set('a', 2));
+		expect(result.current).toEqual([2]);
+		expect(renderCount).toBe(2);
 
-		expect(result.current).toBe(1);
+		// Removing a previously matched entry should cause re-render with new info
+		await act(() => testRegister.set('a', 3));
+		expect(result.current).toEqual([]);
+		expect(renderCount).toBe(3);
 	});
 
-	test('allows all entries within a register to be observed', async () => {
-		const register = new Register([
-			['foo', 1],
-			['bar', 2],
+	test('when the matcher changes, returns updated information', () => {
+		const testRegister = new Register<string, unknown>([
+			['a', 1],
+			['b', 2],
 		]);
 
-		const { result } = renderHook(() => useRegister(register));
+		const matcherA = (key: string) => key === 'a';
+		const matcherAll = () => true;
 
-		expect(result.current).toEqual([
-			['foo', 1],
-			['bar', 2],
-		]);
+		const {
+			rerender,
+			result,
+		} = renderHook(
+			(matcher) => useRegister(testRegister, matcher),
+			{ initialProps: matcherA }
+		);
+		expect(result.current).toEqual([1]);
 
-		await act(() => register.set('foobar', 3));
-
-		expect(result.current).toEqual([
-			['foo', 1],
-			['bar', 2],
-			['foobar', 3],
-		]);
-
-		await act(() => void register.delete('foo'));
-
-		expect(result.current).toEqual([
-			['bar', 2],
-			['foobar', 3],
-		]);
-	});
-
-	test('stops observing an entire register after unmounting', async () => {
-		const register = new Register([
-			['foo', 1],
-			['bar', 2],
-		]);
-
-		const { result, unmount } = renderHook(() => useRegister(register));
-
-		expect(result.current).toEqual([
-			['foo', 1],
-			['bar', 2],
-		]);
-
-		await act(() => register.set('foobar', 3));
-
-		expect(result.current).toEqual([
-			['foo', 1],
-			['bar', 2],
-			['foobar', 3],
-		]);
-
-		expect(result.current).toEqual([
-			['foo', 1],
-			['bar', 2],
-			['foobar', 3],
-		]);
-
-		unmount();
-		await act(() => register.set('test', 4));
-
-		expect(result.current).toEqual([
-			['foo', 1],
-			['bar', 2],
-			['foobar', 3],
-		]);
+		rerender(matcherAll);
+		expect(result.current).toEqual([1, 2]);
 	});
 });

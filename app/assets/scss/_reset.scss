@@ -39,3 +39,8 @@ label[for] {
 label:has(:where(input, textarea, select)) {
 	cursor: pointer;
 }
+
+img {
+	display: block;
+	max-width: 100%;
+}

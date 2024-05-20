@@ -5,6 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ls } from 'persist';
+
 import { setDayInfo } from '../setDayInfo';
 import { saveDays } from './saveDays';
 import { clear } from '../../shared';
@@ -26,18 +28,14 @@ describe('saveDays', () => {
 	});
 
 	test('returns a Promise that resolves when the content of the days register has been persisted', async () => {
+		expect(localStorage.getItem('days')).toBeNull();
+
 		setDayInfo('2023-11-09', ninthDayInfo);
 		setDayInfo('2023-11-10', tenthDayInfo);
 
-		expect(localStorage.getItem('days')).toBeNull();
-
-		const saveDaysPromise = saveDays();
+		const saveDaysPromise = saveDays(ls);
 		expect(saveDaysPromise).toBeInstanceOf(Promise);
-
-		expect(localStorage.getItem('days')).toBeNull();
-
-		const saveDaysResult = await saveDaysPromise;
-		expect(saveDaysResult).toBeUndefined();
+		await expect(saveDaysPromise).resolves.toBeUndefined();
 
 		expect(localStorage.getItem('days')).toEqual(JSON.stringify([
 			['2023-11-09', { name: '2023-11-09', ...ninthDayInfo }],
