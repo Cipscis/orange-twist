@@ -5,6 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ls } from 'persist';
+
 import type { DayTaskInfo } from '../types';
 import { TaskStatus } from 'types/TaskStatus';
 
@@ -38,18 +40,14 @@ describe('saveDayTasks', () => {
 	});
 
 	test('returns a Promise that resolves when the content of the day tasks register has been persisted', async () => {
+		expect(localStorage.getItem('day-tasks')).toBeNull();
+
 		setDayTaskInfo({ dayName: '2023-11-13', taskId: 1 }, firstDayTaskInfo);
 		setDayTaskInfo({ dayName: '2023-11-13', taskId: 2 }, secondDayTaskInfo);
 
-		expect(localStorage.getItem('day-tasks')).toBeNull();
-
-		const saveDayTasksPromise = saveDayTasks();
+		const saveDayTasksPromise = saveDayTasks(ls);
 		expect(saveDayTasksPromise).toBeInstanceOf(Promise);
-
-		expect(localStorage.getItem('day-tasks')).toBeNull();
-
-		const saveDayTasksResult = await saveDayTasksPromise;
-		expect(saveDayTasksResult).toBeUndefined();
+		await expect(saveDayTasksPromise).resolves.toBeUndefined();
 
 		expect(JSON.parse(localStorage.getItem('day-tasks')!)).toEqual([
 			['2023-11-13_1', firstDayTaskInfo],

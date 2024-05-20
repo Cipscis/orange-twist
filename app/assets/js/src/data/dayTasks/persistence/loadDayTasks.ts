@@ -1,6 +1,9 @@
 import { z } from 'zod';
-import { isZodSchemaType } from 'utils';
 
+import { type PersistApi } from 'persist';
+import { isZodSchemaType, loadRegister } from 'utils';
+
+import { StorageKey } from 'data/shared';
 import { dayTasksRegister } from '../dayTasksRegister';
 import { updateOldDayTaskInfo } from './updateOldDayTaskInfo';
 
@@ -21,33 +24,23 @@ const isSerialisedDayTasksEntrySchema = isZodSchemaType(serialisedDayTasksEntryS
  * @returns A Promise which resolves when day tasks info has finished
  * loading, or rejects when day tasks info fails to load.
  */
-export async function loadDayTasks(serialisedDayTasksInfo?: string): Promise<void> {
-	// Until we use an asynchronous API to store this data, emulate
-	// it by using the microtask queue.
-	await new Promise<void>((resolve) => queueMicrotask(resolve));
+export async function loadDayTasks(
+	persist: PersistApi,
+	serialisedDayTasksInfo?: string
+): Promise<void> {
+	const dataSource = serialisedDayTasksInfo
+		? {
+			data: serialisedDayTasksInfo,
+		}
+		: {
+			persist,
+			key: StorageKey.DAY_TASKS,
+		};
 
-	if (typeof serialisedDayTasksInfo === 'undefined') {
-		serialisedDayTasksInfo = localStorage.getItem('day-tasks') ?? undefined;
-	}
-
-	if (!serialisedDayTasksInfo) {
-		dayTasksRegister.clear();
-		return;
-	}
-
-	const persistedDayTasksInfo = JSON.parse(serialisedDayTasksInfo);
-
-	if (!(
-		Array.isArray(persistedDayTasksInfo) &&
-		persistedDayTasksInfo.every(isSerialisedDayTasksEntrySchema)
-	)) {
-		throw new Error(`Persisted day tasks data is invalid: ${serialisedDayTasksInfo}`);
-	}
-
-	const newDayTasksInfo = persistedDayTasksInfo.map(
-		([dayTaskKey, dayInfo]) => [dayTaskKey, updateOldDayTaskInfo(dayInfo)] as const
+	return loadRegister(
+		dayTasksRegister,
+		dataSource,
+		isSerialisedDayTasksEntrySchema,
+		updateOldDayTaskInfo,
 	);
-
-	dayTasksRegister.clear();
-	dayTasksRegister.set(newDayTasksInfo);
 }

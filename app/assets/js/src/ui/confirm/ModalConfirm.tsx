@@ -36,8 +36,8 @@ export function ModalConfirm(props: ModalConfirmProps): JSX.Element {
 	}, [resolve]);
 
 	const previousResolver = useRef<
-	((result: boolean) => void) | null
-		>(null);
+		((result: boolean) => void) | null
+	>(null);
 
 	// Whenever the resolve function is changed, call the
 	// previous resolve function and re-open the modal

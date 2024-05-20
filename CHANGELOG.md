@@ -2,6 +2,32 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2024-04-26
+
+### Added
+
+* Images can now be embedded in notes
+* The footer now includes a link to the changelog
+* Development mode can now display framerate information
+
+### Changed
+
+* Data is now stored in IndexedDB instead of LocalStorage
+* Bumped dependencies to latest versions
+* Version number in footer is now read from package.json
+* Completed tasks are now ordered with the most recent at the top
+
+### Fixed
+
+* "Request a feature" link now opens in a new tab
+* Nested markdown lists with checkboxes have better spacing
+* Tool drawers are larger and easier to open on intermediate devices
+* Pressing "Escape" to cancel changes to an inline note now works correctly
+* Syntax highlighting now works correctly for HTML and XML code blocks
+* Improved performance of editing notes
+* Cross-origin stylesheets being inserted (e.g. by browser extensions) longer cause JavaScript errors
+* If data fails to load or save, the UI now displays an error message
+
 ## [1.4.1] - 2024-04-13
 
 ### Fixed

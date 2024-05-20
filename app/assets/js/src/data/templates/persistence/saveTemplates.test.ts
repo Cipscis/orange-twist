@@ -5,6 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ls } from 'persist';
+
 import {
 	type TemplateInfo,
 	clear,
@@ -31,18 +33,14 @@ describe('saveTemplates', () => {
 	});
 
 	test('returns a Promise that resolves when the content of the templates register has been persisted', async () => {
+		expect(localStorage.getItem('templates')).toBeNull();
+
 		setTemplateInfo(1, firstTemplateInfo);
 		setTemplateInfo(2, secondTemplateInfo);
 
-		expect(localStorage.getItem('templates')).toBeNull();
-
-		const saveTemplatesPromise = saveTemplates();
+		const saveTemplatesPromise = saveTemplates(ls);
 		expect(saveTemplatesPromise).toBeInstanceOf(Promise);
-
-		expect(localStorage.getItem('templates')).toBeNull();
-
-		const saveTemplatesResult = await saveTemplatesPromise;
-		expect(saveTemplatesResult).toBeUndefined();
+		await expect(saveTemplatesPromise).resolves.toBeUndefined();
 
 		expect(localStorage.getItem('templates')).toEqual(JSON.stringify([
 			[1, { id: 1, ...firstTemplateInfo }],

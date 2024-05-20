@@ -1,0 +1,35 @@
+/// This CSS file is only included during development, so should only
+/// contain minimal styles necessary for changes to make it clear that
+/// the current version is not the public release
+
+@use "theme/palette";
+@use "theme/typography";
+
+.dev-ribbon {
+	--_padding: 4ch;
+
+	text-transform: uppercase;
+	position: fixed;
+	z-index: 1;
+	top: 0%;
+	right: 0%;
+
+	@include palette.tertiary;
+	border: 2px solid var(--accent);
+
+	padding: 0 var(--_padding);
+
+	transform-origin: 50% 50%;
+	transform: translate(50%, -50%) rotate(-45deg) translate(calc(-50% + sin(45deg) * var(--_padding)), 0) rotate(90deg);
+
+	font-size: clamp(0.5rem, 2vw, 2rem);
+	font-family: typography.$font-face-heading;
+	font-weight: typography.$weight-heading;
+}
+
+.fps {
+	position: fixed;
+	top: 0.5em;
+	left: 0.5em;
+	z-index: 1;
+}

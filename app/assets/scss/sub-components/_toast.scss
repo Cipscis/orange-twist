@@ -48,10 +48,16 @@
 	pointer-events: none;
 }
 
-.toast__message {
+.toast__body {
+	display: flex;
+	align-items: center;
+	gap: spacing.$sm;
+
 	padding-block: spacing.$sm;
 	padding-inline: spacing.$md;
+}
 
+.toast__message {
 	display: flex;
 	gap: 1ch;
 }

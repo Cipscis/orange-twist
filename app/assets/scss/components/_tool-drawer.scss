@@ -76,7 +76,7 @@ $_animation-speed: animation.$speed-fast;
 	// Match button height
 	height: 2rem;
 	// Don't completely fill gutter
-	width: layout.$gutter * 0.8;
+	width: calc(var(--layout-gutter) * 0.8);
 
 	@include patterns.frosted-glass;
 	border: 1px solid var(--accent);
