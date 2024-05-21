@@ -60,7 +60,17 @@ export function Note(props: NoteProps): JSX.Element {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const displayNoteRef = useRef<HTMLDivElement>(null);
 
-	const [isEditing, setIsEditing] = useState(false);
+	const [isEditing, setIsEditingInternal] = useState(false);
+	const isConfirmingAttachLargeImageRef = useRef(false);
+	const setIsEditing = useCallback((value: boolean) => {
+		// If the prompt to confirm attaching a large image is open, don't change editing status
+		if (isConfirmingAttachLargeImageRef.current) {
+			return;
+		}
+
+		setIsEditingInternal(value);
+	}, []);
+
 	const dirtyFlag = useRef(false);
 
 	/**
@@ -157,6 +167,7 @@ export function Note(props: NoteProps): JSX.Element {
 		}
 		saveChangesIfDirty();
 	}, [
+		setIsEditing,
 		getCleanedNote,
 		updateNote,
 		saveChangesIfDirty,
@@ -176,7 +187,7 @@ export function Note(props: NoteProps): JSX.Element {
 	 */
 	const enterEditingMode = useCallback(() => {
 		setIsEditing(true);
-	}, []);
+	}, [setIsEditing]);
 
 	/**
 	 * Enter editing mode on click, unless the user was selecting
@@ -371,7 +382,12 @@ export function Note(props: NoteProps): JSX.Element {
 			if (file.size > maxFileSize && !await hasImage(file)) {
 				const maxFileSizeString = `${(maxFileSize / (1024 * 1024)).toFixed(1)} MB`;
 				const thisFileSizeString = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+
+				isConfirmingAttachLargeImageRef.current = true;
 				const permission = await ui.confirm(`It's recommended that files be kept below ${maxFileSizeString}. This file is ${thisFileSizeString}, are you sure you want to store it?`);
+
+				isConfirmingAttachLargeImageRef.current = false;
+				textareaRef.current?.focus();
 
 				if (!permission) {
 					return;
