@@ -2,7 +2,13 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.5.0] - 2024-04-26
+## [1.5.1] - 2024-05-21
+
+### Fixed
+
+* Notes stay in editing mode while confirming whether or not to embed a large image
+
+## [1.5.0] - 2024-05-21
 
 ### Added
 
