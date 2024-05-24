@@ -13,7 +13,6 @@ import { Command } from 'types/Command';
 import {
 	getDayTaskInfo,
 	setDayTaskInfo,
-	setTaskInfo,
 	useAllDayTaskInfo,
 	useTaskInfo,
 } from 'data';
@@ -24,12 +23,12 @@ import {
 	Button,
 	Loader,
 	Markdown,
-	Note,
 	Notice,
 } from 'components/shared';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 import { DayTaskDetail } from './DayTaskDetail';
+import { TaskNote } from './TaskNote';
 
 interface TaskDetailProps {
 	taskId: number;
@@ -53,15 +52,6 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 	const dayTasksInfo = useMemo(() => unsortedDayTasksInfo.toSorted(
 		({ dayName: dayNameA }, { dayName: dayNameB }) => dayNameA.localeCompare(dayNameB)
 	), [unsortedDayTasksInfo]);
-
-	const setTaskNote = useCallback(
-		(note: string) => {
-			setTaskInfo(taskId, { note });
-		},
-		[taskId]
-	);
-
-	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
 
 	const addNewDayTask = useCallback(async () => {
 		const dayName = await ui.prompt('What day?', { type: 'date' });
@@ -117,12 +107,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 			content={`## ${taskInfo.name}`}
 			inline
 		/>
-		<Note
-			class="task-detail__note"
-			note={taskInfo.note}
-			onNoteChange={setTaskNote}
-			saveChanges={saveChanges}
-		/>
+		<TaskNote task={taskInfo} />
 		{dayTasksInfo.map((dayTaskInfo, i, arr) => (
 			<DayTaskDetail
 				key={dayTaskInfo.dayName}
