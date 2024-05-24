@@ -11,9 +11,9 @@ import {
 
 import {
 	InlineNote,
-	Note,
 } from 'components/shared';
 import { TaskStatusComponent } from '../TaskStatusComponent';
+import { DayTaskNote } from './DayTaskNote';
 
 interface DayTaskDetailProps {
 	dayTaskInfo: DayTaskInfo;
@@ -28,7 +28,6 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 	const {
 		dayName,
 		taskId,
-		note,
 	} = dayTaskInfo;
 
 	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
@@ -56,13 +55,7 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 		</summary>
 
 		<div class="day__body">
-			<Note
-				note={note}
-				onNoteChange={useCallback((note: string) => {
-					setDayTaskInfo({ dayName, taskId }, { note });
-				}, [dayName, taskId])}
-				saveChanges={saveChanges}
-			/>
+			<DayTaskNote dayTask={dayTaskInfo} />
 		</div>
 	</details>;
 }
