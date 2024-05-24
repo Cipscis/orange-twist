@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.2] - 2024-05-25
+
+### Fixed
+
+* Empty tool drawers no longer show
+
 ## [1.5.1] - 2024-05-21
 
 ### Fixed
