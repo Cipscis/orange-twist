@@ -196,6 +196,33 @@ export function DragList(props: DragListProps): JSX.Element {
 	}, [onReorder, startViewTransition]);
 
 	/**
+	 * Moves the item with a specified key by a specified offset. Negative
+	 * offsets will move the item up, whereas positive offsets will move it
+	 * down. At most, it will be moved to the start or end of the list.
+	 */
+	const moveItemBy = useCallback((itemKey: number, offset: number) => {
+		const keyOrder = itemsRef.current
+			// First, remove null entries
+			.filter((el): el is NonNullable<typeof el> => (
+				el !== null && typeof el !== 'undefined'
+			))
+			// Then, map to key
+			.map((el) => getKey(el));
+
+		const itemIndex = keyOrder.indexOf(itemKey);
+		let targetIndex = itemIndex + offset;
+
+		if (targetIndex < 0) {
+			targetIndex = 0;
+		} else if (targetIndex >= keyOrder.length) {
+			targetIndex = keyOrder.length - 1;
+		}
+
+		const targetKey = keyOrder[targetIndex];
+		moveItemTo(itemKey, targetKey);
+	}, [moveItemTo]);
+
+	/**
 	 * Handle calling the {@linkcode onReorder} callback when dropped.
 	 */
 	const dropHandler = useCallback((e: DragEvent) => {
@@ -242,11 +269,30 @@ export function DragList(props: DragListProps): JSX.Element {
 				}}
 			>
 				{
-					onReorder && <span
-						class="drag-list__drag-handle"
-						draggable
-						onDragStart={dragStartHandler}
-					/>
+					onReorder && <>
+						{/* Drag handle for fine pointer devices */}
+						<span
+							class="drag-list__drag-handle"
+							draggable
+							onDragStart={dragStartHandler}
+						/>
+
+						{/* Up and down buttons for coarse pointer devices */}
+						<div class="drag-list__move-buttons">
+							<button
+								type="button"
+								title="Move up"
+								onClick={() => moveItemBy(getKey(child), -1)}
+								class="drag-list__move-button"
+							>&#x2303;</button>
+							<button
+								type="button"
+								title="Move down"
+								onClick={() => moveItemBy(getKey(child), +1)}
+								class="drag-list__move-button"
+							>&#x2304;</button>
+						</div>
+					</>
 				}
 				{child}
 			</li>
