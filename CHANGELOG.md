@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+* Day summaries can now wrap on mobile
 * Empty tool drawers no longer show
 * Task links will no longer get stuck in a "No task with ID X" state on initial load.
 
