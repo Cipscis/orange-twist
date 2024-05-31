@@ -1,42 +1,37 @@
 import { h, type JSX } from 'preact';
 import { useCallback, useContext } from 'preact/hooks';
 
-import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
+import { Command } from 'types/Command';
 
-import {
-	setDayInfo,
-	type DayInfo,
-} from 'data';
+import { setTaskInfo, type TaskInfo } from 'data';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 import { Note } from 'components/shared';
 
-interface DayNoteProps {
-	day: Readonly<DayInfo>;
+interface TaskNoteProps {
+	task: Readonly<TaskInfo>;
 }
 
-/**
- * Renders a note for a specified day, including the ability to
- * edit that note.
- */
-export function DayNote(props: DayNoteProps): JSX.Element {
-	const { day } = props;
-	const { name } = day;
+export function TaskNote(props: TaskNoteProps): JSX.Element {
+	const { task } = props;
 
 	// Reload when all data is loaded, to make sure it's all displayed correctly
 	useContext(OrangeTwistContext);
 
-	const onNoteChange = useCallback(
-		(note: string) => setDayInfo(name, { note }),
-		[name]
+	const setTaskNote = useCallback(
+		(note: string) => {
+			setTaskInfo(task.id, { note });
+		},
+		[task.id]
 	);
 
 	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
 
 	return <Note
-		note={day.note}
-		onNoteChange={onNoteChange}
+		class="task-detail__note"
+		note={task.note}
+		onNoteChange={setTaskNote}
 		saveChanges={saveChanges}
 	/>;
 }

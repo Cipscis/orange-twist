@@ -44,7 +44,7 @@ export function ToolDrawer(props: ToolDrawerProps): JSX.Element | null {
 	/** Component children as an array, even if only one child was passed */
 	const children = (() => {
 		const { children } = props;
-		if (typeof children === 'undefined') {
+		if (!children) {
 			return [];
 		}
 

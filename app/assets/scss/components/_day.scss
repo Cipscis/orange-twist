@@ -1,3 +1,4 @@
+@use "../theme/layout";
 @use "../theme/palette";
 @use "../theme/spacing";
 @use "../theme/typography";
@@ -23,6 +24,10 @@
 	display: flex;
 	gap: spacing.$sm;
 	align-items: center;
+
+	@include layout.bp-small {
+		flex-wrap: wrap;
+	}
 }
 
 .day__body {
