@@ -55,35 +55,15 @@
 }
 
 @media (pointer: fine) {
-	.drag-list__move-buttons {
+	.drag-list__move-button {
 		display: none;
 	}
 }
 
 @media (pointer: coarse) {
-	.drag-list__move-buttons {
-		display: grid;
-		grid-template-columns: 1fr;
-
-		margin-right: var(--_handle-gutter);
-		width: var(--_handle-width);
-	}
-
 	.drag-list__move-button {
-		@include reset;
-
-		width: 100%;
-		line-height: 0.5lh;
 		display: grid;
 		place-content: center;
-
-		@include palette.secondary(true);
-
-		&:first-child {
-			border-radius: radius.$xs radius.$xs 0 0;
-		}
-		&:last-child {
-			border-radius: 0 0 radius.$xs radius.$xs;
-		}
+		margin-right: var(--_handle-gutter);
 	}
 }
