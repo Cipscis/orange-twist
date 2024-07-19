@@ -160,10 +160,11 @@ export function DragList(props: DragListProps): JSX.Element {
 	 * Moves the item with a specified key to the position of an item
 	 * with a specified target key.
 	 *
-	 * The moved item will be moved one
-	 * spot past the target item, e.g. if it was previously after the
-	 * target then after this operation it will be in the slot before
-	 * the target.
+	 * The moved item will be moved one spot past the target item,
+	 * e.g. if it was previously after the target then after this
+	 * operation it will be in the slot before the target.
+	 *
+	 * This function also calls {@linkcode onReorder} with the new order.
 	 */
 	const moveItemTo = useCallback((itemKey: number, targetKey: number) => {
 		if (!(
@@ -225,7 +226,7 @@ export function DragList(props: DragListProps): JSX.Element {
 	}, [moveItemTo]);
 
 	/**
-	 * Handle calling the {@linkcode onReorder} callback when dropped.
+	 * Move dragged item to new position when it's dropped.
 	 */
 	const dropHandler = useCallback((e: DragEvent) => {
 		if (!(
