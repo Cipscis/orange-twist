@@ -1,15 +1,21 @@
 @use "../tools" as *;
 
+/// Extra small border radius that doesn't scale with font size
+$xs-abs: 4px;
 /// Small border radius that doesn't scale with font size
 $sm-abs: 8px;
 /// Medium border radius that doesn't scale with font size
 $md-abs: 16px;
 
+/// Extra small border radius that scales with default font size
+$xs: rem($xs-abs);
 /// Small border radius that scales with default font size
 $sm: rem($sm-abs);
 /// Medium border radius that scales with default font size
 $md: rem($md-abs);
 
+/// Extra small border radius relative to current font size
+$xs-rel: 0.125em;
 /// Small border radius relative to current font size
 $sm-rel: 0.25em;
 /// Medium border radius relative to current font size
