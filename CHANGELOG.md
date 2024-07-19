@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - 2024-07-20
+
+### Fixed
+
+* Tasks can now be reordered on touch devices
+
 ## [1.5.2] - 2024-06-01
 
 ### Fixed

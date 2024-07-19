@@ -9,6 +9,9 @@
 	display: flex;
 	flex-direction: column;
 	gap: spacing.$sm;
+
+	--_handle-width: 1.5ch;
+	--_handle-gutter: 1ch;
 }
 
 .drag-list__item {
@@ -16,27 +19,50 @@
 	align-items: stretch;
 }
 
-.drag-list__drag-handle {
-	flex-grow: 0;
-	flex-shrink: 0;
+@media (pointer: coarse) {
+	.drag-list__drag-handle {
+		display: none;
+	}
+}
 
-	margin-right: 1ch;
+@media (pointer: fine) {
+	.drag-list__drag-handle {
+		flex-grow: 0;
+		flex-shrink: 0;
 
-	cursor: move;
+		margin-right: var(--_handle-gutter);
 
-	display: grid;
-	place-content: center;
-	overflow: hidden;
+		cursor: move;
 
-	// Force white space in ::before content to break
-	width: min-content;
-	&::before {
-		content: ".. .. ..";
-		display: block;
-		font-size: 1.2rem;
-		line-height: 0.3;
+		display: grid;
+		place-content: center;
+		overflow: hidden;
 
-		// Adjust for `.` character being on the bottom of the line
-		margin-top: -0.5em;
+		// Force white space in ::before content to break
+		width: var(--_handle-width);
+		text-align: center;
+		&::before {
+			content: ".. .. ..";
+			display: block;
+			font-size: 1.2rem;
+			line-height: 0.3;
+
+			// Adjust for `.` character being on the bottom of the line
+			margin-top: -0.5em;
+		}
+	}
+}
+
+@media (pointer: fine) {
+	.drag-list__move-button {
+		display: none;
+	}
+}
+
+@media (pointer: coarse) {
+	.drag-list__move-button {
+		display: grid;
+		place-content: center;
+		margin-right: var(--_handle-gutter);
 	}
 }
