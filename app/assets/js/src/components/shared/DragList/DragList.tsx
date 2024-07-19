@@ -206,9 +206,7 @@ export function DragList(props: DragListProps): JSX.Element {
 	const moveItemBy = useCallback((itemKey: number, offset: number) => {
 		const keyOrder = itemsRef.current
 			// First, remove null entries
-			.filter((el): el is NonNullable<typeof el> => (
-				el !== null && typeof el !== 'undefined'
-			))
+			.filter((el) => el !== null)
 			// Then, map to key
 			.map((el) => getKey(el));
 
