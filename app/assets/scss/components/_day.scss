@@ -41,6 +41,9 @@
 .day__heading {
 	@include typography.heading-3;
 	@include patterns.disclosure-title;
-	white-space: nowrap;
-	font-variant-numeric: tabular-nums;
+
+	& {
+		white-space: nowrap;
+		font-variant-numeric: tabular-nums;
+	}
 }

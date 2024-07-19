@@ -111,8 +111,10 @@
 			margin-block-end: 0;
 		}
 
-		max-width: 100%;
-		overflow: auto;
+		& {
+			max-width: 100%;
+			overflow: auto;
+		}
 	}
 
 	kbd {
@@ -132,9 +134,11 @@
 			margin-block-end: 0;
 		}
 
-		// About enough to compensate for "> "
-		padding-inline-start: 1.5ch;
-		position: relative;
+		& {
+			// About enough to compensate for "> "
+			padding-inline-start: 1.5ch;
+			position: relative;
+		}
 		&::before {
 			content: "";
 			position: absolute;

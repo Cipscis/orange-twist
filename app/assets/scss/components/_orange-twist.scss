@@ -6,12 +6,14 @@
 
 .orange-twist {
 	@include layout.grid;
-	overflow-x: clip;
 	> * {
 		grid-column: main;
 	}
-	padding-block: spacing.$lg;
-	position: relative;
+	& {
+		overflow-x: clip;
+		padding-block: spacing.$lg;
+		position: relative;
+	}
 }
 
 .orange-twist__heading {
