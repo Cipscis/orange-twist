@@ -64,11 +64,11 @@
 		"node": ">=20"
 	},
 	"dependencies": {
-		"highlight.js": "^11.9.0",
+		"highlight.js": "^11.10.0",
 		"marked": "^12.0.2",
-		"marked-highlight": "^2.1.1",
-		"preact": "^10.20.2",
-		"preact-render-to-string": "^6.4.2",
-		"zod": "^3.22.5"
+		"marked-highlight": "^2.1.3",
+		"preact": "^10.22.1",
+		"preact-render-to-string": "^6.5.6",
+		"zod": "^3.23.8"
 	}
 }
