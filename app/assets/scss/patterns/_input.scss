@@ -6,13 +6,15 @@
 @mixin input($variant: secondary) {
 	@include reset;
 
-	@if ($variant == primary) {
-		@include palette.primary;
-	} @else if ($variant == secondary) {
-		@include palette.secondary;
-	} @else if ($variant == tertiary) {
-		@include palette.tertiary;
-	}
+	& {
+		@if ($variant == primary) {
+			@include palette.primary;
+		} @else if ($variant == secondary) {
+			@include palette.secondary;
+		} @else if ($variant == tertiary) {
+			@include palette.tertiary;
+		}
 
-	padding: spacing.$sm-rel;
+		padding: spacing.$sm-rel;
+	}
 }
