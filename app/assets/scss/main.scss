@@ -9,13 +9,13 @@
 @layer packages {
 	body {
 		@container style(--theme: light) {
-			@include meta.load-css("../../../node_modules/highlight.js/scss/a11y-light.scss");
+			@include meta.load-css("../../../node_modules/highlight.js/scss/a11y-light");
 		}
 	}
 
 	body {
 		@container style(--theme: dark) {
-			@include meta.load-css("../../../node_modules/highlight.js/scss/a11y-dark.scss");
+			@include meta.load-css("../../../node_modules/highlight.js/scss/a11y-dark");
 		}
 	}
 }

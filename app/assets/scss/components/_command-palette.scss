@@ -27,13 +27,17 @@
 .command-palette__options {
 	@include patterns.frosted-glass;
 
-	box-shadow: shadow.$accent;
+	& {
+		box-shadow: shadow.$accent;
+	}
 }
 
 .command-palette__field-input,
 .command-palette__option {
 	@include patterns.input;
-	@include typography.base-large;
+	& {
+		@include typography.base-large;
+	}
 }
 
 .command-palette__field-input {
@@ -57,10 +61,12 @@
 		border-bottom: 1px solid var(--accent);
 	}
 
-	transition:
-		background-color
-		animation.$speed-fast
-		animation.$easing-default;
+	& {
+		transition:
+			background-color
+			animation.$speed-fast
+			animation.$easing-default;
+	}
 }
 
 .command-palette__option:not(:is(

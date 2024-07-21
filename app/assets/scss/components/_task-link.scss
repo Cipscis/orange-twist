@@ -10,7 +10,9 @@
 
 	&:where(:not(.task-link--invalid)) {
 		@include palette.primary(true);
-		transition: background-color animation.$speed-fast animation.$easing-default;
+		& {
+			transition: background-color animation.$speed-fast animation.$easing-default;
+		}
 	}
 	&:where(task-link--invalid) {
 		@include palette.primary(false);

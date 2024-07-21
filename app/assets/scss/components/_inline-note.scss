@@ -29,10 +29,12 @@
 
 .inline-note__input {
 	@include reset;
-	cursor: text;
+	& {
+		cursor: text;
 
-	// Enough for the "Task name" placeholder text
-	min-width: 10ch;
+		// Enough for the "Task name" placeholder text
+		min-width: 10ch;
+	}
 }
 
 .inline-note__display {
