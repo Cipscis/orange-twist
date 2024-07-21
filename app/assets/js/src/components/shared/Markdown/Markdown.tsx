@@ -1,5 +1,9 @@
 import { h, type JSX } from 'preact';
-import { useLayoutEffect, useRef } from 'preact/hooks';
+import {
+	useContext,
+	useLayoutEffect,
+	useRef,
+} from 'preact/hooks';
 
 import { classNames } from 'utils';
 
@@ -15,6 +19,7 @@ import { renderer } from './renderer';
 
 import { useAllTemplateInfo } from 'data';
 import { consumeAllImageUrlPlaceholders } from 'images';
+import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	/**
@@ -68,6 +73,9 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 	// Re-render whenever a template changes
 	const templates = useAllTemplateInfo();
+
+	// Re-render when data is loaded to ensure task notes etc. display correctly
+	const { isLoading } = useContext(OrangeTwistContext);
 
 	// Render content as markup
 	// Using `useLayoutEffect` prevents jittering caused by setting HTML after Preact renders
@@ -128,7 +136,12 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 				}
 			}
 		})();
-	}, [content, inline, templates]);
+	}, [
+		content,
+		inline,
+		templates,
+		isLoading,
+	]);
 
 	return <div
 		ref={wrapperRef}
