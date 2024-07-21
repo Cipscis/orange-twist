@@ -1,8 +1,14 @@
-import { h, type JSX } from 'preact';
 import {
-	useContext,
+	h,
+	type JSX,
+	type RefObject,
+} from 'preact';
+import {
+	useCallback,
+	useEffect,
 	useLayoutEffect,
 	useRef,
+	useState,
 } from 'preact/hooks';
 
 import { classNames } from 'utils';
@@ -19,13 +25,45 @@ import { renderer } from './renderer';
 
 import { useAllTemplateInfo } from 'data';
 import { consumeAllImageUrlPlaceholders } from 'images';
-import { OrangeTwistContext } from 'components/OrangeTwistContext';
+
+/**
+ * An externally accessible API exposed through a forwarded ref prop.
+ */
+export interface MarkdownApi {
+	/** Force Markdown content to re-render. */
+	rerender(): void;
+}
 
 interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
 	/**
 	 * The markdown content to be rendered as HTML.
 	 */
 	content: string;
+
+	/**
+	 * If a ref object is provided, it will be set to expose
+	 * a {@linkcode MarkdownApi} object.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Some external data that affects Markdown results
+	 * const externalData = useExternalData();
+	 *
+	 * const markdownApiRef = useRef<MarkdownApi | null>(null);
+	 *
+	 * // Rerender Markdown content when external data changes
+	 * useEffect(() => {
+	 *     markdownApiRef.current?.rerender();
+	 * }, [externalData])
+	 *
+	 * return <Markdown
+	 *     content={props.content}
+	 *     apiRef={markdownApiRef}
+	 * />
+	 * ```
+	 */
+	apiRef?: RefObject<MarkdownApi>;
+
 	/**
 	 * If set to `true`, only the first line of the content will be used,
 	 * and it won't be wrapped in a `<p>` tag.
@@ -65,6 +103,7 @@ function initMarked() {
 export function Markdown(props: MarkdownProps): JSX.Element {
 	const {
 		content,
+		apiRef,
 		inline,
 		...passthroughProps
 	} = props;
@@ -74,8 +113,19 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 	// Re-render whenever a template changes
 	const templates = useAllTemplateInfo();
 
-	// Re-render when data is loaded to ensure task notes etc. display correctly
-	const { isLoading } = useContext(OrangeTwistContext);
+	const [renderSwitch, setRenderSwitch] = useState(false);
+	/**
+	 * Force the Markdown content to re-render.
+	 */
+	const rerender = useCallback(() => {
+		setRenderSwitch(!renderSwitch);
+	}, [renderSwitch]);
+
+	useEffect(() => {
+		if (apiRef) {
+			apiRef.current = { rerender };
+		}
+	}, [apiRef, rerender]);
 
 	// Render content as markup
 	// Using `useLayoutEffect` prevents jittering caused by setting HTML after Preact renders
@@ -140,7 +190,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 		content,
 		inline,
 		templates,
-		isLoading,
+		renderSwitch,
 	]);
 
 	return <div

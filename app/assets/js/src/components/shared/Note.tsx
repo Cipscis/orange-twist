@@ -1,4 +1,8 @@
-import { h, type JSX } from 'preact';
+import {
+	h,
+	type JSX,
+	type RefObject,
+} from 'preact';
 
 import {
 	useCallback,
@@ -28,13 +32,19 @@ import {
 
 import * as ui from 'ui';
 
-import { Markdown } from './Markdown';
+import { Markdown, type MarkdownApi } from './Markdown';
 import { IconButton } from './IconButton';
 
 interface NoteProps {
 	note: string | null;
 	onNoteChange: (note: string) => void;
 	saveChanges: () => void;
+
+	/**
+	 * If a ref object is provided, it will be set to expose
+	 * a {@linkcode MarkdownApi} object.
+	 */
+	markdownApiRef?: RefObject<MarkdownApi>;
 
 	class?: string;
 }
@@ -482,6 +492,7 @@ export function Note(props: NoteProps): JSX.Element {
 					<Markdown
 						content={note}
 						onClick={enterEditingModeOnNoteClick}
+						apiRef={props.markdownApiRef}
 					/>
 				}
 				<IconButton
