@@ -121,6 +121,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 		setRenderSwitch(!renderSwitch);
 	}, [renderSwitch]);
 
+	// Expose API
 	useEffect(() => {
 		if (apiRef) {
 			apiRef.current = { rerender };

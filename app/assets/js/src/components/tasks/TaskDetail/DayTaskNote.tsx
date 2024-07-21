@@ -13,8 +13,8 @@ import { setDayTaskInfo, type DayTaskInfo } from 'data';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
-import { Note } from 'components/shared';
 import type { MarkdownApi } from 'components/shared/Markdown';
+import { Note } from 'components/shared';
 
 interface DayTaskNoteProps {
 	dayTask: Readonly<DayTaskInfo>;
