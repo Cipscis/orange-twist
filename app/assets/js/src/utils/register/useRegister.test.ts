@@ -62,7 +62,7 @@ describe('useRegister', () => {
 			['b', 2],
 		]);
 
-		const matcherA = (key: string) => key === 'a';
+		const matcherA = (key: string): boolean => key === 'a';
 		const matcherAll = () => true;
 
 		const {

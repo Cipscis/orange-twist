@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - 2024-07-21
+
+### Fixed
+
+* Tasks can now be reordered on touch devices
+* Task links will no longer get stuck in a "No task with ID X" state on initial load while there is image data.
+
+### Changed
+
+* Bumped dependencies to latest versions
+
 ## [1.5.2] - 2024-06-01
 
 ### Fixed

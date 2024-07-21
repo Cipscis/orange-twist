@@ -38,9 +38,11 @@
 	@include palette.secondary;
 	@include patterns.frosted-glass;
 
-	border: 1px solid var(--accent);
+	& {
+		border: 1px solid var(--accent);
 
-	box-shadow: shadow.$accent;
+		box-shadow: shadow.$accent;
+	}
 }
 
 .task-status__optgroup {
@@ -60,7 +62,9 @@
 	&:has(> :first-child + :last-child) {
 		grid-template-columns: repeat(2, 1fr);
 	}
-	gap: var(--_gap);
+	& {
+		gap: var(--_gap);
+	}
 }
 
 .task-status__option {}

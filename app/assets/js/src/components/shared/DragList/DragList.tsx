@@ -13,6 +13,8 @@ import {
 
 import { classNames, useViewTransition } from 'utils';
 
+import { DragControls } from './DragControls';
+
 const keyProp = 'data-drag-list-key';
 
 interface DragListChildProps {
@@ -155,11 +157,77 @@ export function DragList(props: DragListProps): JSX.Element {
 	}, []);
 
 	/**
-	 * Handle calling the {@linkcode onReorder} callback when dropped.
+	 * Moves the item with a specified key to the position of an item
+	 * with a specified target key.
+	 *
+	 * The moved item will be moved one spot past the target item,
+	 * e.g. if it was previously after the target then after this
+	 * operation it will be in the slot before the target.
+	 *
+	 * This function also calls {@linkcode onReorder} with the new order.
+	 */
+	const moveItemTo = useCallback((itemKey: number, targetKey: number) => {
+		if (!(
+			onReorder &&
+			itemKey !== targetKey
+		)) {
+			return;
+		}
+
+		const newOrder = itemsRef.current
+			// First, remove null entries
+			.filter((el): el is NonNullable<typeof el> => (
+				el !== null && typeof el !== 'undefined'
+			))
+			// Then, map to key
+			.map((el) => getKey(el));
+
+		// Determine the positions of the moved item and target item
+		// to determine where to move the moved item from and to
+
+		const itemIndex = newOrder.indexOf(itemKey);
+		const targetIndex = newOrder.indexOf(targetKey);
+
+		// Removing first then adding back at the target index
+		// means it will get inserted before if moved back or
+		// inserted after if moved forwards without needing
+		// an extra check
+		newOrder.splice(itemIndex, 1);
+		newOrder.splice(targetIndex, 0, itemKey);
+
+		startViewTransition(() => onReorder(newOrder));
+	}, [onReorder, startViewTransition]);
+
+	/**
+	 * Moves the item with a specified key by a specified offset. Negative
+	 * offsets will move the item up, whereas positive offsets will move it
+	 * down. At most, it will be moved to the start or end of the list.
+	 */
+	const moveItemBy = useCallback((itemKey: number, offset: number) => {
+		const keyOrder = itemsRef.current
+			// First, remove null entries
+			.filter((el) => el !== null)
+			// Then, map to key
+			.map((el) => getKey(el));
+
+		const itemIndex = keyOrder.indexOf(itemKey);
+		let targetIndex = itemIndex + offset;
+
+		if (targetIndex < 0) {
+			targetIndex = 0;
+		} else if (targetIndex >= keyOrder.length) {
+			targetIndex = keyOrder.length - 1;
+		}
+
+		const targetKey = keyOrder[targetIndex];
+		moveItemTo(itemKey, targetKey);
+	}, [moveItemTo]);
+
+	/**
+	 * Move dragged item to new position when it's dropped.
 	 */
 	const dropHandler = useCallback((e: DragEvent) => {
 		if (!(
-			onReorder &&
 			(e.target instanceof Element) &&
 			draggedItemKeyRef.current !== null
 		)) {
@@ -173,30 +241,10 @@ export function DragList(props: DragListProps): JSX.Element {
 
 		const draggedItemKey = draggedItemKeyRef.current;
 		draggedItemKeyRef.current = null;
-		const newOrder = itemsRef.current
-			// First, remove null entries
-			.filter((el): el is NonNullable<typeof el> => (
-				el !== null && typeof el !== 'undefined'
-			))
-			// Then, map to key
-			.map((el) => getKey(el));
-
-		// Determine the positions of the dragged element and drop target
-		// to determine where to move the dragged element from and to
 		const dropTargetKey = getKey(dropTarget);
 
-		const dropTargetIndex = newOrder.indexOf(dropTargetKey);
-		const draggedElementIndex = newOrder.indexOf(draggedItemKey);
-
-		// Removing first then adding back at the target index
-		// means it will get inserted before if dragged back or
-		// inserted after if dragged forwards without needing
-		// an extra check
-		newOrder.splice(draggedElementIndex, 1);
-		newOrder.splice(dropTargetIndex, 0, draggedItemKey);
-
-		startViewTransition(() => onReorder(newOrder));
-	}, [onReorder, startViewTransition]);
+		moveItemTo(draggedItemKey, dropTargetKey);
+	}, [moveItemTo]);
 
 	return <ul
 		class={classNames('drag-list', className)}
@@ -222,10 +270,10 @@ export function DragList(props: DragListProps): JSX.Element {
 				}}
 			>
 				{
-					onReorder && <span
-						class="drag-list__drag-handle"
-						draggable
-						onDragStart={dragStartHandler}
+					onReorder && <DragControls
+						dragStartHandler={dragStartHandler}
+						moveItemBy={moveItemBy}
+						itemKey={getKey(child)}
 					/>
 				}
 				{child}

@@ -9,18 +9,20 @@
 .icon-button--secondary {
 	@include reset;
 
-	@include typography.icons;
+	& {
+		@include typography.icons;
 
-	display: grid;
-	place-items: center;
+		display: grid;
+		place-items: center;
 
-	height: 2em;
-	aspect-ratio: 1 / 1;
-	border-radius: radius.$md-rel;
+		height: 2em;
+		aspect-ratio: 1 / 1;
+		border-radius: radius.$md-rel;
 
-	transition:
-		background-color animation.$speed-fast animation.$easing-default,
-		color animation.$speed-fast animation.$easing-default;
+		transition:
+			background-color animation.$speed-fast animation.$easing-default,
+			color animation.$speed-fast animation.$easing-default;
+	}
 }
 
 .icon-button--primary {
