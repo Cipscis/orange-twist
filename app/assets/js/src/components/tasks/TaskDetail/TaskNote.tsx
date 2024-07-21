@@ -1,12 +1,11 @@
 import { h, type JSX } from 'preact';
-import { useCallback, useContext } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
 import { setTaskInfo, type TaskInfo } from 'data';
 
-import { OrangeTwistContext } from 'components/OrangeTwistContext';
 import { Note } from 'components/shared';
 
 interface TaskNoteProps {
@@ -15,9 +14,6 @@ interface TaskNoteProps {
 
 export function TaskNote(props: TaskNoteProps): JSX.Element {
 	const { task } = props;
-
-	// Reload when all data is loaded, to make sure it's all displayed correctly
-	useContext(OrangeTwistContext);
 
 	const setTaskNote = useCallback(
 		(note: string) => {
