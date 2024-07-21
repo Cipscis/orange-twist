@@ -10,17 +10,19 @@
 .button--secondary {
 	@include reset;
 
-	@include typography.heading-base;
+	& {
+		@include typography.heading-base;
 
-	padding-block: spacing.$sm-rel;
-	padding-inline: spacing.$md-rel;
-	border-radius: radius.$sm-rel;
+		padding-block: spacing.$sm-rel;
+		padding-inline: spacing.$md-rel;
+		border-radius: radius.$sm-rel;
 
-	text-align: center;
+		text-align: center;
 
-	transition:
-		background-color animation.$speed-fast animation.$easing-default,
-		color animation.$speed-fast animation.$easing-default;
+		transition:
+			background-color animation.$speed-fast animation.$easing-default,
+			color animation.$speed-fast animation.$easing-default;
+	}
 }
 
 .button--primary {

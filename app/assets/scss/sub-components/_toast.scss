@@ -21,12 +21,14 @@
 		grid-area: 1 / 1;
 	}
 
-	@include palette.secondary;
-	@include typography.base-body;
-	border-radius: radius.$sm-rel;
-	overflow: hidden;
+	& {
+		@include palette.secondary;
+		@include typography.base-body;
+		border-radius: radius.$sm-rel;
+		overflow: hidden;
 
-	animation: appearUp animation.$speed-medium animation.$easing-default;
+		animation: appearUp animation.$speed-medium animation.$easing-default;
+	}
 }
 
 .toast__progress {
@@ -45,7 +47,10 @@
 			opacity: 0.1;
 		}
 	}
-	pointer-events: none;
+
+	& {
+		pointer-events: none;
+	}
 }
 
 .toast__body {
