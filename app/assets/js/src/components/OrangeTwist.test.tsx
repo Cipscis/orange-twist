@@ -15,6 +15,7 @@ import {
 	act,
 	cleanup,
 	render,
+	waitFor,
 } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
@@ -55,7 +56,7 @@ describe('OrangeTwist', () => {
 		clear();
 	});
 
-	test('renders its children', () => {
+	test('renders its children', async () => {
 		const { getByTestId } = render(
 			<OrangeTwist persist={ls}>
 				<div data-testid="orange-twist-child-1" />
@@ -63,8 +64,10 @@ describe('OrangeTwist', () => {
 			</OrangeTwist>
 		);
 
-		expect(getByTestId('orange-twist-child-1')).toBeInTheDocument();
-		expect(getByTestId('orange-twist-child-2')).toBeInTheDocument();
+		await waitFor(() => {
+			expect(getByTestId('orange-twist-child-1')).toBeInTheDocument();
+			expect(getByTestId('orange-twist-child-2')).toBeInTheDocument();
+		});
 	});
 
 	test('sets up the toggle theme command', () => {
