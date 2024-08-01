@@ -431,7 +431,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				/>
 			</ToolDrawer>
 
-			{children}
+			{!isLoading && children}
 
 			<Footer />
 		</div>
