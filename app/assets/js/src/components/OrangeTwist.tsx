@@ -391,58 +391,60 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			isLoading,
 		}}
 	>
-		{
-			__IS_DEV__ && <>
-				<link rel="stylesheet" href="/assets/css/dev.css" />
-				<span class="dev-ribbon">unreleased</span>
-			</>
-		}
+		{!isLoading && (<>
+			{
+				__IS_DEV__ && <>
+					<link rel="stylesheet" href="/assets/css/dev.css" />
+					<span class="dev-ribbon">unreleased</span>
+				</>
+			}
 
-		<CommandPalette
-			open={commandPaletteOpen}
-			onClose={closeCommandPalette}
-		/>
+			<CommandPalette
+				open={commandPaletteOpen}
+				onClose={closeCommandPalette}
+			/>
 
-		<div class="orange-twist">
-			<ToolDrawer side={ToolDrawerPlacement.LEFT}>
-				{
-					backButton &&
+			<div class="orange-twist">
+				<ToolDrawer side={ToolDrawerPlacement.LEFT}>
+					{
+						backButton &&
+						<IconButton
+							icon="<"
+							title="Back"
+							href="../"
+						/>
+					}
+				</ToolDrawer>
+
+				<h1 class="orange-twist__heading">Orange Twist</h1>
+
+				<ToolDrawer side={ToolDrawerPlacement.RIGHT}>
 					<IconButton
-						icon="<"
-						title="Back"
-						href="../"
+						icon="\"
+						title="Open command palette"
+						onClick={openCommandPalette}
 					/>
-				}
-			</ToolDrawer>
 
-			<h1 class="orange-twist__heading">Orange Twist</h1>
+					<IconButton
+						icon="?"
+						title="Show keyboard shortcuts"
+						onClick={openKeyboardShortcutsModal}
+					/>
+				</ToolDrawer>
 
-			<ToolDrawer side={ToolDrawerPlacement.RIGHT}>
-				<IconButton
-					icon="\"
-					title="Open command palette"
-					onClick={openCommandPalette}
-				/>
+				{children}
 
-				<IconButton
-					icon="?"
-					title="Show keyboard shortcuts"
-					onClick={openKeyboardShortcutsModal}
-				/>
-			</ToolDrawer>
+				<Footer />
+			</div>
 
-			{children}
-
-			<Footer />
-		</div>
-
-		<KeyboardShortcutModal
-			open={keyboardShortcutsModalOpen}
-			onClose={closeKeyboardShortcutsModal}
-		/>
-		<TemplatesModal
-			open={templatesModalOpen}
-			onClose={closeTemplatesModal}
-		/>
+			<KeyboardShortcutModal
+				open={keyboardShortcutsModalOpen}
+				onClose={closeKeyboardShortcutsModal}
+			/>
+			<TemplatesModal
+				open={templatesModalOpen}
+				onClose={closeTemplatesModal}
+			/>
+		</>)}
 	</OrangeTwistContext.Provider>;
 }
