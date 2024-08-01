@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.4] - 2024-08-01
+
+### Fixed
+
+* Improved speed of initial render
+* Fixed a performance bug on task detail pages
+
 ## [1.5.3] - 2024-07-21
 
 ### Fixed
