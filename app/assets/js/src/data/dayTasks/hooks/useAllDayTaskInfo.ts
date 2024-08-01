@@ -19,26 +19,35 @@ import { decodeDayTaskKey } from '../util';
  * provided, provides information on all day tasks.
  */
 export function useAllDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): readonly DayTaskInfo[] {
+	const {
+		dayName: identifierDayName,
+		taskId: identifierTaskId,
+	} = {
+		...identifier,
+	};
+
 	const matcher = useMemo(() => {
-		if (typeof identifier === 'undefined') {
+		if (
+			typeof identifierDayName === 'undefined' &&
+			typeof identifierTaskId === 'undefined'
+		) {
 			return () => true;
 		}
 
 		return (key: RegisterKey<typeof dayTasksRegister>) => {
 			const { dayName, taskId } = decodeDayTaskKey(key);
 
-			if ('dayName' in identifier && dayName !== identifier.dayName) {
+			if (typeof identifierDayName !== 'undefined' && dayName !== identifierDayName) {
 				return false;
 			}
 
-			if ('taskId' in identifier &&
-			taskId !== identifier.taskId) {
+			if (typeof identifierTaskId !== 'undefined' && taskId !== identifierTaskId) {
 				return false;
 			}
 
 			return true;
 		};
-	}, [identifier]);
+	}, [identifierDayName, identifierTaskId]);
 
 	return useRegister(
 		dayTasksRegister,
