@@ -12,24 +12,22 @@ import {
 
 import * as ui from 'ui';
 
-import { Button } from '../shared';
+import { Accordion, Button } from '../shared';
 import { DayNote } from './DayNote';
 import { TaskList } from '../tasks/TaskList';
 
-interface DayProps extends h.JSX.HTMLAttributes<HTMLDetailsElement> {
+interface DayProps {
 	day: Readonly<DayInfo>;
+	open?: boolean;
 }
 
 /**
  * Renders a day, including its notes and tasks, in a disclosure.
- *
- * Props that can apply to a `<details>` element will be passed
- * through to that element.
  */
 export const Day = (props: DayProps): JSX.Element => {
 	const {
 		day,
-		...passthroughProps
+		open,
 	} = props;
 	const {
 		name,
@@ -55,14 +53,13 @@ export const Day = (props: DayProps): JSX.Element => {
 		fireCommand(Command.DATA_SAVE);
 	}, [name]);
 
-	return <details
-		class="day js-day"
-		{...passthroughProps}
-	>
-		<summary class="day__summary">
-			<h3 class="day__heading">{name}</h3>
-		</summary>
+	return <Accordion
+		className="day js-day"
+		initiallyOpen={open}
 
+		summaryClass="day__summary"
+		summary={<h3 class="day__heading">{name}</h3>}
+	>
 		<div class="day__body">
 			<Button
 				onClick={removeDay}
@@ -83,5 +80,5 @@ export const Day = (props: DayProps): JSX.Element => {
 				)}
 			>Add new task</Button>
 		</div>
-	</details>;
+	</Accordion>;
 };
