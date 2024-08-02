@@ -36,7 +36,7 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 	return <Accordion
 		key={dayName}
 		className="day js-day"
-		initiallyOpen={open}
+		open={open}
 
 		summaryClass="day__summary"
 		summary={<>
