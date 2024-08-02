@@ -5,11 +5,16 @@ import {
 	beforeEach,
 	describe,
 	expect,
+	jest,
 	test,
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, render } from '@testing-library/preact';
+import {
+	act,
+	cleanup,
+	render,
+} from '@testing-library/preact';
 
 import { TaskStatus } from 'types/TaskStatus';
 import {
@@ -96,7 +101,12 @@ describe('CompletedTaskList', () => {
 	});
 
 	test('renders all completed tasks', () => {
+		jest.useFakeTimers();
 		const { queryByText } = render(<CompletedTaskList />);
+
+		// Wait for idle rendering to complete
+		act(() => jest.advanceTimersByTime(1500));
+		jest.useRealTimers();
 
 		expect(queryByText('Task two')).toBeInTheDocument();
 		expect(queryByText('Task three')).toBeInTheDocument();
@@ -107,7 +117,12 @@ describe('CompletedTaskList', () => {
 	});
 
 	test('renders completed tasks in reverse order of completion', () => {
+		jest.useFakeTimers();
 		const { queryAllByText } = render(<CompletedTaskList />);
+
+		// Wait for idle rendering to complete
+		act(() => jest.advanceTimersByTime(1500));
+		jest.useRealTimers();
 
 		const tasks = queryAllByText(/^Task /);
 		expect(tasks.map(({ textContent }) => textContent)).toEqual([
