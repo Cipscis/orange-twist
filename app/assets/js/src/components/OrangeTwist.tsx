@@ -6,6 +6,7 @@ import {
 import {
 	useCallback,
 	useEffect,
+	useLayoutEffect,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -146,7 +147,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 
 	// Scroll to first open day when initial loading is complete
 	const hasDoneInitialScroll = useRef(false);
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (hasDoneInitialScroll.current) {
 			return;
 		}
