@@ -5,3 +5,4 @@ app/assets/js/dist/
 app/coverage/
 app/service-worker.js
 app/service-worker.js.map
+app/metafile-service-worker.json
