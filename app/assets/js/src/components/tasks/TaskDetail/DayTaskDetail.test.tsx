@@ -11,7 +11,11 @@ import {
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, render } from '@testing-library/preact';
+import {
+	act,
+	cleanup,
+	render,
+} from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import { Command } from 'types/Command';
@@ -52,9 +56,14 @@ describe('DayTaskDetail', () => {
 	test('renders the day task\'s note', () => {
 		const dayTaskInfo = getDayTaskInfo({ dayName: '2023-12-22', taskId: 1 })!;
 
+		jest.useFakeTimers();
 		const { getByText } = render(<DayTaskDetail
 			dayTaskInfo={dayTaskInfo}
 		/>);
+
+		// Wait for idle rendering to complete
+		act(() => jest.advanceTimersByTime(1500));
+		jest.useRealTimers();
 
 		const status = getByText('Task note');
 		expect(status).toBeInTheDocument();
@@ -92,9 +101,14 @@ describe('DayTaskDetail', () => {
 		const user = userEvent.setup();
 		const dayTaskInfo = getDayTaskInfo({ dayName: '2023-12-22', taskId: 1 })!;
 
+		jest.useFakeTimers();
 		const { getByRole } = render(<DayTaskDetail
 			dayTaskInfo={dayTaskInfo}
 		/>);
+
+		// Wait for idle rendering to complete
+		act(() => jest.advanceTimersByTime(1500));
+		jest.useRealTimers();
 
 		const noteEditButton = getByRole('button', { name: 'Edit note' });
 		await user.click(noteEditButton);
@@ -122,9 +136,14 @@ describe('DayTaskDetail', () => {
 
 		const dayTaskInfo = getDayTaskInfo({ dayName: '2023-12-22', taskId: 1 })!;
 
+		jest.useFakeTimers();
 		const { getByRole } = render(<DayTaskDetail
 			dayTaskInfo={dayTaskInfo}
 		/>);
+
+		// Wait for idle rendering to complete
+		act(() => jest.advanceTimersByTime(1500));
+		jest.useRealTimers();
 
 		const noteEditButton = getByRole('button', { name: 'Edit note' });
 		expect(noteEditButton).toBeInTheDocument();
