@@ -7,7 +7,7 @@
  */
 
 import { FpsCounter } from 'dev/fps-counter';
-import { createElement } from 'utils';
+import { createElement } from 'utils/createElement';
 
 if (navigator.serviceWorker) {
 	navigator.serviceWorker.register('/service-worker.js');
