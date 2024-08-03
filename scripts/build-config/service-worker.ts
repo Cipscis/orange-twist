@@ -14,5 +14,6 @@ export const config: BuildOptions = {
 	bundle: true,
 	sourcemap: 'linked',
 
+	metafile: true,
 	minify: !isDev,
 };
