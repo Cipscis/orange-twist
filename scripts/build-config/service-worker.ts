@@ -13,6 +13,6 @@ export const config: BuildOptions = {
 	outfile: `${root}/service-worker.js`,
 	bundle: true,
 	sourcemap: 'linked',
-
+	metafile: true,
 	minify: !isDev,
 };
