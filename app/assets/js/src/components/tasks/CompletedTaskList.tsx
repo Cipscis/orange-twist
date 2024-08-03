@@ -15,7 +15,7 @@ import { TaskList } from './TaskList';
  */
 export function CompletedTaskList(): JSX.Element | null {
 	return <Accordion
-		className="orange-twist__section"
+		class="orange-twist__section"
 		summary={
 			<h2 class="orange-twist__title">Completed tasks</h2>
 		}

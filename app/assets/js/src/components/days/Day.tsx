@@ -54,7 +54,7 @@ export const Day = (props: DayProps): JSX.Element => {
 	}, [name]);
 
 	return <Accordion
-		className="day js-day"
+		class="day js-day"
 		open={open}
 
 		summaryClass="day__summary"
