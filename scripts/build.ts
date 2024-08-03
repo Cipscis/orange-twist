@@ -13,6 +13,8 @@ const {
 } = process.env;
 
 const isDev = MODE === 'development';
+
+// Modify this line if you want to generate meta files for prod builds when testing locally:
 const writeMetaFiles = isDev;
 
 const [mainMeta, serviceWorkerMeta] = await Promise.all([
