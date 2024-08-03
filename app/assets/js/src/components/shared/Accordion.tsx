@@ -10,7 +10,7 @@ import {
 } from 'preact/hooks';
 
 interface AccordionProps {
-	className?: string;
+	class?: string;
 	open?: boolean;
 
 	summary: string | JSX.Element;
@@ -21,7 +21,7 @@ interface AccordionProps {
 
 export function Accordion(props: AccordionProps): JSX.Element {
 	const {
-		className,
+		class: className,
 
 		summary,
 		summaryClass,
