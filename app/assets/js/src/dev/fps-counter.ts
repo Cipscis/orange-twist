@@ -1,7 +1,5 @@
-import {
-	createElement,
-	startAnimationLoop,
-} from 'utils';
+import { createElement } from 'utils/createElement';
+import { startAnimationLoop } from 'utils/startAnimationLoop';
 
 /**
  * A custom element for displaying frames per second information.

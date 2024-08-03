@@ -30,7 +30,7 @@ export const config: BuildOptions = {
 	outdir: dist,
 	bundle: true,
 	sourcemap: 'linked',
-
+	metafile: true,
 	minify: !isDev,
 	define: {
 		['__VERSION__']: JSON.stringify(version),
