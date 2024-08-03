@@ -10,12 +10,25 @@
 	position: relative;
 
 	--_gap: #{spacing.$sm};
+
+	&:has(.task-status__popover[open]) {
+		anchor-name: --taskStatus;
+	}
 }
 
 .task-status__popover {
-	position: absolute;
-	bottom: 100%;
-	margin-bottom: spacing.$sm;
+	@supports (position-anchor: --taskStatus) {
+		position: fixed;
+		position-anchor: --taskStatus;
+
+		inset-area: top span-right;
+		position-try-fallbacks: flip-block;
+	}
+	@supports not(position-anchor: --taskStatus) {
+		position: absolute;
+		bottom: 100%;
+	}
+	margin: 0 0 spacing.$sm;
 	z-index: 1;
 
 	&[open] {
