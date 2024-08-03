@@ -10,6 +10,7 @@ import {
 } from 'data';
 
 import {
+	Accordion,
 	InlineNote,
 } from 'components/shared';
 import { TaskStatusComponent } from '../TaskStatusComponent';
@@ -32,12 +33,13 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 
 	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
 
-	return <details
+	return <Accordion
 		key={dayName}
 		class="day js-day"
 		open={open}
-	>
-		<summary class="day__summary">
+
+		summaryClass="day__summary"
+		summary={<>
 			<TaskStatusComponent
 				taskId={taskId}
 				dayName={dayTaskInfo.dayName}
@@ -52,10 +54,10 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 				editButtonTitle="Edit summary"
 				placeholder="Summary"
 			/>
-		</summary>
-
+		</>}
+	>
 		<div class="day__body">
 			<DayTaskNote dayTask={dayTaskInfo} />
 		</div>
-	</details>;
+	</Accordion>;
 }

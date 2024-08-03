@@ -7,17 +7,19 @@ import {
 	type TaskInfo,
 } from 'data';
 
+import { Accordion } from 'components/shared';
 import { TaskList } from './TaskList';
 
 /**
  * Renders a list of all completed tasks inside a disclosure.
  */
 export function CompletedTaskList(): JSX.Element | null {
-	return <details class="orange-twist__section">
-		<summary>
+	return <Accordion
+		class="orange-twist__section"
+		summary={
 			<h2 class="orange-twist__title">Completed tasks</h2>
-		</summary>
-
+		}
+	>
 		<TaskList
 			matcher={useCallback(
 				({ status }: TaskInfo) => CompletedTaskStatuses.has(status),
@@ -45,5 +47,5 @@ export function CompletedTaskList(): JSX.Element | null {
 			)}
 			className="orange-twist__task-list"
 		/>
-	</details>;
+	</Accordion>;
 }
