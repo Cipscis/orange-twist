@@ -1,4 +1,5 @@
 import { addToCache, getCachedResponse } from '../cache';
+import { getFallbackResponse } from '../error';
 
 /**
  * Attempt to return a regular network `Response`, but if something goes
@@ -32,28 +33,7 @@ export async function networkFirst({ preloadResponse, request }: FetchEvent): Pr
 			return cachedResponse;
 		}
 
-		if (request.destination === 'document') {
-			// If the request is for a page, and we don't have a cached
-			// response, try to return a generic network error page
-			const errorResponse = await getCachedResponse(
-				new URL('/408.html', self.location.origin)
-			);
-
-			if (errorResponse) {
-				return new Response(errorResponse.clone().body, {
-					...errorResponse,
-					status: 408, // REQUEST_TIMEOUT
-				});
-			}
-		}
-
-		// Otherwise, return a generic network error in plain text instead
-		const message = error instanceof Error ? error.message : 'Network error';
-		return new Response(message, {
-			status: 408, // REQUEST_TIMEOUT
-			headers: {
-				'Content-Type': 'text/plain',
-			},
-		});
+		// If the request failed and we can't return a cached response, use a fallback
+		return await getFallbackResponse(request, error);
 	}
 }
