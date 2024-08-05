@@ -19,7 +19,7 @@ export async function cacheFirst({ preloadResponse, request }: FetchEvent): Prom
 			return preloadedNetworkResponse;
 		}
 
-		return await fetch(request);
+		return fetch(request);
 	})();
 	networkPromise.then(
 		(response) => handleNetworkResponse(request, response)
