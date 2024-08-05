@@ -36,7 +36,13 @@ export async function refreshCache(options?: RefreshCacheOptions): Promise<void>
 		const responsePromise = fetch(request);
 		responsePromise
 			.then((response) => {
-				promisesToResolve.push(addToCache(request, response));
+				if (response.ok) {
+					// If we got a good response, cache it
+					promisesToResolve.push(addToCache(request, response));
+				} else {
+					// Otherwise, clear this entry
+					promisesToResolve.push(cache.delete(request));
+				}
 			})
 			.catch(() => {
 				// If we couldn't get a new response, clear that entry
