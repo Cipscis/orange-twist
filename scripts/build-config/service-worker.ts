@@ -15,4 +15,7 @@ export const config: BuildOptions = {
 	sourcemap: 'linked',
 	metafile: true,
 	minify: !isDev,
+	define: {
+		['__IS_DEV__']: JSON.stringify(isDev),
+	},
 };

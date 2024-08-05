@@ -1,0 +1,1 @@
+export { getFallbackResponse } from './getFallbackResponse';
