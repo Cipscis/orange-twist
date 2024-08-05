@@ -65,9 +65,10 @@ async function handleNetworkResponse(request: Request, response: Response) {
 		return;
 	}
 
+	// Create a copy so we can consume the original's body
 	const responseToCache = response.clone();
 
-	// Check if a response has changes since it was last cached, and refresh the cache if so
+	// Check if a response has changed since it was last cached, and refresh the cache if so
 	const shouldRefreshCache = await (async () => {
 		const cachedResponse = await getCachedResponse(request);
 		if (!cachedResponse?.body) {
