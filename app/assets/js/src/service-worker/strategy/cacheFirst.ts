@@ -42,7 +42,13 @@ export async function cacheFirst({ request }: FetchEvent): Promise<Response> {
 
 	// If there was no cached response, try to return the network response eventually
 	try {
-		return await networkPromise;
+		const response = await networkPromise;
+		if (response.ok) {
+			return response;
+		} else {
+			// Pass to the cache block to get a fallback response
+			throw new Error(response.statusText);
+		}
 	} catch (error) {
 		// If using the network response failed, provide a fallback
 		return await getFallbackResponse(request, error);
