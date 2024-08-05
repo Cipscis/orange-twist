@@ -43,12 +43,12 @@ export async function cacheFirst({ request }: FetchEvent): Promise<Response> {
 	// If there was no cached response, try to return the network response eventually
 	try {
 		const response = await networkPromise;
-		if (response.ok) {
-			return response;
-		} else {
+		if (!response.ok) {
 			// Pass to the cache block to get a fallback response
 			throw new Error(response.statusText);
 		}
+
+		return response;
 	} catch (error) {
 		// If using the network response failed, provide a fallback
 		return await getFallbackResponse(request, error);
@@ -61,33 +61,35 @@ export async function cacheFirst({ request }: FetchEvent): Promise<Response> {
  * Ignores unsuccessful responses.
  */
 async function handleNetworkResponse(request: Request, response: Response) {
-	if (response.ok) {
-		const responseToCache = response.clone();
+	if (!response.ok) {
+		return;
+	}
 
-		// Check if a response has changes since it was last cached, and refresh the cache if so
-		const shouldRefreshCache = await (async () => {
-			const cachedResponse = await getCachedResponse(request);
-			if (!cachedResponse?.body) {
-				return false;
-			}
+	const responseToCache = response.clone();
 
-			const [
-				cachedResponseText,
-				responseText,
-			] = await Promise.all([
-				cachedResponse.text(),
-				response.text(),
-			]);
-			const hasChanged = cachedResponseText !== responseText;
-
-			return hasChanged;
-		})();
-
-		addToCache(request, responseToCache);
-		if (shouldRefreshCache) {
-			await refreshCache({
-				exceptions: [request],
-			});
+	// Check if a response has changes since it was last cached, and refresh the cache if so
+	const shouldRefreshCache = await (async () => {
+		const cachedResponse = await getCachedResponse(request);
+		if (!cachedResponse?.body) {
+			return false;
 		}
+
+		const [
+			cachedResponseText,
+			responseText,
+		] = await Promise.all([
+			cachedResponse.text(),
+			response.text(),
+		]);
+		const hasChanged = cachedResponseText !== responseText;
+
+		return hasChanged;
+	})();
+
+	addToCache(request, responseToCache);
+	if (shouldRefreshCache) {
+		await refreshCache({
+			exceptions: [request],
+		});
 	}
 }
