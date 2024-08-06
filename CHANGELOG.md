@@ -2,11 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.5.6] - 2024-08-04
+## [1.5.6] - 2024-08-06
 
 ### Changed
 
 * Production service worker now uses "cache-first" strategy instead of "network-first"
+* Changed appearance of initial rendering to improve perceived speed
 
 ## [1.5.5] - 2024-08-03
 
