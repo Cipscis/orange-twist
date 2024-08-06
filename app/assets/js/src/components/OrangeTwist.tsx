@@ -42,6 +42,7 @@ import {
 } from 'registers/keyboard-shortcuts';
 
 import {
+	classNames,
 	type DefaultsFor,
 	getCurrentDateDayName,
 	isValidDateString,
@@ -393,10 +394,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		}}
 	>
 		{
-			__IS_DEV__ && <>
-				<link rel="stylesheet" href="/assets/css/dev.css" />
-				<span class="dev-ribbon">unreleased</span>
-			</>
+			__IS_DEV__ && <span class="dev-ribbon">unreleased</span>
 		}
 
 		<CommandPalette
@@ -404,15 +402,19 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			onClose={closeCommandPalette}
 		/>
 
-		<div class="orange-twist">
+		<div
+			class={classNames('orange-twist', {
+				'orange-twist--loading': isLoading,
+			})}
+		>
 			<ToolDrawer side={ToolDrawerPlacement.LEFT}>
 				{
 					backButton &&
-					<IconButton
-						icon="<"
-						title="Back"
-						href="../"
-					/>
+						<IconButton
+							icon="<"
+							title="Back"
+							href="../"
+						/>
 				}
 			</ToolDrawer>
 
