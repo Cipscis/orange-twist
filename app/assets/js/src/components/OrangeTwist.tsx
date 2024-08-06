@@ -394,10 +394,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		}}
 	>
 		{
-			__IS_DEV__ && <>
-				<link rel="stylesheet" href="/assets/css/dev.css" />
-				<span class="dev-ribbon">unreleased</span>
-			</>
+			__IS_DEV__ && <span class="dev-ribbon">unreleased</span>
 		}
 
 		<CommandPalette

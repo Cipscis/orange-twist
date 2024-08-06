@@ -15,6 +15,18 @@ if (navigator.serviceWorker) {
 
 if (__IS_DEV__) {
 	/**
+	 * Insert the extra CSS file for dev CSS.
+	 */
+	const insertDevCss = () => {
+		const cssLink = document.createElement('link');
+		cssLink.rel = 'stylesheet';
+		cssLink.href = '/assets/css/dev.css';
+		cssLink.setAttribute('blocking', 'render');
+
+		document.head.appendChild(cssLink);
+	};
+
+	/**
 	 * Update the document title and favicon to reflect that the app is running in dev mode.
 	 */
 	const displayDevMode = () => {
@@ -40,6 +52,7 @@ if (__IS_DEV__) {
 		document.body.prepend(fpsEl);
 	};
 
+	insertDevCss();
 	displayDevMode();
 	if (__SHOW_FPS_COUNTER__) {
 		displayFramesPerSecond();
