@@ -5,7 +5,7 @@
 // and the project can compile just fine. But my IDE doesn't seem to understand
 
 import { deleteOldCaches, populateCache } from './cache';
-import { networkFirst } from './strategy';
+import { cacheFirst, networkFirst } from './strategy';
 
 // TypeScript doesn't have a Service Worker specific library.
 // This declaration is necessary to update the types of `self`
@@ -24,15 +24,24 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('activate', (e) => {
-	e.waitUntil(Promise.all([
-		self.registration.navigationPreload.enable(),
+	const initialSteps: Promise<void>[] = [
 		deleteOldCaches(),
 		// If any tabs are still open using a previous version of
 		// the service worker, claim them with this new version
 		self.clients.claim(),
-	]));
+	];
+
+	if (__IS_DEV__) {
+		initialSteps.push(self.registration.navigationPreload.enable());
+	}
+
+	e.waitUntil(Promise.all(initialSteps));
 });
 
 self.addEventListener('fetch', (e) => {
-	e.respondWith(networkFirst(e));
+	if (__IS_DEV__) {
+		e.respondWith(networkFirst(e));
+	} else {
+		e.respondWith(cacheFirst(e));
+	}
 });
