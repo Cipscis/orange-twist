@@ -402,44 +402,42 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			onClose={closeCommandPalette}
 		/>
 
-		{!isLoading &&
-			<div
-				class={classNames('orange-twist', {
-					'orange-twist--loading': isLoading,
-				})}
-			>
-				<ToolDrawer side={ToolDrawerPlacement.LEFT}>
-					{
-						backButton &&
+		<div
+			class={classNames('orange-twist', {
+				'orange-twist--loading': isLoading,
+			})}
+		>
+			<ToolDrawer side={ToolDrawerPlacement.LEFT}>
+				{
+					backButton &&
 						<IconButton
 							icon="<"
 							title="Back"
 							href="../"
 						/>
-					}
-				</ToolDrawer>
+				}
+			</ToolDrawer>
 
-				<h1 class="orange-twist__heading">Orange Twist</h1>
+			<h1 class="orange-twist__heading">Orange Twist</h1>
 
-				<ToolDrawer side={ToolDrawerPlacement.RIGHT}>
-					<IconButton
-						icon="\"
-						title="Open command palette"
-						onClick={openCommandPalette}
-					/>
+			<ToolDrawer side={ToolDrawerPlacement.RIGHT}>
+				<IconButton
+					icon="\"
+					title="Open command palette"
+					onClick={openCommandPalette}
+				/>
 
-					<IconButton
-						icon="?"
-						title="Show keyboard shortcuts"
-						onClick={openKeyboardShortcutsModal}
-					/>
-				</ToolDrawer>
+				<IconButton
+					icon="?"
+					title="Show keyboard shortcuts"
+					onClick={openKeyboardShortcutsModal}
+				/>
+			</ToolDrawer>
 
-				{children}
+			{children}
 
-				<Footer />
-			</div>
-		}
+			<Footer />
+		</div>
 
 		<KeyboardShortcutModal
 			open={keyboardShortcutsModalOpen}
