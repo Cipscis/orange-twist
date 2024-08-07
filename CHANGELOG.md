@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.7] - 2024-08-07
+
+### Fixed
+
+* Task links (and any navigation that involves a redirect) will no longer be broken by the service worker
+
 ## [1.5.6] - 2024-08-06
 
 ### Changed
