@@ -3,7 +3,7 @@ import {
 	getCachedResponse,
 	refreshCache,
 } from '../cache';
-import { getFallbackResponse } from '../error';
+import { getSafeNetworkResponse } from '../utils';
 
 /**
  * Return a cached `Response` if possible, while waiting for the network response.
@@ -12,8 +12,6 @@ import { getFallbackResponse } from '../error';
  * a fresh copy of each entry that already exists in the cache. Any entries that fail to be
  * refreshed in this way, for example due to a network error, will be cleared so fresh assets
  * will be requested and cached.
- *
- * The returned promise will resolve to `null` if the fetched response is an opaque redirect.
  *
  * The cache is refreshed asynchronously, without blocking the current request. It's assumed
  * that responses served during a document load are all requested up front, and will be
@@ -29,9 +27,9 @@ import { getFallbackResponse } from '../error';
  * number and total size of these static assets, as this affects how heavy the act of refreshing
  * the cache is.
  */
-export async function cacheFirst({ request }: FetchEvent): Promise<Response | null> {
+export async function cacheFirst({ request }: FetchEvent): Promise<Response> {
 	// Initialise the network request immediately, and queue its follow-up action to happen asynchronously
-	const networkPromise = fetch(request);
+	const networkPromise = getSafeNetworkResponse(request);
 	networkPromise.then(
 		(response) => handleNetworkResponse(request, response.clone())
 	);
@@ -43,22 +41,7 @@ export async function cacheFirst({ request }: FetchEvent): Promise<Response | nu
 	}
 
 	// If there was no cached response, try to return the network response eventually
-	try {
-		const response = await networkPromise;
-		// If the response is an opaque redirect, let the browser handle it
-		if (response.type === 'opaqueredirect') {
-			return null;
-		}
-		if (!response.ok) {
-			// Pass to the cache block to get a fallback response
-			throw new Error(response.statusText);
-		}
-
-		return response;
-	} catch (error) {
-		// If using the network response failed, provide a fallback
-		return await getFallbackResponse(request, error);
-	}
+	return await networkPromise;
 }
 
 /**

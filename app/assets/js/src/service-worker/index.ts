@@ -40,18 +40,8 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
 	if (__IS_DEV__) {
-		e.waitUntil((async () => {
-			const networkFirstResponse = await networkFirst(e);
-			if (networkFirstResponse) {
-				e.respondWith(networkFirstResponse);
-			}
-		})());
+		e.respondWith(networkFirst(e));
 	} else {
-		e.waitUntil((async () => {
-			const cacheFirstResponse = await cacheFirst(e);
-			if (cacheFirstResponse) {
-				e.respondWith(cacheFirstResponse);
-			}
-		})());
+		e.respondWith(cacheFirst(e));
 	}
 });
