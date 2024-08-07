@@ -3,7 +3,7 @@ import {
 	getCachedResponse,
 	refreshCache,
 } from '../cache';
-import { getFallbackResponse } from '../error';
+import { getSafeNetworkResponse } from '../utils';
 
 /**
  * Return a cached `Response` if possible, while waiting for the network response.
@@ -29,9 +29,9 @@ import { getFallbackResponse } from '../error';
  */
 export async function cacheFirst({ request }: FetchEvent): Promise<Response> {
 	// Initialise the network request immediately, and queue its follow-up action to happen asynchronously
-	const networkPromise = fetch(request);
+	const networkPromise = getSafeNetworkResponse(request);
 	networkPromise.then(
-		(response) => handleNetworkResponse(request, response)
+		(response) => handleNetworkResponse(request, response.clone())
 	);
 
 	// Retrieve a cached response and try to return it
@@ -41,18 +41,7 @@ export async function cacheFirst({ request }: FetchEvent): Promise<Response> {
 	}
 
 	// If there was no cached response, try to return the network response eventually
-	try {
-		const response = await networkPromise;
-		if (!response.ok) {
-			// Pass to the cache block to get a fallback response
-			throw new Error(response.statusText);
-		}
-
-		return response;
-	} catch (error) {
-		// If using the network response failed, provide a fallback
-		return await getFallbackResponse(request, error);
-	}
+	return await networkPromise;
 }
 
 /**

@@ -9,7 +9,7 @@ exports[`Markdown renders task links for a valid task ID 1`] = `
     Here's a task link: 
     <a
       class="task-link"
-      href="/task?id=1"
+      href="/task/?id=1"
     >
       <span
         class="task-link__status"

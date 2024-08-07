@@ -25,7 +25,7 @@ function TaskLink(props: TaskLinkProps): JSX.Element {
 
 	return <>
 		<a
-			href={`/task?id=${taskId}`}
+			href={`/task/?id=${taskId}`}
 			class="task-link"
 		>
 			<span
