@@ -13,6 +13,8 @@ import { getFallbackResponse } from '../error';
  * refreshed in this way, for example due to a network error, will be cleared so fresh assets
  * will be requested and cached.
  *
+ * The returned promise will resolve to `null` if the fetched response is an opaque redirect.
+ *
  * The cache is refreshed asynchronously, without blocking the current request. It's assumed
  * that responses served during a document load are all requested up front, and will be
  * retrieved from the cache faster than the cache is able to be refreshed. So long as this
@@ -27,11 +29,11 @@ import { getFallbackResponse } from '../error';
  * number and total size of these static assets, as this affects how heavy the act of refreshing
  * the cache is.
  */
-export async function cacheFirst({ request }: FetchEvent): Promise<Response> {
+export async function cacheFirst({ request }: FetchEvent): Promise<Response | null> {
 	// Initialise the network request immediately, and queue its follow-up action to happen asynchronously
 	const networkPromise = fetch(request);
 	networkPromise.then(
-		(response) => handleNetworkResponse(request, response)
+		(response) => handleNetworkResponse(request, response.clone())
 	);
 
 	// Retrieve a cached response and try to return it
@@ -43,6 +45,10 @@ export async function cacheFirst({ request }: FetchEvent): Promise<Response> {
 	// If there was no cached response, try to return the network response eventually
 	try {
 		const response = await networkPromise;
+		// If the response is an opaque redirect, let the browser handle it
+		if (response.type === 'opaqueredirect') {
+			return null;
+		}
 		if (!response.ok) {
 			// Pass to the cache block to get a fallback response
 			throw new Error(response.statusText);
