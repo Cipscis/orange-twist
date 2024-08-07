@@ -1,5 +1,5 @@
 import { addToCache, getCachedResponse } from '../cache';
-import { getFallbackResponse } from '../error';
+import { getFallbackResponse, getSafeNetworkResponse } from '../utils';
 
 /**
  * Attempt to return a regular network `Response`, but if something goes
@@ -15,7 +15,7 @@ export async function networkFirst({ preloadResponse, request }: FetchEvent): Pr
 			}
 
 			// Otherwise, make the request and return its response
-			return await fetch(request);
+			return await getSafeNetworkResponse(request);
 		})();
 
 		// If the response arrived, cache it if it was okay, and return
