@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.8] - 2024-08-09
+
+### Fixed
+
+* Multiple templates with arguments on the same line now render correctly
+
 ## [1.5.7] - 2024-08-07
 
 ### Fixed
