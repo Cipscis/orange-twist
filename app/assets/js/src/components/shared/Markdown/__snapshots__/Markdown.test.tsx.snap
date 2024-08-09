@@ -83,6 +83,33 @@ exports[`Markdown renders templates renders message for empty templates 1`] = `
 </div>
 `;
 
+exports[`Markdown renders templates renders two templates with arguments on the same line 1`] = `
+<div
+  class="content"
+  data-testid="markdown-content"
+>
+  <p>
+    <em>
+      arg0
+    </em>
+     
+    <em>
+      arg1
+    </em>
+     
+    <em>
+      arg0
+    </em>
+     
+    <em>
+      arg1
+    </em>
+  </p>
+  
+
+</div>
+`;
+
 exports[`Markdown renders templates with a recognised name 1`] = `
 <div
   class="content"
