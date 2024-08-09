@@ -39,7 +39,7 @@ export async function loadExportData(
 	data: ExportDataLike
 ): Promise<void> {
 	// Take a backup in case we hit an error
-	const backup = writeExportData();
+	const backup = await writeExportData();
 
 	try {
 		await loadExportDataDirect(persist, data);
