@@ -36,6 +36,12 @@ const exportDataSchema = exportDataLikeSchema.extend({
 			templateInfoSchema,
 		]),
 	),
+	images: z.array(
+		z.tuple([
+			z.string(),
+			z.string().base64(),
+		]).readonly(),
+	),
 });
 export type ExportData = z.infer<typeof exportDataSchema>;
 export const isExportData = isZodSchemaType(exportDataSchema);

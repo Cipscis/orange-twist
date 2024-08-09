@@ -40,8 +40,8 @@ describe('writeExportData', () => {
 		});
 	});
 
-	test('constructs an ExportData object from current data', () => {
-		const result = writeExportData();
+	test('constructs an ExportData object from current data', async () => {
+		const result = await writeExportData();
 
 		expect(result).toEqual({
 			days: [['2023-12-11', {
@@ -69,6 +69,8 @@ describe('writeExportData', () => {
 				template: 'Test template',
 				sortIndex: -1,
 			}]],
+			// TODO: Is there any way to test image serialisation from IndexedDB?
+			images: [],
 		});
 	});
 });
