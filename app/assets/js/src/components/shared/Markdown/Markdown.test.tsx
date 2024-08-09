@@ -268,5 +268,17 @@ this is the second line`;
 			const content = getByTestId('markdown-content');
 			expect(content).toMatchSnapshot();
 		});
+
+		test('renders two templates with arguments on the same line', () => {
+			const { getByTestId } = render(
+				<Markdown
+					content="{{args|arg0|arg1}} {{args|arg0|arg1}}"
+					data-testid="markdown-content"
+				/>
+			);
+
+			const content = getByTestId('markdown-content');
+			expect(content).toMatchSnapshot();
+		});
 	});
 });
