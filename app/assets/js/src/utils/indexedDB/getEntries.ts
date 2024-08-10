@@ -36,7 +36,7 @@ async function getCursor(request: IDBRequest<IDBCursorWithValue | null>): Promis
 export async function* getEntries(objectStore: IDBObjectStore): AsyncGenerator<
 	[IDBValidKey, unknown],
 	void,
-	never
+	void
 > {
 	const cursorRequest = objectStore.openCursor();
 
