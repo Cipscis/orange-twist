@@ -30,6 +30,8 @@ import {
 	useKeyboardShortcut,
 } from 'registers/keyboard-shortcuts';
 
+import { CustomEventName } from 'types/CustomEventName';
+
 import * as ui from 'ui';
 
 import { Markdown, type MarkdownApi } from './Markdown';
@@ -471,6 +473,22 @@ export function Note(props: NoteProps): JSX.Element {
 
 		return () => controller.abort();
 	}, [isEditing]);
+
+	// Re-render on data import
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		document.addEventListener(
+			CustomEventName.IMPORT_COMPLETE,
+			() => {
+				props.markdownApiRef?.current?.rerender();
+			},
+			{ signal }
+		);
+
+		return () => controller.abort();
+	}, [props.markdownApiRef]);
 
 	return <div class={classNames('note', props.class)}>
 		{isEditing
