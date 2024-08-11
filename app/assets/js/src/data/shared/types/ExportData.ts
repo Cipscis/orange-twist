@@ -11,7 +11,7 @@ import { exportDataLikeSchema } from './ExportDataLike';
 /**
  * Strict export data format used when constructing export data.
  */
-const exportDataSchema = exportDataLikeSchema.extend({
+export const exportDataSchema = exportDataLikeSchema.extend({
 	days: z.array(
 		z.tuple([
 			z.string(),
@@ -35,6 +35,12 @@ const exportDataSchema = exportDataLikeSchema.extend({
 			z.number(),
 			templateInfoSchema,
 		]),
+	),
+	images: z.array(
+		z.tuple([
+			z.string(),
+			z.string().url(), // <- Should be a data URL
+		]).readonly(),
 	),
 });
 export type ExportData = z.infer<typeof exportDataSchema>;

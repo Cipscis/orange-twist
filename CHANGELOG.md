@@ -2,7 +2,11 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.5.8] - 2024-08-09
+## [1.6.0] - 2024-08-10
+
+### Added
+
+* Importing and exporting now includes image data
 
 ### Fixed
 
