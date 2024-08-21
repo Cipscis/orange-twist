@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2024-08-21
+
+### Added
+
+* Importing and exporting now includes image data
+
+### Fixed
+
+* Multiple templates with arguments on the same line now render correctly
+
 ## [1.5.7] - 2024-08-07
 
 ### Fixed
