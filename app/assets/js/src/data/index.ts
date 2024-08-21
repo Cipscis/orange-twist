@@ -44,6 +44,8 @@ export {
 
 	loadDayTasks,
 	saveDayTasks,
+
+	encodeDayTaskKey,
 } from './dayTasks';
 
 export {
