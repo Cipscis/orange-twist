@@ -6,7 +6,7 @@ import { h, type JSX } from 'preact';
 export function Footer(): JSX.Element {
 	return <footer class="orange-twist__footer content">
 		<div class="orange-twist__footer-row">
-			<span class="orange-twist__footer-version">by Mark Hanna</span>
+			<span class="orange-twist__footer-version">by Brooke Hart</span>
 			<span class="orange-twist__footer-version">version <a href="https://github.com/Cipscis/orange-twist/blob/main/CHANGELOG.md" target="_blank" rel="noreferrer">{__VERSION__}</a></span>
 		</div>
 		<div class="orange-twist__footer-row">
