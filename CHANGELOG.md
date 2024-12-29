@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2024-12-30
+
+### Added
+
+* Where supported, task status options use CSS anchor positioning to try fallback positions and remain within the viewport
+
 ## [1.5.5] - 2024-08-03
 
 ### Changed
