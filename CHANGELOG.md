@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2024-12-30
+
+### Fixed
+
+* The performance of `decodeDayTaskKey` should be improved, which will hopefully help improve overall performance
+
 ## [1.6.0] - 2024-08-21
 
 ### Added
