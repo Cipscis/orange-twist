@@ -1,5 +1,6 @@
 import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
+import { memo } from 'preact/compat';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -24,7 +25,7 @@ interface DayProps {
 /**
  * Renders a day, including its notes and tasks, in a disclosure.
  */
-export const Day = (props: DayProps): JSX.Element => {
+export const Day = memo((props: DayProps): JSX.Element => {
 	const {
 		day,
 		open,
@@ -81,4 +82,4 @@ export const Day = (props: DayProps): JSX.Element => {
 			>Add new task</Button>
 		</div>
 	</Accordion>;
-};
+});
