@@ -38,7 +38,7 @@ export const template: TokenizerAndRendererExtension = {
 		// Expression for complete token, from its start
 		// Match a name in double braces, optionally with one or more parameters separated by pipes
 		// e.g. "{{template-name|1|title}}"
-		const rule = /^(\{\{([^{|}]+)(\|(.+))?}})/;
+		const rule = /^(\{\{([^{|}]+)(\|(.+?))?}})/;
 		const match = rule.exec(src);
 		if (!match) {
 			return;

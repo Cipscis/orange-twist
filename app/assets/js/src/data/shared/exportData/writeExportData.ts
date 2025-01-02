@@ -1,14 +1,18 @@
 import type { ExportData } from '../types/ExportData';
 
-import { getAllTaskInfo } from '../../tasks';
-import { getAllDayInfo } from '../../days';
-import { encodeDayTaskKey, getAllDayTaskInfo } from '../../dayTasks';
-import { getAllTemplateInfo } from 'data';
+import {
+	getAllTaskInfo,
+	getAllDayInfo,
+	encodeDayTaskKey,
+	getAllDayTaskInfo,
+	getAllTemplateInfo,
+} from 'data';
+import { getAllImages, toDataUrl } from 'images';
 
 /**
  * Write all data in memory to an ExportData object.
  */
-export function writeExportData(): ExportData {
+export async function writeExportData(): Promise<ExportData> {
 	const data: ExportData = {
 		days: getAllDayInfo().map(
 			(dayInfo) => [dayInfo.name, dayInfo]
@@ -22,6 +26,17 @@ export function writeExportData(): ExportData {
 		templates: getAllTemplateInfo().map(
 			(templateInfo) => [templateInfo.id, templateInfo],
 		),
+		images: await (async () => {
+			const allImages = await getAllImages();
+
+			// Convert all images to base64 encoded data URLs for serialisation
+			const encodedImageEntries = await Promise.all(
+				allImages.map(async ([key, file]) => {
+					return [key, await toDataUrl(file)] as const;
+				})
+			);
+			return encodedImageEntries;
+		})(),
 	};
 
 	return data;
