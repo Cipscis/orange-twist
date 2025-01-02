@@ -25,7 +25,7 @@
 
 		"start": "concurrently --kill-others \"npm run server\" \"npm run watch\""
 	},
-	"author": "Mark Hanna",
+	"author": "Brooke Hart",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/cipscis/orange-twist.git"
