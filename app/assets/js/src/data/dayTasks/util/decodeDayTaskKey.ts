@@ -13,14 +13,14 @@ import type { DayTaskIdentifier } from '../types/DayTaskIdentifier';
  * @see {@linkcode encodeDayTaskKey} for the inverse operation.
  */
 export function decodeDayTaskKey(key: RegisterKey<typeof dayTasksRegister>): DayTaskIdentifier {
-	const parts = key.match(/^(\d{4}-\d{2}-\d{2})_(\d+)$/);
+	const [dayName, taskId] = key.split('_');
 
-	if (parts === null) {
+	if (!(dayName && taskId)) {
 		throw new Error(`Invalid day task key ${key}`);
 	}
 
 	return {
-		dayName: parts[1],
-		taskId: Number(parts[2]),
+		dayName,
+		taskId: Number(taskId),
 	};
 }

@@ -12,6 +12,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 * When `field-sizing: content` is supported, Orange Twist uses CSS instead of JS to control the size of notes while they're being edited
 
+### Fixed
+
+* The performance of `decodeDayTaskKey` should be improved, which will hopefully help improve overall performance
+
 ## [1.6.0] - 2024-08-21
 
 ### Added
