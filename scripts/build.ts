@@ -1,16 +1,18 @@
 import * as esbuild from 'esbuild';
-import dotenv from 'dotenv';
 
-import { writeMetaFile } from './utils/index.js';
+import {
+	getEnv,
+	writeMetaFile,
+} from './utils/index.js';
 
 import { config as mainConfig } from './build-config/main.js';
 import { config as serviceWorkerConfig } from './build-config/service-worker.js';
 
-dotenv.config();
+const env = getEnv();
 
 const {
 	MODE,
-} = process.env;
+} = env;
 
 const isDev = MODE === 'development';
 

@@ -1,16 +1,16 @@
 import type { BuildOptions } from 'esbuild';
-import dotenv from 'dotenv';
 
+import { getEnv } from '../utils/index.js';
 import { dist, src } from './paths.js';
 
 import packageJson from '../../package.json' with { type: 'json' };
 
-dotenv.config();
+const env = getEnv();
 
 const {
 	MODE,
 	SHOW_FPS,
-} = process.env;
+} = env;
 const isDev = MODE === 'development';
 const showFps = Boolean(SHOW_FPS && SHOW_FPS !== 'false');
 

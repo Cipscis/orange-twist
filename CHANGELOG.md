@@ -2,7 +2,7 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.6.1] - 2024-12-30
+## [1.6.1] - 2025-01-03
 
 ### Added
 
@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 * When `field-sizing: content` is supported, Orange Twist uses CSS instead of JS to control the size of notes while they're being edited
+* When running Orange Twist locally without a `.env` file, one will be created automatically
 
 ### Fixed
 
