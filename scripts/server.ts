@@ -1,15 +1,20 @@
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
-import dotenv from 'dotenv';
 import express from 'express';
+
+import { getEnv } from './utils/index.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-dotenv.config();
 const app = express();
 
-const port = process.env.PORT;
+const env = getEnv();
+const port = Number(env.PORT);
+
+if (isNaN(port)) {
+	throw new Error('Cannot listen to NaN port');
+}
 
 app.use(express.static('app'));
 
