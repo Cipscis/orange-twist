@@ -2,6 +2,7 @@ import { h, type JSX } from 'preact';
 import {
 	useCallback,
 	useEffect,
+	useId,
 	useMemo,
 	useRef,
 	useState,
@@ -91,6 +92,9 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	const enterChangeMode = useCallback(() => {
 		setIsInChangeMode(true);
 	}, []);
+
+	const positionAnchorId = useId();
+	const positionAnchorName = `--taskStatus_${positionAnchorId}`;
 
 	/**
 	 * Update task data to reflect new status.
@@ -190,6 +194,10 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 
 		if (isInChangeMode) {
 			popover.show();
+			// The `opening` attribute is used to adjust z-index
+			popover.setAttribute('opening', '');
+			const animation = animate(popover, CSSKeyframes.APPEAR_SCREEN);
+			animation.finished.then(() => popover.removeAttribute('opening'));
 		} else {
 			const animation = animate(popover, CSSKeyframes.DISAPPEAR_SCREEN);
 			animation.finished.then(() => popover.close());
@@ -231,6 +239,9 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	return <span
 		class="task-status"
 		ref={rootRef}
+		style={{
+			anchorName: positionAnchorName,
+		}}
 	>
 		{readonly
 			? <IconButton
@@ -256,6 +267,9 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			ref={popoverRef}
 			tabindex={-1}
 			inert={!isInChangeMode}
+			style={{
+				positionAnchor: positionAnchorName,
+			}}
 		>
 			<ul
 				class="task-status__options"

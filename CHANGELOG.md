@@ -4,6 +4,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [1.6.1] - 2024-12-30
 
+### Added
+
+* Where supported, task status options use CSS anchor positioning to try fallback positions and remain within the viewport
+
+### Changed
+
+* When `field-sizing: content` is supported, Orange Twist uses CSS instead of JS to control the size of notes while they're being edited
+
 ### Fixed
 
 * The performance of `decodeDayTaskKey` should be improved, which will hopefully help improve overall performance
