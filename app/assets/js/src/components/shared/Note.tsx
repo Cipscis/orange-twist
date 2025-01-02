@@ -54,6 +54,11 @@ interface NoteProps {
 const maxFileSize = 1024 * 1024 * 5; // 5 MB
 
 /**
+ * Whether or not the current browser supports CSS field-sizing.
+ */
+const fieldSizingSupport = CSS.supports('field-sizing', 'content');
+
+/**
  * Display a note as HTML, and provide options to edit
  * it in a textarea as Markdown.
  */
@@ -125,6 +130,11 @@ export function Note(props: NoteProps): JSX.Element {
 	}, [onNoteChange, hasNoteChanged]);
 
 	const updateSpaceholderSize = useCallback((note: string) => {
+		// Prefer using CSS to let the note adjust to its content size
+		if (fieldSizingSupport) {
+			return;
+		}
+
 		const spaceholder = spaceholderRef.current;
 		if (!spaceholder) {
 			return;
