@@ -90,7 +90,18 @@ function polyfillBroadcastChannelApi() {
 	window.BroadcastChannel = BroadcastChannel;
 }
 
+/**
+ * jsdom hasn't implemented the CSS API, so replace it with a mocked
+ * version so it won't cause JavaScript errors.
+ */
+function polyfillCSS() {
+	window.CSS = {} as unknown as typeof window.CSS;
+
+	window.CSS.supports = () => true;
+}
+
 polyfillBroadcastChannelApi();
+polyfillCSS();
 
 beforeAll(() => {
 	polyfillDialogElement();
