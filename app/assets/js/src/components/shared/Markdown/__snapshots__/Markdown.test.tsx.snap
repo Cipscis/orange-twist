@@ -9,7 +9,7 @@ exports[`Markdown renders task links for a valid task ID 1`] = `
     Here's a task link: 
     <a
       class="task-link"
-      href="/task?id=1"
+      href="/task/?id=1"
     >
       <span
         class="task-link__status"
@@ -76,6 +76,33 @@ exports[`Markdown renders templates renders message for empty templates 1`] = `
   <p>
     <em>
       Empty template
+    </em>
+  </p>
+  
+
+</div>
+`;
+
+exports[`Markdown renders templates renders two templates with arguments on the same line 1`] = `
+<div
+  class="content"
+  data-testid="markdown-content"
+>
+  <p>
+    <em>
+      arg0
+    </em>
+     
+    <em>
+      arg1
+    </em>
+     
+    <em>
+      arg0
+    </em>
+     
+    <em>
+      arg1
     </em>
   </p>
   

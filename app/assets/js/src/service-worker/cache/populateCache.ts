@@ -9,6 +9,8 @@ export async function populateCache(): Promise<void> {
 	cache.addAll([
 		'/',
 		'/task/',
+		'/help/',
+		'/404.html',
 		'/408.html',
 	]);
 }

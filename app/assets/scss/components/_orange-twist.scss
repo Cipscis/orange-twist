@@ -16,6 +16,10 @@
 	}
 }
 
+.orange-twist--loading {
+	display: none;
+}
+
 .orange-twist__heading {
 	@include typography.heading-1;
 	// Hack to make top of text flush with top of box

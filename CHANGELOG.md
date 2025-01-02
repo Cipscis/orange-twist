@@ -2,11 +2,39 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [1.6.1] - 2024-12-30
 
 ### Added
 
 * Where supported, task status options use CSS anchor positioning to try fallback positions and remain within the viewport
+
+### Changed
+
+* When `field-sizing: content` is supported, Orange Twist uses CSS instead of JS to control the size of notes while they're being edited
+
+## [1.6.0] - 2024-08-21
+
+### Added
+
+* Importing and exporting now includes image data
+
+### Fixed
+
+* Multiple templates with arguments on the same line now render correctly
+
+## [1.5.7] - 2024-08-07
+
+### Fixed
+
+* Task links (and any navigation that involves a redirect) will no longer be broken by the service worker
+
+## [1.5.6] - 2024-08-06
+
+### Changed
+
+* Production service worker now uses "cache-first" strategy instead of "network-first"
+* Changed appearance of initial rendering to improve perceived speed
 
 ## [1.5.5] - 2024-08-03
 
