@@ -1,11 +1,11 @@
 import type { BuildOptions } from 'esbuild';
-import dotenv from 'dotenv';
 
+import { getEnv } from '../utils/index.js';
 import { root, src } from './paths.js';
 
-dotenv.config();
+const env = getEnv();
 
-const { MODE } = process.env;
+const { MODE } = env;
 const isDev = MODE === 'development';
 
 export const config: BuildOptions = {

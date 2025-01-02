@@ -50,6 +50,7 @@ An example `.env` file you can use for development is:
 ```
 MODE = "development"
 PORT = "8080"
+SHOW_FPS = "false"
 ```
 
 This file is intended to differ from environment to environment, so it is ignored by Git.
