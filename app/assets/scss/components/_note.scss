@@ -19,34 +19,49 @@
 	.content:not(:empty) {
 		padding: var(--_gutter);
 	}
+
+	.content {
+		margin-bottom: 0;
+	}
 }
 
 .note__edit-content {
-	// Using this approach:
-	// https://css-tricks.com/auto-growing-inputs-textareas/
-	display: grid;
-
-	// Stack them on top of each other
-	&::before,
-	textarea {
-		grid-area: 1 / -1;
-
-		@include typography.base-body;
-		padding: var(--_gutter);
+	@supports (field-sizing: content) {
+		textarea {
+			field-sizing: content;
+			width: 100%;
+		}
 	}
 
-	// Simulate content of textarea with visibility hidden, to auto-expand content
-	&::before {
-		content: attr(data-content) " ";
-		white-space-collapse: preserve;
-		word-break: break-word;
-		visibility: hidden;
+	@supports not (field-sizing: content) {
+		// Using this approach:
+		// https://css-tricks.com/auto-growing-inputs-textareas/
+		display: grid;
+
+		// Stack them on top of each other
+		&::before,
+		textarea {
+			grid-area: 1 / -1;
+
+			@include typography.base-body;
+		}
+
+		// Simulate content of textarea with visibility hidden, to auto-expand content
+		&::before {
+			content: attr(data-content) " ";
+			white-space-collapse: preserve;
+			word-break: break-word;
+			visibility: hidden;
+			padding: var(--_gutter);
+		}
 	}
 
 	textarea {
 		@include palette.primary;
 		resize: none;
 		overflow: hidden;
+		display: block;
+		padding: var(--_gutter);
 
 		@include typography.base-body;
 
