@@ -1,7 +1,7 @@
 import { h, render } from 'preact';
 
 import { OrangeTwist } from 'components/OrangeTwist';
-import { DayList } from 'components/days/DaysList';
+import { DaysList } from 'components/days/DaysList';
 import { UnfinishedTaskList } from 'components/tasks/UnfinishedTaskList';
 import { CompletedTaskList } from 'components/tasks/CompletedTaskList';
 
@@ -11,7 +11,7 @@ if (main === null) {
 }
 
 render(<OrangeTwist>
-	<DayList />
+	<DaysList />
 
 	<UnfinishedTaskList />
 

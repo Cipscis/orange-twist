@@ -19,7 +19,7 @@ import { Day } from './Day';
 /**
  * Renders a list of days.
  */
-export function DayList(): JSX.Element {
+export function DaysList(): JSX.Element {
 	const unsortedDays = useAllDayInfo();
 
 	const { isLoading } = useContext(OrangeTwistContext);
