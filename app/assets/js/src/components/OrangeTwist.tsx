@@ -359,13 +359,13 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			return;
 		}
 		if (!isValidDateString(dayName)) {
-			ui.alert('Invalid day');
+			ui.alert(`Invalid day ${dayName}`);
 			return;
 		}
 
 		const existingDayData = days.find((day) => day.name === dayName);
 		if (existingDayData) {
-			ui.alert('Day already exists');
+			ui.alert(`Day ${dayName} already exists`);
 			return;
 		}
 
