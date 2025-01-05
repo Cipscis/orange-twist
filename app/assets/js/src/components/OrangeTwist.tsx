@@ -310,7 +310,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 */
 	const saveData = useCallback(
 		async () => {
-			const id = `saving-${crypto.randomUUID()}`;
+			const id = 'saving';
 
 			ui.alert(<>
 				<span>Saving...</span>
