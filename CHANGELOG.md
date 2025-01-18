@@ -2,6 +2,18 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.2] - 2025-01-19
+
+### Changed
+
+* No more than one "Saved" message will display at a time
+* Added additional context to some alert messages
+
+### Fixed
+
+* "Toast" messages no longer seem to disappear behind day titles on mobile
+* The "Move up" button on touch devices will no longer appear to move as tasks with long names are reordered
+
 ## [1.6.1] - 2025-01-03
 
 ### Added

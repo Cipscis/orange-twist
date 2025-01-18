@@ -6,6 +6,7 @@
 
 .toast__container {
 	position: fixed;
+	z-index: 1;
 	bottom: spacing.$md;
 	right: spacing.$md;
 
