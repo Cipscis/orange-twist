@@ -102,7 +102,7 @@ describe('CompletedTaskList', () => {
 
 	test('renders all completed tasks', () => {
 		jest.useFakeTimers();
-		const { queryByText } = render(<CompletedTaskList />);
+		const { queryByText } = render(<CompletedTaskList open />);
 
 		// Wait for idle rendering to complete
 		act(() => jest.advanceTimersByTime(1500));
@@ -118,7 +118,7 @@ describe('CompletedTaskList', () => {
 
 	test('renders completed tasks in reverse order of completion', () => {
 		jest.useFakeTimers();
-		const { queryAllByText } = render(<CompletedTaskList />);
+		const { queryAllByText } = render(<CompletedTaskList open />);
 
 		// Wait for idle rendering to complete
 		act(() => jest.advanceTimersByTime(1500));
