@@ -37,6 +37,7 @@
 		display: grid;
 		place-content: center;
 		overflow: hidden;
+		align-self: stretch;
 
 		// Force white space in ::before content to break
 		width: var(--_handle-width);
