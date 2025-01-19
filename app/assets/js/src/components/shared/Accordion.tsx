@@ -15,6 +15,7 @@ interface AccordionProps {
 
 	summary: string | JSX.Element;
 	summaryClass?: string;
+	onToggle?: (event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => void;
 
 	children: ComponentChildren;
 }
@@ -25,6 +26,7 @@ export function Accordion(props: AccordionProps): JSX.Element {
 
 		summary,
 		summaryClass,
+		onToggle,
 
 		children,
 	} = props;
@@ -76,7 +78,10 @@ export function Accordion(props: AccordionProps): JSX.Element {
 	const handleToggle: JSX.GenericEventHandler<HTMLDetailsElement> = useCallback((e) => {
 		const detailsEl = e.currentTarget;
 		setIsOpen(detailsEl.open);
-	}, []);
+		if (onToggle) {
+			onToggle(e);
+		}
+	}, [onToggle]);
 
 	return <details
 		class={className}
