@@ -14,7 +14,7 @@ import { getCurrentDateDayName } from 'utils';
 import { useAllDayInfo } from 'data';
 
 import { OrangeTwistContext } from '../OrangeTwistContext';
-import { Button } from '../shared';
+import { Accordion, Button } from '../shared';
 import { Day } from './Day';
 
 /**
@@ -71,11 +71,13 @@ export function DaysList(): JSX.Element {
 		)}
 
 		{previousDays.length > 0 &&
-			<details class="orange-twist__section" onToggle={onPreviousDaysToggle}>
-				<summary>
+			<Accordion
+				class="orange-twist__section"
+				summary={
 					<h2 class="orange-twist__title">Previous days</h2>
-				</summary>
-
+				}
+				onToggle={onPreviousDaysToggle}
+			>
 				{previousDaysOpen &&
 					previousDays.map(((day) => (
 						<Day
@@ -84,14 +86,16 @@ export function DaysList(): JSX.Element {
 						/>
 					)))
 				}
-			</details>
+			</Accordion>
 		}
 
-		<details class="orange-twist__section" open>
-			<summary>
+		<Accordion
+			class="orange-twist__section"
+			summary={
 				<h2 class="orange-twist__title">Days</h2>
-			</summary>
-
+			}
+			open
+		>
 			{currentDays.map((day) => (
 				<Day
 					key={day.name}
@@ -99,14 +103,16 @@ export function DaysList(): JSX.Element {
 					open={day.name === currentDayName}
 				/>
 			))}
-		</details>
+		</Accordion>
 
 		{futureDays.length > 0 &&
-			<details class="orange-twist__section" onToggle={onFutureDaysToggle}>
-				<summary>
+			<Accordion
+				class="orange-twist__section"
+				summary={
 					<h2 class="orange-twist__title">Future days</h2>
-				</summary>
-
+				}
+				onToggle={onFutureDaysToggle}
+			>
 				{futureDaysOpen &&
 					futureDays.map(((day) => (
 						<Day
@@ -115,7 +121,7 @@ export function DaysList(): JSX.Element {
 						/>
 					)))
 				}
-			</details>
+			</Accordion>
 		}
 
 		<Button
