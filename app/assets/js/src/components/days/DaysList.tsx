@@ -3,6 +3,7 @@ import {
 	useCallback,
 	useContext,
 	useMemo,
+	useState,
 } from 'preact/hooks';
 
 import { Command } from 'types/Command';
@@ -47,22 +48,75 @@ export function DaysList(): JSX.Element {
 		[days, currentDayName]
 	);
 
-	return <section class="orange-twist__section">
-		<h2 class="orange-twist__title">Days</h2>
+	// Display a window of 7 days, collapse previous and future days
+	const previousDays = days.slice(0, expandedDayIndex - 4);
+	const [previousDaysOpen, setPreviousDaysOpen] = useState(false);
+	const onPreviousDaysToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
+		setPreviousDaysOpen(event.currentTarget.open);
+	}, []);
 
+	const currentDays = days.slice(expandedDayIndex - 3, expandedDayIndex + 4);
+
+	const futureDays = days.slice(expandedDayIndex + 5);
+	const [futureDaysOpen, setFutureDaysOpen] = useState(false);
+	const onFutureDaysToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
+		setFutureDaysOpen(event.currentTarget.open);
+	}, []);
+
+	return <section class="orange-twist__section">
 		{!isLoading && days.length <= 1 && (
 			<div class="content">
 				<p>If you need help getting started, try <a href="/help">the help page</a>.</p>
 			</div>
 		)}
 
-		{days.map((day, i) => (
-			<Day
-				key={day.name}
-				day={day}
-				open={i === expandedDayIndex}
-			/>
-		))}
+		{previousDays.length > 0 &&
+			<details class="orange-twist__section" onToggle={onPreviousDaysToggle}>
+				<summary>
+					<h2 class="orange-twist__title">Previous days</h2>
+				</summary>
+
+				{previousDaysOpen &&
+					previousDays.map(((day) => (
+						<Day
+							key={day.name}
+							day={day}
+						/>
+					)))
+				}
+			</details>
+		}
+
+		<details class="orange-twist__section" open>
+			<summary>
+				<h2 class="orange-twist__title">Days</h2>
+			</summary>
+
+			{currentDays.map((day) => (
+				<Day
+					key={day.name}
+					day={day}
+					open={day.name === currentDayName}
+				/>
+			))}
+		</details>
+
+		{futureDays.length > 0 &&
+			<details class="orange-twist__section" onToggle={onFutureDaysToggle}>
+				<summary>
+					<h2 class="orange-twist__title">Future days</h2>
+				</summary>
+
+				{futureDaysOpen &&
+					futureDays.map(((day) => (
+						<Day
+							key={day.name}
+							day={day}
+						/>
+					)))
+				}
+			</details>
+		}
 
 		<Button
 			onClick={useCallback(() => fireCommand(Command.DAY_ADD_NEW), [])}
