@@ -25,12 +25,14 @@
 		z-index: 3;
 	}
 
-	display: flex;
-	gap: spacing.$sm;
-	align-items: center;
+	& {
+		display: flex;
+		gap: spacing.$sm;
+		align-items: center;
 
-	@include layout.bp-small {
-		flex-wrap: wrap;
+		@include layout.bp-small {
+			flex-wrap: wrap;
+		}
 	}
 }
 
