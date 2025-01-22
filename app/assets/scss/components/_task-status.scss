@@ -25,16 +25,19 @@
 		bottom: 100%;
 		margin: 0 0 spacing.$xs;
 	}
-	z-index: 1;
 
-	&[open] {
-		animation: none animation.$speed-medium animation.$easing-default;
-	}
-	// See `_day.scss` for z-index controls based on open/opening status
+	& {
+		z-index: 1;
 
-	// It's not interactive or tabbable, so let it have no focus style
-	&:focus-visible {
-		outline: none;
+		&[open] {
+			animation: none animation.$speed-medium animation.$easing-default;
+		}
+		// See `_day.scss` for z-index controls based on open/opening status
+
+		// It's not interactive or tabbable, so let it have no focus style
+		&:focus-visible {
+			outline: none;
+		}
 	}
 }
 

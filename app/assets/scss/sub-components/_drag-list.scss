@@ -16,7 +16,7 @@
 
 .drag-list__item {
 	display: flex;
-	align-items: stretch;
+	align-items: start;
 }
 
 @media (pointer: coarse) {
@@ -37,6 +37,7 @@
 		display: grid;
 		place-content: center;
 		overflow: hidden;
+		align-self: stretch;
 
 		// Force white space in ::before content to break
 		width: var(--_handle-width);

@@ -65,21 +65,29 @@ export function Toast(props: ToastProps): JSX.Element {
 		if (toastRef.current) {
 			// TODO: If a toast with the same ID is updated while it's animating out, it won't re-show
 			const animation = animate(toastRef.current, CSSKeyframes.DISAPPEAR_UP);
-			await animation.finished;
+			try {
+				await animation.finished;
+			} catch (e) {
+				// Ignore a cancelled animation
+				return;
+			}
 		}
 
 		removeToast(id);
 		renderToasts();
 	}, [id]);
 
-	// After the initial render, start the animation
+	// After the initial render and whenever duration is changed, start the animation
 	useEffect(() => {
 		const progressEl = progressRef.current;
 
+		if (progressAnimationRef.current) {
+			progressAnimationRef.current.cancel();
+		}
+
 		if (
 			duration &&
-			progressEl &&
-			!progressAnimationRef.current
+			progressEl
 		) {
 			progressAnimationRef.current = progressEl.animate([
 				{ width: 0 },
@@ -89,6 +97,9 @@ export function Toast(props: ToastProps): JSX.Element {
 			progressAnimationRef.current.finished.then(() => {
 				progressEl.style.width = '100%';
 				dismissToast();
+			}).catch(() => {
+				// If the animation was cancelled, do nothing
+				// This catch function is necessary to prevent errors in the console
 			});
 		}
 	}, [duration, dismissToast]);
