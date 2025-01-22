@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
+* Previous and future days (outside a window of 3 behind and 3 ahead of the current day) are hidden by default. These, and finished tasks, are now completely removed from the DOM when their sections are unhidden, in order to improve UI performance
 * No more than one "Saved" message will display at a time
 * Added additional context to some alert messages
 
