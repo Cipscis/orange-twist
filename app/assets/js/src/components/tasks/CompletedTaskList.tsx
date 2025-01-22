@@ -1,5 +1,9 @@
 import { h, type JSX } from 'preact';
-import { useCallback, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useState,
+} from 'preact/hooks';
 
 import { CompletedTaskStatuses } from 'types/TaskStatus';
 import {
@@ -19,6 +23,7 @@ interface CompletedTaskListProps {
  */
 export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | null {
 	const [listOpen, setListOpen] = useState(props.open);
+
 	const onListToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
 		setListOpen(event.currentTarget.open);
 	}, []);
@@ -49,12 +54,18 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 		[]
 	);
 
+	// Update list open state if prop changes
+	useEffect(() => {
+		setListOpen(props.open);
+	}, [props.open]);
+
 	return <Accordion
 		class="orange-twist__section"
 		summary={
 			<h2 class="orange-twist__title">Completed tasks</h2>
 		}
 		onToggle={onListToggle}
+		open={listOpen}
 	>
 		{listOpen &&
 			<TaskList
