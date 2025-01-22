@@ -59,13 +59,13 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 			return;
 		}
 		if (!isValidDateString(dayName)) {
-			ui.alert('Invalid day');
+			ui.alert(`Invalid day ${dayName}`);
 			return;
 		}
 
 		const existingDayData = getDayTaskInfo({ taskId, dayName });
 		if (existingDayData) {
-			ui.alert('Day already exists');
+			ui.alert(`Day ${dayName} already exists`);
 			return;
 		}
 

@@ -310,7 +310,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 */
 	const saveData = useCallback(
 		async () => {
-			const id = `saving-${crypto.randomUUID()}`;
+			const id = 'saving';
 
 			ui.alert(<>
 				<span>Saving...</span>
@@ -359,13 +359,13 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			return;
 		}
 		if (!isValidDateString(dayName)) {
-			ui.alert('Invalid day');
+			ui.alert(`Invalid day ${dayName}`);
 			return;
 		}
 
 		const existingDayData = days.find((day) => day.name === dayName);
 		if (existingDayData) {
-			ui.alert('Day already exists');
+			ui.alert(`Day ${dayName} already exists`);
 			return;
 		}
 
