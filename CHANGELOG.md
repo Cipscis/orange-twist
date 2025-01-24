@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.3] - 2025-01-25
+
+### Changed
+
+* Reduced DOM size to improve performance
+
 ## [1.6.2] - 2025-01-23
 
 ### Changed
