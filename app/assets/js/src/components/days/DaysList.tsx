@@ -49,7 +49,7 @@ export function DaysList(): JSX.Element {
 	);
 
 	// Display a window of 7 days, collapse previous and future days
-	const previousDays = days.slice(0, expandedDayIndex - 4);
+	const previousDays = days.slice(0, expandedDayIndex - 3);
 	const [previousDaysOpen, setPreviousDaysOpen] = useState(false);
 	const onPreviousDaysToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
 		setPreviousDaysOpen(event.currentTarget.open);
@@ -57,7 +57,7 @@ export function DaysList(): JSX.Element {
 
 	const currentDays = days.slice(expandedDayIndex - 3, expandedDayIndex + 4);
 
-	const futureDays = days.slice(expandedDayIndex + 5);
+	const futureDays = days.slice(expandedDayIndex + 4);
 	const [futureDaysOpen, setFutureDaysOpen] = useState(false);
 	const onFutureDaysToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
 		setFutureDaysOpen(event.currentTarget.open);
