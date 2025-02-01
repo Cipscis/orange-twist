@@ -83,10 +83,15 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	// Used to prevent a closing animation display on initial render
 	const canAnimateRef = useRef<null | true>(null);
 
+	const [isClosing, setIsClosing] = useState(false);
 	const [isInChangeMode, setIsInChangeMode] = useState(false);
+
+	/** Used to avoid rendering contents of closed dialogs in order to reduce DOM size */
+	const renderContents = isInChangeMode || isClosing;
 
 	const exitChangeMode = useCallback(() => {
 		setIsInChangeMode(false);
+		setIsClosing(true);
 	}, []);
 
 	const enterChangeMode = useCallback(() => {
@@ -200,7 +205,10 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 			animation.finished.then(() => popover.removeAttribute('opening'));
 		} else {
 			const animation = animate(popover, CSSKeyframes.DISAPPEAR_SCREEN);
-			animation.finished.then(() => popover.close());
+			animation.finished.then(() => {
+				popover.close();
+				setIsClosing(false);
+			});
 		}
 	}, [isInChangeMode]);
 
@@ -271,39 +279,41 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 				positionAnchor: positionAnchorName,
 			}}
 		>
-			<ul
-				class="task-status__options"
-				ref={optionsRef}
-			>
-				<li class="task-status__optgroup">
-					<ul class="task-status__optgroup-list">
-						{Object.values(TaskStatus).map((taskStatus) => (
-							<li
-								key={taskStatus}
-								class="task-status__option"
-							>
-								<TaskStatusButton
-									status={taskStatus}
-									onStatusSelect={changeStatus}
+			{renderContents &&
+				<ul
+					class="task-status__options"
+					ref={optionsRef}
+				>
+					<li class="task-status__optgroup">
+						<ul class="task-status__optgroup-list">
+							{Object.values(TaskStatus).map((taskStatus) => (
+								<li
+									key={taskStatus}
+									class="task-status__option"
+								>
+									<TaskStatusButton
+										status={taskStatus}
+										onStatusSelect={changeStatus}
+									/>
+								</li>
+							))}
+						</ul>
+					</li>
+
+					<li class="task-status__optgroup">
+						<ul class="task-status__optgroup-list">
+							<li class="task-status__option">
+								<IconButton
+									variant={ButtonVariant.SECONDARY}
+									title={deleteButtonTitle}
+									icon="🗑️"
+									onClick={onDeleteButtonClick}
 								/>
 							</li>
-						))}
-					</ul>
-				</li>
-
-				<li class="task-status__optgroup">
-					<ul class="task-status__optgroup-list">
-						<li class="task-status__option">
-							<IconButton
-								variant={ButtonVariant.SECONDARY}
-								title={deleteButtonTitle}
-								icon="🗑️"
-								onClick={onDeleteButtonClick}
-							/>
-						</li>
-					</ul>
-				</li>
-			</ul>
+						</ul>
+					</li>
+				</ul>
+			}
 		</dialog>
 	</span>;
 }
