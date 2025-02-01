@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [1.6.3] - 2025-02-01
 
+### Changed
+
+* Reduced DOM size to improve performance
+
 ### Fixed
 
 * The most recent "Past day" and closest "Future day" are no longer missing from their respective sections.
