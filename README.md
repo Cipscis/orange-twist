@@ -107,8 +107,6 @@ These dependencies are used when working on the project locally.
 
 * [Concurrently](https://www.npmjs.com/package/concurrently): Running server and development build tasks concurrently
 
-* [dotenv](https://www.npmjs.com/package/dotenv): Reading environment variables from [`.env`](#env) file
-
 * [eslint](https://www.npmjs.com/package/eslint): Linting TypeScript files
 
 	* [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin): Allows `eslint` to lint TypeScript
