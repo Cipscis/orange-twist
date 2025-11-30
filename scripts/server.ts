@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 
 import express from 'express';
 
-import { getEnv } from './utils/index.js';
+import { getEnv } from './utils/index.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

@@ -77,8 +77,6 @@ These dependencies are used when working on the project locally.
 
 * [Node.js](https://nodejs.org/en/): Runtime environment
 
-* [ts-node](https://typestrong.org/ts-node/): Allows TypeScript code to be run in a Node.js environment
-
 * [npm](https://www.npmjs.com/): Package manager
 
 * [TypeScript](https://www.typescriptlang.org/): JavaScript extension for static type checking

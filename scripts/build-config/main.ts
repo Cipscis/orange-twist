@@ -1,7 +1,7 @@
 import type { BuildOptions } from 'esbuild';
 
-import { getEnv } from '../utils/index.js';
-import { dist, src } from './paths.js';
+import { getEnv } from '../utils/index.ts';
+import { dist, src } from './paths.ts';
 
 import packageJson from '../../package.json' with { type: 'json' };
 
