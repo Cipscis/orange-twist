@@ -3,10 +3,10 @@ import * as esbuild from 'esbuild';
 import {
 	getEnv,
 	writeMetaFile,
-} from './utils/index.js';
+} from './utils/index.ts';
 
-import { config as mainConfig } from './build-config/main.js';
-import { config as serviceWorkerConfig } from './build-config/service-worker.js';
+import { config as mainConfig } from './build-config/main.ts';
+import { config as serviceWorkerConfig } from './build-config/service-worker.ts';
 
 const env = getEnv();
 
