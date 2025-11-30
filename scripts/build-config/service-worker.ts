@@ -1,7 +1,7 @@
 import type { BuildOptions } from 'esbuild';
 
-import { getEnv } from '../utils/index.js';
-import { root, src } from './paths.js';
+import { getEnv } from '../utils/index.ts';
+import { root, src } from './paths.ts';
 
 const env = getEnv();
 
