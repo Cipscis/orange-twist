@@ -1,7 +1,10 @@
 import type { RendererObject } from 'marked';
 
 export const renderer: RendererObject = {
-	link(href, title, text) {
+	link(token) {
+		const text = this.parser.parseInline(token.tokens);
+		const { href, title } = token;
+
 		try {
 			// Render external links in a new tab
 			const url = new URL(href, location.origin);
