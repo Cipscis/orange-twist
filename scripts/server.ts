@@ -19,7 +19,7 @@ if (isNaN(port)) {
 app.use(express.static('app'));
 
 // Anything not already handled is a 404
-app.get('*', (request, response, next) => {
+app.get('/*splat', (request, response, next) => {
 	response.status(404).sendFile(join(__dirname, '../app/404.html'));
 });
 
