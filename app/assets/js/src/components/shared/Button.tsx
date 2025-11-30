@@ -1,4 +1,9 @@
-import { h, type JSX } from 'preact';
+import {
+	h,
+	type JSX,
+	type ButtonHTMLAttributes,
+	type AnchorHTMLAttributes,
+} from 'preact';
 
 import {
 	assertAllUnionMembersHandled,
@@ -18,8 +23,7 @@ function getVariantClass(variant: ButtonVariant): string {
 }
 
 // <Button> can contain a <button> or an <a>, so inherit from both
-type ButtonPropsBase = JSX.HTMLAttributes<HTMLButtonElement> &
-	JSX.HTMLAttributes<HTMLAnchorElement>;
+type ButtonPropsBase = ButtonHTMLAttributes & AnchorHTMLAttributes;
 
 interface ButtonProps extends ButtonPropsBase {
 	class?: string;
