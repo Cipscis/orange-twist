@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
 import { assertAllUnionMembersHandled } from 'utils';
 
@@ -13,32 +13,32 @@ import { isTaskInfo, type TaskInfo } from './types/TaskInfo';
 const oldTaskInfoSchemas = [
 	[
 		1,
-		z.object({
+		z.strictObject({
 			id: z.number(),
 			name: z.string(),
-			status: z.nativeEnum(TaskStatus),
-		}).strict(),
+			status: z.enum(TaskStatus),
+		}),
 	],
 	[
 		2,
-		z.object({
+		z.strictObject({
 			id: z.number(),
 			name: z.string(),
-			status: z.nativeEnum(TaskStatus),
+			status: z.enum(TaskStatus),
 			note: z.string(),
-		}).strict(),
+		}),
 	],
 	[
 		3,
-		z.object({
+		z.strictObject({
 			id: z.number(),
 			name: z.string(),
-			status: z.nativeEnum(TaskStatus),
+			status: z.enum(TaskStatus),
 			note: z.string(),
 			sortIndex: z.number(),
-		}).strict(),
+		}),
 	],
-] as const satisfies ReadonlyArray<readonly [number, z.ZodType]>;
+] as const satisfies ReadonlyArray<readonly [number, z.ZodMiniType]>;
 
 /**
  * Use an immediately indexed mapped function to construct a

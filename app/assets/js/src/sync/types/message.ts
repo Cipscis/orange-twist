@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
 import { isZodSchemaType, type EnumTypeOf } from 'utils';
 
@@ -11,9 +11,12 @@ const baseMessageSchema = z.object({
 	type: z.nativeEnum(MessageType),
 });
 
-const syncUpdateMessageSchema = baseMessageSchema.extend({
-	type: z.literal(MessageType.SYNC_UPDATE),
-});
+const syncUpdateMessageSchema = z.extend(
+	baseMessageSchema,
+	{
+		type: z.literal(MessageType.SYNC_UPDATE),
+	},
+);
 
 const messageSchema = syncUpdateMessageSchema;
 
