@@ -15,6 +15,10 @@ function getMetaFilePath(config: BuildOptions): string {
 	throw new Error('Can\'t determine output path');
 }
 
+/**
+ * Write an esbuild "metafile" to disk. This can be analysed with the
+ * [esbuild Bundle Size Analyser](https://esbuild.github.io/analyze/).
+ */
 export async function writeMetaFile(
 	config: BuildOptions,
 	result: BuildResult<BuildOptions>,

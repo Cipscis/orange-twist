@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
 import { assertAllUnionMembersHandled } from 'utils';
 import { isTemplateInfo, type TemplateInfo } from '../types/TemplateInfo';
@@ -11,14 +11,14 @@ import { isTemplateInfo, type TemplateInfo } from '../types/TemplateInfo';
 const oldTemplateInfoSchemas = [
 	[
 		1,
-		z.object({
+		z.strictObject({
 			id: z.number(),
 			name: z.string(),
 			template: z.string(),
 			sortIndex: z.number(),
-		}).strict(),
+		}),
 	],
-] as const satisfies ReadonlyArray<readonly [number, z.ZodType]>;
+] as const satisfies ReadonlyArray<readonly [number, z.ZodMiniType]>;
 
 /**
  * Use an immediately indexed mapped function to construct a
