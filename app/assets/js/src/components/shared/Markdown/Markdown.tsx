@@ -197,6 +197,10 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 	return <div
 		ref={wrapperRef}
 		{...passthroughProps}
-		class={classNames('content', passthroughProps.class && String(passthroughProps.class))}
+		class={classNames(
+			'content',
+			// This type assertion MAY NOT BE SAFE but I'm not using Signals currently
+			passthroughProps.class && String(passthroughProps.class as string)
+		)}
 	/>;
 }

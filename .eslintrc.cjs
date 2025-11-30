@@ -53,13 +53,10 @@ module.exports = {
 
 		// The `{}` type has many legitimate uses, primarily in "tagging"
 		// types to change some behaviours of the TypeScript compiler.
-		'@typescript-eslint/ban-types': [
+		'@typescript-eslint/no-empty-object-type': [
 			'error',
 			{
-				'types': {
-					'{}': false,
-				},
-				'extendDefaults': true
+				allowObjectTypes: 'always',
 			}
 		  ],
 
@@ -72,6 +69,7 @@ module.exports = {
 			{
 				vars: 'all',
 				args: 'none',
+				caughtErrors: 'none',
 				ignoreRestSiblings: true,
 			}
 		],
@@ -113,6 +111,9 @@ module.exports = {
 		// asynchronous, but which is planned to eventually become asynchronous, in order to provide
 		// a consistent interface
 		'@typescript-eslint/require-await': 'warn',
+
+		// This rule was added in an update and seems to fire at very annoying times when it's not helpful
+		"@typescript-eslint/no-redundant-type-constituents": "off",
 
 		/////////////
 		// Plugins //

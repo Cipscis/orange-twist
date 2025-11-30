@@ -18,7 +18,10 @@ async function getCursor(request: IDBRequest<IDBCursorWithValue | null>): Promis
 		request.addEventListener(
 			'error',
 			() => {
-				reject(request.error);
+				reject(
+					request.error ??
+					new Error('Database transaction request encountered an unrecognised error.')
+				);
 				controller.abort();
 			},
 			{ signal }
