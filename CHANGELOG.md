@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 * Updated development dependency packages
+* Updated Markdown rendering and code syntax highlighting packages
 * Migrated from Zod 3 to Zod Mini, reducing bundle size significantly
 
 ## [1.6.3] - 2025-02-01
