@@ -255,13 +255,6 @@ export default defineConfig([
 				'error',
 				'always',
 			],
-			'@stylistic/arrow-spacing': [
-				'error',
-				{
-					before: true,
-					after: true,
-				},
-			],
 			'@stylistic/block-spacing': [
 				'error',
 				'always',
@@ -298,7 +291,7 @@ export default defineConfig([
 				'error',
 				'always',
 			],
-			'@stylistic/func-call-spacing': [
+			'@stylistic/function-call-spacing': [
 				'error',
 				'never',
 			],
@@ -371,7 +364,7 @@ export default defineConfig([
 				'error',
 				'single',
 				{
-					allowTemplateLiterals: true,
+					allowTemplateLiterals: 'always',
 				},
 			],
 			'@stylistic/rest-spread-spacing': [
@@ -458,6 +451,7 @@ export default defineConfig([
 				{
 					before: false,
 					after: true,
+					// This override is deprecated, but the alternative seems broken
 					overrides: {
 						arrow: {
 							before: true,
