@@ -8,10 +8,13 @@ export function toDataUrl(image: Blob): Promise<string> {
 			if (typeof reader.result === 'string') {
 				resolve(reader.result);
 			} else {
-				reject('FileReader result for readAsDataURL operation was not a string.');
+				reject(new Error('FileReader result for readAsDataURL operation was not a string.'));
 			}
 		});
-		reader.addEventListener('error', () => reject(reader.error));
+		reader.addEventListener('error', () => reject(
+			reader.error ??
+			new Error('FileReader encountered an unrecognised error.')
+		));
 
 		reader.readAsDataURL(image);
 	});

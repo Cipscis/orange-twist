@@ -21,13 +21,17 @@
 		// https://www.typescriptlang.org/tsconfig#strict
 		"strict": true,
 
-		// Use Node module resolution, since this code is run using `ts-node`
+		// Use Node module resolution, since this code is run using node
 		// https://www.typescriptlang.org/tsconfig#moduleResolution
 		"moduleResolution": "NodeNext",
 		// This must be set to "NodeNext" when "moduleResolution" is set to "NodeNext"
 		// https://www.typescriptlang.org/tsconfig#module
 		// https://www.typescriptlang.org/docs/handbook/modules/reference.html#summary-1
 		"module": "NodeNext",
+		// Node strips types instead of compiling these files, so they should
+		// be imported using ".ts" extensions
+		// https://www.typescriptlang.org/tsconfig/#allowImportingTsExtensions
+		"allowImportingTsExtensions": true,
 		// This code is not compiled using `tsc`
 		// https://www.typescriptlang.org/tsconfig#noEmit
 		"noEmit": true,
