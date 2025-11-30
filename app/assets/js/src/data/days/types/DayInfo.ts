@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
 import { isZodSchemaType } from 'utils';
 
 export const dayInfoSchema = z.object({
 	name: z.string(),
 	note: z.string(),
-	tasks: z.array(z.number()).readonly(),
+	tasks: z.readonly(z.array(z.number())),
 });
 
 /**

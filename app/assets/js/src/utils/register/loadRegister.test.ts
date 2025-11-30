@@ -5,7 +5,7 @@ import {
 	jest,
 	test,
 } from '@jest/globals';
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
 import { ls } from 'persist';
 import { isZodSchemaType } from 'utils';

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
 import { isZodSchemaType } from 'utils';
 
@@ -11,8 +11,8 @@ export const exportDataLikeSchema = z.object({
 	days: z.unknown(),
 	tasks: z.unknown(),
 	dayTasks: z.unknown(),
-	templates: z.unknown().optional(),
-	images: z.unknown().optional(),
+	templates: z.optional(z.unknown()),
+	images: z.optional(z.unknown()),
 });
 export type ExportDataLike = z.infer<typeof exportDataLikeSchema>;
 export const isExportDataLike = isZodSchemaType(exportDataLikeSchema);
