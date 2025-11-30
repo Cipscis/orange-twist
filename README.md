@@ -77,8 +77,6 @@ These dependencies are used when working on the project locally.
 
 * [Node.js](https://nodejs.org/en/): Runtime environment
 
-* [ts-node](https://typestrong.org/ts-node/): Allows TypeScript code to be run in a Node.js environment
-
 * [npm](https://www.npmjs.com/): Package manager
 
 * [TypeScript](https://www.typescriptlang.org/): JavaScript extension for static type checking
@@ -108,8 +106,6 @@ These dependencies are used when working on the project locally.
 * [Express](https://expressjs.com/): Running a Node.js server, accessed at `http://localhost:<PORT>`
 
 * [Concurrently](https://www.npmjs.com/package/concurrently): Running server and development build tasks concurrently
-
-* [dotenv](https://www.npmjs.com/package/dotenv): Reading environment variables from [`.env`](#env) file
 
 * [eslint](https://www.npmjs.com/package/eslint): Linting TypeScript files
 

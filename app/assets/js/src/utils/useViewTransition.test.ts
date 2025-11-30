@@ -13,6 +13,8 @@ import {
 
 import { useViewTransition } from './useViewTransition';
 
+// This variable is only used to store a value, it's not called
+/* eslint-disable-next-line @typescript-eslint/unbound-method */
 const defaultStartViewTransition = document.startViewTransition;
 
 describe('useViewTransition', () => {
@@ -80,6 +82,7 @@ describe('useViewTransition', () => {
 
 	test('if the View Transitions API is not supported, calls the callback immediately', async () => {
 		// Ensure the View Transitions API is not supported
+		/* @ts-expect-error Simulating older browser versions */
 		document.startViewTransition = undefined;
 
 		const { result, rerender } = renderHook(

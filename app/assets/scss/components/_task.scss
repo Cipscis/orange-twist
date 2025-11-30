@@ -7,7 +7,7 @@
 	align-items: start;
 
 	grid-template-columns: auto auto 1fr;
-	grid-gap: spacing.$sm;
+	gap: spacing.$sm;
 }
 
 .task__status {

@@ -1,2 +1,2 @@
-export { getEnv } from './getEnv.js';
-export { writeMetaFile } from './writeMetaFile.js';
+export { getEnv } from './getEnv.ts';
+export { writeMetaFile } from './writeMetaFile.ts';

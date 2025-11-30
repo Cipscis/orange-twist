@@ -50,7 +50,7 @@
 		&::before {
 			content: attr(data-content) " ";
 			white-space-collapse: preserve;
-			word-break: break-word;
+			overflow-wrap: break-word;
 			visibility: hidden;
 			padding: var(--_gutter);
 		}
@@ -71,7 +71,7 @@
 }
 
 .note__display-content {
-	word-break: break-word;
+	overflow-wrap: break-word;
 	position: relative;
 }
 
