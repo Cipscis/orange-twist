@@ -5,16 +5,16 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"server": "node scripts/server.ts",
+		"server": "node --env-file-if-exists=.env scripts/server.ts",
 
-		"build:js": "concurrently \"tsc\" \"node scripts/build.ts\"",
+		"build:js": "concurrently \"tsc\" \"node --env-file-if-exists=.env scripts/build.ts\"",
 		"build:css": "sass app/assets/scss:app/assets/css --style=compressed",
 		"build": "concurrently \"npm:build:*\"",
 
 		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.js",
 		"test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.js --collectCoverage",
 
-		"watch:js": "node scripts/build-watch.ts",
+		"watch:js": "node --env-file-if-exists=.env scripts/build-watch.ts",
 		"watch:css": "sass app/assets/scss:app/assets/css --watch --style=compressed",
 		"watch:test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.js --watch",
 		"watch": "concurrently --kill-others \"tsc --watch --preserveWatchOutput\" \"npm:watch:*\"",
@@ -38,11 +38,11 @@
 		"@testing-library/preact": "^3.2.4",
 		"@testing-library/user-event": "^14.5.2",
 		"@types/express": "^5.0.5",
+		"@types/node": "^22.18.0",
 		"@typescript-eslint/eslint-plugin": "^8.48.0",
 		"@typescript-eslint/parser": "^8.48.0",
 		"concurrently": "^8.2.2",
 		"cross-env": "^7.0.3",
-		"dotenv": "^17.2.3",
 		"esbuild": "~0.27.0",
 		"eslint": "^8.57.0",
 		"eslint-plugin-import-newlines": "^1.4.0",
