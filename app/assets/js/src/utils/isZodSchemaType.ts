@@ -1,4 +1,4 @@
-import { ZodType, z } from 'zod';
+import * as z from 'zod/mini';
 
 /**
  * This utility function can be used to construct a typeguard-style
@@ -20,6 +20,6 @@ import { ZodType, z } from 'zod';
  * }
  * ```
  */
-export function isZodSchemaType<T extends ZodType>(schema: T): (value: unknown) => value is z.infer<T> {
+export function isZodSchemaType<T extends z.ZodMiniType>(schema: T): (value: unknown) => value is z.infer<T> {
 	return (value): value is z.infer<T> => schema.safeParse(value).success;
 }
