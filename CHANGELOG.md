@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.4] - 2025-11-30
+
+### Changed
+
+* Updated development dependency packages
+* Updated Preact to the latest version
+* Updated Markdown rendering and code syntax highlighting packages
+* Migrated from Zod 3 to Zod Mini, reducing bundle size significantly
+
 ## [1.6.3] - 2025-02-01
 
 ### Changed

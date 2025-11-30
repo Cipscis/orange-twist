@@ -77,8 +77,6 @@ These dependencies are used when working on the project locally.
 
 * [Node.js](https://nodejs.org/en/): Runtime environment
 
-* [ts-node](https://typestrong.org/ts-node/): Allows TypeScript code to be run in a Node.js environment
-
 * [npm](https://www.npmjs.com/): Package manager
 
 * [TypeScript](https://www.typescriptlang.org/): JavaScript extension for static type checking
@@ -109,8 +107,6 @@ These dependencies are used when working on the project locally.
 
 * [Concurrently](https://www.npmjs.com/package/concurrently): Running server and development build tasks concurrently
 
-* [dotenv](https://www.npmjs.com/package/dotenv): Reading environment variables from [`.env`](#env) file
-
 * [eslint](https://www.npmjs.com/package/eslint): Linting TypeScript files
 
 	* [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin): Allows `eslint` to lint TypeScript
@@ -126,6 +122,14 @@ These dependencies are used when working on the project locally.
 	* [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest): Provides Jest linting rules
 
 	* [eslint-plugin-import-newlines](https://www.npmjs.com/package/eslint-import-newlines): Provides a linting rule for named imports
+
+	* [@eslint/compat](https://www.npmjs.com/package/@eslint/compat): Use to make older eslint plugins work with the latest version
+
+	* [@eslint/eslintrc](https://www.npmjs.com/package/@eslint/eslintrc): Used to help define the eslint config
+
+	* [@eslint/js](https://www.npmjs.com/package/@eslint/js): eslint's JavaScript configuration, used as a base for eslint config
+
+	* [globals](https://www.npmjs.com/package/globals): Defines global variables for different environments, used by eslint
 
 * [stylelint](https://www.npmjs.com/package/stylelint): Linting CSS
 
