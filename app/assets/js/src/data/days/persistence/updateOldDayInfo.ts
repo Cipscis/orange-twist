@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
 import { assertAllUnionMembersHandled } from 'utils';
 import { isDayInfo, type DayInfo } from '../types/DayInfo';
@@ -11,13 +11,13 @@ import { isDayInfo, type DayInfo } from '../types/DayInfo';
 const oldDayInfoSchemas = [
 	[
 		1,
-		z.object({
+		z.strictObject({
 			name: z.string(),
 			note: z.string(),
-			tasks: z.array(z.number()).readonly(),
-		}).strict(),
+			tasks: z.readonly(z.array(z.number())),
+		}),
 	],
-] as const satisfies ReadonlyArray<readonly [number, z.ZodType]>;
+] as const satisfies ReadonlyArray<readonly [number, z.ZodMiniType]>;
 
 /**
  * Use an immediately indexed mapped function to construct a
