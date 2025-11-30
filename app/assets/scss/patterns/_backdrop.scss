@@ -1,8 +1,10 @@
 /// Makes the existing background semi-transparent. Only works
 /// on elements with a flat background colour.
 @mixin backdrop($var: --bg) {
-	@supports (background-color: rgb(from red r g b / 0.5)) {
-		// Make the background semitransparent
-		background: rgb(from var(#{$var}) r g b / 0.5);
+	& {
+		@supports (background-color: rgb(from red r g b / 0.5)) {
+			// Make the background semitransparent
+			background: rgb(from var(#{$var}) r g b / 0.5);
+		}
 	}
 }
