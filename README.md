@@ -123,6 +123,14 @@ These dependencies are used when working on the project locally.
 
 	* [eslint-plugin-import-newlines](https://www.npmjs.com/package/eslint-import-newlines): Provides a linting rule for named imports
 
+	* [@eslint/compat](https://www.npmjs.com/package/@eslint/compat): Use to make older eslint plugins work with the latest version
+
+	* [@eslint/eslintrc](https://www.npmjs.com/package/@eslint/eslintrc): Used to help define the eslint config
+
+	* [@eslint/js](https://www.npmjs.com/package/@eslint/js): eslint's JavaScript configuration, used as a base for eslint config
+
+	* [globals](https://www.npmjs.com/package/globals): Defines global variables for different environments, used by eslint
+
 * [stylelint](https://www.npmjs.com/package/stylelint): Linting CSS
 
 	* [stylelint-config-recommended-scss](https://www.npmjs.com/package/stylelint-config-recommended-scss): Allows `stylelint` to lint SCSS files, and provides a base set of SCSS linting rules
