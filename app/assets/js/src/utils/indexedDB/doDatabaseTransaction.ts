@@ -34,7 +34,10 @@ export function doDatabaseTransaction(
 			const request = callback(objectStore);
 
 			request.addEventListener('success', () => resolve(request.result));
-			request.addEventListener('error', () => reject(request.error));
+			request.addEventListener('error', () => reject(
+				request.error ??
+				new Error('Database transaction request encountered an unrecognised error.')
+			));
 		}).catch(reject);
 	});
 }

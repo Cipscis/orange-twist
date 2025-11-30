@@ -12,7 +12,7 @@ export const ls: PersistApi = {
 				localStorage.setItem(key, jsonData);
 				resolve();
 			} catch (e) {
-				reject(e);
+				reject(new Error(String(e)));
 			}
 		});
 	},
@@ -28,7 +28,7 @@ export const ls: PersistApi = {
 				const data = JSON.parse(jsonData);
 				resolve(data);
 			} catch (e) {
-				reject(e);
+				reject(new Error(String(e)));
 			}
 		});
 	},
@@ -39,7 +39,7 @@ export const ls: PersistApi = {
 				localStorage.removeItem(key);
 				resolve();
 			} catch (e) {
-				reject(e);
+				reject(new Error(String(e)));
 			}
 		});
 	},
