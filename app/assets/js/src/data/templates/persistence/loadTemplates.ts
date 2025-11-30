@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
 import { type PersistApi } from 'persist';
 import { isZodSchemaType, loadRegister } from 'utils';

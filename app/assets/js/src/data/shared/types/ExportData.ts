@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
 import { isZodSchemaType } from 'utils';
 
@@ -11,38 +11,41 @@ import { exportDataLikeSchema } from './ExportDataLike';
 /**
  * Strict export data format used when constructing export data.
  */
-export const exportDataSchema = exportDataLikeSchema.extend({
-	days: z.array(
-		z.tuple([
-			z.string(),
-			dayInfoSchema,
-		]),
-	),
-	tasks: z.array(
-		z.tuple([
-			z.number(),
-			taskInfoSchema,
-		]),
-	),
-	dayTasks: z.array(
-		z.tuple([
-			z.string(),
-			dayTaskInfoSchema,
-		]),
-	),
-	templates: z.array(
-		z.tuple([
-			z.number(),
-			templateInfoSchema,
-		]),
-	),
-	images: z.array(
-		z.tuple([
-			z.string(),
-			z.string().url(), // <- Should be a data URL
-		]).readonly(),
-	),
-});
+export const exportDataSchema = z.extend(
+	exportDataLikeSchema,
+	{
+		days: z.array(
+			z.tuple([
+				z.string(),
+				dayInfoSchema,
+			]),
+		),
+		tasks: z.array(
+			z.tuple([
+				z.number(),
+				taskInfoSchema,
+			]),
+		),
+		dayTasks: z.array(
+			z.tuple([
+				z.string(),
+				dayTaskInfoSchema,
+			]),
+		),
+		templates: z.array(
+			z.tuple([
+				z.number(),
+				templateInfoSchema,
+			]),
+		),
+		images: z.array(
+			z.readonly(z.tuple([
+				z.string(),
+				z.url(), // <- Should be a data URL
+			])),
+		),
+	},
+);
 export type ExportData = z.infer<typeof exportDataSchema>;
 export const isExportData = isZodSchemaType(exportDataSchema);
 
