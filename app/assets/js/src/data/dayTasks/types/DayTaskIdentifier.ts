@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/mini';
 import { isZodSchemaType } from 'utils';
 
 export const dayTaskIdentifierSchema = z.object({
