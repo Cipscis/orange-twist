@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 * Updated development dependency packages
+* Updated Preact to the latest version
 
 ## [1.6.3] - 2025-02-01
 
