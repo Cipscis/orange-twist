@@ -3,7 +3,12 @@ import {
 	type JSX,
 	h,
 } from 'preact';
-import { useCallback, useMemo } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+} from 'preact/hooks';
 
 import { useAllTaskInfo, type TaskInfo } from 'data';
 
@@ -24,6 +29,9 @@ interface TaskLookupProps {
 		index: number,
 		array: readonly TaskInfo[],
 	) => boolean;
+
+	/** An optional CSS class to apply to the select. */
+	class?: string;
 }
 
 /**
@@ -34,6 +42,7 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 	const {
 		onSelect,
 		filter,
+		class: className,
 	} = props;
 
 	const allTaskInfo = useAllTaskInfo();
@@ -66,10 +75,25 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 		onSelect(selectedTaskId);
 	}, [onSelect]);
 
+	const selectRef = useRef<HTMLSelectElement>(null);
+
+	// When the filtered task list changes, if there's just one task then select it
+	useEffect(() => {
+		const select = selectRef.current;
+		if (!select) {
+			return;
+		}
+
+		if (selectableTaskInfo.length === 1) {
+			select.value = String(selectableTaskInfo[0].id);
+		}
+	}, [selectableTaskInfo]);
+
 	return <>
 		<select
 			onChange={onChange}
-			class="task-lookup"
+			class={className ?? 'task-lookup'}
+			ref={selectRef}
 		>
 			<option selected disabled value="">Select a task</option>
 			{selectableTaskInfo.map((task) => (
