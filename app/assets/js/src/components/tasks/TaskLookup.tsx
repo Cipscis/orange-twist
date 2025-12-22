@@ -1,3 +1,4 @@
+import type Preact from 'preact';
 import {
 	type GenericEventHandler,
 	type JSX,
@@ -12,7 +13,10 @@ import {
 
 import { useAllTaskInfo, type TaskInfo } from 'data';
 
-interface TaskLookupProps {
+interface TaskLookupProps extends Omit<
+	Preact.SelectHTMLAttributes<HTMLSelectElement>,
+	'onSelect'
+> {
 	/**
 	 * A callback called when a task is selected.
 	 */
@@ -29,9 +33,6 @@ interface TaskLookupProps {
 		index: number,
 		array: readonly TaskInfo[],
 	) => boolean;
-
-	/** An optional CSS class to apply to the select. */
-	class?: string;
 }
 
 /**
@@ -42,7 +43,9 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 	const {
 		onSelect,
 		filter,
-		class: className,
+		className,
+
+		...passthroughProps
 	} = props;
 
 	const allTaskInfo = useAllTaskInfo();
@@ -94,6 +97,7 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 			onChange={onChange}
 			class={className ?? 'task-lookup'}
 			ref={selectRef}
+			{...passthroughProps}
 		>
 			<option selected disabled value="">Select a task</option>
 			{selectableTaskInfo.map((task) => (

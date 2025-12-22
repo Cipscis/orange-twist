@@ -6,6 +6,7 @@ import {
 import {
 	useCallback,
 	useEffect,
+	useId,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -43,6 +44,7 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 	} = props;
 
 	const [isOpen, setIsOpen] = useState(true);
+	const idForLabel = useId();
 
 	const previousResolver = useRef<
 		((result: PromptReturnType[T] | null) => void) | null
@@ -122,11 +124,11 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 			onSubmit={resolveWithResult}
 			class="modal-prompt__form"
 		>
-			<label>
-				<div class="modal-prompt__message">{message}</div>
-				{
-					type === PromptType.TEXT ?
-						(
+			{
+				type === PromptType.TEXT ?
+					(
+						<label>
+							<div class="modal-prompt__message">{message}</div>
 							<input
 								type="text"
 								name="result"
@@ -134,9 +136,12 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 								placeholder={placeholder}
 								autofocus
 							/>
-						)
-						: type === PromptType.DATE ?
-							(
+						</label>
+					)
+					: type === PromptType.DATE ?
+						(
+							<label>
+								<div class="modal-prompt__message">{message}</div>
 								<input
 									type="date"
 									name="result"
@@ -144,27 +149,31 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 									placeholder={placeholder}
 									autofocus
 								/>
+							</label>
+						)
+						: type === PromptType.TASK ?
+							(
+								<>
+									<label class="modal-prompt__message" for={idForLabel}>{message}</label>
+									<input
+										type="text"
+										class="modal-prompt__input"
+										placeholder="Filter tasks"
+										ref={taskFilterQueryElRef}
+										onInput={updateTaskFilterQuery}
+										autofocus
+									/>
+									<TaskLookup
+										onSelect={noteSelectedTaskId}
+										filter={applyTaskFilter}
+										class="modal-prompt__input"
+										id={idForLabel}
+										required
+									/>
+								</>
 							)
-							: type === PromptType.TASK ?
-								(
-									<>
-										<input
-											type="text"
-											class="modal-prompt__input"
-											placeholder="Filter tasks"
-											ref={taskFilterQueryElRef}
-											onInput={updateTaskFilterQuery}
-										/>
-										<TaskLookup
-											onSelect={noteSelectedTaskId}
-											filter={applyTaskFilter}
-											class="modal-prompt__input"
-										/>
-									</>
-								)
-								: assertAllUnionMembersHandled(type)
-				}
-			</label>
+							: assertAllUnionMembersHandled(type)
+			}
 
 			<Button variant={ButtonVariant.SECONDARY} type="submit">Okay</Button>
 		</form>
