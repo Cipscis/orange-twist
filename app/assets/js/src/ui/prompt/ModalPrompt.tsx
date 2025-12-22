@@ -1,4 +1,8 @@
-import { h, type JSX } from 'preact';
+import {
+	h,
+	type JSX,
+	type TargetedEvent,
+} from 'preact';
 import {
 	useCallback,
 	useEffect,
@@ -7,6 +11,7 @@ import {
 } from 'preact/hooks';
 
 import { assertAllUnionMembersHandled } from 'utils';
+import type { TaskInfo } from 'data';
 
 import {
 	Button,
@@ -79,7 +84,30 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 		setIsOpen(false);
 	}, [type, resolve]);
 
+	const taskFilterQueryElRef = useRef<HTMLInputElement>(null);
+	const [taskFilterQuery, setTaskFilterQuery] = useState<string | null>(taskFilterQueryElRef.current?.value || null);
+
+	/**
+	 * Update the filter applied to task names when the input changes.
+	 */
+	const updateTaskFilterQuery = useCallback((e: TargetedEvent<HTMLInputElement>) => {
+		setTaskFilterQuery(e.currentTarget.value || null);
+	}, []);
+
+	// TODO: Upgrade this into a fuzzy search filter
+	/**
+	 * Filter tasks based on whether or not their name contains the query.
+	 */
+	const applyTaskFilter = useCallback<(taskInfo: TaskInfo) => boolean>((taskInfo) => {
+		if (taskFilterQuery === null) {
+			return true;
+		}
+
+		return taskInfo.name.includes(taskFilterQuery);
+	}, [taskFilterQuery]);
+
 	const selectedTaskId = useRef<number | null>(null);
+	/** Remember the selected task in a ref to pass up when the value is confirmed. */
 	const noteSelectedTaskId = useCallback((taskId: number | null) => selectedTaskId.current = taskId, []);
 
 	return <Modal
@@ -119,9 +147,20 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 							)
 							: type === PromptType.TASK ?
 								(
-									<TaskLookup
-										onSelect={noteSelectedTaskId}
-									/>
+									<>
+										<input
+											type="text"
+											class="modal-prompt__input"
+											placeholder="Filter tasks"
+											ref={taskFilterQueryElRef}
+											onInput={updateTaskFilterQuery}
+										/>
+										<TaskLookup
+											onSelect={noteSelectedTaskId}
+											filter={applyTaskFilter}
+											class="modal-prompt__input"
+										/>
+									</>
 								)
 								: assertAllUnionMembersHandled(type)
 				}
