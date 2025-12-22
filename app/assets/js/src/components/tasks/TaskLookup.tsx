@@ -63,7 +63,7 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 			return;
 		}
 
-		onSelect(Number(selectedOption.value));
+		onSelect(selectedTaskId);
 	}, [onSelect]);
 
 	return <>
