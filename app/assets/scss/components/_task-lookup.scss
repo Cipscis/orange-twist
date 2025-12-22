@@ -1,0 +1,5 @@
+@use "../patterns";
+
+.task-lookup {
+	@include patterns.input;
+}
