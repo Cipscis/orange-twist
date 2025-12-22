@@ -89,6 +89,15 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 	const taskFilterQueryElRef = useRef<HTMLInputElement>(null);
 	const [taskFilterQuery, setTaskFilterQuery] = useState<string | null>(taskFilterQueryElRef.current?.value || null);
 
+	// Ensure the filter query is cleared when the modal is closed
+	useEffect(() => {
+		if (isOpen) {
+			return;
+		}
+
+		setTaskFilterQuery(null);
+	}, [isOpen]);
+
 	/**
 	 * Update the filter applied to task names when the input changes.
 	 */
