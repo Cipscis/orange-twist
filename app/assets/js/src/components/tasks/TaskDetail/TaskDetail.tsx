@@ -54,7 +54,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 	), [unsortedDayTasksInfo]);
 
 	const addNewDayTask = useCallback(async () => {
-		const dayName = await ui.prompt('What day?', { type: 'date' });
+		const dayName = await ui.prompt('What day?', { type: ui.PromptType.DATE });
 		if (!dayName) {
 			return;
 		}
