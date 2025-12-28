@@ -80,15 +80,21 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 
 	const selectRef = useRef<HTMLSelectElement>(null);
 
-	// When the filtered task list changes, if there's just one task then select it
+	// Update the selected option based on filter query changes
 	useEffect(() => {
 		const select = selectRef.current;
 		if (!select) {
 			return;
 		}
 
-		if (selectableTaskInfo.length === 1) {
+		if (selectableTaskInfo.length === 0) {
+			// If there are no options, revert to the default state
+			select.value = '';
+			select.dispatchEvent(new Event('change'));
+		} else if (selectableTaskInfo.length === 1) {
+			// If there's just one task then select it
 			select.value = String(selectableTaskInfo[0].id);
+			select.dispatchEvent(new Event('change'));
 		}
 	}, [selectableTaskInfo]);
 
@@ -99,7 +105,7 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 			ref={selectRef}
 			{...passthroughProps}
 		>
-			<option selected disabled value="">Select a task</option>
+			<option selected disabled value="">Select a task ({selectableTaskInfo.length} results)</option>
 			{selectableTaskInfo.map((task) => (
 				<option
 					key={task.id}
