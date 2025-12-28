@@ -25,6 +25,7 @@ export { isValidDateString } from './isValidDateString';
 export { isZodSchemaType } from './isZodSchemaType';
 export { nodeHasAncestor } from './nodeHasAncestor';
 export { readFileAsString } from './readFileAsString';
+export { removeDiacritics } from './removeDiacritics';
 export { startAnimationLoop } from './startAnimationLoop';
 export { tryStartViewTransition } from './tryStartViewTransition';
 export { useAsyncData, type AsyncDataState } from './useAsyncData';
