@@ -4,6 +4,7 @@
 
 .modal-prompt__form {
 	display: grid;
+	grid-template-columns: 1fr;
 	gap: spacing.$md;
 }
 
@@ -15,5 +16,5 @@
 .modal-prompt__input {
 	@include patterns.input(tertiary);
 
-	display: block;
+	width: 100%;
 }
