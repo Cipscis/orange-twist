@@ -11,7 +11,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { assertAllUnionMembersHandled } from 'utils';
+import { assertAllUnionMembersHandled, strMatch } from 'utils';
 import type { TaskInfo } from 'data';
 
 import {
@@ -105,7 +105,6 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 		setTaskFilterQuery(e.currentTarget.value || null);
 	}, []);
 
-	// TODO: Upgrade this into a fuzzy search filter
 	/**
 	 * Filter tasks based on whether or not their name contains the query.
 	 */
@@ -114,7 +113,11 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 			return true;
 		}
 
-		return taskInfo.name.includes(taskFilterQuery);
+		// TODO: Upgrade this into a fuzzy search filter
+		return strMatch(taskInfo.name, taskFilterQuery, {
+			ignoreCase: true,
+			ignoreDiacritics: true,
+		});
 	}, [taskFilterQuery]);
 
 	const selectedTaskId = useRef<number | null>(null);
