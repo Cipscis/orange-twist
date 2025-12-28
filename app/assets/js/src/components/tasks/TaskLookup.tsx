@@ -58,6 +58,9 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 		return allTaskInfo.filter(filter);
 	}, [allTaskInfo, filter]);
 
+	const selectRef = useRef<HTMLSelectElement>(null);
+	const valueAutoSelectedRef = useRef<boolean>(false);
+
 	/**
 	 * When a change event fires, extract the value of the selected
 	 * input and pass it to {@linkcode onSelect}.
@@ -66,6 +69,11 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 		const select = e.currentTarget;
 		if (select.selectedIndex === -1) {
 			return;
+		}
+
+		// Remember that the user selected an option
+		if (e.isTrusted) {
+			valueAutoSelectedRef.current = false;
 		}
 
 		const selectedOption = select.options[select.selectedIndex];
@@ -78,7 +86,6 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 		onSelect(selectedTaskId);
 	}, [onSelect]);
 
-	const selectRef = useRef<HTMLSelectElement>(null);
 
 	// Update the selected option based on filter query changes
 	useEffect(() => {
@@ -87,14 +94,16 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 			return;
 		}
 
-		if (selectableTaskInfo.length === 0) {
-			// If there are no options, revert to the default state
-			select.value = '';
-			select.dispatchEvent(new Event('change'));
-		} else if (selectableTaskInfo.length === 1) {
+		if (selectableTaskInfo.length === 1) {
 			// If there's just one task then select it
 			select.value = String(selectableTaskInfo[0].id);
 			select.dispatchEvent(new Event('change'));
+			valueAutoSelectedRef.current = true;
+		} else if (valueAutoSelectedRef.current) {
+			// If there's multiple tasks and we'd automatically selected a value, clear it
+			select.value = '';
+			select.dispatchEvent(new Event('change'));
+			valueAutoSelectedRef.current = true;
 		}
 	}, [selectableTaskInfo]);
 
@@ -105,7 +114,7 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 			ref={selectRef}
 			{...passthroughProps}
 		>
-			<option selected disabled value="">Select a task ({selectableTaskInfo.length} results)</option>
+			<option selected value="">Select a task ({selectableTaskInfo.length} results)</option>
 			{selectableTaskInfo.map((task) => (
 				<option
 					key={task.id}
