@@ -50,6 +50,9 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 
 	const allTaskInfo = useAllTaskInfo();
 
+	/**
+	 * Tasks that pass the current filter, if there is one.
+	 */
 	const selectableTaskInfo = useMemo(() => {
 		if (!filter) {
 			return allTaskInfo;
@@ -59,6 +62,9 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 	}, [allTaskInfo, filter]);
 
 	const selectRef = useRef<HTMLSelectElement>(null);
+	/**
+	 * A boolean used to keep track if the select's value was auto-selected
+	 */
 	const valueAutoSelectedRef = useRef<boolean>(false);
 
 	/**
@@ -86,7 +92,6 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 		onSelect(selectedTaskId);
 	}, [onSelect]);
 
-
 	// Update the selected option based on filter query changes
 	useEffect(() => {
 		const select = selectRef.current;
@@ -100,7 +105,7 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 			select.dispatchEvent(new Event('change'));
 			valueAutoSelectedRef.current = true;
 		} else if (valueAutoSelectedRef.current) {
-			// If there's multiple tasks and we'd automatically selected a value, clear it
+			// If there's zero or multiple tasks and we'd automatically selected a value, clear it
 			select.value = '';
 			select.dispatchEvent(new Event('change'));
 			valueAutoSelectedRef.current = true;
