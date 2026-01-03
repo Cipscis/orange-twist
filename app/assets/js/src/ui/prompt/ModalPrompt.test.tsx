@@ -11,11 +11,13 @@ import '@testing-library/jest-dom/jest-globals';
 import { render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
+import { PromptType } from './prompt';
 import { ModalPrompt } from './ModalPrompt';
 
 describe('ModalPrompt', () => {
 	test('displays the prompt message', () => {
 		const { getByText } = render(<ModalPrompt
+			type={PromptType.TEXT}
 			message="Test message"
 			resolve={() => {}}
 		/>);
@@ -28,6 +30,7 @@ describe('ModalPrompt', () => {
 
 		const spy = jest.fn();
 		render(<ModalPrompt
+			type={PromptType.TEXT}
 			message="Test message"
 			resolve={spy}
 		/>);
@@ -41,6 +44,7 @@ describe('ModalPrompt', () => {
 
 		const spy = jest.fn();
 		render(<ModalPrompt
+			type={PromptType.TEXT}
 			message="Test message"
 			resolve={spy}
 		/>);
@@ -53,6 +57,7 @@ describe('ModalPrompt', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<ModalPrompt
+			type={PromptType.TEXT}
 			message="Test message"
 			resolve={() => {}}
 		/>);
@@ -69,6 +74,7 @@ describe('ModalPrompt', () => {
 			queryByText,
 			rerender,
 		} = render(<ModalPrompt
+			type={PromptType.TEXT}
 			message="Test message"
 			resolve={() => {}}
 		/>);
@@ -78,6 +84,7 @@ describe('ModalPrompt', () => {
 		expect(queryByText('Test message')).not.toBeInTheDocument();
 
 		rerender(<ModalPrompt
+			type={PromptType.TEXT}
 			message="Test message"
 			resolve={() => {}}
 		/>);
@@ -88,6 +95,7 @@ describe('ModalPrompt', () => {
 		const spy = jest.fn();
 
 		const { rerender } = render(<ModalPrompt
+			type={PromptType.TEXT}
 			message="Test message"
 			resolve={spy}
 		/>);
@@ -95,6 +103,7 @@ describe('ModalPrompt', () => {
 		expect(spy).toHaveBeenCalledTimes(0);
 
 		rerender(<ModalPrompt
+			type={PromptType.TEXT}
 			message="Test message 2"
 			resolve={() => {}}
 		/>);

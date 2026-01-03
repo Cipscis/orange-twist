@@ -49,6 +49,7 @@
 	@include meta.load-css("components/task");
 	@include meta.load-css("components/task-detail");
 	@include meta.load-css("components/task-link");
+	@include meta.load-css("components/task-lookup");
 	@include meta.load-css("components/task-status");
 	@include meta.load-css("components/template");
 	@include meta.load-css("components/templates-list");

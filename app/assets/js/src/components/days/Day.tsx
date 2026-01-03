@@ -9,6 +9,7 @@ import {
 	type DayInfo,
 	deleteDay,
 	setDayInfo,
+	setDayTaskInfo,
 } from 'data';
 
 import * as ui from 'ui';
@@ -54,6 +55,26 @@ export const Day = memo((props: DayProps): JSX.Element => {
 		fireCommand(Command.DATA_SAVE);
 	}, [name]);
 
+	/**
+	 * Prompt the user to select an existing task, and add it to the specified day.
+	 */
+	const addExistingTask = useCallback(async () => {
+		const taskId = await ui.prompt('Task name', {
+			type: ui.PromptType.TASK,
+		});
+		if (taskId === null) {
+			return;
+		}
+
+		if (tasks.includes(taskId)) {
+			ui.alert(`Task already exists on day ${name}`);
+			return;
+		}
+
+		setDayTaskInfo({ dayName: name, taskId }, {});
+		fireCommand(Command.DATA_SAVE);
+	}, [tasks, name]);
+
 	return <Accordion
 		class="day js-day"
 		open={open}
@@ -80,6 +101,10 @@ export const Day = memo((props: DayProps): JSX.Element => {
 					[name]
 				)}
 			>Add new task</Button>
+
+			<Button
+				onClick={useCallback(() => addExistingTask(), [addExistingTask])}
+			>Add existing task</Button>
 		</div>
 	</Accordion>;
 });
