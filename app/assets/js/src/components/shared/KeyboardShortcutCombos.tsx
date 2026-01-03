@@ -1,4 +1,8 @@
-import { h, type JSX } from 'preact';
+import {
+	h,
+	Fragment,
+	type JSX,
+} from 'preact';
 
 import { type KeyboardShortcutName, getKeyboardShortcut } from 'registers/keyboard-shortcuts';
 

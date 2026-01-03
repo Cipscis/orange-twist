@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 
 import { Loader } from 'components/shared';
 import * as ui from 'ui';
