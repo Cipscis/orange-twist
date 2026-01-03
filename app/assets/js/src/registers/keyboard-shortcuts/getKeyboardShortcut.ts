@@ -1,5 +1,5 @@
 import type { KeyboardShortcutInfo } from './types';
-import { KeyboardShortcutName } from './types';
+import type { KeyboardShortcutName } from './types';
 
 import { keyboardShortcutsRegister } from './keyboardShortcutsRegister';
 

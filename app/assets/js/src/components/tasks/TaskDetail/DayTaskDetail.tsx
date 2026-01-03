@@ -1,5 +1,9 @@
-import { h, type JSX } from 'preact';
-import { useCallback } from 'preact/hooks';
+import {
+	h,
+	Fragment,
+	type JSX,
+} from 'preact';
+import { useCallback, useState } from 'preact/hooks';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -31,7 +35,15 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 		taskId,
 	} = dayTaskInfo;
 
-	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
+	const [summary, setSummary] = useState(dayTaskInfo.summary);
+
+	/**
+	 * Store the new summary in a register, and save it
+	 */
+	const commitSummary = useCallback(() => {
+		setDayTaskInfo(dayTaskInfo, { summary });
+		fireCommand(Command.DATA_SAVE);
+	}, [dayTaskInfo, summary]);
 
 	return <Accordion
 		key={dayName}
@@ -46,11 +58,9 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 			/>
 			<h3 class="day__heading">{dayTaskInfo.dayName}</h3>
 			<InlineNote
-				note={dayTaskInfo.summary}
-				onNoteChange={useCallback((summary: string | null) => {
-					setDayTaskInfo(dayTaskInfo, { summary });
-				}, [dayTaskInfo])}
-				saveChanges={saveChanges}
+				note={summary}
+				onNoteChange={setSummary}
+				saveChanges={commitSummary}
 				editButtonTitle="Edit summary"
 				placeholder="Summary"
 			/>

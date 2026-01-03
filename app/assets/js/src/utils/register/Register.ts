@@ -1,5 +1,4 @@
 // Type-only import to expose symbol to JSDoc
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { useRegister } from './useRegister';
 
 import { assertAllUnionMembersHandled } from '../assertAllUnionMembersHandled';

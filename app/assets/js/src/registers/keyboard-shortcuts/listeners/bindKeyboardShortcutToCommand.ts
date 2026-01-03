@@ -4,7 +4,7 @@ import {
 } from 'registers/commands';
 import { fireCommand } from '../../commands';
 
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import type { KeyboardShortcutName } from '../types/KeyboardShortcutName';
 import {
 	addKeyboardShortcutListener,
 	removeKeyboardShortcutListener,

@@ -1,5 +1,5 @@
 import type { KeyCombo } from './KeyCombo';
-import { KeyboardShortcutName } from './KeyboardShortcutName';
+import type { KeyboardShortcutName } from './KeyboardShortcutName';
 
 export interface KeyboardShortcutInfo {
 	name: KeyboardShortcutName;

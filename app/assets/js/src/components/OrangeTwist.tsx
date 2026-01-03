@@ -1,5 +1,6 @@
 import {
 	h,
+	Fragment,
 	type ComponentChildren,
 	type JSX,
 } from 'preact';
@@ -353,7 +354,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		const days = getAllDayInfo();
 
 		const dayName = dayNameArg ?? await ui.prompt('What day?', {
-			type: 'date',
+			type: ui.PromptType.DATE,
 		});
 		if (!dayName) {
 			return;
@@ -374,7 +375,9 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	useCommand(Command.DAY_ADD_NEW, addNewDay);
 
 	const createNewTask = useCallback(async (dayName?: string) => {
-		const name = await ui.prompt('Task name');
+		const name = await ui.prompt('Task name', {
+			type: ui.PromptType.TEXT,
+		});
 		if (!name) {
 			return;
 		}

@@ -1,6 +1,6 @@
 {
 	"name": "orange-twist",
-	"version": "1.6.4",
+	"version": "1.7.0",
 	"description": "A task management tool designed for my personal style of working.",
 	"private": true,
 	"type": "module",
@@ -21,7 +21,7 @@
 
 		"lint:js": "eslint app/assets/js/src/**",
 		"lint:css": "stylelint app/assets/scss/**/*.scss",
-		"lint": "npm run lint:js && npm run lint:css",
+		"lint": "concurrently \"npm:lint:*\"",
 
 		"start": "concurrently --kill-others \"npm run server\" \"npm run watch\""
 	},
@@ -50,6 +50,7 @@
 		"eslint": "^9.39.1",
 		"eslint-plugin-import-newlines": "^1.4.0",
 		"eslint-plugin-jest": "^29.2.1",
+		"eslint-plugin-jsdoc": "^61.5.0",
 		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^7.0.1",
 		"express": "^5.1.0",

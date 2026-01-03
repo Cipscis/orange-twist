@@ -16,7 +16,6 @@ export class FpsCounter extends HTMLElement {
 	#displayFpsAbortController: AbortController | null;
 
 	#fpsLog: number[];
-	#previousTime: number;
 
 	constructor() {
 		super();
@@ -32,7 +31,6 @@ export class FpsCounter extends HTMLElement {
 		this.#displayFpsAbortController = null;
 
 		this.#fpsLog = [];
-		this.#previousTime = 0;
 	}
 
 	/**
@@ -190,7 +188,6 @@ export class FpsCounter extends HTMLElement {
 		const { signal } = this.#displayFpsAbortController;
 
 		this.#fpsLog = [];
-		this.#previousTime = performance.now();
 
 		startAnimationLoop(this.#displayFps.bind(this), { signal });
 	}
