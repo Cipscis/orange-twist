@@ -1,5 +1,4 @@
 // Type-only import to make symbol available within JSDoc
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { registerKeyboardShortcut } from '..';
 
 import { useEffect, useState } from 'preact/hooks';

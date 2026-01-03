@@ -2,7 +2,7 @@ import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
 import {
-	TaskStatus,
+	type TaskStatus,
 	TaskStatusName,
 	TaskStatusSymbol,
 } from 'types/TaskStatus';

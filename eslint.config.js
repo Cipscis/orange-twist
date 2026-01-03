@@ -16,6 +16,7 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import importNewlines from 'eslint-plugin-import-newlines';
 import jest from 'eslint-plugin-jest';
+import jsdoc from 'eslint-plugin-jsdoc';
 
 const compat = new FlatCompat({
 	baseDirectory: '.',
@@ -56,6 +57,7 @@ export default defineConfig([
 			react,
 			'react-hooks': fixupPluginRules(reactHooks),
 			'import-newlines': importNewlines,
+			jsdoc: jsdoc,
 		},
 
 		extends: compat.extends(
@@ -86,6 +88,7 @@ export default defineConfig([
 				'error',
 				{
 					allowObjectTypes: 'always',
+					allowInterfaces: 'always',
 				}
 			],
 
@@ -156,6 +159,13 @@ export default defineConfig([
 				},
 			],
 
+			'jsdoc/no-undefined-types': [
+				'warn',
+				{
+					disableReporting: true,
+				},
+			],
+
 			////////////////////////
 			// Debugging warnings //
 			////////////////////////
@@ -182,6 +192,13 @@ export default defineConfig([
 				'error',
 				{
 					assertionStyle: 'as',
+				},
+			],
+			'@typescript-eslint/consistent-type-imports': [
+				'error',
+				{
+					prefer: 'type-imports',
+					fixStyle: 'inline-type-imports',
 				},
 			],
 			'@typescript-eslint/explicit-module-boundary-types': [
