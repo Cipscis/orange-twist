@@ -3,6 +3,7 @@ import {
 	type GenericEventHandler,
 	type JSX,
 	h,
+	Fragment,
 } from 'preact';
 import {
 	useCallback,
