@@ -12,6 +12,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 * Improved linting rules around type imports
 
+### Fixed
+
+* Improved performance of updating day task summary notes
+
 ## [1.6.4] - 2025-11-30
 
 ### Changed
