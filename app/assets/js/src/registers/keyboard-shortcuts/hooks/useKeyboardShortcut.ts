@@ -5,7 +5,7 @@ import type { CommandId } from 'registers/commands';
 
 import { useEffect } from 'preact/hooks';
 
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import type { KeyboardShortcutName } from '../types/KeyboardShortcutName';
 import { addKeyboardShortcutListener } from '../listeners/addKeyboardShortcutListener';
 
 import { bindKeyboardShortcutToCommand } from '../listeners/bindKeyboardShortcutToCommand';

@@ -4,7 +4,7 @@ import type { registerKeyboardShortcut } from './registerKeyboardShortcut';
 import { getDeepActiveElement } from 'utils';
 
 import type { KeyCombo, KeyboardShortcutInfo } from './types';
-import { KeyboardShortcutName } from './types';
+import type { KeyboardShortcutName } from './types';
 
 /**
  * A central register for keeping track of keyboard shortcuts.

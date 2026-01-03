@@ -194,6 +194,13 @@ export default defineConfig([
 					assertionStyle: 'as',
 				},
 			],
+			'@typescript-eslint/consistent-type-imports': [
+				'error',
+				{
+					prefer: 'type-imports',
+					fixStyle: 'inline-type-imports',
+				},
+			],
 			'@typescript-eslint/explicit-module-boundary-types': [
 				'error'
 			],
