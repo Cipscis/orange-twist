@@ -1,5 +1,4 @@
 // Type-only import to expose symbol in JSDoc
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { saveImage } from './saveImage';
 
 import { ObjectStoreName, doDatabaseTransaction } from 'utils';

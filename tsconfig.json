@@ -40,11 +40,14 @@
 		// https://www.typescriptlang.org/tsconfig#lib
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
 
-		// Replace JSX with calls to a JSX function
+		// Copied from [Preact TypeScript docs](https://preactjs.com/guide/v10/typescript/)
 		// https://www.typescriptlang.org/tsconfig#jsx
-		"jsx": "react-jsx",
-		// Tell TypeScript to import JSX function from "preact"
-		// https://www.typescriptlang.org/tsconfig#jsxImportSource
-		"jsxImportSource": "preact"
+		"jsx": "react",
+		// Copied from [Preact TypeScript docs](https://preactjs.com/guide/v10/typescript/)
+		// https://www.typescriptlang.org/tsconfig/jsxFactory.html
+		"jsxFactory": "h",
+		// Copied from [Preact TypeScript docs](https://preactjs.com/guide/v10/typescript/)
+		// https://www.typescriptlang.org/tsconfig/#jsxFragmentFactory
+		"jsxFragmentFactory": "Fragment"
 	}
 }

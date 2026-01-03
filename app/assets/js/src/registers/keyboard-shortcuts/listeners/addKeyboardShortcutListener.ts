@@ -1,4 +1,4 @@
-import { KeyboardShortcutName } from '../types/KeyboardShortcutName';
+import type { KeyboardShortcutName } from '../types/KeyboardShortcutName';
 import type { KeyboardShortcutInfo } from '../types';
 
 import { keyboardShortcutsRegister } from '../keyboardShortcutsRegister';

@@ -1,5 +1,6 @@
 import {
 	h,
+	Fragment,
 	type JSX,
 	type TargetedEvent,
 } from 'preact';
