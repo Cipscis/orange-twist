@@ -6,7 +6,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { Register } from './Register';
+import type { Register } from './Register';
 
 /**
  * A hook for observing data in a {@linkcode Register}.

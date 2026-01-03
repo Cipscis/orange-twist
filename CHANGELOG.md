@@ -2,11 +2,15 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.0] - 2025-12-29
+## [1.7.0] - 2026-01-03
 
 ### Added
 
 * Added an "Add existing task" button to streamline adding a task to a day
+
+### Changed
+
+* Improved linting rules around type imports
 
 ## [1.6.4] - 2025-11-30
 

@@ -1,5 +1,4 @@
 // Type-only import to expose symbol within JSDoc
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { type OrangeTwist } from './OrangeTwist';
 
 import {

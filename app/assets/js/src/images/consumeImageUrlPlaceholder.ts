@@ -1,5 +1,4 @@
 // Type-only import to expose symbol for JSDoc
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { createImageUrlPlaceholder } from './createImageUrlPlaceholder';
 import { getImage } from './getImage';
 

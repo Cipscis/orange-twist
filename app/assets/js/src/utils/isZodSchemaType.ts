@@ -1,4 +1,4 @@
-import * as z from 'zod/mini';
+import type * as z from 'zod/mini';
 
 /**
  * This utility function can be used to construct a typeguard-style
