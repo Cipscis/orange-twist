@@ -1,5 +1,4 @@
 // Type-only import to make symbol available to JSDoc
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import type { useCommand } from 'registers/commands';
 
 import type { CommandId } from 'registers/commands';
