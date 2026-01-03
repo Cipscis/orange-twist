@@ -123,6 +123,8 @@ These dependencies are used when working on the project locally.
 
 	* [eslint-plugin-import-newlines](https://www.npmjs.com/package/eslint-import-newlines): Provides a linting rule for named imports
 
+	* [eslint-plugin-jsdoc](https://www.npmjs.com/package/eslint-plugin-jsdoc): Provides a linting rule making it easier to import type symbols for use in documentation comments
+
 	* [@eslint/compat](https://www.npmjs.com/package/@eslint/compat): Use to make older eslint plugins work with the latest version
 
 	* [@eslint/eslintrc](https://www.npmjs.com/package/@eslint/eslintrc): Used to help define the eslint config
