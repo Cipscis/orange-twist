@@ -77,4 +77,6 @@ describe('useRegister', () => {
 		rerender(matcherAll);
 		expect(result.current).toEqual([1, 2]);
 	});
+
+	test.todo('when the async option is set, processes updates asynchronously');
 });
