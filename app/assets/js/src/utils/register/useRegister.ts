@@ -7,7 +7,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import type { DefaultsFor } from 'utils/DefaultsFor';
+import { type DefaultsFor, requestAsyncCallback } from 'utils';
 import type { Register, RegisterEventListener } from './Register';
 
 export interface UseRegisterOptions {
@@ -130,7 +130,9 @@ export function useRegister<K, V>(
 
 		const listener = (() => {
 			if (async) {
-				return (changes: Parameters<typeof handleDataUpdate>[0]) => requestIdleCallback(() => handleDataUpdate(changes));
+				return (changes: Parameters<typeof handleDataUpdate>[0]) => {
+					requestAsyncCallback(() => handleDataUpdate(changes));
+				};
 			} else {
 				return handleDataUpdate;
 			}
