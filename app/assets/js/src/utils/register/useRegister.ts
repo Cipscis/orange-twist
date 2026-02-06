@@ -8,7 +8,7 @@ import {
 } from 'preact/hooks';
 
 import type { DefaultsFor } from 'utils/DefaultsFor';
-import type { Register } from './Register';
+import type { Register, RegisterEventListener } from './Register';
 
 export interface UseRegisterOptions {
 	/**
@@ -101,12 +101,9 @@ export function useRegister<K, V>(
 	 * Update the hook data on register changes if
 	 * and only if the relevant data has changed.
 	 */
-	const handleDataUpdate = useCallback((
-		changes: {
-			key: K;
-			value: V;
-		}[]
-	) => {
+	const handleDataUpdate = useCallback<
+		RegisterEventListener<K, V>['set' | 'delete']
+	>((changes) => {
 		// If one of the changes matches our matcher, update
 		if (hasChanged(changes)) {
 			updateHookData();
