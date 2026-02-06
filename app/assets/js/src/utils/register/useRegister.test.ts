@@ -1,6 +1,7 @@
 import {
 	describe,
 	expect,
+	jest,
 	test,
 } from '@jest/globals';
 
@@ -78,5 +79,33 @@ describe('useRegister', () => {
 		expect(result.current).toEqual([1, 2]);
 	});
 
-	test.todo('when the async option is set, processes updates asynchronously');
+	test('when the async option is set, processes updates asynchronously', async () => {
+		jest.useFakeTimers();
+
+		const testRegister = new Register<string, number>([
+			['a', 1],
+			['b', 2],
+		]);
+
+		const matcher = (key: string) => key === 'a';
+
+		const { result } = renderHook(() => {
+			return useRegister(
+				testRegister,
+				matcher,
+				{ async: true }
+			);
+		});
+		expect(result.current).toEqual([1]);
+
+		await act(() => testRegister.set('a', 2));
+		// Result is not update immediately
+		expect(result.current).toEqual([1]);
+
+		await act(() => jest.advanceTimersByTime(1500));
+		// Result is updated asynchronously
+		expect(result.current).toEqual([2]);
+
+		jest.useRealTimers();
+	});
 });
