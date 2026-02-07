@@ -13,11 +13,17 @@ export interface StrMatchOptions {
 	 * @default false
 	 */
 	ignoreDiacritics?: boolean;
+
+	/**
+	 * Whether or not to allow partial matches, e.g. if "te" should match "test" or not.
+	 */
+	allowPartial?: boolean;
 }
 
 const defaultOptions: DefaultsFor<StrMatchOptions> = {
 	ignoreCase: false,
 	ignoreDiacritics: false,
+	allowPartial: true,
 };
 
 /**
@@ -39,13 +45,24 @@ export function strMatch(
 	queryString: string,
 	options?: StrMatchOptions,
 ): boolean {
+	const fullOptions = {
+		...defaultOptions,
+		...options,
+	};
+
+	const { allowPartial } = fullOptions;
+
 	const [container, query] = applyStrMatchOptions(
 		containingString,
 		queryString,
-		{ ...defaultOptions, ...options },
+		fullOptions,
 	);
 
-	return container.includes(query);
+	if (allowPartial) {
+		return container.includes(query);
+	} else {
+		return container === query;
+	}
 }
 
 function applyStrMatchOptions(
