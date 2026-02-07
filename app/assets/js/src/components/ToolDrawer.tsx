@@ -1,5 +1,5 @@
 // Type-only import to expose symbol within JSDoc
-import { type OrangeTwist } from './OrangeTwist';
+import type { OrangeTwist } from './OrangeTwist';
 
 import {
 	h,

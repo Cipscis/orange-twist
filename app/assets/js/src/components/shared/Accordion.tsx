@@ -9,6 +9,8 @@ import {
 	useState,
 } from 'preact/hooks';
 
+import { requestAsyncCallback } from 'utils';
+
 interface AccordionProps {
 	class?: string;
 	open?: boolean;
@@ -49,28 +51,13 @@ export function Accordion(props: AccordionProps): JSX.Element {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		/**
-		 * Ask the browser to complete a task before a deadline, preferably
-		 * when the main thread is idle.
-		 */
-		const requestCallback = (callback: () => void, deadline: number) => {
-			// As of 2024-08-03, Safari doesn't support requestIdleCallback
-			if (window.requestIdleCallback) {
-				const callbackId = window.requestIdleCallback(callback, { timeout: deadline });
-				signal.addEventListener('abort', () => window.cancelIdleCallback(callbackId));
-				return;
-			}
-
-			// As a fallback, spread timeouts randomly across the deadline period
-			const delay = Math.random() * deadline;
-			const timeout = setTimeout(callback, delay);
-			signal.addEventListener('abort', () => clearTimeout(timeout));
-		};
-
 		// Render children within 1.5 seconds
-		requestCallback(() => {
+		requestAsyncCallback(() => {
 			setRenderChildren(true);
-		}, 1500);
+		}, {
+			deadline: 1500,
+			signal,
+		});
 
 		return () => controller.abort();
 	}, [renderChildren]);

@@ -4,6 +4,7 @@ import {
 	afterEach,
 	describe,
 	expect,
+	jest,
 	test,
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
@@ -50,6 +51,8 @@ describe('Task', () => {
 	});
 
 	test('renders the task status for the specified day', async () => {
+		jest.useFakeTimers();
+
 		setTaskInfo(1, { status: TaskStatus.TODO });
 		setDayTaskInfo(
 			{ taskId: 1, dayName: '2023-11-23' },
@@ -67,6 +70,7 @@ describe('Task', () => {
 				{ taskId: 1, dayName: '2023-11-24' },
 				{ status: TaskStatus.IN_REVIEW }
 			);
+			jest.advanceTimersByTime(1500);
 		});
 		expect(getByTitle('In review (click to edit)')).toBeInTheDocument();
 
@@ -75,7 +79,10 @@ describe('Task', () => {
 				{ taskId: 1, dayName: '2023-11-25' },
 				{ status: TaskStatus.COMPLETED }
 			);
+			jest.advanceTimersByTime(1500);
 		});
 		expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
+
+		jest.useRealTimers();
 	});
 });

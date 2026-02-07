@@ -4,21 +4,27 @@ import {
 
 import { useRegister } from 'utils';
 
-import {
-	type DayTaskIdentifier,
-	type DayTaskInfo,
+import type {
+	DayTaskIdentifier,
+	DayTaskInfo,
 } from '../types';
 import type { RegisterKey } from 'utils';
 
 import { dayTasksRegister } from '../dayTasksRegister';
 import { decodeDayTaskKey } from '../util';
+import type { UseRegisterOptions } from 'utils/register/useRegister';
+
+interface UseAllDayTaskInfoOptions extends UseRegisterOptions {}
 
 /**
  * Provides up to date information on all day tasks
  * matching a partial identifier. If no identifier is
  * provided, provides information on all day tasks.
  */
-export function useAllDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): readonly DayTaskInfo[] {
+export function useAllDayTaskInfo(
+	identifier?: Partial<DayTaskIdentifier>,
+	options?: UseAllDayTaskInfoOptions,
+): readonly DayTaskInfo[] {
 	const {
 		dayName: identifierDayName,
 		taskId: identifierTaskId,
@@ -51,6 +57,7 @@ export function useAllDayTaskInfo(identifier?: Partial<DayTaskIdentifier>): read
 
 	return useRegister(
 		dayTasksRegister,
-		matcher
+		matcher,
+		options,
 	);
 }

@@ -1,4 +1,4 @@
-import { type PersistApi } from 'persist';
+import type { PersistApi } from 'persist';
 import { saveRegister } from 'utils';
 
 import { StorageKey } from 'data/shared';
