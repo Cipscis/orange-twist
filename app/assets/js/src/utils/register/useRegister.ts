@@ -2,24 +2,47 @@ import {
 	useCallback,
 	useEffect,
 	useLayoutEffect,
+	useMemo,
 	useRef,
 	useState,
 } from 'preact/hooks';
 
-import type { Register } from './Register';
+import { type DefaultsFor, requestAsyncCallback } from 'utils';
+import type { Register, RegisterEventListener } from './Register';
+
+export interface UseRegisterOptions {
+	/**
+	 * If set, any updates will be processed asynchronously by requesting an idle callback. This option is recommended for low priority background work, especially if this hook is used on many elements so a single change could cause many updates.
+	 * @default false
+	 */
+	async?: boolean;
+}
+
+const defaultOptions: DefaultsFor<UseRegisterOptions> = {
+	async: false,
+};
 
 /**
  * A hook for observing data in a {@linkcode Register}.
  *
  * @param register - The `Register` to observe.
  * @param matcher - A function used to check if data for a key should be returned. **Important:** this function must be memoised.
+ * @param options - An optional object specifying configuration options.
  *
  * @returns An array containing all matching entries in the specified `Register`.
  */
 export function useRegister<K, V>(
 	register: Register<K, V>,
 	matcher: (key: K, value: V) => boolean,
+	options?: UseRegisterOptions,
 ): readonly V[] {
+	const {
+		async,
+	} = useMemo(() => ({
+		...defaultOptions,
+		...options,
+	}), [options]);
+
 	/**
 	 * Retrieve all entries matching the matcher.
 	 */
@@ -78,12 +101,9 @@ export function useRegister<K, V>(
 	 * Update the hook data on register changes if
 	 * and only if the relevant data has changed.
 	 */
-	const handleDataUpdate = useCallback((
-		changes: {
-			key: K;
-			value: V;
-		}[]
-	) => {
+	const handleDataUpdate = useCallback<
+		RegisterEventListener<K, V>['set' | 'delete']
+	>((changes) => {
 		// If one of the changes matches our matcher, update
 		if (hasChanged(changes)) {
 			updateHookData();
@@ -108,20 +128,30 @@ export function useRegister<K, V>(
 		const controller = new AbortController();
 		const { signal } = controller;
 
+		const listener = (() => {
+			if (async) {
+				return (changes: Parameters<typeof handleDataUpdate>[0]) => {
+					requestAsyncCallback(() => handleDataUpdate(changes));
+				};
+			} else {
+				return handleDataUpdate;
+			}
+		})();
+
 		register.addEventListener(
 			'set',
-			handleDataUpdate,
+			listener,
 			{ signal }
 		);
 
 		register.addEventListener(
 			'delete',
-			handleDataUpdate,
+			listener,
 			{ signal }
 		);
 
 		return () => controller.abort();
-	}, [register, handleDataUpdate]);
+	}, [register, async, handleDataUpdate]);
 
 	return hookData;
 }
