@@ -61,17 +61,20 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	} = props;
 	const taskInfo = useTaskInfo(taskId);
 
+	const dayTaskIdentifier = useMemo(() => {
+		if (dayName) {
+			return { taskId };
+		}
+
+		// If there's no day name, use an invalid task ID to prevent
+		// unnecessary re-renders
+		return { taskId: -1 };
+	}, [dayName, taskId]);
+
 	// Also re-render when any day task info for a specified day changes
 	useAllDayTaskInfo(
-		useMemo(() => {
-			if (dayName) {
-				return { taskId };
-			}
-
-			// If there's no day name, use an invalid task ID to prevent
-			// unnecessary re-renders
-			return { taskId: -1 };
-		}, [dayName, taskId])
+		dayTaskIdentifier,
+		{ async: true },
 	);
 
 	const readonly = props.readonly ?? false;

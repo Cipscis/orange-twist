@@ -38,6 +38,35 @@ type RegisterEventBindingArguments<K, V> = {
 }[keyof RegisterEventMap<K, V>];
 
 /**
+ * Event listener types for a `Register`.
+ *
+ * @example
+ * ```typescript
+ * declare const register: Register<K, V>;
+ *
+ * const setListener: RegisterEventListener<K, V>["set"] = (changes) => {
+ *     // do something
+ * };
+ * register.addEventListener('set', setListener);
+ *
+ * const deleteListener: RegisterEventListener<K, V>["delete"] = (changes) => {
+ *     // do something
+ * };
+ * register.addEventListener('delete', setListener);
+ *
+ * // This listener can be used on both set and delete events
+ * const setOrDeleteListener: RegisterEventListener<K, V>["set" | "delete"] = (changes) => {
+ *     // do something
+ * };
+ * register.addEventListener('set', setListener);
+ * register.addEventListener('delete', setListener);
+ * ```
+ */
+export type RegisterEventListener<K, V> = {
+	[T in keyof RegisterEventMap<K, V>]: Extract<RegisterEventBindingArguments<K, V>, { 0: T; }>[1];
+};
+
+/**
  * A `Map`-like object that can be used to store arbitrary data in a way that allows event-driven
  * responses to changes in that data.
  *
