@@ -26,6 +26,7 @@ export { isZodSchemaType } from './isZodSchemaType';
 export { nodeHasAncestor } from './nodeHasAncestor';
 export { readFileAsString } from './readFileAsString';
 export { removeDiacritics } from './removeDiacritics';
+export { requestAsyncCallback } from './requestAsyncCallback';
 export { startAnimationLoop } from './startAnimationLoop';
 export { strMatch, type StrMatchOptions } from './strMatch';
 export { tryStartViewTransition } from './tryStartViewTransition';

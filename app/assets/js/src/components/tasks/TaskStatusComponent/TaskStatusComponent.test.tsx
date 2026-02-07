@@ -205,12 +205,17 @@ describe('TaskStatusComponent', () => {
 				name: `Todo (click to edit)`,
 			})).toBeInTheDocument();
 
+			jest.useFakeTimers();
 			await act(() => {
 				setDayTaskInfo({
 					taskId: 1,
 					dayName: '2023-11-21',
 				}, { status: TaskStatus.IN_PROGRESS });
+				// Wait for asynchronous UI update
+				jest.advanceTimersByTime(2000);
 			});
+
+			jest.useRealTimers();
 
 			expect(getByRole('button', {
 				name: `In progress (click to edit)`,
