@@ -34,6 +34,16 @@ interface TaskLookupProps extends Omit<
 		index: number,
 		array: readonly TaskInfo[],
 	) => boolean;
+
+	/**
+	 * An array find predicate function used to pre-select a task if there is an ideal match.
+	 */
+	exactMatch?: (
+		this: void,
+		task: TaskInfo,
+		index: number,
+		array: readonly TaskInfo[],
+	) => boolean;
 }
 
 /**
@@ -44,6 +54,7 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 	const {
 		onSelect,
 		filter,
+		exactMatch,
 		className,
 
 		...passthroughProps
@@ -61,6 +72,14 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 
 		return allTaskInfo.filter(filter);
 	}, [allTaskInfo, filter]);
+
+	const exactMatchTaskInfo = useMemo(() => {
+		if (!exactMatch) {
+			return null;
+		}
+
+		return allTaskInfo.find(exactMatch) ?? null;
+	}, [allTaskInfo, exactMatch]);
 
 	const selectRef = useRef<HTMLSelectElement>(null);
 	/**
@@ -93,6 +112,25 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 		onSelect(selectedTaskId);
 	}, [onSelect]);
 
+	/**
+	 * Pre-select a task, or clear a pre-selected task if passed `null`.
+	 */
+	const preselectTask = useCallback((task: TaskInfo | null) => {
+		const select = selectRef.current;
+		if (!select) {
+			return;
+		}
+
+		if (task) {
+			select.value = String(task.id);
+		} else {
+			select.value = '';
+		}
+
+		select.dispatchEvent(new Event('change'));
+		valueAutoSelectedRef.current = true;
+	}, []);
+
 	// Update the selected option based on filter query changes
 	useEffect(() => {
 		const select = selectRef.current;
@@ -102,16 +140,15 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 
 		if (selectableTaskInfo.length === 1) {
 			// If there's just one task then select it
-			select.value = String(selectableTaskInfo[0].id);
-			select.dispatchEvent(new Event('change'));
-			valueAutoSelectedRef.current = true;
+			preselectTask(selectableTaskInfo[0]);
+		} else if (exactMatchTaskInfo) {
+			// If there's a single task that matches the query exactly then select it
+			preselectTask(exactMatchTaskInfo);
 		} else if (valueAutoSelectedRef.current) {
 			// If there's zero or multiple tasks and we'd automatically selected a value, clear it
-			select.value = '';
-			select.dispatchEvent(new Event('change'));
-			valueAutoSelectedRef.current = true;
+			preselectTask(null);
 		}
-	}, [selectableTaskInfo]);
+	}, [selectableTaskInfo, exactMatchTaskInfo, preselectTask]);
 
 	return <>
 		<select

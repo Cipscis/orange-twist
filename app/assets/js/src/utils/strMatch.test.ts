@@ -33,4 +33,22 @@ describe('strMatch', () => {
 			strMatch('āēīōū', 'eio', { ignoreDiacritics: true })
 		).toBe(true);
 	});
+
+	test('should allow partial or complete matches', () => {
+		expect(
+			strMatch('test', 'te', { allowPartial: true })
+		).toBe(true);
+
+		expect(
+			strMatch('te', 'test', { allowPartial: true })
+		).toBe(false);
+
+		expect(
+			strMatch('test', 'te', { allowPartial: false })
+		).toBe(false);
+
+		expect(
+			strMatch('test', 'test', { allowPartial: false })
+		).toBe(true);
+	});
 });

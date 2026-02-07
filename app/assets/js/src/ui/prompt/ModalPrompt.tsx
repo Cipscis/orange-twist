@@ -121,6 +121,18 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 		});
 	}, [taskFilterQuery]);
 
+	const exactMatch = useCallback((taskInfo: TaskInfo) => {
+		if (taskFilterQuery === null) {
+			return false;
+		}
+
+		return strMatch(taskInfo.name, taskFilterQuery, {
+			ignoreCase: true,
+			ignoreDiacritics: true,
+			allowPartial: false,
+		});
+	}, [taskFilterQuery]);
+
 	const selectedTaskId = useRef<number | null>(null);
 	/** Remember the selected task in a ref to pass up when the value is confirmed. */
 	const noteSelectedTaskId = useCallback((taskId: number | null) => selectedTaskId.current = taskId, []);
@@ -179,6 +191,7 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 									<TaskLookup
 										onSelect={noteSelectedTaskId}
 										filter={applyTaskFilter}
+										exactMatch={exactMatch}
 										class="modal-prompt__input"
 										id={idForLabel}
 										required
