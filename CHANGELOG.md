@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2026-02-07
+
+### Fixed
+
+* Improved performance of updating task status on task detail pages
+
 ## [1.7.0] - 2026-01-03
 
 ### Added
