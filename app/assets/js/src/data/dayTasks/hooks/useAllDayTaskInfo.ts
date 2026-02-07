@@ -4,9 +4,9 @@ import {
 
 import { useRegister } from 'utils';
 
-import {
-	type DayTaskIdentifier,
-	type DayTaskInfo,
+import type {
+	DayTaskIdentifier,
+	DayTaskInfo,
 } from '../types';
 import type { RegisterKey } from 'utils';
 

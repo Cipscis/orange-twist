@@ -1,8 +1,8 @@
 import { getDayInfo, setDayInfo } from 'data/days';
 
 import { encodeDayTaskKey } from './util';
-import {
-	type DayTaskIdentifier,
+import type {
+	DayTaskIdentifier,
 } from './types';
 
 import { dayTasksRegister } from './dayTasksRegister';

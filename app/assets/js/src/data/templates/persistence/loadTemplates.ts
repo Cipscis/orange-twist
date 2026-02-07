@@ -1,6 +1,6 @@
 import * as z from 'zod/mini';
 
-import { type PersistApi } from 'persist';
+import type { PersistApi } from 'persist';
 import { isZodSchemaType, loadRegister } from 'utils';
 
 import { StorageKey } from 'data/shared';
