@@ -193,7 +193,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		closeTemplatesModal,
 	} = useCommandTemplatesEdit();
 
-	// Register all commands and keyboard shortcuts
+	// Register keyboard shortcuts
 	useEffect(() => {
 		registerKeyboardShortcut(
 			KeyboardShortcutName.COMMAND_PALETTE_OPEN,
@@ -201,7 +201,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				key: '\\',
 			}],
 		);
-		registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
 		registerKeyboardShortcut(
 			KeyboardShortcutName.EDITING_FINISH,
 			[

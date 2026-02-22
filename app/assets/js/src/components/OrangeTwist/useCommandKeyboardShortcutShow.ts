@@ -6,7 +6,11 @@ import {
 
 import { Command } from 'types/Command';
 import { registerCommand, useCommand } from 'registers/commands';
-import { KeyboardShortcutName, useKeyboardShortcut } from 'registers/keyboard-shortcuts';
+import {
+	KeyboardShortcutName,
+	registerKeyboardShortcut,
+	useKeyboardShortcut,
+} from 'registers/keyboard-shortcuts';
 
 export interface UseCommandKeyboardShortcutShowState {
 	keyboardShortcutsModalOpen: boolean;
@@ -22,6 +26,8 @@ export interface UseCommandKeyboardShortcutShowState {
 export function useCommandKeyboardShortcutShow(): UseCommandKeyboardShortcutShowState {
 	useEffect(() => {
 		registerCommand(Command.KEYBOARD_SHORTCUT_SHOW, { name: 'Show keyboard shortcuts' });
+
+		registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
 	}, []);
 
 	// Open keyboard shortcuts modal on keyboard shortcut
