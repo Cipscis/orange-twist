@@ -48,6 +48,7 @@ import {
 	getCurrentDateDayName,
 	isValidDateString,
 } from 'utils';
+import { getTaskDetailUrl } from 'navigation';
 
 import { type PersistApi, local } from 'persist';
 import {
@@ -59,16 +60,15 @@ import * as ui from 'ui';
 import {
 	IconButton,
 	Loader,
-} from './shared';
+} from '../shared';
 
-import { OrangeTwistContext } from './OrangeTwistContext';
+import { OrangeTwistContext } from '../OrangeTwistContext';
 
-import { CommandPalette } from './CommandPalette';
-import { KeyboardShortcutModal } from './KeyboardShortcutsModal';
-import { TemplatesModal } from './templates/TemplatesModal';
-import { ToolDrawer, ToolDrawerPlacement } from './ToolDrawer';
-import { Footer } from './Footer';
-import { getTaskDetailUrl } from 'navigation';
+import { CommandPalette } from '../CommandPalette';
+import { KeyboardShortcutModal } from '../KeyboardShortcutsModal';
+import { TemplatesModal } from '../templates/TemplatesModal';
+import { ToolDrawer, ToolDrawerPlacement } from '../ToolDrawer';
+import { Footer } from '../Footer';
 
 interface OrangeTwistProps {
 	/**
