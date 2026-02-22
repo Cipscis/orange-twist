@@ -1,4 +1,5 @@
 @use "../theme/layout";
+@use "../theme/palette";
 @use "../theme/spacing";
 @use "../theme/typography";
 
@@ -33,7 +34,14 @@
 	}
 }
 
+.orange-twist__section--sticky-summary > summary {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+
 .orange-twist__title {
+	@include palette.primary;
 	@include typography.heading-2;
 	@include patterns.disclosure-title;
 }
