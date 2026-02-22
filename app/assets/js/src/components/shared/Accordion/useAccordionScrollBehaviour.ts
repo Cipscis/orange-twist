@@ -41,7 +41,7 @@ export function useAccordionScrollBehaviour(options: UseAccordionScrollBehaviour
 	/**
 	 * Before the `<details>` element is toggled, record its bottom position for handling scroll behaviour.
 	 *
-	 * The `'beforetoggle'` event is not yet supported for `'<details>'` elements, so this polls on scroll.
+	 * The `'beforetoggle'` event is not yet supported for `'<details>'` elements, so currently this polls on scroll end.
 	 * @see {@link https://github.com/whatwg/html/issues/9743 `<details>` element does not fire a `beforetoggle` event.}
 	 */
 	const recordBottomPosition = useCallback(() => {
