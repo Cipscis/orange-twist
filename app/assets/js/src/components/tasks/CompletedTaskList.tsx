@@ -1,4 +1,5 @@
 import { h, type JSX } from 'preact';
+import type Preact from 'preact';
 import {
 	useCallback,
 	useEffect,
@@ -24,7 +25,7 @@ interface CompletedTaskListProps {
 export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | null {
 	const [listOpen, setListOpen] = useState(props.open ?? false);
 
-	const onListToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
+	const onListToggle = useCallback((event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => {
 		setListOpen(event.currentTarget.open);
 	}, []);
 
