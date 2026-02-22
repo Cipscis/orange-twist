@@ -18,6 +18,7 @@ import { useCommandDayAddNew } from './useCommandDayAddNew';
 import { useCommandTaskAddNew } from './useCommandTaskAddNew';
 import { useCommandTaskGoToExisting } from './useCommandTaskGoToExisting';
 import { useCommandThemeToggle } from './useCommandThemeToggle';
+import { useCommandKeyboardShortcutShow } from './useCommandKeyboardShortcutShow';
 
 import {
 	getDayInfo,
@@ -186,10 +187,14 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	useCommandTaskAddNew();
 	useCommandTaskGoToExisting();
 	useCommandThemeToggle();
+	const {
+		keyboardShortcutsModalOpen,
+		openKeyboardShortcutsModal,
+		closeKeyboardShortcutsModal,
+	} = useCommandKeyboardShortcutShow();
 
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
-		registerCommand(Command.KEYBOARD_SHORTCUT_SHOW, { name: 'Show keyboard shortcuts' });
 		registerCommand(Command.TEMPLATES_EDIT, { name: 'Edit templates' });
 
 		registerKeyboardShortcut(
@@ -224,25 +229,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		KeyboardShortcutName.COMMAND_PALETTE_OPEN,
 		openCommandPalette,
 		!commandPaletteOpen
-	);
-
-	// Open keyboard shortcuts modal on keyboard shortcut
-	const [keyboardShortcutsModalOpen, setKeyboardShortcutsModalOpen] = useState(false);
-	/** Open the keyboard shortcuts modal. */
-	const openKeyboardShortcutsModal = useCallback(
-		() => setKeyboardShortcutsModalOpen(true),
-		[]
-	);
-	/** Close the keyboard shortcuts modal. */
-	const closeKeyboardShortcutsModal = useCallback(
-		() => setKeyboardShortcutsModalOpen(false),
-		[],
-	);
-	useCommand(Command.KEYBOARD_SHORTCUT_SHOW, openKeyboardShortcutsModal);
-	useKeyboardShortcut(
-		KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN,
-		Command.KEYBOARD_SHORTCUT_SHOW,
-		!keyboardShortcutsModalOpen
 	);
 
 	const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
