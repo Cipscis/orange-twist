@@ -23,6 +23,9 @@ import * as ui from 'ui';
 import { Loader } from 'components/shared';
 
 export interface UseCommandDataSaveOptions {
+	/**
+	 * A {@linkcode PersistApi} to use when saving data.
+	 */
 	persist: PersistApi;
 }
 
