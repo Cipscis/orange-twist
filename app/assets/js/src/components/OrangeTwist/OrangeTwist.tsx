@@ -15,21 +15,19 @@ import { useCommandDataSave } from './useCommandDataSave';
 import { useCommandDataExport } from './useCommandDataExport';
 import { useCommandDataImport } from './useCommandDataImport';
 import { useCommandDayAddNew } from './useCommandDayAddNew';
+import { useCommandTaskAddNew } from './useCommandTaskAddNew';
 
 import {
 	getDayInfo,
 	loadDays,
 	setDayInfo,
-	createTask,
 	loadTasks,
 	loadDayTasks,
-	setDayTaskInfo,
 	loadTemplates,
 } from 'data';
 
 import { Command } from 'types/Command';
 import {
-	fireCommand,
 	registerCommand,
 	useCommand,
 } from 'registers/commands';
@@ -184,10 +182,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	useCommandDataExport();
 	useCommandDataImport();
 	useCommandDayAddNew();
+	useCommandTaskAddNew();
 
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
-		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
 		registerCommand(Command.TASK_GO_TO_EXISTING, { name: 'Go to task' });
 		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
 		registerCommand(Command.KEYBOARD_SHORTCUT_SHOW, { name: 'Show keyboard shortcuts' });
@@ -294,23 +292,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		[],
 	);
 	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
-
-	const createNewTask = useCallback(async (dayName?: string) => {
-		const name = await ui.prompt('Task name', {
-			type: ui.PromptType.TEXT,
-		});
-		if (!name) {
-			return;
-		}
-
-		const taskId = createTask({ name });
-		if (dayName) {
-			setDayTaskInfo({ dayName, taskId }, {});
-		}
-
-		fireCommand(Command.DATA_SAVE);
-	}, []);
-	useCommand(Command.TASK_ADD_NEW, createNewTask);
 
 	const goToTask = useCallback(async () => {
 		const taskId = await ui.prompt('Task name', {
