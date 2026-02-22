@@ -1,4 +1,4 @@
-export { Accordion } from './Accordion';
+export { Accordion, AccordionScrollBehaviour } from './Accordion';
 export { Button } from './Button';
 export { ButtonVariant } from './types/ButtonVariant';
 export { DragList } from './DragList';
