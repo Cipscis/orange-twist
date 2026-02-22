@@ -2,11 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.8.0] - 2026-02-07
+## [1.8.0] - 2026-02-22
 
 ### Added
 
 * When adding an existing task, if the query exactly matches a task name that task will be pre-selected
+* New "Go to task" command allows direct navigation to an existing task's detail page
 
 ### Changed
 
