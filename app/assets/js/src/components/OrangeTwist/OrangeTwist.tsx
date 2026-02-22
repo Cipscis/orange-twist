@@ -1,6 +1,5 @@
 import {
 	h,
-	Fragment,
 	type ComponentChildren,
 	type JSX,
 } from 'preact';
@@ -12,30 +11,25 @@ import {
 	useState,
 } from 'preact/hooks';
 
+import { useCommandDataSave } from './useCommandDataSave';
+import { useCommandDataExport } from './useCommandDataExport';
+import { useCommandDataImport } from './useCommandDataImport';
+import { useCommandDayAddNew } from './useCommandDayAddNew';
+import { useCommandTaskAddNew } from './useCommandTaskAddNew';
+import { useCommandTaskGoToExisting } from './useCommandTaskGoToExisting';
+import { useCommandThemeToggle } from './useCommandThemeToggle';
+import { useCommandKeyboardShortcutShow } from './useCommandKeyboardShortcutShow';
+import { useCommandTemplatesEdit } from './useCommandTemplatesEdit';
+
 import {
-	getAllDayInfo,
 	getDayInfo,
 	loadDays,
-	saveDays,
 	setDayInfo,
-	createTask,
 	loadTasks,
-	saveTasks,
 	loadDayTasks,
-	saveDayTasks,
-	setDayTaskInfo,
 	loadTemplates,
-	saveTemplates,
-	exportData,
-	importData,
 } from 'data';
 
-import { Command } from 'types/Command';
-import {
-	fireCommand,
-	registerCommand,
-	useCommand,
-} from 'registers/commands';
 import {
 	KeyboardShortcutName,
 	registerKeyboardShortcut,
@@ -46,20 +40,16 @@ import {
 	classNames,
 	type DefaultsFor,
 	getCurrentDateDayName,
-	isValidDateString,
 } from 'utils';
-import { getTaskDetailUrl } from 'navigation';
 
 import { type PersistApi, local } from 'persist';
 import {
-	syncUpdate,
 	onSyncUpdate,
 } from 'sync';
 
 import * as ui from 'ui';
 import {
 	IconButton,
-	Loader,
 } from '../shared';
 
 import { OrangeTwistContext } from '../OrangeTwistContext';
@@ -186,31 +176,29 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		loadAllData,
 	]);
 
-	// Register all commands and keyboard shortcuts
-	useEffect(() => {
-		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
-		registerCommand(Command.DATA_EXPORT, { name: 'Export data' });
-		registerCommand(Command.DATA_IMPORT, { name: 'Import data' });
-		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
-		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
-		registerCommand(Command.TASK_GO_TO_EXISTING, { name: 'Go to task' });
-		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
-		registerCommand(Command.KEYBOARD_SHORTCUT_SHOW, { name: 'Show keyboard shortcuts' });
-		registerCommand(Command.TEMPLATES_EDIT, { name: 'Edit templates' });
+	useCommandDataSave({ persist });
+	useCommandDataExport();
+	useCommandDataImport();
+	useCommandDayAddNew();
+	useCommandTaskAddNew();
+	useCommandTaskGoToExisting();
+	useCommandThemeToggle();
+	const {
+		keyboardShortcutsModalOpen,
+		openKeyboardShortcutsModal,
+		closeKeyboardShortcutsModal,
+	} = useCommandKeyboardShortcutShow();
+	const {
+		templatesModalOpen,
+		closeTemplatesModal,
+	} = useCommandTemplatesEdit();
 
+	// Register keyboard shortcuts
+	useEffect(() => {
 		registerKeyboardShortcut(
 			KeyboardShortcutName.COMMAND_PALETTE_OPEN,
 			[{
 				key: '\\',
-			}],
-		);
-		registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
-
-		registerKeyboardShortcut(
-			KeyboardShortcutName.DATA_SAVE,
-			[{
-				key: 's',
-				ctrl: true,
 			}],
 		);
 		registerKeyboardShortcut(
@@ -221,42 +209,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			]
 		);
 	}, []);
-
-	/**
-	 * Toggle between task and light themes.
-	 */
-	const toggleTheme = useCallback(() => {
-		const htmlEl = document.documentElement;
-
-		const currentTheme = getComputedStyle(htmlEl).getPropertyValue('--theme');
-
-		const newTheme = (() => {
-			if (currentTheme === 'light') {
-				return 'dark';
-			} else {
-				return 'light';
-			}
-		})();
-
-		// Insert a <style> tag to prevent transitions during theme toggle
-		const flashStyle = document.createElement('style');
-		flashStyle.innerHTML = `* {
-			transition: none !important;
-		}`;
-
-		htmlEl.append(flashStyle);
-
-		htmlEl.style.setProperty('--theme', newTheme);
-		if (currentTheme) {
-			htmlEl.classList.remove(currentTheme);
-		}
-		htmlEl.classList.add(newTheme);
-		localStorage.setItem('theme', newTheme);
-
-		// The <style> tag can't be removed synchronously or it's not used for the next paint
-		queueMicrotask(() => flashStyle.remove());
-	}, []);
-	useCommand(Command.THEME_TOGGLE, toggleTheme);
 
 	// Open command palette on keyboard shortcut
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -275,141 +227,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		openCommandPalette,
 		!commandPaletteOpen
 	);
-
-	// Open keyboard shortcuts modal on keyboard shortcut
-	const [keyboardShortcutsModalOpen, setKeyboardShortcutsModalOpen] = useState(false);
-	/** Open the keyboard shortcuts modal. */
-	const openKeyboardShortcutsModal = useCallback(
-		() => setKeyboardShortcutsModalOpen(true),
-		[]
-	);
-	/** Close the keyboard shortcuts modal. */
-	const closeKeyboardShortcutsModal = useCallback(
-		() => setKeyboardShortcutsModalOpen(false),
-		[],
-	);
-	useCommand(Command.KEYBOARD_SHORTCUT_SHOW, openKeyboardShortcutsModal);
-	useKeyboardShortcut(
-		KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN,
-		Command.KEYBOARD_SHORTCUT_SHOW,
-		!keyboardShortcutsModalOpen
-	);
-
-	const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
-	/** Open the templates modal. */
-	const openTemplatesModal = useCallback(
-		() => setTemplatesModalOpen(true),
-		[]
-	);
-	/** Close the templates modal. */
-	const closeTemplatesModal = useCallback(
-		() => setTemplatesModalOpen(false),
-		[],
-	);
-	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
-
-	/**
-	 * Save all data, while giving the user feedback.
-	 */
-	const saveData = useCallback(
-		async () => {
-			const id = 'saving';
-
-			ui.alert(<>
-				<span>Saving...</span>
-				<Loader immediate />
-			</>, { id, duration: null });
-			try {
-				await Promise.all([
-					saveDays(persist),
-					saveTasks(persist),
-					saveDayTasks(persist),
-					saveTemplates(persist),
-				]);
-				ui.alert('Saved', {
-					duration: 2000,
-					id,
-				});
-
-				syncUpdate();
-			} catch (e) {
-				ui.alert('Failed to save', {
-					id,
-					duration: null,
-					dismissible: true,
-				});
-				console.error(e);
-			}
-		},
-		[persist]
-	);
-	useCommand(Command.DATA_SAVE, saveData);
-	useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
-
-	useCommand(Command.DATA_EXPORT, exportData);
-	useCommand(Command.DATA_IMPORT, importData);
-
-	/**
-	 * Ask the user what day to add, then add it to the register.
-	 */
-	const addNewDay = useCallback(async (dayNameArg?: string) => {
-		const days = getAllDayInfo();
-
-		const dayName = dayNameArg ?? await ui.prompt('What day?', {
-			type: ui.PromptType.DATE,
-		});
-		if (!dayName) {
-			return;
-		}
-		if (!isValidDateString(dayName)) {
-			ui.alert(`Invalid day ${dayName}`);
-			return;
-		}
-
-		const existingDayData = days.find((day) => day.name === dayName);
-		if (existingDayData) {
-			ui.alert(`Day ${dayName} already exists`);
-			return;
-		}
-
-		setDayInfo(dayName, {});
-	}, []);
-	useCommand(Command.DAY_ADD_NEW, addNewDay);
-
-	const createNewTask = useCallback(async (dayName?: string) => {
-		const name = await ui.prompt('Task name', {
-			type: ui.PromptType.TEXT,
-		});
-		if (!name) {
-			return;
-		}
-
-		const taskId = createTask({ name });
-		if (dayName) {
-			setDayTaskInfo({ dayName, taskId }, {});
-		}
-
-		fireCommand(Command.DATA_SAVE);
-	}, []);
-	useCommand(Command.TASK_ADD_NEW, createNewTask);
-
-	const goToTask = useCallback(async () => {
-		const taskId = await ui.prompt('Task name', {
-			type: ui.PromptType.TASK,
-		});
-		if (taskId === null) {
-			return;
-		}
-
-		// Navigate to task URL
-		const path = getTaskDetailUrl(taskId);
-		if (window.navigation) {
-			window.navigation.navigate(path);
-		} else {
-			window.location.href = path;
-		}
-	}, []);
-	useCommand(Command.TASK_GO_TO_EXISTING, goToTask);
 
 	return <OrangeTwistContext.Provider
 		value={{
