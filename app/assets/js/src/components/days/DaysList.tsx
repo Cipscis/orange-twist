@@ -15,7 +15,11 @@ import { getCurrentDateDayName } from 'utils';
 import { useAllDayInfo } from 'data';
 
 import { OrangeTwistContext } from '../OrangeTwistContext';
-import { Accordion, Button } from '../shared';
+import {
+	Accordion,
+	AccordionScrollBehaviour,
+	Button,
+} from '../shared';
 import { Day } from './Day';
 
 /**
@@ -78,6 +82,7 @@ export function DaysList(): JSX.Element {
 					<h2 class="orange-twist__title">Previous days</h2>
 				}
 				onToggle={onPreviousDaysToggle}
+				scrollBehaviour={AccordionScrollBehaviour.ANCHOR_BOTTOM}
 			>
 				{previousDaysOpen &&
 					previousDays.map(((day) => (
