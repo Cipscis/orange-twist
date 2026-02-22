@@ -45,5 +45,6 @@ export function useCommandThemeToggle(): void {
 		// The <style> tag can't be removed synchronously or it's not used for the next paint
 		queueMicrotask(() => flashStyle.remove());
 	}, []);
+
 	useCommand(Command.THEME_TOGGLE, toggleTheme);
 }

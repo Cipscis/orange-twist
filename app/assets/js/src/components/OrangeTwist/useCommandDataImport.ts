@@ -11,7 +11,6 @@ import { registerCommand, useCommand } from 'registers/commands';
 export function useCommandDataImport(): void {
 	useEffect(() => {
 		registerCommand(Command.DATA_IMPORT, { name: 'Import data' });
-
 	}, []);
 
 	useCommand(Command.DATA_IMPORT, importData);

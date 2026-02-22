@@ -42,7 +42,9 @@ export function useCommandKeyboardShortcutShow(): UseCommandKeyboardShortcutShow
 		() => setKeyboardShortcutsModalOpen(false),
 		[],
 	);
+
 	useCommand(Command.KEYBOARD_SHORTCUT_SHOW, openKeyboardShortcutsModal);
+
 	useKeyboardShortcut(
 		KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN,
 		Command.KEYBOARD_SHORTCUT_SHOW,

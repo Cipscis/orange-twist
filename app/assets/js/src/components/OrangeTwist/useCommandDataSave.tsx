@@ -77,6 +77,8 @@ export function useCommandDataSave({ persist }: UseCommandDataSaveOptions): void
 		},
 		[persist]
 	);
+
 	useCommand(Command.DATA_SAVE, saveData);
+
 	useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
 }

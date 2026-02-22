@@ -42,5 +42,6 @@ export function useCommandDayAddNew(): void {
 
 		setDayInfo(dayName, {});
 	}, []);
+
 	useCommand(Command.DAY_ADD_NEW, addNewDay);
 }
