@@ -20,7 +20,7 @@ import { useAccordionScrollBehaviour } from './useAccordionScrollBehaviour';
 
 export interface AccordionProps {
 	/**
-	 * An optional string to add to th CSS class attribute for the `Accordion`'s `<details>` element.
+	 * An optional string to add to the CSS class attribute for the `Accordion`'s `<details>` element.
 	 */
 	class?: string;
 	/**
@@ -43,7 +43,7 @@ export interface AccordionProps {
 	/**
 	 * A callback to bind to the `Accordion`'s `<details>` element's `'toggle'` event.
 	 *
-	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/toggle_event `HTMLElement`: toggle event || MDN}
+	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/toggle_event `HTMLElement`: toggle event || MDN Reference}
 	 */
 	onToggle?: (this: HTMLDetailsElement, event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => void;
 	/**
