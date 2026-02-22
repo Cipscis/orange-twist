@@ -14,9 +14,9 @@ import {
 import { useCommandDataSave } from './useCommandDataSave';
 import { useCommandDataExport } from './useCommandDataExport';
 import { useCommandDataImport } from './useCommandDataImport';
+import { useCommandDayAddNew } from './useCommandDayAddNew';
 
 import {
-	getAllDayInfo,
 	getDayInfo,
 	loadDays,
 	setDayInfo,
@@ -43,7 +43,6 @@ import {
 	classNames,
 	type DefaultsFor,
 	getCurrentDateDayName,
-	isValidDateString,
 } from 'utils';
 import { getTaskDetailUrl } from 'navigation';
 
@@ -184,10 +183,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	useCommandDataSave({ persist });
 	useCommandDataExport();
 	useCommandDataImport();
+	useCommandDayAddNew();
 
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
-		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
 		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
 		registerCommand(Command.TASK_GO_TO_EXISTING, { name: 'Go to task' });
 		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
@@ -295,33 +294,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		[],
 	);
 	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
-
-	/**
-	 * Ask the user what day to add, then add it to the register.
-	 */
-	const addNewDay = useCallback(async (dayNameArg?: string) => {
-		const days = getAllDayInfo();
-
-		const dayName = dayNameArg ?? await ui.prompt('What day?', {
-			type: ui.PromptType.DATE,
-		});
-		if (!dayName) {
-			return;
-		}
-		if (!isValidDateString(dayName)) {
-			ui.alert(`Invalid day ${dayName}`);
-			return;
-		}
-
-		const existingDayData = days.find((day) => day.name === dayName);
-		if (existingDayData) {
-			ui.alert(`Day ${dayName} already exists`);
-			return;
-		}
-
-		setDayInfo(dayName, {});
-	}, []);
-	useCommand(Command.DAY_ADD_NEW, addNewDay);
 
 	const createNewTask = useCallback(async (dayName?: string) => {
 		const name = await ui.prompt('Task name', {
