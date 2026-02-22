@@ -21,8 +21,6 @@ export function useCommandDayAddNew(): void {
 	 * Ask the user what day to add, then add it to the register.
 	 */
 	const addNewDay = useCallback(async (dayNameArg?: string) => {
-		const days = getAllDayInfo();
-
 		const dayName = dayNameArg ?? await ui.prompt('What day?', {
 			type: ui.PromptType.DATE,
 		});
@@ -34,6 +32,7 @@ export function useCommandDayAddNew(): void {
 			return;
 		}
 
+		const days = getAllDayInfo();
 		const existingDayData = days.find((day) => day.name === dayName);
 		if (existingDayData) {
 			ui.alert(`Day ${dayName} already exists`);
