@@ -1,4 +1,5 @@
 import { h, type JSX } from 'preact';
+import type Preact from 'preact';
 import {
 	useCallback,
 	useEffect,
@@ -22,9 +23,9 @@ interface CompletedTaskListProps {
  * Renders a list of all completed tasks inside a disclosure.
  */
 export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | null {
-	const [listOpen, setListOpen] = useState(props.open);
+	const [listOpen, setListOpen] = useState(props.open ?? false);
 
-	const onListToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
+	const onListToggle = useCallback((event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => {
 		setListOpen(event.currentTarget.open);
 	}, []);
 
@@ -56,7 +57,7 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 
 	// Update list open state if prop changes
 	useEffect(() => {
-		setListOpen(props.open);
+		setListOpen(props.open ?? false);
 	}, [props.open]);
 
 	return <Accordion

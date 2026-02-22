@@ -1,6 +1,6 @@
 import type { StringWithAutocomplete } from 'utils';
 
-import { type CSSKeyframes } from '../CSSKeyframes';
+import type { CSSKeyframes } from '../CSSKeyframes';
 import { getAllKeyframesRules } from './getAllKeyframesRules';
 import { getElementAnimationDuration } from './getElementAnimationDuration';
 

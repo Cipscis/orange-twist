@@ -11,6 +11,7 @@ import {
 	deleteTask,
 	useTaskInfo,
 } from 'data';
+import { getTaskDetailUrl } from 'navigation';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
 import {
@@ -66,7 +67,7 @@ export function Task(props: TaskProps): JSX.Element | null {
 			dayName={dayName}
 		/>
 		<IconButton
-			href={`/task/?id=${taskInfo.id}`}
+			href={getTaskDetailUrl(taskInfo.id)}
 			title="View task"
 			icon="📄"
 		/>

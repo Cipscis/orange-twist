@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-02-22
+
+### Added
+
+* When adding an existing task, if the query exactly matches a task name that task will be pre-selected
+* New "Go to task" command allows direct navigation to an existing task's detail page
+* When expanding the "Previous Days" accordion, scroll position is maintained for better context preservation
+
+### Changed
+
+* Adjusted linting rules around type imports
+
+### Fixed
+
+* Improved performance of updating task status on task detail pages
+
 ## [1.7.0] - 2026-01-03
 
 ### Added

@@ -1,4 +1,5 @@
 import { type JSX, h } from 'preact';
+import type Preact from 'preact';
 import {
 	useCallback,
 	useContext,
@@ -14,7 +15,11 @@ import { getCurrentDateDayName } from 'utils';
 import { useAllDayInfo } from 'data';
 
 import { OrangeTwistContext } from '../OrangeTwistContext';
-import { Accordion, Button } from '../shared';
+import {
+	Accordion,
+	AccordionScrollBehaviour,
+	Button,
+} from '../shared';
 import { Day } from './Day';
 
 /**
@@ -51,7 +56,7 @@ export function DaysList(): JSX.Element {
 	// Display a window of 7 days, collapse previous and future days
 	const previousDays = days.slice(0, expandedDayIndex - 3);
 	const [previousDaysOpen, setPreviousDaysOpen] = useState(false);
-	const onPreviousDaysToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
+	const onPreviousDaysToggle = useCallback((event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => {
 		setPreviousDaysOpen(event.currentTarget.open);
 	}, []);
 
@@ -59,7 +64,7 @@ export function DaysList(): JSX.Element {
 
 	const futureDays = days.slice(expandedDayIndex + 4);
 	const [futureDaysOpen, setFutureDaysOpen] = useState(false);
-	const onFutureDaysToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
+	const onFutureDaysToggle = useCallback((event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => {
 		setFutureDaysOpen(event.currentTarget.open);
 	}, []);
 
@@ -72,11 +77,12 @@ export function DaysList(): JSX.Element {
 
 		{previousDays.length > 0 &&
 			<Accordion
-				class="orange-twist__section"
+				class="orange-twist__section orange-twist__section--sticky-summary"
 				summary={
 					<h2 class="orange-twist__title">Previous days</h2>
 				}
 				onToggle={onPreviousDaysToggle}
+				scrollBehaviour={AccordionScrollBehaviour.ANCHOR_BOTTOM}
 			>
 				{previousDaysOpen &&
 					previousDays.map(((day) => (
