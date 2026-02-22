@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 * When adding an existing task, if the query exactly matches a task name that task will be pre-selected
 * New "Go to task" command allows direct navigation to an existing task's detail page
+* When expanding the "Previous Days" accordion, scroll position is maintained for better context preservation
 
 ### Changed
 
