@@ -73,7 +73,7 @@ export function DaysList(): JSX.Element {
 
 		{previousDays.length > 0 &&
 			<Accordion
-				class="orange-twist__section"
+				class="orange-twist__section orange-twist__section--sticky-summary"
 				summary={
 					<h2 class="orange-twist__title">Previous days</h2>
 				}

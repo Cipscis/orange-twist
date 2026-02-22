@@ -9,6 +9,8 @@
 
 .day {
 	margin: spacing.$lg 0;
+	// Construct a stacking context
+	isolation: isolate;
 }
 
 .day__summary {
