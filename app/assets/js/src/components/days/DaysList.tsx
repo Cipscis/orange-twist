@@ -1,4 +1,5 @@
 import { type JSX, h } from 'preact';
+import type Preact from 'preact';
 import {
 	useCallback,
 	useContext,
@@ -51,7 +52,7 @@ export function DaysList(): JSX.Element {
 	// Display a window of 7 days, collapse previous and future days
 	const previousDays = days.slice(0, expandedDayIndex - 3);
 	const [previousDaysOpen, setPreviousDaysOpen] = useState(false);
-	const onPreviousDaysToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
+	const onPreviousDaysToggle = useCallback((event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => {
 		setPreviousDaysOpen(event.currentTarget.open);
 	}, []);
 
@@ -59,7 +60,7 @@ export function DaysList(): JSX.Element {
 
 	const futureDays = days.slice(expandedDayIndex + 4);
 	const [futureDaysOpen, setFutureDaysOpen] = useState(false);
-	const onFutureDaysToggle = useCallback((event: JSX.TargetedEvent<HTMLDetailsElement, Event>) => {
+	const onFutureDaysToggle = useCallback((event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => {
 		setFutureDaysOpen(event.currentTarget.open);
 	}, []);
 
