@@ -15,6 +15,9 @@ import {
 	type DefaultsFor,
 } from 'utils';
 
+import { AccordionScrollBehaviour } from './AccordionScrollBehaviour';
+import { useAccordionScrollBehaviour } from './useAccordionScrollBehaviour';
+
 export interface AccordionProps {
 	/**
 	 * An optional string to add to th CSS class attribute for the `Accordion`'s `<details>` element.
@@ -43,6 +46,10 @@ export interface AccordionProps {
 	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/toggle_event `HTMLElement`: toggle event || MDN}
 	 */
 	onToggle?: (this: HTMLDetailsElement, event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => void;
+	/**
+	 * An option to determine how the viewport scrolls when opening or closing the `Accordion`.
+	 */
+	scrollBehaviour?: AccordionScrollBehaviour;
 
 	/**
 	 * The contents of the `Accordion` to show when it is opened.
@@ -68,6 +75,7 @@ export function Accordion(props: AccordionProps): JSX.Element {
 		summary,
 		summaryClass,
 		onToggle,
+		scrollBehaviour,
 
 		children,
 	} = {
@@ -79,6 +87,15 @@ export function Accordion(props: AccordionProps): JSX.Element {
 
 	// Children are not initially rendered for closed `Accordion` components, but will remain rendered once they have been opened.
 	const [renderChildren, setRenderChildren] = useState(isOpen);
+
+	const {
+		detailsRef,
+		summaryRef,
+	} = useAccordionScrollBehaviour({
+		isOpen,
+		renderChildren,
+		scrollBehaviour,
+	});
 
 	// Update open state if prop changes
 	useEffect(() => {
@@ -121,8 +138,9 @@ export function Accordion(props: AccordionProps): JSX.Element {
 		class={className}
 		open={isOpen}
 		onToggle={handleToggle}
+		ref={detailsRef}
 	>
-		<summary class={summaryClass}>{summary}</summary>
+		<summary class={summaryClass} ref={summaryRef}>{summary}</summary>
 		{(renderChildren || isOpen) && children}
 	</details>;
 }
