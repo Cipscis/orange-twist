@@ -1,6 +1,5 @@
 import {
 	h,
-	Fragment,
 	type ComponentChildren,
 	type JSX,
 } from 'preact';
@@ -12,21 +11,18 @@ import {
 	useState,
 } from 'preact/hooks';
 
+import { useCommandDataSave } from './useCommandDataSave';
+
 import {
 	getAllDayInfo,
 	getDayInfo,
 	loadDays,
-	saveDays,
 	setDayInfo,
 	createTask,
 	loadTasks,
-	saveTasks,
 	loadDayTasks,
-	saveDayTasks,
 	setDayTaskInfo,
 	loadTemplates,
-	saveTemplates,
-	exportData,
 	importData,
 } from 'data';
 
@@ -52,14 +48,12 @@ import { getTaskDetailUrl } from 'navigation';
 
 import { type PersistApi, local } from 'persist';
 import {
-	syncUpdate,
 	onSyncUpdate,
 } from 'sync';
 
 import * as ui from 'ui';
 import {
 	IconButton,
-	Loader,
 } from '../shared';
 
 import { OrangeTwistContext } from '../OrangeTwistContext';
@@ -186,9 +180,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		loadAllData,
 	]);
 
+	useCommandDataSave({ persist });
+
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
-		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 		registerCommand(Command.DATA_EXPORT, { name: 'Export data' });
 		registerCommand(Command.DATA_IMPORT, { name: 'Import data' });
 		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
@@ -205,14 +200,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			}],
 		);
 		registerKeyboardShortcut(KeyboardShortcutName.KEYBOARD_SHORTCUTS_MODAL_OPEN, [{ key: '?' }]);
-
-		registerKeyboardShortcut(
-			KeyboardShortcutName.DATA_SAVE,
-			[{
-				key: 's',
-				ctrl: true,
-			}],
-		);
 		registerKeyboardShortcut(
 			KeyboardShortcutName.EDITING_FINISH,
 			[
@@ -307,44 +294,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		[],
 	);
 	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
-
-	/**
-	 * Save all data, while giving the user feedback.
-	 */
-	const saveData = useCallback(
-		async () => {
-			const id = 'saving';
-
-			ui.alert(<>
-				<span>Saving...</span>
-				<Loader immediate />
-			</>, { id, duration: null });
-			try {
-				await Promise.all([
-					saveDays(persist),
-					saveTasks(persist),
-					saveDayTasks(persist),
-					saveTemplates(persist),
-				]);
-				ui.alert('Saved', {
-					duration: 2000,
-					id,
-				});
-
-				syncUpdate();
-			} catch (e) {
-				ui.alert('Failed to save', {
-					id,
-					duration: null,
-					dismissible: true,
-				});
-				console.error(e);
-			}
-		},
-		[persist]
-	);
-	useCommand(Command.DATA_SAVE, saveData);
-	useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
 
 	useCommand(Command.DATA_EXPORT, exportData);
 	useCommand(Command.DATA_IMPORT, importData);
