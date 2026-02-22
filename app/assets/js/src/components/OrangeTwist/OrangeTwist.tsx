@@ -19,6 +19,7 @@ import { useCommandTaskAddNew } from './useCommandTaskAddNew';
 import { useCommandTaskGoToExisting } from './useCommandTaskGoToExisting';
 import { useCommandThemeToggle } from './useCommandThemeToggle';
 import { useCommandKeyboardShortcutShow } from './useCommandKeyboardShortcutShow';
+import { useCommandTemplatesEdit } from './useCommandTemplatesEdit';
 
 import {
 	getDayInfo,
@@ -29,11 +30,6 @@ import {
 	loadTemplates,
 } from 'data';
 
-import { Command } from 'types/Command';
-import {
-	registerCommand,
-	useCommand,
-} from 'registers/commands';
 import {
 	KeyboardShortcutName,
 	registerKeyboardShortcut,
@@ -192,11 +188,13 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		openKeyboardShortcutsModal,
 		closeKeyboardShortcutsModal,
 	} = useCommandKeyboardShortcutShow();
+	const {
+		templatesModalOpen,
+		closeTemplatesModal,
+	} = useCommandTemplatesEdit();
 
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
-		registerCommand(Command.TEMPLATES_EDIT, { name: 'Edit templates' });
-
 		registerKeyboardShortcut(
 			KeyboardShortcutName.COMMAND_PALETTE_OPEN,
 			[{
@@ -230,19 +228,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		openCommandPalette,
 		!commandPaletteOpen
 	);
-
-	const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
-	/** Open the templates modal. */
-	const openTemplatesModal = useCallback(
-		() => setTemplatesModalOpen(true),
-		[]
-	);
-	/** Close the templates modal. */
-	const closeTemplatesModal = useCallback(
-		() => setTemplatesModalOpen(false),
-		[],
-	);
-	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
 
 	return <OrangeTwistContext.Provider
 		value={{
