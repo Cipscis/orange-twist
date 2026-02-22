@@ -12,6 +12,7 @@ import {
 } from 'preact/hooks';
 
 import { useCommandDataSave } from './useCommandDataSave';
+import { useCommandDataExport } from './useCommandDataExport';
 
 import {
 	getAllDayInfo,
@@ -181,10 +182,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	]);
 
 	useCommandDataSave({ persist });
+	useCommandDataExport();
 
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
-		registerCommand(Command.DATA_EXPORT, { name: 'Export data' });
 		registerCommand(Command.DATA_IMPORT, { name: 'Import data' });
 		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
 		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
@@ -294,8 +295,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		[],
 	);
 	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
-
-	useCommand(Command.DATA_EXPORT, exportData);
 	useCommand(Command.DATA_IMPORT, importData);
 
 	/**
