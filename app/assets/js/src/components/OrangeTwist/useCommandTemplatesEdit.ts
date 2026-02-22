@@ -24,16 +24,19 @@ export function useCommandTemplatesEdit(): UseCommandTemplatesEditState {
 	}, []);
 
 	const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
+
 	/** Open the templates modal. */
 	const openTemplatesModal = useCallback(
 		() => setTemplatesModalOpen(true),
 		[]
 	);
+
 	/** Close the templates modal. */
 	const closeTemplatesModal = useCallback(
 		() => setTemplatesModalOpen(false),
 		[],
 	);
+
 	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
 
 	return {

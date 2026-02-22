@@ -34,5 +34,6 @@ export function useCommandTaskGoToExisting(): void {
 			window.location.href = path;
 		}
 	}, []);
+
 	useCommand(Command.TASK_GO_TO_EXISTING, goToTask);
 }

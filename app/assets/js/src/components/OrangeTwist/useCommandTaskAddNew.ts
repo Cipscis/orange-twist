@@ -37,5 +37,6 @@ export function useCommandTaskAddNew(): void {
 
 		fireCommand(Command.DATA_SAVE);
 	}, []);
+
 	useCommand(Command.TASK_ADD_NEW, createNewTask);
 }
