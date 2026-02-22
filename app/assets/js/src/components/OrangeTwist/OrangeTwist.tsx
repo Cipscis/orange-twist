@@ -13,6 +13,7 @@ import {
 
 import { useCommandDataSave } from './useCommandDataSave';
 import { useCommandDataExport } from './useCommandDataExport';
+import { useCommandDataImport } from './useCommandDataImport';
 
 import {
 	getAllDayInfo,
@@ -24,7 +25,6 @@ import {
 	loadDayTasks,
 	setDayTaskInfo,
 	loadTemplates,
-	importData,
 } from 'data';
 
 import { Command } from 'types/Command';
@@ -183,10 +183,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 
 	useCommandDataSave({ persist });
 	useCommandDataExport();
+	useCommandDataImport();
 
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
-		registerCommand(Command.DATA_IMPORT, { name: 'Import data' });
 		registerCommand(Command.DAY_ADD_NEW, { name: 'Add new day' });
 		registerCommand(Command.TASK_ADD_NEW, { name: 'Add new task' });
 		registerCommand(Command.TASK_GO_TO_EXISTING, { name: 'Go to task' });
@@ -295,7 +295,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		[],
 	);
 	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
-	useCommand(Command.DATA_IMPORT, importData);
 
 	/**
 	 * Ask the user what day to add, then add it to the register.
