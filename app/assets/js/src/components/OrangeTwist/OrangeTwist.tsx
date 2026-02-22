@@ -16,6 +16,7 @@ import { useCommandDataExport } from './useCommandDataExport';
 import { useCommandDataImport } from './useCommandDataImport';
 import { useCommandDayAddNew } from './useCommandDayAddNew';
 import { useCommandTaskAddNew } from './useCommandTaskAddNew';
+import { useCommandTaskGoToExisting } from './useCommandTaskGoToExisting';
 
 import {
 	getDayInfo,
@@ -42,7 +43,6 @@ import {
 	type DefaultsFor,
 	getCurrentDateDayName,
 } from 'utils';
-import { getTaskDetailUrl } from 'navigation';
 
 import { type PersistApi, local } from 'persist';
 import {
@@ -183,10 +183,10 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	useCommandDataImport();
 	useCommandDayAddNew();
 	useCommandTaskAddNew();
+	useCommandTaskGoToExisting();
 
 	// Register all commands and keyboard shortcuts
 	useEffect(() => {
-		registerCommand(Command.TASK_GO_TO_EXISTING, { name: 'Go to task' });
 		registerCommand(Command.THEME_TOGGLE, { name: 'Toggle theme' });
 		registerCommand(Command.KEYBOARD_SHORTCUT_SHOW, { name: 'Show keyboard shortcuts' });
 		registerCommand(Command.TEMPLATES_EDIT, { name: 'Edit templates' });
@@ -292,24 +292,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		[],
 	);
 	useCommand(Command.TEMPLATES_EDIT, openTemplatesModal);
-
-	const goToTask = useCallback(async () => {
-		const taskId = await ui.prompt('Task name', {
-			type: ui.PromptType.TASK,
-		});
-		if (taskId === null) {
-			return;
-		}
-
-		// Navigate to task URL
-		const path = getTaskDetailUrl(taskId);
-		if (window.navigation) {
-			window.navigation.navigate(path);
-		} else {
-			window.location.href = path;
-		}
-	}, []);
-	useCommand(Command.TASK_GO_TO_EXISTING, goToTask);
 
 	return <OrangeTwistContext.Provider
 		value={{
