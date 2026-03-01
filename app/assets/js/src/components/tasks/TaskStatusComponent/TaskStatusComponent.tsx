@@ -173,16 +173,12 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		: 'Delete task';
 
 	/**
-	 * Detect if a click was outside the component. If it was, exit change mode.
+	 * Detect if a click was detected on the backdrop. If it was, exit change mode.
 	 */
-	const exitChangeModeOnOutsideClick = useCallback((e: MouseEvent) => {
-		if (
-			rootRef.current &&
-			e.target instanceof Element
-		) {
-			if (!nodeHasAncestor(e.target, rootRef.current)) {
-				exitChangeMode();
-			}
+	const exitChangeModeOnBackdropClick = useCallback((e: MouseEvent) => {
+		// The <dialog> element itself is inert, so any detected clicks must have been on the backdrop
+		if (e.target === popoverRef.current) {
+			exitChangeMode();
 		}
 	}, [exitChangeMode]);
 
@@ -201,7 +197,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		}
 
 		if (isInChangeMode) {
-			popover.show();
+			popover.showModal();
 			// The `opening` attribute is used to adjust z-index
 			popover.setAttribute('opening', '');
 			const animation = animate(popover, CSSKeyframes.APPEAR_SCREEN);
@@ -215,19 +211,40 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		}
 	}, [isInChangeMode]);
 
-	// Add "light dismiss" behaviour - close when clicking outside popover
+	// Add "light dismiss" behaviour - close when clicking on backdrop
 	useEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
 		if (isInChangeMode) {
-			document.addEventListener('click', exitChangeModeOnOutsideClick, { signal });
+			document.addEventListener('click', exitChangeModeOnBackdropClick, { signal });
 		}
 
 		return () => {
 			controller.abort();
 		};
-	}, [isInChangeMode, exitChangeModeOnOutsideClick]);
+	}, [isInChangeMode, exitChangeModeOnBackdropClick]);
+
+	// Prevent clicks from within the dialog from toggling summary elements they're contained in
+	useEffect(() => {
+		const popover = popoverRef.current;
+		if (!popover) {
+			return;
+		}
+
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		if (isInChangeMode) {
+			popover.addEventListener('click', (e) => {
+				e.preventDefault();
+			}, { signal });
+		}
+
+		return () => {
+			controller.abort();
+		};
+	}, [isInChangeMode]);
 
 	// Set up event listeners for closing the popover on UI signals like pressing the "Escape" key
 	useCloseWatcher(exitChangeMode, isInChangeMode);

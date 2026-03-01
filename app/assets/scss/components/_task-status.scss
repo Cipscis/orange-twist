@@ -17,6 +17,7 @@
 		position: fixed;
 
 		margin: spacing.$xs 0;
+		overflow: visible;
 		position-area: top span-right;
 		position-try-fallbacks: flip-block, flip-inline;
 	}
@@ -27,12 +28,11 @@
 	}
 
 	& {
-		z-index: 1;
+		cursor: default;
 
 		&[open] {
 			animation: none animation.$speed-medium animation.$easing-default;
 		}
-		// See `_day.scss` for z-index controls based on open/opening status
 
 		// It's not interactive or tabbable, so let it have no focus style
 		&:focus-visible {
