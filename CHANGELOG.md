@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 * Updated packages
 
+### Fixed
+
+* Code now correctly displays syntax highlighting in Firefox
+
 ## [1.8.0] - 2026-02-22
 
 ### Added
