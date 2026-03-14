@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 * Updated packages
 
+### Fixed
+
+* Fixed z-index issues with task status picker
+
 ## [1.8.0] - 2026-02-22
 
 ### Added
