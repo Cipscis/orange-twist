@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2026-03-15
+
+### Changed
+
+* Updated packages
+
+### Fixed
+
+* Code now correctly displays syntax highlighting in Firefox
+* Fixed z-index issues with task status picker
+
 ## [1.8.0] - 2026-02-22
 
 ### Added

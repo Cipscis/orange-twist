@@ -1,0 +1,23 @@
+@use "sass:meta";
+
+@include meta.load-css("../../../../node_modules/highlight.js/scss/a11y-light");
+.light {
+		@include meta.load-css("../../../../node_modules/highlight.js/scss/a11y-light");
+}
+body {
+	@container style(--theme: light) {
+		@include meta.load-css("../../../../node_modules/highlight.js/scss/a11y-light");
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	@include meta.load-css("../../../../node_modules/highlight.js/scss/a11y-dark");
+}
+.dark {
+	@include meta.load-css("../../../../node_modules/highlight.js/scss/a11y-dark");
+}
+body {
+	@container style(--theme: dark) {
+		@include meta.load-css("../../../../node_modules/highlight.js/scss/a11y-dark");
+	}
+}
