@@ -11,7 +11,7 @@ export {
 } from './hooks';
 
 export {
-	loadDayTasks,
+	loadDayTasksRegister,
 	saveDayTasks,
 } from './persistence';
 

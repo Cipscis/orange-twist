@@ -23,11 +23,11 @@ import { useCommandTemplatesEdit } from './useCommandTemplatesEdit';
 
 import {
 	getDayInfo,
-	loadDays,
+	loadDaysRegister,
 	setDayInfo,
-	loadTasks,
-	loadDayTasks,
-	loadTemplates,
+	loadTasksRegister,
+	loadDayTasksRegister,
+	loadTemplatesRegister,
 } from 'data';
 
 import {
@@ -107,16 +107,16 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 */
 	const loadAllData = useCallback(async () => {
 		await Promise.all([
-			loadDays(persist).then(() => {
+			loadDaysRegister(persist).then(() => {
 				// If there's no info for the current day, set up a stub
 				const currentDateDayName = getCurrentDateDayName();
 				if (getDayInfo(currentDateDayName) === null) {
 					setDayInfo(currentDateDayName, {});
 				}
 			}),
-			loadTasks(persist),
-			loadDayTasks(persist),
-			loadTemplates(persist),
+			loadTasksRegister(persist),
+			loadDayTasksRegister(persist),
+			loadTemplatesRegister(persist),
 		]);
 	}, [persist]);
 

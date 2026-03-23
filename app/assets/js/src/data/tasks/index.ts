@@ -13,6 +13,6 @@ export {
 } from './hooks';
 
 export {
-	loadTasks,
+	loadTasksRegister,
 	saveTasks,
 } from './persistence';

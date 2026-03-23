@@ -1,9 +1,12 @@
 import * as z from 'zod/mini';
 
 import type { PersistApi } from 'persist';
-import { isZodSchemaType, loadRegister } from 'utils';
+import {
+	isZodSchemaType,
+	loadRegister,
+} from 'utils';
 
-import { StorageKey } from 'data/shared';
+import { StorageKey, type DataSource } from 'data/shared';
 import { daysRegister } from '../daysRegister';
 import { updateOldDayInfo } from './updateOldDayInfo';
 
@@ -14,11 +17,11 @@ import { updateOldDayInfo } from './updateOldDayInfo';
  * @returns A Promise which resolves when days info has finished loading,
  * or rejects when days info fails to load.
  */
-export async function loadDays(
+export async function loadDaysRegister(
 	persist: PersistApi,
 	serialisedDaysInfo?: string
 ): Promise<void> {
-	const dataSource = serialisedDaysInfo
+	const dataSource: DataSource = serialisedDaysInfo
 		? {
 			data: serialisedDaysInfo,
 		}

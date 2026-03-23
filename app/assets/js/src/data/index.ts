@@ -9,7 +9,7 @@ export {
 	useDayInfo,
 	useAllDayInfo,
 
-	loadDays,
+	loadDaysRegister,
 	saveDays,
 } from './days';
 
@@ -26,7 +26,7 @@ export {
 	useTaskInfo,
 	useAllTaskInfo,
 
-	loadTasks,
+	loadTasksRegister,
 	saveTasks,
 } from './tasks';
 
@@ -42,7 +42,7 @@ export {
 	useDayTaskInfo,
 	useAllDayTaskInfo,
 
-	loadDayTasks,
+	loadDayTasksRegister,
 	saveDayTasks,
 
 	encodeDayTaskKey,
@@ -60,7 +60,7 @@ export {
 	useTemplateInfo,
 	useAllTemplateInfo,
 
-	loadTemplates,
+	loadTemplatesRegister,
 	saveTemplates,
 } from './templates';
 
