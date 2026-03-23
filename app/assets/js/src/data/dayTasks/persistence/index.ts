@@ -1,2 +1,2 @@
-export { loadDayTasks } from './loadDayTasks';
+export { loadDayTasksRegister } from './loadDayTasksRegister';
 export { saveDayTasks } from './saveDayTasks';

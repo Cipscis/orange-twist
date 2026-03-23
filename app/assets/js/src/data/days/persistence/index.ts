@@ -1,2 +1,2 @@
-export { loadDays } from './loadDays';
+export { loadDaysRegister } from './loadDaysRegister';
 export { saveDays } from './saveDays';

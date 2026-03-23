@@ -8,7 +8,7 @@ import {
 
 import { ls } from 'persist';
 
-import { loadDays } from './loadDays';
+import { loadDaysRegister } from './loadDaysRegister';
 import { daysRegister } from '../daysRegister';
 import { clear } from '../../shared';
 
@@ -22,7 +22,7 @@ const tenthDayInfo = {
 	tasks: [1, 2],
 };
 
-describe('loadDays', () => {
+describe('loadDaysRegister', () => {
 	beforeEach(() => {
 		localStorage.setItem('days', JSON.stringify([
 			['2023-11-09', { name: '2023-11-09', ...ninthDayInfo }],
@@ -34,7 +34,7 @@ describe('loadDays', () => {
 	test('returns a Promise that resolves when the days register has been filled with the persisted days data', async () => {
 		expect(Array.from(daysRegister.entries())).toEqual([]);
 
-		const loadDaysPromise = loadDays(ls);
+		const loadDaysPromise = loadDaysRegister(ls);
 		expect(loadDaysPromise).toBeInstanceOf(Promise);
 
 		expect(Array.from(daysRegister.entries())).toEqual([]);
@@ -53,7 +53,7 @@ describe('loadDays', () => {
 
 		expect(Array.from(daysRegister.entries())).toEqual([]);
 
-		const loadDaysPromise = loadDays(ls);
+		const loadDaysPromise = loadDaysRegister(ls);
 		expect(loadDaysPromise).toBeInstanceOf(Promise);
 
 		expect(Array.from(daysRegister.entries())).toEqual([]);
@@ -67,13 +67,13 @@ describe('loadDays', () => {
 	test('returns a Promise that rejects if invalid JSON has been persisted', async () => {
 		localStorage.setItem('days', 'invalid JSON');
 
-		await expect(loadDays(ls)).rejects.toBeInstanceOf(Error);
+		await expect(loadDaysRegister(ls)).rejects.toBeInstanceOf(Error);
 	});
 
 	test('returns a Promise that rejects if invalid data has been persisted', async () => {
 		localStorage.setItem('days', JSON.stringify(['Invalid data']));
 
-		await expect(loadDays(ls)).rejects.toBeInstanceOf(Error);
+		await expect(loadDaysRegister(ls)).rejects.toBeInstanceOf(Error);
 	});
 
 	test('triggers up to a single "delete" event and a single "set" event', async () => {
@@ -81,7 +81,7 @@ describe('loadDays', () => {
 		daysRegister.addEventListener('delete', spy);
 		daysRegister.addEventListener('set', spy);
 
-		await loadDays(ls);
+		await loadDaysRegister(ls);
 
 		const entryObjArr = Array.from(
 			daysRegister.entries()
@@ -92,7 +92,7 @@ describe('loadDays', () => {
 		expect(spy).toHaveBeenCalledTimes(1);
 		expect(spy).toHaveBeenCalledWith(entryObjArr);
 
-		await loadDays(ls);
+		await loadDaysRegister(ls);
 
 		expect(spy).toHaveBeenCalledTimes(3);
 		expect(spy).toHaveBeenNthCalledWith(2, entryObjArr);
@@ -108,7 +108,7 @@ describe('loadDays', () => {
 		daysRegister.set(testData);
 		expect(Array.from(daysRegister.entries())).toEqual(testData);
 
-		await loadDays(ls);
+		await loadDaysRegister(ls);
 
 		expect(Array.from(daysRegister.entries())).toEqual([
 			['2023-11-09', { name: '2023-11-09', ...ninthDayInfo }],
@@ -117,7 +117,7 @@ describe('loadDays', () => {
 	});
 
 	test('can be passed serialised data as an argument', async () => {
-		await loadDays(ls, JSON.stringify([
+		await loadDaysRegister(ls, JSON.stringify([
 			['2023-12-10', {
 				name: '2023-12-10',
 				note: '',

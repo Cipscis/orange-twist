@@ -11,6 +11,6 @@ export {
 } from './hooks';
 
 export {
-	loadDays,
+	loadDaysRegister,
 	saveDays,
 } from './persistence';
