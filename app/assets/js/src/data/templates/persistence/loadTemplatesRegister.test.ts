@@ -12,7 +12,7 @@ import { templatesRegister } from '../templatesRegister';
 import {
 	type TemplateInfo,
 	clear,
-	loadTemplates,
+	loadTemplatesRegister,
 } from 'data';
 
 const firstTemplateInfo: Omit<TemplateInfo, 'id'> = {
@@ -27,7 +27,7 @@ const secondTemplateInfo: Omit<TemplateInfo, 'id'> = {
 	sortIndex: -1,
 };
 
-describe('loadTemplates', () => {
+describe('loadTemplatesRegister', () => {
 	beforeEach(() => {
 		localStorage.setItem('templates', JSON.stringify([
 			[1, { id: 1, ...firstTemplateInfo }],
@@ -39,7 +39,7 @@ describe('loadTemplates', () => {
 	test('returns a Promise that resolves when the templates register has been filled with the persisted templates data', async () => {
 		expect(Array.from(templatesRegister.entries())).toEqual([]);
 
-		const loadTemplatesPromise = loadTemplates(ls);
+		const loadTemplatesPromise = loadTemplatesRegister(ls);
 		expect(loadTemplatesPromise).toBeInstanceOf(Promise);
 
 		expect(Array.from(templatesRegister.entries())).toEqual([]);
@@ -58,7 +58,7 @@ describe('loadTemplates', () => {
 
 		expect(Array.from(templatesRegister.entries())).toEqual([]);
 
-		const loadTemplatesPromise = loadTemplates(ls);
+		const loadTemplatesPromise = loadTemplatesRegister(ls);
 		expect(loadTemplatesPromise).toBeInstanceOf(Promise);
 
 		expect(Array.from(templatesRegister.entries())).toEqual([]);
@@ -72,13 +72,13 @@ describe('loadTemplates', () => {
 	test('returns a Promise that rejects if invalid JSON has been persisted', async () => {
 		localStorage.setItem('templates', 'invalid JSON');
 
-		await expect(loadTemplates(ls)).rejects.toBeInstanceOf(Error);
+		await expect(loadTemplatesRegister(ls)).rejects.toBeInstanceOf(Error);
 	});
 
 	test('returns a Promise that rejects if invalid data has been persisted', async () => {
 		localStorage.setItem('templates', JSON.stringify(['Invalid data']));
 
-		await expect(loadTemplates(ls)).rejects.toBeInstanceOf(Error);
+		await expect(loadTemplatesRegister(ls)).rejects.toBeInstanceOf(Error);
 	});
 
 	test('triggers up to a single "delete" event and a single "set" event', async () => {
@@ -86,7 +86,7 @@ describe('loadTemplates', () => {
 		templatesRegister.addEventListener('delete', spy);
 		templatesRegister.addEventListener('set', spy);
 
-		await loadTemplates(ls);
+		await loadTemplatesRegister(ls);
 
 		const entryObjArr = Array.from(
 			templatesRegister.entries()
@@ -97,7 +97,7 @@ describe('loadTemplates', () => {
 		expect(spy).toHaveBeenCalledTimes(1);
 		expect(spy).toHaveBeenCalledWith(entryObjArr);
 
-		await loadTemplates(ls);
+		await loadTemplatesRegister(ls);
 
 		expect(spy).toHaveBeenCalledTimes(3);
 		expect(spy).toHaveBeenNthCalledWith(2, entryObjArr);
@@ -113,7 +113,7 @@ describe('loadTemplates', () => {
 		templatesRegister.set(testData);
 		expect(Array.from(templatesRegister.entries())).toEqual(testData);
 
-		await loadTemplates(ls);
+		await loadTemplatesRegister(ls);
 
 		expect(Array.from(templatesRegister.entries())).toEqual([
 			[1, { id: 1, ...firstTemplateInfo }],
@@ -122,7 +122,7 @@ describe('loadTemplates', () => {
 	});
 
 	test('can be passed serialised data as an argument', async () => {
-		await loadTemplates(ls, JSON.stringify([
+		await loadTemplatesRegister(ls, JSON.stringify([
 			[1, {
 				id: 1,
 				name: 'custom template',

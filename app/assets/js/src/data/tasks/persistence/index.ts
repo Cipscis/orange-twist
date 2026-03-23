@@ -1,2 +1,2 @@
-export { loadTasks } from './loadTasks';
+export { loadTasksRegister } from './loadTasksRegister';
 export { saveTasks } from './saveTasks';
