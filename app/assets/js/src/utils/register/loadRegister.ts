@@ -1,13 +1,5 @@
-import type { PersistApi } from 'persist';
-
+import { loadData, type DataSource } from 'data/shared';
 import type { Register } from './Register';
-
-type LoadRegisterDataSource = {
-	persist: PersistApi;
-	key: string;
-} | {
-	data: string;
-};
 
 /**
  * Asynchronously loads any persisted info from a specified storage
@@ -25,43 +17,21 @@ type LoadRegisterDataSource = {
  */
 export async function loadRegister<K, V>(
 	register: Register<K, V>,
-	dataSource: LoadRegisterDataSource,
+	dataSource: DataSource,
 	isValidEntry: (entry: unknown) => entry is [K, unknown],
 	updateOldValue: (value: unknown) => V,
 ): Promise<void> {
-	const persistedInfo = await (() => {
-		if ('data' in dataSource) {
-			return JSON.parse(dataSource.data);
-		}
+	const persistedData = await loadData(
+		dataSource,
+		isValidEntry,
+		updateOldValue,
+	);
 
-		return dataSource.persist.get(dataSource.key);
-	})();
-
-	if (typeof persistedInfo === 'undefined') {
+	if (typeof persistedData === 'undefined') {
 		register.clear();
 		return;
 	}
 
-	if (!(
-		Array.isArray(persistedInfo) &&
-		persistedInfo.every(isValidEntry)
-	)) {
-		throw new Error(`Persisted data from is invalid: ${JSON.stringify(persistedInfo, null, '\t')}`);
-	}
-
-	const newEntries = persistedInfo.map(
-		([key, value]) => {
-			try {
-				return [key, updateOldValue(value)] as const;
-			} catch (e) {
-				throw new Error(
-					`Failed to update value ${JSON.stringify(value, null, '\t')}`,
-					{ cause: e }
-				);
-			}
-		}
-	);
-
 	register.clear();
-	register.set(newEntries);
+	register.set(persistedData);
 }
