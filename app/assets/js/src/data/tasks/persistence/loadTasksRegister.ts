@@ -1,9 +1,12 @@
 import * as z from 'zod/mini';
 
 import type { PersistApi } from 'persist';
-import { isZodSchemaType, loadRegister } from 'utils';
+import {
+	isZodSchemaType,
+	loadRegister,
+} from 'utils';
 
-import { StorageKey } from 'data/shared';
+import { StorageKey, type DataSource } from 'data/shared';
 import { tasksRegister } from '../tasksRegister';
 import { updateOldTaskInfo } from '../updateOldTaskInfo';
 
@@ -14,11 +17,11 @@ import { updateOldTaskInfo } from '../updateOldTaskInfo';
  * @returns A Promise which resolves when tasks info has finished loading,
  * or rejects when tasks info fails to load.
  */
-export async function loadTasks(
+export async function loadTasksRegister(
 	persist: PersistApi,
 	serialisedTasksInfo?: string
 ): Promise<void> {
-	const dataSource = serialisedTasksInfo
+	const dataSource: DataSource = serialisedTasksInfo
 		? {
 			data: serialisedTasksInfo,
 		}

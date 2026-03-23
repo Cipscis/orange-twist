@@ -12,7 +12,7 @@ export {
 } from './hooks';
 
 export {
-	loadTemplates,
+	loadTemplatesRegister,
 	saveTemplates,
 } from './persistence';
 

@@ -1,2 +1,2 @@
-export { loadTemplates } from './loadTemplates';
+export { loadTemplatesRegister } from './loadTemplatesRegister';
 export { saveTemplates } from './saveTemplates';
