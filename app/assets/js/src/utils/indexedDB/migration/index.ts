@@ -1,0 +1,1 @@
+export { migrateToLatest } from './migrateToLatest';
