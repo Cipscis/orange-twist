@@ -1,7 +1,7 @@
-import { ObjectStoreName } from './ObjectStoreName';
+import { migrateToLatest } from './migration';
 
 const dbName = 'orange-twist';
-const dbVersion = 1;
+const dbVersion = 2;
 
 let db: IDBDatabase | null = null;
 /**
@@ -17,10 +17,10 @@ export function getDatabase(): Promise<IDBDatabase> {
 
 		const request = indexedDB.open(dbName, dbVersion);
 
-		// Create the "data" object store when database is first created
-		request.addEventListener('upgradeneeded', (e) => {
-			request.result.createObjectStore(ObjectStoreName.DATA);
-			request.result.createObjectStore(ObjectStoreName.IMAGES);
+		request.addEventListener('upgradeneeded', ({ oldVersion }) => {
+			const db = request.result;
+
+			migrateToLatest(oldVersion, db);
 		});
 
 		// Handle success
@@ -30,7 +30,7 @@ export function getDatabase(): Promise<IDBDatabase> {
 		});
 
 		// Handle errors
-		request.addEventListener('error', reject);
-		request.addEventListener('blocked', reject);
+		request.addEventListener('error', () => reject(request.error));
+		request.addEventListener('blocked', () => reject(new Error('Open database request was blocked')));
 	});
 }
