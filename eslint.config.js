@@ -147,6 +147,22 @@ export default defineConfig([
 			// This rule was added in an update and seems to fire at very annoying times when it's not helpful
 			'@typescript-eslint/no-redundant-type-constituents': 'off',
 
+			// Disabling in favour of TypeScript version
+			'prefer-promise-reject-errors': 'off',
+
+			// Some non-`Error` types are still useful for `Promise` rejection, like `DOMException`
+			'@typescript-eslint/prefer-promise-reject-errors': [
+				'error',
+				{
+					allow: [
+						{
+							from: 'lib',
+							name: 'DOMException',
+						},
+					],
+				},
+			],
+
 			/////////////
 			// Plugins //
 			/////////////
