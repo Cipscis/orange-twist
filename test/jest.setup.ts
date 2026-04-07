@@ -1,5 +1,7 @@
 import { beforeAll, jest } from '@jest/globals';
 
+import packageJson from '../package.json' with { type: 'json' };
+
 /**
  * Set up a bare bones polyfill of `HTMLDialogElement`,
  * enough to allow tests to run, because it's not supported
@@ -111,6 +113,6 @@ beforeAll(() => {
 
 // Define global constants usually replaced using esbuild's "define" option
 Object.assign(global, {
-	__VERSION__: 'test',
+	__VERSION__: `${packageJson.version}-test`,
 	__IS_DEV__: false,
 });
