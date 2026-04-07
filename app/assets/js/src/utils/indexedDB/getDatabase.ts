@@ -28,7 +28,7 @@ export function getDatabase(): Promise<IDBDatabase> {
 		});
 
 		// Handle errors
-		request.addEventListener('error', () => reject(request.error));
+		request.addEventListener('error', () => reject(request.error!));
 		request.addEventListener('blocked', () => reject(new Error('Open database request was blocked')));
 	});
 
