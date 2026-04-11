@@ -17,17 +17,9 @@
 		// https://www.typescriptlang.org/tsconfig#moduleDetection
 		"moduleDetection": "force",
 
-		// Strict mode should really be a default
-		// https://www.typescriptlang.org/tsconfig#strict
-		"strict": true,
-
 		// Don't require file extensions or relative paths in imports
 		// https://www.typescriptlang.org/tsconfig#moduleResolution
 		"moduleResolution": "Bundler",
-		// Include support for latest ECMAScript version
-		// https://www.typescriptlang.org/tsconfig#module
-		// https://www.typescriptlang.org/docs/handbook/modules/reference.html#summary-1
-		"module": "ESNext",
 		// This code is not compiled using `tsc`
 		// https://www.typescriptlang.org/tsconfig#noEmit
 		"noEmit": true,

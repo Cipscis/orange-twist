@@ -11,12 +11,12 @@
 		"build:css": "sass app/assets/scss:app/assets/css --style=compressed",
 		"build": "concurrently \"npm:build:*\"",
 
-		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.js",
-		"test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.js --collectCoverage",
+		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.ts",
+		"test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.ts --collectCoverage",
 
 		"watch:js": "node --env-file-if-exists=.env scripts/build-watch.ts",
 		"watch:css": "sass app/assets/scss:app/assets/css --watch --style=compressed",
-		"watch:test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.js --watch",
+		"watch:test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.ts --watch",
 		"watch": "concurrently --kill-others \"tsc --watch --preserveWatchOutput\" \"npm:watch:*\"",
 
 		"lint:js": "eslint app/assets/js/src/**",
@@ -49,7 +49,7 @@
 		"esbuild": "~0.27.3",
 		"eslint": "^9.39.3",
 		"eslint-plugin-import-newlines": "^1.4.0",
-		"eslint-plugin-jest": "^29.15.0",
+		"eslint-plugin-jest": "^29.15.2",
 		"eslint-plugin-jsdoc": "^62.7.1",
 		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^7.0.1",
@@ -61,8 +61,8 @@
 		"sass": "^1.97.3",
 		"stylelint": "^17.4.0",
 		"stylelint-config-recommended-scss": "^17.0.0",
-		"ts-jest": "^29.4.6",
-		"typescript": "^5.9.3"
+		"ts-jest": "^29.4.9",
+		"typescript": "^6.0.2"
 	},
 	"engines": {
 		"node": ">=22.18.0"
