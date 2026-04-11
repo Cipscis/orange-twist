@@ -17,10 +17,6 @@
 		// https://www.typescriptlang.org/tsconfig#moduleDetection
 		"moduleDetection": "force",
 
-		// Strict mode should really be a default
-		// https://www.typescriptlang.org/tsconfig#strict
-		"strict": true,
-
 		// Use Node module resolution, since this code is run using node
 		// https://www.typescriptlang.org/tsconfig#moduleResolution
 		"moduleResolution": "NodeNext",
