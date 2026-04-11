@@ -1,6 +1,6 @@
 {
 	"name": "orange-twist",
-	"version": "1.8.2",
+	"version": "1.8.3",
 	"description": "A task management tool designed for my personal style of working.",
 	"private": true,
 	"type": "module",
@@ -42,8 +42,8 @@
 		"@testing-library/user-event": "^14.6.1",
 		"@types/express": "^5.0.6",
 		"@types/node": "^22.18.0",
-		"@typescript-eslint/eslint-plugin": "^8.56.1",
-		"@typescript-eslint/parser": "^8.56.1",
+		"@typescript-eslint/eslint-plugin": "^8.58.0",
+		"@typescript-eslint/parser": "^8.58.0",
 		"concurrently": "^9.2.1",
 		"cross-env": "^10.1.0",
 		"esbuild": "~0.27.3",
