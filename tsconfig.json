@@ -25,8 +25,10 @@
 		// https://www.typescriptlang.org/tsconfig#moduleResolution
 		"moduleResolution": "Bundler",
 		// Specify the base URL for using non-relative paths with module names
-		// https://www.typescriptlang.org/tsconfig#baseUrl
-		"baseUrl": "./app/assets/js/src",
+		// https://www.typescriptlang.org/tsconfig#paths
+		"paths": {
+			"*": ["./app/assets/js/src/*"],
+		},
 		// Include support for latest ECMAScript version
 		// https://www.typescriptlang.org/tsconfig#module
 		// https://www.typescriptlang.org/docs/handbook/modules/reference.html#summary-1
@@ -39,6 +41,9 @@
 		// as well as DOM APIs so it can run in the browser
 		// https://www.typescriptlang.org/tsconfig#lib
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		// Include types from packages
+		// https://www.typescriptlang.org/tsconfig#types
+		"types": ["node"],
 
 		// Copied from [Preact TypeScript docs](https://preactjs.com/guide/v10/typescript/)
 		// https://www.typescriptlang.org/tsconfig#jsx

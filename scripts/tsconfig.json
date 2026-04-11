@@ -42,6 +42,9 @@
 		// Include types for the latest ECMAScript features,
 		// but not DOM APIs
 		// https://www.typescriptlang.org/tsconfig#lib
-		"lib": ["ESNext"]
+		"lib": ["ESNext"],
+		// Include types from packages
+		// https://www.typescriptlang.org/tsconfig#types
+		"types": ["node", "express"]
 	}
 }
