@@ -546,7 +546,7 @@ export default defineConfig([
 		'**/tsconfig.json',
 		'**/eslint.config.js',
 		'**/stylelint.config.js',
-		'**/jest.config.js',
+		'**/jest.config.ts',
 		'**/*.snap',
 	]),
 	{
