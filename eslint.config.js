@@ -544,8 +544,8 @@ export default defineConfig([
 	globalIgnores([
 		'**/*.md',
 		'**/tsconfig.json',
-		'**/.eslintrc.cjs',
-		'**/stylelint.config.cjs',
+		'**/eslint.config.js',
+		'**/stylelint.config.js',
 		'**/jest.config.js',
 		'**/*.snap',
 	]),
