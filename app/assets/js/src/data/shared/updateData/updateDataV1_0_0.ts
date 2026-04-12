@@ -34,21 +34,27 @@ export async function updateDataV1_0_0(
 
 /**
  * Collect day data suitable for schema version `2.0.0` from schema version `1.0.0` data.
+ *
+ * Days in the legacy data are sorted chronologically before being assigned IDs.
  */
 function collectDayData(
 	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
 ): LegacyExportDataByVersion<'2.0.0'>['day'] {
-	return legacyData.days.map(([dayName, legacyDay], id) => {
-		const [year, month, day] = getDayNameParts(dayName);
+	return legacyData.days
+		.toSorted(
+			([dayNameA], [dayNameB]) => dayNameA.localeCompare(dayNameB)
+		)
+		.map(([dayName, legacyDay], id) => {
+			const [year, month, day] = getDayNameParts(dayName);
 
-		return {
-			id,
-			note: legacyDay.note,
-			year,
-			month,
-			day,
-		};
-	});
+			return {
+				id,
+				note: legacyDay.note,
+				year,
+				month,
+				day,
+			};
+		});
 }
 
 /**
