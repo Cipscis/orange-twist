@@ -5,11 +5,14 @@
 import JSDOMEnvironment from 'jest-environment-jsdom';
 
 /**
- * A modified JSDOM environment that includes the Node implementation of the Structured Clone API.
+ * A modified JSDOM environment that includes the Node implementation of the Structured Clone and Fetch APIs.
  */
 export default class FixedJSDOMEnvironment extends JSDOMEnvironment {
 	constructor(...args) {
 		super(...args);
 		this.global.structuredClone = structuredClone;
+		this.global.fetch = fetch;
+		this.global.Request = Request;
+		this.global.Response = Response;
 	}
 }
