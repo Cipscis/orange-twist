@@ -40,7 +40,7 @@ export async function updateDataV1_0_0(
 function collectDayData(
 	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
 ): LegacyExportDataByVersion<'2.0.0'>['day'] {
-	return legacyData.days
+	return legacyData.data.days
 		.toSorted(
 			([dayNameA], [dayNameB]) => dayNameA.localeCompare(dayNameB)
 		)
@@ -76,10 +76,10 @@ function collectStatusData(
 		'approved-to-deploy',
 		'will-not-do',
 	] satisfies LegacyStatusName[]);
-	for (const [, { status }] of legacyData.tasks) {
+	for (const [, { status }] of legacyData.data.tasks) {
 		statusSet.add(status);
 	}
-	for (const [, { status }] of legacyData.dayTasks) {
+	for (const [, { status }] of legacyData.data['day-tasks']) {
 		statusSet.add(status);
 	}
 
@@ -98,7 +98,7 @@ function collectTaskData(
 	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>,
 	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>,
 ): LegacyExportDataByVersion<'2.0.0'>['task'] {
-	return legacyData.tasks.map(([id, taskInfo]) => ({
+	return legacyData.data.tasks.map(([id, taskInfo]) => ({
 		id,
 		name: taskInfo.name,
 		note: ('note' in taskInfo) ? taskInfo.note : '',
@@ -117,7 +117,7 @@ function collectDayTaskData(
 	dayData: LegacyExportDataByVersion<'2.0.0'>['day'],
 	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>
 ): LegacyExportDataByVersion<'2.0.0'>['day_task'] {
-	return legacyData.dayTasks.map(
+	return legacyData.data['day-tasks'].map(
 		([dayTaskKey, dayTaskInfo], id) => {
 			const { dayName, taskId } = decodeDayTaskKey(dayTaskKey);
 
@@ -141,7 +141,7 @@ function collectDayTaskData(
 			})();
 
 			const sortIndex = (() => {
-				const legacyDayInfo = legacyData.days.find(([name]) => name === dayName)?.[1];
+				const legacyDayInfo = legacyData.data.days.find(([name]) => name === dayName)?.[1];
 				if (!legacyDayInfo) {
 					return null;
 				}
@@ -173,11 +173,11 @@ function collectDayTaskData(
 function collectTemplateData(
 	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
 ): LegacyExportDataByVersion<'2.0.0'>['template'] {
-	if (!legacyData.templates) {
+	if (!legacyData.data.templates) {
 		return [];
 	}
 
-	return legacyData.templates.map(([id, templateInfo]) => ({
+	return legacyData.data.templates.map(([id, templateInfo]) => ({
 		id,
 		name: templateInfo.name,
 		template: templateInfo.template,
@@ -193,8 +193,12 @@ function collectTemplateData(
 async function collectImageData(
 	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
 ): Promise<LegacyExportDataByVersion<'2.0.0'>['image']> {
+	if (!legacyData.images) {
+		return [];
+	}
+
 	return await Promise.all(
-		legacyData.images?.map(async ([hash, data], id) => {
+		Object.entries(legacyData.images).map(async ([hash, data], id) => {
 			const file = await (async () => {
 				if (data instanceof Blob) {
 					return data;
