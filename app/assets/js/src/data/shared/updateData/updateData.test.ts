@@ -18,55 +18,57 @@ describe('updateData', () => {
 
 			const testExportData: LegacyExportData = {
 				schemaVersion: '1.0.0',
-				days: [
-					['2026-04-12', {
-						name: '2026-04-12',
-						note: 'Test note',
-						tasks: [1, 2],
-					}],
-				],
-				tasks: [
-					[1, {
-						id: 1,
-						name: 'Test task one',
-						note: 'Task one note',
-						status: 'completed',
-						sortIndex: 1,
-					}],
-					[2, {
-						id: 2,
-						name: 'Test task two',
-						note: 'Task two note',
-						status: 'in-progress',
-					}],
-				],
-				dayTasks: [
-					['2026-04-12_1', {
-						dayName: '2026-04-12',
-						taskId: 1,
-						note: 'Day task 1 note',
-						status: 'completed',
-						summary: 'Day task 1 summary',
-					}],
-					['2026-04-12_2', {
-						dayName: '2026-04-12',
-						taskId: 2,
-						note: 'Day task 2 note',
-						status: 'in-progress',
-						summary: 'Day task 2 summary',
-					}],
-				],
-				templates: [
-					[1, {
-						id: 1,
-						name: 'Template 1',
-						template: 'Template 1 template',
-						sortIndex: 1,
-					}],
-				],
-				images: [
-					['hash 1', testImageDataUrl],
-				],
+				data: {
+					days: [
+						['2026-04-12', {
+							name: '2026-04-12',
+							note: 'Test note',
+							tasks: [1, 2],
+						}],
+					],
+					tasks: [
+						[1, {
+							id: 1,
+							name: 'Test task one',
+							note: 'Task one note',
+							status: 'completed',
+							sortIndex: 1,
+						}],
+						[2, {
+							id: 2,
+							name: 'Test task two',
+							note: 'Task two note',
+							status: 'in-progress',
+						}],
+					],
+					['day-tasks']: [
+						['2026-04-12_1', {
+							dayName: '2026-04-12',
+							taskId: 1,
+							note: 'Day task 1 note',
+							status: 'completed',
+							summary: 'Day task 1 summary',
+						}],
+						['2026-04-12_2', {
+							dayName: '2026-04-12',
+							taskId: 2,
+							note: 'Day task 2 note',
+							status: 'in-progress',
+							summary: 'Day task 2 summary',
+						}],
+					],
+					templates: [
+						[1, {
+							id: 1,
+							name: 'Template 1',
+							template: 'Template 1 template',
+							sortIndex: 1,
+						}],
+					],
+				},
+				images: {
+					'hash 1': testImageDataUrl,
+				},
 			};
 
 			const updatedData = await updateData(testExportData);
@@ -188,10 +190,14 @@ describe('updateData', () => {
 		test('errors if it encounters a non-data URL', async () => {
 			const testData: LegacyExportData = {
 				schemaVersion: '1.0.0',
-				days: [],
-				tasks: [],
-				dayTasks: [],
-				images: [['hash', 'https://example.com']],
+				data: {
+					days: [],
+					tasks: [],
+					['day-tasks']: [],
+				},
+				images: {
+					'hash': 'https://example.com',
+				},
 			};
 
 			await expect(async () => await updateData(testData)).rejects.toThrow();
