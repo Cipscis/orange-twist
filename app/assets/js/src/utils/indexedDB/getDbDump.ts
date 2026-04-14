@@ -1,5 +1,5 @@
-import { getIdbRequestPromise } from '../getIdbRequestPromise';
-import { getEntries } from '../getEntries';
+import { getIdbRequestPromise } from './getIdbRequestPromise';
+import { getEntries } from './getEntries';
 
 export async function getDbDump(dbName: string, dbVersion: number): Promise<Record<string, unknown>> {
 	const db = await getIdbRequestPromise(indexedDB.open(dbName, dbVersion));

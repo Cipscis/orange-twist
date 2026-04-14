@@ -1,8 +1,8 @@
-import { isLegacyExportData, type TaggedLegacyExportData } from 'data/shared/types';
-import { migrateToLatest } from './migration';
-import { getDbDump } from './migration/getDbDump';
-import { tagLegacyExportData } from 'data/shared/updateData/tagLegacyExportData';
-import { updateData } from 'data/shared/updateData';
+import {
+	getTaggedDbDump,
+	migrateToLatest,
+	updateData,
+} from 'data/shared/migration';
 
 const dbName = 'orange-twist';
 const dbVersion = 1;
@@ -24,23 +24,28 @@ export async function getDatabase(): Promise<IDBDatabase> {
 	} = Promise.withResolvers<IDBDatabase>();
 	dbPromise = promise;
 
-	const existingDbVersion = await getExistingDbVersion(dbName);
-	const dbNeedsUpdate = (
-		existingDbVersion !== null && (
-			// TODO: Remove this `|| true` debugging condition that's temporarily forcing a data dump
-			existingDbVersion < dbVersion || true
-		)
-	);
-
 	// If the database needs to update, dump a copy of its data into memory and update it
-	if (dbNeedsUpdate) {
-		// TODO: Handle errors based on invalid data in database
-		const oldDbDump = await dumpOldDatabaseData(dbName, existingDbVersion);
-		console.log(oldDbDump);
+	const updatedDbData = await (async () => {
+		const existingDbVersion = await getExistingDbVersion(dbName);
+		const dbNeedsUpdatedData = (
+			// The database existed before, and...
+			existingDbVersion !== null &&
+			// The version we want to use now is newer than the old one
+			existingDbVersion < dbVersion
+		);
 
-		const updatedData = await updateData(oldDbDump);
-		console.log(updatedData);
-	}
+		if (!dbNeedsUpdatedData) {
+			return null;
+		}
+
+		if (dbNeedsUpdatedData) {
+			// TODO: Handle errors based on invalid data in database
+			const oldDbDump = await getTaggedDbDump(dbName, existingDbVersion);
+
+			const updatedData = await updateData(oldDbDump);
+			return updatedData;
+		}
+	})();
 
 	const request = indexedDB.open(dbName, dbVersion);
 
@@ -53,6 +58,7 @@ export async function getDatabase(): Promise<IDBDatabase> {
 	// Handle success
 	request.addEventListener('success', () => {
 		// TODO: Once the upgrade is complete, dump the updated data into the new database
+		console.log(updatedDbData);
 
 		resolve(request.result);
 	});
@@ -72,23 +78,4 @@ async function getExistingDbVersion(dbName: string): Promise<number | null> {
 	const existingDb = existingDbs.find(({ name }) => name === dbName);
 	const existingDbVersion = existingDb?.version;
 	return existingDbVersion ?? null;
-}
-
-async function dumpOldDatabaseData(dbName: string, existingDbVersion: number): Promise<TaggedLegacyExportData> {
-	// TODO: The database will need to be migrated, so grab all the data out of it
-	const dbDump = await getDbDump(dbName, existingDbVersion);
-
-	if (isLegacyExportData(dbDump)) {
-		try {
-			const taggedData = tagLegacyExportData(dbDump);
-			return taggedData;
-		} catch (e) {
-			// TODO: Handle potential error
-			console.error(dbDump);
-			throw e;
-		}
-	} else {
-		console.error(dbDump);
-		throw new Error('Database does not contain valid export data');
-	}
 }
