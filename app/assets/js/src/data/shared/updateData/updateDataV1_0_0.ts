@@ -18,9 +18,7 @@ export async function updateDataV1_0_0(
 	const template = collectTemplateData(legacyData);
 	const image = await collectImageData(legacyData);
 
-	const updatedData: Extract<LegacyExportData, { schemaVersion: '2.0.0'; }> = {
-		schemaVersion: '2.0.0',
-
+	const updatedData: LegacyExportDataByVersion<'2.0.0'> = {
 		day,
 		task,
 		day_task,

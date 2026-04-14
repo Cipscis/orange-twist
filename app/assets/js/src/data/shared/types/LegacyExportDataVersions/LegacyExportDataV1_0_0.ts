@@ -4,7 +4,6 @@ import { legacyStatusNameSchema } from './LegacyStatusName';
 import { isZodSchemaType } from 'utils';
 
 export const legacyExportDataSchemaV1_0_0 = z.object({
-	schemaVersion: z.literal('1.0.0'),
 	data: z.object({
 		days: z.array(
 			z.tuple([

@@ -2,13 +2,13 @@ import * as z from 'zod/mini';
 
 import {
 	legacyExportDataSchemaV1_0_0,
+	legacyExportDataSchemaV2_0_0,
 } from './LegacyExportDataVersions';
-import { databaseDataSchema } from './DatabaseData';
 import { isZodSchemaType } from 'utils';
 
 export const legacyExportDataSchema = z.union([
 	legacyExportDataSchemaV1_0_0,
-	databaseDataSchema,
+	legacyExportDataSchemaV2_0_0,
 ]);
 
 /**

@@ -1,6 +1,8 @@
-import type { LegacyExportData } from '../LegacyExportData';
+import type { TaggedLegacyExportData } from '../TaggedLegacyExportData';
 
 /**
  * Utility function for retrieving a specific version of {@linkcode LegacyExportData}.
  */
-export type LegacyExportDataByVersion<V extends LegacyExportData['schemaVersion']> = Extract<LegacyExportData, { schemaVersion: V; }>;
+export type LegacyExportDataByVersion<
+	V extends TaggedLegacyExportData['schemaVersion']
+> = Extract<TaggedLegacyExportData, { schemaVersion: V; }>['data'];
