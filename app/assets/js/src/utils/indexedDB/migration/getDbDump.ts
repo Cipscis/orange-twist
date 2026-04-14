@@ -1,15 +1,10 @@
-import type { LegacyExportData } from 'data/shared/types';
 import { getIdbRequestPromise } from '../getIdbRequestPromise';
-import { isLegacyExportData } from 'data/shared/types/LegacyExportData';
 import { getEntries } from '../getEntries';
 
-export async function getDbDump(dbName: string, dbVersion: number): Promise<LegacyExportData> {
+export async function getDbDump(dbName: string, dbVersion: number): Promise<Record<string, unknown>> {
 	const db = await getIdbRequestPromise(indexedDB.open(dbName, dbVersion));
 
-	const data: Record<string, unknown> = {
-		// TODO: How should this actually be set?
-		schemaVersion: '1.0.0',
-	};
+	const data: Record<string, unknown> = {};
 
 	for (let i = 0; i < db.objectStoreNames.length; i++) {
 		const objectStoreName = db.objectStoreNames.item(i)!;
@@ -17,12 +12,7 @@ export async function getDbDump(dbName: string, dbVersion: number): Promise<Lega
 	}
 	db.close();
 
-
-	if (isLegacyExportData(data)) {
-		return data;
-	} else {
-		throw new Error('Database does not contain valid export data');
-	}
+	return data;
 }
 
 /**
