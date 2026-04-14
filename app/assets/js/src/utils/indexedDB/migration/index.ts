@@ -1,1 +1,0 @@
-export { migrateToLatest } from './migrateToLatest';

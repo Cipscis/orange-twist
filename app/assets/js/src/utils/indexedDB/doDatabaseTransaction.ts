@@ -1,4 +1,4 @@
-import type { ObjectStoreName } from './ObjectStoreName';
+import type { ObjectStoreName } from '../../data/shared/ObjectStoreName';
 import { getDatabase } from './getDatabase';
 
 /**

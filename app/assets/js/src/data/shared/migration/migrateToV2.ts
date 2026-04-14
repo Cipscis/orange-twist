@@ -1,4 +1,4 @@
-import { ObjectStoreName } from '../../../data/shared/ObjectStoreName';
+import { ObjectStoreName } from '../ObjectStoreName';
 
 /**
  * Migrate the Orange Twist database from v1 to v2.
