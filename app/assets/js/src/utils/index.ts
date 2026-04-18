@@ -15,6 +15,7 @@ export {
 export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 export { chooseFile } from './chooseFile';
 export { classNames } from './classNames';
+export { copyBlob } from './copyBlob';
 export { createElement } from './createElement';
 export { escapeRegExpString } from './escapeRegExpString';
 export { getCurrentDateDayName } from './getCurrentDateDayName';
