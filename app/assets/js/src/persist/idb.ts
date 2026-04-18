@@ -12,24 +12,24 @@ export const idb: PersistApi = {
 	async set(key, data) {
 		await doDatabaseTransaction(
 			'readwrite',
-			ObjectStoreName.DATA,
-			(objectStore) => objectStore.put(data, key)
+			[ObjectStoreName.DATA],
+			([objectStore]) => objectStore.put(data, key)
 		);
 	},
 
 	get(key) {
 		return doDatabaseTransaction(
 			'readonly',
-			ObjectStoreName.DATA,
-			(objectStore) => objectStore.get(key)
+			[ObjectStoreName.DATA],
+			([objectStore]) => objectStore.get(key)
 		);
 	},
 
 	async delete(key) {
 		await doDatabaseTransaction(
 			'readwrite',
-			ObjectStoreName.DATA,
-			(objectStore) => objectStore.delete(key)
+			[ObjectStoreName.DATA],
+			([objectStore]) => objectStore.delete(key)
 		);
 	},
 };
