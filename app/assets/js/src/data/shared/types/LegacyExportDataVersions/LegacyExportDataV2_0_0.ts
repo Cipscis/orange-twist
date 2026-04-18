@@ -2,7 +2,8 @@ import { isZodSchemaType } from 'utils';
 import * as z from 'zod/mini';
 
 export const legacyExportDataSchemaV2_0_0 = z.object({
-	day: z.array(
+	day: z.record(
+		z.number(),
 		z.object({
 			id: z.number(),
 			year: z.number(),
@@ -11,7 +12,8 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 			note: z.string(),
 		}),
 	),
-	task: z.array(
+	task: z.record(
+		z.number(),
 		z.object({
 			id: z.number(),
 			name: z.string(),
@@ -20,25 +22,28 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 			status: z.number(),
 		}),
 	),
-	day_task: z.array(
+	day_task: z.record(
+		z.number(),
 		z.object({
 			id: z.number(),
 			day: z.number(),
 			task: z.number(),
 			note: z.string(),
-			summary: z.string(),
+			summary: z.nullable(z.string()),
 			sortIndex: z.nullable(z.number()),
 			status: z.number(),
 		}),
 	),
-	status: z.array(
+	status: z.record(
+		z.number(),
 		z.object({
 			id: z.number(),
 			name: z.string(),
 			isComplete: z.boolean(),
 		}),
 	),
-	template: z.array(
+	template: z.record(
+		z.number(),
 		z.object({
 			id: z.number(),
 			name: z.string(),
@@ -46,7 +51,8 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 			sortIndex: z.nullable(z.number()),
 		}),
 	),
-	image: z.array(
+	image: z.record(
+		z.number(),
 		z.object({
 			id: z.number(),
 			hash: z.string(),
