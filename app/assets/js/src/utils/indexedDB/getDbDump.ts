@@ -1,13 +1,26 @@
 import { getIdbRequestPromise } from './getIdbRequestPromise';
 import { getEntries } from './getEntries';
 
-export async function getDbDump(dbName: string, dbVersion: number): Promise<Record<string, unknown>> {
+/**
+ * Construct an object containing all data from a given database.
+ *
+ * Assumes the database exists at the specified version and has no open connections.
+ *
+ * @throws {Error} if a key is encountered that is neither a string nor a number.
+ */
+export async function getDbDump(
+	dbName: string,
+	dbVersion: number,
+): Promise<Record<
+	string, Record<string | number, unknown>
+>> {
 	const db = await getIdbRequestPromise(indexedDB.open(dbName, dbVersion));
 
-	const data: Record<string, unknown> = {};
+	const data: Record<
+		string, Record<string | number, unknown>
+	> = {};
 
-	for (let i = 0; i < db.objectStoreNames.length; i++) {
-		const objectStoreName = db.objectStoreNames.item(i)!;
+	for (const objectStoreName of Array.from(db.objectStoreNames)) {
 		data[objectStoreName] = await getObjectStoreDump(db, objectStoreName);
 	}
 	db.close();
@@ -27,10 +40,10 @@ async function getObjectStoreDump(db: IDBDatabase, objectStoreName: string): Pro
 	const objectStore = transaction.objectStore(objectStoreName);
 
 	for await (const [key, value] of getEntries(objectStore)) {
-		if (typeof key !== 'string') {
-			// TODO: Handle non-string keys
-			throw new Error('Error: Encountered non-key string');
+		if (typeof key !== 'string' && typeof key !== 'number') {
+			throw new Error('Error: Encountered a key that was neither a string nor a number');
 		}
+
 		objectStoreData[key] = value;
 	}
 

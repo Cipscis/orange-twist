@@ -38,7 +38,7 @@ export async function updateDataV1_0_0(
 function collectDayData(
 	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
 ): LegacyExportDataByVersion<'2.0.0'>['day'] {
-	return legacyData.data.days
+	return (legacyData.data.days ?? [])
 		.toSorted(
 			([dayNameA], [dayNameB]) => dayNameA.localeCompare(dayNameB)
 		)
@@ -74,10 +74,10 @@ function collectStatusData(
 		'approved-to-deploy',
 		'will-not-do',
 	] satisfies LegacyStatusName[]);
-	for (const [, { status }] of legacyData.data.tasks) {
+	for (const [, { status }] of (legacyData.data.tasks ?? [])) {
 		statusSet.add(status);
 	}
-	for (const [, { status }] of legacyData.data['day-tasks']) {
+	for (const [, { status }] of (legacyData.data['day-tasks'] ?? [])) {
 		statusSet.add(status);
 	}
 
@@ -96,7 +96,7 @@ function collectTaskData(
 	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>,
 	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>,
 ): LegacyExportDataByVersion<'2.0.0'>['task'] {
-	return legacyData.data.tasks.map(([id, taskInfo]) => ({
+	return (legacyData.data.tasks ?? []).map(([id, taskInfo]) => ({
 		id,
 		name: taskInfo.name,
 		note: ('note' in taskInfo) ? taskInfo.note : '',
@@ -115,7 +115,7 @@ function collectDayTaskData(
 	dayData: LegacyExportDataByVersion<'2.0.0'>['day'],
 	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>
 ): LegacyExportDataByVersion<'2.0.0'>['day_task'] {
-	return legacyData.data['day-tasks'].map(
+	return (legacyData.data['day-tasks'] ?? []).map(
 		([dayTaskKey, dayTaskInfo], id) => {
 			const { dayName, taskId } = decodeDayTaskKey(dayTaskKey);
 
@@ -126,20 +126,20 @@ function collectDayTaskData(
 				}
 
 				// Otherwise, construct a new day and insert it, then use that id
-				const nextId = Math.max(...dayData.map(({ id }) => id));
+				const nextId = Math.max(...Object.values(dayData).map(({ id }) => id));
 				const [year, month, dayNumber] = getDayNameParts(dayName);
-				dayData.push({
+				dayData[nextId] = {
 					id: nextId,
 					year,
 					month,
 					day: dayNumber,
 					note: '',
-				});
+				};
 				return nextId;
 			})();
 
 			const sortIndex = (() => {
-				const legacyDayInfo = legacyData.data.days.find(([name]) => name === dayName)?.[1];
+				const legacyDayInfo = (legacyData.data.days ?? []).find(([name]) => name === dayName)?.[1];
 				if (!legacyDayInfo) {
 					return null;
 				}
@@ -245,7 +245,7 @@ function getDayIdByName(
 ): number | null {
 	const [yearToMatch, monthToMatch, dayToMatch] = getDayNameParts(dayName);
 
-	const matchingDay = dayData.find(({ year, month, day }) => {
+	const matchingDay = Object.values(dayData).find(({ year, month, day }) => {
 		return year === yearToMatch &&
 		month === monthToMatch &&
 		day === dayToMatch;
@@ -263,7 +263,7 @@ function getStatusIdByName(
 	statusName: LegacyStatusName,
 	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>,
 ): number {
-	const matchingStatus = statusData.find(({ name }) => name === statusName);
+	const matchingStatus = Object.values(statusData).find(({ name }) => name === statusName);
 
 	return matchingStatus?.id ?? 0;
 }
