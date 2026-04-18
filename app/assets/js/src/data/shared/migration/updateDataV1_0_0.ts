@@ -1,4 +1,7 @@
 import { decodeDayTaskKey } from 'data/dayTasks/util';
+
+import { copyBlob } from 'utils';
+
 import type { LegacyExportData } from '../types';
 import type {
 	LegacyExportDataByVersion,
@@ -199,7 +202,7 @@ async function collectImageData(
 		Object.entries(legacyData.images).map(async ([hash, data], id) => {
 			const file = await (async () => {
 				if (data instanceof Blob) {
-					return data;
+					return await copyBlob(data);
 				}
 
 				const url = new URL(data);
