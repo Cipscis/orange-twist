@@ -1,7 +1,10 @@
 // Type-only import to expose symbol in JSDoc
+import { getDatabase, getIdbRequestPromise } from 'utils/indexedDB';
 import type { saveImage } from './saveImage';
 
 import { ObjectStoreName, doDatabaseTransaction } from 'utils';
+import { IndexName } from 'data/shared/IndexName';
+import type { DatabaseData } from 'data/shared/types';
 
 /**
  * Retrieve a Blob from the image object store.
@@ -14,14 +17,15 @@ import { ObjectStoreName, doDatabaseTransaction } from 'utils';
  * @see {@linkcode saveImage} For how to save an image for retrieval.
  */
 export async function getImage(key: string): Promise<Blob | null> {
-	const image = await doDatabaseTransaction(
-		'readonly',
-		[ObjectStoreName.IMAGES],
-		([store]) => store.get(key)
+	const db = await getDatabase();
+	const transaction = db.transaction(ObjectStoreName.IMAGE);
+	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
+	const imagesByHash = imageOS.index(IndexName.IMAGE_HASH);
+
+	// TODO: Find a way to do this with type safety
+	const image = await getIdbRequestPromise(
+		imagesByHash.get(key) as IDBRequest<DatabaseData['image'][number]>
 	);
 
-	if (image instanceof Blob) {
-		return image;
-	}
-	return null;
+	return image.file;
 }
