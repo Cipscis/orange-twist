@@ -6,7 +6,7 @@ import {
 } from 'data/shared/migration';
 
 const dbName = 'orange-twist';
-const dbVersion = 1;
+const dbVersion = 2;
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 /**
