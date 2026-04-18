@@ -16,8 +16,8 @@ import { ObjectStoreName, doDatabaseTransaction } from 'utils';
 export async function getImage(key: string): Promise<Blob | null> {
 	const image = await doDatabaseTransaction(
 		'readonly',
-		ObjectStoreName.IMAGES,
-		(store) => store.get(key)
+		[ObjectStoreName.IMAGES],
+		([store]) => store.get(key)
 	);
 
 	if (image instanceof Blob) {

@@ -24,14 +24,16 @@ import { getDatabase } from './getDatabase';
  */
 export function doDatabaseTransaction(
 	mode: IDBTransactionMode,
-	objectStoreName: ObjectStoreName,
-	callback: (objectStore: IDBObjectStore) => IDBRequest
+	objectStoreNames: readonly ObjectStoreName[],
+	callback: (objectStores: readonly IDBObjectStore[]) => IDBRequest
 ): Promise<unknown> {
 	return new Promise((resolve, reject) => {
 		getDatabase().then((db) => {
-			const transaction = db.transaction(objectStoreName, mode);
-			const objectStore = transaction.objectStore(objectStoreName);
-			const request = callback(objectStore);
+			const transaction = db.transaction(objectStoreNames, mode);
+			const objectStores = objectStoreNames.map(
+				(objectStoreName) => transaction.objectStore(objectStoreName)
+			);
+			const request = callback(objectStores);
 
 			request.addEventListener('success', () => resolve(request.result));
 			request.addEventListener('error', () => reject(

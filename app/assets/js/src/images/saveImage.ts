@@ -18,8 +18,8 @@ export async function saveImage(image: Blob): Promise<string> {
 	const hash = await createImageHash(image);
 	await doDatabaseTransaction(
 		'readwrite',
-		ObjectStoreName.IMAGES,
-		(store) => store.put(image, hash)
+		[ObjectStoreName.IMAGES],
+		([store]) => store.put(image, hash)
 	);
 	return hash;
 }
