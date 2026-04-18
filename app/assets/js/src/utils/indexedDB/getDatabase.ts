@@ -1,4 +1,5 @@
 import {
+	fillDatabase,
 	getTaggedDbDump,
 	migrateToLatest,
 	updateData,
@@ -38,13 +39,11 @@ export async function getDatabase(): Promise<IDBDatabase> {
 			return null;
 		}
 
-		if (dbNeedsUpdatedData) {
-			// TODO: Handle errors based on invalid data in database
-			const oldDbDump = await getTaggedDbDump(dbName, existingDbVersion);
+		// TODO: Handle errors based on invalid data in database
+		const oldDbDump = await getTaggedDbDump(dbName, existingDbVersion);
 
-			const updatedData = await updateData(oldDbDump);
-			return updatedData;
-		}
+		const updatedData = await updateData(oldDbDump);
+		return updatedData;
 	})();
 
 	const request = indexedDB.open(dbName, dbVersion);
@@ -56,11 +55,19 @@ export async function getDatabase(): Promise<IDBDatabase> {
 	});
 
 	// Handle success
-	request.addEventListener('success', () => {
-		// TODO: Once the upgrade is complete, dump the updated data into the new database
-		console.log(updatedDbData);
-
-		resolve(request.result);
+	request.addEventListener('success', async () => {
+		const db = request.result;
+		// Once the upgrade is complete, dump the updated data into the new database
+		if (updatedDbData) {
+			try {
+				await fillDatabase(db, updatedDbData);
+			} catch (e) {
+				// TODO: Handle error filling database
+				console.error(e);
+				console.error((e as DOMException).name);
+			}
+		}
+		resolve(db);
 	});
 
 	// Handle errors
