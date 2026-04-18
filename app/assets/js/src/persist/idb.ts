@@ -1,8 +1,15 @@
+import { StorageKey } from 'data/shared';
 import type { PersistApi } from 'persist/PersistApi';
 import {
 	ObjectStoreName,
 	doDatabaseTransaction,
 } from 'utils';
+import {
+	getDaysV1,
+	getDayTasksV1,
+	getTasksV1,
+	getTemplatesV1,
+} from 'database';
 
 /**
  * A {@linkcode PersistApi} interface for working with the
@@ -17,12 +24,22 @@ export const idb: PersistApi = {
 		);
 	},
 
-	get(key) {
-		return doDatabaseTransaction(
-			'readonly',
-			[ObjectStoreName.DATA],
-			([objectStore]) => objectStore.get(key)
-		);
+	async get(key) {
+		if (key === StorageKey.DAYS) {
+			return getDaysV1();
+		} else if (key === StorageKey.DAY_TASKS) {
+			return getDayTasksV1();
+		} else if (key === StorageKey.TASKS) {
+			return getTasksV1();
+		} else if (key === StorageKey.TEMPLATES) {
+			return getTemplatesV1();
+		} else {
+			return doDatabaseTransaction(
+				'readonly',
+				[ObjectStoreName.DATA],
+				([objectStore]) => objectStore.get(key)
+			);
+		}
 	},
 
 	async delete(key) {

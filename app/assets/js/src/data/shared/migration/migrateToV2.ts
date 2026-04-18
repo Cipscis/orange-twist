@@ -1,3 +1,4 @@
+import { IndexName } from '../IndexName';
 import { ObjectStoreName } from '../ObjectStoreName';
 
 /**
@@ -9,7 +10,8 @@ export function migrateToV2(db: IDBDatabase): void {
 
 	db.createObjectStore(ObjectStoreName.DAY, { keyPath: 'id' });
 	db.createObjectStore(ObjectStoreName.TASK, { keyPath: 'id' });
-	db.createObjectStore(ObjectStoreName.DAY_TASK, { keyPath: 'id' });
+	const dayTaskOS = db.createObjectStore(ObjectStoreName.DAY_TASK, { keyPath: 'id' });
+	dayTaskOS.createIndex(IndexName.DAY_TASK_DAY, 'day');
 	db.createObjectStore(ObjectStoreName.STATUS, { keyPath: 'id' });
 	db.createObjectStore(ObjectStoreName.TEMPLATE, { keyPath: 'id' });
 	db.createObjectStore(ObjectStoreName.IMAGE, { keyPath: 'id' });
