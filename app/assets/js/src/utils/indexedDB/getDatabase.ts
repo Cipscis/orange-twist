@@ -5,6 +5,8 @@ import {
 	updateData,
 } from 'data/shared/migration';
 
+import { getDatabaseVersion } from './getDatabaseVersion';
+
 const dbName = 'orange-twist';
 const dbVersion = 2;
 
@@ -27,7 +29,7 @@ export async function getDatabase(): Promise<IDBDatabase> {
 
 	// If the database needs to update, dump a copy of its data into memory and update it
 	const updatedDbData = await (async () => {
-		const existingDbVersion = await getExistingDbVersion(dbName);
+		const existingDbVersion = await getDatabaseVersion();
 		const dbNeedsUpdatedData = (
 			// The database existed before, and...
 			existingDbVersion !== null &&
@@ -75,14 +77,4 @@ export async function getDatabase(): Promise<IDBDatabase> {
 	request.addEventListener('blocked', () => reject(new Error('Open database request was blocked')));
 
 	return dbPromise;
-}
-
-/**
- * Determine the version of the existing database, or return `null` if the database doesn't exist yet.
- */
-async function getExistingDbVersion(dbName: string): Promise<number | null> {
-	const existingDbs = await indexedDB.databases();
-	const existingDb = existingDbs.find(({ name }) => name === dbName);
-	const existingDbVersion = existingDb?.version;
-	return existingDbVersion ?? null;
 }
