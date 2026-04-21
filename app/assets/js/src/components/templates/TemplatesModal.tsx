@@ -10,6 +10,7 @@ import {
 import { createTemplate, useAllTemplateInfo } from 'data';
 
 import { TemplatesList } from './TemplatesList';
+import { sortBySortIndex } from 'utils';
 
 interface TemplatesModalProps {
 	/** The TemplatesModal is only rendered when `open` is `true`. */
@@ -46,9 +47,7 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 	} = props;
 
 	const allTemplateInfoUnsorted = useAllTemplateInfo();
-	const allTemplateInfo = allTemplateInfoUnsorted.toSorted(
-		(a, b) => a.sortIndex - b.sortIndex
-	);
+	const allTemplateInfo = sortBySortIndex(allTemplateInfoUnsorted);
 
 	const addNewTemplate = useCallback(() => createTemplate(), []);
 

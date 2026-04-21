@@ -1,7 +1,7 @@
 import { h, type JSX } from 'preact';
 import { useMemo } from 'preact/hooks';
 
-import { classNames } from 'utils';
+import { classNames, sortElementsBySortIndex } from 'utils';
 
 import { useAllTaskInfo, type TaskInfo } from 'data';
 
@@ -65,12 +65,7 @@ export function TaskList(
 		}
 
 		// Otherwise, sort by sortIndex
-		return (
-			{ sortIndex: indexA }: TaskInfo,
-			{ sortIndex: indexB }: TaskInfo
-		) => {
-			return indexA - indexB;
-		};
+		return sortElementsBySortIndex;
 	}, [matcher, sorter]);
 
 	// Sort task info if necessary
