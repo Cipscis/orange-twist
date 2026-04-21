@@ -21,7 +21,6 @@ export async function setDaysV1(
 	const dayByDate = dayOS.index(IndexName.DAY_DATE);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const dayTaskByDay = dayTaskOS.index(IndexName.DAY_TASK_DAY);
-	const dayTaskByDayAndTask = dayTaskOS.index(IndexName.DAY_TASK_DAY_AND_TASK);
 
 	const requests: IDBRequest[] = [];
 
@@ -50,8 +49,8 @@ export async function setDaysV1(
 			const existingDayTasksByTaskId = new Map(
 				existingDayTasks.map((dayTask) => ([
 					dayTask.task,
-					dayTask.id,
-				] as const))
+					dayTask,
+				]))
 			);
 
 			const preDayTaskTaskIds = new Set(
@@ -72,43 +71,41 @@ export async function setDaysV1(
 						// TODO - Make sure this is the right initial status
 						status: 0,
 						note: '',
-						summary: '',
+						summary: null,
 						sortIndex: dayInfo.tasks.indexOf(taskId),
 					} satisfies Omit<DatabaseData['day_task'][number], 'id'>;
 
+					console.log('adding', dayTask);
 					return dayTaskOS.put(dayTask);
 				})
 			);
 
 			// Remove any missing day tasks
 			requests.push(
-				...await Promise.all(
-					Array.from(removedDayTaskTaskIds).map(async (taskId) => {
-						const existingDayTask = await getIdbRequestPromise(
-							// TODO: Find a way to do this with type safety
-							dayTaskByDayAndTask.get([existingDay.id, taskId]) as IDBRequest<DatabaseData['day_task'][number]>
-						);
+				...Array.from(removedDayTaskTaskIds).map((taskId) => {
+					// TODO: This non-null assertion isn't safe
+					const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
 
-						return dayTaskOS.delete(existingDayTask.id);
-					})
-				)
+					console.log('deleting', existingDayTask.id);
+					const request = dayTaskOS.delete(existingDayTask.id);
+					request.addEventListener('error', () => console.error(request));
+					request.addEventListener('success', () => console.log(request));
+					return request;
+				})
 			);
 
 			// Update sort index of remaining day tasks
 			requests.push(
-				...await Promise.all(
-					Array.from(remainingDayTaskTaskIds).map(async (taskId) => {
-						const existingDayTask = await getIdbRequestPromise(
-							// TODO: Find a way to do this with type safety
-							dayTaskByDayAndTask.get([existingDay.id, taskId]) as IDBRequest<DatabaseData['day_task'][number]>
-						);
+				...Array.from(remainingDayTaskTaskIds).map((taskId) => {
+					// TODO: This non-null assertion isn't safe
+					const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
 
-						return dayTaskOS.put({
-							...existingDayTask,
-							sortIndex: dayInfo.tasks.indexOf(taskId),
-						});
-					})
-				)
+					console.log('updating', existingDayTask);
+					return dayTaskOS.put({
+						...existingDayTask,
+						sortIndex: dayInfo.tasks.indexOf(taskId),
+					});
+				})
 			);
 		} else {
 			// Create a new day
