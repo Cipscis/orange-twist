@@ -3,7 +3,9 @@ import type { getImage } from './getImage';
 
 import { doDatabaseTransaction } from 'utils';
 import { createImageHash } from './createImageHash';
+
 import { ObjectStoreName } from 'database/metadata';
+import { getDatabaseVersion } from 'database/utils';
 
 /**
  * Persist an image in IndexedDB, so it can be retrieved later.
@@ -17,10 +19,20 @@ import { ObjectStoreName } from 'database/metadata';
  */
 export async function saveImage(image: Blob): Promise<string> {
 	const hash = await createImageHash(image);
-	await doDatabaseTransaction(
-		'readwrite',
-		[ObjectStoreName.IMAGES],
-		([store]) => store.put(image, hash)
-	);
+
+	// TODO: Get rid of this database v1 handling
+	const dbVersion = await getDatabaseVersion();
+	if (dbVersion === 1 || dbVersion === null) {
+		await doDatabaseTransaction(
+			'readwrite',
+			[ObjectStoreName.IMAGES],
+			([store]) => store.put(image, hash)
+		);
+		return hash;
+	}
+
+	// TODO: Implement v2 handling
+	throw new Error('Saving image not implemented');
+
 	return hash;
 }
