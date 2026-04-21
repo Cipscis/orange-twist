@@ -61,6 +61,7 @@ export async function setDaysV1(
 
 			const removedDayTaskTaskIds = preDayTaskTaskIds.difference(postDayTaskTaskIds);
 			const addedDayTaskTaskIds = postDayTaskTaskIds.difference(preDayTaskTaskIds);
+			const remainingDayTaskTaskIds = preDayTaskTaskIds.intersection(preDayTaskTaskIds);
 
 			// Add any new day tasks
 			requests.push(
@@ -74,7 +75,7 @@ export async function setDaysV1(
 						summary: '',
 						sortIndex: dayInfo.tasks.indexOf(taskId),
 					} satisfies Omit<DatabaseData['day_task'][number], 'id'>;
-					console.log('adding', dayTask);
+
 					return dayTaskOS.put(dayTask);
 				})
 			);
@@ -87,13 +88,28 @@ export async function setDaysV1(
 							// TODO: Find a way to do this with type safety
 							dayTaskByDayAndTask.get([existingDay.id, taskId]) as IDBRequest<DatabaseData['day_task'][number]>
 						);
-						console.log('removing', existingDayTask);
+
 						return dayTaskOS.delete(existingDayTask.id);
 					})
 				)
 			);
 
-			// TODO: Update sort index of day tasks
+			// Update sort index of remaining day tasks
+			requests.push(
+				...await Promise.all(
+					Array.from(remainingDayTaskTaskIds).map(async (taskId) => {
+						const existingDayTask = await getIdbRequestPromise(
+							// TODO: Find a way to do this with type safety
+							dayTaskByDayAndTask.get([existingDay.id, taskId]) as IDBRequest<DatabaseData['day_task'][number]>
+						);
+
+						return dayTaskOS.put({
+							...existingDayTask,
+							sortIndex: dayInfo.tasks.indexOf(taskId),
+						});
+					})
+				)
+			);
 		} else {
 			// Create a new day
 			requests.push(
