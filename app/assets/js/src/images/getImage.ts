@@ -1,5 +1,9 @@
 // Type-only import to expose symbol in JSDoc
-import { getDatabase, getIdbRequestPromise } from 'utils/indexedDB';
+import {
+	getDatabase,
+	getDatabaseVersion,
+	getIdbRequestPromise,
+} from 'utils/indexedDB';
 import type { saveImage } from './saveImage';
 
 import { ObjectStoreName, doDatabaseTransaction } from 'utils';
@@ -18,6 +22,22 @@ import type { DatabaseData } from 'data/shared/types';
  */
 export async function getImage(key: string): Promise<Blob | null> {
 	const db = await getDatabase();
+
+	// TODO: Get rid of this database v1 handling
+	const dbVersion = await getDatabaseVersion();
+	if (dbVersion === 1 || dbVersion === null) {
+		const image = await doDatabaseTransaction(
+			'readonly',
+			[ObjectStoreName.IMAGES],
+			([store]) => store.get(key)
+		);
+
+		if (image instanceof Blob) {
+			return image;
+		}
+		return null;
+	}
+
 	const transaction = db.transaction(ObjectStoreName.IMAGE);
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 	const imagesByHash = imageOS.index(IndexName.IMAGE_HASH);

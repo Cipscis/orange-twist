@@ -2,6 +2,7 @@ import * as z from 'zod/mini';
 
 import {
 	getDatabase,
+	getDatabaseVersion,
 	getEntries,
 	ObjectStoreName,
 } from 'utils/indexedDB';
@@ -22,6 +23,23 @@ const imageDBEntriesSchema = z.array(
  */
 export async function getAllImages(): Promise<(readonly [string, Blob])[]> {
 	const db = await getDatabase();
+
+	// TODO: Get rid of this database v1 handling
+	const dbVersion = await getDatabaseVersion();
+	if (dbVersion === 1 || dbVersion === null) {
+		const transaction = db.transaction(ObjectStoreName.IMAGES, 'readonly');
+		const objectStore = transaction.objectStore(ObjectStoreName.IMAGES);
+
+		const entriesIterator = getEntries(objectStore);
+		const entries = await Array.fromAsync(entriesIterator);
+		const parsedEntries = z.array(
+			z.tuple([z.string(), z.instanceof(Blob)])
+		).parse(
+			entries
+		);
+		return parsedEntries;
+	}
+
 	const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
 	const objectStore = transaction.objectStore(ObjectStoreName.IMAGE);
 
