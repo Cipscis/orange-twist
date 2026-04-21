@@ -8,11 +8,20 @@ import { ObjectStoreName } from 'database/metadata';
  */
 export const idb: PersistApi = {
 	async set(key, data) {
-		await doDatabaseTransaction(
-			'readwrite',
-			[ObjectStoreName.DATA],
-			([objectStore]) => objectStore.put(data, key)
-		);
+		// TODO: Get rid of this unnecessary retrieval, just used to make sure the database has been upgraded first
+		await getDatabase();
+		// TODO: Get rid of this database v1 handling
+		const dbVersion = await getDatabaseVersion();
+		if (dbVersion === 1 || dbVersion === null) {
+			return await doDatabaseTransaction(
+				'readwrite',
+				[ObjectStoreName.DATA],
+				([objectStore]) => objectStore.put(data, key)
+			) as Promise<void>;
+		}
+
+		// TODO: Implement v2 handling
+		throw new Error('Setting with idb not implemented');
 	},
 
 	get(key) {
@@ -24,10 +33,19 @@ export const idb: PersistApi = {
 	},
 
 	async delete(key) {
-		await doDatabaseTransaction(
-			'readwrite',
-			[ObjectStoreName.DATA],
-			([objectStore]) => objectStore.delete(key)
-		);
+		// TODO: Get rid of this unnecessary retrieval, just used to make sure the database has been upgraded first
+		await getDatabase();
+		// TODO: Get rid of this database v1 handling
+		const dbVersion = await getDatabaseVersion();
+		if (dbVersion === 1 || dbVersion === null) {
+			return await doDatabaseTransaction(
+				'readwrite',
+				[ObjectStoreName.DATA],
+				([objectStore]) => objectStore.delete(key)
+			) as Promise<void>;
+		}
+
+		// TODO: Implement v2 handling
+		throw new Error('Deleting with idb not implemented');
 	},
 };
