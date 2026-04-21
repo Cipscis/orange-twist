@@ -141,6 +141,7 @@ function collectDayTaskData(
 				return nextId;
 			})();
 
+			// TODO: Verify that I'm generating sortIndex in the right direction - I should decide what that is (or check if I have previously)
 			const sortIndex = (() => {
 				const legacyDayInfo = (legacyData.data.days ?? []).find(([name]) => name === dayName)?.[1];
 				if (!legacyDayInfo) {
