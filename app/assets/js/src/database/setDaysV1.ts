@@ -61,7 +61,7 @@ export async function setDaysV1(
 
 			const removedDayTaskTaskIds = preDayTaskTaskIds.difference(postDayTaskTaskIds);
 			const addedDayTaskTaskIds = postDayTaskTaskIds.difference(preDayTaskTaskIds);
-			const remainingDayTaskTaskIds = preDayTaskTaskIds.intersection(preDayTaskTaskIds);
+			const remainingDayTaskTaskIds = preDayTaskTaskIds.intersection(postDayTaskTaskIds);
 
 			// Add any new day tasks
 			requests.push(
