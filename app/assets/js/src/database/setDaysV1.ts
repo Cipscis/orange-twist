@@ -1,6 +1,7 @@
 import type { DayInfo } from 'data/days';
 import { IndexName } from 'data/shared/IndexName';
 import type { DatabaseData } from 'data/shared/types';
+import { sortBySortIndex } from 'utils';
 import {
 	getDatabase,
 	getIdbRequestPromise,
@@ -19,26 +20,80 @@ export async function setDaysV1(
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const dayByDate = dayOS.index(IndexName.DAY_DATE);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
+	const dayTaskByDay = dayTaskOS.index(IndexName.DAY_TASK_DAY);
+	const dayTaskByDayAndTask = dayTaskOS.index(IndexName.DAY_TASK_DAY_AND_TASK);
 
-	const requests: IDBRequest<IDBValidKey>[] = [];
+	const requests: IDBRequest[] = [];
 
 	for (const [dayName, dayInfo] of days) {
 		// TODO: Make a type-safe way of doing this
 		const [year, month, day] = getDayNameParts(dayName);
 		const keyRange = [year, month, day];
+
 		const existingDay = await getIdbRequestPromise(
 			dayByDate.get(keyRange) as IDBRequest<DatabaseData['day'][number]>
 		);
 
-		console.log(dayName, keyRange, existingDay);
 		if (existingDay) {
-			// Update an existing day
+			// Update an existing day note
 			requests.push(
 				dayOS.put({
 					...existingDay,
 					note: dayInfo.note,
 				})
 			);
+
+			const existingDayTasks = sortBySortIndex(await getIdbRequestPromise(
+				dayTaskByDay.getAll(existingDay.id) as IDBRequest<DatabaseData['day_task'][number][]>
+			));
+
+			const existingDayTasksByTaskId = new Map(
+				existingDayTasks.map((dayTask) => ([
+					dayTask.task,
+					dayTask.id,
+				] as const))
+			);
+
+			const preDayTaskTaskIds = new Set(
+				existingDayTasks.map(({ task }) => task)
+			);
+			const postDayTaskTaskIds = new Set(dayInfo.tasks);
+
+			const removedDayTaskTaskIds = preDayTaskTaskIds.difference(postDayTaskTaskIds);
+			const addedDayTaskTaskIds = postDayTaskTaskIds.difference(preDayTaskTaskIds);
+
+			// Add any new day tasks
+			requests.push(
+				...Array.from(addedDayTaskTaskIds).map((taskId) => {
+					const dayTask = {
+						day: existingDay.id,
+						task: taskId,
+						// TODO - Make sure this is the right initial status
+						status: 0,
+						note: '',
+						summary: '',
+						sortIndex: dayInfo.tasks.indexOf(taskId),
+					} satisfies Omit<DatabaseData['day_task'][number], 'id'>;
+					console.log('adding', dayTask);
+					return dayTaskOS.put(dayTask);
+				})
+			);
+
+			// Remove any missing day tasks
+			requests.push(
+				...await Promise.all(
+					Array.from(removedDayTaskTaskIds).map(async (taskId) => {
+						const existingDayTask = await getIdbRequestPromise(
+							// TODO: Find a way to do this with type safety
+							dayTaskByDayAndTask.get([existingDay.id, taskId]) as IDBRequest<DatabaseData['day_task'][number]>
+						);
+						console.log('removing', existingDayTask);
+						return dayTaskOS.delete(existingDayTask.id);
+					})
+				)
+			);
+
+			// TODO: Update sort index of day tasks
 		} else {
 			// Create a new day
 			requests.push(
@@ -53,8 +108,6 @@ export async function setDaysV1(
 	}
 
 	// TODO: Remove any days not in the data
-
-	// TODO: Update day tasks
 
 	await Promise.all(requests.map(getIdbRequestPromise));
 }
