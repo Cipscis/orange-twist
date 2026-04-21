@@ -7,6 +7,8 @@ import {
 	Modal,
 } from '../shared';
 
+import { sortBySortIndex } from 'utils';
+
 import { createTemplate, useAllTemplateInfo } from 'data';
 
 import { TemplatesList } from './TemplatesList';
@@ -46,9 +48,7 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 	} = props;
 
 	const allTemplateInfoUnsorted = useAllTemplateInfo();
-	const allTemplateInfo = allTemplateInfoUnsorted.toSorted(
-		(a, b) => a.sortIndex - b.sortIndex
-	);
+	const allTemplateInfo = sortBySortIndex(allTemplateInfoUnsorted);
 
 	const addNewTemplate = useCallback(() => createTemplate(), []);
 
