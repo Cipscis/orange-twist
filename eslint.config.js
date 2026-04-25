@@ -547,6 +547,8 @@ export default defineConfig([
 		'**/eslint.config.js',
 		'**/stylelint.config.js',
 		'**/jest.config.ts',
+		// This file has to be plain JavaScript so ignore it because I don't want to split out TypeScript rules
+		'test/jest-environment.js',
 		'**/*.snap',
 	]),
 	{

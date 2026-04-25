@@ -6,23 +6,18 @@
 	"type": "module",
 	"scripts": {
 		"server": "node --env-file-if-exists=.env scripts/server.ts",
-
 		"build:js": "concurrently \"tsc\" \"node --env-file-if-exists=.env scripts/build.ts\"",
 		"build:css": "sass app/assets/scss:app/assets/css --style=compressed",
 		"build": "concurrently \"npm:build:*\"",
-
 		"test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.ts",
 		"test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.ts --collectCoverage",
-
 		"watch:js": "node --env-file-if-exists=.env scripts/build-watch.ts",
 		"watch:css": "sass app/assets/scss:app/assets/css --watch --style=compressed",
 		"watch:test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config=./test/jest.config.ts --watch",
 		"watch": "concurrently --kill-others \"tsc --watch --preserveWatchOutput\" \"npm:watch:*\"",
-
 		"lint:js": "eslint app/assets/js/src/**",
 		"lint:css": "stylelint app/assets/scss/**/*.scss",
 		"lint": "concurrently \"npm:lint:*\"",
-
 		"start": "concurrently --kill-others \"npm run server\" \"npm run watch\""
 	},
 	"author": "Brooke Hart",
@@ -54,6 +49,7 @@
 		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^7.0.1",
 		"express": "^5.2.1",
+		"fake-indexeddb": "^6.2.5",
 		"globals": "^17.3.0",
 		"jest": "^30.2.0",
 		"jest-environment-jsdom": "^30.2.0",

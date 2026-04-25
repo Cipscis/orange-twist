@@ -99,6 +99,8 @@ These dependencies are used when working on the project locally.
 
 	* [jsdom-testing-mocks](https://www.npmjs.com/package/jsdom-testing-mocks): Mocks some browser APIs that aren't implemented in jsdom
 
+	* [fake-indexeddb](https://www.npmjs.com/package/fake-indexeddb): Mocks the IndexedDB API, which isn't implemented in jsdom
+
 * [esbuild](https://esbuild.github.io/): Bundling tool
 
 * [sass](https://www.npmjs.com/package/sass): Compiling CSS from [Sass](https://sass-lang.com/)

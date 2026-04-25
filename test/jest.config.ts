@@ -17,6 +17,7 @@ const config: JestConfigWithTsJest = {
 	testEnvironmentOptions: {
 		customExportConditions: ['node'],
 	},
+	setupFiles: ['fake-indexeddb/auto'],
 	// Run a setup script before all test suites
 	setupFilesAfterEnv: ['../test/jest.setup.ts'],
 
