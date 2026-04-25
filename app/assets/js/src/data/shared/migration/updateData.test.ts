@@ -1,7 +1,3 @@
-/**
- * @jest-environment ../../../../../../../test/jest-environment
- */
-
 import {
 	describe,
 	expect,
