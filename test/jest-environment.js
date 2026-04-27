@@ -10,6 +10,8 @@ import JSDOMEnvironment from 'jest-environment-jsdom';
 export default class FixedJSDOMEnvironment extends JSDOMEnvironment {
 	constructor(...args) {
 		super(...args);
+		// JSDOM doesn't implement structuredClone
+		// https://github.com/jsdom/jsdom/issues/3363
 		this.global.structuredClone = structuredClone;
 		this.global.fetch = fetch;
 		this.global.Request = Request;
