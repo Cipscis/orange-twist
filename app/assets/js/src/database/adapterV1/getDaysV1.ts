@@ -1,10 +1,6 @@
 import type { DayInfo } from 'data/days';
-import {
-	getDatabase,
-	getIdbRequestPromise,
-} from 'utils/indexedDB';
-import type { DatabaseData } from 'database/types';
-import { IndexName, ObjectStoreName } from 'database/metadata';
+import { getDatabase } from 'utils/indexedDB';
+import { ObjectStoreName } from 'database/metadata';
 import { getDaysInternal, getDayTasksForDayInternal } from 'database/internal';
 
 /**
