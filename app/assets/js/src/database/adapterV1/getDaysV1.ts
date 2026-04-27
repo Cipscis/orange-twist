@@ -5,6 +5,7 @@ import {
 } from 'utils/indexedDB';
 import type { DatabaseData } from 'database/types';
 import { IndexName, ObjectStoreName } from 'database/metadata';
+import { getDaysInternal } from 'database/internal';
 
 /**
  * Retrieve all schema v1 {@linkcode DayInfo} information from the database v2.
@@ -22,8 +23,7 @@ export async function getDaysV1(): Promise<readonly [string, DayInfo][]> {
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const dayTaskByDay = dayTaskOS.index(IndexName.DAY_TASK_DAY);
 
-	// TODO: Make a type-safe way of doing this
-	const allDays = await getIdbRequestPromise(dayOS.getAll() as IDBRequest<DatabaseData['day'][number][]>);
+	const allDays = await getDaysInternal(dayOS);
 	for (const day of allDays) {
 		const dayTasks = await getIdbRequestPromise(
 			// TODO: Make a type-safe way of doing this
