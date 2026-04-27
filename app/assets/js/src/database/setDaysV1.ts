@@ -1,12 +1,12 @@
 import type { DayInfo } from 'data/days';
-import { IndexName } from 'data/shared/IndexName';
-import type { DatabaseData } from 'data/shared/types';
 import { sortBySortIndex } from 'utils';
 import {
 	getDatabase,
 	getIdbRequestPromise,
-	ObjectStoreName,
 } from 'utils/indexedDB';
+
+import { IndexName, ObjectStoreName } from 'database/metadata';
+import type { DatabaseData } from 'database/types';
 
 export async function setDaysV1(
 	days: readonly (readonly [string, DayInfo])[]

@@ -1,6 +1,8 @@
 import type { PersistApi } from 'persist/PersistApi';
 import { doDatabaseTransaction } from 'utils';
 
+import type { DayInfo } from 'data';
+
 import { adapterV1 } from 'database';
 import { setDaysV1 } from 'database/setDaysV1';
 import { getDatabaseVersion } from 'database/utils';
