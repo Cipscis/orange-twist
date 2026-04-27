@@ -1,0 +1,33 @@
+import {
+	beforeAll,
+	describe,
+	expect,
+	test,
+} from '@jest/globals';
+
+import { createTestData } from 'database/test-utils';
+
+import { getDaysV1 } from './getDaysV1';
+
+describe('getDaysV1', () => {
+	beforeAll(async () => {
+		await createTestData();
+	});
+
+	test('returns a Promise that resolves to day entries v1', async () => {
+		const days = await getDaysV1();
+
+		expect(days).toEqual([
+			['2026-04-26', {
+				name: '2026-04-26',
+				note: 'Test note',
+				tasks: [0, 1],
+			}],
+			['2026-04-27', {
+				name: '2026-04-27',
+				note: 'Test note 2',
+				tasks: [],
+			}],
+		]);
+	});
+});
