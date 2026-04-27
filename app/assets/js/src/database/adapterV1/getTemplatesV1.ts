@@ -1,5 +1,5 @@
 import type { TemplateInfo } from 'data/templates';
-import type { DatabaseData } from 'data/shared/types';
+import type { DatabaseData } from 'database/types';
 import {
 	getDatabase,
 	getIdbRequestPromise,

@@ -1,5 +1,5 @@
 import { assertAllUnionMembersHandled } from 'utils';
-import type { DatabaseData, TaggedLegacyExportData } from '../types';
+import type { DatabaseData, TaggedLegacyExportData } from 'database/types';
 import { updateDataV1_0_0 } from './updateDataV1_0_0';
 
 /**

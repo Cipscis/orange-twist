@@ -4,8 +4,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import type { TaggedLegacyExportData } from '../types';
-import type { LegacyExportDataV2_0_0 } from '../types/LegacyExportDataVersions';
+import type { LegacyExportDataV2_0_0, TaggedLegacyExportData } from 'database/types';
 
 import { updateData } from './updateData';
 

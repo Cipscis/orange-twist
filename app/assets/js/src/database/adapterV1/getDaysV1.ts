@@ -1,9 +1,9 @@
 import type { DayInfo } from 'data/days';
-import type { DatabaseData } from 'data/shared/types';
 import {
 	getDatabase,
 	getIdbRequestPromise,
 } from 'utils/indexedDB';
+import type { DatabaseData } from 'database/types';
 import { IndexName, ObjectStoreName } from 'database/metadata';
 
 /**
