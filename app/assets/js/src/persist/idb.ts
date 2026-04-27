@@ -4,12 +4,7 @@ import {
 	ObjectStoreName,
 	doDatabaseTransaction,
 } from 'utils';
-import {
-	getDaysV1,
-	getDayTasksV1,
-	getTasksV1,
-	getTemplatesV1,
-} from 'database';
+import { adapterV1 } from 'database';
 import { getDatabase, getDatabaseVersion } from 'utils/indexedDB';
 
 /**
@@ -39,13 +34,13 @@ export const idb: PersistApi = {
 		}
 
 		if (key === StorageKey.DAYS) {
-			return getDaysV1();
+			return adapterV1.getDays();
 		} else if (key === StorageKey.DAY_TASKS) {
-			return getDayTasksV1();
+			return adapterV1.getDayTasks();
 		} else if (key === StorageKey.TASKS) {
-			return getTasksV1();
+			return adapterV1.getTasks();
 		} else if (key === StorageKey.TEMPLATES) {
-			return getTemplatesV1();
+			return adapterV1.getTemplates();
 		} else {
 			throw new RangeError(`Unrecognised key ${key}`);
 		}
