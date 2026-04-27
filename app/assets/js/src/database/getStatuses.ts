@@ -5,6 +5,9 @@ import {
 	getIdbRequestPromise,
 } from 'utils/indexedDB';
 
+/**
+ * Retrieves all statuses.
+ */
 export async function getStatuses(): Promise<DatabaseData['status']> {
 	const db = await getDatabase();
 	const transaction = db.transaction(ObjectStoreName.STATUS, 'readonly');

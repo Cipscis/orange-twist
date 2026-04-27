@@ -2,6 +2,9 @@ import { getDatabase, getIdbRequestPromise } from 'utils/indexedDB';
 import { ObjectStoreName } from './metadata';
 import type { DatabaseData } from './types';
 
+/**
+ * Retrieves a day by specified ID.
+ */
 export async function getDay(id: number): Promise<
 	| DatabaseData[typeof ObjectStoreName.DAY][number]
 	| null
