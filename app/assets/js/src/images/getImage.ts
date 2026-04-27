@@ -1,14 +1,15 @@
 // Type-only import to expose symbol in JSDoc
 import {
+	doDatabaseTransaction,
 	getDatabase,
-	getDatabaseVersion,
 	getIdbRequestPromise,
 } from 'utils/indexedDB';
 import type { saveImage } from './saveImage';
 
-import { ObjectStoreName, doDatabaseTransaction } from 'utils';
-import { IndexName } from 'data/shared/IndexName';
 import type { DatabaseData } from 'data/shared/types';
+
+import { getDatabaseVersion } from 'database/utils';
+import { IndexName, ObjectStoreName } from 'database/metadata';
 
 /**
  * Retrieve a Blob from the image object store.

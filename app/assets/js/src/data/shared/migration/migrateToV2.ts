@@ -1,5 +1,4 @@
-import { IndexName } from '../IndexName';
-import { ObjectStoreName } from '../ObjectStoreName';
+import { IndexName, ObjectStoreName } from 'database/metadata';
 
 /**
  * Migrate the Orange Twist database from v1 to v2.

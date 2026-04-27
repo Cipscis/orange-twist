@@ -3,10 +3,10 @@ import type { DatabaseData } from 'data/shared/types';
 import {
 	getDatabase,
 	getIdbRequestPromise,
-	ObjectStoreName,
 } from 'utils/indexedDB';
 import { getStatuses } from '../getStatuses';
 import type { LegacyStatusName } from 'data/shared/types/LegacyExportDataVersions';
+import { ObjectStoreName } from 'database/metadata';
 
 /**
  * Retrieve all schema v1 {@linkcode TaskInfo} information from the database v2.

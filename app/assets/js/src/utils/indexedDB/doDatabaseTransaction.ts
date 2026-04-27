@@ -1,5 +1,5 @@
-import type { ObjectStoreName } from '../../data/shared/ObjectStoreName';
 import { getDatabase } from './getDatabase';
+import type { ObjectStoreName } from 'database/metadata';
 
 /**
  * Perform a transaction on a specified object store within

@@ -5,10 +5,8 @@ import {
 	updateData,
 } from 'data/shared/migration';
 
-import { getDatabaseVersion } from './getDatabaseVersion';
-
-const dbName = 'orange-twist';
-const dbVersion = 2;
+import { getDatabaseVersion } from 'database/utils';
+import { dbName, dbVersion } from 'database/metadata';
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 /**

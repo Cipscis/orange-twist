@@ -1,11 +1,13 @@
 import { StorageKey } from 'data/shared';
 import type { PersistApi } from 'persist/PersistApi';
 import {
-	ObjectStoreName,
 	doDatabaseTransaction,
 } from 'utils';
+import { getDatabase } from 'utils/indexedDB';
+
 import { adapterV1 } from 'database';
-import { getDatabase, getDatabaseVersion } from 'utils/indexedDB';
+import { getDatabaseVersion } from 'database/utils';
+import { ObjectStoreName } from 'database/metadata';
 
 /**
  * A {@linkcode PersistApi} interface for working with the
