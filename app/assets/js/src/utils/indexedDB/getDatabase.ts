@@ -12,9 +12,13 @@ let dbPromise: Promise<IDBDatabase> | null = null;
 /**
  * Get a handle to the database, opening it if it wasn't
  * already open.
+ *
+ * @param force By default, the same database open request is reused with each call. If this parameter is set to `true`, a new open request is created.
  */
-export async function getDatabase(): Promise<IDBDatabase> {
-	if (dbPromise) {
+export async function getDatabase(
+	force = false
+): Promise<IDBDatabase> {
+	if (dbPromise && !force) {
 		return dbPromise;
 	}
 
