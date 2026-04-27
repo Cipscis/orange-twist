@@ -4,6 +4,8 @@ import {
 	doDatabaseTransaction,
 } from 'utils';
 
+import type { DayInfo } from 'data/days';
+
 import { adapterV1 } from 'database';
 import { getDatabase, getDatabaseVersion } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -13,11 +15,27 @@ import { ObjectStoreName } from '../metadata';
  */
 export const dbV1: PersistApi = {
 	async set(key, data) {
-		await doDatabaseTransaction(
-			'readwrite',
-			[ObjectStoreName.DATA],
-			([objectStore]) => objectStore.put(data, key)
-		);
+		// TODO: Get rid of this unnecessary retrieval, just used to make sure the database has been upgraded first
+		await getDatabase();
+		// TODO: Get rid of this database v1 handling
+		const dbVersion = await getDatabaseVersion();
+		if (dbVersion === 1 || dbVersion === null) {
+			return await doDatabaseTransaction(
+				'readwrite',
+				[ObjectStoreName.DATA],
+				([objectStore]) => objectStore.put(data, key)
+			) as Promise<void>;
+		}
+
+		// TODO: Implement v2 handling
+		if (key === StorageKey.DAYS) {
+			// TODO: Find a type-safe way of doing this
+			return adapterV1.setDays(
+				data as [string, DayInfo][]
+			);
+		} else {
+			throw new Error('Setting with idb not implemented');
+		}
 	},
 
 	async get(key) {
