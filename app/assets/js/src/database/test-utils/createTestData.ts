@@ -24,6 +24,7 @@ export async function createTestData(): Promise<void> {
 	], 'readwrite');
 
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
+	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 
@@ -47,6 +48,19 @@ export async function createTestData(): Promise<void> {
 		day: 27,
 		note: 'Test note 2',
 	} satisfies DatabaseData[typeof ObjectStoreName.DAY][number]));
+
+	// Insert test statuses
+	requests.push(statusOS.put({
+		id: 0,
+		name: 'todo',
+		isComplete: false,
+	} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]));
+
+	requests.push(statusOS.put({
+		id: 1,
+		name: 'in-progress',
+		isComplete: false,
+	} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]));
 
 	// Insert test tasks
 	requests.push(taskOS.put({

@@ -40,6 +40,5 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 		tasksV1.push(taskV1);
 	}
 
-	console.log(tasksV1);
 	return tasksV1.map((task) => [task.id, task]);
 }
