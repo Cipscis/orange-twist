@@ -1,12 +1,9 @@
 import type { TaskInfo } from 'data/tasks';
-import type { DatabaseData } from 'database/types';
-import {
-	getDatabase,
-	getIdbRequestPromise,
-} from 'utils/indexedDB';
+import { getDatabase } from 'utils/indexedDB';
 import { getStatuses } from '../getStatuses';
 import type { LegacyStatusName } from 'database/types/LegacyExportDataVersions';
 import { ObjectStoreName } from 'database/metadata';
+import { getTasksInternal } from 'database/internal';
 
 /**
  * Retrieve all schema v1 {@linkcode TaskInfo} information from the database v2.
@@ -24,8 +21,7 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
-	// TODO: Make a type-safe way of doing this
-	const allTasks = await getIdbRequestPromise(taskOS.getAll() as IDBRequest<DatabaseData['task'][number][]>);
+	const allTasks = await getTasksInternal(taskOS);
 
 	for (const task of allTasks) {
 		const taskV1: TaskInfo = {

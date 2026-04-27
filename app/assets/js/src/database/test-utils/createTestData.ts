@@ -84,7 +84,7 @@ export async function createTestData(): Promise<void> {
 		name: 'Test task 0',
 		note: 'Test task 0 note',
 		status: 0,
-		sortIndex: 0,
+		sortIndex: 1,
 	} satisfies DatabaseData[typeof ObjectStoreName.TASK][number]));
 
 	requests.push(taskOS.put({
@@ -92,7 +92,15 @@ export async function createTestData(): Promise<void> {
 		name: 'Test task 1',
 		note: 'Test task 1 note',
 		status: 1,
-		sortIndex: 1,
+		sortIndex: 2,
+	} satisfies DatabaseData[typeof ObjectStoreName.TASK][number]));
+
+	requests.push(taskOS.put({
+		id: 2,
+		name: 'Test task 2',
+		note: 'Test task 2 note',
+		status: 1,
+		sortIndex: 0,
 	} satisfies DatabaseData[typeof ObjectStoreName.TASK][number]));
 
 	// Insert test day tasks
