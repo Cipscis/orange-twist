@@ -1,3 +1,5 @@
+export { dbV1 } from './dbV1';
+
 import { getDaysV1 } from './getDaysV1';
 import { getDayTasksV1 } from './getDayTasksV1';
 import { getTasksV1 } from './getTasksV1';

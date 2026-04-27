@@ -1,6 +1,6 @@
 import type { PersistApi } from './PersistApi';
 
-import { idb } from './idb';
+import { dbV1 } from 'database';
 import { ls } from './ls';
 
 /**
@@ -15,12 +15,12 @@ import { ls } from './ls';
 export const local: PersistApi = {
 	set(key, data) {
 		// Set IndexedDB only
-		return idb.set(key, data);
+		return dbV1.set(key, data);
 	},
 
 	async get(key) {
 		// Try to read from IndexedDB first
-		const idbResult = await idb.get(key);
+		const idbResult = await dbV1.get(key);
 		if (typeof idbResult !== 'undefined') {
 			return idbResult;
 		}
@@ -32,7 +32,7 @@ export const local: PersistApi = {
 	delete(key) {
 		// Delete key from both IndexedDB and LocalStorage
 		return Promise.all([
-			idb.delete(key),
+			dbV1.delete(key),
 			ls.delete(key),
 		]) as Promise<unknown> as Promise<void>;
 		// ^ It's safe to cast any Promise to void
