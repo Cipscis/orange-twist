@@ -5,7 +5,7 @@ import {
 } from 'utils/indexedDB';
 import type { DatabaseData } from 'database/types';
 import { IndexName, ObjectStoreName } from 'database/metadata';
-import { getDaysInternal } from 'database/internal';
+import { getDaysInternal, getDayTasksForDayInternal } from 'database/internal';
 
 /**
  * Retrieve all schema v1 {@linkcode DayInfo} information from the database v2.
@@ -21,21 +21,15 @@ export async function getDaysV1(): Promise<readonly [string, DayInfo][]> {
 
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-	const dayTaskByDay = dayTaskOS.index(IndexName.DAY_TASK_DAY);
 
 	const allDays = await getDaysInternal(dayOS);
 	for (const day of allDays) {
-		const dayTasks = await getIdbRequestPromise(
-			// TODO: Make a type-safe way of doing this
-			dayTaskByDay.getAll(day.id) as IDBRequest<DatabaseData['day_task'][number][]>
-		);
+		const dayTasks = await getDayTasksForDayInternal(dayTaskOS, day.id);
 
 		const dayV1: DayInfo = {
 			name: `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`,
 			note: day.note,
-			tasks: dayTasks
-				.toSorted((dayTaskA, dayTaskB) => Number(dayTaskA.sortIndex) - Number(dayTaskB.sortIndex))
-				.map((dayTask) => dayTask.task),
+			tasks: dayTasks.map((dayTask) => dayTask.task),
 		};
 
 		daysV1.push(dayV1);
