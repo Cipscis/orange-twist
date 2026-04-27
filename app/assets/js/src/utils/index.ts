@@ -25,6 +25,8 @@ export { nodeHasAncestor } from './nodeHasAncestor';
 export { readFileAsString } from './readFileAsString';
 export { removeDiacritics } from './removeDiacritics';
 export { requestAsyncCallback } from './requestAsyncCallback';
+export { sortBySortIndex } from './sortBySortIndex';
+export { sortElementsBySortIndex } from './sortElementsBySortIndex';
 export { startAnimationLoop } from './startAnimationLoop';
 export { strMatch, type StrMatchOptions } from './strMatch';
 export { tryStartViewTransition } from './tryStartViewTransition';
