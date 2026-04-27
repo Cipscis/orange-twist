@@ -40,7 +40,7 @@ export async function createTestData(): Promise<void> {
 		year: 2026,
 		month: 4,
 		day: 26,
-		note: 'Test note',
+		note: 'Test note 0',
 	} satisfies DatabaseData[typeof ObjectStoreName.DAY][number]));
 
 	requests.push(dayOS.put({
@@ -48,6 +48,14 @@ export async function createTestData(): Promise<void> {
 		year: 2026,
 		month: 4,
 		day: 27,
+		note: 'Test note 1',
+	} satisfies DatabaseData[typeof ObjectStoreName.DAY][number]));
+
+	requests.push(dayOS.put({
+		id: 2,
+		year: 2026,
+		month: 1,
+		day: 1,
 		note: 'Test note 2',
 	} satisfies DatabaseData[typeof ObjectStoreName.DAY][number]));
 
@@ -95,7 +103,7 @@ export async function createTestData(): Promise<void> {
 		note: 'Note for task 0 day 0',
 		summary: 'Summary for task 0 day 0',
 		status: 1,
-		sortIndex: 0,
+		sortIndex: 1,
 	} satisfies DatabaseData[typeof ObjectStoreName.DAY_TASK][number]));
 
 	requests.push(dayTaskOS.put({
@@ -105,7 +113,7 @@ export async function createTestData(): Promise<void> {
 		note: 'Note for task 1 day 0',
 		summary: 'Summary for task 1 day 0',
 		status: 1,
-		sortIndex: 1,
+		sortIndex: 0,
 	} satisfies DatabaseData[typeof ObjectStoreName.DAY_TASK][number]));
 
 	// Insert test templates

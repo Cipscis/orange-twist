@@ -22,7 +22,7 @@ describe('getDay', () => {
 			year: 2026,
 			month: 4,
 			day: 26,
-			note: 'Test note',
+			note: 'Test note 0',
 		});
 	});
 
