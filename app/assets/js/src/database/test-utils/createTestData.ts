@@ -27,6 +27,7 @@ export async function createTestData(): Promise<void> {
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
+	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
 
 	const requests: IDBRequest[] = [];
 
@@ -100,7 +101,20 @@ export async function createTestData(): Promise<void> {
 		sortIndex: 1,
 	} satisfies DatabaseData[typeof ObjectStoreName.DAY_TASK][number]));
 
-	// TODO: Insert test templates
+	// Insert test templates
+	requests.push(templateOS.put({
+		id: 0,
+		name: 'Template 0 name',
+		template: 'Template 0',
+		sortIndex: 0,
+	} satisfies DatabaseData[typeof ObjectStoreName.TEMPLATE][number]));
+
+	requests.push(templateOS.put({
+		id: 1,
+		name: 'Template 1 name',
+		template: 'Template 1',
+		sortIndex: 1,
+	} satisfies DatabaseData[typeof ObjectStoreName.TEMPLATE][number]));
 
 	// TODO: Insert test images
 
