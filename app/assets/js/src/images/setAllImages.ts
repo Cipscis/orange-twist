@@ -1,8 +1,8 @@
 import {
 	getDatabase,
 	getEntries,
-	ObjectStoreName,
 } from 'utils/indexedDB';
+import { ObjectStoreName } from 'database/metadata';
 
 /**
  * First, erases all existing images in IndexedDB. Then, adds all

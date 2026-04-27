@@ -1,11 +1,10 @@
 import type { DayInfo } from 'data/days';
-import { IndexName } from 'data/shared/IndexName';
 import type { DatabaseData } from 'data/shared/types';
 import {
 	getDatabase,
 	getIdbRequestPromise,
-	ObjectStoreName,
 } from 'utils/indexedDB';
+import { IndexName, ObjectStoreName } from 'database/metadata';
 
 /**
  * Retrieve all schema v1 {@linkcode DayInfo} information from the database v2.

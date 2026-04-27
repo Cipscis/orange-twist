@@ -1,4 +1,4 @@
-import { ObjectStoreName } from '../ObjectStoreName';
+import { ObjectStoreName } from 'database/metadata';
 
 /**
  * Initialise the Orange Twist database to the v1 schema on first load.

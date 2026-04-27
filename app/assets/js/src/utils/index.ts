@@ -7,10 +7,7 @@ export {
 	useRegister,
 } from './register';
 
-export {
-	doDatabaseTransaction,
-	ObjectStoreName,
-} from './indexedDB';
+export { doDatabaseTransaction } from './indexedDB';
 
 export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 export { chooseFile } from './chooseFile';

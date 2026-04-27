@@ -1,8 +1,8 @@
 import type { DatabaseData } from 'data/shared/types';
+import { ObjectStoreName } from 'database/metadata';
 import {
 	getDatabase,
 	getIdbRequestPromise,
-	ObjectStoreName,
 } from 'utils/indexedDB';
 
 export async function getStatuses(): Promise<DatabaseData['status']> {

@@ -3,8 +3,8 @@ import type { DatabaseData } from 'data/shared/types';
 import {
 	getDatabase,
 	getIdbRequestPromise,
-	ObjectStoreName,
 } from 'utils/indexedDB';
+import { ObjectStoreName } from 'database/metadata';
 
 /**
  * Retrieve all schema v1 {@linkcode TemplateInfo} information from the database v2.

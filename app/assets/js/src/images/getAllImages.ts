@@ -2,10 +2,11 @@ import * as z from 'zod/mini';
 
 import {
 	getDatabase,
-	getDatabaseVersion,
 	getEntries,
-	ObjectStoreName,
 } from 'utils/indexedDB';
+
+import { getDatabaseVersion } from 'database/utils';
+import { ObjectStoreName } from 'database/metadata';
 
 const imageDBEntriesSchema = z.array(
 	z.tuple([

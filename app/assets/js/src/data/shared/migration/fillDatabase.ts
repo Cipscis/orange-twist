@@ -1,5 +1,6 @@
-import { getIdbRequestPromise, ObjectStoreName } from 'utils/indexedDB';
+import { getIdbRequestPromise } from 'utils/indexedDB';
 import type { DatabaseData } from '../types';
+import { ObjectStoreName } from 'database/metadata';
 
 /**
  * Fill a database with specified data.
