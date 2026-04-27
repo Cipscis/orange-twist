@@ -18,19 +18,26 @@ describe('getTasksV1', () => {
 		const tasks = await getTasksV1();
 
 		expect(tasks).toEqual([
+			[2, {
+				id: 2,
+				name: 'Test task 2',
+				note: 'Test task 2 note',
+				status: 'in-progress',
+				sortIndex: 0,
+			}],
 			[0, {
 				id: 0,
 				name: 'Test task 0',
 				note: 'Test task 0 note',
 				status: 'todo',
-				sortIndex: 0,
+				sortIndex: 1,
 			}],
 			[1, {
 				id: 1,
 				name: 'Test task 1',
 				note: 'Test task 1 note',
 				status: 'in-progress',
-				sortIndex: 1,
+				sortIndex: 2,
 			}],
 		]);
 	});
