@@ -41,6 +41,5 @@ export async function getDaysV1(): Promise<readonly [string, DayInfo][]> {
 		daysV1.push(dayV1);
 	}
 
-	console.log(daysV1);
 	return daysV1.map((day) => [day.name, day]);
 }

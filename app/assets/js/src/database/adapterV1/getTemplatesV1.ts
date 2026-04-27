@@ -33,6 +33,5 @@ export async function getTemplatesV1(): Promise<readonly [number, TemplateInfo][
 		templatesV1.push(templateV1);
 	}
 
-	console.log(templatesV1);
 	return templatesV1.map((template) => [template.id, template]);
 }
