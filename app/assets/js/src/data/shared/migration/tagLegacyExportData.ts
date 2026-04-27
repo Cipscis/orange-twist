@@ -3,7 +3,7 @@ import {
 	isLegacyExportDataV2_0_0,
 	type LegacyExportData,
 	type TaggedLegacyExportData,
-} from '../types';
+} from 'database/types';
 
 /**
  * Return the schema version of a specified {@linkcode LegacyExportData} and returned a tagged copy.

@@ -6,8 +6,7 @@ import {
 } from 'utils/indexedDB';
 import type { saveImage } from './saveImage';
 
-import type { DatabaseData } from 'data/shared/types';
-
+import type { DatabaseData } from 'database/types';
 import { getDatabaseVersion } from 'database/utils';
 import { IndexName, ObjectStoreName } from 'database/metadata';
 

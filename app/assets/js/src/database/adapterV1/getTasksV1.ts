@@ -1,11 +1,11 @@
 import type { TaskInfo } from 'data/tasks';
-import type { DatabaseData } from 'data/shared/types';
+import type { DatabaseData } from 'database/types';
 import {
 	getDatabase,
 	getIdbRequestPromise,
 } from 'utils/indexedDB';
 import { getStatuses } from '../getStatuses';
-import type { LegacyStatusName } from 'data/shared/types/LegacyExportDataVersions';
+import type { LegacyStatusName } from 'database/types/LegacyExportDataVersions';
 import { ObjectStoreName } from 'database/metadata';
 
 /**

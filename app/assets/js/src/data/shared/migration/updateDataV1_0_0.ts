@@ -2,11 +2,11 @@ import { decodeDayTaskKey } from 'data/dayTasks/util';
 
 import { copyBlob } from 'utils';
 
-import type { LegacyExportData } from '../types';
 import type {
+	LegacyExportData,
 	LegacyExportDataByVersion,
 	LegacyStatusName,
-} from '../types/LegacyExportDataVersions';
+} from 'database/types';
 
 /**
  * Update a {@linkcode LegacyExportData} from schema version `1.0.0` to schema version `2.0.0`.

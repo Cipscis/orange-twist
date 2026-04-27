@@ -1,8 +1,9 @@
 import { clearDatabase } from './clearDatabase';
 
-import type { DatabaseData } from 'data/shared/types';
-import { ObjectStoreName } from 'database/metadata';
 import { getDatabase, getIdbRequestPromise } from 'utils/indexedDB';
+
+import type { DatabaseData } from 'database/types';
+import { ObjectStoreName } from 'database/metadata';
 
 /**
  * **Important!** For use within tests only.

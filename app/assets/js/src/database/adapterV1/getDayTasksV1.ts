@@ -1,8 +1,7 @@
 import type { DayTaskInfo } from 'data/dayTasks';
-import type { DatabaseData } from 'data/shared/types';
 import { getDatabase, getIdbRequestPromise } from 'utils/indexedDB';
 import { getStatuses } from '../getStatuses';
-import type { LegacyStatusName } from 'data/shared/types/LegacyExportDataVersions';
+import type { DatabaseData, LegacyStatusName } from 'database/types';
 import { ObjectStoreName } from 'database/metadata';
 
 /**

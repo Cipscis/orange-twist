@@ -1,5 +1,5 @@
 import { getDbDump } from 'utils/indexedDB';
-import { isLegacyExportData, type TaggedLegacyExportData } from 'data/shared/types';
+import { isLegacyExportData, type TaggedLegacyExportData } from 'database/types';
 import { tagLegacyExportData } from 'data/shared/migration/tagLegacyExportData';
 
 /**

@@ -1,4 +1,4 @@
-import type { DatabaseData } from 'data/shared/types';
+import type { DatabaseData } from 'database/types';
 import { ObjectStoreName } from 'database/metadata';
 import {
 	getDatabase,
