@@ -63,6 +63,12 @@ export async function createTestData(): Promise<void> {
 		isComplete: false,
 	} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]));
 
+	requests.push(statusOS.put({
+		id: 2,
+		name: 'complete',
+		isComplete: true,
+	} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]));
+
 	// Insert test tasks
 	requests.push(taskOS.put({
 		id: 0,
