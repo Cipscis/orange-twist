@@ -4,7 +4,6 @@ import { doDatabaseTransaction } from 'utils';
 import type { DayInfo } from 'data';
 
 import { adapterV1 } from 'database';
-import { setDaysV1 } from 'database/setDaysV1';
 import { getDatabaseVersion } from 'database/utils';
 import { ObjectStoreName } from 'database/metadata';
 
@@ -28,7 +27,7 @@ export const idb: PersistApi = {
 		// TODO: Implement v2 handling
 		if (key === StorageKey.DAYS) {
 			// TODO: Find a type-safe way of doing this
-			return setDaysV1(
+			return adapterV1.setDays(
 				data as [string, DayInfo][]
 			);
 		} else {
