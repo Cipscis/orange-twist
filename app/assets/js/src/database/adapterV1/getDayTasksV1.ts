@@ -3,6 +3,7 @@ import { getDatabase, getIdbRequestPromise } from 'utils/indexedDB';
 import { getStatuses } from '../getStatuses';
 import type { DatabaseData, LegacyStatusName } from 'database/types';
 import { ObjectStoreName } from 'database/metadata';
+import { getDayTasksInternal } from 'database/internal';
 
 /**
  * Retrieve all schema v1 {@linkcode DayTaskInfo} information from the database v2.
@@ -21,8 +22,7 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
-	// TODO: Make a type-safe way of doing this
-	const allDayTasks = await getIdbRequestPromise(dayTaskOS.getAll() as IDBRequest<DatabaseData['day_task'][number][]>);
+	const allDayTasks = await getDayTasksInternal(dayTaskOS);
 	for (const dayTask of allDayTasks) {
 		// TODO: Make a type-safe way of doing this
 		const day = await getIdbRequestPromise(
