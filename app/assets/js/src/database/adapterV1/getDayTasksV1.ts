@@ -2,7 +2,7 @@ import type { DayTaskInfo } from 'data/dayTasks';
 import type { DatabaseData } from 'data/shared/types';
 import { ObjectStoreName } from 'utils';
 import { getDatabase, getIdbRequestPromise } from 'utils/indexedDB';
-import { getStatuses } from './getStatuses';
+import { getStatuses } from '../getStatuses';
 import type { LegacyStatusName } from 'data/shared/types/LegacyExportDataVersions';
 
 /**

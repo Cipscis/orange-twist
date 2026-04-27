@@ -5,7 +5,7 @@ import {
 	getIdbRequestPromise,
 	ObjectStoreName,
 } from 'utils/indexedDB';
-import { getStatuses } from './getStatuses';
+import { getStatuses } from '../getStatuses';
 import type { LegacyStatusName } from 'data/shared/types/LegacyExportDataVersions';
 
 /**
