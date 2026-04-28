@@ -1,10 +1,7 @@
 import type { TemplateInfo } from 'data/templates';
-import type { DatabaseData } from 'database/types';
-import {
-	getDatabase,
-	getIdbRequestPromise,
-} from 'utils/indexedDB';
+import { getDatabase } from 'utils/indexedDB';
 import { ObjectStoreName } from 'database/metadata';
+import { getTemplatesInternal } from 'database/internal';
 
 /**
  * Retrieve all schema v1 {@linkcode TemplateInfo} information from the database v2.
@@ -19,8 +16,7 @@ export async function getTemplatesV1(): Promise<readonly [number, TemplateInfo][
 
 	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
 
-	// TODO: Make a type-safe way of doing this
-	const allTemplates = await getIdbRequestPromise(templateOS.getAll() as IDBRequest<DatabaseData['template'][number][]>);
+	const allTemplates = await getTemplatesInternal(templateOS);
 
 	for (const template of allTemplates) {
 		const templateV1: TemplateInfo = {
