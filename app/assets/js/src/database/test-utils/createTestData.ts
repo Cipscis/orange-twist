@@ -129,14 +129,14 @@ export async function createTestData(): Promise<void> {
 		id: 0,
 		name: 'Template 0 name',
 		template: 'Template 0',
-		sortIndex: 0,
+		sortIndex: 1,
 	} satisfies DatabaseData[typeof ObjectStoreName.TEMPLATE][number]));
 
 	requests.push(templateOS.put({
 		id: 1,
 		name: 'Template 1 name',
 		template: 'Template 1',
-		sortIndex: 1,
+		sortIndex: 0,
 	} satisfies DatabaseData[typeof ObjectStoreName.TEMPLATE][number]));
 
 	// TODO: Insert test images

@@ -18,16 +18,16 @@ describe('getTemplatesV1', () => {
 		const templates = await getTemplatesV1();
 
 		expect(templates).toEqual([
-			[0, {
-				id: 0,
-				name: 'Template 0 name',
-				template: 'Template 0',
-				sortIndex: 0,
-			}],
 			[1, {
 				id: 1,
 				name: 'Template 1 name',
 				template: 'Template 1',
+				sortIndex: 0,
+			}],
+			[0, {
+				id: 0,
+				name: 'Template 0 name',
+				template: 'Template 0',
 				sortIndex: 1,
 			}],
 		]);
