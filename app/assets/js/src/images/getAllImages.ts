@@ -7,6 +7,7 @@ import {
 
 import { getDatabaseVersion } from 'database/utils';
 import { ObjectStoreName } from 'database/metadata';
+import { adapterV1 } from 'database';
 
 const imageDBEntriesSchema = z.array(
 	z.tuple([
@@ -22,23 +23,13 @@ const imageDBEntriesSchema = z.array(
 /**
  * Retrieve all images saved in the image object store, as [key, value] tuples.
  */
-export async function getAllImages(): Promise<(readonly [string, Blob])[]> {
+export async function getAllImages(): Promise<(readonly [hash: string, image: Blob])[]> {
 	const db = await getDatabase();
 
 	// TODO: Get rid of this database v1 handling
 	const dbVersion = await getDatabaseVersion();
 	if (dbVersion === 1 || dbVersion === null) {
-		const transaction = db.transaction(ObjectStoreName.IMAGES, 'readonly');
-		const objectStore = transaction.objectStore(ObjectStoreName.IMAGES);
-
-		const entriesIterator = getEntries(objectStore);
-		const entries = await Array.fromAsync(entriesIterator);
-		const parsedEntries = z.array(
-			z.tuple([z.string(), z.instanceof(Blob)])
-		).parse(
-			entries
-		);
-		return parsedEntries;
+		return await adapterV1.getImages();
 	}
 
 	const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');

@@ -9,7 +9,7 @@ export async function getImage(hash: string): Promise<
 	| null
 > {
 	const db = await getDatabase();
-	const transaction = db.transaction(ObjectStoreName.IMAGE);
+	const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
 	return await getImageByHashInternal(imageOS, hash);
