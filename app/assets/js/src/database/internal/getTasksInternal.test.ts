@@ -5,11 +5,11 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from 'database/test-utils';
+import { getDatabase } from '../utils';
+import { createTestData } from '../test-utils';
+import { ObjectStoreName } from '../metadata';
 
 import { getTasksInternal } from './getTasksInternal';
-import { getDatabase } from 'utils/indexedDB';
-import { ObjectStoreName } from 'database/metadata';
 
 describe('getTasksInternal', () => {
 	beforeAll(() => createTestData());

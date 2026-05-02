@@ -1,7 +1,8 @@
 import type { TemplateInfo } from 'data/templates';
-import { getDatabase } from 'utils/indexedDB';
-import { ObjectStoreName } from 'database/metadata';
-import { getTemplatesInternal } from 'database/internal';
+
+import { getDatabase } from '../utils';
+import { ObjectStoreName } from '../metadata';
+import { getTemplatesInternal } from '../internal';
 
 /**
  * Retrieve all schema v1 {@linkcode TemplateInfo} information from the database v2.

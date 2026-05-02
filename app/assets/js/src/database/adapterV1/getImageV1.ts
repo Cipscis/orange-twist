@@ -1,6 +1,6 @@
-import { getImageByHashInternal } from 'database/internal';
-import { ObjectStoreName } from 'database/metadata';
-import { getDatabase } from 'utils/indexedDB';
+import { getDatabase } from '../utils';
+import { getImageByHashInternal } from '../internal';
+import { ObjectStoreName } from '../metadata';
 
 /**
  * Retrieve a schema v1 image `Blob` from the database v2.

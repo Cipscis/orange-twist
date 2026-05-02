@@ -4,10 +4,10 @@ import {
 	expect,
 	test,
 } from '@jest/globals';
-import { ObjectStoreName } from 'database/metadata';
 
-import { createTestData } from 'database/test-utils';
-import { getDatabase } from 'utils/indexedDB';
+import { getDatabase } from '../utils';
+import { ObjectStoreName } from '../metadata';
+import { createTestData } from '../test-utils';
 import { getTemplatesInternal } from './getTemplatesInternal';
 
 describe('getTemplatesInternal', () => {

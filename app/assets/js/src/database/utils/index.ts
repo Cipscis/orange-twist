@@ -1,1 +1,2 @@
+export { getDatabase } from './getDatabase';
 export { getDatabaseVersion } from './getDatabaseVersion';

@@ -1,5 +1,5 @@
-import { dbName } from 'database/metadata';
-import { getDatabase } from 'utils/indexedDB';
+import { dbName } from '../metadata';
+import { getDatabase } from '../utils';
 
 /**
  * **Important!** For use within tests only.

@@ -1,8 +1,8 @@
 import type { DayTaskInfo } from 'data/dayTasks';
-import { getDatabase } from 'utils/indexedDB';
 
 import { getStatuses } from '../getStatuses';
 
+import { getDatabase } from 'database/utils';
 import type { LegacyStatusName } from 'database/types';
 import { ObjectStoreName } from 'database/metadata';
 import { getDayInternal, getDayTasksInternal } from 'database/internal';

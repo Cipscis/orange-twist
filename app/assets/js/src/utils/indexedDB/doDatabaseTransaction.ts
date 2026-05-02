@@ -1,4 +1,4 @@
-import { getDatabase } from './getDatabase';
+import { getDatabase } from '../../database/utils/getDatabase';
 import type { ObjectStoreName } from 'database/metadata';
 
 /**

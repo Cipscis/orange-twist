@@ -1,6 +1,6 @@
-import { getImagesInternal } from 'database/internal/getImagesInternal';
-import { ObjectStoreName } from 'database/metadata';
-import { getDatabase } from 'utils/indexedDB';
+import { getDatabase } from '../utils';
+import { getImagesInternal } from '../internal/getImagesInternal';
+import { ObjectStoreName } from '../metadata';
 
 export async function getImagesV1(): Promise<(readonly [hash: string, image: Blob])[]> {
 	const db = await getDatabase();

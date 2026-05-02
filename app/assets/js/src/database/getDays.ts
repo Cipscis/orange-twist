@@ -1,5 +1,4 @@
-import { getDatabase } from 'utils/indexedDB';
-
+import { getDatabase } from './utils';
 import { ObjectStoreName } from './metadata';
 import type { DatabaseData } from './types';
 import { getDaysInternal } from './internal';
