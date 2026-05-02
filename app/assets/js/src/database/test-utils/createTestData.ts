@@ -29,6 +29,7 @@ export async function createTestData(): Promise<void> {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
+	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
 	const requests: IDBRequest[] = [];
 
@@ -139,7 +140,16 @@ export async function createTestData(): Promise<void> {
 		sortIndex: 0,
 	} satisfies DatabaseData[typeof ObjectStoreName.TEMPLATE][number]));
 
-	// TODO: Insert test images
+	// Insert test images
+
+	// Working with image Blobs causes problems working with the FileReader, so just use some data that can be read from the Blob directly
+	const testImageBlob = new Blob(['test data'], { type: 'text/plain' });
+
+	requests.push(imageOS.put({
+		id: 0,
+		file: testImageBlob,
+		hash: 'test-hash',
+	} satisfies DatabaseData[typeof ObjectStoreName.IMAGE][number]));
 
 	await Promise.all(
 		requests.map((request) => getIdbRequestPromise(request))
