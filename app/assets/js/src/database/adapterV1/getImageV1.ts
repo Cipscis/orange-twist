@@ -7,7 +7,7 @@ import { getDatabase } from 'utils/indexedDB';
  */
 export async function getImageV1(hash: string): Promise<Blob | null> {
 	const db = await getDatabase();
-	const transaction = db.transaction(ObjectStoreName.IMAGE);
+	const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
 	const image = await getImageByHashInternal(imageOS, hash);
