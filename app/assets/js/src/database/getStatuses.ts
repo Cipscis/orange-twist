@@ -1,9 +1,11 @@
-import type { DatabaseData } from 'database/types';
-import { ObjectStoreName } from 'database/metadata';
 import {
-	getDatabase,
 	getIdbRequestPromise,
 } from 'utils/indexedDB';
+
+import { getDatabase } from './utils';
+import type { DatabaseData } from './types';
+import { ObjectStoreName } from './metadata';
+
 
 /**
  * Retrieves all statuses.

@@ -3,11 +3,10 @@ import type { PersistApi } from 'persist/PersistApi';
 import {
 	doDatabaseTransaction,
 } from 'utils';
-import { getDatabase } from 'utils/indexedDB';
 
 import { adapterV1 } from 'database';
-import { getDatabaseVersion } from 'database/utils';
-import { ObjectStoreName } from 'database/metadata';
+import { getDatabase, getDatabaseVersion } from '../utils';
+import { ObjectStoreName } from '../metadata';
 
 /**
  * A {@linkcode PersistApi} interface for working with the IndexedDB API, reading from the database v2 but providing data with schema v1.

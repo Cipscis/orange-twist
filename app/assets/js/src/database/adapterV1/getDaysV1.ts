@@ -1,7 +1,8 @@
 import type { DayInfo } from 'data/days';
-import { getDatabase } from 'utils/indexedDB';
-import { ObjectStoreName } from 'database/metadata';
-import { getDaysInternal, getDayTasksForDayInternal } from 'database/internal';
+
+import { getDatabase } from '../utils';
+import { ObjectStoreName } from '../metadata';
+import { getDaysInternal, getDayTasksForDayInternal } from '../internal';
 
 /**
  * Retrieve all schema v1 {@linkcode DayInfo} information from the database v2.

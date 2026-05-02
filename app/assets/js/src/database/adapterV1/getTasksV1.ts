@@ -1,9 +1,10 @@
 import type { TaskInfo } from 'data/tasks';
-import { getDatabase } from 'utils/indexedDB';
+
+import { getDatabase } from '../utils';
 import { getStatuses } from '../getStatuses';
-import type { LegacyStatusName } from 'database/types/LegacyExportDataVersions';
-import { ObjectStoreName } from 'database/metadata';
-import { getTasksInternal } from 'database/internal';
+import type { LegacyStatusName } from '../types';
+import { ObjectStoreName } from '../metadata';
+import { getTasksInternal } from '../internal';
 
 /**
  * Retrieve all schema v1 {@linkcode TaskInfo} information from the database v2.
