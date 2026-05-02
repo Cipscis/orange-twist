@@ -16,5 +16,8 @@ export default class FixedJSDOMEnvironment extends JSDOMEnvironment {
 		this.global.fetch = fetch;
 		this.global.Request = Request;
 		this.global.Response = Response;
+
+		// JSDOM's Blob implementation doesn't work properly when creating my test data using `new Blob`
+		this.global.Blob = Blob;
 	}
 }
