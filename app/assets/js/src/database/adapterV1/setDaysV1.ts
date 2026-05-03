@@ -6,7 +6,11 @@ import { getIdbRequestPromise } from 'utils/indexedDB';
 import { getDatabase } from '../utils';
 import { IndexName, ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
-import { addDayInternal } from 'database/internal/addDayInternal';
+import {
+	addDayInternal,
+	getDayTasksForDayInternal,
+	updateDayInternal,
+} from '../internal';
 
 export async function setDaysV1(
 	days: readonly (readonly [string, DayInfo])[]
@@ -20,31 +24,30 @@ export async function setDaysV1(
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const dayByDate = dayOS.index(IndexName.DAY_DATE);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-	const dayTaskByDay = dayTaskOS.index(IndexName.DAY_TASK_DAY);
 
 	const requests: (Promise<unknown>)[] = [];
 
 	for (const [dayName, dayInfo] of days) {
 		// TODO: Make a type-safe way of doing this
 		const [year, month, day] = getDayNameParts(dayName);
-		const keyRange = [year, month, day];
+		const indexKey = [year, month, day];
 
 		const existingDay = await getIdbRequestPromise(
-			dayByDate.get(keyRange) as IDBRequest<DatabaseData['day'][number]>
+			dayByDate.get(indexKey) as IDBRequest<DatabaseData[typeof ObjectStoreName.DAY][number]>
 		);
 
 		if (existingDay) {
 			// Update an existing day note
 			requests.push(
-				getIdbRequestPromise(dayOS.put({
+				updateDayInternal(dayOS, {
 					...existingDay,
 					note: dayInfo.note,
-				}))
+				})
 			);
 
-			const existingDayTasks = sortBySortIndex(await getIdbRequestPromise(
-				dayTaskByDay.getAll(existingDay.id) as IDBRequest<DatabaseData['day_task'][number][]>
-			));
+			const existingDayTasks = sortBySortIndex(
+				await getDayTasksForDayInternal(dayTaskOS, existingDay.id)
+			);
 
 			const existingDayTasksByTaskId = new Map(
 				existingDayTasks.map((dayTask) => ([
@@ -73,7 +76,7 @@ export async function setDaysV1(
 						note: '',
 						summary: null,
 						sortIndex: dayInfo.tasks.indexOf(taskId),
-					} satisfies Omit<DatabaseData['day_task'][number], 'id'>;
+					} satisfies Omit<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id'>;
 
 					console.log('adding', dayTask);
 					return getIdbRequestPromise(dayTaskOS.put(dayTask));
