@@ -8,6 +8,7 @@ export { getTaskInternal } from './getTaskInternal';
 export { getTasksInternal } from './getTasksInternal';
 
 export { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
+export { addDayTaskInternal } from './addDayTaskInternal';
 export { getDayTasksInternal } from './getDayTasksInternal';
 export { getDayTasksForDayInternal } from './getDayTasksForDayInternal';
 
