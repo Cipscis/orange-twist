@@ -1,3 +1,4 @@
+import type { DefaultsFor, ExpandType } from 'utils';
 import { getIdbRequestPromise } from 'utils/indexedDB';
 
 import type { ObjectStoreName } from '../metadata';
@@ -11,7 +12,10 @@ export async function addDayTaskInternal(
 	dayTaskOS: IDBObjectStore,
 	dayOS: IDBObjectStore,
 	taskOS: IDBObjectStore,
-	dayTask: Omit<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id'>
+	dayTask: ExpandType<
+		Pick<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'day' | 'task'> &
+		Partial<Omit<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id' | 'day' | 'task'>>
+	>
 ): Promise<DatabaseData[typeof ObjectStoreName.DAY_TASK][number]['id']> {
 	const existingDayTask = await getDayTaskForDayAndTaskInternal(dayTaskOS, dayTask);
 	if (existingDayTask) {
@@ -28,7 +32,17 @@ export async function addDayTaskInternal(
 		throw new Error(`Cannot add day task - no task exists with ID ${dayTask.task}`);
 	}
 
-	const request = dayTaskOS.add(dayTask);
+	const defaults = {
+		note: '',
+		summary: null,
+		status: 1,
+		sortIndex: null,
+	} as const satisfies DefaultsFor<typeof dayTask>;
+
+	const request = dayTaskOS.add({
+		...defaults,
+		...dayTask,
+	});
 
 	const result = await getIdbRequestPromise(request);
 	if (!(typeof result === 'number')) {
