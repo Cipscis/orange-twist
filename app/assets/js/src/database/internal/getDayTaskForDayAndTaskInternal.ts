@@ -1,3 +1,4 @@
+import type { ExpandType } from 'utils';
 import { getIdbRequestPromise } from 'utils/indexedDB';
 
 import { IndexName, type ObjectStoreName } from '../metadata';
@@ -5,9 +6,9 @@ import type { DatabaseData } from '../types';
 
 export async function getDayTaskForDayAndTaskInternal(
 	dayTaskOS: IDBObjectStore,
-	dayTask: Pick<
+	dayTask: ExpandType<Pick<
 		DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'day' | 'task'
-	>
+	>>
 ): Promise<
 	| DatabaseData[typeof ObjectStoreName.DAY_TASK][number]
 	| null

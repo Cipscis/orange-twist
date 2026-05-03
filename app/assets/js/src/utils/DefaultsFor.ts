@@ -1,3 +1,5 @@
+import type { ExpandType } from './ExpandType';
+
 /**
  * Extract the optional keys of a type.
  *
@@ -37,4 +39,4 @@ type OptionalKeys<T> = {
  * 	// ...
  * ```
  */
-export type DefaultsFor<T> = Required<Pick<T, OptionalKeys<T>>>;
+export type DefaultsFor<T> = ExpandType<Required<Pick<T, OptionalKeys<T>>>>;

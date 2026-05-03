@@ -163,15 +163,11 @@ async function addNewDay(options: {
 
 	// Create the new day's day tasks
 	const dayTaskRequests: Promise<unknown>[] = [];
-	for (const [index, task] of dayInfo.tasks.entries()) {
+	for (const [sortIndex, task] of dayInfo.tasks.entries()) {
 		dayTaskRequests.push(addDayTaskInternal(dayTaskOS, dayOS, taskOS, {
 			day: newDayId,
 			task: task,
-			// TODO: Have some defaults, perhaps built into addDayTaskInternal? Default status is the trickiest bit
-			note: '',
-			summary: null,
-			status: 1,
-			sortIndex: index,
+			sortIndex,
 		}));
 	}
 

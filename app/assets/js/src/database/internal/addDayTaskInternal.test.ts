@@ -65,6 +65,33 @@ describe('addDayTaskInternal', () => {
 		});
 	});
 
+	test('fills in blanks with default values', async () => {
+		await addDayTaskInternal(
+			dayTaskOS,
+			dayOS,
+			taskOS,
+			{
+				day: 0,
+				task: 2,
+			},
+		);
+
+		const dayTask = await getDayTaskForDayAndTaskInternal(dayTaskOS, {
+			day: 0,
+			task: 2,
+		});
+
+		expect(dayTask).toEqual({
+			id: 2,
+			day: 0,
+			task: 2,
+			note: '',
+			summary: null,
+			status: 1,
+			sortIndex: null,
+		});
+	});
+
 	test('throws an error if a day task already exists for that day and task combination', async () => {
 		const promise = addDayTaskInternal(
 			dayTaskOS,
