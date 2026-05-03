@@ -1,35 +1,4 @@
-/**
- * A convenience function for getting an `IDBCursorWithValue` from
- * its originating `IDBRequest`, taking a Promise-based approach.
- */
-async function getCursor(request: IDBRequest<IDBCursorWithValue | null>): Promise<IDBCursorWithValue | null> {
-	const controller = new AbortController();
-	const { signal } = controller;
-
-	const cursor = await new Promise<IDBCursorWithValue | null>((resolve, reject) => {
-		request.addEventListener(
-			'success',
-			() => {
-				resolve(request.result);
-				controller.abort();
-			},
-			{ signal }
-		);
-		request.addEventListener(
-			'error',
-			() => {
-				reject(
-					request.error ??
-					new Error('Database transaction request encountered an unrecognised error.')
-				);
-				controller.abort();
-			},
-			{ signal }
-		);
-	});
-
-	return cursor;
-}
+import { getIterableCursor } from './getIterableCursor';
 
 /**
  * Retrieve an asynchronous iterable iterator that yields "entry" tuples
@@ -41,14 +10,7 @@ export async function* getEntries(objectStore: IDBObjectStore): AsyncGenerator<
 	void,
 	void
 > {
-	const cursorRequest = objectStore.openCursor();
-
-	let cursor = await getCursor(cursorRequest);
-
-	while (cursor) {
+	for await (const cursor of getIterableCursor(objectStore)) {
 		yield [cursor.key, cursor.value];
-
-		cursor.continue();
-		cursor = await getCursor(cursorRequest);
 	}
 }
