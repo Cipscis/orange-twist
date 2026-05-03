@@ -1,12 +1,12 @@
 import type { DayInfo } from 'data/days';
-import { sortBySortIndex } from 'utils';
-import {
-	getDatabase,
-	getIdbRequestPromise,
-} from 'utils/indexedDB';
 
-import { IndexName, ObjectStoreName } from 'database/metadata';
-import type { DatabaseData } from 'database/types';
+import { sortBySortIndex } from 'utils';
+import { getIdbRequestPromise } from 'utils/indexedDB';
+
+import { getDatabase } from '../utils';
+import { IndexName, ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
+import { addDayInternal } from 'database/internal/addDayInternal';
 
 export async function setDaysV1(
 	days: readonly (readonly [string, DayInfo])[]
@@ -22,7 +22,7 @@ export async function setDaysV1(
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const dayTaskByDay = dayTaskOS.index(IndexName.DAY_TASK_DAY);
 
-	const requests: IDBRequest[] = [];
+	const requests: (Promise<unknown>)[] = [];
 
 	for (const [dayName, dayInfo] of days) {
 		// TODO: Make a type-safe way of doing this
@@ -36,10 +36,10 @@ export async function setDaysV1(
 		if (existingDay) {
 			// Update an existing day note
 			requests.push(
-				dayOS.put({
+				getIdbRequestPromise(dayOS.put({
 					...existingDay,
 					note: dayInfo.note,
-				})
+				}))
 			);
 
 			const existingDayTasks = sortBySortIndex(await getIdbRequestPromise(
@@ -76,7 +76,7 @@ export async function setDaysV1(
 					} satisfies Omit<DatabaseData['day_task'][number], 'id'>;
 
 					console.log('adding', dayTask);
-					return dayTaskOS.put(dayTask);
+					return getIdbRequestPromise(dayTaskOS.put(dayTask));
 				})
 			);
 
@@ -90,7 +90,7 @@ export async function setDaysV1(
 					const request = dayTaskOS.delete(existingDayTask.id);
 					request.addEventListener('error', () => console.error(request));
 					request.addEventListener('success', () => console.log(request));
-					return request;
+					return getIdbRequestPromise(request);
 				})
 			);
 
@@ -101,28 +101,26 @@ export async function setDaysV1(
 					const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
 
 					console.log('updating', existingDayTask);
-					return dayTaskOS.put({
+					return getIdbRequestPromise(dayTaskOS.put({
 						...existingDayTask,
 						sortIndex: dayInfo.tasks.indexOf(taskId),
-					});
+					}));
 				})
 			);
 		} else {
 			// Create a new day
-			requests.push(
-				dayOS.put({
-					year,
-					month,
-					day,
-					note: dayInfo.note,
-				})
-			);
+			requests.push(addDayInternal(dayOS, {
+				year,
+				month,
+				day,
+				note: dayInfo.note,
+			}));
 		}
 	}
 
 	// TODO: Remove any days not in the data
 
-	await Promise.all(requests.map(getIdbRequestPromise));
+	await Promise.all(requests);
 }
 
 
