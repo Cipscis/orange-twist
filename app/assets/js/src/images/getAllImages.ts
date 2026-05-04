@@ -1,4 +1,4 @@
-import { getEntries } from 'utils/indexedDB';
+import { getEntries } from 'utils';
 
 import { adapterV1 } from 'database';
 import { getDatabase, getDatabaseVersion } from 'database/utils';

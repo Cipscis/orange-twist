@@ -1,6 +1,4 @@
-import {
-	getEntries,
-} from 'utils/indexedDB';
+import { getEntries } from 'utils';
 
 import { ObjectStoreName } from 'database/metadata';
 import { getDatabase, getDatabaseVersion } from 'database/utils';

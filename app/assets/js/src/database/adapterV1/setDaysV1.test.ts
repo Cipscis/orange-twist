@@ -5,14 +5,16 @@ import {
 	test,
 } from '@jest/globals';
 
+import { getIdbRequestPromise } from 'utils';
+
 import { getDatabase } from '../utils';
 import { createTestData } from '../test-utils';
+import { ObjectStoreName } from '../metadata';
+import { getDayTasksInternal } from '../internal';
+
 import { getDays } from '../getDays';
 
 import { setDaysV1 } from './setDaysV1';
-import { ObjectStoreName } from 'database/metadata';
-import { getIdbRequestPromise } from 'utils/indexedDB';
-import { getDayTasksInternal } from 'database/internal';
 
 describe('setDaysV1', () => {
 	beforeEach(() => createTestData());

@@ -1,7 +1,7 @@
-import { IndexName, type ObjectStoreName } from 'database/metadata';
-import type { DatabaseData } from 'database/types';
-import { sortBySortIndex } from 'utils';
-import { getIdbRequestPromise } from 'utils/indexedDB';
+import { getIdbRequestPromise, sortBySortIndex } from 'utils';
+
+import { IndexName, type ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
 
 export async function getDayTasksForDayInternal(
 	dayTaskOS: IDBObjectStore,

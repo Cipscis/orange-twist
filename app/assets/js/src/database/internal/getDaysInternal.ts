@@ -1,7 +1,7 @@
-import { getIdbRequestPromise } from 'utils/indexedDB';
+import { getIdbRequestPromise } from 'utils';
 
-import type { ObjectStoreName } from 'database/metadata';
-import type { DatabaseData } from 'database/types';
+import type { ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
 
 /**
  * **Important** Intended for internal use within the database API only.

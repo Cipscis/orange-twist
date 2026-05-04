@@ -1,4 +1,4 @@
-import { getDbDump } from 'utils/indexedDB';
+import { getDbDump } from 'utils';
 import { isLegacyExportData, type TaggedLegacyExportData } from 'database/types';
 import { tagLegacyExportData } from 'data/shared/migration/tagLegacyExportData';
 

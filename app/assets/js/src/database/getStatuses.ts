@@ -1,6 +1,4 @@
-import {
-	getIdbRequestPromise,
-} from 'utils/indexedDB';
+import { getIdbRequestPromise } from 'utils';
 
 import { getDatabase } from './utils';
 import type { DatabaseData } from './types';
