@@ -180,7 +180,70 @@ describe('setDaysV1', () => {
 		]);
 	});
 
-	test.todo('updates exists days\' day tasks');
+	test('updates exists days\' day tasks', async () => {
+		await setDaysV1([
+			['2026-04-26', {
+				name: '2026-04-26',
+				note: 'Test note 0 updated',
+				tasks: [],
+			}],
+			['2026-04-27', {
+				name: '2026-04-27',
+				note: 'Test note 1 updated',
+				tasks: [1, 0],
+			}],
+			['2026-01-01', {
+				name: '2026-01-01',
+				note: 'Test note 2 updated',
+				tasks: [0, 2],
+			}],
+		]);
+
+		const db = await getDatabase();
+		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
+		const dayTasksOS = readTransaction.objectStore(ObjectStoreName.DAY_TASK);
+		const dayTasks = await getDayTasksInternal(dayTasksOS);
+		expect(dayTasks).toEqual([
+			{
+				id: 2,
+				day: 1,
+				task: 1,
+				note: '',
+				summary: null,
+				status: 0,
+				sortIndex: 0,
+			},
+			{
+				id: 4,
+				day: 2,
+				task: 0,
+				note: '',
+				summary: null,
+				status: 0,
+				sortIndex: 0,
+			},
+			{
+				id: 3,
+				day: 1,
+				task: 0,
+				note: '',
+				summary: null,
+				status: 0,
+				sortIndex: 1,
+			},
+			{
+				id: 5,
+				day: 2,
+				task: 2,
+				note: '',
+				summary: null,
+				status: 0,
+				sortIndex: 1,
+			},
+		]);
+	});
+
+	test.todo('throws an error if a day is given a non-existent task');
 
 	test.todo('removes removed days');
 
