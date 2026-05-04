@@ -135,7 +135,54 @@ describe('setDaysV1', () => {
 		]);
 	});
 
-	test.todo('updates existing days and their day tasks');
+	test('updates existing days', async () => {
+		await setDaysV1([
+			['2026-04-26', {
+				name: '2026-04-26',
+				note: 'Test note 0 updated',
+				tasks: [1, 0],
+			}],
+			['2026-04-27', {
+				name: '2026-04-27',
+				note: 'Test note 1 updated',
+				tasks: [],
+			}],
+			['2026-01-01', {
+				name: '2026-01-01',
+				note: 'Test note 2 updated',
+				tasks: [],
+			}],
+		]);
 
-	test.todo('removes removed days and their day tasks');
+		const days = await getDays();
+		expect(days).toEqual([
+			{
+				id: 2,
+				year: 2026,
+				month: 1,
+				day: 1,
+				note: 'Test note 2 updated',
+			},
+			{
+				id: 0,
+				year: 2026,
+				month: 4,
+				day: 26,
+				note: 'Test note 0 updated',
+			},
+			{
+				id: 1,
+				year: 2026,
+				month: 4,
+				day: 27,
+				note: 'Test note 1 updated',
+			},
+		]);
+	});
+
+	test.todo('updates exists days\' day tasks');
+
+	test.todo('removes removed days');
+
+	test.todo('removes existing days\' day tasks');
 });
