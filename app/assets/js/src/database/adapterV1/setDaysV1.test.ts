@@ -210,7 +210,7 @@ describe('setDaysV1', () => {
 				task: 1,
 				note: '',
 				summary: null,
-				status: 0,
+				status: 1,
 				sortIndex: 0,
 			},
 			{
@@ -219,7 +219,7 @@ describe('setDaysV1', () => {
 				task: 0,
 				note: '',
 				summary: null,
-				status: 0,
+				status: 1,
 				sortIndex: 0,
 			},
 			{
@@ -228,7 +228,7 @@ describe('setDaysV1', () => {
 				task: 0,
 				note: '',
 				summary: null,
-				status: 0,
+				status: 1,
 				sortIndex: 1,
 			},
 			{
@@ -237,13 +237,33 @@ describe('setDaysV1', () => {
 				task: 2,
 				note: '',
 				summary: null,
-				status: 0,
+				status: 1,
 				sortIndex: 1,
 			},
 		]);
 	});
 
-	test.todo('throws an error if a day is given a non-existent task');
+	test('throws an error if a day is given a non-existent task', async () => {
+		const promise = setDaysV1([
+			['2026-04-26', {
+				name: '2026-04-26',
+				note: 'Test note 0',
+				tasks: [-1],
+			}],
+			['2026-04-27', {
+				name: '2026-04-27',
+				note: 'Test note 1',
+				tasks: [],
+			}],
+			['2026-01-01', {
+				name: '2026-01-01',
+				note: 'Test note 2',
+				tasks: [],
+			}],
+		]);
+
+		await expect(promise).rejects.toBeInstanceOf(Error);
+	});
 
 	test.todo('removes removed days');
 
