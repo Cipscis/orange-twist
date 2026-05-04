@@ -51,79 +51,13 @@ export async function setDaysV1(
 			continue;
 		}
 
-		// Update an existing day's note
-		requests.push(
-			updateDayInternal(dayOS, {
-				...existingDay,
-				note: dayInfo.note,
-			})
-		);
-
-		const existingDayTasks = sortBySortIndex(
-			await getDayTasksForDayInternal(dayTaskOS, existingDay.id)
-		);
-
-		const existingDayTasksByTaskId = new Map(
-			existingDayTasks.map((dayTask) => ([
-				dayTask.task,
-				dayTask,
-			]))
-		);
-
-		const preDayTaskTaskIds = new Set(
-			existingDayTasks.map(({ task }) => task)
-		);
-		const postDayTaskTaskIds = new Set(dayInfo.tasks);
-
-		const removedDayTaskTaskIds = preDayTaskTaskIds.difference(postDayTaskTaskIds);
-		const addedDayTaskTaskIds = postDayTaskTaskIds.difference(preDayTaskTaskIds);
-		const remainingDayTaskTaskIds = preDayTaskTaskIds.intersection(postDayTaskTaskIds);
-
-		// Add any new day tasks
-		requests.push(
-			...Array.from(addedDayTaskTaskIds).map((taskId) => {
-				const dayTask = {
-					day: existingDay.id,
-					task: taskId,
-					// TODO - Make sure this is the right initial status
-					status: 0,
-					note: '',
-					summary: null,
-					sortIndex: dayInfo.tasks.indexOf(taskId),
-				} satisfies Omit<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id'>;
-
-				console.log('adding', dayTask);
-				return getIdbRequestPromise(dayTaskOS.put(dayTask));
-			})
-		);
-
-		// Remove any missing day tasks
-		requests.push(
-			...Array.from(removedDayTaskTaskIds).map((taskId) => {
-				// TODO: This non-null assertion isn't safe
-				const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
-
-				console.log('deleting', existingDayTask.id);
-				const request = dayTaskOS.delete(existingDayTask.id);
-				request.addEventListener('error', () => console.error(request));
-				request.addEventListener('success', () => console.log(request));
-				return getIdbRequestPromise(request);
-			})
-		);
-
-		// Update sort index of remaining day tasks
-		requests.push(
-			...Array.from(remainingDayTaskTaskIds).map((taskId) => {
-				// TODO: This non-null assertion isn't safe
-				const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
-
-				console.log('updating', existingDayTask);
-				return getIdbRequestPromise(dayTaskOS.put({
-					...existingDayTask,
-					sortIndex: dayInfo.tasks.indexOf(taskId),
-				}));
-			})
-		);
+		requests.push(updateExistingDay({
+			dayOS,
+			dayTaskOS,
+			taskOS,
+			dayInfo,
+			existingDay,
+		}));
 	}
 
 	// TODO: Remove any days not in the data
@@ -171,6 +105,93 @@ async function addNewDay(options: {
 	}
 
 	return Promise.all(dayTaskRequests);
+}
+
+async function updateExistingDay(options: {
+	dayOS: IDBObjectStore;
+	dayTaskOS: IDBObjectStore;
+	taskOS: IDBObjectStore;
+	dayInfo: DayInfo;
+	existingDay: DatabaseData[typeof ObjectStoreName.DAY][number];
+}) {
+	const {
+		dayOS,
+		dayTaskOS,
+		taskOS,
+		dayInfo,
+		existingDay,
+	} = options;
+
+	const promises: Promise<unknown>[] = [];
+
+	// Update an existing day's note
+	promises.push(
+		updateDayInternal(dayOS, {
+			...existingDay,
+			note: dayInfo.note,
+		})
+	);
+
+	const existingDayTasks = sortBySortIndex(
+		await getDayTasksForDayInternal(dayTaskOS, existingDay.id)
+	);
+
+	const existingDayTasksByTaskId = new Map(
+		existingDayTasks.map((dayTask) => ([
+			dayTask.task,
+			dayTask,
+		]))
+	);
+
+	const preDayTaskTaskIds = new Set(
+		existingDayTasks.map(({ task }) => task)
+	);
+	const postDayTaskTaskIds = new Set(dayInfo.tasks);
+
+	const removedDayTaskTaskIds = preDayTaskTaskIds.difference(postDayTaskTaskIds);
+	const addedDayTaskTaskIds = postDayTaskTaskIds.difference(preDayTaskTaskIds);
+	const remainingDayTaskTaskIds = preDayTaskTaskIds.intersection(postDayTaskTaskIds);
+
+	// Add any new day tasks
+	promises.push(
+		...Array.from(addedDayTaskTaskIds).map((taskId) => {
+			return addDayTaskInternal(dayTaskOS, dayOS, taskOS, {
+				day: existingDay.id,
+				task: taskId,
+				sortIndex: dayInfo.tasks.indexOf(taskId),
+			});
+		})
+	);
+
+	// Remove any missing day tasks
+	promises.push(
+		...Array.from(removedDayTaskTaskIds).map((taskId) => {
+			// TODO: This non-null assertion isn't safe
+			const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
+
+			console.log('deleting', existingDayTask.id);
+			const request = dayTaskOS.delete(existingDayTask.id);
+			request.addEventListener('error', () => console.error(request));
+			request.addEventListener('success', () => console.log(request));
+			return getIdbRequestPromise(request);
+		})
+	);
+
+	// Update sort index of remaining day tasks
+	promises.push(
+		...Array.from(remainingDayTaskTaskIds).map((taskId) => {
+			// TODO: This non-null assertion isn't safe
+			const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
+
+			console.log('updating', existingDayTask);
+			return getIdbRequestPromise(dayTaskOS.put({
+				...existingDayTask,
+				sortIndex: dayInfo.tasks.indexOf(taskId),
+			}));
+		})
+	);
+
+	return Promise.all(promises);
 }
 
 // TODO: This function is copied from updateDataV1_0_0
