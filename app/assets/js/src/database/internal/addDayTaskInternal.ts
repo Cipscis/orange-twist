@@ -1,5 +1,8 @@
-import type { DefaultsFor, ExpandType } from 'utils';
-import { getIdbRequestPromise } from 'utils/indexedDB';
+import {
+	getIdbRequestPromise,
+	type DefaultsFor,
+	type ExpandType,
+} from 'utils';
 
 import type { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';

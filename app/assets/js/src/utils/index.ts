@@ -7,7 +7,13 @@ export {
 	useRegister,
 } from './register';
 
-export { doDatabaseTransaction } from './indexedDB';
+export {
+	doDatabaseTransaction,
+	getDbDump,
+	getEntries,
+	getIdbRequestPromise,
+	getIterableCursor,
+} from './indexedDB';
 
 export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 export { chooseFile } from './chooseFile';

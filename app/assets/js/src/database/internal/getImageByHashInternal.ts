@@ -1,7 +1,7 @@
-import { getIdbRequestPromise } from 'utils/indexedDB';
+import { getIdbRequestPromise } from 'utils';
 
-import { IndexName, type ObjectStoreName } from 'database/metadata';
-import type { DatabaseData } from 'database/types';
+import { IndexName, type ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
 
 export async function getImageByHashInternal(
 	imageOS: IDBObjectStore,

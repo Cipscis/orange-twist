@@ -1,7 +1,6 @@
 import type { DayInfo } from 'data/days';
 
-import { sortBySortIndex } from 'utils';
-import { getIdbRequestPromise } from 'utils/indexedDB';
+import { getIdbRequestPromise, sortBySortIndex } from 'utils';
 
 import { getDatabase } from '../utils';
 import { IndexName, ObjectStoreName } from '../metadata';

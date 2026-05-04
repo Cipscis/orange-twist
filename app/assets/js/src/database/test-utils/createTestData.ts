@@ -1,6 +1,6 @@
-import { clearDatabase } from './clearDatabase';
+import { getIdbRequestPromise } from 'utils';
 
-import { getIdbRequestPromise } from 'utils/indexedDB';
+import { clearDatabase } from './clearDatabase';
 
 import { getDatabase } from '../utils';
 import type { DatabaseData } from '../types';

@@ -1,6 +1,8 @@
-import type { ExpandType } from 'utils';
-
-import { getIdbRequestPromise, getIterableCursor } from 'utils/indexedDB';
+import {
+	getIdbRequestPromise,
+	getIterableCursor,
+	type ExpandType,
+} from 'utils';
 
 import { IndexName, type ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';

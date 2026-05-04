@@ -1,6 +1,7 @@
-import type { ObjectStoreName } from 'database/metadata';
-import type { DatabaseData } from 'database/types';
-import { getIdbRequestPromise } from 'utils/indexedDB';
+import { getIdbRequestPromise } from 'utils';
+
+import type { ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
 
 export async function getImagesInternal(imageOS: IDBObjectStore): Promise<
 	DatabaseData[typeof ObjectStoreName.IMAGE][number][]
