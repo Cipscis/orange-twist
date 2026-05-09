@@ -29,7 +29,6 @@ export const dbV1: PersistApi = {
 
 		// TODO: Implement v2 handling
 		if (key === StorageKey.DAYS) {
-			// TODO: Find a type-safe way of doing this
 			return adapterV1.setDays(
 				data as [string, DayInfo][]
 			);

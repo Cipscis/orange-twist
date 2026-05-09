@@ -272,5 +272,19 @@ describe('setDaysV1', () => {
 		expect(days).toEqual([]);
 	});
 
-	test.todo('removes existing days\' day tasks');
+	test('removes existing days\' day tasks', async () => {
+		await setDaysV1([
+			['2026-04-27', {
+				name: '2026-04-27',
+				note: 'Test note 1',
+				tasks: [],
+			}],
+		]);
+
+		const db = await getDatabase();
+		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
+		const dayTasksOS = readTransaction.objectStore(ObjectStoreName.DAY_TASK);
+		const dayTasks = await getDayTasksInternal(dayTasksOS);
+		expect(dayTasks).toEqual([]);
+	});
 });
