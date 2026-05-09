@@ -9,6 +9,7 @@ import {
 	addDayInternal,
 	addDayTaskInternal,
 	getDayTasksForDayInternal,
+	removeDayInternal,
 	updateDayInternal,
 } from '../internal';
 
@@ -73,10 +74,11 @@ export async function setDaysV1(
 	const removedDayIds = existingDayIds.difference(newDayIds);
 
 	for (const dayId of removedDayIds) {
-		promises.push(removeDay({
+		promises.push(removeDayInternal(
 			dayOS,
+			dayTaskOS,
 			dayId,
-		}));
+		));
 	}
 
 	await Promise.all(promises);
@@ -209,24 +211,6 @@ async function updateExistingDay(options: {
 	);
 
 	return Promise.all(promises);
-}
-
-async function removeDay(options: {
-	dayOS: IDBObjectStore;
-	dayId: IDBValidKey;
-}): Promise<void> {
-	const {
-		dayOS,
-		dayId,
-	} = options;
-
-	const removePromise = getIdbRequestPromise(
-		dayOS.delete(dayId)
-	);
-
-	// TODO: Remove all day tasks referencing this day
-
-	return removePromise;
 }
 
 // TODO: This function is copied from updateDataV1_0_0
