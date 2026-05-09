@@ -265,7 +265,12 @@ describe('setDaysV1', () => {
 		await expect(promise).rejects.toBeInstanceOf(Error);
 	});
 
-	test.todo('removes removed days');
+	test('removes removed days', async () => {
+		await setDaysV1([]);
+
+		const days = await getDays();
+		expect(days).toEqual([]);
+	});
 
 	test.todo('removes existing days\' day tasks');
 });

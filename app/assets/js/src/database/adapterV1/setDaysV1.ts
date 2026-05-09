@@ -27,7 +27,8 @@ export async function setDaysV1(
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
-	const requests: (Promise<unknown>)[] = [];
+	const promises: (Promise<unknown>)[] = [];
+	const newDayIds = new Set<number>();
 
 	for (const [dayName, dayInfo] of days) {
 		const [year, month, day] = getDayNameParts(dayName);
@@ -37,36 +38,54 @@ export async function setDaysV1(
 			dayByDate.get(indexKey) as IDBRequest<DatabaseData[typeof ObjectStoreName.DAY][number]>
 		);
 
-		if (!existingDay) {
-			// Create a new day
-			requests.push(addNewDay({
+		if (existingDay) {
+			newDayIds.add(existingDay.id);
+			// Update an existing day
+			promises.push(updateExistingDay({
 				dayOS,
 				dayTaskOS,
 				taskOS,
 				dayInfo,
-				year,
-				month,
-				day,
+				existingDay,
 			}));
 			continue;
 		}
 
-		requests.push(updateExistingDay({
+		// Create a new day
+		const addNewDayPromise = addNewDay({
 			dayOS,
 			dayTaskOS,
 			taskOS,
 			dayInfo,
-			existingDay,
+			year,
+			month,
+			day,
+		});
+		addNewDayPromise.then((newDayId) => newDayIds.add(newDayId));
+		promises.push(addNewDayPromise);
+	}
+
+	// Remove any days not in the data
+	const existingDayIds = new Set(await getIdbRequestPromise(dayOS.getAllKeys()));
+	// Wait for `newDayIds` to be fully populated
+	await Promise.all(promises);
+
+	const removedDayIds = existingDayIds.difference(newDayIds);
+
+	for (const dayId of removedDayIds) {
+		promises.push(removeDay({
+			dayOS,
+			dayId,
 		}));
 	}
 
-	// TODO: Remove any days not in the data
-
-	await Promise.all(requests);
+	await Promise.all(promises);
 }
 
 /**
  * Add a new day, and all its day tasks.
+ *
+ * @returns The ID of the newly added day.
  */
 async function addNewDay(options: {
 	dayOS: IDBObjectStore;
@@ -76,7 +95,7 @@ async function addNewDay(options: {
 	year: number;
 	month: number;
 	day: number;
-}) {
+}): Promise<number> {
 	const {
 		dayOS,
 		dayTaskOS,
@@ -104,7 +123,9 @@ async function addNewDay(options: {
 		}));
 	}
 
-	return Promise.all(dayTaskRequests);
+	await Promise.all(dayTaskRequests);
+
+	return newDayId;
 }
 
 async function updateExistingDay(options: {
@@ -169,10 +190,7 @@ async function updateExistingDay(options: {
 			// TODO: This non-null assertion isn't safe
 			const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
 
-			console.log('deleting', existingDayTask.id);
 			const request = dayTaskOS.delete(existingDayTask.id);
-			request.addEventListener('error', () => console.error(request));
-			request.addEventListener('success', () => console.log(request));
 			return getIdbRequestPromise(request);
 		})
 	);
@@ -183,7 +201,6 @@ async function updateExistingDay(options: {
 			// TODO: This non-null assertion isn't safe
 			const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
 
-			console.log('updating', existingDayTask);
 			return getIdbRequestPromise(dayTaskOS.put({
 				...existingDayTask,
 				sortIndex: dayInfo.tasks.indexOf(taskId),
@@ -192,6 +209,24 @@ async function updateExistingDay(options: {
 	);
 
 	return Promise.all(promises);
+}
+
+async function removeDay(options: {
+	dayOS: IDBObjectStore;
+	dayId: IDBValidKey;
+}): Promise<void> {
+	const {
+		dayOS,
+		dayId,
+	} = options;
+
+	const removePromise = getIdbRequestPromise(
+		dayOS.delete(dayId)
+	);
+
+	// TODO: Remove all day tasks referencing this day
+
+	return removePromise;
 }
 
 // TODO: This function is copied from updateDataV1_0_0
