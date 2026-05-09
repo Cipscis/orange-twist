@@ -1,6 +1,7 @@
 export { getDayInternal } from './getDayInternal';
 export { getDayByDateInternal } from './getDayByDateInternal';
 export { addDayInternal } from './addDayInternal';
+export { removeDayInternal } from './removeDayInternal';
 export { updateDayInternal } from './updateDayInternal';
 export { getDaysInternal } from './getDaysInternal';
 
