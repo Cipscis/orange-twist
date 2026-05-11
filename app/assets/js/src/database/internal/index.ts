@@ -15,6 +15,7 @@ export { getDayTasksInternal } from './getDayTasksInternal';
 export { getDayTasksForDayInternal } from './getDayTasksForDayInternal';
 
 export { getStatusInternal } from './getStatusInternal';
+export { getStatusByNameInternal } from './getStatusByNameInternal';
 
 export { getTemplatesInternal } from './getTemplatesInternal';
 
