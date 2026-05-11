@@ -13,6 +13,8 @@ export { addDayTaskInternal } from './addDayTaskInternal';
 export { getDayTasksInternal } from './getDayTasksInternal';
 export { getDayTasksForDayInternal } from './getDayTasksForDayInternal';
 
+export { getStatusInternal } from './getStatusInternal';
+
 export { getTemplatesInternal } from './getTemplatesInternal';
 
 export { getImageByHashInternal } from './getImageByHashInternal';
