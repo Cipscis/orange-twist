@@ -5,5 +5,7 @@ export const IndexName = {
 	DAY_TASK_TASK: 'task',
 	DAY_TASK_DAY_TASK: 'day_task',
 
+	STATUS_NAME: 'name',
+
 	IMAGE_HASH: 'hash',
 } as const;

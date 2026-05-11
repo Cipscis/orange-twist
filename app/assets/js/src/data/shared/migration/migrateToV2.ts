@@ -23,10 +23,11 @@ export function migrateToV2(db: IDBDatabase): void {
 	dayTaskOS.createIndex(IndexName.DAY_TASK_DAY, 'day');
 	dayTaskOS.createIndex(IndexName.DAY_TASK_TASK, 'task');
 	dayTaskOS.createIndex(IndexName.DAY_TASK_DAY_TASK, ['day', 'task']);
-	db.createObjectStore(ObjectStoreName.STATUS, {
+	const statusOS = db.createObjectStore(ObjectStoreName.STATUS, {
 		keyPath: 'id',
 		autoIncrement: true,
 	});
+	statusOS.createIndex(IndexName.STATUS_NAME, 'name');
 	db.createObjectStore(ObjectStoreName.TEMPLATE, {
 		keyPath: 'id',
 		autoIncrement: true,
