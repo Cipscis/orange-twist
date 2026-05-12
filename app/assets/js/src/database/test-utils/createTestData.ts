@@ -76,7 +76,7 @@ export async function createTestData(): Promise<void> {
 
 	requests.push(statusOS.put({
 		id: 2,
-		name: 'complete',
+		name: 'completed',
 		isComplete: true,
 	} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]));
 

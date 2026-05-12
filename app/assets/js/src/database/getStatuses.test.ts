@@ -30,7 +30,7 @@ describe('getStatuses', () => {
 			},
 			2: {
 				id: 2,
-				name: 'complete',
+				name: 'completed',
 				isComplete: true,
 			},
 		});
