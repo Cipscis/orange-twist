@@ -1,0 +1,63 @@
+import {
+	beforeEach,
+	describe,
+	expect,
+	test,
+} from '@jest/globals';
+
+import { ObjectStoreName } from '../metadata';
+import { createTestData } from '../test-utils';
+import { getDatabase } from '../utils';
+import { updateTaskInternal } from './updateTaskInternal';
+import { getTaskInternal } from './getTaskInternal';
+
+describe('updateTaskInternal', () => {
+	let taskOS: IDBObjectStore;
+	let statusOS: IDBObjectStore;
+
+	beforeEach(async () => {
+		await createTestData();
+
+		const db = await getDatabase();
+		const transaction = db.transaction([
+			ObjectStoreName.TASK,
+			ObjectStoreName.STATUS,
+		], 'readwrite');
+		taskOS = transaction.objectStore(ObjectStoreName.TASK);
+		statusOS = transaction.objectStore(ObjectStoreName.STATUS);
+	});
+
+	test('updates a specified task', async () => {
+		const result = await updateTaskInternal(taskOS, statusOS, {
+			id: 1,
+			name: 'Updated name',
+			status: 2,
+		});
+
+		expect(result).toBeUndefined();
+
+		const updatedTask = await getTaskInternal(taskOS, 1);
+
+		expect(updatedTask).toEqual({
+			id: 1,
+			name: 'Updated name',
+			note: 'Test task 1 note',
+			status: 2,
+			sortIndex: 2,
+		});
+	});
+
+	test('throws an error if the task doesn\'t exist', async () => {
+		await expect(updateTaskInternal(taskOS, statusOS, {
+			id: -1,
+			name: 'Updated name',
+		})).rejects.toBeInstanceOf(Error);
+	});
+
+	test('throws an error if the task is given a status that doesn\'t exist', async () => {
+		await expect(updateTaskInternal(taskOS, statusOS, {
+			id: 1,
+			status: -1,
+		})).rejects.toBeInstanceOf(Error);
+	});
+});
