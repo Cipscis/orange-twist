@@ -68,9 +68,89 @@ describe('setTasksV1', () => {
 		]);
 	});
 
-	test.todo('updates existing tasks');
+	test('updates existing tasks', async () => {
+		await setTasksV1([
+			[0, {
+				id: 0,
+				name: 'Test task 0 updated',
+				note: 'Test task 0 note updated',
+				status: 'completed',
+				sortIndex: 0,
+			}],
+			[1, {
+				id: 1,
+				name: 'Test task 1 updated',
+				note: 'Test task 1 note updated',
+				status: 'completed',
+				sortIndex: 1,
+			}],
+			[2, {
+				id: 2,
+				name: 'Test task 2 updated',
+				note: 'Test task 2 note updated',
+				status: 'completed',
+				sortIndex: 2,
+			}],
+		]);
 
-	test.todo('throws an error if a task is given a non-existent status');
+		const db = await getDatabase();
+		const transaction = db.transaction(ObjectStoreName.TASK, 'readonly');
+		const taskOS = transaction.objectStore(ObjectStoreName.TASK);
+
+		const tasks = await getTasksInternal(taskOS);
+		expect(tasks).toEqual([
+			{
+				id: 0,
+				name: 'Test task 0 updated',
+				note: 'Test task 0 note updated',
+				status: 2,
+				sortIndex: 0,
+			},
+			{
+				id: 1,
+				name: 'Test task 1 updated',
+				note: 'Test task 1 note updated',
+				status: 2,
+				sortIndex: 1,
+			},
+			{
+				id: 2,
+				name: 'Test task 2 updated',
+				note: 'Test task 2 note updated',
+				status: 2,
+				sortIndex: 2,
+			},
+		]);
+	});
+
+	test('throws an error if a task is given a non-existent status', async () => {
+		const promise = setTasksV1([
+			[0, {
+				id: 0,
+				name: 'Test task 0 updated',
+				note: 'Test task 0 note updated',
+				status: 'completed',
+				sortIndex: 0,
+			}],
+			[1, {
+				id: 1,
+				name: 'Test task 1 updated',
+				note: 'Test task 1 note updated',
+				status: 'completed',
+				sortIndex: 1,
+			}],
+			[2, {
+				id: 2,
+				name: 'Test task 2 updated',
+				note: 'Test task 2 note updated',
+				/* @ts-expect-error Testing invalid status */
+				status: 'no-status-exists',
+				sortIndex: 2,
+			}],
+		]);
+
+		await expect(promise).rejects.toBeInstanceOf(Error);
+	});
 
 	test.todo('removes removed tasks');
 
