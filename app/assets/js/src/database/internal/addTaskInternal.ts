@@ -9,7 +9,7 @@ export async function addTaskInternal(
 	taskOS: IDBObjectStore,
 	statusOS: IDBObjectStore,
 	task: WithOptional<DatabaseData[typeof ObjectStoreName.TASK][number], 'id'>
-): Promise<DatabaseData[typeof ObjectStoreName.TASK][number]['id'] | void> {
+): Promise<DatabaseData[typeof ObjectStoreName.TASK][number]['id']> {
 	if (typeof task.id !== 'undefined') {
 		const existingTask = await getTaskInternal(taskOS, task.id);
 		if (existingTask) {
