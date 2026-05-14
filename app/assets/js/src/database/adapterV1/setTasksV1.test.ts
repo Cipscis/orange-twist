@@ -10,9 +10,9 @@ import { getIdbRequestPromise } from 'utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { createTestData } from '../test-utils';
+import { getDayTasksInternal, getTasksInternal } from '../internal';
 
 import { setTasksV1 } from './setTasksV1';
-import { getTasksInternal } from 'database/internal';
 
 describe('setTasksV1', () => {
 	beforeEach(() => createTestData());
@@ -20,10 +20,7 @@ describe('setTasksV1', () => {
 	test('adds new tasks', async () => {
 		// Start from a blank slate - remove all days and day tasks
 		const db = await getDatabase();
-		const writeTransaction = db.transaction(
-			[ObjectStoreName.TASK],
-			'readwrite'
-		);
+		const writeTransaction = db.transaction(ObjectStoreName.TASK, 'readwrite');
 		const writeTaskOS = writeTransaction.objectStore(ObjectStoreName.TASK);
 		await getIdbRequestPromise(writeTaskOS.clear());
 
@@ -44,10 +41,9 @@ describe('setTasksV1', () => {
 			}],
 		]);
 
-		const readTransaction = db.transaction(
-			[ObjectStoreName.TASK],
-			'readonly'
-		);
+		const readTransaction = db.transaction([
+			ObjectStoreName.TASK,
+		], 'readonly');
 		const readTaskOS = readTransaction.objectStore(ObjectStoreName.TASK);
 		const tasks = await getTasksInternal(readTaskOS);
 		expect(tasks).toEqual([
@@ -152,7 +148,25 @@ describe('setTasksV1', () => {
 		await expect(promise).rejects.toBeInstanceOf(Error);
 	});
 
-	test.todo('removes removed tasks');
+	test('removes removed tasks', async () => {
+		await setTasksV1([]);
 
-	test.todo('removes existing tasks\' day tasks');
+		const db = await getDatabase();
+		const transaction = db.transaction(ObjectStoreName.TASK, 'readonly');
+		const taskOS = transaction.objectStore(ObjectStoreName.TASK);
+
+		const tasks = await getTasksInternal(taskOS);
+		expect(tasks).toEqual([]);
+	});
+
+	test('removes removed tasks\' day tasks', async () => {
+		await setTasksV1([]);
+
+		const db = await getDatabase();
+		const transaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
+		const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
+
+		const dayTasks = await getDayTasksInternal(dayTaskOS);
+		expect(dayTasks).toEqual([]);
+	});
 });
