@@ -7,6 +7,7 @@ export { getDaysInternal } from './getDaysInternal';
 
 export { getTaskInternal } from './getTaskInternal';
 export { addTaskInternal } from './addTaskInternal';
+export { removeTaskInternal } from './removeTaskInternal';
 export { updateTaskInternal } from './updateTaskInternal';
 export { getTasksInternal } from './getTasksInternal';
 
