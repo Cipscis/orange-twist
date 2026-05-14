@@ -5,6 +5,7 @@ import {
 } from 'utils';
 
 import type { DayInfo } from 'data/days';
+import type { DayTaskInfo } from 'data/dayTasks';
 import type { TaskInfo } from 'data/tasks';
 
 import { adapterV1 } from 'database';
@@ -32,6 +33,10 @@ export const dbV1: PersistApi = {
 		if (key === StorageKey.DAYS) {
 			return adapterV1.setDays(
 				data as [string, DayInfo][]
+			);
+		} else if (key === StorageKey.DAY_TASKS) {
+			return adapterV1.setDayTasks(
+				data as [string, DayTaskInfo][]
 			);
 		} else if (key === StorageKey.TASKS) {
 			return adapterV1.setTasks(

@@ -1,0 +1,81 @@
+import type { DayTaskInfo } from 'data/dayTasks';
+import { decodeDayTaskKey } from 'data/dayTasks/util';
+import {
+	getDayByDateInternal,
+	getDayTaskForDayAndTaskInternal,
+	getDayTasksInternal,
+	getTaskInternal,
+} from 'database/internal';
+import { IndexName, ObjectStoreName } from 'database/metadata';
+import { getDatabase } from 'database/utils';
+
+export async function setDayTasksV1(
+	dayTasks: readonly (readonly [string, DayTaskInfo])[]
+): Promise<void> {
+	const db = await getDatabase();
+	const transaction = db.transaction([
+		ObjectStoreName.DAY_TASK,
+		ObjectStoreName.DAY,
+		ObjectStoreName.TASK,
+		ObjectStoreName.STATUS,
+	], 'readwrite');
+
+	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
+	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
+	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
+	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
+
+	const promises: (Promise<unknown>)[] = [];
+
+	const priorDayTaskIds = new Set((await getDayTasksInternal(dayTaskOS)).map(({ id }) => id));
+	// TODO: Collect IDs of day tasks that are added or updated, to find difference with prior day task IDs
+
+	for (const [dayTaskKey, dayTask] of dayTasks) {
+		const { dayName, taskId } = decodeDayTaskKey(dayTaskKey);
+
+		const dayDate = getDayNameParts(dayName);
+		const day = await getDayByDateInternal(dayOS, {
+			year: dayDate[0],
+			month: dayDate[1],
+			day: dayDate[2],
+		});
+
+		if (!day) {
+			throw new Error(`Cannot add day task, no day exists with name ${dayName}`);
+		}
+
+		const task = await getTaskInternal(taskOS, taskId);
+		if (!task) {
+			throw new Error(`Cannot add day task, no task exists with ID ${taskId}`);
+		}
+
+		const existingDayTask = await getDayTaskForDayAndTaskInternal(dayTaskOS, {
+			day: day.id,
+			task: task.id,
+		});
+
+		if (!existingDayTask) {
+			// TODO: Add new day tasks
+			continue;
+		}
+
+		// TODO: Update existing day tasks
+	}
+
+	// TODO: Remove removed day tasks
+
+	await Promise.all(promises);
+}
+
+// TODO: This function is copied from updateDataV1_0_0
+/**
+ * Convert a legacy day name into numeric parts. For example, `'2026-04-12'` becomes `[2026, 4, 12]`.
+ */
+function getDayNameParts(dayName: string): [number, number, number] {
+	const parts = dayName.split('-');
+	const year = Number(parts[0]);
+	const month = Number(parts[1]);
+	const day = Number(parts[2]);
+
+	return [year, month, day];
+}
