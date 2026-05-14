@@ -1,14 +1,13 @@
 import type { TaskInfo } from 'data/tasks';
 
-import { getIdbRequestPromise } from 'utils';
-
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
-import type { DatabaseData } from '../types';
 import {
 	addTaskInternal,
 	getStatusByNameInternal,
 	getTaskInternal,
+	getTasksInternal,
+	removeTaskInternal,
 	updateTaskInternal,
 } from '../internal';
 
@@ -18,13 +17,18 @@ export async function setTasksV1(
 	const db = await getDatabase();
 	const transaction = db.transaction([
 		ObjectStoreName.TASK,
+		ObjectStoreName.DAY_TASK,
 		ObjectStoreName.STATUS,
 	], 'readwrite');
 
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
+	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 	const promises: (Promise<unknown>)[] = [];
+
+	const priorTaskIds = new Set((await getTasksInternal(taskOS)).map(({ id }) => id));
+	const newTaskIds = new Set(tasks.map(([id]) => id));
 
 	for (const [, taskInfo] of tasks) {
 		const existingTask = await getTaskInternal(taskOS, taskInfo.id);
@@ -47,7 +51,12 @@ export async function setTasksV1(
 		promises.push(addNewTaskPromise);
 	}
 
-	// TODO: Remove any tasks not in the data
+	// Remove any tasks not in the data
+	const removedTaskIds = priorTaskIds.difference(newTaskIds);
+
+	for (const id of removedTaskIds) {
+		promises.push(removeTaskInternal(taskOS, dayTaskOS, id));
+	}
 
 	await Promise.all(promises);
 }
