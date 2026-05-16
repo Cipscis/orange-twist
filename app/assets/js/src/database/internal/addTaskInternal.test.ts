@@ -22,10 +22,8 @@ describe('addTaskInternal', () => {
 			ObjectStoreName.TASK,
 			ObjectStoreName.STATUS,
 		], 'readwrite');
-		const writeTaskOS = writeTransaction.objectStore(ObjectStoreName.TASK);
-		const writeStatusOS = writeTransaction.objectStore(ObjectStoreName.STATUS);
 
-		const writeResult = await addTaskInternal(writeTaskOS, writeStatusOS, {
+		const writeResult = await addTaskInternal(writeTransaction, {
 			name: 'Test task',
 			note: 'Test task note',
 			status: 1,
@@ -57,11 +55,9 @@ describe('addTaskInternal', () => {
 			ObjectStoreName.TASK,
 			ObjectStoreName.STATUS,
 		], 'readwrite');
-		const taskOS = transaction.objectStore(ObjectStoreName.TASK);
-		const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 		await expect(
-			() => addTaskInternal(taskOS, statusOS, {
+			() => addTaskInternal(transaction, {
 				name: 'Test task',
 				note: 'Test task note',
 				status: -1,
@@ -76,11 +72,9 @@ describe('addTaskInternal', () => {
 			ObjectStoreName.TASK,
 			ObjectStoreName.STATUS,
 		], 'readwrite');
-		const taskOS = transaction.objectStore(ObjectStoreName.TASK);
-		const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 		// Add a task first
-		await addTaskInternal(taskOS, statusOS, {
+		await addTaskInternal(transaction, {
 			id: 3,
 			name: 'Test task',
 			note: 'Test task note',
@@ -90,7 +84,7 @@ describe('addTaskInternal', () => {
 
 		// Then try adding it again
 		await expect(
-			() => addTaskInternal(taskOS, statusOS, {
+			() => addTaskInternal(transaction, {
 				id: 3,
 				name: 'Test task',
 				note: 'Test task note',
