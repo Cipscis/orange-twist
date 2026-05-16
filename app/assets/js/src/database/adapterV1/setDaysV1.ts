@@ -57,6 +57,7 @@ export async function setDaysV1(
 
 		// Create a new day
 		const addNewDayPromise = addNewDay({
+			transaction,
 			dayOS,
 			dayTaskOS,
 			taskOS,
@@ -94,6 +95,7 @@ export async function setDaysV1(
  * @returns The ID of the newly added day.
  */
 async function addNewDay(options: {
+	transaction: IDBTransaction;
 	dayOS: IDBObjectStore;
 	dayTaskOS: IDBObjectStore;
 	taskOS: IDBObjectStore;
@@ -104,6 +106,7 @@ async function addNewDay(options: {
 	day: number;
 }): Promise<number> {
 	const {
+		transaction,
 		dayOS,
 		dayTaskOS,
 		taskOS,
@@ -114,7 +117,7 @@ async function addNewDay(options: {
 		day,
 	} = options;
 
-	const newDayId = await addDayInternal(dayOS, {
+	const newDayId = await addDayInternal(transaction, {
 		year,
 		month,
 		day,

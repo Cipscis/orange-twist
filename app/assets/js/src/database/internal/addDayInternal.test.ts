@@ -19,9 +19,8 @@ describe('addDayInternal', () => {
 	test('inserts a new day into the database, and returns its ID', async () => {
 		const db = await getDatabase(true);
 		const writeTransaction = db.transaction(ObjectStoreName.DAY, 'readwrite');
-		const writeDayOS = writeTransaction.objectStore(ObjectStoreName.DAY);
 
-		const writeResult = await addDayInternal(writeDayOS, {
+		const writeResult = await addDayInternal(writeTransaction, {
 			year: 2026,
 			month: 5,
 			day: 3,
@@ -47,10 +46,9 @@ describe('addDayInternal', () => {
 	test('throws an error if a day already exists with that date', async () => {
 		const db = await getDatabase(true);
 		const transaction = db.transaction(ObjectStoreName.DAY, 'readwrite');
-		const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
 		// Add a day first
-		await addDayInternal(dayOS, {
+		await addDayInternal(transaction, {
 			year: 2026,
 			month: 5,
 			day: 3,
@@ -59,7 +57,7 @@ describe('addDayInternal', () => {
 
 		// Then try adding it again
 		await expect(
-			() => addDayInternal(dayOS, {
+			() => addDayInternal(transaction, {
 				year: 2026,
 				month: 5,
 				day: 3,
