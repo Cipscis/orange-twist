@@ -92,8 +92,7 @@ describe('setDaysV1', () => {
 		]);
 
 		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
-		const dayTasksOS = readTransaction.objectStore(ObjectStoreName.DAY_TASK);
-		const dayTasks = await getDayTasksInternal(dayTasksOS);
+		const dayTasks = await getDayTasksInternal(readTransaction);
 		// IDs don't start at 0 because the database had data entered before it was cleared
 		expect(dayTasks).toEqual([
 			{
@@ -201,8 +200,7 @@ describe('setDaysV1', () => {
 
 		const db = await getDatabase();
 		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
-		const dayTasksOS = readTransaction.objectStore(ObjectStoreName.DAY_TASK);
-		const dayTasks = await getDayTasksInternal(dayTasksOS);
+		const dayTasks = await getDayTasksInternal(readTransaction);
 		expect(dayTasks).toEqual([
 			{
 				id: 2,
@@ -283,8 +281,7 @@ describe('setDaysV1', () => {
 
 		const db = await getDatabase();
 		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
-		const dayTasksOS = readTransaction.objectStore(ObjectStoreName.DAY_TASK);
-		const dayTasks = await getDayTasksInternal(dayTasksOS);
+		const dayTasks = await getDayTasksInternal(readTransaction);
 		expect(dayTasks).toEqual([]);
 	});
 });

@@ -46,8 +46,7 @@ describe('setDayTasksV1', () => {
 		]);
 
 		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
-		const readDayTaskOS = readTransaction.objectStore(ObjectStoreName.DAY_TASK);
-		const dayTasks = await getDayTasksInternal(readDayTaskOS);
+		const dayTasks = await getDayTasksInternal(readTransaction);
 		// IDs don't start at 0 because the database had data entered before it was cleared
 		expect(dayTasks).toEqual([
 			{

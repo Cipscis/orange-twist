@@ -23,13 +23,12 @@ export async function setDayTasksV1(
 		ObjectStoreName.STATUS,
 	], 'readwrite');
 
-	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 	const promises: (Promise<unknown>)[] = [];
 
-	const priorDayTaskIds = new Set((await getDayTasksInternal(dayTaskOS)).map(({ id }) => id));
+	const priorDayTaskIds = new Set((await getDayTasksInternal(transaction)).map(({ id }) => id));
 	// TODO: Collect IDs of day tasks that are added or updated, to find difference with prior day task IDs
 
 	for (const [dayTaskKey, dayTask] of dayTasks) {
