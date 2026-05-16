@@ -27,7 +27,7 @@ export async function setTasksV1(
 
 	const promises: (Promise<unknown>)[] = [];
 
-	const priorTaskIds = new Set((await getTasksInternal(taskOS)).map(({ id }) => id));
+	const priorTaskIds = new Set((await getTasksInternal(transaction)).map(({ id }) => id));
 	const newTaskIds = new Set(tasks.map(([id]) => id));
 
 	for (const [, taskInfo] of tasks) {

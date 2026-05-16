@@ -17,9 +17,8 @@ describe('getTasksInternal', () => {
 	test('returns all tasks', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TASK, 'readonly');
-		const tasksOS = transaction.objectStore(ObjectStoreName.TASK);
 
-		const tasks = await getTasksInternal(tasksOS);
+		const tasks = await getTasksInternal(transaction);
 
 		expect(tasks).toEqual([
 			{
