@@ -17,9 +17,8 @@ describe('getImagesInternal', () => {
 	test('returns a Promise which resolves to an array of all images', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
-		const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
-		const result = await getImagesInternal(imageOS);
+		const result = await getImagesInternal(transaction);
 
 		expect(Array.isArray(result)).toBe(true);
 		expect(result.length).toBe(1);
