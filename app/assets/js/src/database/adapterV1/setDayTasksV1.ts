@@ -1,5 +1,6 @@
 import type { DayTaskInfo } from 'data/dayTasks';
 import { decodeDayTaskKey } from 'data/dayTasks/util';
+
 import {
 	addDayTaskInternal,
 	getDayByDateInternal,
@@ -7,9 +8,9 @@ import {
 	getDayTasksInternal,
 	getStatusByNameInternal,
 	getTaskInternal,
-} from 'database/internal';
-import { IndexName, ObjectStoreName } from 'database/metadata';
-import { getDatabase } from 'database/utils';
+} from '../internal';
+import { ObjectStoreName } from '../metadata';
+import { getDatabase } from '../utils';
 
 export async function setDayTasksV1(
 	dayTasks: readonly (readonly [string, DayTaskInfo])[]
@@ -63,7 +64,7 @@ export async function setDayTasksV1(
 
 		if (!existingDayTask) {
 			// Add new day task
-			addDayTaskInternal(dayTaskOS, dayOS, taskOS, statusOS, {
+			addDayTaskInternal(transaction, {
 				day: day.id,
 				task: task.id,
 				note: dayTask.note,
