@@ -24,7 +24,6 @@ export async function setDayTasksV1(
 	], 'readwrite');
 
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
@@ -37,7 +36,7 @@ export async function setDayTasksV1(
 		const { dayName, taskId } = decodeDayTaskKey(dayTaskKey);
 
 		const dayDate = getDayNameParts(dayName);
-		const day = await getDayByDateInternal(dayOS, {
+		const day = await getDayByDateInternal(transaction, {
 			year: dayDate[0],
 			month: dayDate[1],
 			day: dayDate[2],

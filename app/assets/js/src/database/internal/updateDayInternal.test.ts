@@ -13,13 +13,14 @@ import { updateDayInternal } from './updateDayInternal';
 import { getDayByDateInternal } from './getDayByDateInternal';
 
 describe('updateDayInternal', () => {
+	let transaction: IDBTransaction;
 	let dayOS: IDBObjectStore;
 
 	beforeEach(async () => {
 		await createTestData();
 
 		const db = await getDatabase();
-		const transaction = db.transaction(ObjectStoreName.DAY, 'readwrite');
+		transaction = db.transaction(ObjectStoreName.DAY, 'readwrite');
 		dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	});
 
@@ -33,7 +34,7 @@ describe('updateDayInternal', () => {
 
 		expect(result).toBeUndefined();
 
-		const updatedDay = await getDayByDateInternal(dayOS, {
+		const updatedDay = await getDayByDateInternal(transaction, {
 			year: 2026,
 			month: 4,
 			day: 27,

@@ -22,7 +22,7 @@ export async function addDayInternal(
 ): Promise<DatabaseData[typeof ObjectStoreName.DAY][number]['id']> {
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
-	const existingDay = await getDayByDateInternal(dayOS, day);
+	const existingDay = await getDayByDateInternal(transaction, day);
 	if (existingDay) {
 		throw new Error(`Cannot add day - day already exists: ${[day.year, day.month, day.day]}`);
 	}
