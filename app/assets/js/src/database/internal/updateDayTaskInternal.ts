@@ -39,5 +39,9 @@ export async function updateDayTaskInternal(
 		);
 	}
 
+	if (requests.length === 0) {
+		throw new Error(`Failed to update day task with day ID ${dayTask.day} and task ID ${dayTask.task} - No such day task exists.`);
+	}
+
 	await Promise.all(requests);
 }
