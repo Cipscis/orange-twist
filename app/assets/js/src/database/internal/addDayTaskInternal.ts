@@ -32,7 +32,6 @@ export async function addDayTaskInternal(
 	>
 ): Promise<DatabaseData[typeof ObjectStoreName.DAY_TASK][number]['id']> {
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
@@ -41,7 +40,7 @@ export async function addDayTaskInternal(
 		throw new Error(`Cannot add day task - day task already exists for day ${dayTask.day} and task ${dayTask.task}`);
 	}
 
-	const existingDay = await getDayInternal(dayOS, dayTask.day);
+	const existingDay = await getDayInternal(transaction, dayTask.day);
 	if (!existingDay) {
 		throw new Error(`Cannot add day task - no day exists with ID ${dayTask.day}`);
 	}

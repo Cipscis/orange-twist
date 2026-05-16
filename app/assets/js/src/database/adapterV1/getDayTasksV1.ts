@@ -22,12 +22,11 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 	], 'readonly');
 
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
 	const allDayTasks = await getDayTasksInternal(dayTaskOS);
 	for (const dayTask of allDayTasks) {
 		// TODO: This non-null assertion isn't safe
-		const day = (await getDayInternal(dayOS, dayTask.day))!;
+		const day = (await getDayInternal(transaction, dayTask.day))!;
 
 		const dayTaskV1: DayTaskInfo = {
 			taskId: dayTask.task,

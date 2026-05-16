@@ -13,18 +13,17 @@ import { createTestData } from '../test-utils';
 import { getDayInternal } from './getDayInternal';
 
 describe('getDayInternal', () => {
-	let dayOS: IDBObjectStore;
+	let transaction: IDBTransaction;
 
 	beforeAll(() => createTestData());
 
 	beforeEach(async () => {
 		const db = await getDatabase();
-		const transaction = db.transaction(ObjectStoreName.DAY, 'readonly');
-		dayOS = transaction.objectStore(ObjectStoreName.DAY);
+		transaction = db.transaction(ObjectStoreName.DAY, 'readonly');
 	});
 
 	test('returns the specified day', async () => {
-		const day = await getDayInternal(dayOS, 0);
+		const day = await getDayInternal(transaction, 0);
 
 		expect(day).toEqual({
 			id: 0,
@@ -36,7 +35,7 @@ describe('getDayInternal', () => {
 	});
 
 	test('returns null if no day exists for that ID', async () => {
-		const day = await getDayInternal(dayOS, -1);
+		const day = await getDayInternal(transaction, -1);
 
 		expect(day).toBeNull();
 	});
