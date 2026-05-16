@@ -27,8 +27,6 @@ export async function setDaysV1(
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const dayByDate = dayOS.index(IndexName.DAY_DATE);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
-	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 	const promises: (Promise<unknown>)[] = [];
 	const newDayIds = new Set<number>();
@@ -45,10 +43,9 @@ export async function setDaysV1(
 			newDayIds.add(existingDay.id);
 			// Update an existing day
 			promises.push(updateExistingDay({
+				transaction,
 				dayOS,
 				dayTaskOS,
-				taskOS,
-				statusOS,
 				dayInfo,
 				existingDay,
 			}));
@@ -58,10 +55,6 @@ export async function setDaysV1(
 		// Create a new day
 		const addNewDayPromise = addNewDay({
 			transaction,
-			dayOS,
-			dayTaskOS,
-			taskOS,
-			statusOS,
 			dayInfo,
 			year,
 			month,
@@ -96,10 +89,6 @@ export async function setDaysV1(
  */
 async function addNewDay(options: {
 	transaction: IDBTransaction;
-	dayOS: IDBObjectStore;
-	dayTaskOS: IDBObjectStore;
-	taskOS: IDBObjectStore;
-	statusOS: IDBObjectStore;
 	dayInfo: DayInfo;
 	year: number;
 	month: number;
@@ -107,10 +96,6 @@ async function addNewDay(options: {
 }): Promise<number> {
 	const {
 		transaction,
-		dayOS,
-		dayTaskOS,
-		taskOS,
-		statusOS,
 		dayInfo,
 		year,
 		month,
@@ -127,9 +112,9 @@ async function addNewDay(options: {
 	// Create the new day's day tasks
 	const dayTaskRequests: Promise<unknown>[] = [];
 	for (const [sortIndex, task] of dayInfo.tasks.entries()) {
-		dayTaskRequests.push(addDayTaskInternal(dayTaskOS, dayOS, taskOS, statusOS, {
+		dayTaskRequests.push(addDayTaskInternal(transaction, {
 			day: newDayId,
-			task: task,
+			task,
 			sortIndex,
 		}));
 	}
@@ -140,18 +125,16 @@ async function addNewDay(options: {
 }
 
 async function updateExistingDay(options: {
+	transaction: IDBTransaction;
 	dayOS: IDBObjectStore;
 	dayTaskOS: IDBObjectStore;
-	taskOS: IDBObjectStore;
-	statusOS: IDBObjectStore;
 	dayInfo: DayInfo;
 	existingDay: DatabaseData[typeof ObjectStoreName.DAY][number];
 }) {
 	const {
+		transaction,
 		dayOS,
 		dayTaskOS,
-		taskOS,
-		statusOS,
 		dayInfo,
 		existingDay,
 	} = options;
@@ -189,7 +172,7 @@ async function updateExistingDay(options: {
 	// Add any new day tasks
 	promises.push(
 		...Array.from(addedDayTaskTaskIds).map((taskId) => {
-			return addDayTaskInternal(dayTaskOS, dayOS, taskOS, statusOS, {
+			return addDayTaskInternal(transaction, {
 				day: existingDay.id,
 				task: taskId,
 				sortIndex: dayInfo.tasks.indexOf(taskId),

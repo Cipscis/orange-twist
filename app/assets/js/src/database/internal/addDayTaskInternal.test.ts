@@ -14,33 +14,25 @@ import { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskIntern
 import { addDayTaskInternal } from './addDayTaskInternal';
 
 describe('addDayTaskInternal', () => {
+	let transaction: IDBTransaction;
 	let dayTaskOS: IDBObjectStore;
-	let dayOS: IDBObjectStore;
-	let taskOS: IDBObjectStore;
-	let statusOS: IDBObjectStore;
 
 	beforeEach(async () => {
 		await createTestData();
 
 		const db = await getDatabase();
-		const transaction = db.transaction([
+		transaction = db.transaction([
 			ObjectStoreName.DAY_TASK,
 			ObjectStoreName.DAY,
 			ObjectStoreName.TASK,
 			ObjectStoreName.STATUS,
 		], 'readwrite');
 		dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-		dayOS = transaction.objectStore(ObjectStoreName.DAY);
-		taskOS = transaction.objectStore(ObjectStoreName.TASK);
-		statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 	});
 
 	test('inserts a new day task into the database, and returns its ID', async () => {
 		const dayTaskId = await addDayTaskInternal(
-			dayTaskOS,
-			dayOS,
-			taskOS,
-			statusOS,
+			transaction,
 			{
 				day: 0,
 				task: 2,
@@ -71,10 +63,7 @@ describe('addDayTaskInternal', () => {
 
 	test('fills in blanks with default values', async () => {
 		await addDayTaskInternal(
-			dayTaskOS,
-			dayOS,
-			taskOS,
-			statusOS,
+			transaction,
 			{
 				day: 0,
 				task: 2,
@@ -99,10 +88,7 @@ describe('addDayTaskInternal', () => {
 
 	test('throws an error if a day task already exists for that day and task combination', async () => {
 		const promise = addDayTaskInternal(
-			dayTaskOS,
-			dayOS,
-			taskOS,
-			statusOS,
+			transaction,
 			{
 				day: 0,
 				task: 1,
@@ -118,10 +104,7 @@ describe('addDayTaskInternal', () => {
 
 	test('throws an error if no day exists with the specified day ID', async () => {
 		const promise = addDayTaskInternal(
-			dayTaskOS,
-			dayOS,
-			taskOS,
-			statusOS,
+			transaction,
 			{
 				day: 0,
 				task: -1,
@@ -137,10 +120,7 @@ describe('addDayTaskInternal', () => {
 
 	test('throws an error if no task exists with the specified task ID', async () => {
 		const promise = addDayTaskInternal(
-			dayTaskOS,
-			dayOS,
-			taskOS,
-			statusOS,
+			transaction,
 			{
 				day: 0,
 				task: -1,
@@ -156,10 +136,7 @@ describe('addDayTaskInternal', () => {
 
 	test('throws an error if the day task is given a non-existent status', async () => {
 		const promise = addDayTaskInternal(
-			dayTaskOS,
-			dayOS,
-			taskOS,
-			statusOS,
+			transaction,
 			{
 				day: 0,
 				task: 2,
