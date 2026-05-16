@@ -35,7 +35,7 @@ export async function addDayTaskInternal(
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
-	const existingDayTask = await getDayTaskForDayAndTaskInternal(dayTaskOS, dayTask);
+	const existingDayTask = await getDayTaskForDayAndTaskInternal(transaction, dayTask);
 	if (existingDayTask) {
 		throw new Error(`Cannot add day task - day task already exists for day ${dayTask.day} and task ${dayTask.task}`);
 	}

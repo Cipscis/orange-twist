@@ -17,10 +17,9 @@ describe('getDayTaskForDayAndTaskInternal', () => {
 	test('receives a day task by its day and task', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY_TASK);
-		const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 
 		const dayTask = await getDayTaskForDayAndTaskInternal(
-			dayTaskOS,
+			transaction,
 			{
 				day: 0,
 				task: 1,
@@ -41,10 +40,9 @@ describe('getDayTaskForDayAndTaskInternal', () => {
 	test('returns null if no such day exists', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY_TASK);
-		const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 
 		const dayTask = await getDayTaskForDayAndTaskInternal(
-			dayTaskOS,
+			transaction,
 			{
 				day: -1,
 				task: -1,

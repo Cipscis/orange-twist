@@ -51,7 +51,7 @@ export async function setDayTasksV1(
 			throw new Error(`Cannot add day task, no task exists with ID ${taskId}`);
 		}
 
-		const existingDayTask = await getDayTaskForDayAndTaskInternal(dayTaskOS, {
+		const existingDayTask = await getDayTaskForDayAndTaskInternal(transaction, {
 			day: day.id,
 			task: task.id,
 		});
