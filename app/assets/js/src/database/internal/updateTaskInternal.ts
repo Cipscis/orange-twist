@@ -2,6 +2,7 @@ import {
 	getIdbRequestPromise,
 	getIterableCursor,
 	type ExpandType,
+	type OptionalExcept,
 } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
@@ -19,15 +20,7 @@ import { getStatusInternal } from './getStatusInternal';
  */
 export async function updateTaskInternal(
 	transaction: IDBTransaction,
-	task: ExpandType<
-		Pick<DatabaseData[typeof ObjectStoreName.TASK][number], 'id'> &
-		Partial<
-			Omit<
-				DatabaseData[typeof ObjectStoreName.TASK][number],
-				'id'
-			>
-			>
-	>
+	task: OptionalExcept<DatabaseData[typeof ObjectStoreName.TASK][number], 'id'>
 ): Promise<void> {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 

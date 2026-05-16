@@ -2,6 +2,7 @@ import {
 	getIdbRequestPromise,
 	getIterableCursor,
 	type ExpandType,
+	type OptionalExcept,
 } from 'utils';
 
 import { IndexName, ObjectStoreName } from '../metadata';
@@ -17,7 +18,10 @@ import type { DatabaseData } from '../types';
  */
 export async function updateDayInternal(
 	transaction: IDBTransaction,
-	day: ExpandType<Pick<DatabaseData[typeof ObjectStoreName.DAY][number], 'year' | 'month' | 'day'> & Partial<Omit<DatabaseData[typeof ObjectStoreName.DAY][number], 'id' | 'year' | 'month' | 'day'>>>
+	day: OptionalExcept<
+		Omit<DatabaseData[typeof ObjectStoreName.DAY][number], 'id'>,
+		'year' | 'month' | 'day'
+	>
 ): Promise<void> {
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const dayByDate = dayOS.index(IndexName.DAY_DATE);
