@@ -15,9 +15,7 @@ export async function getTemplatesV1(): Promise<readonly [number, TemplateInfo][
 		ObjectStoreName.TEMPLATE,
 	], 'readonly');
 
-	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
-
-	const allTemplates = await getTemplatesInternal(templateOS);
+	const allTemplates = await getTemplatesInternal(transaction);
 
 	for (const template of allTemplates) {
 		const templateV1: TemplateInfo = {
