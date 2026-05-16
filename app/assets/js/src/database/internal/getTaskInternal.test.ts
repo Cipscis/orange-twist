@@ -17,9 +17,8 @@ describe('getTaskInternal', () => {
 	test('returns a task with the specified task ID', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TASK);
-		const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
-		const task = await getTaskInternal(taskOS, 0);
+		const task = await getTaskInternal(transaction, 0);
 
 		expect(task).toEqual({
 			id: 0,
@@ -33,9 +32,8 @@ describe('getTaskInternal', () => {
 	test('returns null if no task exists by that task ID', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TASK);
-		const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
-		const task = await getTaskInternal(taskOS, -1);
+		const task = await getTaskInternal(transaction, -1);
 
 		expect(task).toBeNull();
 	});

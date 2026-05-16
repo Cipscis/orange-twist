@@ -31,7 +31,7 @@ export async function setTasksV1(
 	const newTaskIds = new Set(tasks.map(([id]) => id));
 
 	for (const [, taskInfo] of tasks) {
-		const existingTask = await getTaskInternal(taskOS, taskInfo.id);
+		const existingTask = await getTaskInternal(transaction, taskInfo.id);
 
 		if (existingTask) {
 			promises.push(updateExistingTask({
