@@ -15,6 +15,7 @@ import { getDayTasksInternal } from './getDayTasksInternal';
 import { removeTaskInternal } from './removeTaskInternal';
 
 describe('removeTaskInternal', () => {
+	let transaction: IDBTransaction;
 	let taskOS: IDBObjectStore;
 	let dayTaskOS: IDBObjectStore;
 
@@ -22,7 +23,7 @@ describe('removeTaskInternal', () => {
 		await createTestData();
 
 		const db = await getDatabase();
-		const transaction = db.transaction([
+		transaction = db.transaction([
 			ObjectStoreName.TASK,
 			ObjectStoreName.DAY_TASK,
 		], 'readwrite');
@@ -62,7 +63,7 @@ describe('removeTaskInternal', () => {
 	test('removes all day tasks that reference the removed task', async () => {
 		await removeTaskInternal(taskOS, dayTaskOS, 0);
 
-		const dayTasks = await getDayTasksInternal(dayTaskOS);
+		const dayTasks = await getDayTasksInternal(transaction);
 
 		expect(dayTasks).toEqual([
 			{

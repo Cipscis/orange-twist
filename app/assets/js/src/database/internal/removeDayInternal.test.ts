@@ -63,7 +63,7 @@ describe('removeDayInternal', () => {
 	test('removes all day tasks that reference the removed day', async () => {
 		await removeDayInternal(dayOS, dayTaskOS, 0);
 
-		const dayTasks = await getDayTasksInternal(dayTaskOS);
+		const dayTasks = await getDayTasksInternal(transaction);
 
 		expect(dayTasks).toEqual([]);
 	});

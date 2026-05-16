@@ -164,9 +164,8 @@ describe('setTasksV1', () => {
 
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
-		const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 
-		const dayTasks = await getDayTasksInternal(dayTaskOS);
+		const dayTasks = await getDayTasksInternal(transaction);
 		expect(dayTasks).toEqual([]);
 	});
 });
