@@ -44,7 +44,7 @@ export async function setTasksV1(
 
 		// Create a new task
 		const addNewTaskPromise = addNewTask({
-			taskOS,
+			transaction,
 			statusOS,
 			taskInfo,
 		});
@@ -62,12 +62,12 @@ export async function setTasksV1(
 }
 
 async function addNewTask(options: {
-	taskOS: IDBObjectStore;
+	transaction: IDBTransaction;
 	statusOS: IDBObjectStore;
 	taskInfo: TaskInfo;
 }): Promise<number> {
 	const {
-		taskOS,
+		transaction,
 		statusOS,
 		taskInfo,
 	} = options;
@@ -77,7 +77,7 @@ async function addNewTask(options: {
 		throw new Error(`Cannot add task, no status exists with name ${taskInfo.status}`);
 	}
 
-	return await addTaskInternal(taskOS, statusOS, {
+	return await addTaskInternal(transaction, {
 		id: taskInfo.id,
 		name: taskInfo.name,
 		note: taskInfo.note,
