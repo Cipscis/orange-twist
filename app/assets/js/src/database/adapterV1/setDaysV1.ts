@@ -21,12 +21,14 @@ export async function setDaysV1(
 		ObjectStoreName.DAY,
 		ObjectStoreName.DAY_TASK,
 		ObjectStoreName.TASK,
+		ObjectStoreName.STATUS,
 	], 'readwrite');
 
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const dayByDate = dayOS.index(IndexName.DAY_DATE);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
+	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 	const promises: (Promise<unknown>)[] = [];
 	const newDayIds = new Set<number>();
@@ -46,6 +48,7 @@ export async function setDaysV1(
 				dayOS,
 				dayTaskOS,
 				taskOS,
+				statusOS,
 				dayInfo,
 				existingDay,
 			}));
@@ -57,6 +60,7 @@ export async function setDaysV1(
 			dayOS,
 			dayTaskOS,
 			taskOS,
+			statusOS,
 			dayInfo,
 			year,
 			month,
@@ -93,6 +97,7 @@ async function addNewDay(options: {
 	dayOS: IDBObjectStore;
 	dayTaskOS: IDBObjectStore;
 	taskOS: IDBObjectStore;
+	statusOS: IDBObjectStore;
 	dayInfo: DayInfo;
 	year: number;
 	month: number;
@@ -102,6 +107,7 @@ async function addNewDay(options: {
 		dayOS,
 		dayTaskOS,
 		taskOS,
+		statusOS,
 		dayInfo,
 		year,
 		month,
@@ -118,7 +124,7 @@ async function addNewDay(options: {
 	// Create the new day's day tasks
 	const dayTaskRequests: Promise<unknown>[] = [];
 	for (const [sortIndex, task] of dayInfo.tasks.entries()) {
-		dayTaskRequests.push(addDayTaskInternal(dayTaskOS, dayOS, taskOS, {
+		dayTaskRequests.push(addDayTaskInternal(dayTaskOS, dayOS, taskOS, statusOS, {
 			day: newDayId,
 			task: task,
 			sortIndex,
@@ -134,6 +140,7 @@ async function updateExistingDay(options: {
 	dayOS: IDBObjectStore;
 	dayTaskOS: IDBObjectStore;
 	taskOS: IDBObjectStore;
+	statusOS: IDBObjectStore;
 	dayInfo: DayInfo;
 	existingDay: DatabaseData[typeof ObjectStoreName.DAY][number];
 }) {
@@ -141,6 +148,7 @@ async function updateExistingDay(options: {
 		dayOS,
 		dayTaskOS,
 		taskOS,
+		statusOS,
 		dayInfo,
 		existingDay,
 	} = options;
@@ -178,7 +186,7 @@ async function updateExistingDay(options: {
 	// Add any new day tasks
 	promises.push(
 		...Array.from(addedDayTaskTaskIds).map((taskId) => {
-			return addDayTaskInternal(dayTaskOS, dayOS, taskOS, {
+			return addDayTaskInternal(dayTaskOS, dayOS, taskOS, statusOS, {
 				day: existingDay.id,
 				task: taskId,
 				sortIndex: dayInfo.tasks.indexOf(taskId),

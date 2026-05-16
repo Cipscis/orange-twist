@@ -20,7 +20,7 @@ describe('setDaysV1', () => {
 	beforeEach(() => createTestData());
 
 	test('adds new days', async () => {
-		// Start from a blank slate - remove all days and day tasks
+		// Start from a blank slate - remove all days
 		const db = await getDatabase();
 		const writeTransaction = db.transaction(
 			[ObjectStoreName.DAY],
