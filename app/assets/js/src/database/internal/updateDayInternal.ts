@@ -4,13 +4,22 @@ import {
 	type ExpandType,
 } from 'utils';
 
-import { IndexName, type ObjectStoreName } from '../metadata';
+import { IndexName, ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
+/**
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing day.
+ *
+ * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.DAY} object store.
+ * @param day An object specifying which day to update by its year, month, and day, and providing any values that should be updated.
+ *
+ * @throws Error if no day exists with the specified year, month, and day.
+ */
 export async function updateDayInternal(
-	dayOS: IDBObjectStore,
+	transaction: IDBTransaction,
 	day: ExpandType<Pick<DatabaseData[typeof ObjectStoreName.DAY][number], 'year' | 'month' | 'day'> & Partial<Omit<DatabaseData[typeof ObjectStoreName.DAY][number], 'id' | 'year' | 'month' | 'day'>>>
 ): Promise<void> {
+	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const dayByDate = dayOS.index(IndexName.DAY_DATE);
 
 	const requests: Promise<IDBValidKey>[] = [];

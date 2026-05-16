@@ -44,7 +44,6 @@ export async function setDaysV1(
 			// Update an existing day
 			promises.push(updateExistingDay({
 				transaction,
-				dayOS,
 				dayTaskOS,
 				dayInfo,
 				existingDay,
@@ -125,14 +124,12 @@ async function addNewDay(options: {
 
 async function updateExistingDay(options: {
 	transaction: IDBTransaction;
-	dayOS: IDBObjectStore;
 	dayTaskOS: IDBObjectStore;
 	dayInfo: DayInfo;
 	existingDay: DatabaseData[typeof ObjectStoreName.DAY][number];
 }) {
 	const {
 		transaction,
-		dayOS,
 		dayTaskOS,
 		dayInfo,
 		existingDay,
@@ -142,7 +139,7 @@ async function updateExistingDay(options: {
 
 	// Update an existing day's note
 	promises.push(
-		updateDayInternal(dayOS, {
+		updateDayInternal(transaction, {
 			...existingDay,
 			note: dayInfo.note,
 		})
