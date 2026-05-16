@@ -12,6 +12,7 @@ import {
 } from '../internal';
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
+import { updateDayTaskInternal } from 'database/internal/updateDayTaskInternal';
 
 export async function setDayTasksV1(
 	dayTasks: readonly (readonly [string, DayTaskInfo])[]
@@ -70,7 +71,14 @@ export async function setDayTasksV1(
 			continue;
 		}
 
-		// TODO: Update existing day task
+		// Update existing day task
+		updateDayTaskInternal(transaction, {
+			day: day.id,
+			task: task.id,
+			note: dayTask.note,
+			summary: dayTask.summary,
+			status: status.id,
+		});
 	}
 
 	// TODO: Remove removed day tasks

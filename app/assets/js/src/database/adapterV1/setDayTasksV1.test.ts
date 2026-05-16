@@ -70,7 +70,48 @@ describe('setDayTasksV1', () => {
 		]);
 	});
 
-	test.todo('updates existing day tasks');
+	test('updates existing day tasks', async () => {
+		await setDayTasksV1([
+			['2026-04-26_0', {
+				dayName: '2026-04-26',
+				taskId: 0,
+				note: 'Note for task 0 day 0 updated',
+				summary: 'Summary for task 0 day 0 updated',
+				status: 'completed',
+			}],
+			['2026-04-26_1', {
+				dayName: '2026-04-26',
+				taskId: 1,
+				note: 'Note for task 1 day 0 updated',
+				summary: 'Summary for task 1 day 0 updated',
+				status: 'completed',
+			}],
+		]);
+
+		const db = await getDatabase();
+		const transaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
+		const dayTasks = await getDayTasksInternal(transaction);
+		expect(dayTasks).toEqual([
+			{
+				id: 1,
+				day: 0,
+				task: 1,
+				note: 'Note for task 1 day 0 updated',
+				summary: 'Summary for task 1 day 0 updated',
+				status: 2,
+				sortIndex: 0,
+			},
+			{
+				id: 0,
+				day: 0,
+				task: 0,
+				note: 'Note for task 0 day 0 updated',
+				summary: 'Summary for task 0 day 0 updated',
+				status: 2,
+				sortIndex: 1,
+			},
+		]);
+	});
 
 	test.todo('throws an error if a day task is given a non-existent day');
 
