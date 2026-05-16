@@ -16,11 +16,9 @@ export async function getDaysV1(): Promise<readonly [string, DayInfo][]> {
 		ObjectStoreName.DAY_TASK,
 	], 'readonly');
 
-	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-
 	const allDays = await getDaysInternal(transaction);
 	for (const day of allDays) {
-		const dayTasks = await getDayTasksForDayInternal(dayTaskOS, day.id);
+		const dayTasks = await getDayTasksForDayInternal(transaction, day.id);
 
 		const dayV1: DayInfo = {
 			name: `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`,
