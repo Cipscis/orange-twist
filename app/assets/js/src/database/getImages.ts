@@ -8,7 +8,6 @@ export async function getImages(): Promise<
 > {
 	const db = await getDatabase();
 	const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
-	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
-	return await getImagesInternal(imageOS);
+	return await getImagesInternal(transaction);
 }
