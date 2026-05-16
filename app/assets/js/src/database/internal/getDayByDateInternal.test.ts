@@ -6,8 +6,9 @@ import {
 } from '@jest/globals';
 
 import { createTestData } from '../test-utils';
-import { getDatabase } from 'database/utils';
-import { ObjectStoreName } from 'database/metadata';
+import { getDatabase } from '../utils';
+import { ObjectStoreName } from '../metadata';
+
 import { getDayByDateInternal } from './getDayByDateInternal';
 
 describe('getDayByDateInternal', () => {
@@ -16,9 +17,8 @@ describe('getDayByDateInternal', () => {
 	test('receives a day by its date', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY, 'readonly');
-		const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
-		const result = await getDayByDateInternal(dayOS, {
+		const result = await getDayByDateInternal(transaction, {
 			year: 2026,
 			month: 4,
 			day: 26,
@@ -36,9 +36,8 @@ describe('getDayByDateInternal', () => {
 	test('returns null if no such day exists', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY, 'readonly');
-		const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
-		const result = await getDayByDateInternal(dayOS, {
+		const result = await getDayByDateInternal(transaction, {
 			year: 2020,
 			month: 1,
 			day: 1,
