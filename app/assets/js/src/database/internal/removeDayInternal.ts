@@ -1,12 +1,22 @@
 import { getIdbRequestPromise, getIterableCursor } from 'utils';
 
-import { IndexName } from '../metadata';
+import { IndexName, ObjectStoreName } from '../metadata';
 
+/**
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to remove a day and all its linked day tasks.
+ *
+ * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.DAY} and {@linkcode ObjectStoreName.DAY_TASK} object stores.
+ * @param id The ID of the day to delete.
+ *
+ * @returns A {@linkcode Promise} that resolves when the day and all its linked day tasks have been removed.
+ */
 export async function removeDayInternal(
-	dayOS: IDBObjectStore,
-	dayTaskOS: IDBObjectStore,
+	transaction: IDBTransaction,
 	id: IDBValidKey,
 ): Promise<void> {
+	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
+	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
+
 	const requests: IDBRequest[] = [];
 
 	const dayCursor = await getIdbRequestPromise(
