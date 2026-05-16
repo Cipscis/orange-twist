@@ -1,16 +1,20 @@
 import { getIdbRequestPromise } from 'utils';
 
-import type { ObjectStoreName } from '../metadata';
+import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
 /**
- * **Important** Intended for internal use within the database API only.
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to get all days.
  *
- * Returns all days, when provided with the days {@linkcode IDBObjectStore} from within an existing transaction.
+ * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.DAY} object store.
+ *
+ * @returns A {@linkcode Promise} that resolves with an array containing all day objects, sorted chronologically.
  */
-export async function getDaysInternal(daysOS: IDBObjectStore): Promise<
+export async function getDaysInternal(transaction: IDBTransaction): Promise<
 	DatabaseData[typeof ObjectStoreName.DAY][number][]
 > {
+	const daysOS = transaction.objectStore(ObjectStoreName.DAY);
+
 	// TODO: Find a type-safe way of doing this
 	const request = daysOS.getAll() as IDBRequest<DatabaseData[typeof ObjectStoreName.DAY][number][]>;
 

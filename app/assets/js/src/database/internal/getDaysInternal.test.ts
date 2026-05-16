@@ -17,9 +17,8 @@ describe('getDaysInternal', () => {
 	test('returns all days in chronological order', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY, 'readonly');
-		const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
-		const days = await getDaysInternal(dayOS);
+		const days = await getDaysInternal(transaction);
 
 		expect(days).toEqual([
 			{
