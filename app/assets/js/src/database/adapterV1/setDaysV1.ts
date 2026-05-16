@@ -73,8 +73,7 @@ export async function setDaysV1(
 
 	for (const dayId of removedDayIds) {
 		promises.push(removeDayInternal(
-			dayOS,
-			dayTaskOS,
+			transaction,
 			dayId,
 		));
 	}
