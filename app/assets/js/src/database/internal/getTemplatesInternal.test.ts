@@ -16,9 +16,8 @@ describe('getTemplatesInternal', () => {
 	test('returns all templates', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TEMPLATE, 'readonly');
-		const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
 
-		const templates = await getTemplatesInternal(templateOS);
+		const templates = await getTemplatesInternal(transaction);
 
 		expect(templates).toEqual([
 			{
