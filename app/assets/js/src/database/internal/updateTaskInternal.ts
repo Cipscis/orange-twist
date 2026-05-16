@@ -4,13 +4,21 @@ import {
 	type ExpandType,
 } from 'utils';
 
-import type { ObjectStoreName } from '../metadata';
+import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 import { getStatusInternal } from './getStatusInternal';
 
+/**
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing task.
+ *
+ * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.TASK} and {@linkcode ObjectStoreName.STATUS} object stores.
+ * @param task An object specifying which day to update by its ID, and providing any values that should be updated.
+ *
+ * @throws Error if no task exists with the specified ID.
+ * @throws Error if no status exists with the specified status ID.
+ */
 export async function updateTaskInternal(
-	taskOS: IDBObjectStore,
-	statusOS: IDBObjectStore,
+	transaction: IDBTransaction,
 	task: ExpandType<
 		Pick<DatabaseData[typeof ObjectStoreName.TASK][number], 'id'> &
 		Partial<
@@ -21,7 +29,7 @@ export async function updateTaskInternal(
 			>
 	>
 ): Promise<void> {
-	const transaction = statusOS.transaction;
+	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
 	const requests: Promise<IDBValidKey>[] = [];
 

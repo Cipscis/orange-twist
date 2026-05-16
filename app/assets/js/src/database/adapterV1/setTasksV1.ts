@@ -21,9 +21,6 @@ export async function setTasksV1(
 		ObjectStoreName.STATUS,
 	], 'readwrite');
 
-	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
-	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
-
 	const promises: (Promise<unknown>)[] = [];
 
 	const priorTaskIds = new Set((await getTasksInternal(transaction)).map(({ id }) => id));
@@ -33,20 +30,18 @@ export async function setTasksV1(
 		const existingTask = await getTaskInternal(transaction, taskInfo.id);
 
 		if (existingTask) {
-			promises.push(updateExistingTask({
+			promises.push(updateExistingTask(
 				transaction,
-				taskOS,
-				statusOS,
 				taskInfo,
-			}));
+			));
 			continue;
 		}
 
 		// Create a new task
-		const addNewTaskPromise = addNewTask({
+		const addNewTaskPromise = addNewTask(
 			transaction,
 			taskInfo,
-		});
+		);
 		promises.push(addNewTaskPromise);
 	}
 
@@ -60,15 +55,10 @@ export async function setTasksV1(
 	await Promise.all(promises);
 }
 
-async function addNewTask(options: {
-	transaction: IDBTransaction;
-	taskInfo: TaskInfo;
-}): Promise<number> {
-	const {
-		transaction,
-		taskInfo,
-	} = options;
-
+async function addNewTask(
+	transaction: IDBTransaction,
+	taskInfo: TaskInfo
+): Promise<number> {
 	const status = await getStatusByNameInternal(transaction, taskInfo.status);
 	if (!status) {
 		throw new Error(`Cannot add task, no status exists with name ${taskInfo.status}`);
@@ -83,26 +73,17 @@ async function addNewTask(options: {
 	});
 }
 
-async function updateExistingTask(options: {
-	transaction: IDBTransaction;
-	taskOS: IDBObjectStore;
-	statusOS: IDBObjectStore;
-	taskInfo: TaskInfo;
-}): Promise<void> {
-	const {
-		transaction,
-		taskOS,
-		statusOS,
-		taskInfo,
-	} = options;
-
+async function updateExistingTask(
+	transaction: IDBTransaction,
+	taskInfo: TaskInfo,
+): Promise<void> {
 	const status = await getStatusByNameInternal(transaction, taskInfo.status);
 
 	if (status === null) {
 		throw new Error(`Cannot give task ${taskInfo.id} status with name ${taskInfo.status} - No such status exists`);
 	}
 
-	await updateTaskInternal(taskOS, statusOS, {
+	await updateTaskInternal(transaction, {
 		id: taskInfo.id,
 		name: taskInfo.name,
 		note: taskInfo.note,
