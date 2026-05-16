@@ -1,9 +1,11 @@
 import type { DayTaskInfo } from 'data/dayTasks';
 import { decodeDayTaskKey } from 'data/dayTasks/util';
 import {
+	addDayTaskInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
 	getDayTasksInternal,
+	getStatusByNameInternal,
 	getTaskInternal,
 } from 'database/internal';
 import { IndexName, ObjectStoreName } from 'database/metadata';
@@ -54,12 +56,24 @@ export async function setDayTasksV1(
 			task: task.id,
 		});
 
+		const status = await getStatusByNameInternal(statusOS, dayTask.status);
+		if (!status) {
+			throw new Error(`Cannot add new day task with status ${dayTask.status} - no such status exists`);
+		}
+
 		if (!existingDayTask) {
-			// TODO: Add new day tasks
+			// Add new day task
+			addDayTaskInternal(dayTaskOS, dayOS, taskOS, statusOS, {
+				day: day.id,
+				task: task.id,
+				note: dayTask.note,
+				summary: dayTask.summary,
+				status: status.id,
+			});
 			continue;
 		}
 
-		// TODO: Update existing day tasks
+		// TODO: Update existing day task
 	}
 
 	// TODO: Remove removed day tasks
