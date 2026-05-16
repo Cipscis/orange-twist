@@ -13,8 +13,6 @@ import { getTaskInternal } from './getTaskInternal';
 
 describe('updateTaskInternal', () => {
 	let transaction: IDBTransaction;
-	let taskOS: IDBObjectStore;
-	let statusOS: IDBObjectStore;
 
 	beforeEach(async () => {
 		await createTestData();
@@ -24,12 +22,10 @@ describe('updateTaskInternal', () => {
 			ObjectStoreName.TASK,
 			ObjectStoreName.STATUS,
 		], 'readwrite');
-		taskOS = transaction.objectStore(ObjectStoreName.TASK);
-		statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 	});
 
 	test('updates a specified task', async () => {
-		const result = await updateTaskInternal(taskOS, statusOS, {
+		const result = await updateTaskInternal(transaction, {
 			id: 1,
 			name: 'Updated name',
 			status: 2,
@@ -49,14 +45,14 @@ describe('updateTaskInternal', () => {
 	});
 
 	test('throws an error if the task doesn\'t exist', async () => {
-		await expect(updateTaskInternal(taskOS, statusOS, {
+		await expect(updateTaskInternal(transaction, {
 			id: -1,
 			name: 'Updated name',
 		})).rejects.toBeInstanceOf(Error);
 	});
 
 	test('throws an error if the task is given a status that doesn\'t exist', async () => {
-		await expect(updateTaskInternal(taskOS, statusOS, {
+		await expect(updateTaskInternal(transaction, {
 			id: 1,
 			status: -1,
 		})).rejects.toBeInstanceOf(Error);
