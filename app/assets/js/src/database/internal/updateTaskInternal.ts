@@ -21,11 +21,13 @@ export async function updateTaskInternal(
 			>
 	>
 ): Promise<void> {
+	const transaction = statusOS.transaction;
+
 	const requests: Promise<IDBValidKey>[] = [];
 
 	for await (const taskCursor of getIterableCursor(taskOS, task.id)) {
 		if (typeof task.status === 'number') {
-			const status = await getStatusInternal(statusOS, task.status);
+			const status = await getStatusInternal(transaction, task.status);
 			if (status === null) {
 				throw new Error(`Could not apply status ID ${task.status} to task ${task.id} - No such status exists.`);
 			}

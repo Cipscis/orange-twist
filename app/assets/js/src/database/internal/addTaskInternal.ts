@@ -23,7 +23,6 @@ export async function addTaskInternal(
 	task: WithOptional<DatabaseData[typeof ObjectStoreName.TASK][number], 'id'>
 ): Promise<DatabaseData[typeof ObjectStoreName.TASK][number]['id']> {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
-	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 	if (typeof task.id !== 'undefined') {
 		const existingTask = await getTaskInternal(taskOS, task.id);
@@ -32,7 +31,7 @@ export async function addTaskInternal(
 		}
 	}
 
-	const status = await getStatusInternal(statusOS, task.status);
+	const status = await getStatusInternal(transaction, task.status);
 	if (!status) {
 		throw new Error(`Cannot add task with status ID ${task.status} - no such status exists`);
 	}
