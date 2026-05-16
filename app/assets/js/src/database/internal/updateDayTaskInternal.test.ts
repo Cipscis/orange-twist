@@ -61,5 +61,11 @@ describe('updateDayTaskInternal', () => {
 		})).rejects.toBeInstanceOf(Error);
 	});
 
-	test.todo('throws an error if the day task is given a status that doesn\'t exist');
+	test('throws an error if the day task is given a status that doesn\'t exist', async () => {
+		await expect(updateDayTaskInternal(transaction, {
+			day: 0,
+			task: 0,
+			status: -1,
+		})).rejects.toBeInstanceOf(Error);
+	});
 });

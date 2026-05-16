@@ -8,6 +8,7 @@ import {
 	getDayTasksInternal,
 	getStatusByNameInternal,
 	getTaskInternal,
+	updateDayTaskInternal,
 } from '../internal';
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
