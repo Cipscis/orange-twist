@@ -17,9 +17,8 @@ describe('getDayTasksForDayInternal', () => {
 	test('returns all day tasks in correct sorted order', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
-		const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 
-		const dayTasks = await getDayTasksForDayInternal(dayTaskOS, 0);
+		const dayTasks = await getDayTasksForDayInternal(transaction, 0);
 
 		expect(dayTasks).toEqual([
 			{

@@ -150,7 +150,7 @@ async function updateExistingDay(options: {
 	);
 
 	const existingDayTasks = sortBySortIndex(
-		await getDayTasksForDayInternal(dayTaskOS, existingDay.id)
+		await getDayTasksForDayInternal(transaction, existingDay.id)
 	);
 
 	const existingDayTasksByTaskId = new Map(
