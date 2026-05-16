@@ -16,8 +16,6 @@ import { removeTaskInternal } from './removeTaskInternal';
 
 describe('removeTaskInternal', () => {
 	let transaction: IDBTransaction;
-	let taskOS: IDBObjectStore;
-	let dayTaskOS: IDBObjectStore;
 
 	beforeEach(async () => {
 		await createTestData();
@@ -27,12 +25,10 @@ describe('removeTaskInternal', () => {
 			ObjectStoreName.TASK,
 			ObjectStoreName.DAY_TASK,
 		], 'readwrite');
-		taskOS = transaction.objectStore(ObjectStoreName.TASK);
-		dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	});
 
 	test('removes a specified task', async () => {
-		await removeTaskInternal(taskOS, dayTaskOS, 0);
+		await removeTaskInternal(transaction, 0);
 
 		const tasks = await getTasksInternal(transaction);
 
@@ -55,13 +51,13 @@ describe('removeTaskInternal', () => {
 	});
 
 	test('throws an error if the specified task does not exist', async () => {
-		const promise = removeTaskInternal(taskOS, dayTaskOS, -1);
+		const promise = removeTaskInternal(transaction, -1);
 
 		await expect(promise).rejects.toBeInstanceOf(Error);
 	});
 
 	test('removes all day tasks that reference the removed task', async () => {
-		await removeTaskInternal(taskOS, dayTaskOS, 0);
+		await removeTaskInternal(transaction, 0);
 
 		const dayTasks = await getDayTasksInternal(transaction);
 
