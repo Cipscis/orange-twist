@@ -30,9 +30,8 @@ describe('addDayInternal', () => {
 		expect(writeResult).toBe(1);
 
 		const readTransaction = db.transaction(ObjectStoreName.DAY, 'readonly');
-		const readDayOS = readTransaction.objectStore(ObjectStoreName.DAY);
 
-		const readResult = await getDayInternal(readDayOS, 1);
+		const readResult = await getDayInternal(readTransaction, 1);
 
 		expect(readResult).toEqual({
 			id: 1,
