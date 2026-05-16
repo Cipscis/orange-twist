@@ -1,10 +1,18 @@
 import { getIdbRequestPromise, type ExpandType } from 'utils';
 
-import { IndexName, type ObjectStoreName } from '../metadata';
+import { IndexName, ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
+/**
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to get a day task for a specified day and task.
+ *
+ * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.DAY_TASK} object store.
+ * @param dayTask An object specifying the day and task for the day task to retrieve.
+ *
+ * @returns A {@linkcode Promise} that resolves with the retrieved day task, or `null` if no such day task exists.
+ */
 export async function getDayTaskForDayAndTaskInternal(
-	dayTaskOS: IDBObjectStore,
+	transaction: IDBTransaction,
 	dayTask: ExpandType<Pick<
 		DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'day' | 'task'
 	>>
@@ -12,6 +20,7 @@ export async function getDayTaskForDayAndTaskInternal(
 	| DatabaseData[typeof ObjectStoreName.DAY_TASK][number]
 	| null
 > {
+	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const dayTaskByDayAndTask = dayTaskOS.index(IndexName.DAY_TASK_DAY_TASK);
 
 	// TODO: Find a type-safe way to do this

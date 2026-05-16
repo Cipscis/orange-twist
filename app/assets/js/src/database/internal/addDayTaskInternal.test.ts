@@ -15,7 +15,6 @@ import { addDayTaskInternal } from './addDayTaskInternal';
 
 describe('addDayTaskInternal', () => {
 	let transaction: IDBTransaction;
-	let dayTaskOS: IDBObjectStore;
 
 	beforeEach(async () => {
 		await createTestData();
@@ -27,7 +26,6 @@ describe('addDayTaskInternal', () => {
 			ObjectStoreName.TASK,
 			ObjectStoreName.STATUS,
 		], 'readwrite');
-		dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	});
 
 	test('inserts a new day task into the database, and returns its ID', async () => {
@@ -45,7 +43,7 @@ describe('addDayTaskInternal', () => {
 
 		expect(dayTaskId).toBe(2);
 
-		const dayTask = await getDayTaskForDayAndTaskInternal(dayTaskOS, {
+		const dayTask = await getDayTaskForDayAndTaskInternal(transaction, {
 			day: 0,
 			task: 2,
 		});
@@ -70,7 +68,7 @@ describe('addDayTaskInternal', () => {
 			},
 		);
 
-		const dayTask = await getDayTaskForDayAndTaskInternal(dayTaskOS, {
+		const dayTask = await getDayTaskForDayAndTaskInternal(transaction, {
 			day: 0,
 			task: 2,
 		});
