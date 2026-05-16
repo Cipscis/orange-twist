@@ -13,18 +13,17 @@ import { createTestData } from '../test-utils';
 import { getImageByHashInternal } from './getImageByHashInternal';
 
 describe('getImageByHashInternal', () => {
-	let imageOS: IDBObjectStore;
+	let transaction: IDBTransaction;
 
 	beforeAll(() => createTestData());
 
 	beforeEach(async () => {
 		const db = await getDatabase();
-		const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
-		imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
+		transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
 	});
 
 	test('gets an image by its hash', async () => {
-		const image = await getImageByHashInternal(imageOS, 'test-hash');
+		const image = await getImageByHashInternal(transaction, 'test-hash');
 
 		const {
 			file,
@@ -41,7 +40,7 @@ describe('getImageByHashInternal', () => {
 	});
 
 	test('returns null if no image exists for that hash', async () => {
-		const image = await getImageByHashInternal(imageOS, 'fake-hash');
+		const image = await getImageByHashInternal(transaction, 'fake-hash');
 
 		expect(image).toBeNull();
 	});
