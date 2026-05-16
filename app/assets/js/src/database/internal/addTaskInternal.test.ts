@@ -36,9 +36,8 @@ describe('addTaskInternal', () => {
 			ObjectStoreName.TASK,
 			ObjectStoreName.STATUS,
 		], 'readonly');
-		const readTaskOS = readTransaction.objectStore(ObjectStoreName.TASK);
 
-		const readResult = await getTaskInternal(readTaskOS, 3);
+		const readResult = await getTaskInternal(readTransaction, 3);
 
 		expect(readResult).toEqual({
 			id: 3,

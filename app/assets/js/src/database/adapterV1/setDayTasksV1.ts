@@ -23,8 +23,6 @@ export async function setDayTasksV1(
 		ObjectStoreName.STATUS,
 	], 'readwrite');
 
-	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
-
 	const promises: (Promise<unknown>)[] = [];
 
 	const priorDayTaskIds = new Set((await getDayTasksInternal(transaction)).map(({ id }) => id));
@@ -44,7 +42,7 @@ export async function setDayTasksV1(
 			throw new Error(`Cannot add day task, no day exists with name ${dayName}`);
 		}
 
-		const task = await getTaskInternal(taskOS, taskId);
+		const task = await getTaskInternal(transaction, taskId);
 		if (!task) {
 			throw new Error(`Cannot add day task, no task exists with ID ${taskId}`);
 		}

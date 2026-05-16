@@ -12,6 +12,7 @@ import { updateTaskInternal } from './updateTaskInternal';
 import { getTaskInternal } from './getTaskInternal';
 
 describe('updateTaskInternal', () => {
+	let transaction: IDBTransaction;
 	let taskOS: IDBObjectStore;
 	let statusOS: IDBObjectStore;
 
@@ -19,7 +20,7 @@ describe('updateTaskInternal', () => {
 		await createTestData();
 
 		const db = await getDatabase();
-		const transaction = db.transaction([
+		transaction = db.transaction([
 			ObjectStoreName.TASK,
 			ObjectStoreName.STATUS,
 		], 'readwrite');
@@ -36,7 +37,7 @@ describe('updateTaskInternal', () => {
 
 		expect(result).toBeUndefined();
 
-		const updatedTask = await getTaskInternal(taskOS, 1);
+		const updatedTask = await getTaskInternal(transaction, 1);
 
 		expect(updatedTask).toEqual({
 			id: 1,

@@ -25,7 +25,7 @@ export async function addTaskInternal(
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
 	if (typeof task.id !== 'undefined') {
-		const existingTask = await getTaskInternal(taskOS, task.id);
+		const existingTask = await getTaskInternal(transaction, task.id);
 		if (existingTask) {
 			throw new Error(`Cannot add task - task already exists with ID ${task.id}`);
 		}
