@@ -17,9 +17,8 @@ describe('getStatusInternal', () => {
 	test('returns a status with the specified status ID', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.STATUS);
-		const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
-		const status = await getStatusInternal(statusOS, 0);
+		const status = await getStatusInternal(transaction, 0);
 
 		expect(status).toEqual({
 			id: 0,
@@ -31,9 +30,8 @@ describe('getStatusInternal', () => {
 	test('returns null if no status exists by that status ID', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.STATUS);
-		const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
-		const status = await getStatusInternal(statusOS, -1);
+		const status = await getStatusInternal(transaction, -1);
 
 		expect(status).toBeNull();
 	});

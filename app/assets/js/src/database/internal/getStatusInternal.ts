@@ -1,15 +1,24 @@
 import { getIdbRequestPromise } from 'utils';
 
-import type { ObjectStoreName } from '../metadata';
+import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
+/**
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to get a status by a specified ID.
+ *
+ * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.STATUS} object store.
+ *
+ * @returns A {@linkcode Promise} that resolves to the status with the specified ID, or `null` if no such status exists.
+ */
 export async function getStatusInternal(
-	statusOS: IDBObjectStore,
+	transaction: IDBTransaction,
 	id: number
 ): Promise<
 	| DatabaseData[typeof ObjectStoreName.STATUS][number]
 	| null
 > {
+	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
+
 	// TODO: Find a way to make this type safe
 	const request = statusOS.get(id) as IDBRequest<
 		| DatabaseData[typeof ObjectStoreName.STATUS][number]
