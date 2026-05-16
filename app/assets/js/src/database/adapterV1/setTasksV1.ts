@@ -35,6 +35,7 @@ export async function setTasksV1(
 
 		if (existingTask) {
 			promises.push(updateExistingTask({
+				transaction,
 				taskOS,
 				statusOS,
 				taskInfo,
@@ -45,7 +46,6 @@ export async function setTasksV1(
 		// Create a new task
 		const addNewTaskPromise = addNewTask({
 			transaction,
-			statusOS,
 			taskInfo,
 		});
 		promises.push(addNewTaskPromise);
@@ -63,16 +63,14 @@ export async function setTasksV1(
 
 async function addNewTask(options: {
 	transaction: IDBTransaction;
-	statusOS: IDBObjectStore;
 	taskInfo: TaskInfo;
 }): Promise<number> {
 	const {
 		transaction,
-		statusOS,
 		taskInfo,
 	} = options;
 
-	const status = await getStatusByNameInternal(statusOS, taskInfo.status);
+	const status = await getStatusByNameInternal(transaction, taskInfo.status);
 	if (!status) {
 		throw new Error(`Cannot add task, no status exists with name ${taskInfo.status}`);
 	}
@@ -87,17 +85,19 @@ async function addNewTask(options: {
 }
 
 async function updateExistingTask(options: {
+	transaction: IDBTransaction;
 	taskOS: IDBObjectStore;
 	statusOS: IDBObjectStore;
 	taskInfo: TaskInfo;
 }): Promise<void> {
 	const {
+		transaction,
 		taskOS,
 		statusOS,
 		taskInfo,
 	} = options;
 
-	const status = await getStatusByNameInternal(statusOS, taskInfo.status);
+	const status = await getStatusByNameInternal(transaction, taskInfo.status);
 
 	if (status === null) {
 		throw new Error(`Cannot give task ${taskInfo.id} status with name ${taskInfo.status} - No such status exists`);

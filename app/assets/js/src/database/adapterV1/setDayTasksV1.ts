@@ -24,7 +24,6 @@ export async function setDayTasksV1(
 	], 'readwrite');
 
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
-	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 	const promises: (Promise<unknown>)[] = [];
 
@@ -55,7 +54,7 @@ export async function setDayTasksV1(
 			task: task.id,
 		});
 
-		const status = await getStatusByNameInternal(statusOS, dayTask.status);
+		const status = await getStatusByNameInternal(transaction, dayTask.status);
 		if (!status) {
 			throw new Error(`Cannot add new day task with status ${dayTask.status} - no such status exists`);
 		}
