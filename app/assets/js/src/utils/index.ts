@@ -48,5 +48,6 @@ export type { DeepPartial } from './DeepPartial';
 export type { DefaultsFor } from './DefaultsFor';
 export type { EnumTypeOf } from './EnumTypeOf';
 export type { ExpandType } from './ExpandType';
+export type { OptionalExcept } from './OptionalExcept';
 export type { StringWithAutocomplete } from './StringWithAutocomplete';
 export type { WithOptional } from './WithOptional';
