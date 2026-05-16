@@ -34,7 +34,7 @@ describe('removeTaskInternal', () => {
 	test('removes a specified task', async () => {
 		await removeTaskInternal(taskOS, dayTaskOS, 0);
 
-		const tasks = await getTasksInternal(taskOS);
+		const tasks = await getTasksInternal(transaction);
 
 		expect(tasks).toEqual([
 			{

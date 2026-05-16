@@ -20,9 +20,7 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 		ObjectStoreName.STATUS,
 	], 'readonly');
 
-	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
-
-	const allTasks = await getTasksInternal(taskOS);
+	const allTasks = await getTasksInternal(transaction);
 
 	for (const task of allTasks) {
 		const taskV1: TaskInfo = {

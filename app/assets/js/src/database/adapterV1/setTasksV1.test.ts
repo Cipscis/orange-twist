@@ -44,8 +44,7 @@ describe('setTasksV1', () => {
 		const readTransaction = db.transaction([
 			ObjectStoreName.TASK,
 		], 'readonly');
-		const readTaskOS = readTransaction.objectStore(ObjectStoreName.TASK);
-		const tasks = await getTasksInternal(readTaskOS);
+		const tasks = await getTasksInternal(readTransaction);
 		expect(tasks).toEqual([
 			{
 				id: 0,
@@ -91,9 +90,8 @@ describe('setTasksV1', () => {
 
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TASK, 'readonly');
-		const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
-		const tasks = await getTasksInternal(taskOS);
+		const tasks = await getTasksInternal(transaction);
 		expect(tasks).toEqual([
 			{
 				id: 0,
@@ -153,9 +151,8 @@ describe('setTasksV1', () => {
 
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TASK, 'readonly');
-		const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
-		const tasks = await getTasksInternal(taskOS);
+		const tasks = await getTasksInternal(transaction);
 		expect(tasks).toEqual([]);
 	});
 
