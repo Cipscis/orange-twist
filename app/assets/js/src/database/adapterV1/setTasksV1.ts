@@ -22,7 +22,6 @@ export async function setTasksV1(
 	], 'readwrite');
 
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
-	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 	const promises: (Promise<unknown>)[] = [];
@@ -55,7 +54,7 @@ export async function setTasksV1(
 	const removedTaskIds = priorTaskIds.difference(newTaskIds);
 
 	for (const id of removedTaskIds) {
-		promises.push(removeTaskInternal(taskOS, dayTaskOS, id));
+		promises.push(removeTaskInternal(transaction, id));
 	}
 
 	await Promise.all(promises);
