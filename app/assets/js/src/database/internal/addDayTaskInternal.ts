@@ -10,11 +10,13 @@ import type { DatabaseData } from '../types';
 import { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
 import { getTaskInternal } from './getTaskInternal';
 import { getDayInternal } from './getDayInternal';
+import { getStatusInternal } from './getStatusInternal';
 
 export async function addDayTaskInternal(
 	dayTaskOS: IDBObjectStore,
 	dayOS: IDBObjectStore,
 	taskOS: IDBObjectStore,
+	statusOS: IDBObjectStore,
 	dayTask: ExpandType<
 		Pick<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'day' | 'task'> &
 		Partial<Omit<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id' | 'day' | 'task'>>
@@ -41,11 +43,17 @@ export async function addDayTaskInternal(
 		status: 1,
 		sortIndex: null,
 	} as const satisfies DefaultsFor<typeof dayTask>;
-
-	const request = dayTaskOS.add({
+	const dayTaskWithDefaults = {
 		...defaults,
 		...dayTask,
-	});
+	};
+
+	const status = await getStatusInternal(statusOS, dayTaskWithDefaults.status);
+	if (!status) {
+		throw new Error(`Cannot add day task - no status exists with ID ${dayTaskWithDefaults.status}`);
+	}
+
+	const request = dayTaskOS.add(dayTaskWithDefaults);
 
 	const result = await getIdbRequestPromise(request);
 	if (!(typeof result === 'number')) {

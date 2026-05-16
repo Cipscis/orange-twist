@@ -17,6 +17,7 @@ describe('addDayTaskInternal', () => {
 	let dayTaskOS: IDBObjectStore;
 	let dayOS: IDBObjectStore;
 	let taskOS: IDBObjectStore;
+	let statusOS: IDBObjectStore;
 
 	beforeEach(async () => {
 		await createTestData();
@@ -26,10 +27,12 @@ describe('addDayTaskInternal', () => {
 			ObjectStoreName.DAY_TASK,
 			ObjectStoreName.DAY,
 			ObjectStoreName.TASK,
+			ObjectStoreName.STATUS,
 		], 'readwrite');
 		dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 		dayOS = transaction.objectStore(ObjectStoreName.DAY);
 		taskOS = transaction.objectStore(ObjectStoreName.TASK);
+		statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 	});
 
 	test('inserts a new day task into the database, and returns its ID', async () => {
@@ -37,6 +40,7 @@ describe('addDayTaskInternal', () => {
 			dayTaskOS,
 			dayOS,
 			taskOS,
+			statusOS,
 			{
 				day: 0,
 				task: 2,
@@ -70,6 +74,7 @@ describe('addDayTaskInternal', () => {
 			dayTaskOS,
 			dayOS,
 			taskOS,
+			statusOS,
 			{
 				day: 0,
 				task: 2,
@@ -97,6 +102,7 @@ describe('addDayTaskInternal', () => {
 			dayTaskOS,
 			dayOS,
 			taskOS,
+			statusOS,
 			{
 				day: 0,
 				task: 1,
@@ -115,6 +121,7 @@ describe('addDayTaskInternal', () => {
 			dayTaskOS,
 			dayOS,
 			taskOS,
+			statusOS,
 			{
 				day: 0,
 				task: -1,
@@ -133,6 +140,7 @@ describe('addDayTaskInternal', () => {
 			dayTaskOS,
 			dayOS,
 			taskOS,
+			statusOS,
 			{
 				day: 0,
 				task: -1,
@@ -141,6 +149,25 @@ describe('addDayTaskInternal', () => {
 				status: 1,
 				sortIndex: null,
 			},
+		);
+
+		await expect(promise).rejects.toBeInstanceOf(Error);
+	});
+
+	test('throws an error if the day task is given a non-existent status', async () => {
+		const promise = addDayTaskInternal(
+			dayTaskOS,
+			dayOS,
+			taskOS,
+			statusOS,
+			{
+				day: 0,
+				task: 2,
+				note: 'Note for task 2 day 0',
+				summary: 'Summary for task 2 day 0',
+				status: -1,
+				sortIndex: null,
+			}
 		);
 
 		await expect(promise).rejects.toBeInstanceOf(Error);
