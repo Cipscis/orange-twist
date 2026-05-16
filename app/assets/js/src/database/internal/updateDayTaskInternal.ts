@@ -7,6 +7,8 @@ import {
 import { IndexName, ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
+import { getStatusInternal } from './getStatusInternal';
+
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing day task.
  *
@@ -29,6 +31,16 @@ export async function updateDayTaskInternal(
 	const requests: Promise<IDBValidKey>[] = [];
 
 	for await (const dayTaskCursor of getIterableCursor(dayTaskByDayAndTask, [dayTask.day, dayTask.task])) {
+		// TODO: Find a type-safe way to do this
+		const dayTaskId = (dayTaskCursor.value as DatabaseData[typeof ObjectStoreName.DAY_TASK][number]).id;
+
+		if (typeof dayTask.status === 'number') {
+			const status = await getStatusInternal(transaction, dayTask.status);
+			if (status === null) {
+				throw new Error(`Could not apply status ID ${dayTask.status} to day task ${dayTaskId} - No such status exists.`);
+			}
+		}
+
 		requests.push(
 			getIdbRequestPromise(
 				dayTaskCursor.update({
