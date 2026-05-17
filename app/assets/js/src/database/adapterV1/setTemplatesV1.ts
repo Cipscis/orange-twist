@@ -5,6 +5,8 @@ import { ObjectStoreName } from '../metadata';
 import {
 	addTemplateInternal,
 	getTemplateInternal,
+	getTemplatesInternal,
+	removeTemplateInternal,
 	updateTemplateInternal,
 } from '../internal';
 
@@ -18,6 +20,11 @@ export async function setTemplatesV1(
 
 	const promises: Promise<unknown>[] = [];
 
+	const priorTemplateIds = new Set(
+		(await getTemplatesInternal(transaction)).map(({ id }) => id)
+	);
+	const newTemplateIds = new Set<number>();
+
 	for (const [, templateInfo] of templates) {
 		const existingTemplate = await getTemplateInternal(transaction, templateInfo.id);
 
@@ -25,6 +32,7 @@ export async function setTemplatesV1(
 			// Update existing template
 			promises.push(
 				updateTemplateInternal(transaction, templateInfo)
+					.then((templateId) => newTemplateIds.add(templateId))
 			);
 			continue;
 		}
@@ -32,10 +40,21 @@ export async function setTemplatesV1(
 		// Create a new template
 		promises.push(
 			addTemplateInternal(transaction, templateInfo)
+				.then((templateId) => newTemplateIds.add(templateId))
 		);
 	}
 
-	// TODO: Remove removed templates
+	// Wait for newTemplateIds to be populated
+	await Promise.all(promises);
+
+	// Remove removed templates
+	const removedTemplateIds = priorTemplateIds.difference(newTemplateIds);
+
+	for (const id of removedTemplateIds) {
+		promises.push(
+			removeTemplateInternal(transaction, id)
+		);
+	}
 
 	await Promise.all(promises);
 }

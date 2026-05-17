@@ -86,5 +86,13 @@ describe('setTemplatesV1', () => {
 		]);
 	});
 
-	test.todo('removes removed templates');
+	test('removes removed templates', async () => {
+		await setTemplatesV1([]);
+
+		const db = await getDatabase();
+		const transaction = db.transaction(ObjectStoreName.TEMPLATE, 'readonly');
+
+		const templates = await getTemplatesInternal(transaction);
+		expect(templates).toEqual([]);
+	});
 });
