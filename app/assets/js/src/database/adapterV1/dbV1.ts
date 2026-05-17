@@ -7,6 +7,7 @@ import {
 import type { DayInfo } from 'data/days';
 import type { DayTaskInfo } from 'data/dayTasks';
 import type { TaskInfo } from 'data/tasks';
+import type { TemplateInfo } from 'data/templates';
 
 import { adapterV1 } from 'database';
 import { getDatabase, getDatabaseVersion } from '../utils';
@@ -41,6 +42,10 @@ export const dbV1: PersistApi = {
 		} else if (key === StorageKey.TASKS) {
 			return adapterV1.setTasks(
 				data as [number, TaskInfo][]
+			);
+		} else if (key === StorageKey.TEMPLATES) {
+			return adapterV1.setTemplates(
+				data as [number, TemplateInfo][]
 			);
 		} else {
 			throw new Error('Setting with idb not implemented');
