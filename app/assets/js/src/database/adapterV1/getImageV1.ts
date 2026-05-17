@@ -1,5 +1,5 @@
 import { getDatabase } from '../utils';
-import { getImageByHashInternal } from '../internal';
+import { getImageInternal } from '../internal';
 import { ObjectStoreName } from '../metadata';
 
 /**
@@ -9,7 +9,7 @@ export async function getImageV1(hash: string): Promise<Blob | null> {
 	const db = await getDatabase();
 	const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
 
-	const image = await getImageByHashInternal(transaction, hash);
+	const image = await getImageInternal(transaction, hash);
 
 	return image?.file ?? null;
 }

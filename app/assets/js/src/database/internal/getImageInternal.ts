@@ -1,6 +1,6 @@
 import { getIdbRequestPromise } from 'utils';
 
-import { IndexName, ObjectStoreName } from '../metadata';
+import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
 /**
@@ -11,7 +11,7 @@ import type { DatabaseData } from '../types';
  *
  * @returns A {@linkcode Promise} that resolves to the retrieved image, or `null` if no image exists with the specified truncated hash.
  */
-export async function getImageByHashInternal(
+export async function getImageInternal(
 	transaction: IDBTransaction,
 	hash: string,
 ): Promise<
