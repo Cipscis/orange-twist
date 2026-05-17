@@ -12,7 +12,7 @@ import { getStatusInternal } from './getStatusInternal';
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.TASK} and {@linkcode ObjectStoreName.STATUS} object stores.
  * @param task The day object to insert. Any missing properties will be filled with sensible defaults.
  *
- * @returns A {@linkcode Promise} that resolves when the task has been added.
+ * @returns A {@linkcode Promise} that resolves with the task's ID when id has been added.
  *
  * @throws Error if a task already exists with the specified ID.
  * @throws Error if the task is linked to a status ID that does not exist.
