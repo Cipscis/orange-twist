@@ -11,6 +11,7 @@ import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { getDayTasksInternal } from '../internal';
+import type { LegacyStatusName } from '../types';
 
 import { setDayTasksV1 } from './setDayTasksV1';
 
@@ -113,11 +114,47 @@ describe('setDayTasksV1', () => {
 		]);
 	});
 
-	test.todo('throws an error if a day task is given a non-existent day');
+	test('throws an error if a day task is given a non-existent day', async () => {
+		const promise = setDayTasksV1([
+			['2020-04-26_0', {
+				dayName: '2020-04-26',
+				taskId: 0,
+				note: 'Note for task 0 day 0 updated',
+				summary: 'Summary for task 0 day 0 updated',
+				status: 'completed',
+			}],
+		]);
 
-	test.todo('throws an error if a day task is given a non-existent task');
+		await expect(promise).rejects.toBeInstanceOf(Error);
+	});
 
-	test.todo('throws an error if a day task is given a non-existent status');
+	test('throws an error if a day task is given a non-existent task', async () => {
+		const promise = setDayTasksV1([
+			['2026-04-26_-1', {
+				dayName: '2026-04-26',
+				taskId: -1,
+				note: 'Note for task 0 day 0 updated',
+				summary: 'Summary for task 0 day 0 updated',
+				status: 'completed',
+			}],
+		]);
+
+		await expect(promise).rejects.toBeInstanceOf(Error);
+	});
+
+	test('throws an error if a day task is given a non-existent status', async () => {
+		const promise = setDayTasksV1([
+			['2026-04-26_0', {
+				dayName: '2026-04-26',
+				taskId: 0,
+				note: 'Note for task 0 day 0 updated',
+				summary: 'Summary for task 0 day 0 updated',
+				status: 'no-status' as LegacyStatusName,
+			}],
+		]);
+
+		await expect(promise).rejects.toBeInstanceOf(Error);
+	});
 
 	test('removes removed day tasks', async () => {
 		await setDayTasksV1([]);
