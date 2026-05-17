@@ -13,6 +13,7 @@ export { getTasksInternal } from './getTasksInternal';
 
 export { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
 export { addDayTaskInternal } from './addDayTaskInternal';
+export { removeDayTaskInternal } from './removeDayTaskInternal';
 export { updateDayTaskInternal } from './updateDayTaskInternal';
 export { getDayTasksInternal } from './getDayTasksInternal';
 export { getDayTasksForDayInternal } from './getDayTasksForDayInternal';
