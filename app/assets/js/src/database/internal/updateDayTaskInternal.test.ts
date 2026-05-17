@@ -26,7 +26,7 @@ describe('updateDayTaskInternal', () => {
 		], 'readwrite');
 	});
 
-	test('updates a specified day task', async () => {
+	test('updates a specified day task, and returns a promise that resolves to its ID', async () => {
 		const result = await updateDayTaskInternal(transaction, {
 			day: 0,
 			task: 0,
@@ -35,7 +35,7 @@ describe('updateDayTaskInternal', () => {
 			status: 2,
 		});
 
-		expect(result).toBeUndefined();
+		expect(result).toBe(0);
 
 		const updatedDayTask = await getDayTaskForDayAndTaskInternal(transaction, {
 			day: 0,
