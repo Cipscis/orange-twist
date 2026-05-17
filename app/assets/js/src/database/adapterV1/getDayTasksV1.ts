@@ -2,10 +2,10 @@ import type { DayTaskInfo } from 'data/dayTasks';
 
 import { getStatuses } from '../getStatuses';
 
-import { getDatabase } from 'database/utils';
-import type { LegacyStatusName } from 'database/types';
-import { ObjectStoreName } from 'database/metadata';
-import { getDayInternal, getDayTasksInternal } from 'database/internal';
+import { getDatabase } from '../utils';
+import type { LegacyStatusName } from '../types';
+import { ObjectStoreName } from '../metadata';
+import { getDayInternal, getDayTasksInternal } from '../internal';
 
 /**
  * Retrieve all schema v1 {@linkcode DayTaskInfo} information from the database v2.

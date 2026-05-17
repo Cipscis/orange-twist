@@ -7,7 +7,7 @@ import {
 
 import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
-import { ObjectStoreName } from 'database/metadata';
+import { ObjectStoreName } from '../metadata';
 
 import { removeDayTaskInternal } from './removeDayTaskInternal';
 import { getDayTasksInternal } from './getDayTasksInternal';

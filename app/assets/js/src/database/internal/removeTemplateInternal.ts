@@ -1,5 +1,6 @@
-import { ObjectStoreName } from 'database/metadata';
 import { getIdbRequestPromise } from 'utils';
+
+import { ObjectStoreName } from '../metadata';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to remove a day task.

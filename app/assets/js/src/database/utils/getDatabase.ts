@@ -3,10 +3,10 @@ import {
 	getTaggedDbDump,
 	migrateToLatest,
 	updateData,
-} from 'data/shared/migration';
+} from '../migration';
 
-import { getDatabaseVersion } from 'database/utils';
-import { dbName, dbVersion } from 'database/metadata';
+import { getDatabaseVersion } from '../utils';
+import { dbName, dbVersion } from '../metadata';
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 /**
