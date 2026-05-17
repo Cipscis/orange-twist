@@ -10,9 +10,9 @@ import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { createTestData } from '../test-utils';
 
-import { getImageByHashInternal } from './getImageByHashInternal';
+import { getImageInternal } from './getImageInternal';
 
-describe('getImageByHashInternal', () => {
+describe('getImageInternal', () => {
 	let transaction: IDBTransaction;
 
 	beforeAll(() => createTestData());
@@ -23,7 +23,7 @@ describe('getImageByHashInternal', () => {
 	});
 
 	test('gets an image by its hash', async () => {
-		const image = await getImageByHashInternal(transaction, 'test-hash');
+		const image = await getImageInternal(transaction, 'test-hash');
 
 		const {
 			file,
@@ -39,7 +39,7 @@ describe('getImageByHashInternal', () => {
 	});
 
 	test('returns null if no image exists for that hash', async () => {
-		const image = await getImageByHashInternal(transaction, 'fake-hash');
+		const image = await getImageInternal(transaction, 'fake-hash');
 
 		expect(image).toBeNull();
 	});

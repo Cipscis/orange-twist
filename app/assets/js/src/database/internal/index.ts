@@ -27,4 +27,4 @@ export { updateTemplateInternal } from './updateTemplateInternal';
 export { removeTemplateInternal } from './removeTemplateInternal';
 export { getTemplatesInternal } from './getTemplatesInternal';
 
-export { getImageByHashInternal } from './getImageByHashInternal';
+export { getImageInternal } from './getImageInternal';
