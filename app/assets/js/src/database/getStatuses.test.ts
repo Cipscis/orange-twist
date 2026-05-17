@@ -5,7 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from 'database/test-utils';
+import { createTestData } from './test-utils';
 
 import { getStatuses } from './getStatuses';
 

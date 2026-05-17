@@ -1,4 +1,4 @@
-import { dbName, dbVersion } from 'database/metadata';
+import { dbName, dbVersion } from '../metadata';
 
 /**
  * Determine the version of the existing database, or the intended version to be used if the database doesn't exist yet.

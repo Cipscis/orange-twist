@@ -5,12 +5,14 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from '../test-utils';
-import { getDatabase } from 'database/utils';
-import { ObjectStoreName } from 'database/metadata';
 import { getIdbRequestPromise } from 'utils';
+
+import { createTestData } from '../test-utils';
+import { getDatabase } from '../utils';
+import { ObjectStoreName } from '../metadata';
+import { getTemplatesInternal } from '../internal';
+
 import { setTemplatesV1 } from './setTemplatesV1';
-import { getTemplatesInternal } from 'database/internal';
 
 describe('setTemplatesV1', () => {
 	beforeEach(() => createTestData());
