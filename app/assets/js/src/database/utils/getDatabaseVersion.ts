@@ -5,7 +5,6 @@ import { dbName, dbVersion } from '../metadata';
  */
 export async function getDatabaseVersion(): Promise<number | null> {
 	const existingDbs = await indexedDB.databases();
-	// TODO: Avoid this magic string
 	const existingDb = existingDbs.find(({ name }) => name === dbName);
 	const existingDbVersion = existingDb?.version;
 	return existingDbVersion ?? dbVersion;
