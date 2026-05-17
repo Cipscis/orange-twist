@@ -33,8 +33,8 @@ export async function getDatabase(
 	const updatedDbData = await (async () => {
 		const existingDbVersion = await getDatabaseVersion();
 		const dbNeedsUpdatedData = (
-			// The database existed before, and...
-			existingDbVersion !== null &&
+			// The database did not exist before, or...
+			existingDbVersion === null ||
 			// The version we want to use now is newer than the old one
 			existingDbVersion < dbVersion
 		);
@@ -43,11 +43,15 @@ export async function getDatabase(
 			return null;
 		}
 
-		// TODO: Handle errors based on invalid data in database
-		const oldDbDump = await getTaggedDbDump(dbName, existingDbVersion);
+		if (existingDbVersion === null) {
+			// TODO: Get data dump from localStorage and old images database (if it exists), and update it
+			return null;
+		} else {
+			const oldDbDump = await getTaggedDbDump(dbName, existingDbVersion);
 
-		const updatedData = await updateData(oldDbDump);
-		return updatedData;
+			const updatedData = await updateData(oldDbDump);
+			return updatedData;
+		}
 	})();
 
 	const request = indexedDB.open(dbName, dbVersion);
