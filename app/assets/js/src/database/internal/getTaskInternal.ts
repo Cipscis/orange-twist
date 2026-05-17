@@ -9,7 +9,7 @@ import type { DatabaseData } from '../types';
  * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.TASK} object store.
  * @param id The ID of the task to retrieve.
  *
- * @returns A {@linkcode Promise} that resolves with the retrieved task object, or `null` if no task exists with the specified ID;
+ * @returns A {@linkcode Promise} that resolves with the retrieved task object, or `null` if no task exists with the specified ID.
  */
 export async function getTaskInternal(
 	transaction: IDBTransaction,
