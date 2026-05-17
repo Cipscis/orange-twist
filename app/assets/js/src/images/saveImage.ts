@@ -1,11 +1,10 @@
 // Type-only import to expose symbol in JSDoc
 import type { getImage } from './getImage';
 
-import { doDatabaseTransaction } from 'utils';
 import { createImageHash } from './createImageHash';
 
 import { ObjectStoreName } from 'database/metadata';
-import { getDatabaseVersion } from 'database/utils';
+import { doDatabaseTransaction, getDatabaseVersion } from 'database/utils';
 
 /**
  * Persist an image in IndexedDB, so it can be retrieved later.

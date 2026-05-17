@@ -8,7 +8,6 @@ export {
 } from './register';
 
 export {
-	doDatabaseTransaction,
 	getDbDump,
 	getEntries,
 	getIdbRequestPromise,

@@ -1,5 +1,5 @@
-import { getDatabase } from '../../database/utils/getDatabase';
-import type { ObjectStoreName } from 'database/metadata';
+import { getDatabase } from './getDatabase';
+import type { ObjectStoreName } from '../metadata';
 
 /**
  * Perform a transaction on a specified object store within
