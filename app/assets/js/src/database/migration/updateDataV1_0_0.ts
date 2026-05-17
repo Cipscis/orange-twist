@@ -6,7 +6,7 @@ import type {
 	LegacyExportData,
 	LegacyExportDataByVersion,
 	LegacyStatusName,
-} from 'database/types';
+} from '../types';
 
 /**
  * Update a {@linkcode LegacyExportData} from schema version `1.0.0` to schema version `2.0.0`.
@@ -124,11 +124,12 @@ function collectDayTaskData(
 
 			const dayId = (() => {
 				const dayId = getDayIdByName(dayName, dayData);
+				// If a day already exists, reuse its ID.
 				if (typeof dayId === 'number') {
 					return dayId;
 				}
 
-				// Otherwise, construct a new day and insert it, then use that id
+				// Otherwise, construct a new day and insert it, then use that ID
 				const nextId = Math.max(...Object.values(dayData).map(({ id }) => id));
 				const [year, month, dayNumber] = getDayNameParts(dayName);
 				dayData[nextId] = {
@@ -141,7 +142,7 @@ function collectDayTaskData(
 				return nextId;
 			})();
 
-			// TODO: Verify that I'm generating sortIndex in the right direction - lower numbers mean sorted to the start/top)
+			// Construct the day task's sortIndex based on its position in the day's array of tasks
 			const sortIndex = (() => {
 				const legacyDayInfo = (legacyData.data.days ?? []).find(([name]) => name === dayName)?.[1];
 				if (!legacyDayInfo) {
