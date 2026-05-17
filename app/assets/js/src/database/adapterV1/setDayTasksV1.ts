@@ -8,11 +8,11 @@ import {
 	getDayTasksInternal,
 	getStatusByNameInternal,
 	getTaskInternal,
+	removeDayTaskInternal,
 	updateDayTaskInternal,
 } from '../internal';
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
-import { updateDayTaskInternal } from 'database/internal/updateDayTaskInternal';
 
 export async function setDayTasksV1(
 	dayTasks: readonly (readonly [string, DayTaskInfo])[]
@@ -28,7 +28,7 @@ export async function setDayTasksV1(
 	const promises: (Promise<unknown>)[] = [];
 
 	const priorDayTaskIds = new Set((await getDayTasksInternal(transaction)).map(({ id }) => id));
-	// TODO: Collect IDs of day tasks that are added or updated, to find difference with prior day task IDs
+	const newDayTaskIds = new Set<number>();
 
 	for (const [dayTaskKey, dayTask] of dayTasks) {
 		const { dayName, taskId } = decodeDayTaskKey(dayTaskKey);
@@ -61,27 +61,43 @@ export async function setDayTasksV1(
 
 		if (!existingDayTask) {
 			// Add new day task
-			addDayTaskInternal(transaction, {
+			promises.push(
+				addDayTaskInternal(transaction, {
+					day: day.id,
+					task: task.id,
+					note: dayTask.note,
+					summary: dayTask.summary,
+					status: status.id,
+				}).then(
+					(newDayTaskId) => newDayTaskIds.add(newDayTaskId)
+				)
+			);
+			continue;
+		}
+
+		// Update existing day task
+		promises.push(
+			updateDayTaskInternal(transaction, {
 				day: day.id,
 				task: task.id,
 				note: dayTask.note,
 				summary: dayTask.summary,
 				status: status.id,
-			});
-			continue;
-		}
-
-		// Update existing day task
-		updateDayTaskInternal(transaction, {
-			day: day.id,
-			task: task.id,
-			note: dayTask.note,
-			summary: dayTask.summary,
-			status: status.id,
-		});
+			}).then(
+				(newDayTaskId) => newDayTaskIds.add(newDayTaskId)
+			)
+		);
 	}
 
-	// TODO: Remove removed day tasks
+	// Wait for newDayTaskIds to be populated
+	await Promise.all(promises);
+
+	// Remove removed day tasks
+	const removedDayTaskIds = priorDayTaskIds.difference(newDayTaskIds);
+
+	for (const id of removedDayTaskIds) {
+		promises.push(removeDayTaskInternal(transaction, id));
+	}
 
 	await Promise.all(promises);
 }

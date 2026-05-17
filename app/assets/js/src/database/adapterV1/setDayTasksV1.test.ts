@@ -119,5 +119,13 @@ describe('setDayTasksV1', () => {
 
 	test.todo('throws an error if a day task is given a non-existent status');
 
-	test.todo('removes removed day tasks');
+	test('removes removed day tasks', async () => {
+		await setDayTasksV1([]);
+
+		const db = await getDatabase();
+		const transaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
+
+		const dayTasks = await getDayTasksInternal(transaction);
+		expect(dayTasks).toEqual([]);
+	});
 });
