@@ -4,10 +4,12 @@ import { ObjectStoreName } from '../metadata';
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to remove a day task.
  *
- * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.DayTaskInfo} object store.
+ * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.DAY_TASK} object store.
  * @param dayTaskId The ID of the day task to delete.
  *
  * @returns A {@linkcode Promise} that resolves when the day task has been removed.
+ *
+ * @throws Error if no template exists with the specified ID.
  */
 export async function removeDayTaskInternal(
 	transaction: IDBTransaction,
