@@ -2,7 +2,11 @@ import type { TemplateInfo } from 'data/templates';
 
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { addTemplateInternal, getTemplateInternal } from '../internal';
+import {
+	addTemplateInternal,
+	getTemplateInternal,
+	updateTemplateInternal,
+} from '../internal';
 
 export async function setTemplatesV1(
 	templates: readonly (readonly [number, TemplateInfo])[]
@@ -18,7 +22,10 @@ export async function setTemplatesV1(
 		const existingTemplate = await getTemplateInternal(transaction, templateInfo.id);
 
 		if (existingTemplate) {
-			// TODO: Update existing template
+			// Update existing template
+			promises.push(
+				updateTemplateInternal(transaction, templateInfo)
+			);
 			continue;
 		}
 
