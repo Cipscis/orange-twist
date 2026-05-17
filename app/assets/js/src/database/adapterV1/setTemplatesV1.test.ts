@@ -50,7 +50,41 @@ describe('setTemplatesV1', () => {
 		]);
 	});
 
-	test.todo('updates existing templates');
+	test('updates existing templates', async () => {
+		await setTemplatesV1([
+			[0, {
+				id: 0,
+				name: 'Template 0 name updated',
+				template: 'Template 0 updated',
+				sortIndex: 0,
+			}],
+			[1, {
+				id: 1,
+				name: 'Template 1 name updated',
+				template: 'Template 1 updated',
+				sortIndex: 1,
+			}],
+		]);
+
+		const db = await getDatabase();
+		const transaction = db.transaction(ObjectStoreName.TEMPLATE, 'readonly');
+
+		const templates = await getTemplatesInternal(transaction);
+		expect(templates).toEqual([
+			{
+				id: 0,
+				name: 'Template 0 name updated',
+				template: 'Template 0 updated',
+				sortIndex: 0,
+			},
+			{
+				id: 1,
+				name: 'Template 1 name updated',
+				template: 'Template 1 updated',
+				sortIndex: 1,
+			},
+		]);
+	});
 
 	test.todo('removes removed templates');
 });
