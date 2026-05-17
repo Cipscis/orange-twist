@@ -147,9 +147,8 @@ export async function createTestData(): Promise<void> {
 	const testImageBlob = new Blob(['test data'], { type: 'text/plain' });
 
 	requests.push(imageOS.put({
-		id: 0,
-		file: testImageBlob,
 		hash: 'test-hash',
+		file: testImageBlob,
 	} satisfies DatabaseData[typeof ObjectStoreName.IMAGE][number]));
 
 	await Promise.all(

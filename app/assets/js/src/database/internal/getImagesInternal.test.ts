@@ -29,7 +29,6 @@ describe('getImagesInternal', () => {
 		}] = result;
 
 		expect(rest).toEqual({
-			id: 0,
 			hash: 'test-hash',
 		});
 

@@ -52,9 +52,8 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 		}),
 	),
 	image: z.record(
-		z.number(),
+		z.string(),
 		z.object({
-			id: z.number(),
 			hash: z.string(),
 			file: z.instanceof(Blob),
 		}),
