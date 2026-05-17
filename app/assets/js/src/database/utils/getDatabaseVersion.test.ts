@@ -11,8 +11,8 @@ import { dbName } from '../metadata';
 import { getDatabaseVersion } from './getDatabaseVersion';
 
 describe('getDatabaseVersion', () => {
-	test('if the database does not exist, returns the intended version', async () => {
-		await expect(getDatabaseVersion()).resolves.toBe(2);
+	test('if the database does not exist, returns null', async () => {
+		await expect(getDatabaseVersion()).resolves.toBeNull;
 	});
 
 	test('if the database does exist, returns the actual version', async () => {
