@@ -175,13 +175,12 @@ describe('updateData', () => {
 						sortIndex: 1,
 					},
 				],
-				image: [
-					{
-						id: 0,
+				image: {
+					'hash 1':  {
 						hash: 'hash 1',
 						file: image,
 					},
-				],
+				},
 			} satisfies LegacyExportDataV2_0_0);
 		});
 

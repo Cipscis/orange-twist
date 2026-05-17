@@ -195,11 +195,13 @@ function collectTemplateData(
 async function collectImageData(
 	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
 ): Promise<LegacyExportDataByVersion<'2.0.0'>['image']> {
+	const images: LegacyExportDataByVersion<'2.0.0'>['image'] = {};
+
 	if (!legacyData.images) {
-		return [];
+		return images;
 	}
 
-	return await Promise.all(
+	await Promise.all(
 		Object.entries(legacyData.images).map(async ([hash, data], id) => {
 			const file = await (async () => {
 				if (data instanceof Blob) {
@@ -217,13 +219,14 @@ async function collectImageData(
 				return imageBlob;
 			})();
 
-			return {
-				id,
+			images[hash] = {
 				hash,
 				file,
 			};
-		}) ?? []
+		})
 	);
+
+	return images;
 }
 
 /**

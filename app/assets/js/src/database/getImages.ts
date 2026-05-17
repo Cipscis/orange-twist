@@ -4,7 +4,7 @@ import type { DatabaseData } from './types';
 import { getImagesInternal } from './internal/getImagesInternal';
 
 export async function getImages(): Promise<
-	DatabaseData[typeof ObjectStoreName.IMAGE][number][]
+	DatabaseData[typeof ObjectStoreName.IMAGE][string][]
 > {
 	const db = await getDatabase();
 	const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');

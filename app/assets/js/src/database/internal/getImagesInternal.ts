@@ -11,13 +11,13 @@ import type { DatabaseData } from '../types';
  * @returns A {@linkcode Promise} that resolves with an array containing all images.
  */
 export async function getImagesInternal(transaction: IDBTransaction): Promise<
-	DatabaseData[typeof ObjectStoreName.IMAGE][number][]
+	DatabaseData[typeof ObjectStoreName.IMAGE][string][]
 > {
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
 	// TODO: Find a type-safe way to do this
 	const request = imageOS.getAll() as IDBRequest<
-		DatabaseData[typeof ObjectStoreName.IMAGE][number][]
+		DatabaseData[typeof ObjectStoreName.IMAGE][string][]
 	>;
 
 	const result = await getIdbRequestPromise(request);

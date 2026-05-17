@@ -19,10 +19,9 @@ export async function getImageByHashInternal(
 	| null
 > {
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
-	const imageByHash = imageOS.index(IndexName.IMAGE_HASH);
 
 	// TODO: Find a way to make this type-safe
-	const request = imageByHash.get(hash) as IDBRequest<
+	const request = imageOS.get(hash) as IDBRequest<
 		| DatabaseData[typeof ObjectStoreName.IMAGE][number]
 		| undefined
 	>;
