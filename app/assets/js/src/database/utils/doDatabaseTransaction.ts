@@ -22,11 +22,11 @@ import type { ObjectStoreName } from '../metadata';
  * );
  * ```
  */
-export function doDatabaseTransaction(
+export function doDatabaseTransaction<T = unknown>(
 	mode: IDBTransactionMode,
 	objectStoreNames: readonly ObjectStoreName[],
-	callback: (objectStores: readonly IDBObjectStore[]) => IDBRequest
-): Promise<unknown> {
+	callback: (objectStores: readonly IDBObjectStore[]) => IDBRequest<T>
+): Promise<T> {
 	return new Promise((resolve, reject) => {
 		getDatabase().then((db) => {
 			const transaction = db.transaction(objectStoreNames, mode);
