@@ -1,6 +1,8 @@
 import { getDbDump } from 'utils';
-import { isLegacyExportData, type TaggedLegacyExportData } from 'database/types';
-import { tagLegacyExportData } from 'data/shared/migration/tagLegacyExportData';
+
+import { isLegacyExportData, type TaggedLegacyExportData } from '../types';
+
+import { tagLegacyExportData } from './tagLegacyExportData';
 
 /**
  * Gets a dump of a specified database and tags it with the appropriate schema version.
