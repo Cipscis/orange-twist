@@ -22,6 +22,7 @@ export { getStatusInternal } from './getStatusInternal';
 export { getStatusByNameInternal } from './getStatusByNameInternal';
 
 export { getTemplateInternal } from './getTemplateInternal';
+export { addTemplateInternal } from './addTemplateInternal';
 export { getTemplatesInternal } from './getTemplatesInternal';
 
 export { getImageByHashInternal } from './getImageByHashInternal';
