@@ -1,7 +1,7 @@
 import type { PersistApi } from 'persist/PersistApi';
-import { doDatabaseTransaction } from 'utils';
 
 import { ObjectStoreName } from 'database/metadata';
+import { doDatabaseTransaction } from 'database/utils';
 
 /**
  * A {@linkcode PersistApi} interface for working with the IndexedDB API, using the database schema v1.
