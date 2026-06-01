@@ -1,12 +1,9 @@
 import {
 	fillDatabase,
-	getTaggedDbDump,
 	migrateToLatest,
-	updateData,
 } from '../migration';
-
-import { getDatabaseVersion } from '../utils';
 import { dbName, dbVersion } from '../metadata';
+import { updatePersistedData } from '../migration/updatePersistedData';
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 /**
@@ -29,30 +26,7 @@ export async function getDatabase(
 	} = Promise.withResolvers<IDBDatabase>();
 	dbPromise = promise;
 
-	// If the database needs to update, dump a copy of its data into memory and update it
-	const updatedDbData = await (async () => {
-		const existingDbVersion = await getDatabaseVersion();
-		const dbNeedsUpdatedData = (
-			// The database did not exist before, or...
-			existingDbVersion === null ||
-			// The version we want to use now is newer than the old one
-			existingDbVersion < dbVersion
-		);
-
-		if (!dbNeedsUpdatedData) {
-			return null;
-		}
-
-		if (existingDbVersion === null) {
-			// TODO: Get data dump from localStorage and old images database (if it exists), and update it
-			return null;
-		} else {
-			const oldDbDump = await getTaggedDbDump(dbName, existingDbVersion);
-
-			const updatedData = await updateData(oldDbDump);
-			return updatedData;
-		}
-	})();
+	const updatedData = await updatePersistedData();
 
 	const request = indexedDB.open(dbName, dbVersion);
 
@@ -66,9 +40,9 @@ export async function getDatabase(
 	request.addEventListener('success', async () => {
 		const db = request.result;
 		// Once the upgrade is complete, dump the updated data into the new database
-		if (updatedDbData) {
+		if (updatedData) {
 			try {
-				await fillDatabase(db, updatedDbData);
+				await fillDatabase(db, updatedData);
 			} catch (e) {
 				// TODO: Handle error filling database
 				console.error(e);

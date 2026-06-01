@@ -49,7 +49,7 @@ function collectDayData(
 			const [year, month, day] = getDayNameParts(dayName);
 
 			return {
-				id,
+				id: id + 1, // IndexedDB IDs start from 1, so increment here to match,
 				note: legacyDay.note,
 				year,
 				month,
@@ -86,7 +86,7 @@ function collectStatusData(
 
 	return Array.from(statusSet)
 		.map((name, id) => ({
-			id,
+			id: id + 1, // IndexedDB IDs start from 1, so increment here to match,
 			name,
 			isComplete: ['completed', 'will-not-do'].includes(name),
 		}));
@@ -158,7 +158,7 @@ function collectDayTaskData(
 			})();
 
 			return {
-				id,
+				id: id + 1, // IndexedDB IDs start from 1, so increment here to match,
 				day: dayId,
 				task: taskId,
 				note: dayTaskInfo.note,
