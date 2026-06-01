@@ -77,7 +77,7 @@ describe('updateData', () => {
 			expect(updatedData).toEqual({
 				day: [
 					{
-						id: 0,
+						id: 1,
 						year: 2026,
 						month: 4,
 						day: 12,
@@ -89,80 +89,80 @@ describe('updateData', () => {
 						id: 1,
 						name: 'Test task one',
 						note: 'Task one note',
-						status: 2,
+						status: 3,
 						sortIndex: 1,
 					},
 					{
 						id: 2,
 						name: 'Test task two',
 						note: 'Task two note',
-						status: 1,
+						status: 2,
 						sortIndex: null,
 					},
 				],
 				day_task: [
 					{
-						id: 0,
-						day: 0,
+						id: 1,
+						day: 1,
 						task: 1,
 						note: 'Day task 1 note',
 						summary: 'Day task 1 summary',
-						status: 2,
+						status: 3,
 						sortIndex: 0,
 					},
 					{
-						id: 1,
-						day: 0,
+						id: 2,
+						day: 1,
 						task: 2,
 						note: 'Day task 2 note',
 						summary: 'Day task 2 summary',
-						status: 1,
+						status: 2,
 						sortIndex: 1,
 					},
 				],
 				status: [
 					{
-						id: 0,
+						id: 1,
 						name: 'todo',
 						isComplete: false,
 					},
 					{
-						id: 1,
+						id: 2,
 						name: 'in-progress',
 						isComplete: false,
 					},
 					{
-						id: 2,
+						id: 3,
 						name: 'completed',
 						isComplete: true,
 					},
 					{
-						id: 3,
+						id: 4,
 						name: 'investigating',
 						isComplete: false,
 					},
 					{
-						id: 4,
+						id: 5,
 						name: 'in-review',
 						isComplete: false,
 					},
 					{
-						id: 5,
+						id: 6,
 						name: 'ready-to-test',
 						isComplete: false,
 					},
 					{
-						id: 6,
+						id: 7,
 						name: 'paused',
 						isComplete: false,
 					},
 					{
-						id: 7,
+						id: 8,
 						name: 'approved-to-deploy',
 						isComplete: false,
 					},
 					{
-						id: 8,
+						id: 9,
 						name: 'will-not-do',
 						isComplete: true,
 					},
@@ -176,7 +176,7 @@ describe('updateData', () => {
 					},
 				],
 				image: {
-					'hash 1':  {
+					'hash 1': {
 						hash: 'hash 1',
 						file: image,
 					},
