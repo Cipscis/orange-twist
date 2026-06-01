@@ -1,7 +1,7 @@
 import { dbName } from '../metadata';
 
 /**
- * Determine the version of the existing database, or the intended version to be used if the database doesn't exist yet.
+ * Determine the version of the existing database, or `null` if the database doesn't exist yet.
  */
 export async function getDatabaseVersion(): Promise<number | null> {
 	const existingDbs = await indexedDB.databases();
