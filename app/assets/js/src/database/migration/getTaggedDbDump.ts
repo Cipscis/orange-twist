@@ -23,7 +23,6 @@ export async function getTaggedDbDump(dbName: string, dbVersion: number): Promis
 		}
 	} else {
 		// TODO: Handle this error?
-		console.error(dbDump);
 		throw new Error('Database does not contain valid export data');
 	}
 }

@@ -49,6 +49,7 @@ export const legacyExportDataSchemaV1_0_0 = z.object({
 						taskId: z.number(),
 						status: legacyStatusNameSchema,
 						note: z.string(),
+						summary: z.string(),
 					}),
 					z.object({
 						status: legacyStatusNameSchema,
