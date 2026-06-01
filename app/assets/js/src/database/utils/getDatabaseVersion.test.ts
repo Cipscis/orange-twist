@@ -12,7 +12,7 @@ import { getDatabaseVersion } from './getDatabaseVersion';
 
 describe('getDatabaseVersion', () => {
 	test('if the database does not exist, returns null', async () => {
-		await expect(getDatabaseVersion()).resolves.toBeNull;
+		await expect(getDatabaseVersion()).resolves.toBeNull();
 	});
 
 	test('if the database does exist, returns the actual version', async () => {
