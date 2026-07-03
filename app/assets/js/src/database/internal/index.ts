@@ -28,3 +28,4 @@ export { removeTemplateInternal } from './removeTemplateInternal';
 export { getTemplatesInternal } from './getTemplatesInternal';
 
 export { getImageInternal } from './getImageInternal';
+export { addImageInternal } from './addImageInternal';
