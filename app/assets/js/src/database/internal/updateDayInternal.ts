@@ -1,7 +1,6 @@
 import {
 	getIdbRequestPromise,
 	getIterableCursor,
-	type ExpandType,
 	type OptionalExcept,
 } from 'utils';
 
