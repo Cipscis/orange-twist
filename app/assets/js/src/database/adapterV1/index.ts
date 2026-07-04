@@ -11,6 +11,7 @@ import { setTemplatesV1 } from './setTemplatesV1';
 import { getImageV1 } from './getImageV1';
 import { setImageV1 } from './setImageV1';
 import { getImagesV1 } from './getImagesV1';
+import { setImagesV1 } from './setImagesV1';
 
 /**
  * An API for interacting with the database v2 using types from the database schema v1.
@@ -27,4 +28,5 @@ export const adapterV1 = {
 	getImage: getImageV1,
 	setImage: setImageV1,
 	getImages: getImagesV1,
+	setImages: setImagesV1,
 };
