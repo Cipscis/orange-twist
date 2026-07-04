@@ -2,9 +2,7 @@
 import type { getImage } from './getImage';
 
 import { createImageHash } from './createImageHash';
-
-import { ObjectStoreName } from 'database/metadata';
-import { doDatabaseTransaction, getDatabaseVersion } from 'database/utils';
+import { adapterV1 } from 'database';
 
 /**
  * Persist an image in IndexedDB, so it can be retrieved later.
@@ -19,19 +17,7 @@ import { doDatabaseTransaction, getDatabaseVersion } from 'database/utils';
 export async function saveImage(image: Blob): Promise<string> {
 	const hash = await createImageHash(image);
 
-	// TODO: Get rid of this database v1 handling
-	const dbVersion = await getDatabaseVersion();
-	if (dbVersion === 1 || dbVersion === null) {
-		await doDatabaseTransaction(
-			'readwrite',
-			[ObjectStoreName.IMAGES],
-			([store]) => store.put(image, hash)
-		);
-		return hash;
-	}
-
-	// TODO: Implement v2 handling
-	throw new Error('Saving image not implemented');
+	await adapterV1.setImage(image, hash);
 
 	return hash;
 }
