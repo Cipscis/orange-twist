@@ -12,7 +12,7 @@ export async function* getIterableCursor(
 	source: IDBObjectStore | IDBIndex,
 	query?: IDBKeyRange | IDBValidKey | null
 ): AsyncGenerator<
-	IDBCursorWithValue,
+	Omit<IDBCursorWithValue, 'value'> & { readonly value: unknown; },
 	void,
 	void
 > {

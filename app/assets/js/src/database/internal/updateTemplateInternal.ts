@@ -29,10 +29,13 @@ export async function updateTemplateInternal(
 	const requests: Promise<IDBValidKey>[] = [];
 
 	for await (const templateCursor of getIterableCursor(templateOS, template.id)) {
+		// This type assertion is safe because of other controls around what can be inserted into the database
+		const templateCursorValue = templateCursor.value as DatabaseData[typeof ObjectStoreName.TEMPLATE][number];
+
 		requests.push(
 			getIdbRequestPromise(
 				templateCursor.update({
-					...templateCursor.value,
+					...templateCursorValue,
 					...template,
 				})
 			)
