@@ -19,7 +19,7 @@ export async function getStatusInternal(
 > {
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
-	// TODO: Find a way to make this type safe
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = statusOS.get(id) as IDBRequest<
 		| DatabaseData[typeof ObjectStoreName.STATUS][number]
 		| undefined

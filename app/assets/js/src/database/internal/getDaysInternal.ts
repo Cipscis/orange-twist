@@ -15,8 +15,10 @@ export async function getDaysInternal(transaction: IDBTransaction): Promise<
 > {
 	const daysOS = transaction.objectStore(ObjectStoreName.DAY);
 
-	// TODO: Find a type-safe way of doing this
-	const request = daysOS.getAll() as IDBRequest<DatabaseData[typeof ObjectStoreName.DAY][number][]>;
+	// This type assertion is safe because of other controls around what can be inserted into the database
+	const request = daysOS.getAll() as IDBRequest<
+		DatabaseData[typeof ObjectStoreName.DAY][number][]
+	>;
 
 	const days = await getIdbRequestPromise(request);
 	const sortedDays = days.toSorted(sortDaysChronologically);

@@ -15,7 +15,7 @@ export async function getImagesInternal(transaction: IDBTransaction): Promise<
 > {
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
-	// TODO: Find a type-safe way to do this
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = imageOS.getAll() as IDBRequest<
 		DatabaseData[typeof ObjectStoreName.IMAGE][string][]
 	>;

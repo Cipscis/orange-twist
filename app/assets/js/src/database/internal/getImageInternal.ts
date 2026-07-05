@@ -20,7 +20,7 @@ export async function getImageInternal(
 > {
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
-	// TODO: Find a way to make this type-safe
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = imageOS.get(hash) as IDBRequest<
 		| DatabaseData[typeof ObjectStoreName.IMAGE][number]
 		| undefined

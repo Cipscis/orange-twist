@@ -20,7 +20,7 @@ export async function getTemplateInternal(
 > {
 	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
 
-	// TODO: Find a way to make this type safe
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = templateOS.get(templateId) as IDBRequest<
 		| DatabaseData[typeof ObjectStoreName.TEMPLATE][number]
 		| undefined

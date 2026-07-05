@@ -15,7 +15,7 @@ export async function getTasksInternal(transaction: IDBTransaction): Promise<
 > {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
-	// TODO: Find a type-safe way to do this
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = taskOS.getAll() as IDBRequest<
 		DatabaseData[typeof ObjectStoreName.TASK][number][]
 	>;

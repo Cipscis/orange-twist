@@ -24,7 +24,7 @@ export async function getDayByDateInternal(
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const dayByDate = dayOS.index(IndexName.DAY_DATE);
 
-	// TODO: Find a type-safe way to do this
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = dayByDate.get([year, month, day]) as IDBRequest<
 		| DatabaseData[typeof ObjectStoreName.DAY][number]
 		| undefined
