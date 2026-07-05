@@ -58,8 +58,8 @@ export function useCommandDataSave({ persist }: UseCommandDataSaveOptions): void
 			</>, { id, duration: null });
 			try {
 				await Promise.all([
-					saveDays(persist),
 					saveTasks(persist),
+					saveDays(persist),
 					saveDayTasks(persist),
 					saveTemplates(persist),
 				]);

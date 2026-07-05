@@ -55,8 +55,8 @@ async function loadExportDataDirect(
 	data: ExportDataLike
 ): Promise<void> {
 	await Promise.all([
-		loadDaysRegister(persist, JSON.stringify(data.days)),
 		loadTasksRegister(persist, JSON.stringify(data.tasks)),
+		loadDaysRegister(persist, JSON.stringify(data.days)),
 		loadDayTasksRegister(persist, JSON.stringify(data.dayTasks)),
 		loadTemplatesRegister(persist, JSON.stringify(data.templates ?? [])),
 		setAllImages(await getImageEntries(data)),
@@ -83,8 +83,8 @@ export async function loadExportData(
 		} catch (e) {
 			// If restoring the backup failed, try to load persisted data again
 			await Promise.all([
-				loadDaysRegister(persist),
 				loadTasksRegister(persist),
+				loadDaysRegister(persist),
 				loadDayTasksRegister(persist),
 				loadTemplatesRegister(persist),
 				setAllImages(await getImageEntries(backup)),
