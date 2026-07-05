@@ -10,9 +10,7 @@ import { getIdbRequestPromise } from 'utils';
 import { getDatabase } from '../utils';
 import { createTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
-import { getDayTasksInternal } from '../internal';
-
-import { getDays } from '../getDays';
+import { getDaysInternal, getDayTasksInternal } from '../internal';
 
 import { setDaysV1 } from './setDaysV1';
 
@@ -43,7 +41,8 @@ describe('setDaysV1', () => {
 			}],
 		]);
 
-		const days = await getDays();
+		const readTransaction = db.transaction(ObjectStoreName.DAY, 'readonly');
+		const days = await getDaysInternal(readTransaction);
 		// IDs don't start at 1 because the database had data entered before it was cleared
 		expect(days).toEqual([
 			{
@@ -153,7 +152,9 @@ describe('setDaysV1', () => {
 			}],
 		]);
 
-		const days = await getDays();
+		const db = await getDatabase();
+		const readTransaction = db.transaction(ObjectStoreName.DAY, 'readonly');
+		const days = await getDaysInternal(readTransaction);
 		expect(days).toEqual([
 			{
 				id: 3,
@@ -266,7 +267,9 @@ describe('setDaysV1', () => {
 	test('removes removed days', async () => {
 		await setDaysV1([]);
 
-		const days = await getDays();
+		const db = await getDatabase();
+		const readTransaction = db.transaction(ObjectStoreName.DAY, 'readonly');
+		const days = await getDaysInternal(readTransaction);
 		expect(days).toEqual([]);
 	});
 

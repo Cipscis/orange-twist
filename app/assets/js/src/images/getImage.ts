@@ -1,7 +1,6 @@
 import type { saveImage } from './saveImage';
 
-import { getDatabaseVersion } from 'database/utils';
-import { adapterV1, getImage as getImageByHash } from 'database';
+import { adapterV1 } from 'database';
 
 /**
  * Retrieve a Blob from the image object store.
@@ -14,11 +13,5 @@ import { adapterV1, getImage as getImageByHash } from 'database';
  * @see {@linkcode saveImage} For how to save an image for retrieval.
  */
 export async function getImage(hash: string): Promise<Blob | null> {
-	// TODO: Get rid of this database v1 handling
-	const dbVersion = await getDatabaseVersion();
-	if (dbVersion === 1 || dbVersion === null) {
-		return adapterV1.getImage(hash);
-	}
-
-	return (await getImageByHash(hash))?.file ?? null;
+	return adapterV1.getImage(hash);
 }
