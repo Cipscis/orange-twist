@@ -1,6 +1,7 @@
-import { ObjectStoreName } from 'database/metadata';
-import type { DatabaseData } from 'database/types';
 import { getIdbRequestPromise, getIterableCursor } from 'utils';
+
+import { ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing image.

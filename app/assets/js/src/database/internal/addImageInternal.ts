@@ -1,6 +1,8 @@
-import { ObjectStoreName } from 'database/metadata';
-import type { DatabaseData } from 'database/types';
 import { getIdbRequestPromise, type ExpandType } from 'utils';
+
+import { ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
+
 import { getImageInternal } from './getImageInternal';
 
 /**

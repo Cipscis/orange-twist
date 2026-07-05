@@ -3,8 +3,10 @@ import {
 	expect,
 	test,
 } from '@jest/globals';
+
+import { ObjectStoreName } from '../metadata';
+
 import { doDatabaseTransaction } from './doDatabaseTransaction';
-import { ObjectStoreName } from 'database/metadata';
 
 describe('doDatabaseTransaction', () => {
 	test('returns a promise that resolves when a database transaction is complete', async () => {
