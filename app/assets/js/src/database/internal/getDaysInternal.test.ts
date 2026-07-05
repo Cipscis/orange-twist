@@ -22,25 +22,25 @@ describe('getDaysInternal', () => {
 
 		expect(days).toEqual([
 			{
-				id: 2,
+				id: 3,
 				year: 2026,
 				month: 1,
 				day: 1,
-				note: 'Test note 2',
-			},
-			{
-				id: 0,
-				year: 2026,
-				month: 4,
-				day: 26,
-				note: 'Test note 0',
+				note: 'Test note 3',
 			},
 			{
 				id: 1,
 				year: 2026,
 				month: 4,
-				day: 27,
+				day: 26,
 				note: 'Test note 1',
+			},
+			{
+				id: 2,
+				year: 2026,
+				month: 4,
+				day: 27,
+				note: 'Test note 2',
 			},
 		]);
 	});

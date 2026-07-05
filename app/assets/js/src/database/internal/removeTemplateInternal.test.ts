@@ -26,15 +26,15 @@ describe('removeTemplateInternal', () => {
 	});
 
 	test('removes a specified template', async () => {
-		await removeTemplateInternal(transaction, 0);
+		await removeTemplateInternal(transaction, 1);
 
 		const templates = await getTemplatesInternal(transaction);
 
 		expect(templates).toEqual([
 			{
-				id: 1,
-				name: 'Template 1 name',
-				template: 'Template 1',
+				id: 2,
+				name: 'Template 2 name',
+				template: 'Template 2',
 				sortIndex: 0,
 			},
 		]);

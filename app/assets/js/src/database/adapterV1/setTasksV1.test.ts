@@ -25,17 +25,17 @@ describe('setTasksV1', () => {
 		await getIdbRequestPromise(writeTaskOS.clear());
 
 		await setTasksV1([
-			[0, {
-				id: 0,
-				name: 'Task 0',
-				note: 'Note for task 0',
-				status: 'todo',
-				sortIndex: 0,
-			}],
 			[1, {
 				id: 1,
 				name: 'Task 1',
 				note: 'Note for task 1',
+				status: 'todo',
+				sortIndex: 0,
+			}],
+			[2, {
+				id: 2,
+				name: 'Task 2',
+				note: 'Note for task 2',
 				status: 'todo',
 				sortIndex: 1,
 			}],
@@ -47,17 +47,17 @@ describe('setTasksV1', () => {
 		const tasks = await getTasksInternal(readTransaction);
 		expect(tasks).toEqual([
 			{
-				id: 0,
-				name: 'Task 0',
-				note: 'Note for task 0',
-				status: 0,
-				sortIndex: 0,
-			},
-			{
 				id: 1,
 				name: 'Task 1',
 				note: 'Note for task 1',
-				status: 0,
+				status: 1,
+				sortIndex: 0,
+			},
+			{
+				id: 2,
+				name: 'Task 2',
+				note: 'Note for task 2',
+				status: 1,
 				sortIndex: 1,
 			},
 		]);
@@ -65,24 +65,24 @@ describe('setTasksV1', () => {
 
 	test('updates existing tasks', async () => {
 		await setTasksV1([
-			[0, {
-				id: 0,
-				name: 'Test task 0 updated',
-				note: 'Test task 0 note updated',
-				status: 'completed',
-				sortIndex: 0,
-			}],
 			[1, {
 				id: 1,
 				name: 'Test task 1 updated',
 				note: 'Test task 1 note updated',
 				status: 'completed',
-				sortIndex: 1,
+				sortIndex: 0,
 			}],
 			[2, {
 				id: 2,
 				name: 'Test task 2 updated',
 				note: 'Test task 2 note updated',
+				status: 'completed',
+				sortIndex: 1,
+			}],
+			[3, {
+				id: 3,
+				name: 'Test task 3 updated',
+				note: 'Test task 3 note updated',
 				status: 'completed',
 				sortIndex: 2,
 			}],
@@ -94,24 +94,24 @@ describe('setTasksV1', () => {
 		const tasks = await getTasksInternal(transaction);
 		expect(tasks).toEqual([
 			{
-				id: 0,
-				name: 'Test task 0 updated',
-				note: 'Test task 0 note updated',
-				status: 2,
-				sortIndex: 0,
-			},
-			{
 				id: 1,
 				name: 'Test task 1 updated',
 				note: 'Test task 1 note updated',
-				status: 2,
-				sortIndex: 1,
+				status: 3,
+				sortIndex: 0,
 			},
 			{
 				id: 2,
 				name: 'Test task 2 updated',
 				note: 'Test task 2 note updated',
-				status: 2,
+				status: 3,
+				sortIndex: 1,
+			},
+			{
+				id: 3,
+				name: 'Test task 3 updated',
+				note: 'Test task 3 note updated',
+				status: 3,
 				sortIndex: 2,
 			},
 		]);
@@ -119,24 +119,24 @@ describe('setTasksV1', () => {
 
 	test('throws an error if a task is given a non-existent status', async () => {
 		const promise = setTasksV1([
-			[0, {
-				id: 0,
-				name: 'Test task 0 updated',
-				note: 'Test task 0 note updated',
-				status: 'completed',
-				sortIndex: 0,
-			}],
 			[1, {
 				id: 1,
 				name: 'Test task 1 updated',
 				note: 'Test task 1 note updated',
 				status: 'completed',
-				sortIndex: 1,
+				sortIndex: 0,
 			}],
 			[2, {
 				id: 2,
 				name: 'Test task 2 updated',
 				note: 'Test task 2 note updated',
+				status: 'completed',
+				sortIndex: 1,
+			}],
+			[3, {
+				id: 3,
+				name: 'Test task 3 updated',
+				note: 'Test task 3 note updated',
 				/* @ts-expect-error Testing invalid status */
 				status: 'no-status-exists',
 				sortIndex: 2,

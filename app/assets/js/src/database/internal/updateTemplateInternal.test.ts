@@ -27,17 +27,17 @@ describe('updateTemplateInternal', () => {
 
 	test('updates a specified template and returns its ID', async () => {
 		const result = await updateTemplateInternal(transaction, {
-			id: 0,
-			name: 'Template 0 name updated',
+			id: 1,
+			name: 'Template 1 name updated',
 		});
 
-		expect(result).toBe(0);
+		expect(result).toBe(1);
 
-		const template = await getTemplateInternal(transaction, 0);
+		const template = await getTemplateInternal(transaction, 1);
 		expect(template).toEqual({
-			id: 0,
-			name: 'Template 0 name updated',
-			template: 'Template 0',
+			id: 1,
+			name: 'Template 1 name updated',
+			template: 'Template 1',
 			sortIndex: 1,
 		});
 	});

@@ -25,11 +25,11 @@ describe('getDayByDateInternal', () => {
 		});
 
 		expect(result).toEqual({
-			id: 0,
+			id: 1,
 			year: 2026,
 			month: 4,
 			day: 26,
-			note: 'Test note 0',
+			note: 'Test note 1',
 		});
 	});
 

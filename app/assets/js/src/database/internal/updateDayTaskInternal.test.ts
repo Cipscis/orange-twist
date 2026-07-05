@@ -28,27 +28,27 @@ describe('updateDayTaskInternal', () => {
 
 	test('updates a specified day task, and returns a promise that resolves to its ID', async () => {
 		const result = await updateDayTaskInternal(transaction, {
-			day: 0,
-			task: 0,
+			day: 1,
+			task: 1,
 			note: 'Updated note',
 			summary: 'Updated summary',
-			status: 2,
+			status: 3,
 		});
 
-		expect(result).toBe(0);
+		expect(result).toBe(1);
 
 		const updatedDayTask = await getDayTaskForDayAndTaskInternal(transaction, {
-			day: 0,
-			task: 0,
+			day: 1,
+			task: 1,
 		});
 
 		expect(updatedDayTask).toEqual({
-			id: 0,
-			day: 0,
-			task: 0,
+			id: 1,
+			day: 1,
+			task: 1,
 			note: 'Updated note',
 			summary: 'Updated summary',
-			status: 2,
+			status: 3,
 			sortIndex: 1,
 		});
 	});

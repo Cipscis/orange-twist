@@ -22,7 +22,7 @@ describe('getStatusByAliasInternal', () => {
 		const status = await getStatusByAliasInternal(transaction, 'todo');
 
 		expect(status).toEqual({
-			id: 0,
+			id: 1,
 			alias: 'todo',
 		} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]);
 	});

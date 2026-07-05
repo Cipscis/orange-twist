@@ -28,24 +28,24 @@ describe('removeDayInternal', () => {
 	});
 
 	test('removes a specified day', async () => {
-		await removeDayInternal(transaction, 0);
+		await removeDayInternal(transaction, 1);
 
 		const days = await getDaysInternal(transaction);
 
 		expect(days).toEqual([
 			{
-				id: 2,
+				id: 3,
 				year: 2026,
 				month: 1,
 				day: 1,
-				note: 'Test note 2',
+				note: 'Test note 3',
 			},
 			{
-				id: 1,
+				id: 2,
 				year: 2026,
 				month: 4,
 				day: 27,
-				note: 'Test note 1',
+				note: 'Test note 2',
 			},
 		]);
 	});
@@ -57,7 +57,7 @@ describe('removeDayInternal', () => {
 	});
 
 	test('removes all day tasks that reference the removed day', async () => {
-		await removeDayInternal(transaction, 0);
+		await removeDayInternal(transaction, 1);
 
 		const dayTasks = await getDayTasksInternal(transaction);
 

@@ -32,29 +32,29 @@ describe('addDayTaskInternal', () => {
 		const dayTaskId = await addDayTaskInternal(
 			transaction,
 			{
-				day: 0,
-				task: 2,
-				note: 'Note for task 2 day 0',
-				summary: 'Summary for task 2 day 0',
-				status: 1,
+				day: 1,
+				task: 3,
+				note: 'Note for task 3 day 1',
+				summary: 'Summary for task 3 day 1',
+				status: 2,
 				sortIndex: null,
 			},
 		);
 
-		expect(dayTaskId).toBe(2);
+		expect(dayTaskId).toBe(3);
 
 		const dayTask = await getDayTaskForDayAndTaskInternal(transaction, {
-			day: 0,
-			task: 2,
+			day: 1,
+			task: 3,
 		});
 
 		expect(dayTask).toEqual({
-			id: 2,
-			day: 0,
-			task: 2,
-			note: 'Note for task 2 day 0',
-			summary: 'Summary for task 2 day 0',
-			status: 1,
+			id: 3,
+			day: 1,
+			task: 3,
+			note: 'Note for task 3 day 1',
+			summary: 'Summary for task 3 day 1',
+			status: 2,
 			sortIndex: null,
 		});
 	});
@@ -63,20 +63,20 @@ describe('addDayTaskInternal', () => {
 		await addDayTaskInternal(
 			transaction,
 			{
-				day: 0,
-				task: 2,
+				day: 1,
+				task: 3,
 			},
 		);
 
 		const dayTask = await getDayTaskForDayAndTaskInternal(transaction, {
-			day: 0,
-			task: 2,
+			day: 1,
+			task: 3,
 		});
 
 		expect(dayTask).toEqual({
-			id: 2,
-			day: 0,
-			task: 2,
+			id: 3,
+			day: 1,
+			task: 3,
 			note: '',
 			summary: null,
 			status: 1,
@@ -88,11 +88,11 @@ describe('addDayTaskInternal', () => {
 		const promise = addDayTaskInternal(
 			transaction,
 			{
-				day: 0,
-				task: 1,
-				note: 'Note for task 1 day 0',
-				summary: 'Summary for task 1 day 0',
-				status: 1,
+				day: 1,
+				task: 2,
+				note: 'Note for task 2 day 1',
+				summary: 'Summary for task 2 day 1',
+				status: 2,
 				sortIndex: null,
 			},
 		);
@@ -104,11 +104,11 @@ describe('addDayTaskInternal', () => {
 		const promise = addDayTaskInternal(
 			transaction,
 			{
-				day: 0,
+				day: 1,
 				task: -1,
-				note: 'Note for task -1 day 0',
-				summary: 'Summary for task -1 day 0',
-				status: 1,
+				note: 'Note for task -1 day 1',
+				summary: 'Summary for task -1 day 1',
+				status: 2,
 				sortIndex: null,
 			},
 		);
@@ -120,11 +120,11 @@ describe('addDayTaskInternal', () => {
 		const promise = addDayTaskInternal(
 			transaction,
 			{
-				day: 0,
+				day: 1,
 				task: -1,
-				note: 'Note for task -1 day 0',
-				summary: 'Summary for task -1 day 0',
-				status: 1,
+				note: 'Note for task -1 day 1',
+				summary: 'Summary for task -1 day 1',
+				status: 2,
 				sortIndex: null,
 			},
 		);
@@ -136,10 +136,10 @@ describe('addDayTaskInternal', () => {
 		const promise = addDayTaskInternal(
 			transaction,
 			{
-				day: 0,
-				task: 2,
-				note: 'Note for task 2 day 0',
-				summary: 'Summary for task 2 day 0',
+				day: 1,
+				task: 3,
+				note: 'Note for task 3 day 1',
+				summary: 'Summary for task 3 day 1',
 				status: -1,
 				sortIndex: null,
 			}

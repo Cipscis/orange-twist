@@ -15,14 +15,14 @@ describe('getDay', () => {
 	});
 
 	test('returns a day based on the specified ID', async () => {
-		const day = await getDay(0);
+		const day = await getDay(1);
 
 		expect(day).toEqual({
-			id: 0,
+			id: 1,
 			year: 2026,
 			month: 4,
 			day: 26,
-			note: 'Test note 0',
+			note: 'Test note 1',
 		});
 	});
 

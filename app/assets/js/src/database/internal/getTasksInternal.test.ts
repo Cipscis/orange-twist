@@ -22,24 +22,24 @@ describe('getTasksInternal', () => {
 
 		expect(tasks).toEqual([
 			{
-				id: 2,
-				name: 'Test task 2',
-				note: 'Test task 2 note',
-				status: 1,
+				id: 3,
+				name: 'Test task 3',
+				note: 'Test task 3 note',
+				status: 2,
 				sortIndex: 0,
-			},
-			{
-				id: 0,
-				name: 'Test task 0',
-				note: 'Test task 0 note',
-				status: 0,
-				sortIndex: 1,
 			},
 			{
 				id: 1,
 				name: 'Test task 1',
 				note: 'Test task 1 note',
 				status: 1,
+				sortIndex: 1,
+			},
+			{
+				id: 2,
+				name: 'Test task 2',
+				note: 'Test task 2 note',
+				status: 2,
 				sortIndex: 2,
 			},
 		]);
