@@ -20,6 +20,7 @@ export { getDayTasksForDayInternal } from './getDayTasksForDayInternal';
 
 export { getStatusInternal } from './getStatusInternal';
 export { getStatusByAliasInternal } from './getStatusByAliasInternal';
+export { getStatusesInternal } from './getStatusesInternal';
 
 export { getTemplateInternal } from './getTemplateInternal';
 export { addTemplateInternal } from './addTemplateInternal';
