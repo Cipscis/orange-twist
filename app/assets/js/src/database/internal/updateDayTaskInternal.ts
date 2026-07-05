@@ -34,8 +34,8 @@ export async function updateDayTaskInternal(
 	let dayTaskId: number | undefined;
 
 	for await (const dayTaskCursor of getIterableCursor(dayTaskByDayAndTask, [dayTask.day, dayTask.task])) {
-		// TODO: Find a type-safe way to do this
-		const dayTaskCursorValue = (dayTaskCursor.value as DatabaseData[typeof ObjectStoreName.DAY_TASK][number]);
+		// This type assertion is safe because of other controls around what can be inserted into the database
+		const dayTaskCursorValue = dayTaskCursor.value as DatabaseData[typeof ObjectStoreName.DAY_TASK][number];
 		dayTaskId = dayTaskCursorValue.id;
 
 		if (typeof dayTask.status === 'number') {

@@ -27,10 +27,13 @@ export async function updateDayInternal(
 
 	const requests: Promise<IDBValidKey>[] = [];
 	for await (const dayCursor of getIterableCursor(dayByDate, [day.year, day.month, day.day])) {
+		// This type assertion is safe because of other controls around what can be inserted into the database
+		const dayCursorValue = dayCursor.value as DatabaseData[typeof ObjectStoreName.DAY][number];
+
 		requests.push(
 			getIdbRequestPromise(
 				dayCursor.update({
-					...dayCursor.value,
+					...dayCursorValue,
 					...day,
 				})
 			)

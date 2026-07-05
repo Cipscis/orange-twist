@@ -26,6 +26,9 @@ export async function updateTaskInternal(
 	const requests: Promise<IDBValidKey>[] = [];
 
 	for await (const taskCursor of getIterableCursor(taskOS, task.id)) {
+		// This type assertion is safe because of other controls around what can be inserted into the database
+		const taskCursorValue = taskCursor.value as DatabaseData[typeof ObjectStoreName.TASK][number];
+
 		if (typeof task.status === 'number') {
 			const status = await getStatusInternal(transaction, task.status);
 			if (status === null) {
@@ -36,7 +39,7 @@ export async function updateTaskInternal(
 		requests.push(
 			getIdbRequestPromise(
 				taskCursor.update({
-					...taskCursor.value,
+					...taskCursorValue,
 					...task,
 				})
 			)
