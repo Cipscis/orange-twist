@@ -12,7 +12,7 @@ import {
 	updateDayTaskInternal,
 } from '../internal';
 import { ObjectStoreName } from '../metadata';
-import { getDatabase } from '../utils';
+import { getDatabase, getDayNameParts } from '../utils';
 
 export async function setDayTasksV1(
 	dayTasks: readonly (readonly [string, DayTaskInfo])[]
@@ -100,17 +100,4 @@ export async function setDayTasksV1(
 	}
 
 	await Promise.all(promises);
-}
-
-// TODO: This function is copied from updateDataV1_0_0
-/**
- * Convert a legacy day name into numeric parts. For example, `'2026-04-12'` becomes `[2026, 4, 12]`.
- */
-function getDayNameParts(dayName: string): [number, number, number] {
-	const parts = dayName.split('-');
-	const year = Number(parts[0]);
-	const month = Number(parts[1]);
-	const day = Number(parts[2]);
-
-	return [year, month, day];
 }
