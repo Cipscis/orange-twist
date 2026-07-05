@@ -28,10 +28,6 @@ export async function updatePersistedData(): Promise<DatabaseData | null> {
 			? getTaggedLsDump()
 			: await getTaggedDbDump(dbName, existingDbVersion);
 
-		if (!oldDataDump) {
-			return null;
-		}
-
 		const updatedData = await updateData(oldDataDump);
 		return updatedData;
 	})();

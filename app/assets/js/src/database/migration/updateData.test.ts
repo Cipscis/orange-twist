@@ -4,11 +4,63 @@ import {
 	test,
 } from '@jest/globals';
 
-import type { LegacyExportDataV2_0_0, TaggedLegacyExportData } from '../types';
+import type { DatabaseData, TaggedLegacyExportData } from '../types';
 
 import { updateData } from './updateData';
 
 describe('updateData', () => {
+	describe('receiving null', () => {
+		test('constructs a minimal v2.0.0 database', async () => {
+			const updatedData = await updateData(null);
+
+			expect(updatedData).toEqual({
+				day: {},
+				task: {},
+				day_task: {},
+				status: [
+					{
+						id: 1,
+						alias: 'todo',
+					},
+					{
+						id: 2,
+						alias: 'in-progress',
+					},
+					{
+						id: 3,
+						alias: 'completed',
+					},
+					{
+						id: 4,
+						alias: 'investigating',
+					},
+					{
+						id: 5,
+						alias: 'in-review',
+					},
+					{
+						id: 6,
+						alias: 'ready-to-test',
+					},
+					{
+						id: 7,
+						alias: 'paused',
+					},
+					{
+						id: 8,
+						alias: 'approved-to-deploy',
+					},
+					{
+						id: 9,
+						alias: 'will-not-do',
+					},
+				],
+				template: {},
+				image: {},
+			} satisfies DatabaseData);
+		});
+	});
+
 	describe('receiving schema 1.0.0', () => {
 		test('updates to v2.0.0', async () => {
 			const testImageDataUrl = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+PHBhdGggZmlsbD0iI0Y0OTAwQyIgZD0iTTMgMTkuNUMzIDEwLjM4OCAxMC4zODcgMyAxOS40OTkgM2M5LjExMyAwIDE2LjUgNy4zODcgMTYuNSAxNi41UzI4LjYxMiAzNiAxOS40OTkgMzZDMTAuMzg3IDM2IDMgMjguNjEzIDMgMTkuNXoiLz48cGF0aCBmaWxsPSIjNjYyMTEzIiBkPSJNMTEuNDE0IDcuNTg1Yy0uMjY3LS4yNjctLjc5Ny0uMTk3LTEuMzU1LjEyLTMuMy0yLjczMi04LjY1My0zLjY1Mi04Ljg5NS0zLjY5Mi0uNTQ2LS4wODktMS4wNTkuMjc3LTEuMTUuODIxLS4wOTEuNTQ0LjI3NiAxLjA2LjgyMSAxLjE1MS4wNTMuMDA5IDQuOTM0Ljg1NCA3LjgyMSAzLjE2LS4yNzUuNTI1LS4zMjQgMS4wMTUtLjA3IDEuMjY4LjM5LjM5MSAxLjM0LjA3NCAyLjEyMS0uNzA3Ljc4MS0uNzggMS4wOTctMS43My43MDctMi4xMjF6Ii8+PHBhdGggZmlsbD0iIzVDOTEzQiIgZD0iTTIxIDFzLTMuMTA2IDQuMzE4LTcuMDIxIDUuMjczQzExIDcgNy4wNDEgNy4wNyA2LjY0NiA2LjE1Yy0uMzk0LS45MTkgMS41NzItMy45MzcgNC45NjktNS4zOTNDMTUuMDEyLS42OTggMjEgMSAyMSAxeiIvPjwvc3ZnPg==';
@@ -172,7 +224,7 @@ describe('updateData', () => {
 						file: image,
 					},
 				},
-			} satisfies LegacyExportDataV2_0_0);
+			} satisfies DatabaseData);
 		});
 
 		test('errors if it encounters a non-data URL', async () => {

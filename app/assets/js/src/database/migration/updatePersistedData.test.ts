@@ -6,6 +6,7 @@ import {
 } from '@jest/globals';
 
 import { StorageKey } from 'data/shared';
+import type { DatabaseData } from '../types';
 import { ObjectStoreName } from '../metadata';
 
 import { updatePersistedData } from './updatePersistedData';
@@ -16,10 +17,54 @@ describe('updatePersistedData', () => {
 		indexedDB.deleteDatabase('orange-twist');
 	});
 
-	test('returns null if no persisted data exists', async () => {
+	test('returns minimal data if no persisted data exists', async () => {
 		const updatedData = await updatePersistedData();
 
-		expect(updatedData).toBeNull();
+		expect(updatedData).toEqual({
+			day: {},
+			task: {},
+			day_task: {},
+			status: [
+				{
+					id: 1,
+					alias: 'todo',
+				},
+				{
+					id: 2,
+					alias: 'in-progress',
+				},
+				{
+					id: 3,
+					alias: 'completed',
+				},
+				{
+					id: 4,
+					alias: 'investigating',
+				},
+				{
+					id: 5,
+					alias: 'in-review',
+				},
+				{
+					id: 6,
+					alias: 'ready-to-test',
+				},
+				{
+					id: 7,
+					alias: 'paused',
+				},
+				{
+					id: 8,
+					alias: 'approved-to-deploy',
+				},
+				{
+					id: 9,
+					alias: 'will-not-do',
+				},
+			],
+			template: {},
+			image: {},
+		} satisfies DatabaseData);
 	});
 
 	test('updates any existing data from Orange Twist v1.4.0 or lower', async () => {
@@ -125,7 +170,7 @@ describe('updatePersistedData', () => {
 				},
 			],
 			image: {},
-		});
+		} satisfies DatabaseData);
 	});
 
 	test('updates any existing data stored in the database v1', async () => {
@@ -261,7 +306,7 @@ describe('updatePersistedData', () => {
 					sortIndex: -1,
 				},
 			],
-		});
+		} satisfies Omit<DatabaseData, 'image'>);
 
 		// Compare JSON serialised strings to get around different Blob instances in JSDOM vs Node
 		expect(JSON.stringify(image, null, '\t')).toEqual(JSON.stringify({
