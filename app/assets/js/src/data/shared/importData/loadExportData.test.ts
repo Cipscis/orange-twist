@@ -45,8 +45,7 @@ describe('loadExportData', () => {
 		localStorage.clear();
 	});
 
-	// TODO: This test is skipped until `setAllImages` has been updated for the database migration
-	test.skip('returns a Promise that resolves when correct export data is passed', async () => {
+	test('returns a Promise that resolves when correct export data is passed', async () => {
 		await expect(loadExportData(ls, {
 			days: [],
 			tasks: [],
@@ -61,8 +60,7 @@ describe('loadExportData', () => {
 		})).resolves.toBeUndefined();
 	});
 
-	// TODO: This test is skipped until `setAllImages` has been updated for the database migration
-	test.skip('saves changes if import was successful', async () => {
+	test('saves changes if import was successful', async () => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
@@ -83,8 +81,7 @@ describe('loadExportData', () => {
 		controller.abort();
 	});
 
-	// TODO: This test is skipped until `setAllImages` has been updated for the database migration
-	test.skip('returns a Promise that rejects when incorrect export data is passed', async () => {
+	test('returns a Promise that rejects when incorrect export data is passed', async () => {
 		const result = loadExportData(ls, {
 			days: [[true, null]],
 			tasks: [[true, null]],
@@ -95,8 +92,7 @@ describe('loadExportData', () => {
 		await expect(result).rejects.toBeInstanceOf(Error);
 	});
 
-	// TODO: This test is skipped until `setAllImages` has been updated for the database migration
-	test.skip('reverts to backed up data if any part of the import failed', async () => {
+	test('reverts to backed up data if any part of the import failed', async () => {
 		const testTask: TaskInfo = {
 			id: 1,
 			name: 'Task name',
@@ -200,8 +196,7 @@ describe('loadExportData', () => {
 		expect(getAllTemplateInfo()).toEqual([testTemplate]);
 	});
 
-	// TODO: This test is skipped until `setAllImages` has been updated for the database migration
-	test.skip('updates old export data', async () => {
+	test('updates old export data', async () => {
 		const testDay: DayInfo = {
 			name: '2023-12-11',
 			note: 'Day note',
