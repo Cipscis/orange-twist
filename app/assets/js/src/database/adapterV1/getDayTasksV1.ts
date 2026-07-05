@@ -1,11 +1,13 @@
 import type { DayTaskInfo } from 'data/dayTasks';
 
-import { getStatuses } from '../getStatuses';
-
 import { getDatabase } from '../utils';
 import type { LegacyStatusName } from '../types';
 import { ObjectStoreName } from '../metadata';
-import { getDayInternal, getDayTasksInternal } from '../internal';
+import {
+	getDayInternal,
+	getDayTasksInternal,
+	getStatusesInternal,
+} from '../internal';
 
 /**
  * Retrieve all schema v1 {@linkcode DayTaskInfo} information from the database v2.
@@ -13,18 +15,21 @@ import { getDayInternal, getDayTasksInternal } from '../internal';
 export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]> {
 	const dayTasksV1: DayTaskInfo[] = [];
 
-	const statuses = await getStatuses();
-
 	const db = await getDatabase();
 	const transaction = db.transaction([
 		ObjectStoreName.DAY_TASK,
 		ObjectStoreName.DAY,
+		ObjectStoreName.STATUS,
 	], 'readonly');
 
 	const allDayTasks = await getDayTasksInternal(transaction);
+	const statuses = await getStatusesInternal(transaction);
 	for (const dayTask of allDayTasks) {
 		// TODO: This non-null assertion isn't safe
 		const day = (await getDayInternal(transaction, dayTask.day))!;
+
+		// TODO: This non-null assertion isn't safe
+		const status = statuses.find(({ id }) => id === dayTask.status)!;
 
 		const dayTaskV1: DayTaskInfo = {
 			taskId: dayTask.task,
@@ -32,7 +37,7 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 			summary: dayTask.summary,
 			dayName: `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`,
 			// TODO: Make a type-safe way of doing this
-			status: statuses[dayTask.status].alias as LegacyStatusName,
+			status: status.alias as LegacyStatusName,
 		};
 
 		dayTasksV1.push(dayTaskV1);
