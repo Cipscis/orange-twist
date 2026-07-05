@@ -2,7 +2,7 @@ import {
 	isLegacyExportDataV1_0_0,
 	type LegacyExportDataV1_0_0,
 	type TaggedLegacyExportData,
-} from 'database/types';
+} from '../types';
 import { tagLegacyExportData } from './tagLegacyExportData';
 
 const StorageKey = {

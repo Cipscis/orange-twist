@@ -3,10 +3,10 @@ import { ObjectStoreName } from '../metadata';
 import {
 	addImageInternal,
 	getImageInternal,
+	getImagesInternal,
 	removeImageInternal,
 	updateImageInternal,
 } from '../internal';
-import { getImagesInternal } from 'database/internal/getImagesInternal';
 
 export async function setImagesV1(
 	images: readonly (readonly [string, Blob])[]

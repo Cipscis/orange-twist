@@ -31,3 +31,4 @@ export { getImageInternal } from './getImageInternal';
 export { addImageInternal } from './addImageInternal';
 export { updateImageInternal } from './updateImageInternal';
 export { removeImageInternal } from './removeImageInternal';
+export { getImagesInternal } from './getImagesInternal';

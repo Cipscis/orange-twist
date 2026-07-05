@@ -1,7 +1,7 @@
 import { getDatabase } from './utils';
 import { ObjectStoreName } from './metadata';
 import type { DatabaseData } from './types';
-import { getImagesInternal } from './internal/getImagesInternal';
+import { getImagesInternal } from './internal';
 
 export async function getImages(): Promise<
 	DatabaseData[typeof ObjectStoreName.IMAGE][string][]
