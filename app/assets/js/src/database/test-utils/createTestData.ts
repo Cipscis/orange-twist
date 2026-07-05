@@ -64,20 +64,17 @@ export async function createTestData(): Promise<void> {
 	// Insert test statuses
 	requests.push(statusOS.put({
 		id: 0,
-		name: 'todo',
-		isComplete: false,
+		alias: 'todo',
 	} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]));
 
 	requests.push(statusOS.put({
 		id: 1,
-		name: 'in-progress',
-		isComplete: false,
+		alias: 'in-progress',
 	} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]));
 
 	requests.push(statusOS.put({
 		id: 2,
-		name: 'completed',
-		isComplete: true,
+		alias: 'completed',
 	} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]));
 
 	// Insert test tasks

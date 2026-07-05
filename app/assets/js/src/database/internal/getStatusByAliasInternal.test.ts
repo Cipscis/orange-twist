@@ -5,33 +5,33 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { DatabaseData } from '../types';
 import { ObjectStoreName } from '../metadata';
 import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 
-import { getStatusByNameInternal } from './getStatusByNameInternal';
+import { getStatusByAliasInternal } from './getStatusByAliasInternal';
 
-describe('getStatusByNameInternal', () => {
+describe('getStatusByAliasInternal', () => {
 	beforeAll(() => createTestData());
 
 	test('returns a status with the specified name', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.STATUS);
 
-		const status = await getStatusByNameInternal(transaction, 'todo');
+		const status = await getStatusByAliasInternal(transaction, 'todo');
 
 		expect(status).toEqual({
 			id: 0,
-			name: 'todo',
-			isComplete: false,
-		});
+			alias: 'todo',
+		} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]);
 	});
 
 	test('returns null if no status exists with that name', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.STATUS);
 
-		const status = await getStatusByNameInternal(transaction, 'no status with this name');
+		const status = await getStatusByAliasInternal(transaction, 'no status with this name');
 
 		expect(status).toBeNull();
 	});

@@ -4,7 +4,7 @@ import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
 import {
 	addTaskInternal,
-	getStatusByNameInternal,
+	getStatusByAliasInternal,
 	getTaskInternal,
 	getTasksInternal,
 	removeTaskInternal,
@@ -59,7 +59,7 @@ async function addNewTask(
 	transaction: IDBTransaction,
 	taskInfo: TaskInfo
 ): Promise<number> {
-	const status = await getStatusByNameInternal(transaction, taskInfo.status);
+	const status = await getStatusByAliasInternal(transaction, taskInfo.status);
 	if (!status) {
 		throw new Error(`Cannot add task, no status exists with name ${taskInfo.status}`);
 	}
@@ -77,10 +77,10 @@ async function updateExistingTask(
 	transaction: IDBTransaction,
 	taskInfo: TaskInfo,
 ): Promise<void> {
-	const status = await getStatusByNameInternal(transaction, taskInfo.status);
+	const status = await getStatusByAliasInternal(transaction, taskInfo.status);
 
 	if (status === null) {
-		throw new Error(`Cannot give task ${taskInfo.id} status with name ${taskInfo.status} - No such status exists`);
+		throw new Error(`Cannot give task ${taskInfo.id} status with alias ${taskInfo.status} - No such status exists`);
 	}
 
 	await updateTaskInternal(transaction, {

@@ -29,7 +29,7 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 			note: task.note,
 			sortIndex: task.sortIndex ?? 0,
 			// TODO: Make a type safe way of doing this
-			status: statuses[task.status].name as LegacyStatusName,
+			status: statuses[task.status].alias as LegacyStatusName,
 		};
 
 		tasksV1.push(taskV1);

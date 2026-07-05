@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { DatabaseData } from '../types';
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
 import { createTestData } from '../test-utils';
@@ -22,9 +23,8 @@ describe('getStatusInternal', () => {
 
 		expect(status).toEqual({
 			id: 0,
-			name: 'todo',
-			isComplete: false,
-		});
+			alias: 'todo',
+		} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]);
 	});
 
 	test('returns null if no status exists by that status ID', async () => {

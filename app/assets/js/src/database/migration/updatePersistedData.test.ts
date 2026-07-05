@@ -80,49 +80,40 @@ describe('updatePersistedData', () => {
 			status: [
 				{
 					id: 1,
-					name: 'todo',
-					isComplete: false,
+					alias: 'todo',
 				},
 				{
 					id: 2,
-					name: 'in-progress',
-					isComplete: false,
+					alias: 'in-progress',
 				},
 				{
 					id: 3,
-					name: 'completed',
-					isComplete: true,
+					alias: 'completed',
 				},
 
 				{
 					id: 4,
-					name: 'investigating',
-					isComplete: false,
+					alias: 'investigating',
 				},
 				{
 					id: 5,
-					name: 'in-review',
-					isComplete: false,
+					alias: 'in-review',
 				},
 				{
 					id: 6,
-					name: 'ready-to-test',
-					isComplete: false,
+					alias: 'ready-to-test',
 				},
 				{
 					id: 7,
-					name: 'paused',
-					isComplete: false,
+					alias: 'paused',
 				},
 				{
 					id: 8,
-					name: 'approved-to-deploy',
-					isComplete: false,
+					alias: 'approved-to-deploy',
 				},
 				{
 					id: 9,
-					name: 'will-not-do',
-					isComplete: true,
+					alias: 'will-not-do',
 				},
 			],
 			template: [
@@ -139,7 +130,7 @@ describe('updatePersistedData', () => {
 
 	test('updates any existing data stored in the database v1', async () => {
 		const testImageDataUrl = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+PHBhdGggZmlsbD0iI0Y0OTAwQyIgZD0iTTMgMTkuNUMzIDEwLjM4OCAxMC4zODcgMyAxOS40OTkgM2M5LjExMyAwIDE2LjUgNy4zODcgMTYuNSAxNi41UzI4LjYxMiAzNiAxOS40OTkgMzZDMTAuMzg3IDM2IDMgMjguNjEzIDMgMTkuNXoiLz48cGF0aCBmaWxsPSIjNjYyMTEzIiBkPSJNMTEuNDE0IDcuNTg1Yy0uMjY3LS4yNjctLjc5Ny0uMTk3LTEuMzU1LjEyLTMuMy0yLjczMi04LjY1My0zLjY1Mi04Ljg5NS0zLjY5Mi0uNTQ2LS4wODktMS4wNTkuMjc3LTEuMTUuODIxLS4wOTEuNTQ0LjI3NiAxLjA2LjgyMSAxLjE1MS4wNTMuMDA5IDQuOTM0Ljg1NCA3LjgyMSAzLjE2LS4yNzUuNTI1LS4zMjQgMS4wMTUtLjA3IDEuMjY4LjM5LjM5MSAxLjM0LjA3NCAyLjEyMS0uNzA3Ljc4MS0uNzggMS4wOTctMS43My43MDctMi4xMjF6Ii8+PHBhdGggZmlsbD0iIzVDOTEzQiIgZD0iTTIxIDFzLTMuMTA2IDQuMzE4LTcuMDIxIDUuMjczQzExIDcgNy4wNDEgNy4wNyA2LjY0NiA2LjE1Yy0uMzk0LS45MTkgMS41NzItMy45MzcgNC45NjktNS4zOTNDMTUuMDEyLS42OTggMjEgMSAyMSAxeiIvPjwvc3ZnPg==';
-		const imageBlob = await(await fetch(testImageDataUrl)).blob();
+		const imageBlob = await (await fetch(testImageDataUrl)).blob();
 
 		// Construct test data for database v1
 		await new Promise<void>((resolve) => {
@@ -161,10 +152,10 @@ describe('updatePersistedData', () => {
 				const dataOS = transaction.objectStore(ObjectStoreName.DATA);
 				const imageOS = transaction.objectStore(ObjectStoreName.IMAGES);
 
-				dataOS.put([["2026-05-17",{"name":"2026-05-17","note":"Day 1 note","tasks":[1,2]}]], StorageKey.DAYS);
-				dataOS.put([[1,{"id":1,"name":"Test task 1","status":"todo","note":"Test task 1 note","sortIndex":-1}],[2,{"id":2,"name":"Test task 2","status":"in-progress","note":"Test task 2 note","sortIndex":-2}]], StorageKey.TASKS);
-				dataOS.put([["2026-05-17_1",{"dayName":"2026-05-17","taskId":1,"status":"todo","note":"Day task for task 1 day 1 note","summary":"Day task for task 1 day 1 summary"}],["2026-05-17_2",{"dayName":"2026-05-17","taskId":2,"status":"in-progress","note":"Day task for task 2 day 1 note","summary":"Day task for task 2 day 1 summary"}]], StorageKey.DAY_TASKS);
-				dataOS.put([[1,{"id":1,"name":"Template 1 name","template":"Template 1","sortIndex":-1}]], StorageKey.TEMPLATES);
+				dataOS.put([['2026-05-17', {'name': '2026-05-17', 'note': 'Day 1 note', 'tasks': [1, 2]}]], StorageKey.DAYS);
+				dataOS.put([[1, {'id': 1, 'name': 'Test task 1', 'status': 'todo', 'note': 'Test task 1 note', 'sortIndex': -1}], [2, {'id': 2, 'name': 'Test task 2', 'status': 'in-progress', 'note': 'Test task 2 note', 'sortIndex': -2}]], StorageKey.TASKS);
+				dataOS.put([['2026-05-17_1', {'dayName': '2026-05-17', 'taskId': 1, 'status': 'todo', 'note': 'Day task for task 1 day 1 note', 'summary': 'Day task for task 1 day 1 summary'}], ['2026-05-17_2', {'dayName': '2026-05-17', 'taskId': 2, 'status': 'in-progress', 'note': 'Day task for task 2 day 1 note', 'summary': 'Day task for task 2 day 1 summary'}]], StorageKey.DAY_TASKS);
+				dataOS.put([[1, {'id': 1, 'name': 'Template 1 name', 'template': 'Template 1', 'sortIndex': -1}]], StorageKey.TEMPLATES);
 
 				imageOS.put(testImageDataUrl, 'test-hash');
 
@@ -226,49 +217,40 @@ describe('updatePersistedData', () => {
 			status: [
 				{
 					id: 1,
-					name: 'todo',
-					isComplete: false,
+					alias: 'todo',
 				},
 				{
 					id: 2,
-					name: 'in-progress',
-					isComplete: false,
+					alias: 'in-progress',
 				},
 				{
 					id: 3,
-					name: 'completed',
-					isComplete: true,
+					alias: 'completed',
 				},
 
 				{
 					id: 4,
-					name: 'investigating',
-					isComplete: false,
+					alias: 'investigating',
 				},
 				{
 					id: 5,
-					name: 'in-review',
-					isComplete: false,
+					alias: 'in-review',
 				},
 				{
 					id: 6,
-					name: 'ready-to-test',
-					isComplete: false,
+					alias: 'ready-to-test',
 				},
 				{
 					id: 7,
-					name: 'paused',
-					isComplete: false,
+					alias: 'paused',
 				},
 				{
 					id: 8,
-					name: 'approved-to-deploy',
-					isComplete: false,
+					alias: 'approved-to-deploy',
 				},
 				{
 					id: 9,
-					name: 'will-not-do',
-					isComplete: true,
+					alias: 'will-not-do',
 				},
 			],
 			template: [

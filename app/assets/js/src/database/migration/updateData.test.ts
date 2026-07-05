@@ -123,48 +123,39 @@ describe('updateData', () => {
 				status: [
 					{
 						id: 1,
-						name: 'todo',
-						isComplete: false,
+						alias: 'todo',
 					},
 					{
 						id: 2,
-						name: 'in-progress',
-						isComplete: false,
+						alias: 'in-progress',
 					},
 					{
 						id: 3,
-						name: 'completed',
-						isComplete: true,
+						alias: 'completed',
 					},
 					{
 						id: 4,
-						name: 'investigating',
-						isComplete: false,
+						alias: 'investigating',
 					},
 					{
 						id: 5,
-						name: 'in-review',
-						isComplete: false,
+						alias: 'in-review',
 					},
 					{
 						id: 6,
-						name: 'ready-to-test',
-						isComplete: false,
+						alias: 'ready-to-test',
 					},
 					{
 						id: 7,
-						name: 'paused',
-						isComplete: false,
+						alias: 'paused',
 					},
 					{
 						id: 8,
-						name: 'approved-to-deploy',
-						isComplete: false,
+						alias: 'approved-to-deploy',
 					},
 					{
 						id: 9,
-						name: 'will-not-do',
-						isComplete: true,
+						alias: 'will-not-do',
 					},
 				],
 				template: [

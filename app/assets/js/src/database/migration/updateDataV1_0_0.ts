@@ -85,10 +85,9 @@ function collectStatusData(
 	}
 
 	return Array.from(statusSet)
-		.map((name, id) => ({
+		.map((alias, id) => ({
 			id: id + 1, // IndexedDB IDs start from 1, so increment here to match,
-			name,
-			isComplete: ['completed', 'will-not-do'].includes(name),
+			alias,
 		}));
 }
 
@@ -271,7 +270,7 @@ function getStatusIdByName(
 	statusName: LegacyStatusName,
 	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>,
 ): number {
-	const matchingStatus = Object.values(statusData).find(({ name }) => name === statusName);
+	const matchingStatus = Object.values(statusData).find(({ alias }) => alias === statusName);
 
 	return matchingStatus?.id ?? 0;
 }
