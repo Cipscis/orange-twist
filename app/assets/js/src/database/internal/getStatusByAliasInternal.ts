@@ -21,7 +21,7 @@ export async function getStatusByAliasInternal(
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 	const statusByAlias = statusOS.index(IndexName.STATUS_ALIAS);
 
-	// TODO: Find a way to make this type safe
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = statusByAlias.get(alias) as IDBRequest<
 			| DatabaseData[typeof ObjectStoreName.STATUS][number]
 			| undefined

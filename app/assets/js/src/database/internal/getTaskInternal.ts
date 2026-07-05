@@ -20,7 +20,7 @@ export async function getTaskInternal(
 > {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
-	// TODO: Find a way to make this type safe
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = taskOS.get(id) as IDBRequest<
 		| DatabaseData[typeof ObjectStoreName.TASK][number]
 		| undefined

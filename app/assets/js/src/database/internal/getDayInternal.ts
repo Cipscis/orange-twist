@@ -20,9 +20,10 @@ export async function getDayInternal(
 > {
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
-	// TODO: Find a type-safe way to do this
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = dayOS.get(dayId) as IDBRequest<
-		DatabaseData[typeof ObjectStoreName.DAY][number] | undefined
+		| DatabaseData[typeof ObjectStoreName.DAY][number]
+		| undefined
 	>;
 
 	const day = await getIdbRequestPromise(request);

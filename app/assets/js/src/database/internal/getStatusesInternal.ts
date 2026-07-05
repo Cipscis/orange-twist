@@ -15,8 +15,10 @@ export async function getStatusesInternal(
 ): Promise<DatabaseData[typeof ObjectStoreName.STATUS][number][]> {
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
-	// TODO: Find a type-safe way of doing this
-	const request = statusOS.getAll() as IDBRequest<DatabaseData[typeof ObjectStoreName.STATUS][number][]>;
+	// This type assertion is safe because of other controls around what can be inserted into the database
+	const request = statusOS.getAll() as IDBRequest<
+		DatabaseData[typeof ObjectStoreName.STATUS][number][]
+	>;
 
 	const statuses = await getIdbRequestPromise(request);
 

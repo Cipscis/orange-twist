@@ -20,7 +20,7 @@ export async function getDayTasksForDayInternal(
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const dayTaskByDay = dayTaskOS.index(IndexName.DAY_TASK_DAY);
 
-	// TODO: Find a way to make this type-safe
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = dayTaskByDay.getAll(dayId) as IDBRequest<
 		DatabaseData[typeof ObjectStoreName.DAY_TASK][number][]
 	>;

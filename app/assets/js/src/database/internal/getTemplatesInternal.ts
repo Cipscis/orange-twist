@@ -15,7 +15,7 @@ export async function getTemplatesInternal(transaction: IDBTransaction): Promise
 > {
 	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
 
-	// TODO: Find a type-safe way to do this
+	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = templateOS.getAll() as IDBRequest<
 		DatabaseData[typeof ObjectStoreName.TEMPLATE][number][]
 	>;
