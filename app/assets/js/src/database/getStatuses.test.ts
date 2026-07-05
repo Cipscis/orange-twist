@@ -5,6 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { DatabaseData } from './types';
+import type { ObjectStoreName } from './metadata';
 import { createTestData } from './test-utils';
 
 import { getStatuses } from './getStatuses';
@@ -20,19 +22,16 @@ describe('getStatuses', () => {
 		expect(statuses).toEqual({
 			0: {
 				id: 0,
-				name: 'todo',
-				isComplete: false,
+				alias: 'todo',
 			},
 			1: {
 				id: 1,
-				name: 'in-progress',
-				isComplete: false,
+				alias: 'in-progress',
 			},
 			2: {
 				id: 2,
-				name: 'completed',
-				isComplete: true,
+				alias: 'completed',
 			},
-		});
+		} satisfies DatabaseData[typeof ObjectStoreName.STATUS]);
 	});
 });

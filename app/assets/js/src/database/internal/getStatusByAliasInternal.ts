@@ -4,25 +4,25 @@ import { IndexName, ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
 /**
- * Takes an existing {@linkcode IDBTransaction} and adds a request to get a status by a specified name.
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to get a status by a specified alias.
  *
  * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.STATUS} object store.
- * @param name The name of the status to be retrieved.
+ * @param alias The alias of the status to be retrieved.
  *
- * @returns A {@linkcode Promise} that resolves with the status that has the specified name, or `null` if no such status exists.
+ * @returns A {@linkcode Promise} that resolves with the status that has the specified alias, or `null` if no such status exists.
  */
-export async function getStatusByNameInternal(
+export async function getStatusByAliasInternal(
 	transaction: IDBTransaction,
-	name: string,
+	alias: string,
 ): Promise<
 	| DatabaseData[typeof ObjectStoreName.STATUS][number]
 	| null
 > {
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
-	const statusByName = statusOS.index(IndexName.STATUS_NAME);
+	const statusByAlias = statusOS.index(IndexName.STATUS_ALIAS);
 
 	// TODO: Find a way to make this type safe
-	const request = statusByName.get(name) as IDBRequest<
+	const request = statusByAlias.get(alias) as IDBRequest<
 			| DatabaseData[typeof ObjectStoreName.STATUS][number]
 			| undefined
 		>;

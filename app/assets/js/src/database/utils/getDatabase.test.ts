@@ -7,13 +7,13 @@ import {
 
 import { getDbDump } from 'utils';
 
+import type { DatabaseData } from '../types';
 import {
 	dbName,
 	dbVersion,
 	ObjectStoreName,
 } from '../metadata';
 import { clearDatabase, createTestData } from '../test-utils';
-import type { DatabaseData } from '../types';
 
 import { getDatabase } from './getDatabase';
 
@@ -137,18 +137,15 @@ describe('getDatabase', () => {
 			status: {
 				0: {
 					id: 0,
-					name: 'todo',
-					isComplete: false,
+					alias: 'todo',
 				},
 				1: {
 					id: 1,
-					name: 'in-progress',
-					isComplete: false,
+					alias: 'in-progress',
 				},
 				2: {
 					id: 2,
-					name: 'completed',
-					isComplete: true,
+					alias: 'completed',
 				},
 			},
 			template: {
@@ -165,7 +162,7 @@ describe('getDatabase', () => {
 					sortIndex: 0,
 				},
 			},
-		});
+		} satisfies Partial<DatabaseData>);
 
 		// Can't easily compare image dump due to Blob handling, so remove Blobs first
 		const imageDumpWithoutBlobs = Object.fromEntries(

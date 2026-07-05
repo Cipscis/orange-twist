@@ -6,7 +6,7 @@ import {
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
 	getDayTasksInternal,
-	getStatusByNameInternal,
+	getStatusByAliasInternal,
 	getTaskInternal,
 	removeDayTaskInternal,
 	updateDayTaskInternal,
@@ -54,7 +54,7 @@ export async function setDayTasksV1(
 			task: task.id,
 		});
 
-		const status = await getStatusByNameInternal(transaction, dayTask.status);
+		const status = await getStatusByAliasInternal(transaction, dayTask.status);
 		if (!status) {
 			throw new Error(`Cannot add new day task with status ${dayTask.status} - no such status exists`);
 		}

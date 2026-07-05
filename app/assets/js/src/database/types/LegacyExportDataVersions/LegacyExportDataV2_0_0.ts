@@ -38,8 +38,7 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 		z.number(),
 		z.object({
 			id: z.number(),
-			name: z.string(),
-			isComplete: z.boolean(),
+			alias: z.string(),
 		}),
 	),
 	template: z.record(

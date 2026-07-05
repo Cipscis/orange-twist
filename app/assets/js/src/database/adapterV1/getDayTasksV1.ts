@@ -32,7 +32,7 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 			summary: dayTask.summary,
 			dayName: `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`,
 			// TODO: Make a type-safe way of doing this
-			status: statuses[dayTask.status].name as LegacyStatusName,
+			status: statuses[dayTask.status].alias as LegacyStatusName,
 		};
 
 		dayTasksV1.push(dayTaskV1);

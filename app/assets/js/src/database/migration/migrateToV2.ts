@@ -27,7 +27,7 @@ export function migrateToV2(db: IDBDatabase): void {
 		keyPath: 'id',
 		autoIncrement: true,
 	});
-	statusOS.createIndex(IndexName.STATUS_NAME, 'name');
+	statusOS.createIndex(IndexName.STATUS_ALIAS, 'alias');
 	db.createObjectStore(ObjectStoreName.TEMPLATE, {
 		keyPath: 'id',
 		autoIncrement: true,
