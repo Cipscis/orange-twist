@@ -10,7 +10,7 @@ import { getIdbRequestPromise } from 'utils';
 import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { getImages } from '../getImages';
+import { getImagesInternal } from '../internal';
 
 import { setImageV1 } from './setImageV1';
 
@@ -33,7 +33,11 @@ describe('setImageV1', () => {
 			'test-hash',
 		);
 
-		const images = await getImages();
+		const readTransaction = db.transaction(
+			[ObjectStoreName.IMAGE],
+			'readonly'
+		);
+		const images = await getImagesInternal(readTransaction);
 
 		expect(images.length).toBe(1);
 		expect(images[0].hash).toBe('test-hash');
@@ -45,7 +49,12 @@ describe('setImageV1', () => {
 			'test-hash',
 		);
 
-		const images = await getImages();
+		const db = await getDatabase();
+		const readTransaction = db.transaction(
+			[ObjectStoreName.IMAGE],
+			'readonly'
+		);
+		const images = await getImagesInternal(readTransaction);
 
 		expect(images.length).toBe(1);
 		expect(images[0].file.type).toBe('application/json');
