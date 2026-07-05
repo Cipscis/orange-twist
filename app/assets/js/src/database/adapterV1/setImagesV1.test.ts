@@ -10,7 +10,7 @@ import { getIdbRequestPromise } from 'utils';
 import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { getImages } from '../getImages';
+import { getImagesInternal } from '../internal';
 
 import { setImagesV1 } from './setImagesV1';
 
@@ -33,7 +33,11 @@ describe('setImagesV1', () => {
 			['new-hash-2', new Blob(['new-blob-2'], { type: 'text/plain' })],
 		]);
 
-		const images = await getImages();
+		const readTransaction = db.transaction(
+			[ObjectStoreName.IMAGE],
+			'readonly'
+		);
+		const images = await getImagesInternal(readTransaction);
 		expect(images.length).toBe(2);
 		expect(images[0].hash).toBe('new-hash-1');
 		expect(images[1].hash).toBe('new-hash-2');
@@ -44,7 +48,12 @@ describe('setImagesV1', () => {
 			['test-hash', new Blob([JSON.stringify(null)], { type: 'application/json' })],
 		]);
 
-		const images = await getImages();
+		const db = await getDatabase();
+		const readTransaction = db.transaction(
+			[ObjectStoreName.IMAGE],
+			'readonly'
+		);
+		const images = await getImagesInternal(readTransaction);
 		expect(images.length).toBe(1);
 		expect(images[0].file.type).toBe('application/json');
 	});
@@ -52,7 +61,12 @@ describe('setImagesV1', () => {
 	test('removes removed images', async () => {
 		await setImagesV1([]);
 
-		const images = await getImages();
+		const db = await getDatabase();
+		const readTransaction = db.transaction(
+			[ObjectStoreName.IMAGE],
+			'readonly'
+		);
+		const images = await getImagesInternal(readTransaction);
 		expect(images).toEqual([]);
 	});
 });
