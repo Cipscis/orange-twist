@@ -13,16 +13,9 @@ export async function getTaggedDbDump(dbName: string, dbVersion: number): Promis
 	const dbDump = await getDbDump(dbName, dbVersion);
 
 	if (isLegacyExportData(dbDump)) {
-		try {
-			const taggedData = tagLegacyExportData(dbDump);
-			return taggedData;
-		} catch (e) {
-			// TODO: Handle this error
-			console.error(dbDump);
-			throw e;
-		}
+		const taggedData = tagLegacyExportData(dbDump);
+		return taggedData;
 	} else {
-		// TODO: Handle this error?
 		throw new Error('Database does not contain valid export data');
 	}
 }
