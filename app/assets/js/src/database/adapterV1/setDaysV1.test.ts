@@ -34,27 +34,27 @@ describe('setDaysV1', () => {
 			['2020-01-01', {
 				name: '2020-01-01',
 				note: '2020-01-01 note',
-				tasks: [1, 0],
+				tasks: [2, 1],
 			}],
 			['2020-01-02', {
 				name: '2020-01-02',
 				note: '2020-01-02 note',
-				tasks: [2, 1],
+				tasks: [3, 1],
 			}],
 		]);
 
 		const days = await getDays();
-		// IDs don't start at 0 because the database had data entered before it was cleared
+		// IDs don't start at 1 because the database had data entered before it was cleared
 		expect(days).toEqual([
 			{
-				id: 3,
+				id: 4,
 				year: 2020,
 				month: 1,
 				day: 1,
 				note: '2020-01-01 note',
 			},
 			{
-				id: 4,
+				id: 5,
 				year: 2020,
 				month: 1,
 				day: 2,
@@ -82,30 +82,21 @@ describe('setDaysV1', () => {
 			['2020-01-01', {
 				name: '2020-01-01',
 				note: '2020-01-01 note',
-				tasks: [1, 0],
+				tasks: [2, 1],
 			}],
 			['2020-01-02', {
 				name: '2020-01-02',
 				note: '2020-01-02 note',
-				tasks: [2, 1],
+				tasks: [3, 2],
 			}],
 		]);
 
 		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
 		const dayTasks = await getDayTasksInternal(readTransaction);
-		// IDs don't start at 0 because the database had data entered before it was cleared
+		// IDs don't start at 1 because the database had data entered before it was cleared
 		expect(dayTasks).toEqual([
 			{
-				id: 2,
-				day: 3,
-				task: 1,
-				note: '',
-				summary: null,
-				sortIndex: 0,
-				status: 1,
-			},
-			{
-				id: 4,
+				id: 3,
 				day: 4,
 				task: 2,
 				note: '',
@@ -114,18 +105,27 @@ describe('setDaysV1', () => {
 				status: 1,
 			},
 			{
-				id: 3,
-				day: 3,
-				task: 0,
+				id: 5,
+				day: 5,
+				task: 3,
+				note: '',
+				summary: null,
+				sortIndex: 0,
+				status: 1,
+			},
+			{
+				id: 4,
+				day: 4,
+				task: 1,
 				note: '',
 				summary: null,
 				sortIndex: 1,
 				status: 1,
 			},
 			{
-				id: 5,
-				day: 4,
-				task: 1,
+				id: 6,
+				day: 5,
+				task: 2,
 				note: '',
 				summary: null,
 				sortIndex: 1,
@@ -138,17 +138,17 @@ describe('setDaysV1', () => {
 		await setDaysV1([
 			['2026-04-26', {
 				name: '2026-04-26',
-				note: 'Test note 0 updated',
-				tasks: [1, 0],
+				note: 'Test note 1 updated',
+				tasks: [2, 1],
 			}],
 			['2026-04-27', {
 				name: '2026-04-27',
-				note: 'Test note 1 updated',
+				note: 'Test note 2 updated',
 				tasks: [],
 			}],
 			['2026-01-01', {
 				name: '2026-01-01',
-				note: 'Test note 2 updated',
+				note: 'Test note 3 updated',
 				tasks: [],
 			}],
 		]);
@@ -156,45 +156,45 @@ describe('setDaysV1', () => {
 		const days = await getDays();
 		expect(days).toEqual([
 			{
-				id: 2,
+				id: 3,
 				year: 2026,
 				month: 1,
 				day: 1,
-				note: 'Test note 2 updated',
-			},
-			{
-				id: 0,
-				year: 2026,
-				month: 4,
-				day: 26,
-				note: 'Test note 0 updated',
+				note: 'Test note 3 updated',
 			},
 			{
 				id: 1,
 				year: 2026,
 				month: 4,
-				day: 27,
+				day: 26,
 				note: 'Test note 1 updated',
+			},
+			{
+				id: 2,
+				year: 2026,
+				month: 4,
+				day: 27,
+				note: 'Test note 2 updated',
 			},
 		]);
 	});
 
-	test('updates exists days\' day tasks', async () => {
+	test('updates existing days\' day tasks', async () => {
 		await setDaysV1([
 			['2026-04-26', {
 				name: '2026-04-26',
-				note: 'Test note 0 updated',
+				note: 'Test note 1 updated',
 				tasks: [],
 			}],
 			['2026-04-27', {
 				name: '2026-04-27',
-				note: 'Test note 1 updated',
-				tasks: [1, 0],
+				note: 'Test note 2 updated',
+				tasks: [2, 1],
 			}],
 			['2026-01-01', {
 				name: '2026-01-01',
-				note: 'Test note 2 updated',
-				tasks: [0, 2],
+				note: 'Test note 3 updated',
+				tasks: [1, 3],
 			}],
 		]);
 
@@ -203,8 +203,17 @@ describe('setDaysV1', () => {
 		const dayTasks = await getDayTasksInternal(readTransaction);
 		expect(dayTasks).toEqual([
 			{
-				id: 2,
-				day: 1,
+				id: 3,
+				day: 2,
+				task: 2,
+				note: '',
+				summary: null,
+				status: 1,
+				sortIndex: 0,
+			},
+			{
+				id: 5,
+				day: 3,
 				task: 1,
 				note: '',
 				summary: null,
@@ -214,25 +223,16 @@ describe('setDaysV1', () => {
 			{
 				id: 4,
 				day: 2,
-				task: 0,
-				note: '',
-				summary: null,
-				status: 1,
-				sortIndex: 0,
-			},
-			{
-				id: 3,
-				day: 1,
-				task: 0,
+				task: 1,
 				note: '',
 				summary: null,
 				status: 1,
 				sortIndex: 1,
 			},
 			{
-				id: 5,
-				day: 2,
-				task: 2,
+				id: 6,
+				day: 3,
+				task: 3,
 				note: '',
 				summary: null,
 				status: 1,
@@ -245,17 +245,17 @@ describe('setDaysV1', () => {
 		const promise = setDaysV1([
 			['2026-04-26', {
 				name: '2026-04-26',
-				note: 'Test note 0',
+				note: 'Test note 1',
 				tasks: [-1],
 			}],
 			['2026-04-27', {
 				name: '2026-04-27',
-				note: 'Test note 1',
+				note: 'Test note 2',
 				tasks: [],
 			}],
 			['2026-01-01', {
 				name: '2026-01-01',
-				note: 'Test note 2',
+				note: 'Test note 3',
 				tasks: [],
 			}],
 		]);
@@ -274,7 +274,7 @@ describe('setDaysV1', () => {
 		await setDaysV1([
 			['2026-04-27', {
 				name: '2026-04-27',
-				note: 'Test note 1',
+				note: 'Test note 2',
 				tasks: [],
 			}],
 		]);

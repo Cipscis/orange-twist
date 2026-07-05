@@ -21,15 +21,15 @@ describe('getTemplatesInternal', () => {
 
 		expect(templates).toEqual([
 			{
-				id: 1,
-				name: 'Template 1 name',
-				template: 'Template 1',
+				id: 2,
+				name: 'Template 2 name',
+				template: 'Template 2',
 				sortIndex: 0,
 			},
 			{
-				id: 0,
-				name: 'Template 0 name',
-				template: 'Template 0',
+				id: 1,
+				name: 'Template 1 name',
+				template: 'Template 1',
 				sortIndex: 1,
 			},
 		]);

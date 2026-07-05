@@ -19,10 +19,10 @@ describe('getStatusInternal', () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.STATUS);
 
-		const status = await getStatusInternal(transaction, 0);
+		const status = await getStatusInternal(transaction, 1);
 
 		expect(status).toEqual({
-			id: 0,
+			id: 1,
 			alias: 'todo',
 		} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]);
 	});

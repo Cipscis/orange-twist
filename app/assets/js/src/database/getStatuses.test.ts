@@ -20,16 +20,16 @@ describe('getStatuses', () => {
 		const statuses = await getStatuses();
 
 		expect(statuses).toEqual({
-			0: {
-				id: 0,
-				alias: 'todo',
-			},
 			1: {
 				id: 1,
-				alias: 'in-progress',
+				alias: 'todo',
 			},
 			2: {
 				id: 2,
+				alias: 'in-progress',
+			},
+			3: {
+				id: 3,
 				alias: 'completed',
 			},
 		} satisfies DatabaseData[typeof ObjectStoreName.STATUS]);

@@ -26,24 +26,24 @@ describe('addTaskInternal', () => {
 		const writeResult = await addTaskInternal(writeTransaction, {
 			name: 'Test task',
 			note: 'Test task note',
-			status: 1,
+			status: 2,
 			sortIndex: 0,
 		});
 
-		expect(writeResult).toBe(3);
+		expect(writeResult).toBe(4);
 
 		const readTransaction = db.transaction([
 			ObjectStoreName.TASK,
 			ObjectStoreName.STATUS,
 		], 'readonly');
 
-		const readResult = await getTaskInternal(readTransaction, 3);
+		const readResult = await getTaskInternal(readTransaction, 4);
 
 		expect(readResult).toEqual({
-			id: 3,
+			id: 4,
 			name: 'Test task',
 			note: 'Test task note',
-			status: 1,
+			status: 2,
 			sortIndex: 0,
 		});
 	});
@@ -74,20 +74,20 @@ describe('addTaskInternal', () => {
 
 		// Add a task first
 		await addTaskInternal(transaction, {
-			id: 3,
+			id: 4,
 			name: 'Test task',
 			note: 'Test task note',
-			status: 1,
+			status: 2,
 			sortIndex: 1,
 		});
 
 		// Then try adding it again
 		await expect(
 			() => addTaskInternal(transaction, {
-				id: 3,
+				id: 4,
 				name: 'Test task',
 				note: 'Test task note',
-				status: 1,
+				status: 2,
 				sortIndex: 1,
 			})
 		).rejects.toBeInstanceOf(Error);

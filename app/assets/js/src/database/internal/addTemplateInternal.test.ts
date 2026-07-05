@@ -31,12 +31,12 @@ describe('addTemplateInternal', () => {
 			sortIndex: 0,
 		});
 
-		expect(addResult).toBe(2);
+		expect(addResult).toBe(3);
 
-		const readResult = await getTemplateInternal(transaction, 2);
+		const readResult = await getTemplateInternal(transaction, 3);
 
 		expect(readResult).toEqual({
-			id: 2,
+			id: 3,
 			name: 'Test template name',
 			template: 'Test template',
 			sortIndex: 0,
@@ -45,9 +45,9 @@ describe('addTemplateInternal', () => {
 
 	test('throws an error if a template already exists with that ID', async () => {
 		const promise = addTemplateInternal(transaction, {
-			id: 0,
-			name: 'Template 0 name',
-			template: 'Template 0',
+			id: 1,
+			name: 'Template 1 name',
+			template: 'Template 1',
 			sortIndex: 0,
 		});
 

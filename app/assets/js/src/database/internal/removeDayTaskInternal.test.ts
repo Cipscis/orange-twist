@@ -25,18 +25,18 @@ describe('removeDayTaskInternal', () => {
 	});
 
 	test('removes a specified day task', async () => {
-		await removeDayTaskInternal(transaction, 0);
+		await removeDayTaskInternal(transaction, 1);
 
 		const dayTasks = await getDayTasksInternal(transaction);
 
 		expect(dayTasks).toEqual([
 			{
-				id: 1,
-				day: 0,
-				task: 1,
-				note: 'Note for task 1 day 0',
-				summary: 'Summary for task 1 day 0',
-				status: 1,
+				id: 2,
+				day: 1,
+				task: 2,
+				note: 'Note for task 2 day 1',
+				summary: 'Summary for task 2 day 1',
+				status: 2,
 				sortIndex: 0,
 			},
 		]);

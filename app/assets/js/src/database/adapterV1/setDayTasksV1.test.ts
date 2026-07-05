@@ -30,42 +30,42 @@ describe('setDayTasksV1', () => {
 
 		// Set day tasks
 		await setDayTasksV1([
-			['2026-04-26_0', {
-				dayName: '2026-04-26',
-				taskId: 0,
-				note: 'Note for 2026-04-26 task 0',
-				summary: 'Summary for 2026-04-26 task 0',
-				status: 'todo',
-			}],
 			['2026-04-26_1', {
 				dayName: '2026-04-26',
 				taskId: 1,
 				note: 'Note for 2026-04-26 task 1',
 				summary: 'Summary for 2026-04-26 task 1',
+				status: 'todo',
+			}],
+			['2026-04-26_2', {
+				dayName: '2026-04-26',
+				taskId: 2,
+				note: 'Note for 2026-04-26 task 2',
+				summary: 'Summary for 2026-04-26 task 2',
 				status: 'completed',
 			}],
 		]);
 
 		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
 		const dayTasks = await getDayTasksInternal(readTransaction);
-		// IDs don't start at 0 because the database had data entered before it was cleared
+		// IDs don't start at 1 because the database had data entered before it was cleared
 		expect(dayTasks).toEqual([
 			{
-				id: 2,
-				day: 0,
-				task: 0,
-				note: 'Note for 2026-04-26 task 0',
-				summary: 'Summary for 2026-04-26 task 0',
-				status: 0,
-				sortIndex: null,
-			},
-			{
 				id: 3,
-				day: 0,
+				day: 1,
 				task: 1,
 				note: 'Note for 2026-04-26 task 1',
 				summary: 'Summary for 2026-04-26 task 1',
-				status: 2,
+				status: 1,
+				sortIndex: null,
+			},
+			{
+				id: 4,
+				day: 1,
+				task: 2,
+				note: 'Note for 2026-04-26 task 2',
+				summary: 'Summary for 2026-04-26 task 2',
+				status: 3,
 				sortIndex: null,
 			},
 		]);
@@ -73,18 +73,18 @@ describe('setDayTasksV1', () => {
 
 	test('updates existing day tasks', async () => {
 		await setDayTasksV1([
-			['2026-04-26_0', {
-				dayName: '2026-04-26',
-				taskId: 0,
-				note: 'Note for task 0 day 0 updated',
-				summary: 'Summary for task 0 day 0 updated',
-				status: 'completed',
-			}],
 			['2026-04-26_1', {
 				dayName: '2026-04-26',
 				taskId: 1,
-				note: 'Note for task 1 day 0 updated',
-				summary: 'Summary for task 1 day 0 updated',
+				note: 'Note for task 1 day 1 updated',
+				summary: 'Summary for task 1 day 1 updated',
+				status: 'completed',
+			}],
+			['2026-04-26_2', {
+				dayName: '2026-04-26',
+				taskId: 2,
+				note: 'Note for task 2 day 1 updated',
+				summary: 'Summary for task 2 day 1 updated',
 				status: 'completed',
 			}],
 		]);
@@ -94,21 +94,21 @@ describe('setDayTasksV1', () => {
 		const dayTasks = await getDayTasksInternal(transaction);
 		expect(dayTasks).toEqual([
 			{
-				id: 1,
-				day: 0,
-				task: 1,
-				note: 'Note for task 1 day 0 updated',
-				summary: 'Summary for task 1 day 0 updated',
-				status: 2,
+				id: 2,
+				day: 1,
+				task: 2,
+				note: 'Note for task 2 day 1 updated',
+				summary: 'Summary for task 2 day 1 updated',
+				status: 3,
 				sortIndex: 0,
 			},
 			{
-				id: 0,
-				day: 0,
-				task: 0,
-				note: 'Note for task 0 day 0 updated',
-				summary: 'Summary for task 0 day 0 updated',
-				status: 2,
+				id: 1,
+				day: 1,
+				task: 1,
+				note: 'Note for task 1 day 1 updated',
+				summary: 'Summary for task 1 day 1 updated',
+				status: 3,
 				sortIndex: 1,
 			},
 		]);

@@ -20,17 +20,17 @@ describe('getDaysV1', () => {
 		expect(days).toEqual([
 			['2026-01-01', {
 				name: '2026-01-01',
-				note: 'Test note 2',
+				note: 'Test note 3',
 				tasks: [],
 			}],
 			['2026-04-26', {
 				name: '2026-04-26',
-				note: 'Test note 0',
-				tasks: [1, 0],
+				note: 'Test note 1',
+				tasks: [2, 1],
 			}],
 			['2026-04-27', {
 				name: '2026-04-27',
-				note: 'Test note 1',
+				note: 'Test note 2',
 				tasks: [],
 			}],
 		]);

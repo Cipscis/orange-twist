@@ -26,20 +26,20 @@ describe('updateTaskInternal', () => {
 
 	test('updates a specified task', async () => {
 		const result = await updateTaskInternal(transaction, {
-			id: 1,
+			id: 2,
 			name: 'Updated name',
-			status: 2,
+			status: 3,
 		});
 
 		expect(result).toBeUndefined();
 
-		const updatedTask = await getTaskInternal(transaction, 1);
+		const updatedTask = await getTaskInternal(transaction, 2);
 
 		expect(updatedTask).toEqual({
-			id: 1,
+			id: 2,
 			name: 'Updated name',
-			note: 'Test task 1 note',
-			status: 2,
+			note: 'Test task 2 note',
+			status: 3,
 			sortIndex: 2,
 		});
 	});

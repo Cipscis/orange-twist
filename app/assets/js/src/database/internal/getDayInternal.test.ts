@@ -23,14 +23,14 @@ describe('getDayInternal', () => {
 	});
 
 	test('returns the specified day', async () => {
-		const day = await getDayInternal(transaction, 0);
+		const day = await getDayInternal(transaction, 1);
 
 		expect(day).toEqual({
-			id: 0,
+			id: 1,
 			year: 2026,
 			month: 4,
 			day: 26,
-			note: 'Test note 0',
+			note: 'Test note 1',
 		});
 	});
 

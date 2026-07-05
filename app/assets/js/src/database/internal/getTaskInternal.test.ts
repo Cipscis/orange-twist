@@ -18,13 +18,13 @@ describe('getTaskInternal', () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TASK);
 
-		const task = await getTaskInternal(transaction, 0);
+		const task = await getTaskInternal(transaction, 1);
 
 		expect(task).toEqual({
-			id: 0,
-			name: 'Test task 0',
-			note: 'Test task 0 note',
-			status: 0,
+			id: 1,
+			name: 'Test task 1',
+			note: 'Test task 1 note',
+			status: 1,
 			sortIndex: 1,
 		});
 	});
