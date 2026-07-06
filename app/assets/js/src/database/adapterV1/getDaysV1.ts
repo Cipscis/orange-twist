@@ -1,6 +1,6 @@
 import type { DayInfo } from 'data/days';
 
-import { getDatabase } from '../utils';
+import { getDatabase, getDayName } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { getDaysInternal, getDayTasksForDayInternal } from '../internal';
 
@@ -21,7 +21,7 @@ export async function getDaysV1(): Promise<readonly [string, DayInfo][]> {
 		const dayTasks = await getDayTasksForDayInternal(transaction, day.id);
 
 		const dayV1: DayInfo = {
-			name: `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`,
+			name: getDayName(day),
 			note: day.note,
 			tasks: dayTasks.map((dayTask) => dayTask.task),
 		};
