@@ -1,6 +1,6 @@
 import type { DayTaskInfo } from 'data/dayTasks';
 
-import { getDatabase } from '../utils';
+import { getDatabase, getDayName } from '../utils';
 import type { LegacyStatusName } from '../types';
 import { ObjectStoreName } from '../metadata';
 import {
@@ -35,7 +35,7 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 			taskId: dayTask.task,
 			note: dayTask.note,
 			summary: dayTask.summary,
-			dayName: `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`,
+			dayName: getDayName(day),
 			// This type assertion is safe because statuses are hard-coded to match legacy status names
 			status: status.alias as LegacyStatusName,
 		};
