@@ -47,7 +47,7 @@ describe('removeDayInternal', () => {
 				day: 27,
 				note: 'Test note 2',
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDaysInternal>>);
 	});
 
 	test('throws an error if the specified day does not exist', async () => {

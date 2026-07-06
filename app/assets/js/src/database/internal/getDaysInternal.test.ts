@@ -42,6 +42,6 @@ describe('getDaysInternal', () => {
 				day: 27,
 				note: 'Test note 2',
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDaysInternal>>);
 	});
 });

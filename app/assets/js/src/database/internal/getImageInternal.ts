@@ -4,12 +4,12 @@ import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
 /**
- * Takes an existing {@linkcode IDBTransaction} and adds a request to retrieve an image by its specified truncated hash.
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to retrieve an image by its specified hash.
  *
  * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.IMAGE} object store.
- * @param hash The truncated hash for the image to retrieve.
+ * @param hash The hash for the image to retrieve.
  *
- * @returns A {@linkcode Promise} that resolves to the retrieved image, or `null` if no image exists with the specified truncated hash.
+ * @returns A {@linkcode Promise} that resolves to the retrieved image, or `null` if no image exists with the specified hash.
  */
 export async function getImageInternal(
 	transaction: IDBTransaction,

@@ -8,6 +8,7 @@ import {
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { createTestData } from '../test-utils';
+
 import { getTemplatesInternal } from './getTemplatesInternal';
 
 describe('getTemplatesInternal', () => {
@@ -32,6 +33,6 @@ describe('getTemplatesInternal', () => {
 				template: 'Template 1',
 				sortIndex: 1,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getTemplatesInternal>>);
 	});
 });

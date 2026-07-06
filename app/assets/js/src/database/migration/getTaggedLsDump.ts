@@ -1,16 +1,12 @@
+import { StorageKey } from 'data';
+
 import {
 	isLegacyExportDataV1_0_0,
 	type LegacyExportDataV1_0_0,
 	type TaggedLegacyExportData,
 } from '../types';
-import { tagLegacyExportData } from './tagLegacyExportData';
 
-const StorageKey = {
-	DAY: 'days',
-	TASK: 'tasks',
-	DAY_TASK: 'day-tasks',
-	TEMPLATE: 'templates',
-} as const;
+import { tagLegacyExportData } from './tagLegacyExportData';
 
 /**
  * Exports data from version 1.4.0 or earlier from localStorage, if it exists.
@@ -19,15 +15,15 @@ const StorageKey = {
  * @throws Error if serialised JSON doesn't match expected data shape
  */
 export function getTaggedLsDump(): TaggedLegacyExportData | null {
-	const daysJson = localStorage.getItem(StorageKey.DAY);
-	const tasksJson = localStorage.getItem(StorageKey.TASK);
-	const dayTasksJson = localStorage.getItem(StorageKey.DAY_TASK);
+	const daysJson = localStorage.getItem(StorageKey.DAYS);
+	const tasksJson = localStorage.getItem(StorageKey.TASKS);
+	const dayTasksJson = localStorage.getItem(StorageKey.DAY_TASKS);
 
 	if (!(daysJson && tasksJson && dayTasksJson)) {
 		return null;
 	}
 
-	const templatesJson = localStorage.getItem(StorageKey.TEMPLATE);
+	const templatesJson = localStorage.getItem(StorageKey.TEMPLATES);
 
 	const dump: LegacyExportDataV1_0_0 = {
 		data: {

@@ -39,7 +39,7 @@ describe('removeDayTaskInternal', () => {
 				status: 2,
 				sortIndex: 0,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
 	});
 
 	test('throws an error if the specified day task does not exist', async () => {

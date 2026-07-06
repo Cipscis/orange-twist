@@ -2,6 +2,7 @@ import {
 	getIdbRequestPromise,
 	type DefaultsFor,
 	type ExpandType,
+	type OptionalExcept,
 } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
@@ -27,8 +28,13 @@ import { getStatusInternal } from './getStatusInternal';
 export async function addDayTaskInternal(
 	transaction: IDBTransaction,
 	dayTask: ExpandType<
-		Pick<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'day' | 'task'> &
-		Partial<Omit<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id' | 'day' | 'task'>>
+		OptionalExcept<
+			Omit<
+				DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
+				'id'
+			>,
+			'day' | 'task'
+		>
 	>
 ): Promise<DatabaseData[typeof ObjectStoreName.DAY_TASK][number]['id']> {
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);

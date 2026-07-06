@@ -39,6 +39,6 @@ describe('getDayTasksForDayInternal', () => {
 				status: 2,
 				sortIndex: 1,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDayTasksForDayInternal>>);
 	});
 });

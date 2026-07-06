@@ -59,7 +59,7 @@ describe('setDaysV1', () => {
 				day: 2,
 				note: '2020-01-02 note',
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDaysInternal>>);
 	});
 
 	test('adds day tasks for new days', async () => {
@@ -130,7 +130,7 @@ describe('setDaysV1', () => {
 				sortIndex: 1,
 				status: 1,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
 	});
 
 	test('updates existing days', async () => {
@@ -177,7 +177,7 @@ describe('setDaysV1', () => {
 				day: 27,
 				note: 'Test note 2 updated',
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDaysInternal>>);
 	});
 
 	test('updates existing days\' day tasks', async () => {
@@ -239,7 +239,7 @@ describe('setDaysV1', () => {
 				status: 1,
 				sortIndex: 1,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
 	});
 
 	test('throws an error if a day is given a non-existent task', async () => {

@@ -1,4 +1,4 @@
-import { decodeDayTaskKey } from 'data/dayTasks/util';
+import { decodeDayTaskKey } from 'data/dayTasks';
 
 import { copyBlob } from 'utils';
 
@@ -8,6 +8,7 @@ import type {
 	LegacyStatusName,
 } from '../types';
 import { getDayNameParts } from '../utils';
+
 import { collectStatusData } from './collectStatusData';
 
 /**
@@ -171,7 +172,7 @@ async function collectImageData(
 	}
 
 	await Promise.all(
-		Object.entries(legacyData.images).map(async ([hash, data], id) => {
+		Object.entries(legacyData.images).map(async ([hash, data]) => {
 			const file = await (async () => {
 				if (data instanceof Blob) {
 					return await copyBlob(data);
@@ -209,11 +210,12 @@ function getDayIdByName(
 ): number | null {
 	const [yearToMatch, monthToMatch, dayToMatch] = getDayNameParts(dayName);
 
-	const matchingDay = Object.values(dayData).find(({ year, month, day }) => {
-		return year === yearToMatch &&
-		month === monthToMatch &&
-		day === dayToMatch;
-	});
+	const matchingDay = Object.values(dayData)
+		.find(({ year, month, day }) => {
+			return year === yearToMatch &&
+			month === monthToMatch &&
+			day === dayToMatch;
+		});
 
 	return matchingDay?.id ?? null;
 }
@@ -227,7 +229,8 @@ function getStatusIdByName(
 	statusName: LegacyStatusName,
 	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>,
 ): number {
-	const matchingStatus = Object.values(statusData).find(({ alias }) => alias === statusName);
+	const matchingStatus = Object.values(statusData)
+		.find(({ alias }) => alias === statusName);
 
 	return matchingStatus?.id ?? 0;
 }

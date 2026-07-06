@@ -10,9 +10,7 @@ import { createTestData } from '../test-utils';
 import { getTasksV1 } from './getTasksV1';
 
 describe('getTasksV1', () => {
-	beforeAll(async () => {
-		await createTestData();
-	});
+	beforeAll(() => createTestData());
 
 	test('returns a Promise that resolves to day entries v1', async () => {
 		const tasks = await getTasksV1();
@@ -39,6 +37,6 @@ describe('getTasksV1', () => {
 				status: 'in-progress',
 				sortIndex: 2,
 			}],
-		]);
+		] satisfies Awaited<ReturnType<typeof getTasksV1>>);
 	});
 });

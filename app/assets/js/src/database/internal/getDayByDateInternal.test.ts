@@ -30,7 +30,7 @@ describe('getDayByDateInternal', () => {
 			month: 4,
 			day: 26,
 			note: 'Test note 1',
-		});
+		} satisfies Awaited<ReturnType<typeof getDayByDateInternal>>);
 	});
 
 	test('returns null if no such day exists', async () => {

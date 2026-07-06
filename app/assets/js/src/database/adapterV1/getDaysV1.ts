@@ -7,7 +7,7 @@ import { getDaysInternal, getDayTasksForDayInternal } from '../internal';
 /**
  * Retrieve all schema v1 {@linkcode DayInfo} information from the database v2.
  */
-export async function getDaysV1(): Promise<readonly [string, DayInfo][]> {
+export async function getDaysV1(): Promise<[string, DayInfo][]> {
 	const daysV1: DayInfo[] = [];
 
 	const db = await getDatabase();

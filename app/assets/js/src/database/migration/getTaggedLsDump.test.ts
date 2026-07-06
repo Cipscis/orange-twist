@@ -4,7 +4,9 @@ import {
 	expect,
 	test,
 } from '@jest/globals';
+
 import { getTaggedLsDump } from './getTaggedLsDump';
+import type { TaggedLegacyExportData } from 'database/types';
 
 describe('getTaggedLsDump', () => {
 	beforeEach(() => localStorage.clear());
@@ -76,7 +78,7 @@ describe('getTaggedLsDump', () => {
 					],
 				},
 			},
-		});
+		} satisfies TaggedLegacyExportData);
 	});
 
 	test('throws error if malformed data is encountered', () => {

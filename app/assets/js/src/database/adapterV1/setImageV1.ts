@@ -6,6 +6,9 @@ import {
 	updateImageInternal,
 } from '../internal';
 
+/**
+ * Overwrites information for one image in the database v2, using image information from schema v1.
+ */
 export async function setImageV1(
 	file: Blob,
 	hash: string,

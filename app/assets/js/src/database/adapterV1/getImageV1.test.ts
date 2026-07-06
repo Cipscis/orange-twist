@@ -10,9 +10,7 @@ import { createTestData } from '../test-utils';
 import { getImageV1 } from './getImageV1';
 
 describe('getImageV1', () => {
-	beforeAll(async () => {
-		await createTestData();
-	});
+	beforeAll(() => createTestData());
 
 	test('returns a Promise that resolves to an image v1', async () => {
 		const image = await getImageV1('test-hash');

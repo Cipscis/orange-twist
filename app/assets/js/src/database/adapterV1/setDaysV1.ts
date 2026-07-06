@@ -1,31 +1,36 @@
 import type { DayInfo } from 'data/days';
 
-import { getIdbRequestPromise, sortBySortIndex } from 'utils';
+import { getIdbRequestPromise } from 'utils';
 
 import { getDatabase, getDayNameParts } from '../utils';
-import { IndexName, ObjectStoreName } from '../metadata';
+import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 import {
 	addDayInternal,
 	addDayTaskInternal,
+	getDayByDateInternal,
 	getDayTasksForDayInternal,
 	removeDayInternal,
+	removeDayTaskInternal,
 	updateDayInternal,
+	updateDayTaskInternal,
 } from '../internal';
 
+/**
+ * Overwrites all day information in the database v2, using {@linkcode DayInfo} information from schema v1.
+ */
 export async function setDaysV1(
 	days: readonly (readonly [string, DayInfo])[]
 ): Promise<void> {
 	const db = await getDatabase();
 	const transaction = db.transaction([
 		ObjectStoreName.DAY,
-		ObjectStoreName.DAY_TASK,
 		ObjectStoreName.TASK,
+		ObjectStoreName.DAY_TASK,
 		ObjectStoreName.STATUS,
 	], 'readwrite');
 
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
-	const dayByDate = dayOS.index(IndexName.DAY_DATE);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 
 	const promises: (Promise<unknown>)[] = [];
@@ -33,11 +38,8 @@ export async function setDaysV1(
 
 	for (const [dayName, dayInfo] of days) {
 		const [year, month, day] = getDayNameParts(dayName);
-		const indexKey = [year, month, day];
 
-		const existingDay = await getIdbRequestPromise(
-			dayByDate.get(indexKey) as IDBRequest<DatabaseData[typeof ObjectStoreName.DAY][number]>
-		);
+		const existingDay = await getDayByDateInternal(transaction, { year, month, day });
 
 		if (existingDay) {
 			newDayIds.add(existingDay.id);
@@ -110,11 +112,13 @@ async function addNewDay(options: {
 	// Create the new day's day tasks
 	const dayTaskRequests: Promise<unknown>[] = [];
 	for (const [sortIndex, task] of dayInfo.tasks.entries()) {
-		dayTaskRequests.push(addDayTaskInternal(transaction, {
-			day: newDayId,
-			task,
-			sortIndex,
-		}));
+		dayTaskRequests.push(
+			addDayTaskInternal(transaction, {
+				day: newDayId,
+				task,
+				sortIndex,
+			})
+		);
 	}
 
 	await Promise.all(dayTaskRequests);
@@ -122,15 +126,17 @@ async function addNewDay(options: {
 	return newDayId;
 }
 
+/**
+ * Update an existing day, and all its day tasks.
+ */
 async function updateExistingDay(options: {
 	transaction: IDBTransaction;
 	dayTaskOS: IDBObjectStore;
 	dayInfo: DayInfo;
 	existingDay: DatabaseData[typeof ObjectStoreName.DAY][number];
-}) {
+}): Promise<void> {
 	const {
 		transaction,
-		dayTaskOS,
 		dayInfo,
 		existingDay,
 	} = options;
@@ -145,9 +151,7 @@ async function updateExistingDay(options: {
 		})
 	);
 
-	const existingDayTasks = sortBySortIndex(
-		await getDayTasksForDayInternal(transaction, existingDay.id)
-	);
+	const existingDayTasks = await getDayTasksForDayInternal(transaction, existingDay.id);
 
 	const existingDayTasksByTaskId = new Map(
 		existingDayTasks.map((dayTask) => ([
@@ -182,23 +186,20 @@ async function updateExistingDay(options: {
 			// This non-null assertion is safe because of other controls around what can be inserted into the database
 			const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
 
-			const request = dayTaskOS.delete(existingDayTask.id);
-			return getIdbRequestPromise(request);
+			return removeDayTaskInternal(transaction, existingDayTask.id);
 		})
 	);
 
 	// Update sort index of remaining day tasks
 	promises.push(
 		...Array.from(remainingDayTaskTaskIds).map((taskId) => {
-			// This non-null assertion is safe because of other controls around what can be inserted into the database
-			const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
-
-			return getIdbRequestPromise(dayTaskOS.put({
-				...existingDayTask,
+			return updateDayTaskInternal(transaction, {
+				day: existingDay.id,
+				task: taskId,
 				sortIndex: dayInfo.tasks.indexOf(taskId),
-			}));
+			});
 		})
 	);
 
-	return Promise.all(promises);
+	await Promise.all(promises);
 }

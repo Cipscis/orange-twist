@@ -10,6 +10,9 @@ import {
 	updateTemplateInternal,
 } from '../internal';
 
+/**
+ * Overwrites all template information in the database v2, using {@linkcode TemplateInfo} information from schema v1.
+ */
 export async function setTemplatesV1(
 	templates: readonly (readonly [number, TemplateInfo])[]
 ): Promise<void> {

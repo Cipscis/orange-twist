@@ -10,9 +10,7 @@ import { createTestData } from '../test-utils';
 import { getDayTasksV1 } from './getDayTasksV1';
 
 describe('getDayTasksV1', () => {
-	beforeAll(async () => {
-		await createTestData();
-	});
+	beforeAll(() => createTestData());
 
 	test('returns a Promise that resolves to day task entries v1', async () => {
 		const dayTasks = await getDayTasksV1();
@@ -32,6 +30,6 @@ describe('getDayTasksV1', () => {
 				summary: 'Summary for task 1 day 1',
 				status: 'in-progress',
 			}],
-		]);
+		] satisfies Awaited<ReturnType<typeof getDayTasksV1>>);
 	});
 });

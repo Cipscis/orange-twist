@@ -5,7 +5,6 @@ import {
 	test,
 } from '@jest/globals';
 
-import type { DatabaseData } from '../types';
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
 import { createTestData } from '../test-utils';
@@ -24,7 +23,7 @@ describe('getStatusInternal', () => {
 		expect(status).toEqual({
 			id: 1,
 			alias: 'todo',
-		} satisfies DatabaseData[typeof ObjectStoreName.STATUS][number]);
+		} satisfies Awaited<ReturnType<typeof getStatusInternal>>);
 	});
 
 	test('returns null if no status exists by that status ID', async () => {

@@ -4,7 +4,7 @@ import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
 /**
- * Takes an existing {@linkcode IDBTransaction} and adds a request to get all tempaltes.
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to get all templates.
  *
  * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.TEMPLATE} object store.
  *

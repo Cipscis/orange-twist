@@ -13,7 +13,7 @@ import { getStatusInternal } from './getStatusInternal';
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing day task.
  *
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.DAY_TASK} and {@linkcode ObjectStoreName.STATUS} object stores.
- * @param dayTask An object specifiny which day task to update by the IDs of its day and task, and providing any values that should be updated.
+ * @param dayTask An object specifying which day task to update by the IDs of its day and task, and providing any values that should be updated.
  *
  * @returns a {@linkcode Promise} that resolves with the ID of the updated day task, once the update is complete.
  *

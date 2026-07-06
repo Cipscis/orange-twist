@@ -1,9 +1,9 @@
 import {
 	fillDatabase,
 	migrateToLatest,
+	updatePersistedData,
 } from '../migration';
 import { dbName, dbVersion } from '../metadata';
-import { updatePersistedData } from '../migration/updatePersistedData';
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 /**

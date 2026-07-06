@@ -9,7 +9,7 @@ import { ObjectStoreName } from '../metadata';
  *
  * @returns A {@linkcode Promise} that resolves when the day task has been removed.
  *
- * @throws Error if no template exists with the specified ID.
+ * @throws Error if no day task exists with the specified ID.
  */
 export async function removeDayTaskInternal(
 	transaction: IDBTransaction,

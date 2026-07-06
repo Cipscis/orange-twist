@@ -49,7 +49,7 @@ describe('setTemplatesV1', () => {
 				template: 'New template 0',
 				sortIndex: 1,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getTemplatesInternal>>);
 	});
 
 	test('updates existing templates', async () => {
@@ -85,7 +85,7 @@ describe('setTemplatesV1', () => {
 				template: 'Template 1 updated',
 				sortIndex: 1,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getTemplatesInternal>>);
 	});
 
 	test('removes removed templates', async () => {
