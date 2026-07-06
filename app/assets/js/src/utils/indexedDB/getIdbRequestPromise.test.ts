@@ -11,6 +11,7 @@ describe('getIdbRequestPromise', () => {
 	let db: IDBDatabase;
 
 	beforeEach(() => {
+		// Create a simple test database
 		return new Promise((resolve, reject) => {
 			const dbOpenRequest = indexedDB.open('test', 1);
 

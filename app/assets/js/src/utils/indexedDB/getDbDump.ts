@@ -1,5 +1,5 @@
 import { getIdbRequestPromise } from './getIdbRequestPromise';
-import { getEntries } from './getEntries';
+import { getIterableCursor } from './getIterableCursor';
 
 /**
  * Construct an object containing all data from a given database.
@@ -33,13 +33,16 @@ export async function getDbDump(
  *
  * Assumes the object store exists on this database.
  */
-async function getObjectStoreDump(db: IDBDatabase, objectStoreName: string): Promise<Record<string, unknown>> {
+async function getObjectStoreDump(
+	db: IDBDatabase,
+	objectStoreName: string,
+): Promise<Record<string, unknown>> {
 	const objectStoreData: Record<string, unknown> = {};
 
 	const transaction = db.transaction(objectStoreName, 'readonly');
 	const objectStore = transaction.objectStore(objectStoreName);
 
-	for await (const [key, value] of getEntries(objectStore)) {
+	for await (const { key, value } of getIterableCursor(objectStore)) {
 		if (typeof key !== 'string' && typeof key !== 'number') {
 			throw new Error('Error: Encountered a key that was neither a string nor a number');
 		}

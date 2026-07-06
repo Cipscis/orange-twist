@@ -9,7 +9,6 @@ export {
 
 export {
 	getDbDump,
-	getEntries,
 	getIdbRequestPromise,
 	getIterableCursor,
 } from './indexedDB';
