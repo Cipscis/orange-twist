@@ -6,7 +6,7 @@ import type { DayTaskInfo } from 'data/dayTasks';
 import type { TaskInfo } from 'data/tasks';
 import type { TemplateInfo } from 'data/templates';
 
-import { adapterV1 } from 'database';
+import { adapterV1 } from './adapterV1';
 import { ObjectStoreName } from '../metadata';
 import { doDatabaseTransaction } from '../utils';
 
