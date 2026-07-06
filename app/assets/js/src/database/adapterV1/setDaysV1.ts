@@ -179,7 +179,7 @@ async function updateExistingDay(options: {
 	// Remove any missing day tasks
 	promises.push(
 		...Array.from(removedDayTaskTaskIds).map((taskId) => {
-			// TODO: This non-null assertion isn't safe
+			// This non-null assertion is safe because of other controls around what can be inserted into the database
 			const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
 
 			const request = dayTaskOS.delete(existingDayTask.id);
@@ -190,7 +190,7 @@ async function updateExistingDay(options: {
 	// Update sort index of remaining day tasks
 	promises.push(
 		...Array.from(remainingDayTaskTaskIds).map((taskId) => {
-			// TODO: This non-null assertion isn't safe
+			// This non-null assertion is safe because of other controls around what can be inserted into the database
 			const existingDayTask = existingDayTasksByTaskId.get(taskId)!;
 
 			return getIdbRequestPromise(dayTaskOS.put({

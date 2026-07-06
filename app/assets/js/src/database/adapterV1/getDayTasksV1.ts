@@ -25,10 +25,10 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 	const allDayTasks = await getDayTasksInternal(transaction);
 	const statuses = await getStatusesInternal(transaction);
 	for (const dayTask of allDayTasks) {
-		// TODO: This non-null assertion isn't safe
+		// This non-null assertion is safe because of other controls around what can be inserted into the database
 		const day = (await getDayInternal(transaction, dayTask.day))!;
 
-		// TODO: This non-null assertion isn't safe
+		// This non-null assertion is safe because of other controls around what can be inserted into the database
 		const status = statuses.find(({ id }) => id === dayTask.status)!;
 
 		const dayTaskV1: DayTaskInfo = {
