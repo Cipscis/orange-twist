@@ -10,7 +10,7 @@ import { getStatusInternal } from './getStatusInternal';
  * Takes an existing {@linkcode IDBTransaction} and adds a request to insert a new task to the task object store.
  *
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.TASK} and {@linkcode ObjectStoreName.STATUS} object stores.
- * @param task The day object to insert. Any missing properties will be filled with sensible defaults.
+ * @param task The task object to insert.
  *
  * @returns A {@linkcode Promise} that resolves with the task's ID when id has been added.
  *
@@ -40,7 +40,7 @@ export async function addTaskInternal(
 
 	const result = await getIdbRequestPromise(request);
 	if (!(typeof result === 'number')) {
-		throw new TypeError(`The key for a day should be a number. Received ${JSON.stringify(result, null, '\t')}`);
+		throw new TypeError(`The key for a task should be a number. Received ${JSON.stringify(result, null, '\t')}`);
 	}
 
 	return result;
