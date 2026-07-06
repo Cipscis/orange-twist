@@ -1,14 +1,14 @@
-import { StorageKey } from 'data/shared';
 import type { PersistApi } from 'persist/PersistApi';
 
-import type { DayInfo } from 'data/days';
-import type { DayTaskInfo } from 'data/dayTasks';
-import type { TaskInfo } from 'data/tasks';
-import type { TemplateInfo } from 'data/templates';
+import {
+	StorageKey,
+	type DayInfo,
+	type DayTaskInfo,
+	type TaskInfo,
+	type TemplateInfo,
+} from 'data';
 
 import { adapterV1 } from './adapterV1';
-import { ObjectStoreName } from '../metadata';
-import { doDatabaseTransaction } from '../utils';
 
 /**
  * A {@linkcode PersistApi} interface for working with the IndexedDB API, reading from the database v2 but providing data with schema v1.
