@@ -44,9 +44,7 @@ export async function getDatabase(
 			try {
 				await fillDatabase(db, updatedData);
 			} catch (e) {
-				// TODO: Handle error filling database
-				console.error(e);
-				console.error((e as DOMException).name);
+				reject(e);
 			}
 		}
 		resolve(db);
