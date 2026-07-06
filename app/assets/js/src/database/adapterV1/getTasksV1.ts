@@ -29,7 +29,7 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 			name: task.name,
 			note: task.note,
 			sortIndex: task.sortIndex ?? 0,
-			// TODO: Make a type safe way of doing this
+			// This type assertion is safe because statuses are hard-coded to match legacy status names
 			status: status.alias as LegacyStatusName,
 		};
 

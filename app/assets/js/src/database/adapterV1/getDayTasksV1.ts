@@ -36,7 +36,7 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 			note: dayTask.note,
 			summary: dayTask.summary,
 			dayName: `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`,
-			// TODO: Make a type-safe way of doing this
+			// This type assertion is safe because statuses are hard-coded to match legacy status names
 			status: status.alias as LegacyStatusName,
 		};
 
