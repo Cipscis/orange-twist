@@ -21,14 +21,4 @@ export interface PersistApi {
 	 * the specified key, or `undefined` if no data was persisted.
 	 */
 	get(key: string): Promise<unknown>;
-
-	/**
-	 * Deletes data from persistent storage. If no data is stored against
-	 * the specified key, this function does nothing.
-	 *
-	 * @param key - The string key where data should be deleted.
-	 *
-	 * @returns A `Promise` that resolves when the value has been deleted.
-	 */
-	delete(key: string): Promise<void>;
 }

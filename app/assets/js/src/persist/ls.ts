@@ -32,15 +32,4 @@ export const ls: PersistApi = {
 			}
 		});
 	},
-
-	delete(key) {
-		return new Promise((resolve, reject) => {
-			try {
-				localStorage.removeItem(key);
-				resolve();
-			} catch (e) {
-				reject(new Error(String(e)));
-			}
-		});
-	},
 };
