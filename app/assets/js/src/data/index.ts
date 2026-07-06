@@ -69,4 +69,5 @@ export {
 	exportData,
 	getTaskStatusForDay,
 	importData,
+	StorageKey,
 } from './shared';
