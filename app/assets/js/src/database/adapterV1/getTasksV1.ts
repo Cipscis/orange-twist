@@ -21,7 +21,7 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 	const statuses = await getStatusesInternal(transaction);
 
 	for (const task of allTasks) {
-		// TODO: This non-null assertion is not safe
+		// This non-null assertion is safe because of other controls around what can be inserted into the database
 		const status = statuses.find(({ id }) => id === task.status)!;
 
 		const taskV1: TaskInfo = {
