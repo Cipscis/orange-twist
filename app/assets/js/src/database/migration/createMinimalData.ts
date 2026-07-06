@@ -1,7 +1,10 @@
-import type { LegacyExportDataByVersion } from '../types';
+import type { DatabaseData } from '../types';
 import { collectStatusData } from './collectStatusData';
 
-export function createMinimalData(): LegacyExportDataByVersion<'2.0.0'> {
+/**
+ * Create minimal data to populate an empty database, which includes status data.
+ */
+export function createMinimalData(): DatabaseData {
 	const day = {};
 	const status = collectStatusData();
 	const task = {};
@@ -9,7 +12,7 @@ export function createMinimalData(): LegacyExportDataByVersion<'2.0.0'> {
 	const template = {};
 	const image = {};
 
-	const updatedData: LegacyExportDataByVersion<'2.0.0'> = {
+	const updatedData: DatabaseData = {
 		day,
 		task,
 		day_task,

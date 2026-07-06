@@ -6,7 +6,7 @@ import type { LegacyExportDataByVersion, LegacyStatusName } from '../types';
 export function collectStatusData(
 	legacyData?: Readonly<LegacyExportDataByVersion<'1.0.0'>>
 ): LegacyExportDataByVersion<'2.0.0'>['status'] {
-	// Collect statuses in data set, starting with defaults
+	// Start with default statuses
 	const statusSet = new Set<string>([
 		'todo',
 		'in-progress',

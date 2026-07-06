@@ -37,7 +37,7 @@ describe('addStatusInternal', () => {
 		expect(readResult).toEqual({
 			id: 4,
 			alias: 'will-not-do',
-		});
+		} satisfies Awaited<ReturnType<typeof getStatusInternal>>);
 	});
 
 	test('throws an error if a status already exists with that ID', async () => {

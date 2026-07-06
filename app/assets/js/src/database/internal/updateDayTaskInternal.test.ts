@@ -50,7 +50,7 @@ describe('updateDayTaskInternal', () => {
 			summary: 'Updated summary',
 			status: 3,
 			sortIndex: 1,
-		});
+		} satisfies Awaited<ReturnType<typeof getDayTaskForDayAndTaskInternal>>);
 	});
 
 	test('throws an error if the day task doesn\'t exist', async () => {

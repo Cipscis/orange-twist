@@ -42,6 +42,6 @@ describe('getTasksInternal', () => {
 				status: 2,
 				sortIndex: 2,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);
 	});
 });

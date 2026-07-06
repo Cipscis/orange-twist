@@ -56,7 +56,7 @@ describe('addDayTaskInternal', () => {
 			summary: 'Summary for task 3 day 1',
 			status: 2,
 			sortIndex: null,
-		});
+		} satisfies Awaited<ReturnType<typeof getDayTaskForDayAndTaskInternal>>);
 	});
 
 	test('fills in blanks with default values', async () => {
@@ -81,7 +81,7 @@ describe('addDayTaskInternal', () => {
 			summary: null,
 			status: 1,
 			sortIndex: null,
-		});
+		} satisfies Awaited<ReturnType<typeof getDayTaskForDayAndTaskInternal>>);
 	});
 
 	test('throws an error if a day task already exists for that day and task combination', async () => {

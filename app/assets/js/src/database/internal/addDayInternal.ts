@@ -11,7 +11,7 @@ import { getDayByDateInternal } from './getDayByDateInternal';
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.DAY} object store.
  * @param day The day object to insert.
  *
- * @returns A {@linkcode Promise} that resolves when the day has been added.
+ * @returns A {@linkcode Promise} that resolves with the ID of a newly added day once it has been added.
  *
  * @throws Error if a day with the same year, month, and day already exists.
  * @throws TypeError if the database returns a non-number key after adding.

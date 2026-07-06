@@ -11,6 +11,9 @@ import {
 	updateTaskInternal,
 } from '../internal';
 
+/**
+ * Overwrites all task information in the database v2, using {@linkcode TaskInfo} information from schema v1.
+ */
 export async function setTasksV1(
 	tasks: readonly (readonly [number, TaskInfo])[]
 ): Promise<void> {
@@ -23,13 +26,17 @@ export async function setTasksV1(
 
 	const promises: (Promise<unknown>)[] = [];
 
-	const priorTaskIds = new Set((await getTasksInternal(transaction)).map(({ id }) => id));
+	const priorTaskIds = new Set(
+		(await getTasksInternal(transaction))
+			.map(({ id }) => id)
+	);
 	const newTaskIds = new Set(tasks.map(([id]) => id));
 
 	for (const [, taskInfo] of tasks) {
 		const existingTask = await getTaskInternal(transaction, taskInfo.id);
 
 		if (existingTask) {
+			// Update an existing task
 			promises.push(updateExistingTask(
 				transaction,
 				taskInfo,

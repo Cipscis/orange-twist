@@ -68,7 +68,7 @@ describe('setDayTasksV1', () => {
 				status: 3,
 				sortIndex: null,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
 	});
 
 	test('updates existing day tasks', async () => {
@@ -111,7 +111,7 @@ describe('setDayTasksV1', () => {
 				status: 3,
 				sortIndex: 1,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
 	});
 
 	test('throws an error if a day task is given a non-existent day', async () => {

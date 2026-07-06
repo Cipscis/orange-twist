@@ -6,7 +6,7 @@ import {
 } from '../types';
 
 /**
- * Return the schema version of a specified {@linkcode LegacyExportData} and returned a tagged copy.
+ * Determine the schema version of a specified {@linkcode LegacyExportData} and returned a tagged copy.
  *
  * @throws {Error} if no schema version could be determined.
  */

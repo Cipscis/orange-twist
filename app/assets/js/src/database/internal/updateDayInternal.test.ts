@@ -9,8 +9,9 @@ import { ObjectStoreName } from '../metadata';
 import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 
-import { updateDayInternal } from './updateDayInternal';
 import { getDayByDateInternal } from './getDayByDateInternal';
+
+import { updateDayInternal } from './updateDayInternal';
 
 describe('updateDayInternal', () => {
 	let transaction: IDBTransaction;

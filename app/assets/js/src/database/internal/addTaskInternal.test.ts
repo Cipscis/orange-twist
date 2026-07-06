@@ -45,7 +45,7 @@ describe('addTaskInternal', () => {
 			note: 'Test task note',
 			status: 2,
 			sortIndex: 0,
-		});
+		} satisfies Awaited<ReturnType<typeof getTaskInternal>>);
 	});
 
 	test('throws an error if a task is given a non-existent status', async () => {

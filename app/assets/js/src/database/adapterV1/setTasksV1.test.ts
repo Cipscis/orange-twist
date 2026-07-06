@@ -60,7 +60,7 @@ describe('setTasksV1', () => {
 				status: 1,
 				sortIndex: 1,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);
 	});
 
 	test('updates existing tasks', async () => {
@@ -114,7 +114,7 @@ describe('setTasksV1', () => {
 				status: 3,
 				sortIndex: 2,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);
 	});
 
 	test('throws an error if a task is given a non-existent status', async () => {

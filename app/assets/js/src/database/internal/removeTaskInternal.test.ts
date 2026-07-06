@@ -47,7 +47,7 @@ describe('removeTaskInternal', () => {
 				status: 2,
 				sortIndex: 2,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);
 	});
 
 	test('throws an error if the specified task does not exist', async () => {
@@ -71,6 +71,6 @@ describe('removeTaskInternal', () => {
 				status: 2,
 				sortIndex: 0,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
 	});
 });

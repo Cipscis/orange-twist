@@ -8,6 +8,9 @@ import {
 	updateImageInternal,
 } from '../internal';
 
+/**
+ * Overwrites all image information in the database v2, using image information from schema v1.
+ */
 export async function setImagesV1(
 	images: readonly (readonly [string, Blob])[]
 ): Promise<void> {
@@ -27,8 +30,8 @@ export async function setImagesV1(
 		const existingImage = await getImageInternal(transaction, hash);
 
 		if (existingImage) {
+			// Update an existing image
 			newImageHashes.add(hash);
-			// Update an existing promise
 			promises.push(updateImageInternal(transaction, {
 				hash,
 				file,

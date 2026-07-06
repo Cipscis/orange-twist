@@ -34,7 +34,7 @@ describe('getDayTaskForDayAndTaskInternal', () => {
 			summary: 'Summary for task 2 day 1',
 			status: 2,
 			sortIndex: 0,
-		});
+		} satisfies Awaited<ReturnType<typeof getDayTaskForDayAndTaskInternal>>);
 	});
 
 	test('returns null if no such day exists', async () => {

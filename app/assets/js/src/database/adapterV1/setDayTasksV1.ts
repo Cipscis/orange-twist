@@ -1,5 +1,4 @@
-import type { DayTaskInfo } from 'data/dayTasks';
-import { decodeDayTaskKey } from 'data/dayTasks/util';
+import { decodeDayTaskKey, type DayTaskInfo } from 'data/dayTasks';
 
 import {
 	addDayTaskInternal,
@@ -14,6 +13,9 @@ import {
 import { ObjectStoreName } from '../metadata';
 import { getDatabase, getDayNameParts } from '../utils';
 
+/**
+ * Overwrites all day task information in the database v2, using {@linkcode DayTaskInfo} information from schema v1.
+ */
 export async function setDayTasksV1(
 	dayTasks: readonly (readonly [string, DayTaskInfo])[]
 ): Promise<void> {
@@ -27,7 +29,10 @@ export async function setDayTasksV1(
 
 	const promises: (Promise<unknown>)[] = [];
 
-	const priorDayTaskIds = new Set((await getDayTasksInternal(transaction)).map(({ id }) => id));
+	const priorDayTaskIds = new Set(
+		(await getDayTasksInternal(transaction))
+			.map(({ id }) => id)
+	);
 	const newDayTaskIds = new Set<number>();
 
 	for (const [dayTaskKey, dayTask] of dayTasks) {

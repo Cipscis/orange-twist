@@ -12,7 +12,7 @@ import { getStatusInternal } from './getStatusInternal';
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing task.
  *
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.TASK} and {@linkcode ObjectStoreName.STATUS} object stores.
- * @param task An object specifying which day to update by its ID, and providing any values that should be updated.
+ * @param task An object specifying which task to update by its ID, and providing any values that should be updated.
  *
  * @throws Error if no task exists with the specified ID.
  * @throws Error if no status exists with the specified status ID.

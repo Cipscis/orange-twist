@@ -18,6 +18,7 @@ describe('addTemplateInternal', () => {
 
 	beforeEach(async () => {
 		await createTestData();
+
 		const db = await getDatabase();
 		transaction = db.transaction([
 			ObjectStoreName.TEMPLATE,
@@ -40,7 +41,7 @@ describe('addTemplateInternal', () => {
 			name: 'Test template name',
 			template: 'Test template',
 			sortIndex: 0,
-		});
+		} satisfies Awaited<ReturnType<typeof getTemplateInternal>>);
 	});
 
 	test('throws an error if a template already exists with that ID', async () => {

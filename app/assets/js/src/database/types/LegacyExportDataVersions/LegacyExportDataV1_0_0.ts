@@ -1,7 +1,8 @@
 import * as z from 'zod/mini';
 
-import { legacyStatusNameSchema } from './LegacyStatusName';
 import { isZodSchemaType } from 'utils';
+
+import { legacyStatusNameSchema } from './LegacyStatusName';
 
 export const legacyExportDataSchemaV1_0_0 = z.object({
 	data: z.object({

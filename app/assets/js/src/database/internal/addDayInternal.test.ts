@@ -39,7 +39,7 @@ describe('addDayInternal', () => {
 			month: 5,
 			day: 3,
 			note: 'Test note',
-		});
+		} satisfies Awaited<ReturnType<typeof getDayInternal>>);
 	});
 
 	test('throws an error if a day already exists with that date', async () => {

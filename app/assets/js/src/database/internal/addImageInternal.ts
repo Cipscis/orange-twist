@@ -11,7 +11,7 @@ import { getImageInternal } from './getImageInternal';
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.IMAGE} object store.
  * @param image The image object to insert.
  *
- * @returns A {@linkcode Promise} that resolves when the image has been added.
+ * @returns A {@linkcode Promise} that resolves with the new image's hash when it has been added.
  *
  * @throws Error if an image already exists with the same hash.
  */

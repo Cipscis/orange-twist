@@ -5,7 +5,6 @@ import {
 	test,
 } from '@jest/globals';
 
-import type { DatabaseData } from '../types';
 import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -34,6 +33,6 @@ describe('getStatusesInternal', () => {
 				id: 3,
 				alias: 'completed',
 			},
-		] satisfies DatabaseData[typeof ObjectStoreName.STATUS][number][]);
+		] satisfies Awaited<ReturnType<typeof getStatusesInternal>>);
 	});
 });

@@ -37,7 +37,7 @@ describe('removeTemplateInternal', () => {
 				template: 'Template 2',
 				sortIndex: 0,
 			},
-		]);
+		] satisfies Awaited<ReturnType<typeof getTemplatesInternal>>);
 	});
 
 	test('throws an error if the specified template does not exist', async () => {

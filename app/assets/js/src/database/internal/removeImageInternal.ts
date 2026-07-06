@@ -6,7 +6,7 @@ import { ObjectStoreName } from '../metadata';
  * Takes an existing {@linkcode IDBTransaction} and adds a request to remove an image.
  *
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.IMAGE} object store.
- * @param imageHash The hash of the image to delete;
+ * @param imageHash The hash of the image to delete.
  *
  * @returns a {@linkcode Promise} that resolves when the image has been removed.
  *

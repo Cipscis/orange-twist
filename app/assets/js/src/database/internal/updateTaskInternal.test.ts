@@ -8,8 +8,10 @@ import {
 import { ObjectStoreName } from '../metadata';
 import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
-import { updateTaskInternal } from './updateTaskInternal';
+
 import { getTaskInternal } from './getTaskInternal';
+
+import { updateTaskInternal } from './updateTaskInternal';
 
 describe('updateTaskInternal', () => {
 	let transaction: IDBTransaction;
@@ -41,7 +43,7 @@ describe('updateTaskInternal', () => {
 			note: 'Test task 2 note',
 			status: 3,
 			sortIndex: 2,
-		});
+		} satisfies Awaited<ReturnType<typeof getTaskInternal>>);
 	});
 
 	test('throws an error if the task doesn\'t exist', async () => {

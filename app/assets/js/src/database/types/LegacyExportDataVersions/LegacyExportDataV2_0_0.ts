@@ -1,5 +1,6 @@
-import { isZodSchemaType } from 'utils';
 import * as z from 'zod/mini';
+
+import { isZodSchemaType } from 'utils';
 
 export const legacyExportDataSchemaV2_0_0 = z.object({
 	day: z.record(

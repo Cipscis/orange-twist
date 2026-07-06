@@ -11,7 +11,7 @@ import { getStatusInternal } from './getStatusInternal';
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.STATUS} object store.
  * @param status The status object to insert.
  *
- * @returns A {@linkcode Promise} that resolves with the status's ID when id has been added.
+ * @returns A {@linkcode Promise} that resolves with the status's ID when it has been added.
  *
  * @throws Error if a status already exists with the specified ID.
  * @throws TypeError if the database returns a non-number key after adding.

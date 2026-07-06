@@ -10,9 +10,7 @@ import { createTestData } from '../test-utils';
 import { getTemplatesV1 } from './getTemplatesV1';
 
 describe('getTemplatesV1', () => {
-	beforeAll(async () => {
-		await createTestData();
-	});
+	beforeAll(() => createTestData());
 
 	test('returns a Promise that resolves to template entries v1', async () => {
 		const templates = await getTemplatesV1();
@@ -30,6 +28,6 @@ describe('getTemplatesV1', () => {
 				template: 'Template 1',
 				sortIndex: 1,
 			}],
-		]);
+		] satisfies Awaited<ReturnType<typeof getTemplatesV1>>);
 	});
 });

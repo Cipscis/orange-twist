@@ -1,4 +1,4 @@
-import type { DayTaskInfo } from 'data/dayTasks';
+import { encodeDayTaskKey, type DayTaskInfo } from 'data/dayTasks';
 
 import { getDatabase, getDayName } from '../utils';
 import type { LegacyStatusName } from '../types';
@@ -43,5 +43,5 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 		dayTasksV1.push(dayTaskV1);
 	}
 
-	return dayTasksV1.map((dayTask) => [`${dayTask.dayName}_${dayTask.taskId}`, dayTask]);
+	return dayTasksV1.map((dayTask) => [encodeDayTaskKey(dayTask), dayTask]);
 }

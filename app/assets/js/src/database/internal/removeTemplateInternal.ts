@@ -3,7 +3,7 @@ import { getIdbRequestPromise } from 'utils';
 import { ObjectStoreName } from '../metadata';
 
 /**
- * Takes an existing {@linkcode IDBTransaction} and adds a request to remove a day task.
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to remove a template.
  *
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.TEMPLATE} object store.
  * @param templateId The ID of the template to delete.

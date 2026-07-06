@@ -1,4 +1,5 @@
 import {
+	beforeAll,
 	beforeEach,
 	describe,
 	expect,
@@ -14,8 +15,9 @@ import { getTemplateInternal } from './getTemplateInternal';
 describe('getTemplateInternal', () => {
 	let transaction: IDBTransaction;
 
+	beforeAll(() => createTestData());
+
 	beforeEach(async () => {
-		await createTestData();
 		const db = await getDatabase();
 		transaction = db.transaction([
 			ObjectStoreName.TEMPLATE,
@@ -30,7 +32,7 @@ describe('getTemplateInternal', () => {
 			name: 'Template 1 name',
 			template: 'Template 1',
 			sortIndex: 1,
-		});
+		} satisfies Awaited<ReturnType<typeof getTemplateInternal>>);
 	});
 
 	test('returns null if no template exists by that template ID', async () => {

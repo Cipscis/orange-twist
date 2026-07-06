@@ -6,7 +6,7 @@ import { ObjectStoreName } from '../metadata';
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get all statuses.
  *
- * @param transaction An {@linkcode IDBT} with read permission and access to the {@linkcode ObjectStoreName.STATUS} object store.
+ * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.STATUS} object store.
  *
  * @returns A {@linkcode Promise} that resolves with an array containing all status objects.
  */

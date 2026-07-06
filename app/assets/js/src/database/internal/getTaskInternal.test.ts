@@ -26,7 +26,7 @@ describe('getTaskInternal', () => {
 			note: 'Test task 1 note',
 			status: 1,
 			sortIndex: 1,
-		});
+		} satisfies Awaited<ReturnType<typeof getTaskInternal>>);
 	});
 
 	test('returns null if no task exists by that task ID', async () => {
