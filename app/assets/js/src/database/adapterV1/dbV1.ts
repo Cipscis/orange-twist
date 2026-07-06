@@ -49,12 +49,4 @@ export const dbV1: PersistApi = {
 			throw new RangeError(`Unrecognised key ${key}`);
 		}
 	},
-
-	async delete(key) {
-		await doDatabaseTransaction(
-			'readwrite',
-			[ObjectStoreName.DATA],
-			([objectStore]) => objectStore.delete(key)
-		);
-	},
 };

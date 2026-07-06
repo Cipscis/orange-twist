@@ -71,35 +71,4 @@ describe('ls', () => {
 			).rejects.toBeInstanceOf(Error);
 		});
 	});
-
-	describe('delete', () => {
-		beforeEach(() => {
-			ls.set('test', { foo: 'bar' });
-		});
-
-		test('returns a Promise that resolves when persisted data has been deleted', async () => {
-			const result = ls.delete('test');
-			expect(result).toBeInstanceOf(Promise);
-
-			expect(await result).toBeUndefined();
-			expect(
-				await ls.get('test')
-			).toBeUndefined();
-		});
-
-		test('does nothing if no data was persisted at the given key', async () => {
-			await expect(
-				ls.delete('nothing')
-			).resolves.toBeUndefined();
-		});
-
-		test('rejects if localStorage is not available', async () => {
-			// @ts-expect-error Just deleting localStorage for a test
-			delete window.localStorage;
-
-			await expect(
-				ls.delete('test')
-			).rejects.toBeInstanceOf(Error);
-		});
-	});
 });

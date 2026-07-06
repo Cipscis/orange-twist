@@ -28,13 +28,4 @@ export const local: PersistApi = {
 		// If that failed, read from LocalStorage
 		return await ls.get(key);
 	},
-
-	delete(key) {
-		// Delete key from both IndexedDB and LocalStorage
-		return Promise.all([
-			dbV1.delete(key),
-			ls.delete(key),
-		]) as Promise<unknown> as Promise<void>;
-		// ^ It's safe to cast any Promise to void
-	},
 };
