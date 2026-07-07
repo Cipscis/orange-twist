@@ -104,7 +104,7 @@ describe('updateData', () => {
 								taskId: 2,
 								note: 'Day task 2 note',
 								status: 'in-progress',
-								summary: 'Day task 2 summary',
+								summary: null,
 							}],
 						],
 						templates: [
@@ -167,7 +167,7 @@ describe('updateData', () => {
 						day: 1,
 						task: 2,
 						note: 'Day task 2 note',
-						summary: 'Day task 2 summary',
+						summary: null,
 						status: 2,
 						sortIndex: 1,
 					},
