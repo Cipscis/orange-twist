@@ -8,7 +8,7 @@ import {
 	getStatusByAliasInternal,
 	getTaskInternal,
 	removeDayTaskInternal,
-	updateDayTaskInternal,
+	updateDayTaskByDayAndTaskInternal,
 } from '../internal';
 import { ObjectStoreName } from '../metadata';
 import { getDatabase, getDayNameParts } from '../utils';
@@ -82,7 +82,7 @@ export async function setDayTasksV1(
 
 		// Update existing day task
 		promises.push(
-			updateDayTaskInternal(transaction, {
+			updateDayTaskByDayAndTaskInternal(transaction, {
 				day: day.id,
 				task: task.id,
 				note: dayTask.note,

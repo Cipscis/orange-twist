@@ -11,9 +11,9 @@ import { getDatabase } from '../utils';
 
 import { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
 
-import { updateDayTaskInternal } from './updateDayTaskInternal';
+import { updateDayTaskByDayAndTaskInternal } from './updateDayTaskByDayAndTaskInternal';
 
-describe('updateDayTaskInternal', () => {
+describe('updateDayTaskByDayAndTaskInternal', () => {
 	let transaction: IDBTransaction;
 
 	beforeEach(async () => {
@@ -27,8 +27,9 @@ describe('updateDayTaskInternal', () => {
 	});
 
 	test('updates a specified day task, and returns a promise that resolves to its ID', async () => {
-		const result = await updateDayTaskInternal(transaction, {
-			id: 1,
+		const result = await updateDayTaskByDayAndTaskInternal(transaction, {
+			day: 1,
+			task: 1,
 			note: 'Updated note',
 			summary: 'Updated summary',
 			status: 3,
@@ -53,28 +54,18 @@ describe('updateDayTaskInternal', () => {
 	});
 
 	test('throws an error if the day task doesn\'t exist', async () => {
-		await expect(updateDayTaskInternal(transaction, {
-			id: -1,
+		await expect(updateDayTaskByDayAndTaskInternal(transaction, {
+			day: -1,
+			task: 0,
 			note: 'Note',
 		})).rejects.toBeInstanceOf(Error);
 	});
 
 	test('throws an error if the day task is given a status that doesn\'t exist', async () => {
-		await expect(updateDayTaskInternal(transaction, {
-			id: 1,
+		await expect(updateDayTaskByDayAndTaskInternal(transaction, {
+			day: 0,
+			task: 0,
 			status: -1,
-		})).rejects.toBeInstanceOf(Error);
-	});
-
-	test('throws an error if the day or task properties were modified', async () => {
-		await expect(updateDayTaskInternal(transaction, {
-			id: 1,
-			day: 2,
-		})).rejects.toBeInstanceOf(Error);
-
-		await expect(updateDayTaskInternal(transaction, {
-			id: 1,
-			task: 2,
 		})).rejects.toBeInstanceOf(Error);
 	});
 });
