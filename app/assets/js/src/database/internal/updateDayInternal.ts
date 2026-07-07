@@ -4,31 +4,38 @@ import {
 	type OptionalExcept,
 } from 'utils';
 
-import { IndexName, ObjectStoreName } from '../metadata';
+import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing day.
  *
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.DAY} object store.
- * @param day An object specifying which day to update by its year, month, and day, and providing any values that should be updated.
+ * @param day An object specifying which day to update by its ID, and providing any values that should be updated.
  *
- * @throws Error if no day exists with the specified year, month, and day.
+ * @throws Error if no day exists with the specified ID.
+ * @throws Error if the `year`, `month`, or `day` properties are modified.
  */
 export async function updateDayInternal(
 	transaction: IDBTransaction,
 	day: OptionalExcept<
-		Omit<DatabaseData[typeof ObjectStoreName.DAY][number], 'id'>,
-		'year' | 'month' | 'day'
+		DatabaseData[typeof ObjectStoreName.DAY][number], 'id'
 	>
 ): Promise<void> {
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
-	const dayByDate = dayOS.index(IndexName.DAY_DATE);
 
 	const requests: Promise<IDBValidKey>[] = [];
-	for await (const dayCursor of getIterableCursor(dayByDate, [day.year, day.month, day.day])) {
+	for await (const dayCursor of getIterableCursor(dayOS, day.id)) {
 		// This type assertion is safe because of other controls around what can be inserted into the database
 		const dayCursorValue = dayCursor.value as DatabaseData[typeof ObjectStoreName.DAY][number];
+
+		if (
+			('year' in day && day.year !== dayCursorValue.year) ||
+			('month' in day && day.month !== dayCursorValue.month) ||
+			('day' in day && day.day !== dayCursorValue.day)
+		) {
+			throw new Error(`The year, month, and day properties of a day are immutable and cannot be modified.`);
+		}
 
 		requests.push(
 			getIdbRequestPromise(
@@ -41,7 +48,7 @@ export async function updateDayInternal(
 	}
 
 	if (requests.length === 0) {
-		throw new Error(`Failed to update day ${[day.year, day.month, day.day]} - No such day exists.`);
+		throw new Error(`Failed to update day ${day.id} - No such day exists.`);
 	}
 
 	await Promise.all(requests);
