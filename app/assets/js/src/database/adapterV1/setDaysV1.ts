@@ -13,7 +13,7 @@ import {
 	removeDayInternal,
 	removeDayTaskInternal,
 	updateDayInternal,
-	updateDayTaskInternal,
+	updateDayTaskByDayAndTaskInternal,
 } from '../internal';
 
 /**
@@ -193,7 +193,7 @@ async function updateExistingDay(options: {
 	// Update sort index of remaining day tasks
 	promises.push(
 		...Array.from(remainingDayTaskTaskIds).map((taskId) => {
-			return updateDayTaskInternal(transaction, {
+			return updateDayTaskByDayAndTaskInternal(transaction, {
 				day: existingDay.id,
 				task: taskId,
 				sortIndex: dayInfo.tasks.indexOf(taskId),

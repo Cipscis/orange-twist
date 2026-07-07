@@ -4,7 +4,7 @@ import {
 	type OptionalExcept,
 } from 'utils';
 
-import { IndexName, ObjectStoreName } from '../metadata';
+import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
 import { getStatusInternal } from './getStatusInternal';
@@ -13,7 +13,7 @@ import { getStatusInternal } from './getStatusInternal';
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing day task.
  *
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.DAY_TASK} and {@linkcode ObjectStoreName.STATUS} object stores.
- * @param dayTask An object specifying which day task to update by the IDs of its day and task, and providing any values that should be updated.
+ * @param dayTask An object specifying which day task to update by its ID, and providing any values that should be updated.
  *
  * @returns a {@linkcode Promise} that resolves with the ID of the updated day task, once the update is complete.
  *
@@ -23,25 +23,28 @@ import { getStatusInternal } from './getStatusInternal';
 export async function updateDayTaskInternal(
 	transaction: IDBTransaction,
 	dayTask: OptionalExcept<
-		Omit<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id'>,
-		'day' | 'task'
+		DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id'
 	>
 ): Promise<number> {
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-	const dayTaskByDayAndTask = dayTaskOS.index(IndexName.DAY_TASK_DAY_TASK);
 
 	const requests: Promise<IDBValidKey>[] = [];
-	let dayTaskId: number | undefined;
 
-	for await (const dayTaskCursor of getIterableCursor(dayTaskByDayAndTask, [dayTask.day, dayTask.task])) {
+	for await (const dayTaskCursor of getIterableCursor(dayTaskOS, dayTask.id)) {
 		// This type assertion is safe because of other controls around what can be inserted into the database
 		const dayTaskCursorValue = dayTaskCursor.value as DatabaseData[typeof ObjectStoreName.DAY_TASK][number];
-		dayTaskId = dayTaskCursorValue.id;
+
+		if (
+			('day' in dayTask && dayTask.day !== dayTaskCursorValue.day) ||
+			('task' in dayTask && dayTask.task !== dayTaskCursorValue.task)
+		) {
+			throw new Error(`The day and task properties of a day task are immutable and cannot be modified.`);
+		}
 
 		if (typeof dayTask.status === 'number') {
 			const status = await getStatusInternal(transaction, dayTask.status);
 			if (status === null) {
-				throw new Error(`Could not apply status ID ${dayTask.status} to day task ${dayTaskId} - No such status exists.`);
+				throw new Error(`Could not apply status ID ${dayTask.status} to day task ${dayTask.id} - No such status exists.`);
 			}
 		}
 
@@ -55,11 +58,11 @@ export async function updateDayTaskInternal(
 		);
 	}
 
-	if (typeof dayTaskId === 'undefined') {
-		throw new Error(`Failed to update day task with day ID ${dayTask.day} and task ID ${dayTask.task} - No such day task exists.`);
+	if (requests.length === 0) {
+		throw new Error(`Failed to update day task ${dayTask.id}`);
 	}
 
 	await Promise.all(requests);
 
-	return dayTaskId;
+	return dayTask.id;
 }
