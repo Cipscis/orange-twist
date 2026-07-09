@@ -163,6 +163,9 @@ export default defineConfig([
 				},
 			],
 
+			// After updating @typescript-eslint pugins to 8.63.0, this rule started giving a bunch of false-positive errors, complaining about type assertions that would break compilation if removed
+			'@typescript-eslint/no-unnecessary-type-assertion': 'off',
+
 			/////////////
 			// Plugins //
 			/////////////
