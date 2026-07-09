@@ -223,7 +223,7 @@ function getDayIdByName(
 /**
  * Within schema version `2.0.0` status data, look up the ID of a status based on its legacy name.
  *
- * If no status is found, returns the ID of the first status by default (`0`).
+ * If no status is found, returns the ID of the first status by default (`1`).
  */
 function getStatusIdByName(
 	statusName: LegacyStatusName,
@@ -232,5 +232,5 @@ function getStatusIdByName(
 	const matchingStatus = Object.values(statusData)
 		.find(({ alias }) => alias === statusName);
 
-	return matchingStatus?.id ?? 0;
+	return matchingStatus?.id ?? 1;
 }
