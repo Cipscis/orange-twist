@@ -6,10 +6,10 @@ import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
 import {
-	loadDayTasks,
-	loadDays,
-	loadTasks,
-	loadTemplates,
+	loadDayTasksRegister,
+	loadDaysRegister,
+	loadTasksRegister,
+	loadTemplatesRegister,
 } from 'data';
 import { setAllImages } from 'images';
 
@@ -55,10 +55,10 @@ async function loadExportDataDirect(
 	data: ExportDataLike
 ): Promise<void> {
 	await Promise.all([
-		loadDays(persist, JSON.stringify(data.days)),
-		loadTasks(persist, JSON.stringify(data.tasks)),
-		loadDayTasks(persist, JSON.stringify(data.dayTasks)),
-		loadTemplates(persist, JSON.stringify(data.templates ?? [])),
+		loadTasksRegister(persist, JSON.stringify(data.tasks)),
+		loadDaysRegister(persist, JSON.stringify(data.days)),
+		loadDayTasksRegister(persist, JSON.stringify(data.dayTasks)),
+		loadTemplatesRegister(persist, JSON.stringify(data.templates ?? [])),
 		setAllImages(await getImageEntries(data)),
 	]);
 }
@@ -83,10 +83,10 @@ export async function loadExportData(
 		} catch (e) {
 			// If restoring the backup failed, try to load persisted data again
 			await Promise.all([
-				loadDays(persist),
-				loadTasks(persist),
-				loadDayTasks(persist),
-				loadTemplates(persist),
+				loadTasksRegister(persist),
+				loadDaysRegister(persist),
+				loadDayTasksRegister(persist),
+				loadTemplatesRegister(persist),
 				setAllImages(await getImageEntries(backup)),
 			]);
 		}

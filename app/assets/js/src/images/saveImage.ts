@@ -1,8 +1,8 @@
 // Type-only import to expose symbol in JSDoc
 import type { getImage } from './getImage';
 
-import { ObjectStoreName, doDatabaseTransaction } from 'utils';
 import { createImageHash } from './createImageHash';
+import { adapterV1 } from 'database';
 
 /**
  * Persist an image in IndexedDB, so it can be retrieved later.
@@ -16,10 +16,8 @@ import { createImageHash } from './createImageHash';
  */
 export async function saveImage(image: Blob): Promise<string> {
 	const hash = await createImageHash(image);
-	await doDatabaseTransaction(
-		'readwrite',
-		ObjectStoreName.IMAGES,
-		(store) => store.put(image, hash)
-	);
+
+	await adapterV1.setImage(image, hash);
+
 	return hash;
 }

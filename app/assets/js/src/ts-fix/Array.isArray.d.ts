@@ -5,8 +5,6 @@
  * https://github.com/microsoft/TypeScript/issues/17002#issuecomment-1217386617
  * https://github.com/microsoft/TypeScript/issues/17002#issuecomment-1285847629
  */
-type IfUnknownOrAny<T, Y, N> = unknown extends T ? Y : N;
-
 type ArrayType<T> = Extract<
 	(
 		true extends false & T

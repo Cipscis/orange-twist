@@ -31,7 +31,7 @@ const oldDayTaskInfoSchemas = [
 ] as const satisfies ReadonlyArray<readonly [number, z.ZodMiniType]>;
 
 /**
- * Use an immediately indexed mapped function to construct a
+ * Use an immediately indexed mapped type to construct a
  * discriminated union of tuple types that can be used to
  * return a linked version number and parsed value from
  * {@linkcode getOldDayTaskInfoSchemaVersion}.

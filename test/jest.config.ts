@@ -12,11 +12,12 @@ const config: JestConfigWithTsJest = {
 	// Tell Jest how to follow module resolution rules based on tsconfig's baseUrl
 	moduleDirectories: ['node_modules', './app/assets/js/src'],
 	// Provide a mocked DOM environment for tests
-	testEnvironment: 'jsdom',
+	testEnvironment: '../../../../../test/jest-environment',
 	// Telling jsdom to use 'node' exports seems necessary to allow importing from Preact
 	testEnvironmentOptions: {
 		customExportConditions: ['node'],
 	},
+	setupFiles: ['fake-indexeddb/auto'],
 	// Run a setup script before all test suites
 	setupFilesAfterEnv: ['../test/jest.setup.ts'],
 

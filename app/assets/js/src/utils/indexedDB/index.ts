@@ -1,4 +1,3 @@
-export { doDatabaseTransaction } from './doDatabaseTransaction';
-export { getDatabase } from './getDatabase';
-export { getEntries } from './getEntries';
-export { ObjectStoreName } from './ObjectStoreName';
+export { getDbDump } from './getDbDump';
+export { getIterableCursor } from './getIterableCursor';
+export { getIdbRequestPromise } from './getIdbRequestPromise';

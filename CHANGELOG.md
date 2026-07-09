@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - Unreleased
+
+### Changed
+
+* Redesigned the database
+
 ## [1.8.3] - 2026-04-07
 
 ### Changed

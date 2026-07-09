@@ -14,6 +14,7 @@ import {
 
 import { Accordion } from 'components/shared';
 import { TaskList } from './TaskList';
+import { sortElementsBySortIndex } from 'utils';
 
 interface CompletedTaskListProps {
 	open?: boolean;
@@ -50,7 +51,7 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 			}
 
 			// Then, sort by sort index
-			return taskA.sortIndex - taskB.sortIndex;
+			return sortElementsBySortIndex(taskA, taskB);
 		},
 		[]
 	);

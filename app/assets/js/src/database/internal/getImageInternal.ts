@@ -1,0 +1,32 @@
+import { getIdbRequestPromise } from 'utils';
+
+import { ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
+
+/**
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to retrieve an image by its specified hash.
+ *
+ * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.IMAGE} object store.
+ * @param hash The hash for the image to retrieve.
+ *
+ * @returns A {@linkcode Promise} that resolves to the retrieved image, or `null` if no image exists with the specified hash.
+ */
+export async function getImageInternal(
+	transaction: IDBTransaction,
+	hash: string,
+): Promise<
+	| DatabaseData[typeof ObjectStoreName.IMAGE][number]
+	| null
+> {
+	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
+
+	// This type assertion is safe because of other controls around what can be inserted into the database
+	const request = imageOS.get(hash) as IDBRequest<
+		| DatabaseData[typeof ObjectStoreName.IMAGE][number]
+		| undefined
+	>;
+
+	const image = await getIdbRequestPromise(request);
+
+	return image ?? null;
+}

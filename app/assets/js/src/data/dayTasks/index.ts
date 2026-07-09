@@ -11,8 +11,8 @@ export {
 } from './hooks';
 
 export {
-	loadDayTasks,
+	loadDayTasksRegister,
 	saveDayTasks,
 } from './persistence';
 
-export { encodeDayTaskKey } from './util';
+export { encodeDayTaskKey, decodeDayTaskKey } from './util';

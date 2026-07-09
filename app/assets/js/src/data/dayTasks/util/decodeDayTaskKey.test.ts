@@ -24,7 +24,6 @@ describe('decodeDayTaskKey', () => {
 
 	test('throws an error if passed an invalid key', () => {
 		expect(
-			/* @ts-expect-error TypeScript tries to enforce the key format */
 			() => decodeDayTaskKey('test')
 		).toThrow();
 	});

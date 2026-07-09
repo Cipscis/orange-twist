@@ -8,13 +8,15 @@ export {
 } from './register';
 
 export {
-	doDatabaseTransaction,
-	ObjectStoreName,
+	getDbDump,
+	getIdbRequestPromise,
+	getIterableCursor,
 } from './indexedDB';
 
 export { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 export { chooseFile } from './chooseFile';
 export { classNames } from './classNames';
+export { copyBlob } from './copyBlob';
 export { createElement } from './createElement';
 export { escapeRegExpString } from './escapeRegExpString';
 export { getCurrentDateDayName } from './getCurrentDateDayName';
@@ -27,6 +29,8 @@ export { nodeHasAncestor } from './nodeHasAncestor';
 export { readFileAsString } from './readFileAsString';
 export { removeDiacritics } from './removeDiacritics';
 export { requestAsyncCallback } from './requestAsyncCallback';
+export { sortBySortIndex } from './sortBySortIndex';
+export { sortElementsBySortIndex } from './sortElementsBySortIndex';
 export { startAnimationLoop } from './startAnimationLoop';
 export { strMatch, type StrMatchOptions } from './strMatch';
 export { tryStartViewTransition } from './tryStartViewTransition';
@@ -42,4 +46,6 @@ export type { DeepPartial } from './DeepPartial';
 export type { DefaultsFor } from './DefaultsFor';
 export type { EnumTypeOf } from './EnumTypeOf';
 export type { ExpandType } from './ExpandType';
+export type { OptionalExcept } from './OptionalExcept';
 export type { StringWithAutocomplete } from './StringWithAutocomplete';
+export type { WithOptional } from './WithOptional';
