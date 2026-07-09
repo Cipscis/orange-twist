@@ -8,12 +8,13 @@ import { getDbDump, getIterableCursor } from 'utils';
 
 import type { DatabaseData } from '../types';
 import { getDatabase } from '../utils';
-import { fillDatabase } from './fillDatabase';
 import {
 	dbName,
 	dbVersion,
 	ObjectStoreName,
 } from '../metadata';
+
+import { fillDatabase } from './fillDatabase';
 
 describe('fillDatabase', () => {
 	test('fills an Orange Twist database with data', async () => {
