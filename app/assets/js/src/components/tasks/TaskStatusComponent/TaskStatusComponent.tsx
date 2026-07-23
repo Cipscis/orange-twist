@@ -11,7 +11,6 @@ import {
 import {
 	animate,
 	CSSKeyframes,
-	nodeHasAncestor,
 	useCloseWatcher,
 } from 'utils';
 
