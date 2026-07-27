@@ -1,4 +1,5 @@
 import type { EnumTypeOf } from 'utils';
+import type { SaveAction } from './SaveAction';
 
 export const Command = {
 	DAY_ADD_NEW: 'day-add-new',
@@ -18,7 +19,7 @@ declare module 'registers/commands' {
 		[Command.DAY_ADD_NEW]: [dayName: string];
 		[Command.TASK_ADD_NEW]: [dayName: string];
 		[Command.TASK_GO_TO_EXISTING]: [taskId: number];
-		[Command.DATA_SAVE]: [];
+		[Command.DATA_SAVE]: [saveActions: readonly SaveAction[]];
 		[Command.DATA_EXPORT]: [];
 		[Command.DATA_IMPORT]: [];
 		[Command.THEME_TOGGLE]: [];
