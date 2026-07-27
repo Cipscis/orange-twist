@@ -36,12 +36,14 @@ export async function updateTaskInternal(
 			}
 		}
 
+		const updatedTask = {
+			...taskCursorValue,
+			...task,
+		};
+
 		requests.push(
 			getIdbRequestPromise(
-				taskCursor.update({
-					...taskCursorValue,
-					...task,
-				})
+				taskCursor.update(updatedTask)
 			)
 		);
 	}
