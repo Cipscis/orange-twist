@@ -9,8 +9,11 @@ import {
 	renderHook,
 } from '@testing-library/preact';
 
-import type { GetAsyncDataOptions } from './useAsyncData';
-import { useAsyncData } from './useAsyncData';
+import {
+	AsyncDataState,
+	useAsyncData,
+	type GetAsyncDataOptions,
+} from './useAsyncData';
 
 describe('useAsyncData', () => {
 	test('returns an AsyncDataState', () => {
@@ -21,9 +24,7 @@ describe('useAsyncData', () => {
 		);
 
 		expect(result.current).toMatchObject({
-			data: null,
-			isLoading: true,
-			error: null,
+			state: AsyncDataState.LOADING,
 		});
 	});
 
@@ -45,9 +46,8 @@ describe('useAsyncData', () => {
 		await act(() => rerender(initialProps));
 
 		expect(result.current).toMatchObject({
+			state: AsyncDataState.SUCCESS,
 			data,
-			isLoading: false,
-			error: null,
 		});
 	});
 
@@ -65,9 +65,7 @@ describe('useAsyncData', () => {
 		);
 
 		expect(result.current).toMatchObject({
-			data: null,
-			isLoading: true,
-			error: null,
+			state: AsyncDataState.LOADING,
 		});
 		expect(abortSignal!.aborted).toBe(false);
 
@@ -88,15 +86,14 @@ describe('useAsyncData', () => {
 			{ initialProps }
 		);
 
-		const errorMessage = 'Failed to fetch';
-		await act(() => rejectWithError!(new Error(errorMessage)));
+		const error = new Error('Failed to fetch');
+		await act(() => rejectWithError!(error));
 		// TODO: Can I refactor it to not need an additional rerender?
 		await act(() => rerender(initialProps));
 
 		expect(result.current).toMatchObject({
-			data: null,
-			isLoading: false,
-			error: errorMessage,
+			state: AsyncDataState.ERROR,
+			error,
 		});
 	});
 });
