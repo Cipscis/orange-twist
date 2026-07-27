@@ -1,6 +1,6 @@
 import type { OptionalExcept } from 'utils';
 
-import { ObjectStoreName } from '../metadata';
+import type { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
 
 import { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
@@ -24,8 +24,6 @@ export async function updateDayTaskByDayAndTaskInternal(
 		'day' | 'task'
 	>
 ): Promise<number> {
-	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
-
 	const retrievedDayTask = await getDayTaskForDayAndTaskInternal(transaction, dayTask);
 
 	if (!retrievedDayTask) {
