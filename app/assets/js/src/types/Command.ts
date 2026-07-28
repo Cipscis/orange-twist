@@ -1,5 +1,5 @@
 import type { EnumTypeOf } from 'utils';
-import type { SaveAction } from './SaveAction';
+import type { SaveAction } from 'database';
 
 export const Command = {
 	DAY_ADD_NEW: 'day-add-new',

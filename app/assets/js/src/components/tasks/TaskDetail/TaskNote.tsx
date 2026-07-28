@@ -10,12 +10,12 @@ import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
 import { setTaskInfo, type TaskInfo } from 'data';
+import { SaveType } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import type { MarkdownApi } from 'components/shared/Markdown';
 import { Note } from 'components/shared';
-import { SaveType } from 'types/SaveAction';
 
 interface TaskNoteProps {
 	task: Readonly<TaskInfo>;
@@ -42,9 +42,9 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 
 	const saveChanges = useCallback(() => {
 		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.TASK_NOTE,
-			task: task.id,
-			note: noteRef.current,
+			type: SaveType.TASK,
+			id: task.id,
+			task: { note: noteRef.current },
 		}]);
 	}, [task.id]);
 

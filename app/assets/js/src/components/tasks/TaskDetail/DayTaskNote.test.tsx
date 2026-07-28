@@ -18,8 +18,7 @@ import { Command } from 'types/Command';
 import { addCommandListener, registerCommand } from 'registers/commands';
 
 import { clear } from 'data';
-
-import { SaveType } from 'types/SaveAction';
+import { SaveType } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 

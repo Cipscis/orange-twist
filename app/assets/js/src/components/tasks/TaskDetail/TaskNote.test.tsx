@@ -19,7 +19,7 @@ import { addCommandListener, registerCommand } from 'registers/commands';
 
 import { clear } from 'data';
 
-import { SaveType } from 'types/SaveAction';
+import { SaveType } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
@@ -94,9 +94,9 @@ describe('TaskNote', () => {
 
 		expect(spy).toHaveBeenCalledTimes(1);
 		expect(spy).toHaveBeenCalledWith([{
-			type: SaveType.TASK_NOTE,
-			task: 1,
-			note: 'Task note edited',
+			type: SaveType.TASK,
+			id: 1,
+			task: { note: 'Task note edited' },
 		}]);
 
 		controller.abort();

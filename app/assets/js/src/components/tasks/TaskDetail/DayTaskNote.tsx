@@ -10,12 +10,12 @@ import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
 import { setDayTaskInfo, type DayTaskInfo } from 'data';
+import { SaveType } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import type { MarkdownApi } from 'components/shared/Markdown';
 import { Note } from 'components/shared';
-import { SaveType } from 'types/SaveAction';
 
 interface DayTaskNoteProps {
 	dayTask: Readonly<DayTaskInfo>;

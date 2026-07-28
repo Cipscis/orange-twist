@@ -1,7 +1,10 @@
 import type { EnumTypeOf, ExpandType } from 'utils';
 
+import type { ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
+
 export const SaveType = {
-	TASK_NOTE: 'task note',
+	TASK: 'task',
 
 	// TODO: Remove this once day task notes can be saved via the day task's ID
 	DAY_TASK_NOTE_LEGACY: 'day task note (legacy)',
@@ -10,9 +13,14 @@ export const SaveType = {
 export type SaveType = EnumTypeOf<typeof SaveType>;
 
 interface SaveActionByType {
-	[SaveType.TASK_NOTE]: {
-		task: number;
-		note: string;
+	[SaveType.TASK]: {
+		id: number;
+		task: ExpandType<Partial<
+			Omit<
+				DatabaseData[typeof ObjectStoreName.TASK][number],
+				'id'
+			>
+		>>;
 	};
 	[SaveType.DAY_TASK_NOTE_LEGACY]: {
 		dayName: string;
