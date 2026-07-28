@@ -10,27 +10,46 @@ import {
 } from '@testing-library/preact';
 
 import {
-	AsyncDataState,
+	AsyncDataStateType,
 	useAsyncData,
 	type GetAsyncDataOptions,
 } from './useAsyncData';
 
 describe('useAsyncData', () => {
-	test('returns an AsyncDataState', () => {
+	test('starts in an initial state', () => {
 		const { result } = renderHook(
 			() => useAsyncData(
 				() => new Promise(() => {})
 			)
 		);
 
-		expect(result.current).toMatchObject({
-			state: AsyncDataState.LOADING,
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.INITIAL,
+		});
+	});
+
+	test('enters loading state when data is requested', () => {
+		const initialProps = {
+			getData: () => new Promise(() => {}),
+		};
+		const { result, rerender } = renderHook(
+			({ getData }) => useAsyncData(getData),
+			{ initialProps },
+		);
+
+		result.current.getData();
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.LOADING,
 		});
 	});
 
 	test('makes data available when Promise is settled', async () => {
-		let resolveData: (value: unknown) => void;
-		const dataPromise = new Promise((resolve) => resolveData = resolve);
+		const {
+			resolve: resolveData,
+			promise: dataPromise,
+		} = Promise.withResolvers<unknown>();
 		const initialProps = {
 			getData: () => dataPromise,
 		};
@@ -41,42 +60,27 @@ describe('useAsyncData', () => {
 		);
 
 		const data = Math.random();
-		await act(() => resolveData!(data));
-		// TODO: Can I refactor it to not need an additional rerender?
-		await act(() => rerender(initialProps));
 
-		expect(result.current).toMatchObject({
-			state: AsyncDataState.SUCCESS,
+		result.current.getData();
+		rerender(initialProps);
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.LOADING,
+		});
+
+		await act(() => resolveData(data));
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.SUCCESS,
 			data,
 		});
 	});
 
-	test('passes an AbortSignal to get callback, and aborts it if unmounted', () => {
-		let abortSignal: AbortSignal | undefined;
-		const initialProps = {
-			getData: (options?: GetAsyncDataOptions) => new Promise(() => {
-				abortSignal = options?.signal;
-			}),
-		};
-
-		const { result, unmount } = renderHook(
-			({ getData }) => useAsyncData(getData),
-			{ initialProps }
-		);
-
-		expect(result.current).toMatchObject({
-			state: AsyncDataState.LOADING,
-		});
-		expect(abortSignal!.aborted).toBe(false);
-
-		unmount();
-
-		expect(abortSignal!.aborted).toBe(true);
-	});
-
 	test('resolves with error when Promise is rejected', async () => {
-		let rejectWithError: (value: unknown) => void;
-		const dataPromise = new Promise((resolve, reject) => rejectWithError = reject);
+		const {
+			reject: rejectWithError,
+			promise: dataPromise,
+		} = Promise.withResolvers<never>();
 		const initialProps = {
 			getData: () => dataPromise,
 		};
@@ -86,13 +90,146 @@ describe('useAsyncData', () => {
 			{ initialProps }
 		);
 
-		const error = new Error('Failed to fetch');
-		await act(() => rejectWithError!(error));
-		// TODO: Can I refactor it to not need an additional rerender?
-		await act(() => rerender(initialProps));
+		result.current.getData()
+			.catch(() => {
+				// Do nothing on error, but consider it handled
+			});
 
-		expect(result.current).toMatchObject({
-			state: AsyncDataState.ERROR,
+		const error = new Error('Failed to fetch');
+		await act(() => rejectWithError(error));
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.ERROR,
+			error,
+		});
+	});
+
+	test('aborts any previous attempts when starting a new one', () => {
+		let abortSignal: AbortSignal;
+		const initialProps = {
+			getData: (options?: GetAsyncDataOptions) => new Promise(() => {
+				abortSignal = abortSignal ?? options!.signal;
+			}),
+		};
+		const { result, rerender } = renderHook(
+			({ getData }) => useAsyncData(getData),
+			{ initialProps }
+		);
+
+		result.current.getData();
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.LOADING,
+		});
+		expect(abortSignal!.aborted).toBe(false);
+
+		result.current.getData();
+		rerender(initialProps);
+
+		expect(abortSignal!.aborted).toBe(true);
+	});
+
+	test('enters aborted state if aborted before reaching success or error states', () => {
+		const {
+			promise,
+		} = Promise.withResolvers();
+		const initialProps = {
+			getData: () => promise,
+		};
+		const { result, rerender } = renderHook(
+			({ getData }) => useAsyncData(getData),
+			{ initialProps }
+		);
+
+		const abortController = new AbortController();
+		const { signal } = abortController;
+
+		result.current.getData({ signal });
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.LOADING,
+		});
+
+		abortController.abort('Manually aborted');
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.ABORTED,
+			reason: 'Manually aborted',
+		});
+	});
+
+	test('does not enter aborted state if aborted after reaching success state', async () => {
+		const {
+			promise,
+			resolve,
+		} = Promise.withResolvers();
+		const initialProps = {
+			getData: () => promise,
+		};
+		const { result, rerender } = renderHook(
+			({ getData }) => useAsyncData(getData),
+			{ initialProps }
+		);
+
+		const abortController = new AbortController();
+		const { signal } = abortController;
+
+		result.current.getData({ signal });
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.LOADING,
+		});
+
+		await act(() => resolve('Data'));
+
+		abortController.abort('Manually aborted');
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.SUCCESS,
+			data: 'Data',
+		});
+	});
+
+	test('does not enter aborted state if aborted after reaching error state', async () => {
+		const {
+			promise,
+			reject,
+		} = Promise.withResolvers();
+		const initialProps = {
+			getData: () => promise,
+		};
+		const { result, rerender } = renderHook(
+			({ getData }) => useAsyncData(getData),
+			{ initialProps }
+		);
+
+		const abortController = new AbortController();
+		const { signal } = abortController;
+
+		result.current.getData({ signal })
+			.catch(() => {
+				// Do nothing on error
+			});
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.LOADING,
+		});
+
+		const error = new Error('Error');
+		await act(() => reject(error));
+
+		abortController.abort('Manually aborted');
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.ERROR,
 			error,
 		});
 	});
