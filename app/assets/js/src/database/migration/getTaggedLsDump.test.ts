@@ -6,7 +6,7 @@ import {
 } from '@jest/globals';
 
 import { getTaggedLsDump } from './getTaggedLsDump';
-import type { TaggedLegacyExportData } from 'database/types';
+import type { TaggedLegacyExportData } from '../types';
 
 describe('getTaggedLsDump', () => {
 	beforeEach(() => localStorage.clear());
