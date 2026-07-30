@@ -1,7 +1,7 @@
 import { assertAllUnionMembersHandled } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import { getDatabase, getDayNameParts } from '../utils';
+import { getDayNameParts } from '../utils';
 import {
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
@@ -10,6 +10,7 @@ import {
 } from '../internal';
 
 import { SaveType, type SaveAction } from './SaveAction';
+import { requestTransaction } from './requestTransaction';
 
 /**
  * Process any number of {@linkcode SaveAction}s.
@@ -20,8 +21,7 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 	}
 
 	const objectStores = gatherTransactionRequirements(actions);
-	const db = await getDatabase();
-	const transaction = db.transaction(objectStores, 'readwrite');
+	const transaction = await requestTransaction(objectStores, 'readwrite');
 
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
