@@ -11,6 +11,7 @@ export { removeTaskInternal } from './removeTaskInternal';
 export { updateTaskInternal } from './updateTaskInternal';
 export { getTasksInternal } from './getTasksInternal';
 
+export { getDayTaskInternal } from './getDayTaskInternal';
 export { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
 export { addDayTaskInternal } from './addDayTaskInternal';
 export { removeDayTaskInternal } from './removeDayTaskInternal';
