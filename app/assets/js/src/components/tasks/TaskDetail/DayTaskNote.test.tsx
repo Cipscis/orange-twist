@@ -93,10 +93,10 @@ describe('DayTaskNote', () => {
 
 		expect(spy).toHaveBeenCalledTimes(1);
 		expect(spy).toHaveBeenCalledWith([{
-			type: SaveType.DAY_TASK_NOTE_LEGACY,
+			type: SaveType.DAY_TASK_LEGACY,
 			dayName: '2026-08-04',
 			taskId: 1,
-			note: 'Day task note edited',
+			dayTask: { note: 'Day task note edited' },
 		}]);
 
 		controller.abort();

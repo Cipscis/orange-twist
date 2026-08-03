@@ -43,10 +43,10 @@ export function DayTaskNote(props: DayTaskNoteProps): JSX.Element {
 
 	const saveChanges = useCallback(() => {
 		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.DAY_TASK_NOTE_LEGACY,
+			type: SaveType.DAY_TASK_LEGACY,
 			dayName,
 			taskId,
-			note: noteRef.current,
+			dayTask: { note: noteRef.current },
 		}]);
 	}, [dayName, taskId]);
 

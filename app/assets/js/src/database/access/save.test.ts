@@ -5,7 +5,6 @@ import {
 	test,
 } from '@jest/globals';
 
-
 import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -88,7 +87,7 @@ describe('SaveHelper', () => {
 		});
 	});
 
-	test('saves day task notes via legacy interface', async () => {
+	test('saves day tasks via legacy interface', async () => {
 		let readTransaction = db.transaction([
 			ObjectStoreName.DAY_TASK,
 		], 'readonly');
@@ -100,16 +99,31 @@ describe('SaveHelper', () => {
 
 		await save([
 			{
-				type: SaveType.DAY_TASK_NOTE_LEGACY,
+				type: SaveType.DAY_TASK_LEGACY,
 				dayName: '2026-04-26',
 				taskId: 1,
-				note: 'New note 1',
+				// Ensure undefined and extraneous properties are ignored
+				dayTask: {
+					status: undefined,
+					note: 'New note 1',
+					// @ts-expect-error Ignore for test
+					extra: 'test',
+				},
 			},
 			{
-				type: SaveType.DAY_TASK_NOTE_LEGACY,
+				type: SaveType.DAY_TASK_LEGACY,
 				dayName: '2026-04-26',
 				taskId: 2,
-				note: 'New note 2',
+				// Ensure all properties get updated
+				dayTask: {
+					note: 'New note 2',
+					sortIndex: 3,
+					status: 3,
+					summary: 'Test day task 2 updated',
+				} satisfies Omit<
+					DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
+					'id' | 'day' | 'task'
+				>,
 			},
 		]);
 
@@ -119,8 +133,24 @@ describe('SaveHelper', () => {
 		const afterDayTask1 = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 1, task: 1 });
 		const afterDayTask2 = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 1, task: 2 });
 
-		expect(afterDayTask1?.note).toBe('New note 1');
-		expect(afterDayTask2?.note).toBe('New note 2');
+		expect(afterDayTask1).toEqual({
+			id: 1,
+			day: 1,
+			task: 1,
+			note: 'New note 1',
+			status: 2,
+			sortIndex: 1,
+			summary: 'Summary for task 1 day 1',
+		});
+		expect(afterDayTask2).toEqual({
+			id: 2,
+			day: 1,
+			task: 2,
+			note: 'New note 2',
+			sortIndex: 3,
+			status: 3,
+			summary: 'Test day task 2 updated',
+		});
 	});
 
 	test('saves day task notes', async () => {
@@ -135,14 +165,29 @@ describe('SaveHelper', () => {
 
 		await save([
 			{
-				type: SaveType.DAY_TASK_NOTE,
-				dayTask: 1,
-				note: 'New note 1',
+				type: SaveType.DAY_TASK,
+				id: 1,
+				// Ensure undefined and extraneous properties are ignored
+				dayTask: {
+					status: undefined,
+					note: 'New note 1',
+					// @ts-expect-error Ignore for test
+					extra: 'test',
+				},
 			},
 			{
-				type: SaveType.DAY_TASK_NOTE,
-				dayTask: 2,
-				note: 'New note 2',
+				type: SaveType.DAY_TASK,
+				id: 2,
+				// Ensure all properties get updated
+				dayTask: {
+					note: 'New note 2',
+					sortIndex: 3,
+					status: 3,
+					summary: 'Test day task 2 updated',
+				} satisfies Omit<
+					DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
+					'id' | 'day' | 'task'
+				>,
 			},
 		]);
 
@@ -152,7 +197,23 @@ describe('SaveHelper', () => {
 		const afterDayTask1 = await getDayTaskInternal(readTransaction, 1);
 		const afterDayTask2 = await getDayTaskInternal(readTransaction, 2);
 
-		expect(afterDayTask1?.note).toBe('New note 1');
-		expect(afterDayTask2?.note).toBe('New note 2');
+		expect(afterDayTask1).toEqual({
+			id: 1,
+			day: 1,
+			task: 1,
+			note: 'New note 1',
+			status: 2,
+			sortIndex: 1,
+			summary: 'Summary for task 1 day 1',
+		});
+		expect(afterDayTask2).toEqual({
+			id: 2,
+			day: 1,
+			task: 2,
+			note: 'New note 2',
+			sortIndex: 3,
+			status: 3,
+			summary: 'Test day task 2 updated',
+		});
 	});
 });

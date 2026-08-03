@@ -26,10 +26,10 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
 			saveTask(action, transaction);
-		} else if (action.type === SaveType.DAY_TASK_NOTE_LEGACY) {
+		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
 			saveDayTaskNoteLegacy(action, transaction);
-		} else if (action.type === SaveType.DAY_TASK_NOTE) {
-			saveDayTaskNote(action, transaction);
+		} else if (action.type === SaveType.DAY_TASK) {
+			saveDayTask(action, transaction);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}
@@ -66,18 +66,32 @@ async function saveTask(
 }
 
 /**
- * Save the note of a single day task.
+ * Save a single day task.
  */
-async function saveDayTaskNote(
+async function saveDayTask(
 	action: Extract<
-		SaveAction, { type: typeof SaveType.DAY_TASK_NOTE; }
+		SaveAction, { type: typeof SaveType.DAY_TASK; }
 	>,
 	transaction: IDBTransaction,
 ): Promise<void> {
-	await updateDayTaskInternal(transaction, {
-		id: action.dayTask,
-		note: action.note,
-	});
+	// Protect against extraneous and undefined properties
+	const dayTaskToSave: Parameters<typeof updateDayTaskInternal>[1] = {
+		id: action.id,
+	};
+	if (typeof action.dayTask.note !== 'undefined') {
+		dayTaskToSave.note = action.dayTask.note;
+	}
+	if (typeof action.dayTask.sortIndex !== 'undefined') {
+		dayTaskToSave.sortIndex = action.dayTask.sortIndex;
+	}
+	if (typeof action.dayTask.status !== 'undefined') {
+		dayTaskToSave.status = action.dayTask.status;
+	}
+	if (typeof action.dayTask.summary !== 'undefined') {
+		dayTaskToSave.summary = action.dayTask.summary;
+	}
+
+	await updateDayTaskInternal(transaction, dayTaskToSave);
 }
 
 /**
@@ -85,7 +99,7 @@ async function saveDayTaskNote(
  */
 async function saveDayTaskNoteLegacy(
 	action: Extract<
-		SaveAction, { type: typeof SaveType.DAY_TASK_NOTE_LEGACY; }
+		SaveAction, { type: typeof SaveType.DAY_TASK_LEGACY; }
 	>,
 	transaction: IDBTransaction
 ): Promise<void> {
@@ -105,10 +119,10 @@ async function saveDayTaskNoteLegacy(
 		throw new Error(`Could not save day task - unable to find day task for day ${JSON.stringify({ year, month, day })} and task ${taskId}`);
 	}
 
-	saveDayTaskNote({
-		type: SaveType.DAY_TASK_NOTE,
-		dayTask: dayTask.id,
-		note: action.note,
+	saveDayTask({
+		type: SaveType.DAY_TASK,
+		id: dayTask.id,
+		dayTask: action.dayTask,
 	}, transaction);
 }
 
@@ -124,10 +138,10 @@ function gatherTransactionRequirements(
 		if (action.type === SaveType.TASK) {
 			objectStores.add(ObjectStoreName.TASK);
 			objectStores.add(ObjectStoreName.STATUS);
-		} else if (action.type === SaveType.DAY_TASK_NOTE) {
+		} else if (action.type === SaveType.DAY_TASK) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.STATUS);
-		} else if (action.type === SaveType.DAY_TASK_NOTE_LEGACY) {
+		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.STATUS);
 			objectStores.add(ObjectStoreName.DAY);
