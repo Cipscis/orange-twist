@@ -23,9 +23,9 @@ import { SaveType } from 'types/SaveAction';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
-import { TaskNote } from './TaskNote';
+import { DayTaskNote } from './DayTaskNote';
 
-describe('TaskNote', () => {
+describe('DayTaskNote', () => {
 	beforeAll(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 	});
@@ -38,24 +38,24 @@ describe('TaskNote', () => {
 		cleanup();
 	});
 
-	test('renders the task\'s note', () => {
+	test('renders the day task\'s note', () => {
 		const { getByText } = render(<OrangeTwistContext.Provider
 			value={{
 				isLoading: false,
 			}}
 		>
-			<TaskNote
-				task={{
-					id: 1,
-					name: 'Test task',
-					note: 'Task note',
+			<DayTaskNote
+				dayTask={{
+					dayName: '2026-08-04',
+					taskId: 1,
+					summary: 'Summary',
+					note: 'Day task note',
 					status: 'todo',
-					sortIndex: 1,
 				}}
 			/>
 		</OrangeTwistContext.Provider>);
 
-		expect(getByText('Task note')).toBeInTheDocument();
+		expect(getByText('Day task note')).toBeInTheDocument();
 	});
 
 	test('saves note after change', async () => {
@@ -68,23 +68,23 @@ describe('TaskNote', () => {
 
 		addCommandListener(Command.DATA_SAVE, spy, { signal });
 
-		const { getByRole } = render(<OrangeTwistContext.Provider
+		const { getAllByRole } = render(<OrangeTwistContext.Provider
 			value={{
 				isLoading: false,
 			}}
 		>
-			<TaskNote
-				task={{
-					id: 1,
-					name: 'Test task',
-					note: 'Task note',
+			<DayTaskNote
+				dayTask={{
+					dayName: '2026-08-04',
+					taskId: 1,
+					summary: 'Summary',
+					note: 'Day task note',
 					status: 'todo',
-					sortIndex: 1,
 				}}
 			/>
 		</OrangeTwistContext.Provider>);
 
-		const noteEditButton = getByRole('button', { name: 'Edit note' });
+		const noteEditButton = getAllByRole('button', { name: 'Edit note' })[0];
 		await user.click(noteEditButton);
 		await user.keyboard(' edited');
 
@@ -94,9 +94,10 @@ describe('TaskNote', () => {
 
 		expect(spy).toHaveBeenCalledTimes(1);
 		expect(spy).toHaveBeenCalledWith([{
-			type: SaveType.TASK_NOTE,
-			task: 1,
-			note: 'Task note edited',
+			type: SaveType.DAY_TASK_NOTE_LEGACY,
+			dayName: '2026-08-04',
+			taskId: 1,
+			note: 'Day task note edited',
 		}]);
 
 		controller.abort();
