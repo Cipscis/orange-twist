@@ -14,7 +14,7 @@ import { getDayTaskInternal } from './getDayTaskInternal';
 describe('getDayTaskInternal', () => {
 	beforeAll(() => createTestData());
 
-	test('receives a day task by its day and task', async () => {
+	test('receives a day task by its ID', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY_TASK);
 
@@ -31,7 +31,7 @@ describe('getDayTaskInternal', () => {
 		} satisfies Awaited<ReturnType<typeof getDayTaskInternal>>);
 	});
 
-	test('returns null if no such day exists', async () => {
+	test('returns null if no such day task exists', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY_TASK);
 
