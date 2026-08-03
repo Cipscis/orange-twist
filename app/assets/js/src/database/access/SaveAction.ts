@@ -6,9 +6,9 @@ import type { DatabaseData } from '../types';
 export const SaveType = {
 	TASK: 'task',
 
-	// TODO: Remove this once day task notes can be saved via the day task's ID
-	DAY_TASK_NOTE_LEGACY: 'day task note (legacy)',
-	DAY_TASK_NOTE: 'day task note',
+	// TODO: Remove this once day tasks can be saved via the day task's ID
+	DAY_TASK_LEGACY: 'day task (legacy)',
+	DAY_TASK: 'day task',
 } as const;
 export type SaveType = EnumTypeOf<typeof SaveType>;
 
@@ -22,14 +22,24 @@ interface SaveActionByType {
 			>
 		>>;
 	};
-	[SaveType.DAY_TASK_NOTE_LEGACY]: {
+	[SaveType.DAY_TASK_LEGACY]: {
 		dayName: string;
 		taskId: number;
-		note: string;
+		dayTask: ExpandType<Partial<
+			Omit<
+				DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
+				'id' | 'day' | 'task'
+			>
+		>>;
 	};
-	[SaveType.DAY_TASK_NOTE]: {
-		dayTask: number;
-		note: string;
+	[SaveType.DAY_TASK]: {
+		id: number;
+		dayTask: ExpandType<Partial<
+			Omit<
+				DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
+				'id' | 'day' | 'task'
+			>
+		>>;
 	};
 }
 
