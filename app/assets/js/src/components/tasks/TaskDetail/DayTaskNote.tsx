@@ -15,6 +15,7 @@ import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import type { MarkdownApi } from 'components/shared/Markdown';
 import { Note } from 'components/shared';
+import { SaveType } from 'types/SaveAction';
 
 interface DayTaskNoteProps {
 	dayTask: Readonly<DayTaskInfo>;
@@ -25,12 +26,29 @@ export function DayTaskNote(props: DayTaskNoteProps): JSX.Element {
 	const { dayName, taskId } = dayTask;
 
 	const { isLoading } = useContext(OrangeTwistContext);
+	/** Keep a reference to the note for immediate saving before re-renredering. */
+	const noteRef = useRef(dayTask.note);
+	// Make sure to update the ref if the day task note changes from other sources
+	useEffect(() => {
+		noteRef.current = dayTask.note;
+	}, [dayTask.note]);
 
-	const setDayTaskNote = useCallback((note: string) => {
-		setDayTaskInfo({ dayName, taskId }, { note });
+	const setDayTaskNote = useCallback(
+		(note: string) => {
+			noteRef.current = note;
+			setDayTaskInfo({ dayName, taskId }, { note });
+		},
+		[dayName, taskId]
+	);
+
+	const saveChanges = useCallback(() => {
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.DAY_TASK_NOTE_LEGACY,
+			dayName,
+			taskId,
+			note: noteRef.current,
+		}]);
 	}, [dayName, taskId]);
-
-	const saveChanges = useCallback(() => fireCommand(Command.DATA_SAVE), []);
 
 	const markdownApiRef = useRef<MarkdownApi | null>(null);
 	// When data is finished loading re-render Markdown
