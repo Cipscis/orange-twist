@@ -44,13 +44,14 @@ describe('TaskNote', () => {
 				isLoading: false,
 			}}
 		>
-			<TaskNote task={{
-				id: 1,
-				name: 'Test task',
-				note: 'Task note',
-				status: 'todo',
-				sortIndex: 1,
-			}}
+			<TaskNote
+				task={{
+					id: 1,
+					name: 'Test task',
+					note: 'Task note',
+					status: 'todo',
+					sortIndex: 1,
+				}}
 			/>
 		</OrangeTwistContext.Provider>);
 
@@ -72,13 +73,14 @@ describe('TaskNote', () => {
 				isLoading: false,
 			}}
 		>
-			<TaskNote task={{
-				id: 1,
-				name: 'Test task',
-				note: 'Task note',
-				status: 'todo',
-				sortIndex: 1,
-			}}
+			<TaskNote
+				task={{
+					id: 1,
+					name: 'Test task',
+					note: 'Task note',
+					status: 'todo',
+					sortIndex: 1,
+				}}
 			/>
 		</OrangeTwistContext.Provider>);
 
