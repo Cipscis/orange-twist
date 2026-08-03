@@ -14,10 +14,9 @@ import {
 	getTaskInternal,
 } from '../internal';
 
-import { SaveType } from './SaveAction';
+import { type SaveAction, SaveType } from './SaveAction';
 
 import { save } from './save';
-import type { DatabaseData } from 'database/types';
 
 describe('SaveHelper', () => {
 	let db: IDBDatabase;
@@ -34,8 +33,20 @@ describe('SaveHelper', () => {
 		const beforeTask1 = await getTaskInternal(readTransaction, 1);
 		const beforeTask2 = await getTaskInternal(readTransaction, 2);
 
-		expect(beforeTask1?.note).toBe('Test task 1 note');
-		expect(beforeTask2?.note).toBe('Test task 2 note');
+		expect(beforeTask1).toEqual({
+			id: 1,
+			name: 'Test task 1',
+			note: 'Test task 1 note',
+			sortIndex: 1,
+			status: 1,
+		});
+		expect(beforeTask2).toEqual({
+			id: 2,
+			name: 'Test task 2',
+			note: 'Test task 2 note',
+			sortIndex: 2,
+			status: 2,
+		});
 
 		await save([
 			{
@@ -58,9 +69,8 @@ describe('SaveHelper', () => {
 					note: 'New note 2',
 					sortIndex: 3,
 					status: 3,
-				} satisfies Omit<
-					DatabaseData[typeof ObjectStoreName.TASK][number],
-					'id'
+				} satisfies Required<
+					Extract<SaveAction, { type: typeof SaveType.TASK; }>['task']
 				>,
 			},
 		]);
@@ -94,8 +104,24 @@ describe('SaveHelper', () => {
 		const beforeDayTask1 = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 1, task: 1 });
 		const beforeDayTask2 = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 1, task: 2 });
 
-		expect(beforeDayTask1?.note).toBe('Note for task 1 day 1');
-		expect(beforeDayTask2?.note).toBe('Note for task 2 day 1');
+		expect(beforeDayTask1).toEqual({
+			id: 1,
+			day: 1,
+			task: 1,
+			note: 'Note for task 1 day 1',
+			sortIndex: 1,
+			status: 2,
+			summary: 'Summary for task 1 day 1',
+		});
+		expect(beforeDayTask2).toEqual({
+			id: 2,
+			day: 1,
+			task: 2,
+			note: 'Note for task 2 day 1',
+			sortIndex: 0,
+			status: 2,
+			summary: 'Summary for task 2 day 1',
+		});
 
 		await save([
 			{
@@ -120,9 +146,8 @@ describe('SaveHelper', () => {
 					sortIndex: 3,
 					status: 3,
 					summary: 'Test day task 2 updated',
-				} satisfies Omit<
-					DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
-					'id' | 'day' | 'task'
+				} satisfies Required<
+					Extract<SaveAction, { type: typeof SaveType.DAY_TASK_LEGACY; }>['dayTask']
 				>,
 			},
 		]);
@@ -184,9 +209,8 @@ describe('SaveHelper', () => {
 					sortIndex: 3,
 					status: 3,
 					summary: 'Test day task 2 updated',
-				} satisfies Omit<
-					DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
-					'id' | 'day' | 'task'
+				} satisfies Required<
+					Extract<SaveAction, { type: typeof SaveType.DAY_TASK; }>['dayTask']
 				>,
 			},
 		]);
