@@ -7,7 +7,7 @@ import type { DatabaseData } from '../types';
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get a day task by its ID.
  *
  * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.DAY_TASK} object store.
- * @param dayTask An object specifying the day and task for the day task to retrieve.
+ * @param dayTaskId The ID of the the day task to retrieve.
  *
  * @returns A {@linkcode Promise} that resolves with the retrieved day task, or `null` if no such day task exists.
  */

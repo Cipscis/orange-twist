@@ -37,7 +37,7 @@ describe('getDayTaskForDayAndTaskInternal', () => {
 		} satisfies Awaited<ReturnType<typeof getDayTaskForDayAndTaskInternal>>);
 	});
 
-	test('returns null if no such day exists', async () => {
+	test('returns null if no such day task exists', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY_TASK);
 

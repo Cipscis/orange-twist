@@ -8,7 +8,7 @@ import {
 	getDayTaskForDayAndTaskInternal,
 	updateDayTaskInternal,
 	updateTaskInternal,
-} from 'database/internal';
+} from '../internal';
 
 /**
  * A helper class for managing database save actions.
@@ -72,7 +72,7 @@ export class SaveHelper {
 	}
 
 	/**
-	 * Save the note of a single day task, referenced by its legacy key instead of its ID.
+	 * Save the note of a single day task, referenced by its day name and task ID instead of its ID.
 	 */
 	async #saveDayTaskNoteLegacy(
 		action: Extract<

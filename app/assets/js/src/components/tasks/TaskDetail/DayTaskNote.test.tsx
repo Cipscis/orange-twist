@@ -1,7 +1,9 @@
 import { h } from 'preact';
 
 import {
+	afterEach,
 	beforeAll,
+	beforeEach,
 	describe,
 	expect,
 	jest,
@@ -22,7 +24,6 @@ import { SaveType } from 'types/SaveAction';
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import { DayTaskNote } from './DayTaskNote';
-import { afterEach, beforeEach } from 'node:test';
 
 describe('DayTaskNote', () => {
 	beforeAll(() => {
