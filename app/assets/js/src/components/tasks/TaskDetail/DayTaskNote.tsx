@@ -10,12 +10,12 @@ import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
 import { setDayTaskInfo, type DayTaskInfo } from 'data';
+import { SaveType } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import type { MarkdownApi } from 'components/shared/Markdown';
 import { Note } from 'components/shared';
-import { SaveType } from 'types/SaveAction';
 
 interface DayTaskNoteProps {
 	dayTask: Readonly<DayTaskInfo>;
@@ -43,10 +43,10 @@ export function DayTaskNote(props: DayTaskNoteProps): JSX.Element {
 
 	const saveChanges = useCallback(() => {
 		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.DAY_TASK_NOTE_LEGACY,
+			type: SaveType.DAY_TASK_LEGACY,
 			dayName,
 			taskId,
-			note: noteRef.current,
+			dayTask: { note: noteRef.current },
 		}]);
 	}, [dayName, taskId]);
 

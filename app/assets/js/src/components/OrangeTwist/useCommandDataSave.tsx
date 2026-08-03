@@ -9,7 +9,6 @@ import {
 } from 'data';
 
 import { Command } from 'types/Command';
-import type { SaveAction } from 'types/SaveAction';
 import { registerCommand, useCommand } from 'registers/commands';
 import {
 	KeyboardShortcutName,
@@ -17,7 +16,7 @@ import {
 	useKeyboardShortcut,
 } from 'registers/keyboard-shortcuts';
 
-import { SaveHelper } from 'database';
+import { save, type SaveAction } from 'database';
 import type { PersistApi } from 'persist';
 import { syncUpdate } from 'sync';
 
@@ -31,16 +30,10 @@ export interface UseCommandDataSaveOptions {
 	persist: PersistApi;
 }
 
-let saveHelper: SaveHelper;
-
 /**
  * Register the "Save data" command and its keyboard shortcut.
  */
 export function useCommandDataSave({ persist }: UseCommandDataSaveOptions): void {
-	useEffect(() => {
-		saveHelper = saveHelper ?? new SaveHelper();
-	}, []);
-
 	useEffect(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 	}, []);
@@ -106,5 +99,5 @@ async function processSaveActions(persist: PersistApi, saveActions?: readonly Sa
 	}
 
 	// Otherwise, process each save action
-	await saveHelper.save(saveActions);
+	await save(saveActions);
 }
