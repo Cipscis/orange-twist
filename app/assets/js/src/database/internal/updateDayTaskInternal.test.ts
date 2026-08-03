@@ -9,7 +9,7 @@ import { ObjectStoreName } from '../metadata';
 import { createTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 
-import { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
+import { getDayTaskInternal } from './getDayTaskInternal';
 
 import { updateDayTaskInternal } from './updateDayTaskInternal';
 
@@ -36,10 +36,7 @@ describe('updateDayTaskInternal', () => {
 
 		expect(result).toBe(1);
 
-		const updatedDayTask = await getDayTaskForDayAndTaskInternal(transaction, {
-			day: 1,
-			task: 1,
-		});
+		const updatedDayTask = await getDayTaskInternal(transaction, 1);
 
 		expect(updatedDayTask).toEqual({
 			id: 1,
@@ -49,7 +46,7 @@ describe('updateDayTaskInternal', () => {
 			summary: 'Updated summary',
 			status: 3,
 			sortIndex: 1,
-		} satisfies Awaited<ReturnType<typeof getDayTaskForDayAndTaskInternal>>);
+		} satisfies Awaited<ReturnType<typeof getDayTaskInternal>>);
 	});
 
 	test('throws an error if the day task doesn\'t exist', async () => {

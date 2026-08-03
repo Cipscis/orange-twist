@@ -12,6 +12,7 @@ import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import {
 	getDayTaskForDayAndTaskInternal,
+	getDayTaskInternal,
 	getTaskInternal,
 } from '../internal';
 
@@ -99,8 +100,8 @@ describe('SaveHelper', () => {
 		let readTransaction = db.transaction([
 			ObjectStoreName.DAY_TASK,
 		], 'readonly');
-		const beforeDayTask1 = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 1, task: 1 });
-		const beforeDayTask2 = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 1, task: 2 });
+		const beforeDayTask1 = await getDayTaskInternal(readTransaction, 1);
+		const beforeDayTask2 = await getDayTaskInternal(readTransaction, 2);
 
 		expect(beforeDayTask1?.note).toBe('Note for task 1 day 1');
 		expect(beforeDayTask2?.note).toBe('Note for task 2 day 1');
@@ -121,8 +122,8 @@ describe('SaveHelper', () => {
 		readTransaction = db.transaction([
 			ObjectStoreName.DAY_TASK,
 		], 'readonly');
-		const afterDayTask1 = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 1, task: 1 });
-		const afterDayTask2 = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 1, task: 2 });
+		const afterDayTask1 = await getDayTaskInternal(readTransaction, 1);
+		const afterDayTask2 = await getDayTaskInternal(readTransaction, 2);
 
 		expect(afterDayTask1?.note).toBe('New note 1');
 		expect(afterDayTask2?.note).toBe('New note 2');
