@@ -19,7 +19,7 @@ import { addCommandListener, registerCommand } from 'registers/commands';
 
 import { clear } from 'data';
 
-import { SaveType } from 'database';
+import { createTestData, SaveType } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
@@ -30,32 +30,25 @@ describe('TaskNote', () => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 	});
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		clear();
+		await createTestData();
 	});
 
 	afterEach(() => {
 		cleanup();
 	});
 
-	test('renders the task\'s note', () => {
-		const { getByText } = render(<OrangeTwistContext.Provider
+	test('renders the task\'s note', async () => {
+		const { findByText } = render(<OrangeTwistContext.Provider
 			value={{
 				isLoading: false,
 			}}
 		>
-			<TaskNote
-				task={{
-					id: 1,
-					name: 'Test task',
-					note: 'Task note',
-					status: 'todo',
-					sortIndex: 1,
-				}}
-			/>
+			<TaskNote taskId={1} />
 		</OrangeTwistContext.Provider>);
 
-		expect(getByText('Task note')).toBeInTheDocument();
+		expect(await findByText('Test task 1 note')).toBeInTheDocument();
 	});
 
 	test('saves note after change', async () => {
@@ -68,23 +61,15 @@ describe('TaskNote', () => {
 
 		addCommandListener(Command.DATA_SAVE, spy, { signal });
 
-		const { getByRole } = render(<OrangeTwistContext.Provider
+		const { findAllByRole } = render(<OrangeTwistContext.Provider
 			value={{
 				isLoading: false,
 			}}
 		>
-			<TaskNote
-				task={{
-					id: 1,
-					name: 'Test task',
-					note: 'Task note',
-					status: 'todo',
-					sortIndex: 1,
-				}}
-			/>
+			<TaskNote taskId={1} />
 		</OrangeTwistContext.Provider>);
 
-		const noteEditButton = getByRole('button', { name: 'Edit note' });
+		const noteEditButton = (await findAllByRole('button', { name: 'Edit note' }))[0];
 		await user.click(noteEditButton);
 		await user.keyboard(' edited');
 
@@ -96,7 +81,7 @@ describe('TaskNote', () => {
 		expect(spy).toHaveBeenCalledWith([{
 			type: SaveType.TASK,
 			id: 1,
-			task: { note: 'Task note edited' },
+			task: { note: 'Test task 1 note edited' },
 		}]);
 
 		controller.abort();
