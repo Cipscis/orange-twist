@@ -34,7 +34,7 @@ type AsyncDataStateMap<T> = {
 /**
  * A discriminated union of possible results of async data retrieval.
  */
-type AsyncDataState<T> = {
+export type AsyncDataState<T> = {
 	[S in AsyncDataStateType]: ExpandType<
 		{ type: S; } &
 		AsyncDataStateMap<T>[S]
@@ -97,6 +97,9 @@ export function useAsyncData<T>(
 		return combinedSignal;
 	}, []);
 
+	/**
+	 * A wrapper around the {@linkcode getData} function that manages custom logic such as setting state and sending internal {@linkcode AbortSignal}s.
+	 */
 	const getDataWrapper = useCallback(
 		async (options?: GetAsyncDataOptions) => {
 			// 1. Abort any previous attempts, and configure abort controls for this attempt
