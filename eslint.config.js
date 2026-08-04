@@ -51,6 +51,12 @@ export default defineConfig([
 			},
 		},
 
+		linterOptions: {
+			// Disabling this seems to be the only way to prevent line comments to disable rules from being incorrectly removed on save
+			// https://github.com/microsoft/vscode-eslint/issues/1938
+			reportUnusedDisableDirectives: 'off',
+		},
+
 		plugins: {
 			'@stylistic': stylistic,
 			'@typescript-eslint': typescriptEslint,
@@ -62,7 +68,6 @@ export default defineConfig([
 
 		extends: compat.extends(
 			'eslint:recommended',
-			'plugin:@typescript-eslint/recommended',
 			'plugin:@typescript-eslint/recommended-requiring-type-checking',
 		),
 
