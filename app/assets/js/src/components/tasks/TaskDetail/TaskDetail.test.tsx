@@ -17,25 +17,27 @@ import {
 	createTask,
 	setDayTaskInfo,
 } from 'data';
+import { createTestData } from 'database';
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import { TaskDetail } from './TaskDetail';
 
 describe('TaskDetail', () => {
-	beforeEach(() => {
+	beforeEach(async () => {
 		clear();
+		await createTestData();
 	});
 
 	afterEach(() => {
 		cleanup();
 	});
 
-	test('renders the task\'s note', () => {
+	test('renders the task\'s note', async () => {
 		const taskId = createTask({
 			note: 'Task note',
 		});
 
-		const { getByText } = render(<OrangeTwistContext.Provider
+		const { findByText } = render(<OrangeTwistContext.Provider
 			value={{
 				isLoading: false,
 			}}
@@ -43,7 +45,7 @@ describe('TaskDetail', () => {
 			<TaskDetail taskId={taskId} />
 		</OrangeTwistContext.Provider>);
 
-		expect(getByText('Task note')).toBeInTheDocument();
+		expect(await findByText('Test task 1 note')).toBeInTheDocument();
 	});
 
 	test('renders the status and day name for day tasks', () => {

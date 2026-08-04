@@ -9,4 +9,4 @@ export { Loader } from './Loader';
 export { Markdown } from './Markdown';
 export { Modal } from './Modal';
 export { Note } from './Note';
-export { Notice } from './Notice';
+export { Notice, NoticeVariant } from './Notice';

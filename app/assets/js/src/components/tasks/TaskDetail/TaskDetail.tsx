@@ -24,6 +24,7 @@ import {
 	Loader,
 	Markdown,
 	Notice,
+	NoticeVariant,
 } from 'components/shared';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
@@ -99,6 +100,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 	if (!taskInfo) {
 		return <Notice
 			message={`No task with ID ${taskId} exists`}
+			variant={NoticeVariant.ERROR}
 		/>;
 	}
 
@@ -107,7 +109,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 			content={`## ${taskInfo.name}`}
 			inline
 		/>
-		<TaskNote task={taskInfo} />
+		<TaskNote taskId={taskInfo.id} />
 		{dayTasksInfo.map((dayTaskInfo, i, arr) => (
 			<DayTaskDetail
 				key={dayTaskInfo.dayName}
