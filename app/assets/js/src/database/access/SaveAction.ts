@@ -9,6 +9,10 @@ export const SaveType = {
 	// TODO: Remove this once day tasks can be saved via the day task's ID
 	DAY_TASK_LEGACY: 'day task (legacy)',
 	DAY_TASK: 'day task',
+
+	// TODO: Remove this once days can be saved via the day's ID
+	DAY_LEGACY: 'day (legacy)',
+	DAY: 'day',
 } as const;
 export type SaveType = EnumTypeOf<typeof SaveType>;
 
@@ -38,6 +42,24 @@ interface SaveActionByType {
 			Omit<
 				DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
 				'id' | 'day' | 'task'
+			>
+		>>;
+	};
+	[SaveType.DAY]: {
+		id: number;
+		day: ExpandType<Partial<
+			Omit<
+				DatabaseData[typeof ObjectStoreName.DAY][number],
+				'id' | 'year' | 'month' | 'day'
+			>
+		>>;
+	};
+	[SaveType.DAY_LEGACY]: {
+		dayName: string;
+		day: ExpandType<Partial<
+			Omit<
+				DatabaseData[typeof ObjectStoreName.DAY][number],
+				'id' | 'year' | 'month' | 'day'
 			>
 		>>;
 	};
