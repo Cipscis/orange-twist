@@ -5,6 +5,7 @@ import { getDayNameParts } from '../utils';
 import {
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
+	updateDayInternal,
 	updateDayTaskInternal,
 	updateTaskInternal,
 } from '../internal';
@@ -27,9 +28,13 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 		if (action.type === SaveType.TASK) {
 			saveTask(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
-			saveDayTaskNoteLegacy(action, transaction);
+			saveDayTaskLegacy(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK) {
 			saveDayTask(action, transaction);
+		} else if (action.type === SaveType.DAY) {
+			saveDay(action, transaction);
+		} else if (action.type === SaveType.DAY_LEGACY) {
+			saveDayLegacy(action, transaction);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}
@@ -97,7 +102,7 @@ async function saveDayTask(
 /**
  * Save the note of a single day task, referenced by its day name and task ID instead of its ID.
  */
-async function saveDayTaskNoteLegacy(
+async function saveDayTaskLegacy(
 	action: Extract<
 		SaveAction, { type: typeof SaveType.DAY_TASK_LEGACY; }
 	>,
@@ -127,6 +132,51 @@ async function saveDayTaskNoteLegacy(
 }
 
 /**
+ * Save a single day.
+ */
+async function saveDay(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.DAY; }
+	>,
+	transaction: IDBTransaction,
+): Promise<void> {
+	// Protect against extraneous and undefined properties
+	const dayToSave: Parameters<typeof updateDayInternal>[1] = {
+		id: action.id,
+	};
+	if (typeof action.day.note !== 'undefined') {
+		dayToSave.note = action.day.note;
+	}
+
+	await updateDayInternal(transaction, dayToSave);
+}
+
+/**
+ * Save the note of a single day, referenced by its day name instead of its ID.
+ */
+async function saveDayLegacy(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.DAY_LEGACY; }
+	>,
+	transaction: IDBTransaction
+): Promise<void> {
+	const { dayName } = action;
+
+	const [year, month, day] = getDayNameParts(dayName);
+
+	const dayInfo = await getDayByDateInternal(transaction, { year, month, day });
+	if (!dayInfo) {
+		throw new Error(`Could not save day task - unable to find associated day ${JSON.stringify({ year, month, day })}`);
+	}
+
+	saveDay({
+		type: SaveType.DAY,
+		id: dayInfo.id,
+		day: action.day,
+	}, transaction);
+}
+
+/**
  * For a given set of {@linkcode SaveAction}s, gather the required object stores needed to process them all.
  */
 function gatherTransactionRequirements(
@@ -144,6 +194,11 @@ function gatherTransactionRequirements(
 		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.STATUS);
+			objectStores.add(ObjectStoreName.DAY);
+		} else if (
+			action.type === SaveType.DAY ||
+			action.type === SaveType.DAY_LEGACY
+		) {
 			objectStores.add(ObjectStoreName.DAY);
 		} else {
 			assertAllUnionMembersHandled(action);
