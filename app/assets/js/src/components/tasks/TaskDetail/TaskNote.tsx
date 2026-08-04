@@ -42,7 +42,7 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 		taskAsyncState.type === AsyncDataStateType.INITIAL ||
 		taskAsyncState.type === AsyncDataStateType.LOADING;
 
-	/** Keep a reference to the note for immediate saving before re-renredering. */
+	/** Keep a reference to the note for immediate saving before re-rendering. */
 	const noteRef = useRef('');
 	// Make sure to update the ref if the task note changes from other sources
 	useEffect(() => {
