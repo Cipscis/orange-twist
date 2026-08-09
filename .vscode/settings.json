@@ -1,3 +1,36 @@
 {
-	"js/ts.tsdk.path": "node_modules/typescript/lib"
+	"js/ts.tsdk.path": "node_modules/typescript/lib",
+
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+	"eslint.rules.customizations": [
+		{
+			"rule": "@stylistic/*",
+			"severity": "off"
+		},
+		{
+			"rule": "import-newlines/enforce",
+			"severity": "off"
+		},
+		{
+			"rule": "curly",
+			"severity": "off"
+		},
+		{
+			"rule": "@typescript-eslint/consistent-type-imports",
+			"severity": "off"
+		},
+		{
+			"rule": "@typescript-eslint/no-import-type-side-effects",
+			"severity": "off"
+		},
+	],
+	"eslint.codeActionsOnSave.rules": [
+		"@stylistic/*",
+		"import-newlines/enforce",
+		"curly",
+		"@typescript-eslint/consistent-type-imports",
+		"@typescript-eslint/no-import-type-side-effects",
+	],
 }

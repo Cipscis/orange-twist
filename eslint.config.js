@@ -57,7 +57,7 @@ export default defineConfig([
 			react,
 			'react-hooks': fixupPluginRules(reactHooks),
 			'import-newlines': importNewlines,
-			jsdoc: jsdoc,
+			jsdoc,
 		},
 
 		extends: compat.extends(
@@ -178,6 +178,8 @@ export default defineConfig([
 				},
 			],
 
+			// This rule is enabled with reporting disabled to mark symbols
+			// referenced in JSDoc comments as "used"
 			'jsdoc/no-undefined-types': [
 				'warn',
 				{
@@ -225,6 +227,7 @@ export default defineConfig([
 			"@typescript-eslint/no-import-type-side-effects": [
 				'error',
 			],
+			// Require explicit types on exported symbols, e.g. function return values
 			'@typescript-eslint/explicit-module-boundary-types': [
 				'error'
 			],
@@ -295,6 +298,13 @@ export default defineConfig([
 			'@stylistic/arrow-parens': [
 				'error',
 				'always',
+			],
+			'@stylistic/arrow-spacing': [
+				'error',
+				{
+					before: true,
+					after: true,
+				},
 			],
 			'@stylistic/block-spacing': [
 				'error',
@@ -492,7 +502,7 @@ export default defineConfig([
 				{
 					before: false,
 					after: true,
-					// This override is deprecated, but the alternative seems broken
+					// This override is deprecated, but necessary to prevent correct code reported as errors. Fixed in v6, which is still in beta at time of writing
 					overrides: {
 						arrow: {
 							before: true,
