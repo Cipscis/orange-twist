@@ -20,7 +20,6 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 			name: z.string(),
 			note: z.string(),
 			sortIndex: z.nullable(z.number()),
-			status: z.number(),
 		}),
 	),
 	day_task: z.record(
