@@ -22,6 +22,7 @@ import { clear } from 'data';
 import { createTestData, SaveType } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
+import { OrangeTwist } from 'components/OrangeTwist';
 
 import { TaskNote } from './TaskNote';
 
@@ -85,5 +86,30 @@ describe('TaskNote', () => {
 		}]);
 
 		controller.abort();
+	});
+
+	test('reloads note data after change', async () => {
+
+		const user = userEvent.setup();
+
+		const {
+			findAllByRole,
+			findByText,
+		} = render(
+			// Render the full <OrangeTwist> wrapper so it implements saving
+			<OrangeTwist>
+				<TaskNote taskId={1} />
+			</OrangeTwist>
+		);
+
+		expect(await findByText('Test task 1 note')).toBeInTheDocument();
+
+		const noteEditButton = (await findAllByRole('button', { name: 'Edit note' }))[0];
+		await user.click(noteEditButton);
+		await user.keyboard(' edited');
+
+		await user.click(document.body);
+
+		expect(await findByText('Test task 1 note edited')).toBeInTheDocument();
 	});
 });
