@@ -6,16 +6,14 @@ import {
 
 import { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
-import { getStatusInternal } from './getStatusInternal';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing task.
  *
- * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.TASK} and {@linkcode ObjectStoreName.STATUS} object stores.
+ * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.TASK} object store.
  * @param task An object specifying which task to update by its ID, and providing any values that should be updated.
  *
  * @throws Error if no task exists with the specified ID.
- * @throws Error if no status exists with the specified status ID.
  */
 export async function updateTaskInternal(
 	transaction: IDBTransaction,
@@ -28,13 +26,6 @@ export async function updateTaskInternal(
 	for await (const taskCursor of getIterableCursor(taskOS, task.id)) {
 		// This type assertion is safe because of other controls around what can be inserted into the database
 		const taskCursorValue = taskCursor.value as DatabaseData[typeof ObjectStoreName.TASK][number];
-
-		if (typeof task.status === 'number') {
-			const status = await getStatusInternal(transaction, task.status);
-			if (status === null) {
-				throw new Error(`Could not apply status ID ${task.status} to task ${task.id} - No such status exists.`);
-			}
-		}
 
 		const updatedTask = {
 			...taskCursorValue,
