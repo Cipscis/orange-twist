@@ -91,10 +91,7 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 	return <>
 		{isLoading
 			? <Loader />
-			: (
-				taskAsyncState.type === AsyncDataStateType.SUCCESS &&
-				taskAsyncState.data
-			)
+			: taskAsyncState.type === AsyncDataStateType.SUCCESS
 				? <Note
 					class="task-detail__note"
 					note={optimisticTaskNote}
