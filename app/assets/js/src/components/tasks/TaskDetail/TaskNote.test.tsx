@@ -89,7 +89,6 @@ describe('TaskNote', () => {
 	});
 
 	test('reloads note data after change', async () => {
-
 		const user = userEvent.setup();
 
 		const {
