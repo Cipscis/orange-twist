@@ -8,6 +8,7 @@ import {
 	useContext,
 	useEffect,
 	useRef,
+	useState,
 } from 'preact/hooks';
 
 import { AsyncDataStateType } from 'utils';
@@ -43,6 +44,11 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 		taskAsyncState.type === AsyncDataStateType.LOADING;
 
 	/**
+	 * A copy of the task note that is updated optimistically on save for immediate display.
+	 */
+	const [optimisticTaskNote, setOptimisticTaskNote] = useState('');
+
+	/**
 	 * Keep a reference to the note for immediate saving of the new value before re-rendering.
 	 */
 	const noteRef = useRef('');
@@ -51,6 +57,7 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 	useEffect(() => {
 		if (taskAsyncState.type === AsyncDataStateType.SUCCESS) {
 			noteRef.current = taskAsyncState.data?.note ?? '';
+			setOptimisticTaskNote(noteRef.current);
 		} else {
 			noteRef.current = '';
 		}
@@ -59,6 +66,7 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 	const setTaskNote = useCallback(
 		(note: string) => {
 			noteRef.current = note;
+			setOptimisticTaskNote(note);
 			setTaskInfo(taskId, { note });
 		},
 		[taskId]
@@ -89,7 +97,7 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 			)
 				? <Note
 					class="task-detail__note"
-					note={taskAsyncState.data.note}
+					note={optimisticTaskNote}
 					onNoteChange={setTaskNote}
 					saveChanges={saveChanges}
 					markdownApiRef={markdownApiRef}

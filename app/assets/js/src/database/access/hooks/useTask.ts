@@ -1,9 +1,11 @@
 import {
 	useCallback,
 	useEffect,
+	useRef,
 } from 'preact/hooks';
 
 import {
+	AsyncDataStateType,
 	useAsyncData,
 	type AsyncDataState,
 } from 'utils';
@@ -53,5 +55,11 @@ export function useTask(taskId: number): AsyncDataState<
 		return () => controller.abort();
 	}, [taskId, asyncDataResult.getData]);
 
-	return asyncDataResult.state;
+	// Don't re-enter loading state on re-requesting data
+	const asyncDataResultStateRef = useRef(asyncDataResult.state);
+	if (asyncDataResult.state.type !== AsyncDataStateType.LOADING) {
+		asyncDataResultStateRef.current = asyncDataResult.state;
+	}
+
+	return asyncDataResultStateRef.current;
 }
