@@ -1,4 +1,7 @@
-import { useCallback, useEffect } from 'preact/hooks';
+import {
+	useCallback,
+	useEffect,
+} from 'preact/hooks';
 
 import {
 	useAsyncData,
@@ -6,6 +9,7 @@ import {
 } from 'utils';
 
 import { loadTask } from '../loadTask';
+import { addTaskChangeListener } from '../liveAccessManager';
 
 /**
  * Attempts to load a specified task immediately, and provides a {@linkcode AsyncDataState} representing the state of that loading operation.
@@ -34,6 +38,20 @@ export function useTask(taskId: number): AsyncDataState<
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getTask]
 	);
+
+	// Re-fetch the data if it changes
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		addTaskChangeListener(
+			taskId,
+			asyncDataResult.getData,
+			{ signal },
+		);
+
+		return () => controller.abort();
+	}, [taskId, asyncDataResult.getData]);
 
 	return asyncDataResult.state;
 }
