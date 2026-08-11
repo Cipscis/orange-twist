@@ -1,6 +1,7 @@
 import {
 	describe,
 	expect,
+	jest,
 	test,
 } from '@jest/globals';
 
@@ -63,6 +64,13 @@ describe('updateData', () => {
 
 	describe('receiving schema 1.0.0', () => {
 		test('updates to v2.0.0', async () => {
+			jest.useFakeTimers().setSystemTime(new Date(
+				2026,
+				7,
+				12,
+				8,
+			));
+
 			const testImageDataUrl = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+PHBhdGggZmlsbD0iI0Y0OTAwQyIgZD0iTTMgMTkuNUMzIDEwLjM4OCAxMC4zODcgMyAxOS40OTkgM2M5LjExMyAwIDE2LjUgNy4zODcgMTYuNSAxNi41UzI4LjYxMiAzNiAxOS40OTkgMzZDMTAuMzg3IDM2IDMgMjguNjEzIDMgMTkuNXoiLz48cGF0aCBmaWxsPSIjNjYyMTEzIiBkPSJNMTEuNDE0IDcuNTg1Yy0uMjY3LS4yNjctLjc5Ny0uMTk3LTEuMzU1LjEyLTMuMy0yLjczMi04LjY1My0zLjY1Mi04Ljg5NS0zLjY5Mi0uNTQ2LS4wODktMS4wNTkuMjc3LTEuMTUuODIxLS4wOTEuNTQ0LjI3NiAxLjA2LjgyMSAxLjE1MS4wNTMuMDA5IDQuOTM0Ljg1NCA3LjgyMSAzLjE2LS4yNzUuNTI1LS4zMjQgMS4wMTUtLjA3IDEuMjY4LjM5LjM5MSAxLjM0LjA3NCAyLjEyMS0uNzA3Ljc4MS0uNzggMS4wOTctMS43My43MDctMi4xMjF6Ii8+PHBhdGggZmlsbD0iIzVDOTEzQiIgZD0iTTIxIDFzLTMuMTA2IDQuMzE4LTcuMDIxIDUuMjczQzExIDcgNy4wNDEgNy4wNyA2LjY0NiA2LjE1Yy0uMzk0LS45MTkgMS41NzItMy45MzcgNC45NjktNS4zOTNDMTUuMDEyLS42OTggMjEgMSAyMSAxeiIvPjwvc3ZnPg==';
 
 			const testExportData: TaggedLegacyExportData = {
@@ -88,7 +96,7 @@ describe('updateData', () => {
 								id: 2,
 								name: 'Test task two',
 								note: 'Task two note',
-								status: 'in-progress',
+								status: 'completed',
 							}],
 						],
 						['day-tasks']: [
@@ -135,20 +143,25 @@ describe('updateData', () => {
 						day: 12,
 						note: 'Test note',
 					},
+					{
+						id: 2,
+						year: 2026,
+						month: 8,
+						day: 12,
+						note: '',
+					},
 				],
 				task: [
 					{
 						id: 1,
 						name: 'Test task one',
 						note: 'Task one note',
-						status: 3,
 						sortIndex: 1,
 					},
 					{
 						id: 2,
 						name: 'Test task two',
 						note: 'Task two note',
-						status: 2,
 						sortIndex: null,
 					},
 				],
@@ -170,6 +183,15 @@ describe('updateData', () => {
 						summary: null,
 						status: 2,
 						sortIndex: 1,
+					},
+					{
+						id: 3,
+						day: 2,
+						task: 2,
+						note: 'This day task was created automatically during database migration, to ensure the task\'s final status is unchanged.',
+						summary: null,
+						status: 3,
+						sortIndex: 0,
 					},
 				],
 				status: [
