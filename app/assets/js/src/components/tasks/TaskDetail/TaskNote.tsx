@@ -1,52 +1,84 @@
-import { h, type JSX } from 'preact';
+import {
+	h,
+	Fragment,
+	type JSX,
+} from 'preact';
 import {
 	useCallback,
 	useContext,
 	useEffect,
 	useRef,
+	useState,
 } from 'preact/hooks';
+
+import { AsyncDataStateType } from 'utils';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
-import { setTaskInfo, type TaskInfo } from 'data';
-import { SaveType } from 'database';
+import { setTaskInfo } from 'data';
+import { SaveType, useTask } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import type { MarkdownApi } from 'components/shared/Markdown';
-import { Note } from 'components/shared';
+import {
+	Loader,
+	Note,
+	Notice,
+	NoticeVariant,
+} from 'components/shared';
 
 interface TaskNoteProps {
-	task: Readonly<TaskInfo>;
+	taskId: number;
 }
 
 export function TaskNote(props: TaskNoteProps): JSX.Element {
-	const { task } = props;
+	const { taskId } = props;
 
-	const { isLoading } = useContext(OrangeTwistContext);
-	/** Keep a reference to the note for immediate saving before re-renredering. */
-	const noteRef = useRef(task.note);
-	// Make sure to update the ref if the task note changes from other sources
+	const taskAsyncState = useTask(taskId);
+
+	const context = useContext(OrangeTwistContext);
+	const isLoading = context.isLoading ||
+		taskAsyncState.type === AsyncDataStateType.INITIAL ||
+		taskAsyncState.type === AsyncDataStateType.LOADING;
+
+	/**
+	 * A copy of the task note that is updated optimistically on save for immediate display.
+	 */
+	const [optimisticTaskNote, setOptimisticTaskNote] = useState('');
+
+	/**
+	 * Keep a reference to the note for immediate saving of the new value before re-rendering.
+	 */
+	const noteRef = useRef('');
+
+	// Make sure to update the note each time the task is loaded
 	useEffect(() => {
-		noteRef.current = task.note;
-	}, [task.note]);
+		if (taskAsyncState.type === AsyncDataStateType.SUCCESS) {
+			noteRef.current = taskAsyncState.data?.note ?? '';
+			setOptimisticTaskNote(noteRef.current);
+		} else {
+			noteRef.current = '';
+		}
+	}, [taskAsyncState]);
 
 	const setTaskNote = useCallback(
 		(note: string) => {
 			noteRef.current = note;
-			setTaskInfo(task.id, { note });
+			setOptimisticTaskNote(note);
+			setTaskInfo(taskId, { note });
 		},
-		[task.id]
+		[taskId]
 	);
 
 	const saveChanges = useCallback(() => {
 		fireCommand(Command.DATA_SAVE, [{
 			type: SaveType.TASK,
-			id: task.id,
+			id: taskId,
 			task: { note: noteRef.current },
 		}]);
-	}, [task.id]);
+	}, [taskId]);
 
 	const markdownApiRef = useRef<MarkdownApi | null>(null);
 	// When data is finished loading re-render Markdown
@@ -56,11 +88,21 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 		}
 	}, [isLoading]);
 
-	return <Note
-		class="task-detail__note"
-		note={task.note}
-		onNoteChange={setTaskNote}
-		saveChanges={saveChanges}
-		markdownApiRef={markdownApiRef}
-	/>;
+	return <>
+		{isLoading
+			? <Loader />
+			: taskAsyncState.type === AsyncDataStateType.SUCCESS
+				? <Note
+					class="task-detail__note"
+					note={optimisticTaskNote}
+					onNoteChange={setTaskNote}
+					saveChanges={saveChanges}
+					markdownApiRef={markdownApiRef}
+				/>
+				: <Notice
+					message={`No task with ID ${taskId} exists`}
+					variant={NoticeVariant.ERROR}
+				/>
+		}
+	</>;
 }

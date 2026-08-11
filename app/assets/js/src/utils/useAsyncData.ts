@@ -1,10 +1,58 @@
-import { useEffect, useState } from 'preact/hooks';
+import {
+	useCallback,
+	useMemo,
+	useRef,
+	useState,
+} from 'preact/hooks';
 
-export interface AsyncDataState<T> {
-	data: T | null;
-	isLoading: boolean;
-	error: string | null;
-}
+import type { EnumTypeOf } from './EnumTypeOf';
+import type { ExpandType } from './ExpandType';
+
+export const AsyncDataStateType = {
+	INITIAL: 'initial',
+	LOADING: 'loading',
+	ABORTED: 'aborted',
+	ERROR: 'error',
+	SUCCESS: 'success',
+} as const;
+export type AsyncDataStateType = EnumTypeOf<typeof AsyncDataStateType>;
+
+type AsyncDataStateMap<T> = {
+	[AsyncDataStateType.INITIAL]: {};
+	[AsyncDataStateType.LOADING]: {};
+	[AsyncDataStateType.ABORTED]: {
+		reason: unknown;
+	};
+	[AsyncDataStateType.ERROR]: {
+		error: Error;
+	};
+	[AsyncDataStateType.SUCCESS]: {
+		data: T;
+	};
+};
+
+/**
+ * A discriminated union of possible results of async data retrieval.
+ */
+export type AsyncDataState<T> = {
+	[S in AsyncDataStateType]: ExpandType<
+		{ type: S; } &
+		AsyncDataStateMap<T>[S]
+	>;
+}[AsyncDataStateType];
+
+export type AsyncDataResult<T> = {
+	/** The current state of the async data. */
+	state: AsyncDataState<T>;
+	/**
+	 * A getter function to retrieve async data.
+	 *
+	 * @param options An optional set of configuration options.
+	 *
+	 * @throws Error if an error is encountered when retrieving data.
+	 */
+	getData: (options?: GetAsyncDataOptions) => Promise<T>;
+};
 
 export interface GetAsyncDataOptions {
 	/**
@@ -14,48 +62,112 @@ export interface GetAsyncDataOptions {
 	signal: AbortSignal;
 }
 
+/**
+ * Provides a getter function for asynchronous data, as well as an automatically updated state object that can be used to handle states like loading and error.
+ *
+ * @param getData A function that retrieves data asynchronously. Will be passed an {@linkcode AbortSignal} that will be aborted if a subsequent request is made, or if an external {@linkcode AbortSignal} provided to the returned getter is aborted.
+ */
 export function useAsyncData<T>(
-	getData: (options?: GetAsyncDataOptions) => Promise<T>,
-): AsyncDataState<T> {
-	const [isLoading, setIsLoading] = useState(true);
-	const [data, setData] = useState<T | null>(null);
-	const [error, setError] = useState<string | null>(null);
+	getData: (options: GetAsyncDataOptions) => Promise<T>,
+): AsyncDataResult<T> {
+	const [state, setState] = useState<AsyncDataState<T>>({ type: AsyncDataStateType.INITIAL });
 
-	useEffect(() => {
-		const controller = new AbortController();
-		const { signal } = controller;
+	const abortControllerRef = useRef(new AbortController());
 
-		(async () => {
-			setIsLoading(true);
-			setError(null);
+	/**
+	 * Abort any previous data requests, and reset the internal {@linkcode AbortController}.
+	 */
+	const abortPrevious = useCallback(() => {
+		abortControllerRef.current.abort();
+		abortControllerRef.current = new AbortController();
+	}, []);
+
+	/**
+	 * Construct a combined {@linkcode AbortSignal} from both internal sources and optional external sources passed in as options.
+	 */
+	const getCombinedAbortSignal = useCallback((options?: GetAsyncDataOptions) => {
+		const internalSignal = abortControllerRef.current.signal;
+		const externalSignal = options?.signal;
+
+		const combinedSignal = AbortSignal.any([
+			internalSignal,
+			externalSignal,
+		].filter(Boolean));
+
+		return combinedSignal;
+	}, []);
+
+	/**
+	 * A wrapper around the {@linkcode getData} function that manages custom logic such as setting state and sending internal {@linkcode AbortSignal}s.
+	 */
+	const getDataWrapper = useCallback(
+		async (options?: GetAsyncDataOptions) => {
+			// 1. Abort any previous attempts, and configure abort controls for this attempt
+			abortPrevious();
+			const combinedAbortSignal = getCombinedAbortSignal(options);
+
+			// Add abort listeners to enter aborted state if signal is aborted before we reach success or error state
+			const abortSignalUpdateController = new AbortController();
+			const abortSignalUpdateSignal = abortSignalUpdateController.signal;
+
+			combinedAbortSignal.addEventListener(
+				'abort',
+				() => {
+					setState({
+						type: AsyncDataStateType.ABORTED,
+						reason: combinedAbortSignal.reason,
+					});
+				},
+				{
+					signal: abortSignalUpdateSignal,
+				}
+			);
 
 			try {
-				const data = await getData({ signal });
-				setData(data);
-			} catch (e) {
-				setData(null);
+				// 2. Enter loading state
+				if (state.type !== AsyncDataStateType.LOADING) {
+					setState({ type: AsyncDataStateType.LOADING });
+				}
 
+				// 3. Attempt to retrieve data
+				const data = await getData({
+					signal: combinedAbortSignal,
+				});
+				// 4a. Handle retrieved data
+				setState({
+					type: AsyncDataStateType.SUCCESS,
+					data,
+				});
+				return data;
+			} catch (e) {
+				// 4b. Handle error retrieving data
 				const error = (() => {
 					if (e instanceof Error) {
-						return e.message;
-					} else if (typeof e === 'string') {
 						return e;
+					} else if (typeof e === 'string') {
+						return new Error(e);
 					} else {
-						return String(e);
+						return new Error('Encountered unknown error when retrieving async data.', { cause: e });
 					}
 				})();
-				setError(error);
+				setState({
+					type: AsyncDataStateType.ERROR,
+					error,
+				});
+				throw error;
 			} finally {
-				setIsLoading(false);
+				abortSignalUpdateController.abort();
 			}
-		})();
+		},
+		// Deliberately only rebuild this function when the `getData` function changes
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[getData]
+	);
 
-		return () => controller.abort();
-	}, [getData]);
+	const result = useMemo<AsyncDataResult<T>>(() => ({
+		state,
+		getData: getDataWrapper,
+	}), [state, getDataWrapper]);
 
-	return {
-		isLoading,
-		data,
-		error,
-	};
+	return result;
 }

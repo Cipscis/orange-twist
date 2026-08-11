@@ -1,4 +1,11 @@
-import { beforeAll, jest } from '@jest/globals';
+import {
+	afterAll,
+	afterEach,
+	beforeAll,
+	jest,
+} from '@jest/globals';
+
+import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
 
 import packageJson from '../package.json' with { type: 'json' };
 
@@ -56,7 +63,7 @@ function polyfillDialogElement() {
  * jsdom hasn't implemented window.scrollTo, so replace it
  * with a mocked function so it won't cause JavaScript errors.
  */
-function polyfillWindowScrollto() {
+function mockWindowScrollto() {
 	window.scrollTo = jest.fn();
 }
 
@@ -64,7 +71,7 @@ function polyfillWindowScrollto() {
  * jsdom hasn't implemented Element.scrollIntoView, so replace it
  * with a mocked function so it won't cause JavaScript errors.
  */
-function polyfillElementScrollIntoView() {
+function mockElementScrollIntoView() {
 	window.Element.prototype.scrollIntoView = jest.fn();
 }
 
@@ -88,7 +95,7 @@ class BroadcastChannel {
  * jsdom hasn't implemented the BroadcastChannel API, so replace it
  * with a mocked version so it won't cause JavaScript errors.
  */
-function polyfillBroadcastChannelApi() {
+function mockBroadcastChannelApi() {
 	window.BroadcastChannel = BroadcastChannel;
 }
 
@@ -96,19 +103,25 @@ function polyfillBroadcastChannelApi() {
  * jsdom hasn't implemented the CSS API, so replace it with a mocked
  * version so it won't cause JavaScript errors.
  */
-function polyfillCSS() {
+function mockCSS() {
 	window.CSS = {} as unknown as typeof window.CSS;
 
 	window.CSS.supports = () => true;
 }
 
-polyfillBroadcastChannelApi();
-polyfillCSS();
+mockBroadcastChannelApi();
+mockCSS();
+
+configMocks({
+	afterEach,
+	afterAll,
+});
+mockAnimationsApi();
 
 beforeAll(() => {
 	polyfillDialogElement();
-	polyfillWindowScrollto();
-	polyfillElementScrollIntoView();
+	mockWindowScrollto();
+	mockElementScrollIntoView();
 });
 
 // Define global constants usually replaced using esbuild's "define" option

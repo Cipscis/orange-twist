@@ -6,11 +6,11 @@ import {
 	type EnumTypeOf,
 } from 'utils';
 
-const NoticeVariant = {
+export const NoticeVariant = {
 	ERROR: 'error',
 	WARNING: 'warning',
 } as const;
-type NoticeVariant = EnumTypeOf<typeof NoticeVariant>;
+export type NoticeVariant = EnumTypeOf<typeof NoticeVariant>;
 
 interface NoticeProps {
 	variant?: NoticeVariant;
