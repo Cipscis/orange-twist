@@ -76,7 +76,6 @@ async function addNewTask(
 		name: taskInfo.name,
 		note: taskInfo.note,
 		sortIndex: taskInfo.sortIndex,
-		status: status.id,
 	});
 }
 
@@ -94,7 +93,6 @@ async function updateExistingTask(
 		id: taskInfo.id,
 		name: taskInfo.name,
 		note: taskInfo.note,
-		status: status.id,
 		sortIndex: taskInfo.sortIndex,
 	});
 }

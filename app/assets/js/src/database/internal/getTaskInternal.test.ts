@@ -24,7 +24,6 @@ describe('getTaskInternal', () => {
 			id: 1,
 			name: 'Test task 1',
 			note: 'Test task 1 note',
-			status: 1,
 			sortIndex: 1,
 		} satisfies Awaited<ReturnType<typeof getTaskInternal>>);
 	});

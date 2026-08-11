@@ -64,9 +64,6 @@ async function saveTask(
 	if (typeof action.task.sortIndex !== 'undefined') {
 		taskToSave.sortIndex = action.task.sortIndex;
 	}
-	if (typeof action.task.status !== 'undefined') {
-		taskToSave.status = action.task.status;
-	}
 
 	await updateTaskInternal(transaction, taskToSave);
 	noticeTaskChange(action.id);
@@ -189,7 +186,6 @@ function gatherTransactionRequirements(
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
 			objectStores.add(ObjectStoreName.TASK);
-			objectStores.add(ObjectStoreName.STATUS);
 		} else if (action.type === SaveType.DAY_TASK) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.STATUS);
