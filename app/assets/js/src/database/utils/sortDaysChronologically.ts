@@ -1,12 +1,19 @@
+import type { ExpandType } from 'utils';
+
 import type { ObjectStoreName } from '../metadata';
 import type { DatabaseData } from '../types';
+
+type PartialDay = Pick<
+	DatabaseData[typeof ObjectStoreName.DAY][number],
+	'year' | 'month' | 'day'
+>;
 
 /**
  * Returns a number for use within `Array.toSorted`, used to sort two days chronologically
  */
 export function sortDaysChronologically(
-	dayA: DatabaseData[typeof ObjectStoreName.DAY][number],
-	dayB: DatabaseData[typeof ObjectStoreName.DAY][number],
+	dayA: ExpandType<PartialDay>,
+	dayB: ExpandType<PartialDay>,
 ): number {
 	const yearDiff = dayA.year - dayB.year;
 	if (yearDiff) {
