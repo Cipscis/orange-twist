@@ -258,6 +258,10 @@ function addMissingDayTasks(
 
 			// If there are no day tasks for this task, there is a status mismatch
 			if (unsortedTaskDayTasks.length === 0) {
+				// Unless the task has the default status
+				if (taskInfo.status === 'todo') {
+					return [false, null];
+				}
 				return [true, null];
 			}
 
@@ -297,7 +301,7 @@ function addMissingDayTasks(
 			const nextDay = new Date(year, month-1, day+1);
 			const nextDayName = getDayName({
 				year: nextDay.getFullYear(),
-				month: nextDay.getMonth()-1,
+				month: nextDay.getMonth()+1,
 				day: nextDay.getDate(),
 			});
 
