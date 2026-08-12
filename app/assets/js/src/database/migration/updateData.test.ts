@@ -8,6 +8,46 @@ import {
 import type { DatabaseData, TaggedLegacyExportData } from '../types';
 
 import { updateData } from './updateData';
+import type { ObjectStoreName } from 'database/metadata';
+
+const statusResult = [
+	{
+		id: 1,
+		alias: 'todo',
+	},
+	{
+		id: 2,
+		alias: 'in-progress',
+	},
+	{
+		id: 3,
+		alias: 'completed',
+	},
+	{
+		id: 4,
+		alias: 'investigating',
+	},
+	{
+		id: 5,
+		alias: 'in-review',
+	},
+	{
+		id: 6,
+		alias: 'ready-to-test',
+	},
+	{
+		id: 7,
+		alias: 'paused',
+	},
+	{
+		id: 8,
+		alias: 'approved-to-deploy',
+	},
+	{
+		id: 9,
+		alias: 'will-not-do',
+	},
+] as const satisfies DatabaseData[typeof ObjectStoreName.STATUS];
 
 describe('updateData', () => {
 	describe('receiving null', () => {
@@ -18,44 +58,7 @@ describe('updateData', () => {
 				day: {},
 				task: {},
 				day_task: {},
-				status: [
-					{
-						id: 1,
-						alias: 'todo',
-					},
-					{
-						id: 2,
-						alias: 'in-progress',
-					},
-					{
-						id: 3,
-						alias: 'completed',
-					},
-					{
-						id: 4,
-						alias: 'investigating',
-					},
-					{
-						id: 5,
-						alias: 'in-review',
-					},
-					{
-						id: 6,
-						alias: 'ready-to-test',
-					},
-					{
-						id: 7,
-						alias: 'paused',
-					},
-					{
-						id: 8,
-						alias: 'approved-to-deploy',
-					},
-					{
-						id: 9,
-						alias: 'will-not-do',
-					},
-				],
+				status: statusResult,
 				template: {},
 				image: {},
 			} satisfies DatabaseData);
@@ -194,44 +197,7 @@ describe('updateData', () => {
 						sortIndex: 0,
 					},
 				],
-				status: [
-					{
-						id: 1,
-						alias: 'todo',
-					},
-					{
-						id: 2,
-						alias: 'in-progress',
-					},
-					{
-						id: 3,
-						alias: 'completed',
-					},
-					{
-						id: 4,
-						alias: 'investigating',
-					},
-					{
-						id: 5,
-						alias: 'in-review',
-					},
-					{
-						id: 6,
-						alias: 'ready-to-test',
-					},
-					{
-						id: 7,
-						alias: 'paused',
-					},
-					{
-						id: 8,
-						alias: 'approved-to-deploy',
-					},
-					{
-						id: 9,
-						alias: 'will-not-do',
-					},
-				],
+				status: statusResult,
 				template: [
 					{
 						id: 1,
@@ -247,6 +213,411 @@ describe('updateData', () => {
 					},
 				},
 			} satisfies DatabaseData);
+		});
+
+		describe('adds new day tasks to record unmatched task status', () => {
+			test('for a task with no day tasks and \'todo\' status', async () => {
+				jest.useFakeTimers().setSystemTime(new Date(
+					2026,
+					7,
+					12,
+					8,
+				));
+
+				const testExportData: TaggedLegacyExportData = {
+					schemaVersion: '1.0.0',
+					data: {
+						data: {
+							days: [],
+							tasks: [
+								[1, {
+									id: 1,
+									name: 'Test task one',
+									note: 'Task one note',
+									status: 'todo',
+									sortIndex: 1,
+								}],
+							],
+							['day-tasks']: [],
+							templates: [],
+						},
+						images: {},
+					},
+				};
+
+				const updatedData = await updateData(testExportData);
+
+				expect(updatedData).toEqual({
+					day: [],
+					task: [
+						{
+							id: 1,
+							name: 'Test task one',
+							note: 'Task one note',
+							sortIndex: 1,
+						},
+					],
+					day_task: [],
+					status: statusResult,
+					template: [],
+					image: {},
+				} satisfies DatabaseData);
+			});
+
+
+			test('for a task with no day tasks and non-\'todo\' status', async () => {
+				jest.useFakeTimers().setSystemTime(new Date(
+					2026,
+					7,
+					12,
+					8,
+				));
+
+				const testExportData: TaggedLegacyExportData = {
+					schemaVersion: '1.0.0',
+					data: {
+						data: {
+							days: [],
+							tasks: [
+								[1, {
+									id: 1,
+									name: 'Test task one',
+									note: 'Task one note',
+									status: 'completed',
+									sortIndex: 1,
+								}],
+							],
+							['day-tasks']: [],
+							templates: [],
+						},
+						images: {},
+					},
+				};
+
+				const updatedData = await updateData(testExportData);
+
+				expect(updatedData).toEqual({
+					day: [
+						{
+							id: 1,
+							year: 2026,
+							month: 8,
+							day: 12,
+							note: '',
+						},
+					],
+					task: [
+						{
+							id: 1,
+							name: 'Test task one',
+							note: 'Task one note',
+							sortIndex: 1,
+						},
+					],
+					day_task: [
+						{
+							id: 1,
+							day: 1,
+							task: 1,
+							note: 'This day task was created automatically during database migration, to ensure the task\'s final status is unchanged.',
+							summary: null,
+							status: 3,
+							sortIndex: 0,
+						},
+					],
+					status: statusResult,
+					template: [],
+					image: {},
+				} satisfies DatabaseData);
+			});
+
+			test('for a task with a status mismatch and a day task in the past', async () => {
+				jest.useFakeTimers().setSystemTime(new Date(
+					2026,
+					7,
+					12,
+					8,
+				));
+
+				const testExportData: TaggedLegacyExportData = {
+					schemaVersion: '1.0.0',
+					data: {
+						data: {
+							days: [
+								['2026-08-01', {
+									name: '2026-08-01',
+									note: '',
+									tasks: [1],
+								}],
+							],
+							tasks: [
+								[1, {
+									id: 1,
+									name: 'Test task one',
+									note: 'Task one note',
+									status: 'completed',
+									sortIndex: 1,
+								}],
+							],
+							['day-tasks']: [
+								['2026-08-01_1', {
+									dayName: '2026-08-01',
+									taskId: 1,
+									note: '',
+									summary: null,
+									status: 'todo',
+								}],
+							],
+							templates: [],
+						},
+						images: {},
+					},
+				};
+
+				const updatedData = await updateData(testExportData);
+
+				expect(updatedData).toEqual({
+					day: [
+						{
+							id: 1,
+							year: 2026,
+							month: 8,
+							day: 1,
+							note: '',
+						},
+						{
+							id: 2,
+							year: 2026,
+							month: 8,
+							day: 12,
+							note: '',
+						},
+					],
+					task: [
+						{
+							id: 1,
+							name: 'Test task one',
+							note: 'Task one note',
+							sortIndex: 1,
+						},
+					],
+					day_task: [
+						{
+							id: 1,
+							day: 1,
+							task: 1,
+							note: '',
+							summary: null,
+							status: 1,
+							sortIndex: 0,
+						},
+						{
+							id: 2,
+							day: 2,
+							task: 1,
+							note: 'This day task was created automatically during database migration, to ensure the task\'s final status is unchanged.',
+							summary: null,
+							status: 3,
+							sortIndex: 0,
+						},
+					],
+					status: statusResult,
+					template: [],
+					image: {},
+				} satisfies DatabaseData);
+			});
+
+			test('for a task with a status mismatch and a day task today', async () => {
+				jest.useFakeTimers().setSystemTime(new Date(
+					2026,
+					7,
+					12,
+					8,
+				));
+
+				const testExportData: TaggedLegacyExportData = {
+					schemaVersion: '1.0.0',
+					data: {
+						data: {
+							days: [
+								['2026-08-12', {
+									name: '2026-08-12',
+									note: '',
+									tasks: [1],
+								}],
+							],
+							tasks: [
+								[1, {
+									id: 1,
+									name: 'Test task one',
+									note: 'Task one note',
+									status: 'completed',
+									sortIndex: 1,
+								}],
+							],
+							['day-tasks']: [
+								['2026-08-12_1', {
+									dayName: '2026-08-12',
+									taskId: 1,
+									note: '',
+									summary: null,
+									status: 'todo',
+								}],
+							],
+							templates: [],
+						},
+						images: {},
+					},
+				};
+
+				const updatedData = await updateData(testExportData);
+
+				expect(updatedData).toEqual({
+					day: [
+						{
+							id: 1,
+							year: 2026,
+							month: 8,
+							day: 12,
+							note: '',
+						},
+						{
+							id: 2,
+							year: 2026,
+							month: 8,
+							day: 13,
+							note: '',
+						},
+					],
+					task: [
+						{
+							id: 1,
+							name: 'Test task one',
+							note: 'Task one note',
+							sortIndex: 1,
+						},
+					],
+					day_task: [
+						{
+							id: 1,
+							day: 1,
+							task: 1,
+							note: '',
+							summary: null,
+							status: 1,
+							sortIndex: 0,
+						},
+						{
+							id: 2,
+							day: 2,
+							task: 1,
+							note: 'This day task was created automatically during database migration, to ensure the task\'s final status is unchanged.',
+							summary: null,
+							status: 3,
+							sortIndex: 0,
+						},
+					],
+					status: statusResult,
+					template: [],
+					image: {},
+				} satisfies DatabaseData);
+			});
+
+			test('for a task with a status mismatch and a day task in the future', async () => {
+				jest.useFakeTimers().setSystemTime(new Date(
+					2026,
+					7,
+					12,
+					8,
+				));
+
+				const testExportData: TaggedLegacyExportData = {
+					schemaVersion: '1.0.0',
+					data: {
+						data: {
+							days: [
+								['2026-08-13', {
+									name: '2026-08-13',
+									note: '',
+									tasks: [1],
+								}],
+							],
+							tasks: [
+								[1, {
+									id: 1,
+									name: 'Test task one',
+									note: 'Task one note',
+									status: 'completed',
+									sortIndex: 1,
+								}],
+							],
+							['day-tasks']: [
+								['2026-08-13_1', {
+									dayName: '2026-08-13',
+									taskId: 1,
+									note: '',
+									summary: null,
+									status: 'todo',
+								}],
+							],
+							templates: [],
+						},
+						images: {},
+					},
+				};
+
+				const updatedData = await updateData(testExportData);
+
+				expect(updatedData).toEqual({
+					day: [
+						{
+							id: 1,
+							year: 2026,
+							month: 8,
+							day: 13,
+							note: '',
+						},
+						{
+							id: 2,
+							year: 2026,
+							month: 8,
+							day: 14,
+							note: '',
+						},
+					],
+					task: [
+						{
+							id: 1,
+							name: 'Test task one',
+							note: 'Task one note',
+							sortIndex: 1,
+						},
+					],
+					day_task: [
+						{
+							id: 1,
+							day: 1,
+							task: 1,
+							note: '',
+							summary: null,
+							status: 1,
+							sortIndex: 0,
+						},
+						{
+							id: 2,
+							day: 2,
+							task: 1,
+							note: 'This day task was created automatically during database migration, to ensure the task\'s final status is unchanged.',
+							summary: null,
+							status: 3,
+							sortIndex: 0,
+						},
+					],
+					status: statusResult,
+					template: [],
+					image: {},
+				} satisfies DatabaseData);
+			});
 		});
 
 		test('errors if it encounters a non-data URL', async () => {

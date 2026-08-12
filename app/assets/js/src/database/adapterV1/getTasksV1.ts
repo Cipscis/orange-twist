@@ -52,6 +52,11 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 	return tasksV1.map((task) => [task.id, task]);
 }
 
+/**
+ * Under schema 1, it was possible for a task to have a status that was not reflected in its last day task. However, under schema 2.0.0 tasks no longer have a status of their own.
+ *
+ * This function determines if a task has a status mismatch like this and, if it does, it constructs a new last day task with a special note that records the final status.
+ */
 function getStatusForTask({
 	task,
 	allDays,
@@ -73,7 +78,6 @@ function getStatusForTask({
 			const dayB = allDays.find(({ id }) => id === dayTaskB.day);
 
 			if (!(dayA && dayB)) {
-				// TODO: Handle this somehow
 				throw new Error(`Couldn't find both days ${dayTaskA.day} and ${dayTaskB.day}`);
 			}
 
@@ -88,7 +92,6 @@ function getStatusForTask({
 	const status = statuses.find(({ id }) => id === statusId);
 
 	if (!status) {
-		// TODO: Handle this
 		throw new Error(`Could not find status with ID ${statusId}`);
 	}
 	return status;
