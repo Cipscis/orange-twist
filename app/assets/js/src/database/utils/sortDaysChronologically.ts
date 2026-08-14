@@ -9,7 +9,7 @@ type PartialDay = Pick<
 >;
 
 /**
- * Returns a number for use within `Array.toSorted`, used to sort two days chronologically
+ * Returns a number for use within `Array.toSorted`, used to sort two days chronologically in ascending order.
  */
 export function sortDaysChronologically(
 	dayA: ExpandType<PartialDay>,

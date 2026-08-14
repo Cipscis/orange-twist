@@ -237,7 +237,7 @@ function getStatusIdByName(
 }
 
 /**
- * If a task has a status that isn't recorded in its final day task, then it requires a new day task to be created during migration to record that status. If the task's final day task is today or later, then that day task may require a new day to be created on.
+ * If a task has a status that isn't recorded in its final day task, then it requires a new day task to be created during migration to record that status. If the task's final day task is today or later, then that day task may require a new day for it to be created on.
  *
  * This function adds any necessary days and day tasks to legacy data before its transformation to schema version 2.0.0.
  */
@@ -248,65 +248,18 @@ function addMissingDayTasks(
 
 	for (const [, taskInfo] of legacyData.data.tasks) {
 		// First, determine if there is a task status mismatch and, if so, what the day name of the task's final day task is
-		const [taskStatusMismatch, finalDayTaskDayName] = (() => {
-			const unsortedTaskDayTasks = legacyData.data['day-tasks'].filter(
-				([key]) => {
-					const { taskId } = decodeDayTaskKey(key);
-					return taskId === taskInfo.id;
-				}
-			);
-
-			// If there are no day tasks for this task, there is a status mismatch
-			if (unsortedTaskDayTasks.length === 0) {
-				// Unless the task has the default status
-				if (taskInfo.status === 'todo') {
-					return [false, null];
-				}
-				return [true, null];
-			}
-
-			const sortedTaskDayTasks = unsortedTaskDayTasks.sort(([keyA], [keyB]) => {
-				const { dayName: dayNameA } = decodeDayTaskKey(keyA);
-				const { dayName: dayNameB } = decodeDayTaskKey(keyB);
-				return dayNameA.localeCompare(dayNameB);
-			});
-
-			// This non-null assertion is safe because we've already checked that the array doesn't have length 0
-			const finalTaskDayTask = sortedTaskDayTasks.at(-1)!;
-
-			const taskStatusMismatch = finalTaskDayTask[1].status !== taskInfo.status;
-			const finalDayTaskDayName = decodeDayTaskKey(finalTaskDayTask[0]).dayName;
-
-			return [taskStatusMismatch, finalDayTaskDayName];
-		})();
+		const [taskStatusMismatch, finalDayTaskDayName] = getTaskStatusMismatch(
+			taskInfo,
+			legacyData.data['day-tasks'],
+		);
 
 		// We only need to do anything if there is a task status mismatch
 		if (!taskStatusMismatch) {
 			continue;
 		}
 
-		/** Determine what day name to use for the new day task, based on the task's final day task and today's date */
-		const dayNameToUse = (() => {
-			const today = getCurrentDateDayName();
-			// If the final dayTask's day is not today or later, use today
-			if (
-				!finalDayTaskDayName ||
-				today.localeCompare(finalDayTaskDayName) === 1
-			) {
-				return today;
-			}
-
-			// Otherwise, use the day after the final dayTask's day
-			const [year, month, day] = getDayNameParts(finalDayTaskDayName);
-			const nextDay = new Date(year, month-1, day+1);
-			const nextDayName = getDayName({
-				year: nextDay.getFullYear(),
-				month: nextDay.getMonth()+1,
-				day: nextDay.getDate(),
-			});
-
-			return nextDayName;
-		})();
+		// Determine what day name to use for the new day task, based on the task's final day task and today's date
+		const dayNameToUse = getDayNameForStatusMismatchDayTask(finalDayTaskDayName);
 
 		// If the day doesn't exist, create it
 		let dayToUse = updatedLegacyData.data.days.find(
@@ -342,4 +295,71 @@ function addMissingDayTasks(
 	}
 
 	return updatedLegacyData;
+}
+
+/**
+ * Determine if a specified task has a status mismatch. If it does, and it has day tasks, also return the name of the day associated with the task's final day task.
+ */
+function getTaskStatusMismatch(
+	taskInfo: Readonly<LegacyExportDataByVersion<'1.0.0'>['data']['tasks'][number][1]>,
+	dayTasks: Readonly<LegacyExportDataByVersion<'1.0.0'>['data']['day-tasks']>,
+): readonly [taskStatusMismatch: boolean, finalDayTaskDayName: string | null] {
+	const unsortedTaskDayTasks = dayTasks.filter(
+		([key]) => {
+			const { taskId } = decodeDayTaskKey(key);
+			return taskId === taskInfo.id;
+		}
+	);
+
+	// If there are no day tasks for this task, there is a status mismatch
+	if (unsortedTaskDayTasks.length === 0) {
+		// Unless the task has the default status
+		if (taskInfo.status === 'todo') {
+			return [false, null] as const;
+		}
+		return [true, null] as const;
+	}
+
+	const sortedTaskDayTasks = unsortedTaskDayTasks.sort(([keyA], [keyB]) => {
+		const { dayName: dayNameA } = decodeDayTaskKey(keyA);
+		const { dayName: dayNameB } = decodeDayTaskKey(keyB);
+		return dayNameA.localeCompare(dayNameB);
+	});
+
+	// This non-null assertion is safe because we've already checked that the array doesn't have length 0
+	const finalTaskDayTask = sortedTaskDayTasks.at(-1)!;
+
+	const taskStatusMismatch = finalTaskDayTask[1].status !== taskInfo.status;
+	const finalDayTaskDayName = decodeDayTaskKey(finalTaskDayTask[0]).dayName;
+
+	return [taskStatusMismatch, finalDayTaskDayName] as const;
+}
+
+/**
+ * If a task has a status mismatch, then a new day task must be created during migration to reconcile that mismatch. This function determines which day that day task should be created for, based on the final day task's day and the current day.
+ *
+ * Creating new day tasks on the current day is preferred, as it makes them immediately visible to the user. If the final day task was after the current day, then the new day task will be created the day after it.
+ */
+function getDayNameForStatusMismatchDayTask(
+	finalDayTaskDayName: string | null,
+) {
+	const today = getCurrentDateDayName();
+	// If the final dayTask's day is not today or later, use today
+	if (
+		!finalDayTaskDayName ||
+		today.localeCompare(finalDayTaskDayName) === 1
+	) {
+		return today;
+	}
+
+	// Otherwise, use the day after the final dayTask's day
+	const [year, month, day] = getDayNameParts(finalDayTaskDayName);
+	const nextDay = new Date(year, month-1, day+1);
+	const nextDayName = getDayName({
+		year: nextDay.getFullYear(),
+		month: nextDay.getMonth()+1,
+		day: nextDay.getDate(),
+	});
+
+	return nextDayName;
 }

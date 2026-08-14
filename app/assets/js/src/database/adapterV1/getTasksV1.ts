@@ -53,9 +53,9 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 }
 
 /**
- * Under schema 1, it was possible for a task to have a status that was not reflected in its last day task. However, under schema 2.0.0 tasks no longer have a status of their own.
+ * Tasks don't have statuses recorded on them directly. Instead, a task's current status is derived by its latest day task. If a task has no day tasks, then it uses the default status.
  *
- * This function determines if a task has a status mismatch like this and, if it does, it constructs a new last day task with a special note that records the final status.
+ * This function looks at a task's day tasks, and determines which status it should be considered to have.
  */
 function getStatusForTask({
 	task,
