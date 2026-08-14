@@ -7,7 +7,7 @@ import {
 import { sortDaysChronologically } from './sortDaysChronologically';
 
 describe('sortDaysChronologically', () => {
-	test('sorts two days chronologically', () => {
+	test('sorts two days chronologically (in ascending order)', () => {
 		const dayA = {
 			year: 2026,
 			month: 8,
@@ -47,5 +47,7 @@ describe('sortDaysChronologically', () => {
 		expect(
 			sortDaysChronologically(dayA, dayD)
 		).toBe(-1);
+
+		expect([dayD, dayB, dayA, dayC].toSorted(sortDaysChronologically)).toEqual([dayA, dayB, dayC, dayD]);
 	});
 });

@@ -6,9 +6,9 @@ import {
 } from '@jest/globals';
 
 import type { DatabaseData, TaggedLegacyExportData } from '../types';
+import type { ObjectStoreName } from '../metadata';
 
 import { updateData } from './updateData';
-import type { ObjectStoreName } from 'database/metadata';
 
 const statusResult = [
 	{
@@ -67,12 +67,9 @@ describe('updateData', () => {
 
 	describe('receiving schema 1.0.0', () => {
 		test('updates to v2.0.0', async () => {
-			jest.useFakeTimers().setSystemTime(new Date(
-				2026,
-				7,
-				12,
-				8,
-			));
+			jest.useFakeTimers().setSystemTime(
+				new Date(2026, 7, 12, 8)
+			);
 
 			const testImageDataUrl = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+PHBhdGggZmlsbD0iI0Y0OTAwQyIgZD0iTTMgMTkuNUMzIDEwLjM4OCAxMC4zODcgMyAxOS40OTkgM2M5LjExMyAwIDE2LjUgNy4zODcgMTYuNSAxNi41UzI4LjYxMiAzNiAxOS40OTkgMzZDMTAuMzg3IDM2IDMgMjguNjEzIDMgMTkuNXoiLz48cGF0aCBmaWxsPSIjNjYyMTEzIiBkPSJNMTEuNDE0IDcuNTg1Yy0uMjY3LS4yNjctLjc5Ny0uMTk3LTEuMzU1LjEyLTMuMy0yLjczMi04LjY1My0zLjY1Mi04Ljg5NS0zLjY5Mi0uNTQ2LS4wODktMS4wNTkuMjc3LTEuMTUuODIxLS4wOTEuNTQ0LjI3NiAxLjA2LjgyMSAxLjE1MS4wNTMuMDA5IDQuOTM0Ljg1NCA3LjgyMSAzLjE2LS4yNzUuNTI1LS4zMjQgMS4wMTUtLjA3IDEuMjY4LjM5LjM5MSAxLjM0LjA3NCAyLjEyMS0uNzA3Ljc4MS0uNzggMS4wOTctMS43My43MDctMi4xMjF6Ii8+PHBhdGggZmlsbD0iIzVDOTEzQiIgZD0iTTIxIDFzLTMuMTA2IDQuMzE4LTcuMDIxIDUuMjczQzExIDcgNy4wNDEgNy4wNyA2LjY0NiA2LjE1Yy0uMzk0LS45MTkgMS41NzItMy45MzcgNC45NjktNS4zOTNDMTUuMDEyLS42OTggMjEgMSAyMSAxeiIvPjwvc3ZnPg==';
 
@@ -217,12 +214,9 @@ describe('updateData', () => {
 
 		describe('adds new day tasks to record unmatched task status', () => {
 			test('for a task with no day tasks and \'todo\' status', async () => {
-				jest.useFakeTimers().setSystemTime(new Date(
-					2026,
-					7,
-					12,
-					8,
-				));
+				jest.useFakeTimers().setSystemTime(
+					new Date(2026, 7, 12, 8)
+				);
 
 				const testExportData: TaggedLegacyExportData = {
 					schemaVersion: '1.0.0',
@@ -264,14 +258,10 @@ describe('updateData', () => {
 				} satisfies DatabaseData);
 			});
 
-
 			test('for a task with no day tasks and non-\'todo\' status', async () => {
-				jest.useFakeTimers().setSystemTime(new Date(
-					2026,
-					7,
-					12,
-					8,
-				));
+				jest.useFakeTimers().setSystemTime(
+					new Date(2026, 7, 12, 8)
+				);
 
 				const testExportData: TaggedLegacyExportData = {
 					schemaVersion: '1.0.0',
@@ -332,12 +322,9 @@ describe('updateData', () => {
 			});
 
 			test('for a task with a status mismatch and a day task in the past', async () => {
-				jest.useFakeTimers().setSystemTime(new Date(
-					2026,
-					7,
-					12,
-					8,
-				));
+				jest.useFakeTimers().setSystemTime(
+					new Date(2026, 7, 12, 8)
+				);
 
 				const testExportData: TaggedLegacyExportData = {
 					schemaVersion: '1.0.0',
@@ -428,12 +415,9 @@ describe('updateData', () => {
 			});
 
 			test('for a task with a status mismatch and a day task today', async () => {
-				jest.useFakeTimers().setSystemTime(new Date(
-					2026,
-					7,
-					12,
-					8,
-				));
+				jest.useFakeTimers().setSystemTime(
+					new Date(2026, 7, 12, 8)
+				);
 
 				const testExportData: TaggedLegacyExportData = {
 					schemaVersion: '1.0.0',
@@ -524,12 +508,9 @@ describe('updateData', () => {
 			});
 
 			test('for a task with a status mismatch and a day task in the future', async () => {
-				jest.useFakeTimers().setSystemTime(new Date(
-					2026,
-					7,
-					12,
-					8,
-				));
+				jest.useFakeTimers().setSystemTime(
+					new Date(2026, 7, 12, 8)
+				);
 
 				const testExportData: TaggedLegacyExportData = {
 					schemaVersion: '1.0.0',
