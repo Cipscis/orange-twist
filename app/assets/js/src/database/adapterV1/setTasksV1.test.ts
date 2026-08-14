@@ -50,14 +50,12 @@ describe('setTasksV1', () => {
 				id: 1,
 				name: 'Task 1',
 				note: 'Note for task 1',
-				status: 1,
 				sortIndex: 0,
 			},
 			{
 				id: 2,
 				name: 'Task 2',
 				note: 'Note for task 2',
-				status: 1,
 				sortIndex: 1,
 			},
 		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);
@@ -97,21 +95,18 @@ describe('setTasksV1', () => {
 				id: 1,
 				name: 'Test task 1 updated',
 				note: 'Test task 1 note updated',
-				status: 3,
 				sortIndex: 0,
 			},
 			{
 				id: 2,
 				name: 'Test task 2 updated',
 				note: 'Test task 2 note updated',
-				status: 3,
 				sortIndex: 1,
 			},
 			{
 				id: 3,
 				name: 'Test task 3 updated',
 				note: 'Test task 3 note updated',
-				status: 3,
 				sortIndex: 2,
 			},
 		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);

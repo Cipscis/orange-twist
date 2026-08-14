@@ -26,7 +26,6 @@ describe('addTaskInternal', () => {
 		const writeResult = await addTaskInternal(writeTransaction, {
 			name: 'Test task',
 			note: 'Test task note',
-			status: 2,
 			sortIndex: 0,
 		});
 
@@ -43,26 +42,8 @@ describe('addTaskInternal', () => {
 			id: 4,
 			name: 'Test task',
 			note: 'Test task note',
-			status: 2,
 			sortIndex: 0,
 		} satisfies Awaited<ReturnType<typeof getTaskInternal>>);
-	});
-
-	test('throws an error if a task is given a non-existent status', async () => {
-		const db = await getDatabase();
-		const transaction = db.transaction([
-			ObjectStoreName.TASK,
-			ObjectStoreName.STATUS,
-		], 'readwrite');
-
-		await expect(
-			() => addTaskInternal(transaction, {
-				name: 'Test task',
-				note: 'Test task note',
-				status: -1,
-				sortIndex: 1,
-			})
-		).rejects.toBeInstanceOf(Error);
 	});
 
 	test('throws an error if a task already exists with that ID', async () => {
@@ -77,7 +58,6 @@ describe('addTaskInternal', () => {
 			id: 4,
 			name: 'Test task',
 			note: 'Test task note',
-			status: 2,
 			sortIndex: 1,
 		});
 
@@ -87,7 +67,6 @@ describe('addTaskInternal', () => {
 				id: 4,
 				name: 'Test task',
 				note: 'Test task note',
-				status: 2,
 				sortIndex: 1,
 			})
 		).rejects.toBeInstanceOf(Error);

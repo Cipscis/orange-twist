@@ -69,21 +69,18 @@ export async function createTestData(): Promise<void> {
 	addTaskInternal(transaction, {
 		name: 'Test task 1',
 		note: 'Test task 1 note',
-		status: 1,
 		sortIndex: 1,
 	});
 
 	addTaskInternal(transaction, {
 		name: 'Test task 2',
 		note: 'Test task 2 note',
-		status: 2,
 		sortIndex: 2,
 	});
 
 	addTaskInternal(transaction, {
 		name: 'Test task 3',
 		note: 'Test task 3 note',
-		status: 2,
 		sortIndex: 0,
 	});
 

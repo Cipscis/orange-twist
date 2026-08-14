@@ -40,14 +40,12 @@ describe('SaveHelper', () => {
 			name: 'Test task 1',
 			note: 'Test task 1 note',
 			sortIndex: 1,
-			status: 1,
 		});
 		expect(beforeTask2).toEqual({
 			id: 2,
 			name: 'Test task 2',
 			note: 'Test task 2 note',
 			sortIndex: 2,
-			status: 2,
 		});
 
 		await save([
@@ -70,7 +68,6 @@ describe('SaveHelper', () => {
 					name: 'Test task 2 updated',
 					note: 'New note 2',
 					sortIndex: 3,
-					status: 3,
 				} satisfies Required<
 					Extract<SaveAction, { type: typeof SaveType.TASK; }>['task']
 				>,
@@ -88,14 +85,12 @@ describe('SaveHelper', () => {
 			name: 'Test task 1',
 			note: 'New note 1',
 			sortIndex: 1,
-			status: 1,
 		});
 		expect(afterTask2).toEqual({
 			id: 2,
 			name: 'Test task 2 updated',
 			note: 'New note 2',
 			sortIndex: 3,
-			status: 3,
 		});
 	});
 

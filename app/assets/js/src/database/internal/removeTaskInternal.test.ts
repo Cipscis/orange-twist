@@ -37,14 +37,12 @@ describe('removeTaskInternal', () => {
 				id: 3,
 				name: 'Test task 3',
 				note: 'Test task 3 note',
-				status: 2,
 				sortIndex: 0,
 			},
 			{
 				id: 2,
 				name: 'Test task 2',
 				note: 'Test task 2 note',
-				status: 2,
 				sortIndex: 2,
 			},
 		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);
