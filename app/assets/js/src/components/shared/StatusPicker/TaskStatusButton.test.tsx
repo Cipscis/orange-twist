@@ -17,7 +17,7 @@ import {
 	TaskStatusSymbol,
 } from 'types/TaskStatus';
 
-import { TaskStatusButton } from './TaskStatusComponent/TaskStatusButton';
+import { TaskStatusButton } from './TaskStatusButton';
 
 describe('TaskStatusButton', () => {
 	test('renders a status\'s name and symbol', () => {
