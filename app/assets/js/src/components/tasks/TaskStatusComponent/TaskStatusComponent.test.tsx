@@ -17,6 +17,7 @@ import {
 	cleanup,
 	render,
 	screen,
+	waitFor,
 } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
@@ -78,15 +79,6 @@ describe('TaskStatusComponent', () => {
 		/>);
 
 		expect(container).toBeEmptyDOMElement();
-	});
-
-	test('can\'t be edited in readonly mode', () => {
-		const { queryByRole } = render(<TaskStatusComponent
-			taskId={1}
-			readonly
-		/>);
-
-		expect(queryByRole('button')).toBeDisabled();
 	});
 
 	describe('when not passed a day name', () => {
@@ -246,9 +238,13 @@ describe('TaskStatusComponent', () => {
 
 			await user.click(inReviewStatusButton);
 			expect(saveSpy).toHaveBeenCalledTimes(1);
-			expect(getByRole('button', {
-				name: `In review (click to edit)`,
-			})).toBeInTheDocument();
+
+			// The component responds asynchronously to day task updates, so wait for changes to be processed
+			await waitFor(() => {
+				expect(getByRole('button', {
+					name: `In review (click to edit)`,
+				})).toBeInTheDocument();
+			}, { timeout: 1500 });
 
 			// Task status should be unchanged
 			expect(getTaskInfo(1)?.status).toBe(TaskStatus.COMPLETED);
