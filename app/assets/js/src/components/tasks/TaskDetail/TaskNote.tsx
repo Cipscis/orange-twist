@@ -46,7 +46,7 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 	/**
 	 * A copy of the task note that is updated optimistically on save for immediate display.
 	 */
-	const [optimisticTaskNote, setOptimisticTaskNote] = useState('');
+	const [optimisticTaskNote, setOptimisticTaskNote] = useState<string | null>(null);
 
 	/**
 	 * Keep a reference to the note for immediate saving of the new value before re-rendering.
@@ -94,7 +94,7 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 			: taskAsyncState.type === AsyncDataStateType.SUCCESS
 				? <Note
 					class="task-detail__note"
-					note={optimisticTaskNote}
+					note={optimisticTaskNote ?? taskAsyncState.data?.note ?? null}
 					onNoteChange={setTaskNote}
 					saveChanges={saveChanges}
 					markdownApiRef={markdownApiRef}
