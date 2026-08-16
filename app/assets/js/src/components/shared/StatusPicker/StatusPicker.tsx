@@ -24,7 +24,7 @@ import {
 	IconButton,
 } from 'components/shared';
 
-import { TaskStatusButton } from './TaskStatusButton';
+import { StatusButton } from './StatusButton';
 
 interface StatusPickerProps {
 	status: TaskStatus;
@@ -208,7 +208,7 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 									key={taskStatus}
 									class="task-status__option"
 								>
-									<TaskStatusButton
+									<StatusButton
 										status={taskStatus}
 										onStatusSelect={onStatusSelectWrapper}
 									/>
