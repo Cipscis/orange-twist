@@ -1,3 +1,4 @@
+import type Preact from 'preact';
 import {
 	h,
 	type JSX,
@@ -34,7 +35,7 @@ export interface MarkdownApi {
 	rerender(): void;
 }
 
-interface MarkdownProps extends h.JSX.HTMLAttributes<HTMLDivElement> {
+interface MarkdownProps extends Preact.HTMLAttributes<HTMLDivElement> {
 	/**
 	 * The markdown content to be rendered as HTML.
 	 */
