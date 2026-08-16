@@ -165,6 +165,12 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 	const statusSymbol = TaskStatusSymbol[status];
 	const statusName = TaskStatusName[status];
 
+	if (!(
+		statusSymbol && statusName
+	)) {
+		return null;
+	}
+
 	return <span
 		class="task-status"
 		ref={rootRef}
