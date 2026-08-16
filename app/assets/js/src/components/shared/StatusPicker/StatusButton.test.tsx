@@ -17,14 +17,14 @@ import {
 	TaskStatusSymbol,
 } from 'types/TaskStatus';
 
-import { TaskStatusButton } from './TaskStatusButton';
+import { StatusButton } from './StatusButton';
 
-describe('TaskStatusButton', () => {
+describe('StatusButton', () => {
 	test('renders a status\'s name and symbol', () => {
 		const {
 			getByTitle,
 			getByText,
-		} = render(<TaskStatusButton
+		} = render(<StatusButton
 			status={TaskStatus.TODO}
 			onStatusSelect={() => {}}
 		/>);
@@ -37,7 +37,7 @@ describe('TaskStatusButton', () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
-		const { getByRole } = render(<TaskStatusButton
+		const { getByRole } = render(<StatusButton
 			status={TaskStatus.COMPLETED}
 			onStatusSelect={spy}
 		/>);
