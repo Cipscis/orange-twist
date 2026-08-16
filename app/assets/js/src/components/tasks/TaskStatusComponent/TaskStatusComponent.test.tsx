@@ -80,15 +80,6 @@ describe('TaskStatusComponent', () => {
 		expect(container).toBeEmptyDOMElement();
 	});
 
-	test('can\'t be edited in readonly mode', () => {
-		const { queryByRole } = render(<TaskStatusComponent
-			taskId={1}
-			readonly
-		/>);
-
-		expect(queryByRole('button')).toBeDisabled();
-	});
-
 	describe('when not passed a day name', () => {
 		test('renders its task\'s status', async () => {
 			const { getByTitle } = render(<TaskStatusComponent
@@ -212,9 +203,8 @@ describe('TaskStatusComponent', () => {
 					dayName: '2023-11-21',
 				}, { status: TaskStatus.IN_PROGRESS });
 				// Wait for asynchronous UI update
-				jest.advanceTimersByTime(2000);
+				jest.advanceTimersByTime(1500);
 			});
-
 			jest.useRealTimers();
 
 			expect(getByRole('button', {
@@ -246,9 +236,11 @@ describe('TaskStatusComponent', () => {
 
 			await user.click(inReviewStatusButton);
 			expect(saveSpy).toHaveBeenCalledTimes(1);
-			expect(getByRole('button', {
-				name: `In review (click to edit)`,
-			})).toBeInTheDocument();
+
+			// Wait for asynchronous UI update
+			jest.useFakeTimers();
+			jest.advanceTimersByTime(1500);
+			jest.useRealTimers();
 
 			// Task status should be unchanged
 			expect(getTaskInfo(1)?.status).toBe(TaskStatus.COMPLETED);

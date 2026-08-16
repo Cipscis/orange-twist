@@ -10,3 +10,4 @@ export { Markdown } from './Markdown';
 export { Modal } from './Modal';
 export { Note } from './Note';
 export { Notice, NoticeVariant } from './Notice';
+export { StatusPicker } from './StatusPicker';

@@ -12,16 +12,16 @@ import {
 	IconButton,
 } from 'components/shared';
 
-interface TaskStatusButtonProps {
+interface StatusButtonProps {
 	status: TaskStatus;
 	onStatusSelect: (status: TaskStatus) => void;
 }
 
 /**
- * Display an icon button for a task status that, when clicked,
+ * Display an icon button for a status that, when clicked,
  * selects that status in some way defined by a prop.
  */
-export function TaskStatusButton(props: TaskStatusButtonProps): JSX.Element {
+export function StatusButton(props: StatusButtonProps): JSX.Element {
 	const {
 		status,
 		onStatusSelect,
