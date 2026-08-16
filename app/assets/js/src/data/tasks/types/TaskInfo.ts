@@ -6,7 +6,7 @@ import { TaskStatus } from 'types/TaskStatus';
 export const taskInfoSchema = z.object({
 	id: z.number(),
 	name: z.string(),
-	status: z.nativeEnum(TaskStatus),
+	status: z.enum(TaskStatus),
 	note: z.string(),
 	/** Used for sorting tasks. */
 	sortIndex: z.number(),

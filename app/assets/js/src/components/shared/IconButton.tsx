@@ -1,3 +1,4 @@
+import type Preact from 'preact';
 import { h, type JSX } from 'preact';
 import { useMemo } from 'preact/hooks';
 
@@ -20,7 +21,7 @@ function getVariantClass(variant: ButtonVariant): string {
 
 // <IconButton> can contain different tag types, so inherit from the base `HTMLElement`
 type IconButtonPropsBase = Omit<
-	JSX.HTMLAttributes<HTMLElement>,
+	Preact.HTMLAttributes<HTMLElement>,
 	'icon' | 'children' | 'ref'
 >;
 

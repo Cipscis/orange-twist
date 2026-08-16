@@ -1,3 +1,4 @@
+import type Preact from 'preact';
 import {
 	h,
 	Fragment,
@@ -66,7 +67,7 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 	 * Retrieve the result from the DOM, and pass it to the `resolve` prop. Then close the modal.
 	 */
 	const resolveWithResult = useCallback<
-		NonNullable<JSX.DOMAttributes<HTMLFormElement>['onSubmit']>
+		NonNullable<Preact.DOMAttributes<HTMLFormElement>['onSubmit']>
 	>((e) => {
 		e.preventDefault();
 

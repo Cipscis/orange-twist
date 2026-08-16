@@ -8,7 +8,7 @@ export const MessageType = {
 export type MessageType = EnumTypeOf<typeof MessageType>;
 
 const baseMessageSchema = z.object({
-	type: z.nativeEnum(MessageType),
+	type: z.enum(MessageType),
 });
 
 const syncUpdateMessageSchema = z.extend(

@@ -1,3 +1,4 @@
+import type Preact from 'preact';
 import {
 	h,
 	type JSX,
@@ -144,7 +145,7 @@ export function Note(props: NoteProps): JSX.Element {
 		spaceholder.dataset.content = note;
 	}, []);
 
-	const noteInputHandler = useCallback<JSX.InputEventHandler<HTMLTextAreaElement>>(
+	const noteInputHandler = useCallback<Preact.InputEventHandler<HTMLTextAreaElement>>(
 		(e) => {
 			const newNote = e.currentTarget.value;
 			updateSpaceholderSize(newNote);

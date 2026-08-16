@@ -1,3 +1,4 @@
+import type Preact from 'preact';
 import { h, type JSX } from 'preact';
 import {
 	useCallback,
@@ -65,7 +66,7 @@ export function Template(props: TemplateProps): JSX.Element | null {
 	 * Update template info as it's edited.
 	 */
 	const definitionInputHandler = useCallback<
-		JSX.GenericEventHandler<HTMLTextAreaElement>
+		Preact.GenericEventHandler<HTMLTextAreaElement>
 	>((e) => {
 		if (!templateInfo) {
 			return;
