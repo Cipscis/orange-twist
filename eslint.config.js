@@ -214,6 +214,8 @@ export default defineConfig([
 			///////////////////////////////
 			// TypeScript-specific rules //
 			///////////////////////////////
+			'@typescript-eslint/no-deprecated': 'error',
+
 			'@typescript-eslint/consistent-type-assertions': [
 				'error',
 				{
@@ -556,6 +558,22 @@ export default defineConfig([
 					'afterOpening': 'never',
 					'beforeClosing': 'allow',
 				},
+			],
+		},
+	},
+	{
+		// Allow references to deprecated object stores only within database migration code
+		files: ['app/assets/js/src/database/migration/**/*.ts'],
+		rules: {
+			'@typescript-eslint/no-deprecated': [
+				'error',
+				{
+					'allow': [{
+						from: 'file',
+						name: ['DATA', 'IMAGES'],
+						path: 'ObjectStoreName.ts',
+					}],
+				}
 			],
 		},
 	},
