@@ -41,7 +41,36 @@ describe('useAsyncData', () => {
 		rerender(initialProps);
 
 		expect(result.current.state).toMatchObject({
-			type: AsyncDataStateType.LOADING,
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
+		});
+	});
+
+	test('retains state and any metadata when loading', async () => {
+		const initialProps = {
+			getData: () => Promise.resolve(true),
+		};
+		const { result, rerender } = renderHook(
+			({ getData }) => useAsyncData(getData),
+			{ initialProps },
+		);
+
+		await result.current.getData();
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.SUCCESS,
+			loading: false,
+			data: true,
+		});
+
+		result.current.getData();
+		rerender(initialProps);
+
+		expect(result.current.state).toMatchObject({
+			type: AsyncDataStateType.SUCCESS,
+			loading: true,
+			data: true,
 		});
 	});
 
@@ -64,7 +93,8 @@ describe('useAsyncData', () => {
 		result.current.getData();
 		rerender(initialProps);
 		expect(result.current.state).toMatchObject({
-			type: AsyncDataStateType.LOADING,
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
 		});
 
 		await act(() => resolveData(data));
@@ -72,6 +102,7 @@ describe('useAsyncData', () => {
 
 		expect(result.current.state).toMatchObject({
 			type: AsyncDataStateType.SUCCESS,
+			loading: false,
 			data,
 		});
 	});
@@ -101,6 +132,7 @@ describe('useAsyncData', () => {
 
 		expect(result.current.state).toMatchObject({
 			type: AsyncDataStateType.ERROR,
+			loading: false,
 			error,
 		});
 	});
@@ -121,7 +153,8 @@ describe('useAsyncData', () => {
 		rerender(initialProps);
 
 		expect(result.current.state).toMatchObject({
-			type: AsyncDataStateType.LOADING,
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
 		});
 		expect(abortSignal!.aborted).toBe(false);
 
@@ -150,7 +183,8 @@ describe('useAsyncData', () => {
 		rerender(initialProps);
 
 		expect(result.current.state).toMatchObject({
-			type: AsyncDataStateType.LOADING,
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
 		});
 
 		abortController.abort('Manually aborted');
@@ -158,6 +192,7 @@ describe('useAsyncData', () => {
 
 		expect(result.current.state).toMatchObject({
 			type: AsyncDataStateType.ABORTED,
+			loading: false,
 			reason: 'Manually aborted',
 		});
 	});
@@ -182,7 +217,8 @@ describe('useAsyncData', () => {
 		rerender(initialProps);
 
 		expect(result.current.state).toMatchObject({
-			type: AsyncDataStateType.LOADING,
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
 		});
 
 		await act(() => resolve('Data'));
@@ -219,7 +255,8 @@ describe('useAsyncData', () => {
 		rerender(initialProps);
 
 		expect(result.current.state).toMatchObject({
-			type: AsyncDataStateType.LOADING,
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
 		});
 
 		const error = new Error('Error');
@@ -230,6 +267,7 @@ describe('useAsyncData', () => {
 
 		expect(result.current.state).toMatchObject({
 			type: AsyncDataStateType.ERROR,
+			loading: false,
 			error,
 		});
 	});

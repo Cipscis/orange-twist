@@ -10,7 +10,6 @@ import type { ExpandType } from './ExpandType';
 
 export const AsyncDataStateType = {
 	INITIAL: 'initial',
-	LOADING: 'loading',
 	ABORTED: 'aborted',
 	ERROR: 'error',
 	SUCCESS: 'success',
@@ -19,7 +18,6 @@ export type AsyncDataStateType = EnumTypeOf<typeof AsyncDataStateType>;
 
 type AsyncDataStateMap<T> = {
 	[AsyncDataStateType.INITIAL]: {};
-	[AsyncDataStateType.LOADING]: {};
 	[AsyncDataStateType.ABORTED]: {
 		reason: unknown;
 	};
@@ -36,7 +34,10 @@ type AsyncDataStateMap<T> = {
  */
 export type AsyncDataState<T> = {
 	[S in AsyncDataStateType]: ExpandType<
-		{ type: S; } &
+		{
+			type: S;
+			loading: boolean;
+		} &
 		AsyncDataStateMap<T>[S]
 	>;
 }[AsyncDataStateType];
@@ -70,7 +71,10 @@ export interface GetAsyncDataOptions {
 export function useAsyncData<T>(
 	getData: (options: GetAsyncDataOptions) => Promise<T>,
 ): AsyncDataResult<T> {
-	const [state, setState] = useState<AsyncDataState<T>>({ type: AsyncDataStateType.INITIAL });
+	const [state, setState] = useState<AsyncDataState<T>>({
+		type: AsyncDataStateType.INITIAL,
+		loading: false,
+	});
 
 	const abortControllerRef = useRef(new AbortController());
 
@@ -115,6 +119,7 @@ export function useAsyncData<T>(
 				() => {
 					setState({
 						type: AsyncDataStateType.ABORTED,
+						loading: false,
 						reason: combinedAbortSignal.reason,
 					});
 				},
@@ -125,8 +130,11 @@ export function useAsyncData<T>(
 
 			try {
 				// 2. Enter loading state
-				if (state.type !== AsyncDataStateType.LOADING) {
-					setState({ type: AsyncDataStateType.LOADING });
+				if (!state.loading) {
+					setState((state) => ({
+						...state,
+						loading: true,
+					}));
 				}
 
 				// 3. Attempt to retrieve data
@@ -136,6 +144,7 @@ export function useAsyncData<T>(
 				// 4a. Handle retrieved data
 				setState({
 					type: AsyncDataStateType.SUCCESS,
+					loading: false,
 					data,
 				});
 				return data;
@@ -152,6 +161,7 @@ export function useAsyncData<T>(
 				})();
 				setState({
 					type: AsyncDataStateType.ERROR,
+					loading: false,
 					error,
 				});
 				throw error;

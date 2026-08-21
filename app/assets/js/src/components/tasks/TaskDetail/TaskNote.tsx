@@ -41,7 +41,7 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 	const context = useContext(OrangeTwistContext);
 	const isLoading = context.isLoading ||
 		taskAsyncState.type === AsyncDataStateType.INITIAL ||
-		taskAsyncState.type === AsyncDataStateType.LOADING;
+		taskAsyncState.loading;
 
 	/**
 	 * A copy of the task note that is updated optimistically on save for immediate display.
