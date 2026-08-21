@@ -9,8 +9,8 @@ import {
 	renderHook,
 } from '@testing-library/preact';
 
+import { AsyncDataStateType } from './AsyncDataStateType';
 import {
-	AsyncDataStateType,
 	useAsyncData,
 	type GetAsyncDataOptions,
 } from './useAsyncData';

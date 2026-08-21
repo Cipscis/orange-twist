@@ -35,11 +35,13 @@ export { startAnimationLoop } from './startAnimationLoop';
 export { strMatch, type StrMatchOptions } from './strMatch';
 export { tryStartViewTransition } from './tryStartViewTransition';
 export {
-	useAsyncData,
-	type AsyncDataState,
 	AsyncDataStateType,
+	type AsyncDataState,
+
+	useAsyncData,
+	type GetAsyncDataOptions,
 	type AsyncDataResult,
-} from './useAsyncData';
+} from './asyncData';
 export { useBlurCallback } from './useBlurCallback';
 export { useCloseWatcher } from './useCloseWatcher';
 export { useViewTransition } from './useViewTransition';

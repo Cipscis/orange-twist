@@ -5,42 +5,9 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import type { EnumTypeOf } from './EnumTypeOf';
-import type { ExpandType } from './ExpandType';
-
-export const AsyncDataStateType = {
-	INITIAL: 'initial',
-	ABORTED: 'aborted',
-	ERROR: 'error',
-	SUCCESS: 'success',
-} as const;
-export type AsyncDataStateType = EnumTypeOf<typeof AsyncDataStateType>;
-
-type AsyncDataStateMap<T> = {
-	[AsyncDataStateType.INITIAL]: {};
-	[AsyncDataStateType.ABORTED]: {
-		reason: unknown;
-	};
-	[AsyncDataStateType.ERROR]: {
-		error: Error;
-	};
-	[AsyncDataStateType.SUCCESS]: {
-		data: T;
-	};
-};
-
-/**
- * A discriminated union of possible results of async data retrieval.
- */
-export type AsyncDataState<T> = {
-	[S in AsyncDataStateType]: ExpandType<
-		{
-			type: S;
-			loading: boolean;
-		} &
-		AsyncDataStateMap<T>[S]
-	>;
-}[AsyncDataStateType];
+import { extractError } from './extractError';
+import { AsyncDataStateType } from './AsyncDataStateType';
+import type { AsyncDataState } from './AsyncDataState';
 
 export type AsyncDataResult<T> = {
 	/** The current state of the async data. */
@@ -150,15 +117,7 @@ export function useAsyncData<T>(
 				return data;
 			} catch (e) {
 				// 4b. Handle error retrieving data
-				const error = (() => {
-					if (e instanceof Error) {
-						return e;
-					} else if (typeof e === 'string') {
-						return new Error(e);
-					} else {
-						return new Error('Encountered unknown error when retrieving async data.', { cause: e });
-					}
-				})();
+				const error = extractError(e, 'Encountered unknown error when retrieving async data.');
 				setState({
 					type: AsyncDataStateType.ERROR,
 					loading: false,
