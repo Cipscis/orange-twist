@@ -6,3 +6,8 @@ export {
 	type GetAsyncDataOptions,
 	type AsyncDataResult,
 } from './useAsyncData';
+export {
+	useSettableAsyncData,
+	type UseSettableAsyncDataOptions,
+	type SettableAsyncDataResult,
+} from './useSettableAsyncData';

@@ -41,6 +41,10 @@ export {
 	useAsyncData,
 	type GetAsyncDataOptions,
 	type AsyncDataResult,
+
+	useSettableAsyncData,
+	type UseSettableAsyncDataOptions,
+	type SettableAsyncDataResult,
 } from './asyncData';
 export { useBlurCallback } from './useBlurCallback';
 export { useCloseWatcher } from './useCloseWatcher';
