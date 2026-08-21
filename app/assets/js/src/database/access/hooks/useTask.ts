@@ -5,7 +5,6 @@ import {
 } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
 	useAsyncData,
 	type AsyncDataState,
 } from 'utils';
@@ -57,7 +56,7 @@ export function useTask(taskId: number): AsyncDataState<
 
 	// Don't re-enter loading state on re-requesting data
 	const asyncDataResultStateRef = useRef(asyncDataResult.state);
-	if (asyncDataResult.state.type !== AsyncDataStateType.LOADING) {
+	if (!asyncDataResult.state.loading) {
 		asyncDataResultStateRef.current = asyncDataResult.state;
 	}
 
