@@ -1,4 +1,3 @@
-import type Preact from 'preact';
 import {
 	h,
 	type JSX,
@@ -16,7 +15,6 @@ import {
 	classNames,
 	nodeHasAncestor,
 	useBlurCallback,
-	usePropAsRef,
 } from 'utils';
 
 import {
@@ -39,8 +37,8 @@ import { IconButton } from '../IconButton';
 
 interface NoteProps {
 	note: string | null;
-	onNoteChange: (note: string) => void;
-	saveChanges: () => void;
+	/** A callback called with the updated note when a change is committed. */
+	onNoteChange: (note: string | null) => void;
 
 	/**
 	 * If a ref object is provided, it will be set to expose
@@ -61,12 +59,7 @@ export function Note(props: NoteProps): JSX.Element {
 	const {
 		note,
 		onNoteChange,
-		saveChanges,
 	} = props;
-
-	// Launder `note` through a ref so it doesn't cause
-	// too many side effects every time it changes
-	const noteRef = usePropAsRef(note);
 
 	const spaceholderRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -83,58 +76,14 @@ export function Note(props: NoteProps): JSX.Element {
 		setIsEditingInternal(value);
 	}, []);
 
-	const dirtyFlag = useRef(false);
-
-	/**
-	 * Save changes if there were any, then clear `dirtyFlag`.
-	 */
-	const saveChangesIfDirty = useCallback(() => {
-		if (dirtyFlag.current) {
-			saveChanges();
-			dirtyFlag.current = false;
-		}
-	}, [saveChanges]);
-
-	/**
-	 * Check whether or not a specified note string is different
-	 * from the note value passed as a prop.
-	 */
-	const hasNoteChanged = useCallback((newNote: string) => {
-		if (newNote === noteRef.current) {
-			return false;
+	const isDirty = useCallback(() => {
+		const textarea = textareaRef.current;
+		if (!textarea) {
+			return;
 		}
 
-		if (
-			newNote === '' &&
-			noteRef.current === null
-		) {
-			return false;
-		}
-
-		return true;
-	}, [noteRef]);
-
-	/**
-	 * Update the note and, if there were changes, set the dirty flag.
-	 */
-	const updateNote = useCallback((newNote: string) => {
-		if (hasNoteChanged(newNote)) {
-			onNoteChange(newNote);
-			dirtyFlag.current = true;
-		}
-	}, [onNoteChange, hasNoteChanged]);
-
-	const noteInputHandler = useCallback<Preact.InputEventHandler<HTMLTextAreaElement>>(
-		(e) => {
-			const newNote = e.currentTarget.value;
-			if (hasNoteChanged(newNote)) {
-				dirtyFlag.current = true;
-			}
-		},
-		[
-			hasNoteChanged,
-		]
-	);
+		return textarea.value !== note;
+	}, [note]);
 
 	/**
 	 * Markdown doesn't render leading or trailing spaces, and treats
@@ -157,20 +106,19 @@ export function Note(props: NoteProps): JSX.Element {
 	}, []);
 
 	/**
-	 * Leave editing mode and save changes.
+	 * Leave editing mode, and commit changes if there are any to commit.
 	 */
 	const leaveEditingMode = useCallback(() => {
 		setIsEditing(false);
 		const cleanedNote = getCleanedNote();
-		if (cleanedNote !== null) {
-			updateNote(cleanedNote);
+		if (isDirty()) {
+			onNoteChange(cleanedNote);
 		}
-		saveChangesIfDirty();
 	}, [
 		setIsEditing,
 		getCleanedNote,
-		updateNote,
-		saveChangesIfDirty,
+		isDirty,
+		onNoteChange,
 	]);
 
 	/**
@@ -279,7 +227,7 @@ export function Note(props: NoteProps): JSX.Element {
 		};
 	}, [isEditing, leaveEditingMode]);
 
-	// Prompt the user about losing unsaved changes if the tab is closed in edit mode
+	// Prompt the user about losing uncommitted changes if the tab is closed in edit mode
 	useEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
@@ -288,7 +236,7 @@ export function Note(props: NoteProps): JSX.Element {
 			window.addEventListener(
 				'beforeunload',
 				(e) => {
-					if (dirtyFlag.current) {
+					if (isDirty()) {
 						e.preventDefault();
 					}
 				},
@@ -297,7 +245,7 @@ export function Note(props: NoteProps): JSX.Element {
 		}
 
 		return () => controller.abort();
-	}, [isEditing]);
+	}, [isEditing, isDirty]);
 
 	// Leave editing mode when losing focus, but not when the tab loses focus
 	useBlurCallback(
@@ -475,7 +423,6 @@ export function Note(props: NoteProps): JSX.Element {
 			>
 				<textarea
 					ref={textareaRef}
-					onInput={noteInputHandler}
 				>{note}</textarea>
 			</div>
 			: <div
