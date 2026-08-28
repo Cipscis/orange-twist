@@ -42,7 +42,6 @@ export {
 } from './useAsyncData';
 export { useBlurCallback } from './useBlurCallback';
 export { useCloseWatcher } from './useCloseWatcher';
-export { usePropAsRef } from './usePropAsRef';
 export { useViewTransition } from './useViewTransition';
 
 export { CSSKeyframes } from './CSSKeyframes';

@@ -44,7 +44,6 @@ describe('Note', () => {
 			<Note
 				note={null}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -61,7 +60,6 @@ describe('Note', () => {
 			<Note
 				note={note}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -72,7 +70,6 @@ describe('Note', () => {
 		render(<Note
 			note={'Test note'}
 			onNoteChange={() => {}}
-			saveChanges={() => {}}
 
 			class="test-class"
 		/>);
@@ -91,7 +88,6 @@ describe('Note', () => {
 			<Note
 				note={note}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -116,7 +112,6 @@ describe('Note', () => {
 			<Note
 				note={note}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -142,7 +137,6 @@ describe('Note', () => {
 			<Note
 				note={noteWithLink}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -161,7 +155,7 @@ describe('Note', () => {
 		expect(textarea.value).toBe(noteWithLink);
 	});
 
-	test('calls onNoteChange when the note is changed', async () => {
+	test('calls onNoteChange only when committing changes to the note', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
@@ -171,7 +165,6 @@ describe('Note', () => {
 			<Note
 				note={null}
 				onNoteChange={spy}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -198,7 +191,6 @@ describe('Note', () => {
 			<Note
 				note={null}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -231,7 +223,6 @@ describe('Note', () => {
 			<Note
 				note={null}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -255,7 +246,6 @@ describe('Note', () => {
 			<Note
 				note={null}
 				onNoteChange={spy}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -272,55 +262,19 @@ describe('Note', () => {
 		expect(spy).toHaveBeenCalledWith('a\tb');
 	});
 
-	test('calls saveChanges when leaving editing mode, if the note was changed', async () => {
-		const user = userEvent.setup();
-		const spy = jest.fn();
-
-		const {
-			getByRole,
-			queryByRole,
-		} = render(
-			<Note
-				note={null}
-				onNoteChange={() => {}}
-				saveChanges={spy}
-			/>
-		);
-
-		const editButton = getByRole('button', { name: 'Edit note' });
-		await user.click(editButton);
-
-		expect(queryByRole('textbox')).toBeInTheDocument();
-		expect(spy).not.toHaveBeenCalled();
-
-		await user.click(document.body);
-
-		// If the note wasn't edited, saveChanges isn't called
-		expect(queryByRole('textbox')).not.toBeInTheDocument();
-		expect(spy).not.toHaveBeenCalled();
-
-		await user.click(editButton);
-		await user.keyboard('edit');
-		await user.keyboard('{Control>}{Enter}{/Control}');
-
-		expect(queryByRole('textbox')).not.toBeInTheDocument();
-		expect(spy).toHaveBeenCalled();
-	});
-
 	test('allows editing the middle when the note is updated on each change', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
 		const NoteContainer = function () {
-			const [note, setNote] = useState('');
+			const [note, setNote] = useState<string | null>('');
 
 			return <Note
 				note={note}
-				onNoteChange={(note: string) => {
+				onNoteChange={(note: string | null) => {
 					spy(note);
 					setNote(note);
 				}}
-				saveChanges={() => {}}
 			/>;
 		};
 
@@ -336,7 +290,7 @@ describe('Note', () => {
 	});
 
 	describe('if the tab is unloaded while in editing mode', () => {
-		test('if there are unsaved changes, cancels the event', async () => {
+		test('if there are uncommitted changes, cancels the event', async () => {
 			const user = userEvent.setup();
 
 			const note = 'Test note';
@@ -347,7 +301,6 @@ describe('Note', () => {
 				<Note
 					note={note}
 					onNoteChange={() => {}}
-					saveChanges={() => {}}
 				/>
 			);
 
@@ -360,7 +313,7 @@ describe('Note', () => {
 			expect(event.defaultPrevented).toBe(true);
 		});
 
-		test('if there are no unsaved changes, does not cancel the event', async () => {
+		test('if there are no uncommitted changes, does not cancel the event', async () => {
 			const user = userEvent.setup();
 
 			const note = 'Test note';
@@ -371,7 +324,6 @@ describe('Note', () => {
 				<Note
 					note={note}
 					onNoteChange={() => {}}
-					saveChanges={() => {}}
 				/>
 			);
 
