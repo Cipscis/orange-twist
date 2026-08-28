@@ -8,6 +8,6 @@ export { KeyboardShortcutCombos } from './KeyboardShortcutCombos';
 export { Loader } from './Loader';
 export { Markdown } from './Markdown';
 export { Modal } from './Modal';
-export { Note } from './Note';
+export { Note } from './Note/Note';
 export { Notice, NoticeVariant } from './Notice';
 export { StatusPicker } from './StatusPicker';

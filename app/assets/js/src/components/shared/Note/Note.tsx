@@ -34,8 +34,8 @@ import { CustomEventName } from 'types/CustomEventName';
 
 import * as ui from 'ui';
 
-import { Markdown, type MarkdownApi } from './Markdown';
-import { IconButton } from './IconButton';
+import { Markdown, type MarkdownApi } from '../Markdown';
+import { IconButton } from '../IconButton';
 
 interface NoteProps {
 	note: string | null;
