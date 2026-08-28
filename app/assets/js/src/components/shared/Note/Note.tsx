@@ -17,12 +17,7 @@ import {
 	useBlurCallback,
 } from 'utils';
 import { useAllowTabInsertion } from './useAllowTabInsertion';
-
-import {
-	createImageUrlPlaceholder,
-	hasImage,
-	saveImage,
-} from 'images';
+import { useListenForImages } from './useListenForImages';
 
 import {
 	KeyboardShortcutName,
@@ -30,8 +25,6 @@ import {
 } from 'registers/keyboard-shortcuts';
 
 import { CustomEventName } from 'types/CustomEventName';
-
-import * as ui from 'ui';
 
 import { Markdown, type MarkdownApi } from '../Markdown';
 import { IconButton } from '../IconButton';
@@ -49,8 +42,6 @@ interface NoteProps {
 
 	class?: string;
 }
-
-const maxFileSize = 1024 * 1024 * 5; // 5 MB
 
 /**
  * Display a note as HTML, and provide options to edit
@@ -243,124 +234,11 @@ export function Note(props: NoteProps): JSX.Element {
 	}, [isEditing]);
 
 	// Listen for pasted or dropped images
-	useEffect(() => {
-		const textarea = textareaRef.current;
-		if (!(
-			isEditing &&
-			textarea
-		)) {
-			return;
-		}
-
-		const controller = new AbortController();
-		const { signal } = controller;
-
-		/**
-		 * Retrieves an image from a `DataTransfer` object, if it has one.
-		 */
-		const getImage = (
-			dataTransfer: DataTransfer | null
-		): File | null => {
-			const file = dataTransfer?.files?.[0];
-			if (!file) {
-				return null;
-			}
-
-			if (!file.type.startsWith('image/')) {
-				return null;
-			}
-
-			return file;
-		};
-
-		/**
-		 * Inserts text into the textarea to render a given image.
-		 */
-		const insertImage = async (file: File) => {
-			// If the image is too large, and hasn't been stored already,
-			// ask for confirmation before storing it
-			if (file.size > maxFileSize && !await hasImage(file)) {
-				const maxFileSizeString = `${(maxFileSize / (1024 * 1024)).toFixed(1)} MB`;
-				const thisFileSizeString = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
-
-				isConfirmingAttachLargeImageRef.current = true;
-				const permission = await ui.confirm(`It's recommended that files be kept below ${maxFileSizeString}. This file is ${thisFileSizeString}, are you sure you want to store it?`);
-
-				isConfirmingAttachLargeImageRef.current = false;
-				textareaRef.current?.focus();
-
-				if (!permission) {
-					return;
-				}
-			}
-			const hash = await saveImage(file);
-
-			const valueArr = [...textarea.value];
-			const { selectionStart, selectionEnd } = textarea;
-			const selectionSize = selectionEnd - selectionStart;
-
-			const urlPlaceholder = createImageUrlPlaceholder(hash);
-			const insertedContent = `![](${urlPlaceholder})`;
-			valueArr.splice(selectionStart, selectionSize, insertedContent);
-
-			textarea.value = valueArr.join('');
-			// Move text cursor to where alt text will go
-			textarea.selectionStart = selectionStart + 2;
-			textarea.selectionEnd = selectionStart + 2;
-		};
-
-		// Listen for pasted images, and insert them.
-		textarea.addEventListener(
-			'paste',
-			(e) => {
-				const file = getImage(e.clipboardData);
-				if (!file) {
-					return;
-				}
-
-				insertImage(file);
-			},
-			{ signal }
-		);
-
-		// Allow images to be dragged and dropped into the textarea.
-		textarea.addEventListener(
-			'dragover',
-			(e) => {
-				const items = Array.from(e.dataTransfer?.items ?? []);
-				if (!items.some((item) => {
-					if (item.kind !== 'file') {
-						return false;
-					}
-					if (!item.type.startsWith('image/')) {
-						return false;
-					}
-					return true;
-				})) {
-					return;
-				}
-
-				e.preventDefault();
-			},
-			{ signal }
-		);
-
-		// Listen for images being dropped, and insert them.
-		textarea.addEventListener(
-			'drop',
-			(e) => {
-				const file = getImage(e.dataTransfer);
-				if (!file) {
-					return;
-				}
-				insertImage(file);
-				e.preventDefault();
-			},
-			{ signal }
-		);
-
-		return () => controller.abort();
-	}, [isEditing]);
+	useListenForImages({
+		editorRef: textareaRef,
+		isConfirmingAttachLargeImageRef,
+		condition: isEditing,
+	});
 
 	// Re-render on data import
 	useEffect(() => {
