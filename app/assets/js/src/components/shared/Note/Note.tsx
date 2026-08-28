@@ -38,7 +38,7 @@ import { IconButton } from '../IconButton';
 interface NoteProps {
 	note: string | null;
 	/** A callback called with the updated note when a change is committed. */
-	onNoteChange: (note: string | null) => void;
+	onNoteChange: (note: string) => void;
 
 	/**
 	 * If a ref object is provided, it will be set to expose
@@ -90,12 +90,12 @@ export function Note(props: NoteProps): JSX.Element {
 	 * 3 or more consecutive newlines the same as 2. So tidy the note
 	 * to match these expectations.
 	 */
-	const getCleanedNote = useCallback((): string | null => {
+	const getCleanedNote = useCallback((): string => {
 		const textarea = textareaRef.current;
 		if (!textarea) {
 			// `textarea` should always exist by the point this is called
 			/* istanbul ignore next */
-			return null;
+			throw new Error('Could not find textarea');
 		}
 
 		const cleanedNote = textarea.value

@@ -68,17 +68,15 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 			noteRef.current = note;
 			setOptimisticTaskNote(note);
 			setTaskInfo(taskId, { note });
+
+			fireCommand(Command.DATA_SAVE, [{
+				type: SaveType.TASK,
+				id: taskId,
+				task: { note: noteRef.current },
+			}]);
 		},
 		[taskId]
 	);
-
-	const saveChanges = useCallback(() => {
-		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.TASK,
-			id: taskId,
-			task: { note: noteRef.current },
-		}]);
-	}, [taskId]);
 
 	const markdownApiRef = useRef<MarkdownApi | null>(null);
 	// When data is finished loading re-render Markdown
@@ -96,7 +94,6 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 					class="task-detail__note"
 					note={optimisticTaskNote ?? taskAsyncState.data?.note ?? null}
 					onNoteChange={setTaskNote}
-					saveChanges={saveChanges}
 					markdownApiRef={markdownApiRef}
 				/>
 				: <Notice

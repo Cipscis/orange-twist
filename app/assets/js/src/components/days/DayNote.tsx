@@ -44,17 +44,15 @@ export function DayNote(props: DayNoteProps): JSX.Element {
 		(note: string) => {
 			noteRef.current = note;
 			setDayInfo(name, { note });
-		},
-		[name]
-	);
 
-	const saveChanges = useCallback(() => {
-		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.DAY_LEGACY,
-			dayName: day.name,
-			day: { note: noteRef.current },
-		}]);
-	}, [day.name]);
+			fireCommand(Command.DATA_SAVE, [{
+				type: SaveType.DAY_LEGACY,
+				dayName: day.name,
+				day: { note: noteRef.current },
+			}]);
+		},
+		[name, day.name]
+	);
 
 	const markdownApiRef = useRef<MarkdownApi | null>(null);
 	// When data is finished loading re-render Markdown
@@ -67,7 +65,6 @@ export function DayNote(props: DayNoteProps): JSX.Element {
 	return <Note
 		note={day.note}
 		onNoteChange={onNoteChange}
-		saveChanges={saveChanges}
 		markdownApiRef={markdownApiRef}
 	/>;
 }
