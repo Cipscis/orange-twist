@@ -5,18 +5,14 @@
 @use "../patterns";
 
 .inline-note {
-	// Using this approach:
-	// https://css-tricks.com/auto-growing-inputs-textareas/
 	display: inline-grid;
 	grid-template-columns: [content-start] 1fr [content-end edit-button-start] 2em [edit-button-end];
 	grid-template-rows: [content-start] 1fr [content-end];
 	gap: spacing.$sm;
 
 	width: fit-content;
-
 	position: relative;
 
-	// Stack them on top of each other
 	.inline-note__input,
 	.inline-note__display {
 		grid-area: content;
@@ -30,6 +26,7 @@
 .inline-note__input {
 	@include reset;
 	& {
+		field-sizing: content;
 		cursor: text;
 
 		// Enough for the "Task name" placeholder text
@@ -38,17 +35,7 @@
 }
 
 .inline-note__display {
-	overflow: hidden;
 	margin: 0;
-	p {
-		white-space: pre;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-}
-
-.inline-note__display--hidden {
-	visibility: hidden;
 }
 
 .inline-note__edit {
