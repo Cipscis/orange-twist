@@ -16,6 +16,7 @@ import {
 	nodeHasAncestor,
 	useBlurCallback,
 } from 'utils';
+import { useAllowTabInsertion } from './useAllowTabInsertion';
 
 import {
 	createImageUrlPlaceholder,
@@ -184,48 +185,10 @@ export function Note(props: NoteProps): JSX.Element {
 	);
 
 	// Set up event listener to manage tab insertion
-	useEffect(() => {
-		const textarea = textareaRef.current;
-		if (!textarea) {
-			return;
-		}
-
-		const controller = new AbortController();
-		const { signal } = controller;
-
-		// If we've just entered editing mode
-		if (isEditing) {
-			textarea.addEventListener(
-				'keydown',
-				(e) => {
-					// Insert a tab character on tab press
-					if (e.key === 'Tab') {
-						e.preventDefault();
-
-						const selectionStart = textarea.selectionStart;
-						const selectionEnd = textarea.selectionEnd;
-
-						const indentation = '\t';
-
-						if (selectionStart === selectionEnd) {
-							const beforeSelection = textarea.value.substring(0, selectionStart);
-							const afterSelection = textarea.value.substring(selectionEnd);
-
-							// Insert indentation at the caret
-							textarea.value = `${beforeSelection}${indentation}${afterSelection}`;
-							textarea.selectionStart = selectionStart + indentation.length;
-							textarea.selectionEnd = selectionEnd + indentation.length;
-						}
-					}
-				},
-				{ signal },
-			);
-		}
-
-		return () => {
-			controller.abort();
-		};
-	}, [isEditing, leaveEditingMode]);
+	useAllowTabInsertion({
+		editorRef: textareaRef,
+		condition: isEditing,
+	});
 
 	// Prompt the user about losing uncommitted changes if the tab is closed in edit mode
 	useEffect(() => {
