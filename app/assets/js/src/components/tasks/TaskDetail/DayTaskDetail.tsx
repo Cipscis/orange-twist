@@ -40,10 +40,11 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 	/**
 	 * Store the new summary in a register, and save it
 	 */
-	const commitSummary = useCallback(() => {
+	const commitSummary = useCallback((summary: string | null) => {
+		setSummary(summary);
 		setDayTaskInfo(dayTaskInfo, { summary });
 		fireCommand(Command.DATA_SAVE);
-	}, [dayTaskInfo, summary]);
+	}, [dayTaskInfo]);
 
 	return <Accordion
 		key={dayName}
@@ -59,8 +60,7 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 			<h3 class="day__heading">{dayTaskInfo.dayName}</h3>
 			<InlineNote
 				note={summary}
-				onNoteChange={setSummary}
-				saveChanges={commitSummary}
+				onNoteChange={commitSummary}
 				editButtonTitle="Edit summary"
 				placeholder="Summary"
 			/>
