@@ -8,7 +8,6 @@ import {
 import {
 	useCallback,
 	useEffect,
-	useLayoutEffect,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -53,11 +52,6 @@ interface NoteProps {
 }
 
 const maxFileSize = 1024 * 1024 * 5; // 5 MB
-
-/**
- * Whether or not the current browser supports CSS field-sizing.
- */
-const fieldSizingSupport = CSS.supports('field-sizing', 'content');
 
 /**
  * Display a note as HTML, and provide options to edit
@@ -130,31 +124,14 @@ export function Note(props: NoteProps): JSX.Element {
 		}
 	}, [onNoteChange, hasNoteChanged]);
 
-	const updateSpaceholderSize = useCallback((note: string) => {
-		// Prefer using CSS to let the note adjust to its content size
-		if (fieldSizingSupport) {
-			return;
-		}
-
-		const spaceholder = spaceholderRef.current;
-		if (!spaceholder) {
-			return;
-		}
-
-		// CSS causes this content to be rendered in a way that is hidden but occupies space
-		spaceholder.dataset.content = note;
-	}, []);
-
 	const noteInputHandler = useCallback<Preact.InputEventHandler<HTMLTextAreaElement>>(
 		(e) => {
 			const newNote = e.currentTarget.value;
-			updateSpaceholderSize(newNote);
 			if (hasNoteChanged(newNote)) {
 				dirtyFlag.current = true;
 			}
 		},
 		[
-			updateSpaceholderSize,
 			hasNoteChanged,
 		]
 	);
@@ -257,17 +234,6 @@ export function Note(props: NoteProps): JSX.Element {
 		leaveEditingModeFromTextarea,
 		isEditing
 	);
-
-	// Initialise spaceholder size when entering editing mode
-	useLayoutEffect(() => {
-		if (isEditing) {
-			updateSpaceholderSize(noteRef.current ?? '');
-		}
-	}, [
-		isEditing,
-		updateSpaceholderSize,
-		noteRef,
-	]);
 
 	// Set up event listener to manage tab insertion
 	useEffect(() => {
