@@ -144,8 +144,10 @@ describe('OrangeTwist', () => {
 		const user = userEvent.setup();
 		render(<OrangeTwist persist={ls} />);
 
-		await act(() => fireCommand(Command.TASK_ADD_NEW, '2023-11-26'));
-		await user.keyboard('Test event{Enter}');
+		await act(async () => {
+			fireCommand(Command.TASK_ADD_NEW, '2023-11-26');
+			await user.keyboard('Test event{Enter}');
+		});
 
 		expect(getAllDayTaskInfo({ dayName: '2023-11-26' }).length).toBe(1);
 		expect(getAllTaskInfo()?.[0]?.name).toBe('Test event');

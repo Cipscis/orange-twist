@@ -20,7 +20,7 @@ describe('addCommandListener', () => {
 	});
 
 	test('adds a specified listener to a registered command', () => {
-		const spy = jest.fn();
+		const spy = jest.fn(() => {});
 		addCommandListener('__TEST_COMMAND_A__', spy);
 
 		const listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
@@ -29,7 +29,7 @@ describe('addCommandListener', () => {
 	});
 
 	test('does nothing if the listener is already bound', () => {
-		const spy = jest.fn();
+		const spy = jest.fn(() => {});
 		addCommandListener('__TEST_COMMAND_A__', spy);
 		addCommandListener('__TEST_COMMAND_A__', spy);
 
@@ -48,7 +48,7 @@ describe('addCommandListener', () => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		const spy = jest.fn();
+		const spy = jest.fn(() => {});
 		addCommandListener('__TEST_COMMAND_A__', spy, { signal });
 
 		let listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
@@ -64,7 +64,7 @@ describe('addCommandListener', () => {
 	test('does not bind the listener if called with an already aborted AbortSignal', () => {
 		const signal = AbortSignal.abort();
 
-		const spy = jest.fn();
+		const spy = jest.fn(() => {});
 		addCommandListener('__TEST_COMMAND_A__', spy, { signal });
 
 		const listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
@@ -81,7 +81,7 @@ describe('removeCommandListener', () => {
 	});
 
 	test('removes a specified listener from a command', () => {
-		const spy = jest.fn();
+		const spy = jest.fn(() => {});
 		addCommandListener('__TEST_COMMAND_A__', spy);
 
 		let listeners = commandsRegister.get('__TEST_COMMAND_A__')?.listeners;
