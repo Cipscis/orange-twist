@@ -13,7 +13,7 @@ import { IconButton } from './IconButton';
 interface InlineNoteProps {
 	note: string | null;
 	/** A callback called with the updated note when a change is committed. */
-	onNoteChange: (note: string | null) => void;
+	onNoteChange: (note: string) => void;
 
 	placeholder?: string;
 	editButtonTitle?: string;
@@ -51,7 +51,7 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 	/** Leave edit mode, and commit changes. */
 	const commitAndExit = useCallback(() => {
 		if (isDirty()) {
-			onNoteChange(inputRef.current?.value?.trim() ?? null);
+			onNoteChange(inputRef.current?.value?.trim() ?? '');
 		}
 		setIsEditing(false);
 	}, [isDirty, onNoteChange]);

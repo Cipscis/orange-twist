@@ -41,8 +41,8 @@ export function Help(): JSX.Element {
 		fireCommand(Command.TEMPLATES_EDIT);
 	}, []);
 
-	const [taskLinkNote, setTaskLinkNote] = useState<string | null>('[[1]]');
-	const [templateNote, setTemplateNote] = useState<string | null>('{{issue|99|custom templates}}');
+	const [taskLinkNote, setTaskLinkNote] = useState('[[1]]');
+	const [templateNote, setTemplateNote] = useState('{{issue|99|custom templates}}');
 
 	return <>
 		<section class="orange-twist__section">
