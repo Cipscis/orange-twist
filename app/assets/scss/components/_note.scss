@@ -26,23 +26,19 @@
 }
 
 .note__edit-content {
-	textarea {
-		field-sizing: content;
-		width: 100%;
-	}
+	field-sizing: content;
+	width: 100%;
 
-	textarea {
-		@include palette.primary;
-		resize: none;
-		overflow: hidden;
-		display: block;
-		padding: var(--_gutter);
+	@include palette.primary;
+	resize: none;
+	overflow: hidden;
+	display: block;
+	padding: var(--_gutter);
 
-		@include typography.base-body;
+	@include typography.base-body;
 
-		// Make it look focused even if the tab itself doesn't have focus
-		outline: auto;
-	}
+	// Make it look focused even if the tab itself doesn't have focus
+	outline: auto;
 }
 
 .note__display-content {
