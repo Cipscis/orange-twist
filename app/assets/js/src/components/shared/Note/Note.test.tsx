@@ -267,11 +267,11 @@ describe('Note', () => {
 		const spy = jest.fn();
 
 		const NoteContainer = function () {
-			const [note, setNote] = useState<string | null>('');
+			const [note, setNote] = useState('');
 
 			return <Note
 				note={note}
-				onNoteChange={(note: string | null) => {
+				onNoteChange={(note) => {
 					spy(note);
 					setNote(note);
 				}}
