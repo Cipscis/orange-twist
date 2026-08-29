@@ -23,7 +23,7 @@ export interface UseSettableAsyncDataOptions<T> {
 	/**
 	 * A function that retrieves data asynchronously. Will be passed an {@linkcode AbortSignal} that will be aborted if a subsequent request is made, or if an external {@linkcode AbortSignal} provided to the returned getter is aborted.
 	 */
-	getData: (options: GetAsyncDataOptions) => Promise<T>;
+	getData: (options: GetAsyncDataOptions) => Promise<T | null>;
 	/**
 	 * A function that sets data via partial update.
 	 */
@@ -42,9 +42,9 @@ const useSettableAsyncDataDefaultOptions = {
 >;
 
 export type SettableAsyncDataResult<T> = ExpandType<
-	Omit<AsyncDataResult<T>, 'state'> &
+	Omit<AsyncDataResult<T | null>, 'state'> &
 	{
-		stateOfGet: AsyncDataResult<T>['state'];
+		stateOfGet: AsyncDataResult<T | null>['state'];
 
 		setData: (data: Partial<T>) => Promise<void>;
 		stateOfSet: SettableAsyncDataState;

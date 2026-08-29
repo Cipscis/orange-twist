@@ -6,6 +6,7 @@ export {
 
 	loadTask,
 	useTask,
+	useSettableTask,
 } from './access';
 
 export { createTestData } from './test-utils';
