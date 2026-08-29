@@ -53,7 +53,6 @@ export function Note(props: NoteProps): JSX.Element {
 		onNoteChange,
 	} = props;
 
-	const spaceholderRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const displayNoteRef = useRef<HTMLDivElement>(null);
 
@@ -258,14 +257,10 @@ export function Note(props: NoteProps): JSX.Element {
 
 	return <div class={classNames('note', props.class)}>
 		{isEditing
-			? <div
+			? <textarea
 				class="note__edit-content"
-				ref={spaceholderRef}
-			>
-				<textarea
-					ref={textareaRef}
-				>{note}</textarea>
-			</div>
+				ref={textareaRef}
+			>{note}</textarea>
 			: <div
 				class="note__display-content"
 				ref={displayNoteRef}
