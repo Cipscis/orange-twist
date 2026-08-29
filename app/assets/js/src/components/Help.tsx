@@ -43,7 +43,6 @@ export function Help(): JSX.Element {
 
 	const [taskLinkNote, setTaskLinkNote] = useState('[[1]]');
 	const [templateNote, setTemplateNote] = useState('{{issue|99|custom templates}}');
-	const noop = useCallback(() => {}, []);
 
 	return <>
 		<section class="orange-twist__section">
@@ -114,7 +113,6 @@ export function Help(): JSX.Element {
 				: <Note
 					note={taskLinkNote}
 					onNoteChange={setTaskLinkNote}
-					saveChanges={noop}
 				/>
 			}
 
@@ -152,7 +150,6 @@ export function Help(): JSX.Element {
 					: <Note
 						note={templateNote}
 						onNoteChange={setTemplateNote}
-						saveChanges={noop}
 					/>
 				}
 

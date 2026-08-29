@@ -26,48 +26,19 @@
 }
 
 .note__edit-content {
-	@supports (field-sizing: content) {
-		textarea {
-			field-sizing: content;
-			width: 100%;
-		}
-	}
+	field-sizing: content;
+	width: 100%;
 
-	@supports not (field-sizing: content) {
-		// Using this approach:
-		// https://css-tricks.com/auto-growing-inputs-textareas/
-		display: grid;
+	@include palette.primary;
+	resize: none;
+	overflow: hidden;
+	display: block;
+	padding: var(--_gutter);
 
-		// Stack them on top of each other
-		&::before,
-		textarea {
-			grid-area: 1 / -1;
+	@include typography.base-body;
 
-			@include typography.base-body;
-		}
-
-		// Simulate content of textarea with visibility hidden, to auto-expand content
-		&::before {
-			content: attr(data-content) " ";
-			white-space-collapse: preserve;
-			overflow-wrap: break-word;
-			visibility: hidden;
-			padding: var(--_gutter);
-		}
-	}
-
-	textarea {
-		@include palette.primary;
-		resize: none;
-		overflow: hidden;
-		display: block;
-		padding: var(--_gutter);
-
-		@include typography.base-body;
-
-		// Make it look focused even if the tab itself doesn't have focus
-		outline: auto;
-	}
+	// Make it look focused even if the tab itself doesn't have focus
+	outline: auto;
 }
 
 .note__display-content {

@@ -24,7 +24,6 @@ describe('InlineNote', () => {
 			<InlineNote
 				note="**Bold** *italic* `code`"
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -37,7 +36,6 @@ describe('InlineNote', () => {
 		render(<InlineNote
 			note={'Test note'}
 			onNoteChange={() => {}}
-			saveChanges={() => {}}
 
 			class="test-class"
 		/>);
@@ -52,7 +50,6 @@ describe('InlineNote', () => {
 			<InlineNote
 				note="Task note"
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -69,7 +66,6 @@ describe('InlineNote', () => {
 			<InlineNote
 				note={null}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 
 				editButtonTitle="Custom edit button title"
 			/>
@@ -89,7 +85,6 @@ describe('InlineNote', () => {
 			<InlineNote
 				note={null}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 
 				placeholder="Custom placeholder"
 			/>
@@ -109,7 +104,6 @@ describe('InlineNote', () => {
 			<InlineNote
 				note="Task note"
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -128,7 +122,6 @@ describe('InlineNote', () => {
 			<InlineNote
 				note="[Link text](#)"
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -139,7 +132,7 @@ describe('InlineNote', () => {
 		expect(inputEl).not.toBeInTheDocument();
 	});
 
-	test('calls onNoteChange when the note is changed', async () => {
+	test('doesn\'t call onNoteChange when the note is changed within edit mode', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
@@ -149,7 +142,6 @@ describe('InlineNote', () => {
 			<InlineNote
 				note={null}
 				onNoteChange={spy}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -159,14 +151,12 @@ describe('InlineNote', () => {
 		const textarea = getByRole('textbox') as HTMLTextAreaElement;
 		await user.type(textarea, 'abcd');
 
-		expect(spy).toHaveBeenCalledWith('a');
-		expect(spy).toHaveBeenCalledWith('ab');
-		expect(spy).toHaveBeenCalledWith('abc');
-		expect(spy).toHaveBeenCalledWith('abcd');
+		expect(spy).not.toHaveBeenCalled();
 	});
 
-	test('When pressing the "Enter" key, leaves editing mode', async () => {
+	test('When pressing the "Enter" key, leaves editing mode and commits changes', async () => {
 		const user = userEvent.setup();
+		const onNoteChange = jest.fn();
 
 		const {
 			getByRole,
@@ -174,8 +164,7 @@ describe('InlineNote', () => {
 		} = render(
 			<InlineNote
 				note={null}
-				onNoteChange={() => {}}
-				saveChanges={() => {}}
+				onNoteChange={onNoteChange}
 			/>
 		);
 
@@ -183,12 +172,16 @@ describe('InlineNote', () => {
 		await user.click(editButton);
 		expect(queryByRole('textbox')).toBeInTheDocument();
 
-		// Pressing enter should exit edit mode
+		await user.keyboard('Updated note');
+		expect(onNoteChange).not.toHaveBeenCalled();
+
+		// Pressing enter should exit edit mode and commit changes
 		await user.keyboard('{Enter}');
 		expect(queryByRole('textbox')).not.toBeInTheDocument();
+		expect(onNoteChange).toHaveBeenLastCalledWith('Updated note');
 	});
 
-	test('When pressing the "Escape" key, leaves editing mode and reverts the content', async () => {
+	test('When pressing the "Escape" key, leaves editing mode and discards the content', async () => {
 		const user = userEvent.setup();
 		const onNoteChange = jest.fn();
 
@@ -199,7 +192,6 @@ describe('InlineNote', () => {
 			<InlineNote
 				note={'Initial note'}
 				onNoteChange={onNoteChange}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -209,14 +201,12 @@ describe('InlineNote', () => {
 
 		await user.keyboard('Updated note');
 
-		expect(onNoteChange).toHaveBeenLastCalledWith('Initial noteUpdated note');
-
 		// Pressing escape should exit edit mode
 		await user.keyboard('{Escape}');
 		expect(queryByRole('textbox')).not.toBeInTheDocument();
 
-		// Make sure note has reverted
-		expect(onNoteChange).toHaveBeenLastCalledWith('Initial note');
+		// No changes should have been committed
+		expect(onNoteChange).not.toHaveBeenCalled();
 	});
 
 	test('leaves editing mode when keyboard focus moves elsewhere', async () => {
@@ -229,7 +219,6 @@ describe('InlineNote', () => {
 			<InlineNote
 				note={null}
 				onNoteChange={() => {}}
-				saveChanges={() => {}}
 			/>
 		);
 
@@ -243,7 +232,7 @@ describe('InlineNote', () => {
 		expect(queryByRole('textbox')).not.toBeInTheDocument();
 	});
 
-	test('calls saveChanges when leaving editing mode, if the note was changed', async () => {
+	test('calls onNoteChange when leaving editing mode, only if the note was changed', async () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
@@ -253,8 +242,7 @@ describe('InlineNote', () => {
 		} = render(
 			<InlineNote
 				note={null}
-				onNoteChange={() => {}}
-				saveChanges={spy}
+				onNoteChange={spy}
 			/>
 		);
 
@@ -290,7 +278,6 @@ describe('InlineNote', () => {
 				<InlineNote
 					note={note}
 					onNoteChange={() => {}}
-					saveChanges={() => {}}
 				/>
 			);
 
@@ -314,7 +301,6 @@ describe('InlineNote', () => {
 				<InlineNote
 					note={note}
 					onNoteChange={() => {}}
-					saveChanges={() => {}}
 				/>
 			);
 

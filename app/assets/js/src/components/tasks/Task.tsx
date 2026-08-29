@@ -32,22 +32,10 @@ export function Task(props: TaskProps): JSX.Element | null {
 	const taskInfo = useTaskInfo(taskId);
 
 	/**
-	 * Save any changes to the name.
+	 * Update the name, and save any changes to it.
 	 *
 	 * If there is no task name, delete the task.
 	 */
-	const saveChanges = useCallback(() => {
-		if (!taskInfo) {
-			return;
-		}
-
-		if (taskInfo.name === '') {
-			deleteTask(taskInfo.id);
-		}
-		fireCommand(Command.DATA_SAVE);
-	}, [taskInfo]);
-
-	/** Update the name. */
 	const nameChangeHandler = useCallback((newName: string | null) => {
 		if (!taskInfo) {
 			return;
@@ -55,6 +43,11 @@ export function Task(props: TaskProps): JSX.Element | null {
 
 		const name = newName ?? '';
 		setTaskInfo(taskInfo.id, { name });
+
+		if (newName === '') {
+			deleteTask(taskInfo.id);
+		}
+		fireCommand(Command.DATA_SAVE);
 	}, [taskInfo]);
 
 	if (!taskInfo) {
@@ -74,7 +67,6 @@ export function Task(props: TaskProps): JSX.Element | null {
 		<InlineNote
 			note={taskInfo.name}
 			onNoteChange={nameChangeHandler}
-			saveChanges={saveChanges}
 
 			placeholder="Task name"
 			editButtonTitle="Edit task name"

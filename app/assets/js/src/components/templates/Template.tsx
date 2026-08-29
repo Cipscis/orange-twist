@@ -38,21 +38,10 @@ export function Template(props: TemplateProps): JSX.Element | null {
 	const definitionRef = useRef<HTMLTextAreaElement>(null);
 
 	/**
-	 * Save any changes to the name.
+	 * Update the name, and save any changes to it.
 	 *
 	 * If there is no template name, delete the template.
 	 */
-	const saveChanges = useCallback(() => {
-		if (!templateInfo) {
-			return;
-		}
-
-		if (templateInfo.name === '') {
-			deleteTemplate(templateInfo.id);
-		}
-		fireCommand(Command.DATA_SAVE);
-	}, [templateInfo]);
-
 	const nameChangeHandler = useCallback((newName: string | null) => {
 		if (!templateInfo) {
 			return;
@@ -60,6 +49,11 @@ export function Template(props: TemplateProps): JSX.Element | null {
 
 		const name = newName ?? '';
 		setTemplateInfo(templateInfo.id, { name });
+
+		if (newName === '') {
+			deleteTemplate(templateInfo.id);
+		}
+		fireCommand(Command.DATA_SAVE);
 	}, [templateInfo]);
 
 	/**
@@ -126,7 +120,6 @@ export function Template(props: TemplateProps): JSX.Element | null {
 		<InlineNote
 			note={templateInfo.name}
 			onNoteChange={nameChangeHandler}
-			saveChanges={saveChanges}
 
 			placeholder="Template name"
 			editButtonTitle="Edit template name"
