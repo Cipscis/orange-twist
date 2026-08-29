@@ -17,5 +17,5 @@ export type CommandRegistration<
 	shortcuts: Set<KeyboardShortcutName>;
 
 	/** All bound listeners that will be called when the command is fired. */
-	listeners: Set<(...args: CommandsList[C] | []) => void>;
+	listeners: Set<(...args: CommandsList[C] | []) => void | Promise<void>>;
 };
