@@ -20,11 +20,11 @@ describe('useSettableAsyncData', () => {
 			})
 		);
 
-		expect(result.current.stateOfGet).toMatchObject({
+		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
 		});
-		expect(result.current.stateOfSet).toMatchObject({
+		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
 		});
@@ -54,11 +54,11 @@ describe('useSettableAsyncData', () => {
 
 		rerender(initialProps);
 
-		expect(result.current.stateOfGet).toMatchObject({
+		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
 		});
-		expect(result.current.stateOfSet).toMatchObject({
+		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
@@ -67,11 +67,11 @@ describe('useSettableAsyncData', () => {
 
 		rerender(initialProps);
 
-		expect(result.current.stateOfGet).toMatchObject({
+		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
 		});
-		expect(result.current.stateOfSet).toMatchObject({
+		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 		});
@@ -91,9 +91,10 @@ describe('useSettableAsyncData', () => {
 		await result.current.setData({foo: true });
 		rerender(initialProps);
 
-		expect(result.current.stateOfSet).toMatchObject({
+		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.ERROR,
 			error: new Error('Error message'),
+			loading: false,
 		});
 	});
 
@@ -120,7 +121,7 @@ describe('useSettableAsyncData', () => {
 		await result.current.getData();
 		rerender(initialProps);
 
-		expect(result.current.stateOfGet).toMatchObject({
+		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: { foo: false },
@@ -130,12 +131,12 @@ describe('useSettableAsyncData', () => {
 
 		rerender(initialProps);
 
-		expect(result.current.stateOfGet).toMatchObject({
+		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: { foo: false },
 		});
-		expect(result.current.stateOfSet).toMatchObject({
+		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
@@ -143,12 +144,12 @@ describe('useSettableAsyncData', () => {
 		await setPromise;
 		rerender(initialProps);
 
-		expect(result.current.stateOfGet).toMatchObject({
+		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: { foo: false },
 		});
-		expect(result.current.stateOfSet).toMatchObject({
+		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 		});
@@ -178,7 +179,7 @@ describe('useSettableAsyncData', () => {
 		await result.current.getData();
 		rerender(initialProps);
 
-		expect(result.current.stateOfGet).toMatchObject({
+		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: { foo: false },
@@ -187,12 +188,12 @@ describe('useSettableAsyncData', () => {
 		const setPromise = result.current.setData({ foo: true });
 		rerender(initialProps);
 
-		expect(result.current.stateOfGet).toMatchObject({
+		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: { foo: true },
 		});
-		expect(result.current.stateOfSet).toMatchObject({
+		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
@@ -200,12 +201,12 @@ describe('useSettableAsyncData', () => {
 		await setPromise;
 		rerender(initialProps);
 
-		expect(result.current.stateOfGet).toMatchObject({
+		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: { foo: true },
 		});
-		expect(result.current.stateOfSet).toMatchObject({
+		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 		});

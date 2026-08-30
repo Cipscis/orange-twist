@@ -23,8 +23,9 @@ describe('useAsyncData', () => {
 			)
 		);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.INITIAL,
+			loading: false,
 		});
 	});
 
@@ -40,7 +41,7 @@ describe('useAsyncData', () => {
 		result.current.getData();
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
@@ -58,7 +59,7 @@ describe('useAsyncData', () => {
 		await result.current.getData();
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: true,
@@ -67,7 +68,7 @@ describe('useAsyncData', () => {
 		result.current.getData();
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: true,
 			data: true,
@@ -92,7 +93,7 @@ describe('useAsyncData', () => {
 
 		result.current.getData();
 		rerender(initialProps);
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
@@ -100,7 +101,7 @@ describe('useAsyncData', () => {
 		await act(() => resolveData(data));
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data,
@@ -130,7 +131,7 @@ describe('useAsyncData', () => {
 		await act(() => rejectWithError(error));
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.ERROR,
 			loading: false,
 			error,
@@ -152,7 +153,7 @@ describe('useAsyncData', () => {
 		result.current.getData();
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
@@ -182,7 +183,7 @@ describe('useAsyncData', () => {
 		result.current.getData({ signal });
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
@@ -190,7 +191,7 @@ describe('useAsyncData', () => {
 		abortController.abort('Manually aborted');
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.ABORTED,
 			loading: false,
 			reason: 'Manually aborted',
@@ -216,7 +217,7 @@ describe('useAsyncData', () => {
 		result.current.getData({ signal });
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
@@ -226,9 +227,10 @@ describe('useAsyncData', () => {
 		abortController.abort('Manually aborted');
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			data: 'Data',
+			loading: false,
 		});
 	});
 
@@ -254,7 +256,7 @@ describe('useAsyncData', () => {
 			});
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
@@ -265,7 +267,7 @@ describe('useAsyncData', () => {
 		abortController.abort('Manually aborted');
 		rerender(initialProps);
 
-		expect(result.current.state).toMatchObject({
+		expect(result.current.state).toEqual({
 			type: AsyncDataStateType.ERROR,
 			loading: false,
 			error,
