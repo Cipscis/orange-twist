@@ -17,16 +17,20 @@ type FireCommandArgs = {
  * @param command A string ID identifying a command.
  * @param args Any arguments to pass to the commands' listeners.
  */
-export function fireCommand(
+export async function fireCommand(
 	...[command, ...args]: FireCommandArgs
-): void {
+): Promise<void> {
 	const commandInfo = commandsRegister.get(command);
 
 	if (!commandInfo) {
 		return;
 	}
 
+	const promises: Promise<void>[] = [];
 	for (const listener of commandInfo.listeners.values()) {
-		listener(...args);
+		promises.push(Promise.try(() => listener(...args)));
 	}
+
+	// This type assertion is safe because Promise<void> means the result should not be used
+	return Promise.all(promises) as Promise<unknown> as Promise<void>;
 }

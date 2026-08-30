@@ -8,16 +8,11 @@ import {
 	useContext,
 	useEffect,
 	useRef,
-	useState,
 } from 'preact/hooks';
 
 import { AsyncDataStateType } from 'utils';
 
-import { fireCommand } from 'registers/commands';
-import { Command } from 'types/Command';
-
-import { setTaskInfo } from 'data';
-import { SaveType, useTask } from 'database';
+import { useSettableTask } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
@@ -36,46 +31,18 @@ interface TaskNoteProps {
 export function TaskNote(props: TaskNoteProps): JSX.Element {
 	const { taskId } = props;
 
-	const taskAsyncState = useTask(taskId);
+	const taskAsyncState = useSettableTask(taskId);
 
 	const context = useContext(OrangeTwistContext);
+	// Don't display a loading state while setting or re-retrieving data
 	const isLoading = context.isLoading ||
-		taskAsyncState.type === AsyncDataStateType.INITIAL ||
-		taskAsyncState.type === AsyncDataStateType.LOADING;
-
-	/**
-	 * A copy of the task note that is updated optimistically on save for immediate display.
-	 */
-	const [optimisticTaskNote, setOptimisticTaskNote] = useState<string | null>(null);
-
-	/**
-	 * Keep a reference to the note for immediate saving of the new value before re-rendering.
-	 */
-	const noteRef = useRef('');
-
-	// Make sure to update the note each time the task is loaded
-	useEffect(() => {
-		if (taskAsyncState.type === AsyncDataStateType.SUCCESS) {
-			noteRef.current = taskAsyncState.data?.note ?? '';
-			setOptimisticTaskNote(noteRef.current);
-		} else {
-			noteRef.current = '';
-		}
-	}, [taskAsyncState]);
+		taskAsyncState.stateOfGet.type === AsyncDataStateType.INITIAL;
 
 	const setTaskNote = useCallback(
-		(note: string) => {
-			noteRef.current = note;
-			setOptimisticTaskNote(note);
-			setTaskInfo(taskId, { note });
-
-			fireCommand(Command.DATA_SAVE, [{
-				type: SaveType.TASK,
-				id: taskId,
-				task: { note: noteRef.current },
-			}]);
+		async (note: string) => {
+			await taskAsyncState.setData({ note });
 		},
-		[taskId]
+		[taskAsyncState]
 	);
 
 	const markdownApiRef = useRef<MarkdownApi | null>(null);
@@ -89,10 +56,10 @@ export function TaskNote(props: TaskNoteProps): JSX.Element {
 	return <>
 		{isLoading
 			? <Loader />
-			: taskAsyncState.type === AsyncDataStateType.SUCCESS
+			: taskAsyncState.stateOfGet.type === AsyncDataStateType.SUCCESS
 				? <Note
 					class="task-detail__note"
-					note={optimisticTaskNote ?? taskAsyncState.data?.note ?? null}
+					note={taskAsyncState.stateOfGet.data?.note ?? null}
 					onNoteChange={setTaskNote}
 					markdownApiRef={markdownApiRef}
 				/>

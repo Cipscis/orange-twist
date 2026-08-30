@@ -5,41 +5,9 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import type { EnumTypeOf } from './EnumTypeOf';
-import type { ExpandType } from './ExpandType';
-
-export const AsyncDataStateType = {
-	INITIAL: 'initial',
-	LOADING: 'loading',
-	ABORTED: 'aborted',
-	ERROR: 'error',
-	SUCCESS: 'success',
-} as const;
-export type AsyncDataStateType = EnumTypeOf<typeof AsyncDataStateType>;
-
-type AsyncDataStateMap<T> = {
-	[AsyncDataStateType.INITIAL]: {};
-	[AsyncDataStateType.LOADING]: {};
-	[AsyncDataStateType.ABORTED]: {
-		reason: unknown;
-	};
-	[AsyncDataStateType.ERROR]: {
-		error: Error;
-	};
-	[AsyncDataStateType.SUCCESS]: {
-		data: T;
-	};
-};
-
-/**
- * A discriminated union of possible results of async data retrieval.
- */
-export type AsyncDataState<T> = {
-	[S in AsyncDataStateType]: ExpandType<
-		{ type: S; } &
-		AsyncDataStateMap<T>[S]
-	>;
-}[AsyncDataStateType];
+import { extractError } from './extractError';
+import { AsyncDataStateType } from './AsyncDataStateType';
+import type { AsyncDataState } from './AsyncDataState';
 
 export type AsyncDataResult<T> = {
 	/** The current state of the async data. */
@@ -70,7 +38,10 @@ export interface GetAsyncDataOptions {
 export function useAsyncData<T>(
 	getData: (options: GetAsyncDataOptions) => Promise<T>,
 ): AsyncDataResult<T> {
-	const [state, setState] = useState<AsyncDataState<T>>({ type: AsyncDataStateType.INITIAL });
+	const [state, setState] = useState<AsyncDataState<T>>({
+		type: AsyncDataStateType.INITIAL,
+		loading: false,
+	});
 
 	const abortControllerRef = useRef(new AbortController());
 
@@ -115,6 +86,7 @@ export function useAsyncData<T>(
 				() => {
 					setState({
 						type: AsyncDataStateType.ABORTED,
+						loading: false,
 						reason: combinedAbortSignal.reason,
 					});
 				},
@@ -125,8 +97,11 @@ export function useAsyncData<T>(
 
 			try {
 				// 2. Enter loading state
-				if (state.type !== AsyncDataStateType.LOADING) {
-					setState({ type: AsyncDataStateType.LOADING });
+				if (!state.loading) {
+					setState((state) => ({
+						...state,
+						loading: true,
+					}));
 				}
 
 				// 3. Attempt to retrieve data
@@ -136,22 +111,16 @@ export function useAsyncData<T>(
 				// 4a. Handle retrieved data
 				setState({
 					type: AsyncDataStateType.SUCCESS,
+					loading: false,
 					data,
 				});
 				return data;
 			} catch (e) {
 				// 4b. Handle error retrieving data
-				const error = (() => {
-					if (e instanceof Error) {
-						return e;
-					} else if (typeof e === 'string') {
-						return new Error(e);
-					} else {
-						return new Error('Encountered unknown error when retrieving async data.', { cause: e });
-					}
-				})();
+				const error = extractError(e, 'Encountered unknown error when retrieving async data.');
 				setState({
 					type: AsyncDataStateType.ERROR,
+					loading: false,
 					error,
 				});
 				throw error;
