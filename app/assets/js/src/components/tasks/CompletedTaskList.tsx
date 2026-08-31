@@ -69,6 +69,15 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 		matchingTaskInfo,
 	]);
 
+	const matchingTaskInfo = useAllTaskInfo(matcher);
+	const sortedTaskIds = useMemo(() => {
+		const sortedTasks = matchingTaskInfo.toSorted(sorter);
+
+		return sortedTasks.map(({ id }) => id);
+	}, [
+		matchingTaskInfo, sorter,
+	]);
+
 	// Update list open state if prop changes
 	useEffect(() => {
 		setListOpen(props.open ?? false);
