@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { classNames, sortElementsBySortIndex } from 'utils';
+import { classNames } from 'utils';
 
 import { DragList } from 'components/shared';
 import { Task } from './Task';
