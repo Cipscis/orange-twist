@@ -90,7 +90,7 @@ export const Day = memo((props: DayProps): JSX.Element => {
 			<DayNote day={day} />
 
 			<TaskList
-				matcher={tasks}
+				taskIds={tasks}
 				dayName={name}
 				onReorder={reorderTasks}
 			/>

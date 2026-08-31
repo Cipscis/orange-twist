@@ -3,14 +3,17 @@ import type Preact from 'preact';
 import {
 	useCallback,
 	useEffect,
+	useMemo,
 	useState,
 } from 'preact/hooks';
 
 import { CompletedTaskStatuses } from 'types/TaskStatus';
 import {
 	getAllDayTaskInfo,
+	useAllTaskInfo,
 	type TaskInfo,
 } from 'data';
+import { sortElementsBySortIndex } from 'utils';
 
 import { Accordion } from 'components/shared';
 import { TaskList } from './TaskList';
@@ -55,6 +58,15 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 		[]
 	);
 
+	const matchingTaskInfo = useAllTaskInfo(matcher);
+	const sortedTaskIds = useMemo(() => {
+		const sortedTasks = matchingTaskInfo.toSorted(sorter);
+
+		return sortedTasks.map(({ id }) => id);
+	}, [
+		matchingTaskInfo, sorter,
+	]);
+
 	// Update list open state if prop changes
 	useEffect(() => {
 		setListOpen(props.open ?? false);
@@ -70,8 +82,7 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 	>
 		{listOpen &&
 			<TaskList
-				matcher={matcher}
-				sorter={sorter}
+				taskIds={sortedTaskIds}
 				className="orange-twist__task-list"
 			/>
 		}
