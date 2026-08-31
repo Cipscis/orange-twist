@@ -37,15 +37,22 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 		[]
 	);
 
-	const sorter = useCallback(
-		(taskA: TaskInfo, taskB: TaskInfo): number => {
+	const matchingTaskInfo = useAllTaskInfo(matcher);
+	const sortedTaskIds = useMemo(() => {
+		// Construct a proxy array with all information needed for sorting
+		const sortableTaskInfo = matchingTaskInfo.map((taskInfo) => {
+			const dayTasks = getAllDayTaskInfo({ taskId: taskInfo.id });
+			const lastUpdated = dayTasks.at(-1)?.dayName ?? '0001-01-01';
+
+			return [taskInfo, lastUpdated] as const;
+		});
+
+		// Sort the proxy array
+		const sortedTasks = sortableTaskInfo.toSorted((
+			[taskA, lastUpdatedA],
+			[taskB, lastUpdatedB],
+		) => {
 			// First, sort by last updated date, with more recent tasks first
-			const dayTasksA = getAllDayTaskInfo({ taskId: taskA.id });
-			const dayTasksB = getAllDayTaskInfo({ taskId: taskB.id });
-
-			const lastUpdatedA = dayTasksA.at(-1)?.dayName ?? '0001-01-01';
-			const lastUpdatedB = dayTasksB.at(-1)?.dayName ?? '0001-01-01';
-
 			const comparison = lastUpdatedB.localeCompare(lastUpdatedA);
 
 			if (comparison !== 0) {
@@ -53,18 +60,13 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 			}
 
 			// Then, sort by sort index
-			return taskA.sortIndex - taskB.sortIndex;
-		},
-		[]
-	);
+			return sortElementsBySortIndex(taskA, taskB);
+		});
 
-	const matchingTaskInfo = useAllTaskInfo(matcher);
-	const sortedTaskIds = useMemo(() => {
-		const sortedTasks = matchingTaskInfo.toSorted(sorter);
-
-		return sortedTasks.map(({ id }) => id);
+		// Then convert back to its original state once sorted
+		return sortedTasks.map(([{ id }]) => id);
 	}, [
-		matchingTaskInfo, sorter,
+		matchingTaskInfo,
 	]);
 
 	// Update list open state if prop changes
