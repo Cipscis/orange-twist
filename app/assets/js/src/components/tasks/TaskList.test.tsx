@@ -48,7 +48,7 @@ describe('TaskList', () => {
 
 	test('renders a specified array of tasks in order', () => {
 		const { queryAllByText } = render(<TaskList
-			matcher={[3, 2, 1]}
+			taskIds={[3, 2, 1]}
 		/>);
 
 		const tasks = queryAllByText(/^Task /);
@@ -56,47 +56,6 @@ describe('TaskList', () => {
 			'Task three',
 			'Task two',
 			'Task one',
-		]);
-	});
-
-	test('renders all tasks matching a matcher function', () => {
-		const { queryByText } = render(<TaskList
-			matcher={(task) => task.status === TaskStatus.COMPLETED}
-		/>);
-
-		expect(queryByText('Task two')).toBeInTheDocument();
-		expect(queryByText('Task four')).toBeInTheDocument();
-
-		expect(queryByText('Task one')).not.toBeInTheDocument();
-		expect(queryByText('Task three')).not.toBeInTheDocument();
-	});
-
-	test('when using a matching function, sorts tasks by sortIndex', () => {
-		const { queryAllByText } = render(<TaskList
-			matcher={() => true}
-		/>);
-
-		const tasks = queryAllByText(/^Task /);
-		expect(tasks.map(({ textContent }) => textContent)).toEqual([
-			'Task four',
-			'Task one',
-			'Task three',
-			'Task two',
-		]);
-	});
-
-	test('when using a sorting function, sorts tasks by that function', () => {
-		const { queryAllByText } = render(<TaskList
-			matcher={() => true}
-			sorter={(taskA, taskB) => taskB.name.localeCompare(taskA.name)}
-		/>);
-
-		const tasks = queryAllByText(/^Task /);
-		expect(tasks.map(({ textContent }) => textContent)).toEqual([
-			'Task two',
-			'Task three',
-			'Task one',
-			'Task four',
 		]);
 	});
 });
