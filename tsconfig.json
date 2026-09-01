@@ -17,20 +17,14 @@
 		// https://www.typescriptlang.org/tsconfig#moduleDetection
 		"moduleDetection": "force",
 
-		// Strict mode should really be a default
-		// https://www.typescriptlang.org/tsconfig#strict
-		"strict": true,
-
 		// Don't require file extensions or relative paths in imports
 		// https://www.typescriptlang.org/tsconfig#moduleResolution
 		"moduleResolution": "Bundler",
 		// Specify the base URL for using non-relative paths with module names
-		// https://www.typescriptlang.org/tsconfig#baseUrl
-		"baseUrl": "./app/assets/js/src",
-		// Include support for latest ECMAScript version
-		// https://www.typescriptlang.org/tsconfig#module
-		// https://www.typescriptlang.org/docs/handbook/modules/reference.html#summary-1
-		"module": "ESNext",
+		// https://www.typescriptlang.org/tsconfig#paths
+		"paths": {
+			"*": ["./app/assets/js/src/*"],
+		},
 		// This code is not compiled using `tsc`
 		// https://www.typescriptlang.org/tsconfig#noEmit
 		"noEmit": true,
@@ -39,6 +33,9 @@
 		// as well as DOM APIs so it can run in the browser
 		// https://www.typescriptlang.org/tsconfig#lib
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		// Include types from packages
+		// https://www.typescriptlang.org/tsconfig#types
+		"types": ["node"],
 
 		// Copied from [Preact TypeScript docs](https://preactjs.com/guide/v10/typescript/)
 		// https://www.typescriptlang.org/tsconfig#jsx

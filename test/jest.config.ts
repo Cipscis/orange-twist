@@ -1,12 +1,10 @@
+import { createDefaultEsmPreset, type JestConfigWithTsJest } from 'ts-jest';
+
 /**
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
  */
-
-/** @typedef {import('ts-jest').JestConfigWithTsJest} JestConfigWithTsJest */
-
-/** @type {JestConfigWithTsJest} */
-const config = {
+const config: JestConfigWithTsJest = {
 	// Don't inject globals. Require them to be imported from `@jest/globals`
 	injectGlobals: false,
 	// Specify where the tests are
@@ -22,10 +20,13 @@ const config = {
 	// Run a setup script before all test suites
 	setupFilesAfterEnv: ['../test/jest.setup.ts'],
 
-	// Allow tests to be written in TypeScript using ESM syntax
-	preset: 'ts-jest/presets/default-esm',
-
 	passWithNoTests: true,
+
+	// Allow tests to be written in TypeScript using ESM syntax
+	// preset: 'ts-jest/presets/default-esm',
+	...createDefaultEsmPreset({
+		tsconfig: './test/tsconfig.json',
+	}),
 };
 
 export default config;
