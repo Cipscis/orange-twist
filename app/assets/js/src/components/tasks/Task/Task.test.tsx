@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { act } from 'preact/test-utils';
 
 import {
 	afterEach,

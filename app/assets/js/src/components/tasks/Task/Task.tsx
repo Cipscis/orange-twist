@@ -14,7 +14,7 @@ import {
 } from 'data';
 import { getTaskDetailUrl } from 'navigation';
 
-import { TaskStatusComponentDisplay } from './TaskStatusComponent';
+import { TaskStatusComponentDisplay } from '../TaskStatusComponent';
 import {
 	IconButton,
 	InlineNote,
