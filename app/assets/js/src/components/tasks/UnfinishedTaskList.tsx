@@ -1,10 +1,14 @@
 import { h, type JSX } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
-import { classNames } from 'utils';
+import { classNames, sortBySortIndex } from 'utils';
 
 import { CompletedTaskStatuses } from 'types/TaskStatus';
-import { setAllTaskInfo, type TaskInfo } from 'data';
+import {
+	setAllTaskInfo,
+	useAllTaskInfo,
+	type TaskInfo,
+} from 'data';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -16,6 +20,28 @@ import { TaskList } from './TaskList';
  * Renders a {@linkcode TaskList} of all unfinished tasks in a disclosure.
  */
 export function UnfinishedTaskList(): JSX.Element {
+	const matcher = useCallback(
+		({ status }: TaskInfo) => !CompletedTaskStatuses.has(status),
+		[]
+	);
+
+	const matchingTaskInfo = useAllTaskInfo(matcher);
+	const taskIdsToDisplay = useMemo(() => {
+		const sortedTasks = sortBySortIndex(matchingTaskInfo);
+
+		return sortedTasks.map(({ id }) => id);
+	}, [
+		matchingTaskInfo,
+	]);
+
+	const onReorder = useCallback((taskIds: readonly number[]) => {
+		const entries = taskIds.map(
+			(taskId, sortIndex) => [taskId, { sortIndex }] as const
+		);
+		setAllTaskInfo(entries);
+		fireCommand(Command.DATA_SAVE);
+	}, []);
+
 	return <section
 		class={classNames({
 			'orange-twist__section': true,
@@ -24,18 +50,9 @@ export function UnfinishedTaskList(): JSX.Element {
 		<h2 class="orange-twist__title">Tasks</h2>
 
 		<TaskList
-			matcher={useCallback(
-				({ status }: TaskInfo) => !CompletedTaskStatuses.has(status),
-				[]
-			)}
+			taskIds={taskIdsToDisplay}
 			className="orange-twist__task-list"
-			onReorder={useCallback((taskIds: readonly number[]) => {
-				const entries = taskIds.map(
-					(taskId, sortIndex) => [taskId, { sortIndex }] as const
-				);
-				setAllTaskInfo(entries);
-				fireCommand(Command.DATA_SAVE);
-			}, [])}
+			onReorder={onReorder}
 		/>
 
 		<Button
