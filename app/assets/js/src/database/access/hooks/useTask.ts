@@ -12,7 +12,7 @@ import {
 import type { Task } from '../../types';
 
 import { loadTask } from '../loadTask';
-import { addTaskChangeListener } from '../liveAccessManager';
+import { addChangeListener, ChangeType } from '../liveAccessManager';
 
 /**
  * Attempts to load a specified task immediately, and reloads it if it is changed in the database. Provides a {@linkcode AsyncDataState} representing the state of that loading operation.
@@ -45,7 +45,8 @@ export function useTask(taskId: number): AsyncDataState<Task | null> {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		addTaskChangeListener(
+		addChangeListener(
+			ChangeType.TASK,
 			taskId,
 			asyncDataResult.getData,
 			{ signal },

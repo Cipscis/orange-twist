@@ -1,49 +1,58 @@
+import type { EnumTypeOf } from 'utils';
+
+export const ChangeType = {
+	TASK: 'task',
+} as const;
+export type ChangeType = EnumTypeOf<typeof ChangeType>;
+
 /**
  * Internal record of {@linkcode EventTarget}s for various observable objects.
  */
 export const eventTargetLookup = {
-	task: new Map<number, EventTarget>(),
+	[ChangeType.TASK]: new Map<number, EventTarget>(),
 };
 
 /**
- * Trigger a "change" event for a specified task, causing any change listeners for that task to fire.
+ * Trigger a "change" event for a specified type of item, causing any change listeners for that item to fire.
  */
-export function noticeTaskChange(taskId: number): void {
-	const taskChangeTarget = eventTargetLookup.task.get(taskId);
-	if (!taskChangeTarget) {
+export function noticeChange(type: ChangeType, id: number): void {
+	const changeTarget = eventTargetLookup[type].get(id);
+	if (!changeTarget) {
 		return;
 	}
 
-	taskChangeTarget.dispatchEvent(new Event('change'));
+	changeTarget.dispatchEvent(new Event('change'));
 }
 
 /**
- * Adds a "change" listener for a specified task.
+ * Adds a "change" listener for a specified type of item.
  */
-export function addTaskChangeListener(
-	taskId: number,
+export function addChangeListener(
+	type: ChangeType,
+	id: number,
 	callback: () => void,
 	options?: AddEventListenerOptions,
 ): void {
-	const taskChangeTarget = eventTargetLookup.task.getOrInsert(
-		taskId,
+	const changeTarget = eventTargetLookup[type].getOrInsert(
+		id,
 		new EventTarget(),
 	);
 
-	taskChangeTarget.addEventListener('change', callback, options);
+	changeTarget.addEventListener('change', callback, options);
 }
 
 /**
- * Removes a "change" listener for a specified task.
+ * Removes a "change" listener for a specified type of item.
  */
-export function removeTaskChangeListener(
-	taskId: number,
+export function removeChangeListener(
+	type: ChangeType,
+	id: number,
 	callback: () => void,
 ): void {
-	const taskChangeTarget = eventTargetLookup.task.get(taskId);
-	if (!taskChangeTarget) {
+	const changeTarget = eventTargetLookup.task.get(id);
+	if (!changeTarget) {
 		return;
 	}
 
-	taskChangeTarget.removeEventListener('change', callback);
+	changeTarget.removeEventListener('change', callback);
 }

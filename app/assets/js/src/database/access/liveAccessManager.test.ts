@@ -6,25 +6,26 @@ import {
 } from '@jest/globals';
 
 import {
-	addTaskChangeListener,
-	noticeTaskChange,
-	removeTaskChangeListener,
+	ChangeType,
+	addChangeListener,
+	noticeChange,
+	removeChangeListener,
 } from './liveAccessManager';
 
 describe('liveAccessManager', () => {
-	test('listens for changes based on task ID', () => {
+	test('listens for changes based on item ID', () => {
 		const listener = jest.fn();
 
-		addTaskChangeListener(1, listener);
+		addChangeListener(ChangeType.TASK, 1, listener);
 
-		noticeTaskChange(2);
+		noticeChange(ChangeType.TASK, 2);
 		expect(listener).toHaveBeenCalledTimes(0);
 
-		noticeTaskChange(1);
+		noticeChange(ChangeType.TASK, 1);
 		expect(listener).toHaveBeenCalledTimes(1);
 
-		removeTaskChangeListener(1, listener);
-		noticeTaskChange(1);
+		removeChangeListener(ChangeType.TASK, 1, listener);
+		noticeChange(ChangeType.TASK, 1);
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 });

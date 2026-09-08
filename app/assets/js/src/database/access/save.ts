@@ -12,7 +12,7 @@ import {
 
 import { SaveType, type SaveAction } from './SaveAction';
 import { requestTransaction } from './requestTransaction';
-import { noticeTaskChange } from './liveAccessManager';
+import { ChangeType, noticeChange } from './liveAccessManager';
 
 /**
  * Process any number of {@linkcode SaveAction}s.
@@ -66,7 +66,7 @@ async function saveTask(
 	}
 
 	await updateTaskInternal(transaction, taskToSave);
-	noticeTaskChange(action.id);
+	noticeChange(ChangeType.TASK, action.id);
 }
 
 /**
