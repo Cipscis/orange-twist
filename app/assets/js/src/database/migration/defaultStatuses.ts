@@ -1,0 +1,77 @@
+import type { ObjectStoreName } from '../metadata';
+import type { DatabaseData } from '../types';
+
+export const defaultStatuses = [
+	{
+		id: 1,
+		alias: 'todo',
+		name: 'Todo',
+		icon: 'todo.svg',
+		colour: 'var(--blue)',
+		completed: false,
+	},
+	{
+		id: 2,
+		alias: 'in-progress',
+		name: 'In progress',
+		icon: 'in-progress.svg',
+		colour: 'var(--blue)',
+		completed: false,
+	},
+	{
+		id: 3,
+		alias: 'completed',
+		name: 'Completed',
+		icon: 'completed.svg',
+		colour: 'var(--green)',
+		completed: true,
+	},
+	{
+		id: 4,
+		alias: 'investigating',
+		name: 'Investigating',
+		icon: 'investigating.svg',
+		colour: 'var(--blue)',
+		completed: false,
+	},
+	{
+		id: 5,
+		alias: 'in-review',
+		name: 'In review',
+		icon: 'in-review.svg',
+		colour: 'var(--blue)',
+		completed: false,
+	},
+	{
+		id: 6,
+		alias: 'ready-to-test',
+		name: 'Testing',
+		icon: 'testing.svg',
+		colour: 'var(--green)',
+		completed: false,
+	},
+	{
+		id: 7,
+		alias: 'paused',
+		name: 'Paused',
+		icon: 'paused.svg',
+		colour: 'var(--red)',
+		completed: false,
+	},
+	{
+		id: 8,
+		alias: 'approved-to-deploy',
+		name: 'Approved',
+		icon: 'approved.svg',
+		colour: 'var(--green)',
+		completed: true,
+	},
+	{
+		id: 9,
+		alias: 'will-not-do',
+		name: 'Will not do',
+		icon: 'will-not-do.svg',
+		colour: 'var(--red)',
+		completed: true,
+	},
+] as const satisfies DatabaseData[typeof ObjectStoreName.STATUS][number][];

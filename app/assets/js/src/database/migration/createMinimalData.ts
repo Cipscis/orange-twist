@@ -1,12 +1,12 @@
 import type { DatabaseData } from '../types';
-import { collectStatusData } from './collectStatusData';
+import { defaultStatuses } from './defaultStatuses';
 
 /**
  * Create minimal data to populate an empty database, which includes status data.
  */
 export function createMinimalData(): DatabaseData {
 	const day = {};
-	const status = collectStatusData();
+	const status = defaultStatuses;
 	const task = {};
 	const day_task = {};
 	const template = {};
