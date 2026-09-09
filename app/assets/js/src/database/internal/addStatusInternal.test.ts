@@ -5,6 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { IconName } from 'types/IconName';
+
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -25,7 +27,7 @@ describe('addStatusInternal', () => {
 		const writeResult = await addStatusInternal(writeTransaction, {
 			alias: 'will-not-do',
 			name: 'Will not do',
-			icon: 'will-not-do.svg',
+			icon: IconName.WILL_NOT_DO,
 			colour: 'var(--red)',
 			completed: true,
 		});
@@ -42,7 +44,7 @@ describe('addStatusInternal', () => {
 			id: 4,
 			alias: 'will-not-do',
 			name: 'Will not do',
-			icon: 'will-not-do.svg',
+			icon: IconName.WILL_NOT_DO,
 			colour: 'var(--red)',
 			completed: true,
 		} satisfies Awaited<ReturnType<typeof getStatusInternal>>);
@@ -60,7 +62,7 @@ describe('addStatusInternal', () => {
 			id: 4,
 			alias: 'will-not-do',
 			name: 'Will not do',
-			icon: 'will-not-do.svg',
+			icon: IconName.WILL_NOT_DO,
 			colour: 'var(--red)',
 			completed: true,
 		});
@@ -71,7 +73,7 @@ describe('addStatusInternal', () => {
 				id: 4,
 				alias: 'will-not-do',
 				name: 'Will not do',
-				icon: 'will-not-do.svg',
+				icon: IconName.WILL_NOT_DO,
 				colour: 'var(--red)',
 				completed: true,
 			})

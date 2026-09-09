@@ -5,6 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { IconName } from 'types/IconName';
+
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
@@ -24,7 +26,7 @@ describe('getStatusInternal', () => {
 			id: 1,
 			alias: 'todo',
 			name: 'Todo',
-			icon: 'todo.svg',
+			icon: IconName.TODO,
 			colour: 'var(--blue)',
 			completed: false,
 		} satisfies Awaited<ReturnType<typeof getStatusInternal>>);

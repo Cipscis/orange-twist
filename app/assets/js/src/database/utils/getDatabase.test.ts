@@ -6,6 +6,7 @@ import {
 } from '@jest/globals';
 
 import { getDbDump } from 'utils';
+import { IconName } from 'types/IconName';
 
 import type { DatabaseData, Image } from '../types';
 import {
@@ -136,7 +137,7 @@ describe('getDatabase', () => {
 					id: 1,
 					alias: 'todo',
 					name: 'Todo',
-					icon: 'todo.svg',
+					icon: IconName.TODO,
 					colour: 'var(--blue)',
 					completed: false,
 				},
@@ -144,7 +145,7 @@ describe('getDatabase', () => {
 					id: 2,
 					alias: 'in-progress',
 					name: 'In progress',
-					icon: 'in-progress.svg',
+					icon: IconName.IN_PROGRESS,
 					colour: 'var(--blue)',
 					completed: false,
 				},
@@ -152,7 +153,7 @@ describe('getDatabase', () => {
 					id: 3,
 					alias: 'completed',
 					name: 'Completed',
-					icon: 'completed.svg',
+					icon: IconName.COMPLETED,
 					colour: 'var(--green)',
 					completed: true,
 				},

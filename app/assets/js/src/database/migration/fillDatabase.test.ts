@@ -5,6 +5,7 @@ import {
 } from '@jest/globals';
 
 import { getDbDump, getIterableCursor } from 'utils';
+import { IconName } from 'types/IconName';
 
 import type { DatabaseData } from '../types';
 import { getDatabase } from '../utils';
@@ -61,7 +62,7 @@ describe('fillDatabase', () => {
 					id: 1,
 					alias: 'todo',
 					name: 'Todo',
-					icon: 'todo.svg',
+					icon: IconName.TODO,
 					colour: 'var(--blue)',
 					completed: false,
 				},
@@ -113,7 +114,7 @@ describe('fillDatabase', () => {
 					id: 1,
 					alias: 'todo',
 					name: 'Todo',
-					icon: 'todo.svg',
+					icon: IconName.TODO,
 					colour: 'var(--blue)',
 					completed: false,
 				},
