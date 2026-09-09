@@ -55,14 +55,26 @@ export async function createTestData(): Promise<void> {
 	// Insert test statuses
 	addStatusInternal(transaction, {
 		alias: 'todo',
+		name: 'Todo',
+		icon: 'todo.svg',
+		colour: 'var(--blue)',
+		completed: false,
 	});
 
 	addStatusInternal(transaction, {
 		alias: 'in-progress',
+		name: 'In progress',
+		icon: 'in-progress.svg',
+		colour: 'var(--blue)',
+		completed: false,
 	});
 
 	addStatusInternal(transaction, {
 		alias: 'completed',
+		name: 'Completed',
+		icon: 'completed.svg',
+		colour: 'var(--green)',
+		completed: true,
 	});
 
 	// Insert test tasks

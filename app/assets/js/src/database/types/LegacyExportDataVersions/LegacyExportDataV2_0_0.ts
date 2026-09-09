@@ -38,7 +38,16 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 		z.number(),
 		z.object({
 			id: z.readonly(z.number()),
+			/** The legacy alias used for this status in the database v1 */
 			alias: z.string(),
+			/** A human-readable name for this status, in sentence case */
+			name: z.string(),
+			/** The filename for an image to use as a mask when representing this task as an icon */
+			icon: z.string(),
+			/** A CSS colour to use when representing this task as an icon */
+			colour: z.string(),
+			/** Whether or not a task with this status should be considered "completed" */
+			completed: z.boolean(),
 		}),
 	),
 	template: z.record(

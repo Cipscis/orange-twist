@@ -9,7 +9,7 @@ import type {
 } from '../types';
 import { getDayName, getDayNameParts } from '../utils';
 
-import { collectStatusData } from './collectStatusData';
+import { defaultStatuses } from './defaultStatuses';
 
 /**
  * Update a {@linkcode LegacyExportData} from schema version `1.0.0` to schema version `2.0.0`.
@@ -20,7 +20,7 @@ export async function updateDataV1_0_0(
 	const updatedLegacyData = addMissingDayTasks(legacyData);
 
 	const day = collectDayData(updatedLegacyData);
-	const status = collectStatusData(updatedLegacyData);
+	const status = defaultStatuses;
 	const task = collectTaskData(updatedLegacyData, status);
 	const day_task = collectDayTaskData(updatedLegacyData, day, status);
 	const template = collectTemplateData(updatedLegacyData);

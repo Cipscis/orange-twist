@@ -6,48 +6,9 @@ import {
 } from '@jest/globals';
 
 import type { DatabaseData, TaggedLegacyExportData } from '../types';
-import type { ObjectStoreName } from '../metadata';
+import { defaultStatuses } from './defaultStatuses';
 
 import { updateData } from './updateData';
-
-const statusResult = [
-	{
-		id: 1,
-		alias: 'todo',
-	},
-	{
-		id: 2,
-		alias: 'in-progress',
-	},
-	{
-		id: 3,
-		alias: 'completed',
-	},
-	{
-		id: 4,
-		alias: 'investigating',
-	},
-	{
-		id: 5,
-		alias: 'in-review',
-	},
-	{
-		id: 6,
-		alias: 'ready-to-test',
-	},
-	{
-		id: 7,
-		alias: 'paused',
-	},
-	{
-		id: 8,
-		alias: 'approved-to-deploy',
-	},
-	{
-		id: 9,
-		alias: 'will-not-do',
-	},
-] as const satisfies DatabaseData[typeof ObjectStoreName.STATUS];
 
 describe('updateData', () => {
 	describe('receiving null', () => {
@@ -58,7 +19,7 @@ describe('updateData', () => {
 				day: {},
 				task: {},
 				day_task: {},
-				status: statusResult,
+				status: defaultStatuses,
 				template: {},
 				image: {},
 			} satisfies DatabaseData);
@@ -194,7 +155,7 @@ describe('updateData', () => {
 						sortIndex: 0,
 					},
 				],
-				status: statusResult,
+				status: defaultStatuses,
 				template: [
 					{
 						id: 1,
@@ -252,7 +213,7 @@ describe('updateData', () => {
 						},
 					],
 					day_task: [],
-					status: statusResult,
+					status: defaultStatuses,
 					template: [],
 					image: {},
 				} satisfies DatabaseData);
@@ -315,7 +276,7 @@ describe('updateData', () => {
 							sortIndex: 0,
 						},
 					],
-					status: statusResult,
+					status: defaultStatuses,
 					template: [],
 					image: {},
 				} satisfies DatabaseData);
@@ -408,7 +369,7 @@ describe('updateData', () => {
 							sortIndex: 0,
 						},
 					],
-					status: statusResult,
+					status: defaultStatuses,
 					template: [],
 					image: {},
 				} satisfies DatabaseData);
@@ -501,7 +462,7 @@ describe('updateData', () => {
 							sortIndex: 0,
 						},
 					],
-					status: statusResult,
+					status: defaultStatuses,
 					template: [],
 					image: {},
 				} satisfies DatabaseData);
@@ -594,7 +555,7 @@ describe('updateData', () => {
 							sortIndex: 0,
 						},
 					],
-					status: statusResult,
+					status: defaultStatuses,
 					template: [],
 					image: {},
 				} satisfies DatabaseData);

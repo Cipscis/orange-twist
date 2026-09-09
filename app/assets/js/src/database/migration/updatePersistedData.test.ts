@@ -8,6 +8,7 @@ import {
 import { StorageKey } from 'data/shared';
 import type { DatabaseData } from '../types';
 import { ObjectStoreName } from '../metadata';
+import { defaultStatuses } from './defaultStatuses';
 
 import { updatePersistedData } from './updatePersistedData';
 
@@ -24,44 +25,7 @@ describe('updatePersistedData', () => {
 			day: {},
 			task: {},
 			day_task: {},
-			status: [
-				{
-					id: 1,
-					alias: 'todo',
-				},
-				{
-					id: 2,
-					alias: 'in-progress',
-				},
-				{
-					id: 3,
-					alias: 'completed',
-				},
-				{
-					id: 4,
-					alias: 'investigating',
-				},
-				{
-					id: 5,
-					alias: 'in-review',
-				},
-				{
-					id: 6,
-					alias: 'ready-to-test',
-				},
-				{
-					id: 7,
-					alias: 'paused',
-				},
-				{
-					id: 8,
-					alias: 'approved-to-deploy',
-				},
-				{
-					id: 9,
-					alias: 'will-not-do',
-				},
-			],
+			status: defaultStatuses,
 			template: {},
 			image: {},
 		} satisfies DatabaseData);
@@ -120,45 +84,7 @@ describe('updatePersistedData', () => {
 					sortIndex: 1,
 				},
 			],
-			status: [
-				{
-					id: 1,
-					alias: 'todo',
-				},
-				{
-					id: 2,
-					alias: 'in-progress',
-				},
-				{
-					id: 3,
-					alias: 'completed',
-				},
-
-				{
-					id: 4,
-					alias: 'investigating',
-				},
-				{
-					id: 5,
-					alias: 'in-review',
-				},
-				{
-					id: 6,
-					alias: 'ready-to-test',
-				},
-				{
-					id: 7,
-					alias: 'paused',
-				},
-				{
-					id: 8,
-					alias: 'approved-to-deploy',
-				},
-				{
-					id: 9,
-					alias: 'will-not-do',
-				},
-			],
+			status: defaultStatuses,
 			template: [
 				{
 					id: 1,
@@ -255,45 +181,7 @@ describe('updatePersistedData', () => {
 					sortIndex: 1,
 				},
 			],
-			status: [
-				{
-					id: 1,
-					alias: 'todo',
-				},
-				{
-					id: 2,
-					alias: 'in-progress',
-				},
-				{
-					id: 3,
-					alias: 'completed',
-				},
-
-				{
-					id: 4,
-					alias: 'investigating',
-				},
-				{
-					id: 5,
-					alias: 'in-review',
-				},
-				{
-					id: 6,
-					alias: 'ready-to-test',
-				},
-				{
-					id: 7,
-					alias: 'paused',
-				},
-				{
-					id: 8,
-					alias: 'approved-to-deploy',
-				},
-				{
-					id: 9,
-					alias: 'will-not-do',
-				},
-			],
+			status: defaultStatuses,
 			template: [
 				{
 					id: 1,
