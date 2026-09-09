@@ -135,14 +135,26 @@ describe('getDatabase', () => {
 				1: {
 					id: 1,
 					alias: 'todo',
+					name: 'Todo',
+					icon: 'todo.svg',
+					colour: 'var(--blue)',
+					completed: false,
 				},
 				2: {
 					id: 2,
 					alias: 'in-progress',
+					name: 'In progress',
+					icon: 'in-progress.svg',
+					colour: 'var(--blue)',
+					completed: false,
 				},
 				3: {
 					id: 3,
 					alias: 'completed',
+					name: 'Completed',
+					icon: 'completed.svg',
+					colour: 'var(--green)',
+					completed: true,
 				},
 			},
 			template: {

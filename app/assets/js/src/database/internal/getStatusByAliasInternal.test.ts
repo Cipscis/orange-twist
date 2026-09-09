@@ -23,6 +23,10 @@ describe('getStatusByAliasInternal', () => {
 		expect(status).toEqual({
 			id: 1,
 			alias: 'todo',
+			name: 'Todo',
+			icon: 'todo.svg',
+			colour: 'var(--blue)',
+			completed: false,
 		} satisfies Awaited<ReturnType<typeof getStatusByAliasInternal>>);
 	});
 
