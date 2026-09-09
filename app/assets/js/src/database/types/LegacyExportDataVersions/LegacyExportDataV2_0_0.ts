@@ -1,6 +1,7 @@
 import * as z from 'zod/mini';
 
 import { isZodSchemaType } from 'utils';
+import { IconName } from 'types/IconName';
 
 export const legacyExportDataSchemaV2_0_0 = z.object({
 	day: z.record(
@@ -42,8 +43,8 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 			alias: z.string(),
 			/** A human-readable name for this status, in sentence case */
 			name: z.string(),
-			/** The filename for an image to use as a mask when representing this task as an icon */
-			icon: z.string(),
+			/** The name of an icon use when representing this task as an icon */
+			icon: z.enum(IconName),
 			/** A CSS colour to use when representing this task as an icon */
 			colour: z.string(),
 			/** Whether or not a task with this status should be considered "completed" */

@@ -1,3 +1,5 @@
+import { IconName } from 'types/IconName';
+
 import type { DatabaseData } from '../types';
 import { ObjectStoreName } from '../metadata';
 
@@ -76,7 +78,7 @@ export function createTestData(): DatabaseData {
 				id: 1,
 				alias: 'todo',
 				name: 'Todo',
-				icon: 'todo.svg',
+				icon: IconName.TODO,
 				colour: 'var(--blue)',
 				completed: false,
 			},
@@ -84,7 +86,7 @@ export function createTestData(): DatabaseData {
 				id: 2,
 				alias: 'in-progress',
 				name: 'In progress',
-				icon: 'in-progress.svg',
+				icon: IconName.IN_PROGRESS,
 				colour: 'var(--blue)',
 				completed: false,
 			},
@@ -92,7 +94,7 @@ export function createTestData(): DatabaseData {
 				id: 3,
 				alias: 'completed',
 				name: 'Completed',
-				icon: 'completed.svg',
+				icon: IconName.COMPLETED,
 				colour: 'var(--green)',
 				completed: true,
 			},
