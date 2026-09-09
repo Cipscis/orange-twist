@@ -60,6 +60,10 @@ describe('fillDatabase', () => {
 				1: {
 					id: 1,
 					alias: 'todo',
+					name: 'Todo',
+					icon: 'todo.svg',
+					colour: 'var(--blue)',
+					completed: false,
 				},
 			},
 			[ObjectStoreName.TEMPLATE]: {
@@ -108,6 +112,10 @@ describe('fillDatabase', () => {
 				1: {
 					id: 1,
 					alias: 'todo',
+					name: 'Todo',
+					icon: 'todo.svg',
+					colour: 'var(--blue)',
+					completed: false,
 				},
 			},
 			[ObjectStoreName.TEMPLATE]: {

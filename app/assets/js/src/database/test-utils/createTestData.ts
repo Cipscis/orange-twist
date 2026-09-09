@@ -75,14 +75,26 @@ export function createTestData(): DatabaseData {
 			{
 				id: 1,
 				alias: 'todo',
+				name: 'Todo',
+				icon: 'todo.svg',
+				colour: 'var(--blue)',
+				completed: false,
 			},
 			{
 				id: 2,
 				alias: 'in-progress',
+				name: 'In progress',
+				icon: 'in-progress.svg',
+				colour: 'var(--blue)',
+				completed: false,
 			},
 			{
 				id: 3,
 				alias: 'completed',
+				name: 'Completed',
+				icon: 'completed.svg',
+				colour: 'var(--green)',
+				completed: true,
 			},
 		],
 		[ObjectStoreName.TEMPLATE]: [
