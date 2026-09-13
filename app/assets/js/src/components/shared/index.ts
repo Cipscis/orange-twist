@@ -2,6 +2,7 @@ export { Accordion, AccordionScrollBehaviour } from './Accordion';
 export { Button } from './Button';
 export { ButtonVariant } from './types/ButtonVariant';
 export { DragList } from './DragList';
+export { Icon } from './Icon';
 export { IconButton } from './IconButton';
 export { InlineNote } from './InlineNote';
 export { KeyboardShortcutCombos } from './KeyboardShortcutCombos';
