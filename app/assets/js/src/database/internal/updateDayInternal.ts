@@ -5,7 +5,7 @@ import {
 } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Day } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing day.
@@ -19,7 +19,7 @@ import type { DatabaseData } from '../types';
 export async function updateDayInternal(
 	transaction: IDBTransaction,
 	day: OptionalExcept<
-		DatabaseData[typeof ObjectStoreName.DAY][number], 'id'
+		Day, 'id'
 	>
 ): Promise<void> {
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
@@ -27,7 +27,7 @@ export async function updateDayInternal(
 	const requests: Promise<IDBValidKey>[] = [];
 	for await (const dayCursor of getIterableCursor(dayOS, day.id)) {
 		// This type assertion is safe because of other controls around what can be inserted into the database
-		const dayCursorValue = dayCursor.value as DatabaseData[typeof ObjectStoreName.DAY][number];
+		const dayCursorValue = dayCursor.value as Day;
 
 		if (
 			('year' in day && day.year !== dayCursorValue.year) ||

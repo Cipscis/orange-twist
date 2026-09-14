@@ -1,7 +1,7 @@
 import { getIdbRequestPromise, sortBySortIndex } from 'utils';
 
 import { IndexName, ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { DayTask } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get all day tasks for a specified day.
@@ -15,14 +15,14 @@ export async function getDayTasksForDayInternal(
 	transaction: IDBTransaction,
 	dayId: number,
 ): Promise<
-	DatabaseData[typeof ObjectStoreName.DAY_TASK][number][]
+	DayTask[]
 > {
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 	const dayTaskByDay = dayTaskOS.index(IndexName.DAY_TASK_DAY);
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = dayTaskByDay.getAll(dayId) as IDBRequest<
-		DatabaseData[typeof ObjectStoreName.DAY_TASK][number][]
+		DayTask[]
 	>;
 
 	const dayTasks = await getIdbRequestPromise(request);

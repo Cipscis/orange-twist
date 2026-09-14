@@ -1,7 +1,13 @@
 import type { TaskInfo } from 'data/tasks';
 
 import { getDatabase, sortDaysChronologically } from '../utils';
-import type { DatabaseData, LegacyStatusName } from '../types';
+import type {
+	Day,
+	DayTask,
+	LegacyStatusName,
+	Status,
+	Task,
+} from '../types';
 import { ObjectStoreName } from '../metadata';
 import {
 	getDaysInternal,
@@ -63,17 +69,17 @@ function getStatusForTask({
 	allDayTasks,
 	statuses,
 }: {
-	task: DatabaseData[typeof ObjectStoreName.TASK][number];
-	allDays: DatabaseData[typeof ObjectStoreName.DAY][number][];
-	allDayTasks: DatabaseData[typeof ObjectStoreName.DAY_TASK][number][];
-	statuses: DatabaseData[typeof ObjectStoreName.STATUS][number][];
+	task: Task;
+	allDays: Day[];
+	allDayTasks: DayTask[];
+	statuses: Status[];
 }) {
 	// Find task status via the task's most recent day task
 	const dayTasks = allDayTasks.filter(
 		({ task: taskId }) => taskId === task.id
 	);
 
-	const daysById = new Map<number, DatabaseData[typeof ObjectStoreName.DAY][number]>();
+	const daysById = new Map<number, Day>();
 	for (const day of allDays) {
 		daysById.set(day.id, day);
 	}

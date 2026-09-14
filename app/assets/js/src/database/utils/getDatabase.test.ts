@@ -7,7 +7,7 @@ import {
 
 import { getDbDump } from 'utils';
 
-import type { DatabaseData } from '../types';
+import type { DatabaseData, Image } from '../types';
 import {
 	dbName,
 	dbVersion,
@@ -168,7 +168,7 @@ describe('getDatabase', () => {
 					const {
 						file,
 						...rest
-					} = value as DatabaseData[typeof ObjectStoreName.IMAGE][string];
+					} = value as Image;
 
 					return [key, rest];
 				}

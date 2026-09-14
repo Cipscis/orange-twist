@@ -1,7 +1,7 @@
 import { getIdbRequestPromise } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Day } from '../types';
 import { sortDaysChronologically } from '../utils';
 
 /**
@@ -12,13 +12,13 @@ import { sortDaysChronologically } from '../utils';
  * @returns A {@linkcode Promise} that resolves with an array containing all day objects, sorted chronologically.
  */
 export async function getDaysInternal(transaction: IDBTransaction): Promise<
-	DatabaseData[typeof ObjectStoreName.DAY][number][]
+	Day[]
 > {
 	const daysOS = transaction.objectStore(ObjectStoreName.DAY);
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = daysOS.getAll() as IDBRequest<
-		DatabaseData[typeof ObjectStoreName.DAY][number][]
+		Day[]
 	>;
 
 	const days = await getIdbRequestPromise(request);

@@ -1,7 +1,7 @@
 import { getIdbRequestPromise } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Day } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get a day based on a specified ID.
@@ -15,14 +15,14 @@ export async function getDayInternal(
 	transaction: IDBTransaction,
 	dayId: number,
 ): Promise<
-	| DatabaseData[typeof ObjectStoreName.DAY][number]
+	| Day
 	| null
 > {
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = dayOS.get(dayId) as IDBRequest<
-		| DatabaseData[typeof ObjectStoreName.DAY][number]
+		| Day
 		| undefined
 	>;
 

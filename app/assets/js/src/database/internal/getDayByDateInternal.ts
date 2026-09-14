@@ -1,7 +1,7 @@
 import { getIdbRequestPromise, type ExpandType } from 'utils';
 
 import { IndexName, ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Day } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get a day based on a specified year, month, and day.
@@ -14,10 +14,10 @@ import type { DatabaseData } from '../types';
 export async function getDayByDateInternal(
 	transaction: IDBTransaction,
 	date: ExpandType<Pick<
-		DatabaseData[typeof ObjectStoreName.DAY][number], 'year' | 'month' | 'day'
+		Day, 'year' | 'month' | 'day'
 	>>
 ): Promise<
-	| DatabaseData[typeof ObjectStoreName.DAY][number]
+	| Day
 	| null
 > {
 	const { year, month, day } = date;
@@ -26,7 +26,7 @@ export async function getDayByDateInternal(
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = dayByDate.get([year, month, day]) as IDBRequest<
-		| DatabaseData[typeof ObjectStoreName.DAY][number]
+		| Day
 		| undefined
 	>;
 

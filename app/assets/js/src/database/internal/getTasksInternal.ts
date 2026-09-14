@@ -1,7 +1,7 @@
 import { getIdbRequestPromise, sortBySortIndex } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Task } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get all tasks.
@@ -11,13 +11,13 @@ import type { DatabaseData } from '../types';
  * @returns A {@linkcode Promise} that resolves to an array containing all tasks, sorted according to their `sortIndex` property.
  */
 export async function getTasksInternal(transaction: IDBTransaction): Promise<
-	DatabaseData[typeof ObjectStoreName.TASK][number][]
+	Task[]
 > {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = taskOS.getAll() as IDBRequest<
-		DatabaseData[typeof ObjectStoreName.TASK][number][]
+		Task[]
 	>;
 
 	const tasks = await getIdbRequestPromise(request);

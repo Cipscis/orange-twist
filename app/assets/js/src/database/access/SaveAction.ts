@@ -1,7 +1,10 @@
 import type { EnumTypeOf, ExpandType } from 'utils';
 
-import type { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type {
+	Day,
+	DayTask,
+	Task,
+} from '../types';
 
 export const SaveType = {
 	TASK: 'task',
@@ -21,7 +24,7 @@ interface SaveActionByType {
 		id: number;
 		task: ExpandType<Partial<
 			Omit<
-				DatabaseData[typeof ObjectStoreName.TASK][number],
+				Task,
 				'id'
 			>
 		>>;
@@ -31,7 +34,7 @@ interface SaveActionByType {
 		taskId: number;
 		dayTask: ExpandType<Partial<
 			Omit<
-				DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
+				DayTask,
 				'id' | 'day' | 'task'
 			>
 		>>;
@@ -40,7 +43,7 @@ interface SaveActionByType {
 		id: number;
 		dayTask: ExpandType<Partial<
 			Omit<
-				DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
+				DayTask,
 				'id' | 'day' | 'task'
 			>
 		>>;
@@ -49,7 +52,7 @@ interface SaveActionByType {
 		id: number;
 		day: ExpandType<Partial<
 			Omit<
-				DatabaseData[typeof ObjectStoreName.DAY][number],
+				Day,
 				'id' | 'year' | 'month' | 'day'
 			>
 		>>;
@@ -58,7 +61,7 @@ interface SaveActionByType {
 		dayName: string;
 		day: ExpandType<Partial<
 			Omit<
-				DatabaseData[typeof ObjectStoreName.DAY][number],
+				Day,
 				'id' | 'year' | 'month' | 'day'
 			>
 		>>;

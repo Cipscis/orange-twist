@@ -1,6 +1,6 @@
 import { getIdbRequestPromise } from 'utils';
 
-import type { DatabaseData } from '../types';
+import type { Status } from '../types';
 import { ObjectStoreName } from '../metadata';
 
 /**
@@ -12,12 +12,12 @@ import { ObjectStoreName } from '../metadata';
  */
 export async function getStatusesInternal(
 	transaction: IDBTransaction
-): Promise<DatabaseData[typeof ObjectStoreName.STATUS][number][]> {
+): Promise<Status[]> {
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = statusOS.getAll() as IDBRequest<
-		DatabaseData[typeof ObjectStoreName.STATUS][number][]
+		Status[]
 	>;
 
 	const statuses = await getIdbRequestPromise(request);

@@ -13,8 +13,7 @@ import {
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
-import type { DatabaseData } from '../../types';
-import type { ObjectStoreName } from '../../metadata';
+import type { Task } from '../../types';
 
 import { loadTask } from '../loadTask';
 import { addTaskChangeListener } from '../liveAccessManager';
@@ -35,7 +34,7 @@ export function useSettableTask(taskId: number): ExpandType<
 	}, [taskId]);
 
 	const setTask = useCallback(async (task: Partial<
-		Omit<DatabaseData[typeof ObjectStoreName.TASK][number], 'id'>
+		Omit<Task, 'id'>
 	>) => {
 		await fireCommand(Command.DATA_SAVE, [{
 			type: SaveType.TASK,
