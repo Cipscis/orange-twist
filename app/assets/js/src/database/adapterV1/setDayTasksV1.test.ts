@@ -7,7 +7,7 @@ import {
 
 import { getIdbRequestPromise } from 'utils';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { getDayTasksInternal } from '../internal';
@@ -16,7 +16,7 @@ import type { LegacyStatusName } from '../types';
 import { setDayTasksV1 } from './setDayTasksV1';
 
 describe('setDayTasksV1', () => {
-	beforeEach(() => createTestData());
+	beforeEach(() => insertTestData());
 
 	test('adds new day tasks', async () => {
 		// Start from a blank slate - remove all day tasks

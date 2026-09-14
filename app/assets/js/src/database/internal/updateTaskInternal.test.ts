@@ -6,7 +6,7 @@ import {
 } from '@jest/globals';
 
 import { ObjectStoreName } from '../metadata';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 
 import { getTaskInternal } from './getTaskInternal';
@@ -17,7 +17,7 @@ describe('updateTaskInternal', () => {
 	let transaction: IDBTransaction;
 
 	beforeEach(async () => {
-		await createTestData();
+		await insertTestData();
 
 		const db = await getDatabase();
 		transaction = db.transaction([

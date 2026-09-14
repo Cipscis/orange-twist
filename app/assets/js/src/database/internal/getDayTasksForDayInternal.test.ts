@@ -6,13 +6,13 @@ import {
 } from '@jest/globals';
 
 import { getDatabase } from '../utils';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
 
 import { getDayTasksForDayInternal } from './getDayTasksForDayInternal';
 
 describe('getDayTasksForDayInternal', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns all day tasks in correct sorted order', async () => {
 		const db = await getDatabase();

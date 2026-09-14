@@ -7,12 +7,12 @@ import {
 
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 
 import { getImagesInternal } from './getImagesInternal';
 
 describe('getImagesInternal', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns a Promise which resolves to an array of all images', async () => {
 		const db = await getDatabase();

@@ -7,7 +7,7 @@ import {
 
 import { getIdbRequestPromise } from 'utils';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { getTemplatesInternal } from '../internal';
@@ -15,7 +15,7 @@ import { getTemplatesInternal } from '../internal';
 import { setTemplatesV1 } from './setTemplatesV1';
 
 describe('setTemplatesV1', () => {
-	beforeEach(() => createTestData());
+	beforeEach(() => insertTestData());
 
 	test('adds new templates', async () => {
 		// Start from a blank slate - remove all templates

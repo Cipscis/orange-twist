@@ -5,12 +5,12 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 
 import { getImageV1 } from './getImageV1';
 
 describe('getImageV1', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns a Promise that resolves to an image v1', async () => {
 		const image = await getImageV1('test-hash');

@@ -6,13 +6,13 @@ import {
 } from '@jest/globals';
 
 import { ObjectStoreName } from '../metadata';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 
 import { getStatusByAliasInternal } from './getStatusByAliasInternal';
 
 describe('getStatusByAliasInternal', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns a status with the specified name', async () => {
 		const db = await getDatabase();

@@ -9,13 +9,13 @@ import { getIdbRequestPromise } from 'utils';
 
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDayTasksInternal, getTasksInternal } from '../internal';
 
 import { setTasksV1 } from './setTasksV1';
 
 describe('setTasksV1', () => {
-	beforeEach(() => createTestData());
+	beforeEach(() => insertTestData());
 
 	test('adds new tasks', async () => {
 		// Start from a blank slate - remove all days and day tasks

@@ -5,7 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import {
@@ -24,7 +24,7 @@ describe('SaveHelper', () => {
 	let db: IDBDatabase;
 
 	beforeEach(async () => {
-		await createTestData();
+		await insertTestData();
 		db = await getDatabase();
 	});
 

@@ -9,4 +9,7 @@ export {
 	useSettableTask,
 } from './access';
 
-export { createTestData } from './test-utils';
+export {
+	createTestData,
+	insertTestData,
+} from './test-utils';
