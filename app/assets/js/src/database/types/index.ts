@@ -1,4 +1,13 @@
-export type { DatabaseData } from './DatabaseData';
+export type {
+	DatabaseData,
+
+	Day,
+	Task,
+	DayTask,
+	Status,
+	Template,
+	Image,
+} from './DatabaseData';
 export {
 	isLegacyExportDataV1_0_0,
 	isLegacyExportDataV2_0_0,
