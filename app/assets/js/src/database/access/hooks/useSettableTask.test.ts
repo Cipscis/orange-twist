@@ -16,14 +16,14 @@ import { AsyncDataStateType } from 'utils';
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
 
-import { createTestData } from '../../test-utils';
+import { insertTestData } from '../../test-utils';
 import type { DatabaseData } from '../../types';
 import type { ObjectStoreName } from '../../metadata';
 
 import { useSettableTask } from './useSettableTask';
 
 describe('useSettableTask', () => {
-	beforeEach(async () => createTestData());
+	beforeEach(async () => insertTestData());
 	afterEach(() => cleanup());
 
 	test('provide a SettableAsyncDataResult', () => {

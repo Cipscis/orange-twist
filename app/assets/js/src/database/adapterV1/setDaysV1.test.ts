@@ -8,14 +8,14 @@ import {
 import { getIdbRequestPromise } from 'utils';
 
 import { getDatabase } from '../utils';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
 import { getDaysInternal, getDayTasksInternal } from '../internal';
 
 import { setDaysV1 } from './setDaysV1';
 
 describe('setDaysV1', () => {
-	beforeEach(() => createTestData());
+	beforeEach(() => insertTestData());
 
 	test('adds new days', async () => {
 		// Start from a blank slate - remove all days

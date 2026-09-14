@@ -7,12 +7,12 @@ import {
 
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 
 import { getStatusInternal } from './getStatusInternal';
 
 describe('getStatusInternal', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns a status with the specified status ID', async () => {
 		const db = await getDatabase();

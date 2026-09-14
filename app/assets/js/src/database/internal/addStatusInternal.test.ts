@@ -5,7 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 
@@ -14,7 +14,7 @@ import { getStatusInternal } from './getStatusInternal';
 import { addStatusInternal } from './addStatusInternal';
 
 describe('addStatusInternal', () => {
-	beforeEach(() => createTestData());
+	beforeEach(() => insertTestData());
 
 	test('inserts a new status into the database, and returns its ID', async () => {
 		const db = await getDatabase();

@@ -5,14 +5,14 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 
 import { getDayTaskInternal } from './getDayTaskInternal';
 
 describe('getDayTaskInternal', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('receives a day task by its ID', async () => {
 		const db = await getDatabase();

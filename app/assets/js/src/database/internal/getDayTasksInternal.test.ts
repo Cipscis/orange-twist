@@ -7,12 +7,12 @@ import {
 
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 
 import { getDayTasksInternal } from './getDayTasksInternal';
 
 describe('getDayTasksInternal', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns all day tasks in sorted order', async () => {
 		const db = await getDatabase();

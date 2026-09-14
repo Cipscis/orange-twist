@@ -19,7 +19,7 @@ import { addCommandListener, registerCommand } from 'registers/commands';
 
 import { clear } from 'data';
 
-import { createTestData, SaveType } from 'database';
+import { insertTestData, SaveType } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 import { OrangeTwist } from 'components/OrangeTwist';
@@ -33,7 +33,7 @@ describe('TaskNote', () => {
 
 	beforeEach(async () => {
 		clear();
-		await createTestData();
+		await insertTestData();
 	});
 
 	afterEach(() => {
