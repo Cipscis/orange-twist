@@ -4,7 +4,7 @@ import { useCallback } from 'preact/hooks';
 import {
 	type TaskStatus,
 	TaskStatusName,
-	TaskStatusSymbol,
+	TaskStatusIconName,
 } from 'types/TaskStatus';
 
 import {
@@ -30,12 +30,12 @@ export function StatusButton(props: StatusButtonProps): JSX.Element {
 	} = props;
 
 	const statusName = TaskStatusName[status];
-	const statusSymbol = TaskStatusSymbol[status];
+	const statusIconName = TaskStatusIconName[status];
 
 	return <IconButton
 		variant={ButtonVariant.SECONDARY}
 		title={title || statusName}
-		icon={statusSymbol}
+		icon={statusIconName}
 		onClick={useCallback(() => {
 			onStatusSelect(status);
 		}, [status, onStatusSelect])}

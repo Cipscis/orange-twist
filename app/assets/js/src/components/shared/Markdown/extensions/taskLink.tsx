@@ -8,7 +8,8 @@ import { renderToStaticMarkup } from 'preact-render-to-string';
 import type { TokenizerAndRendererExtension } from 'marked';
 
 import { useTaskInfo } from 'data';
-import { TaskStatusSymbol } from 'types/TaskStatus';
+import { TaskStatusName, TaskStatusIconName } from 'types/TaskStatus';
+import { Icon } from 'components/shared/Icon';
 
 interface TaskLinkProps {
 	taskId: number;
@@ -37,7 +38,9 @@ function TaskLink(props: TaskLinkProps): JSX.Element {
 				style={{
 					'--colour': `var(--colour-task--${taskInfo.status})`,
 				}}
-			>{TaskStatusSymbol[taskInfo.status]}</span>
+			>
+				<Icon name={TaskStatusIconName[taskInfo.status]} title={TaskStatusName[taskInfo.status]} />
+			</span>
 			<span class="task-link__name">{taskInfo.name}</span>
 		</a>
 	</>;

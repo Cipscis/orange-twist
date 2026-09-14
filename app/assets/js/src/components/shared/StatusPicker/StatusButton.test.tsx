@@ -14,23 +14,18 @@ import userEvent from '@testing-library/user-event';
 import {
 	TaskStatus,
 	TaskStatusName,
-	TaskStatusSymbol,
 } from 'types/TaskStatus';
 
 import { StatusButton } from './StatusButton';
 
 describe('StatusButton', () => {
-	test('renders a status\'s name and symbol', () => {
-		const {
-			getByTitle,
-			getByText,
-		} = render(<StatusButton
+	test('renders a status\'s name', () => {
+		const { getByTitle } = render(<StatusButton
 			status={TaskStatus.TODO}
 			onStatusSelect={() => {}}
 		/>);
 
 		expect(getByTitle(TaskStatusName[TaskStatus.TODO])).toBeInTheDocument();
-		expect(getByText(TaskStatusSymbol[TaskStatus.TODO])).toBeInTheDocument();
 	});
 
 	test('calls its onStatusSelect callback with the correct status when clicked', async () => {
