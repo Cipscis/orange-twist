@@ -7,6 +7,11 @@ export {
 	loadTask,
 	useTask,
 	useSettableTask,
+
+	loadStatus,
+	useStatus,
+	loadAllStatuses,
+	useAllStatuses,
 } from './access';
 
 export type {
