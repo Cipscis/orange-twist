@@ -1,7 +1,7 @@
 import { getIdbRequestPromise } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Template } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get the template with a specified ID.
@@ -15,14 +15,14 @@ export async function getTemplateInternal(
 	transaction: IDBTransaction,
 	templateId: number,
 ): Promise<
-	| DatabaseData[typeof ObjectStoreName.TEMPLATE][number]
+	| Template
 	| null
 > {
 	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = templateOS.get(templateId) as IDBRequest<
-		| DatabaseData[typeof ObjectStoreName.TEMPLATE][number]
+		| Template
 		| undefined
 	>;
 

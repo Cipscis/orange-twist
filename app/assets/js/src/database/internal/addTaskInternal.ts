@@ -1,7 +1,7 @@
 import { getIdbRequestPromise, type WithOptional } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Task } from '../types';
 
 import { getTaskInternal } from './getTaskInternal';
 
@@ -18,8 +18,8 @@ import { getTaskInternal } from './getTaskInternal';
  */
 export async function addTaskInternal(
 	transaction: IDBTransaction,
-	task: WithOptional<DatabaseData[typeof ObjectStoreName.TASK][number], 'id'>
-): Promise<DatabaseData[typeof ObjectStoreName.TASK][number]['id']> {
+	task: WithOptional<Task, 'id'>
+): Promise<Task['id']> {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
 	if (typeof task.id !== 'undefined') {

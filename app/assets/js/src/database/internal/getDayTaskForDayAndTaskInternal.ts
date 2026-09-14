@@ -1,7 +1,7 @@
 import { getIdbRequestPromise, type ExpandType } from 'utils';
 
 import { IndexName, ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { DayTask } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get a day task for a specified day and task.
@@ -14,10 +14,10 @@ import type { DatabaseData } from '../types';
 export async function getDayTaskForDayAndTaskInternal(
 	transaction: IDBTransaction,
 	dayTask: ExpandType<Pick<
-		DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'day' | 'task'
+		DayTask, 'day' | 'task'
 	>>
 ): Promise<
-	| DatabaseData[typeof ObjectStoreName.DAY_TASK][number]
+	| DayTask
 	| null
 > {
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
@@ -25,7 +25,7 @@ export async function getDayTaskForDayAndTaskInternal(
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = dayTaskByDayAndTask.get([dayTask.day, dayTask.task]) as IDBRequest<
-		| DatabaseData[typeof ObjectStoreName.DAY_TASK][number]
+		| DayTask
 		| undefined
 	>;
 

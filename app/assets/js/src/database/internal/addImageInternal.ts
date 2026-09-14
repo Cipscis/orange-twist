@@ -1,7 +1,7 @@
 import { getIdbRequestPromise, type ExpandType } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { DatabaseData, Image } from '../types';
 
 import { getImageInternal } from './getImageInternal';
 
@@ -18,7 +18,7 @@ import { getImageInternal } from './getImageInternal';
 export async function addImageInternal(
 	transaction: IDBTransaction,
 	image: ExpandType<
-		DatabaseData[typeof ObjectStoreName.IMAGE][string]
+		Image
 	>
 ): Promise<keyof DatabaseData[typeof ObjectStoreName.IMAGE]> {
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);

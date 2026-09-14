@@ -1,7 +1,7 @@
 import { getIdbRequestPromise, getIterableCursor } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Image } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing image.
@@ -13,7 +13,7 @@ import type { DatabaseData } from '../types';
  */
 export async function updateImageInternal(
 	transaction: IDBTransaction,
-	image: DatabaseData[typeof ObjectStoreName.IMAGE][string],
+	image: Image,
 ): Promise<void> {
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
