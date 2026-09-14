@@ -29,8 +29,6 @@
 	margin-top: -0.1em;
 	line-height: 1;
 	color: var(--colour);
-
-	@include typography.icons;
 }
 
 .task-link__name {

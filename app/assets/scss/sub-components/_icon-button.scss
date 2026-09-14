@@ -10,7 +10,8 @@
 	@include reset;
 
 	& {
-		@include typography.icons;
+		font-family: typography.$family-heading;
+		font-weight: typography.$weight-heading;
 
 		display: grid;
 		place-items: center;
