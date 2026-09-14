@@ -15,6 +15,7 @@ import {
 interface StatusButtonProps {
 	status: TaskStatus;
 	onStatusSelect: (status: TaskStatus) => void;
+	title?: string;
 }
 
 /**
@@ -25,6 +26,7 @@ export function StatusButton(props: StatusButtonProps): JSX.Element {
 	const {
 		status,
 		onStatusSelect,
+		title,
 	} = props;
 
 	const statusName = TaskStatusName[status];
@@ -32,7 +34,7 @@ export function StatusButton(props: StatusButtonProps): JSX.Element {
 
 	return <IconButton
 		variant={ButtonVariant.SECONDARY}
-		title={statusName}
+		title={title || statusName}
 		icon={statusSymbol}
 		onClick={useCallback(() => {
 			onStatusSelect(status);
