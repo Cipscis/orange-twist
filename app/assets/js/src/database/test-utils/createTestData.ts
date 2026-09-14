@@ -1,7 +1,6 @@
-import { IconName } from 'types/IconName';
-
 import type { DatabaseData } from '../types';
 import { ObjectStoreName } from '../metadata';
+import { defaultStatuses } from '../migration';
 
 /**
  * **Important!** For use within tests only.
@@ -73,32 +72,7 @@ export function createTestData(): DatabaseData {
 				sortIndex: 0,
 			},
 		],
-		[ObjectStoreName.STATUS]: [
-			{
-				id: 1,
-				alias: 'todo',
-				name: 'Todo',
-				icon: IconName.TODO,
-				colour: 'var(--blue)',
-				completed: false,
-			},
-			{
-				id: 2,
-				alias: 'in-progress',
-				name: 'In progress',
-				icon: IconName.IN_PROGRESS,
-				colour: 'var(--blue)',
-				completed: false,
-			},
-			{
-				id: 3,
-				alias: 'completed',
-				name: 'Completed',
-				icon: IconName.COMPLETED,
-				colour: 'var(--green)',
-				completed: true,
-			},
-		],
+		[ObjectStoreName.STATUS]: defaultStatuses,
 		[ObjectStoreName.TEMPLATE]: [
 			{
 				id: 1,

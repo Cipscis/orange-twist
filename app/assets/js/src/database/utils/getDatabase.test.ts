@@ -6,7 +6,6 @@ import {
 } from '@jest/globals';
 
 import { getDbDump } from 'utils';
-import { IconName } from 'types/IconName';
 
 import type { DatabaseData, Image } from '../types';
 import {
@@ -15,6 +14,7 @@ import {
 	ObjectStoreName,
 } from '../metadata';
 import { clearDatabase, insertTestData } from '../test-utils';
+import { defaultStatuses } from '../migration';
 
 import { getDatabase } from './getDatabase';
 
@@ -132,32 +132,7 @@ describe('getDatabase', () => {
 					sortIndex: 0,
 				},
 			},
-			status: {
-				1: {
-					id: 1,
-					alias: 'todo',
-					name: 'Todo',
-					icon: IconName.TODO,
-					colour: 'var(--blue)',
-					completed: false,
-				},
-				2: {
-					id: 2,
-					alias: 'in-progress',
-					name: 'In progress',
-					icon: IconName.IN_PROGRESS,
-					colour: 'var(--blue)',
-					completed: false,
-				},
-				3: {
-					id: 3,
-					alias: 'completed',
-					name: 'Completed',
-					icon: IconName.COMPLETED,
-					colour: 'var(--green)',
-					completed: true,
-				},
-			},
+			status: Object.fromEntries(defaultStatuses.map((status) => [status.id, status])),
 			template: {
 				1: {
 					id: 1,
