@@ -244,6 +244,10 @@ function getStatusIdByName(
 function addMissingDayTasks(
 	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
 ): Readonly<LegacyExportDataByVersion<'1.0.0'>> {
+	if (!legacyData.data.tasks) {
+		return legacyData;
+	}
+
 	const updatedLegacyData = structuredClone(legacyData);
 
 	for (const [, taskInfo] of legacyData.data.tasks) {
