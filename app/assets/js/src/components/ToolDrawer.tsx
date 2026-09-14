@@ -9,6 +9,7 @@ import {
 import {
 	useCallback,
 	useEffect,
+	useMemo,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -19,6 +20,8 @@ import {
 	type EnumTypeOf,
 	nodeHasAncestor,
 } from 'utils';
+import { IconButton } from './shared';
+import { IconName } from 'types/IconName';
 
 export const ToolDrawerPlacement = {
 	LEFT: 'left',
@@ -97,6 +100,22 @@ export function ToolDrawer(props: ToolDrawerProps): JSX.Element | null {
 		return () => controller.abort();
 	}, [isOpen, closeSlideout]);
 
+	const iconName = useMemo(() => {
+		if (side === ToolDrawerPlacement.LEFT) {
+			if (isOpen) {
+				return IconName.CHEVRON_LEFT;
+			} else {
+				return IconName.CHEVRON_RIGHT;
+			}
+		} else {
+			if (isOpen) {
+				return IconName.CHEVRON_RIGHT;
+			} else {
+				return IconName.CHEVRON_LEFT;
+			}
+		}
+	}, [side, isOpen]);
+
 	if (children.length === 0) {
 		return null;
 	}
@@ -109,8 +128,9 @@ export function ToolDrawer(props: ToolDrawerProps): JSX.Element | null {
 		})}
 		ref={rootRef}
 	>
-		<button
+		<IconButton
 			onClick={toggleSlideout}
+			icon={iconName}
 			class="tool-drawer__toggle"
 			title="Open tool drawer"
 		/>

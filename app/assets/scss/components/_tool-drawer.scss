@@ -89,10 +89,9 @@ $_animation-speed: animation.$speed-fast;
 		position: absolute;
 		z-index: 1;
 		top: spacing.$sm;
-	}
 
-	&::before {
-		@include typography.icons;
+		font-family: typography.$family-heading;
+		font-weight: typography.$weight-heading;
 		font-size: 0.6em;
 	}
 
@@ -102,14 +101,6 @@ $_animation-speed: animation.$speed-fast;
 		border-left-color: var(--bg);
 
 		left: calc(100% - 1px);
-		&::before {
-			content: ">";
-		}
-		&:is(.tool-drawer--open *) {
-			&::before {
-				content: "<";
-			}
-		}
 	}
 	.tool-drawer--right & {
 		border-top-left-radius: $_border-radius;
@@ -117,14 +108,6 @@ $_animation-speed: animation.$speed-fast;
 		border-right-color: var(--bg);
 
 		right: calc(100% - 1px);
-		&::before {
-			content: "<";
-		}
-		&:is(.tool-drawer--open *) {
-			&::before {
-				content: ">";
-			}
-		}
 	}
 
 	@include layout.bp-large {

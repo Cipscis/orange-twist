@@ -51,6 +51,7 @@ import * as ui from 'ui';
 import {
 	IconButton,
 } from '../shared';
+import { IconName } from 'types/IconName';
 
 import { OrangeTwistContext } from '../OrangeTwistContext';
 
@@ -251,7 +252,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				{
 					backButton &&
 						<IconButton
-							icon="<"
+							icon={IconName.CHEVRON_LEFT}
 							title="Back"
 							href="../"
 						/>
