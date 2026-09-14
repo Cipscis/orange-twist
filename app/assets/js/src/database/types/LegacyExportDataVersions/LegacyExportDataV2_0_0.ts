@@ -2,6 +2,7 @@ import * as z from 'zod/mini';
 
 import { isZodSchemaType } from 'utils';
 import { IconName } from 'types/IconName';
+import { TaskStatus } from 'types/TaskStatus';
 
 export const legacyExportDataSchemaV2_0_0 = z.object({
 	day: z.record(
@@ -40,7 +41,7 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 		z.object({
 			id: z.readonly(z.number()),
 			/** The legacy alias used for this status in the database v1 */
-			alias: z.string(),
+			alias: z.enum(TaskStatus),
 			/** A human-readable name for this status, in sentence case */
 			name: z.string(),
 			/** The name of an icon use when representing this task as an icon */
