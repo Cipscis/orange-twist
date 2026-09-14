@@ -72,10 +72,16 @@ function getStatusForTask({
 	const dayTasks = allDayTasks.filter(
 		({ task: taskId }) => taskId === task.id
 	);
+
+	const daysById = new Map<number, DatabaseData[typeof ObjectStoreName.DAY][number]>();
+	for (const day of allDays) {
+		daysById.set(day.id, day);
+	}
+
 	const sortedDayTasks = dayTasks.toSorted(
 		(dayTaskA, dayTaskB) => {
-			const dayA = allDays.find(({ id }) => id === dayTaskA.day);
-			const dayB = allDays.find(({ id }) => id === dayTaskB.day);
+			const dayA = daysById.get(dayTaskA.day);
+			const dayB = daysById.get(dayTaskB.day);
 
 			if (!(dayA && dayB)) {
 				throw new Error(`Couldn't find both days ${dayTaskA.day} and ${dayTaskB.day}`);
