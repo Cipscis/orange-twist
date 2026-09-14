@@ -9,6 +9,15 @@ export {
 	useSettableTask,
 } from './access';
 
+export type {
+	Day,
+	Task,
+	DayTask,
+	Status,
+	Template,
+	Image,
+} from './types';
+
 export {
 	createTestData,
 	insertTestData,
