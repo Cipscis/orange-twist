@@ -4,10 +4,6 @@ import {
 	useMemo,
 } from 'preact/hooks';
 
-import type {
-	TaskStatus,
-} from 'types/TaskStatus';
-
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
@@ -20,6 +16,7 @@ import {
 	useAllDayTaskInfo,
 	useTaskInfo,
 } from 'data';
+import type { Status } from 'database';
 
 import * as ui from 'ui';
 import { StatusPicker } from 'components/shared';
@@ -27,6 +24,8 @@ import { StatusPicker } from 'components/shared';
 export interface TaskStatusComponentProps {
 	taskId: number;
 	dayName?: string;
+
+	statuses: Status[];
 }
 
 /**
@@ -39,6 +38,8 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	const {
 		taskId,
 		dayName,
+
+		statuses,
 	} = props;
 	const taskInfo = useTaskInfo(taskId);
 
@@ -61,21 +62,23 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 	/**
 	 * Update task data to reflect new status.
 	 */
-	const changeStatus = useCallback((status: TaskStatus) => {
+	const changeStatus = useCallback((status: number) => {
 		if (!taskInfo) {
 			return;
 		}
+
+		const statusAlias = statuses.find(({ id }) => id === status)!.alias;
 
 		if (dayName) {
 			setDayTaskInfo({
 				dayName,
 				taskId,
-			}, { status });
+			}, { status: statusAlias });
 		} else {
-			setTaskInfo(taskId, { status });
+			setTaskInfo(taskId, { status: statusAlias });
 		}
 		fireCommand(Command.DATA_SAVE);
-	}, [dayName, taskId, taskInfo]);
+	}, [statuses, dayName, taskId, taskInfo]);
 
 	/**
 	 * Ask for confirmation, then delete the task.
@@ -125,11 +128,17 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 		: 'Delete task';
 
 	const status = (() => {
-		if (dayName) {
-			return getTaskStatusForDay({ dayName, taskId });
-		}
+		const statusAlias = (() => {
+			if (dayName) {
+				return getTaskStatusForDay({ dayName, taskId });
+			}
 
-		return taskInfo?.status ?? null;
+			return taskInfo?.status ?? null;
+		})();
+
+		const status = statuses.find(({ alias }) => alias === statusAlias);
+
+		return status;
 	})();
 
 	if (!status) {
@@ -138,6 +147,7 @@ export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Elemen
 
 	return <StatusPicker
 		status={status}
+		statuses={statuses}
 		onStatusSelect={changeStatus}
 		onDelete={onDeleteButtonClick}
 		deleteButtonTitle={deleteButtonTitle}

@@ -1,11 +1,7 @@
 import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import {
-	type TaskStatus,
-	TaskStatusName,
-	TaskStatusIconName,
-} from 'types/TaskStatus';
+import type { Status } from 'database';
 
 import {
 	ButtonVariant,
@@ -13,8 +9,8 @@ import {
 } from 'components/shared';
 
 interface StatusButtonProps {
-	status: TaskStatus;
-	onStatusSelect: (status: TaskStatus) => void;
+	status: Status;
+	onStatusSelect: (status: number) => void;
 	title?: string;
 }
 
@@ -29,18 +25,18 @@ export function StatusButton(props: StatusButtonProps): JSX.Element {
 		title,
 	} = props;
 
-	const statusName = TaskStatusName[status];
-	const statusIconName = TaskStatusIconName[status];
+	const statusName = status.name;
+	const statusIconName = status.icon;
 
 	return <IconButton
 		variant={ButtonVariant.SECONDARY}
 		title={title || statusName}
 		icon={statusIconName}
 		onClick={useCallback(() => {
-			onStatusSelect(status);
+			onStatusSelect(status.id);
 		}, [status, onStatusSelect])}
 		style={{
-			'--colour': `var(--colour-task--${status})`,
+			'--colour': status.colour,
 		}}
 	/>;
 }

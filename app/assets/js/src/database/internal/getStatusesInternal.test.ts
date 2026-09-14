@@ -5,10 +5,9 @@ import {
 	test,
 } from '@jest/globals';
 
-
 import { insertTestData } from '../test-utils';
-import { defaultStatuses } from '../migration';
 import { getDatabase } from '../utils';
+import { defaultStatuses } from '../migration';
 import { ObjectStoreName } from '../metadata';
 
 import { getStatusesInternal } from './getStatusesInternal';

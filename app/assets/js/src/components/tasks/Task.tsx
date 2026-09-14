@@ -13,7 +13,7 @@ import {
 } from 'data';
 import { getTaskDetailUrl } from 'navigation';
 
-import { TaskStatusComponent } from './TaskStatusComponent';
+import { TaskStatusComponentDisplay } from './TaskStatusComponent';
 import {
 	IconButton,
 	InlineNote,
@@ -55,7 +55,7 @@ export function Task(props: TaskProps): JSX.Element | null {
 	}
 
 	return <div class="task">
-		<TaskStatusComponent
+		<TaskStatusComponentDisplay
 			taskId={taskInfo.id}
 			dayName={dayName}
 		/>

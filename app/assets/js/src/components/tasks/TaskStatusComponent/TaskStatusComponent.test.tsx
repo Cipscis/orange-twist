@@ -17,6 +17,7 @@ import {
 	cleanup,
 	render,
 	screen,
+	waitFor,
 } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
@@ -37,6 +38,7 @@ import {
 	setDayTaskInfo,
 	setTaskInfo,
 } from 'data';
+import { createTestData, insertTestData } from 'database';
 
 import { TaskStatusComponent } from './TaskStatusComponent';
 
@@ -46,13 +48,17 @@ configMocks({
 });
 mockAnimationsApi();
 
+const testData = createTestData();
+const statuses = Array.from(Object.values(testData.status));
+
 describe('TaskStatusComponent', () => {
 	beforeAll(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 	});
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		clear();
+		await insertTestData(testData);
 		setTaskInfo(1, { status: TaskStatus.COMPLETED });
 		setDayTaskInfo({
 			dayName: '2023-11-20',
@@ -75,6 +81,7 @@ describe('TaskStatusComponent', () => {
 	test('renders nothing if passed an invalid task ID', () => {
 		const { container } = render(<TaskStatusComponent
 			taskId={-1}
+			statuses={statuses}
 		/>);
 
 		expect(container).toBeEmptyDOMElement();
@@ -84,6 +91,7 @@ describe('TaskStatusComponent', () => {
 		test('renders its task\'s status', async () => {
 			const { getByTitle } = render(<TaskStatusComponent
 				taskId={1}
+				statuses={statuses}
 			/>);
 
 			expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
@@ -101,6 +109,7 @@ describe('TaskStatusComponent', () => {
 
 			const { getByRole } = render(<TaskStatusComponent
 				taskId={1}
+				statuses={statuses}
 			/>);
 
 			const editButton = getByRole('button', {
@@ -132,6 +141,7 @@ describe('TaskStatusComponent', () => {
 
 			const { getByRole } = render(<TaskStatusComponent
 				taskId={1}
+				statuses={statuses}
 			/>);
 
 			const editButton = getByRole('button', {
@@ -160,6 +170,7 @@ describe('TaskStatusComponent', () => {
 			const { getByTitle, rerender } = render(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-20"
+				statuses={statuses}
 			/>);
 
 			expect(getByTitle('Todo (click to edit)')).toBeInTheDocument();
@@ -167,12 +178,14 @@ describe('TaskStatusComponent', () => {
 			rerender(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-25"
+				statuses={statuses}
 			/>);
 			expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
 
 			rerender(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-27"
+				statuses={statuses}
 			/>);
 			expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
 		});
@@ -181,35 +194,43 @@ describe('TaskStatusComponent', () => {
 			const { container } = render(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-01-01"
+				statuses={statuses}
 			/>);
 
 			expect(container).toBeEmptyDOMElement();
 		});
 
 		test('updates if the task\'s status for that day is updated', async () => {
+			const user = userEvent.setup();
+
 			const { getByRole } = render(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-23"
+				statuses={statuses}
 			/>);
 
-			expect(getByRole('button', {
+			const statusEditButton = getByRole('button', {
 				name: `Todo (click to edit)`,
-			})).toBeInTheDocument();
-
-			jest.useFakeTimers();
-			await act(() => {
-				setDayTaskInfo({
-					taskId: 1,
-					dayName: '2023-11-21',
-				}, { status: TaskStatus.IN_PROGRESS });
-				// Wait for asynchronous UI update
-				jest.advanceTimersByTime(1500);
 			});
-			jest.useRealTimers();
+			expect(statusEditButton).toBeInTheDocument();
 
-			expect(getByRole('button', {
-				name: `In progress (click to edit)`,
-			})).toBeInTheDocument();
+			await user.click(statusEditButton);
+			const inProgressButton = getByRole('button', {
+				name: 'In progress',
+			});
+			await user.click(inProgressButton);
+			// Wait for asynchronous UI update
+			await act(() => {
+				jest.useFakeTimers();
+				jest.advanceTimersByTime(1500);
+				jest.useRealTimers();
+			});
+
+			await waitFor(() => {
+				expect(getByRole('button', {
+					name: `In progress (click to edit)`,
+				})).toBeInTheDocument();
+			});
 		});
 
 		test('edits a task\'s status for that day only', async () => {
@@ -220,6 +241,7 @@ describe('TaskStatusComponent', () => {
 			const { getByRole } = render(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-24"
+				statuses={statuses}
 			/>);
 
 			const editButton = getByRole('button', {
@@ -260,6 +282,7 @@ describe('TaskStatusComponent', () => {
 			const { getByRole } = render(<TaskStatusComponent
 				taskId={1}
 				dayName="2023-11-26"
+				statuses={statuses}
 			/>);
 
 			const editButton = getByRole('button', {

@@ -15,13 +15,21 @@ import {
 	TaskStatus,
 	TaskStatusName,
 } from 'types/TaskStatus';
+import { createTestData } from 'database';
 
 import { StatusButton } from './StatusButton';
+
+const testData = createTestData();
+const statuses = Object.fromEntries(
+	Object.values(testData.status).map(
+		(status) => [status.alias, status]
+	)
+);
 
 describe('StatusButton', () => {
 	test('renders a status\'s name', () => {
 		const { getByTitle } = render(<StatusButton
-			status={TaskStatus.TODO}
+			status={statuses[TaskStatus.TODO]}
 			onStatusSelect={() => {}}
 		/>);
 
@@ -33,7 +41,7 @@ describe('StatusButton', () => {
 		const spy = jest.fn();
 
 		const { getByRole } = render(<StatusButton
-			status={TaskStatus.COMPLETED}
+			status={statuses[TaskStatus.COMPLETED]}
 			onStatusSelect={spy}
 		/>);
 
@@ -43,6 +51,6 @@ describe('StatusButton', () => {
 		await user.click(button);
 
 		expect(spy).toHaveBeenCalledTimes(1);
-		expect(spy).toHaveBeenCalledWith(TaskStatus.COMPLETED);
+		expect(spy).toHaveBeenCalledWith(3);
 	});
 });
