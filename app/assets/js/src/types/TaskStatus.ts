@@ -1,4 +1,5 @@
 import type { EnumTypeOf } from 'utils';
+import { IconName } from './IconName';
 
 export const TaskStatus = {
 	TODO: 'todo',
@@ -19,18 +20,18 @@ export const CompletedTaskStatuses: ReadonlySet<TaskStatus> = new Set([
 	TaskStatus.WILL_NOT_DO,
 ]);
 
-export const TaskStatusSymbol = {
-	[TaskStatus.TODO]: '☐',
-	[TaskStatus.IN_PROGRESS]: '▶️',
-	[TaskStatus.COMPLETED]: '☑️',
+export const TaskStatusIconName = {
+	[TaskStatus.TODO]: IconName.TODO,
+	[TaskStatus.IN_PROGRESS]: IconName.IN_PROGRESS,
+	[TaskStatus.COMPLETED]: IconName.COMPLETED,
 
-	[TaskStatus.INVESTIGATING]: '🔍',
-	[TaskStatus.IN_REVIEW]: '👁️',
-	[TaskStatus.READY_TO_TEST]: '🧪',
-	[TaskStatus.PAUSED]: '⏸️',
-	[TaskStatus.APPROVED_TO_DEPLOY]: '👍',
-	[TaskStatus.WILL_NOT_DO]: '🚫',
-} as const satisfies Record<TaskStatus, string>;
+	[TaskStatus.INVESTIGATING]: IconName.INVESTIGATING,
+	[TaskStatus.IN_REVIEW]: IconName.IN_REVIEW,
+	[TaskStatus.READY_TO_TEST]: IconName.TESTING,
+	[TaskStatus.PAUSED]: IconName.PAUSED,
+	[TaskStatus.APPROVED_TO_DEPLOY]: IconName.APPROVED,
+	[TaskStatus.WILL_NOT_DO]: IconName.WILL_NOT_DO,
+} as const satisfies Record<TaskStatus, IconName>;
 
 export const TaskStatusName = {
 	[TaskStatus.TODO]: 'Todo',

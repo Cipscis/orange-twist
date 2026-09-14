@@ -28,3 +28,8 @@ export const IconName = {
 	CLOSE: 'close',
 } as const;
 export type IconName = EnumTypeOf<typeof IconName>;
+
+const iconNames = new Set(Object.values(IconName));
+export const isIconName = (value: unknown): value is IconName => {
+	return iconNames.has(value as IconName);
+};

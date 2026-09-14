@@ -5,9 +5,12 @@ import { useMemo } from 'preact/hooks';
 import {
 	assertAllUnionMembersHandled,
 	classNames,
+	type StringWithAutocomplete,
 } from 'utils';
 
 import { ButtonVariant } from './types';
+import { type IconName, isIconName } from 'types/IconName';
+import { Icon } from './Icon';
 
 function getVariantClass(variant: ButtonVariant): string {
 	if (variant === ButtonVariant.PRIMARY) {
@@ -32,7 +35,10 @@ interface IconButtonProps extends IconButtonPropsBase {
 	/** If set, element will be a link instead of a button. */
 	href?: string;
 
-	icon: JSX.Element | string;
+	/**
+	 * The icon to display. If a valid icon name is passed, the {@linkcode Icon} component will be used. Otherwise, the icon name will be rendered. This is useful for single characters used in place of icons, e.g. `'?'`
+	 */
+	icon: StringWithAutocomplete<IconName>;
 	title: string;
 
 	/** If `true`, will render a disabled button or text instead of a link. */
@@ -56,7 +62,13 @@ export function IconButton(props: IconButtonProps): JSX.Element {
 		getVariantClass(props.variant ?? ButtonVariant.PRIMARY),
 	);
 
-	const iconEl = useMemo(() => <span aria-hidden>{icon}</span>, [icon]);
+	const iconEl = useMemo(() => {
+		if (isIconName(icon)) {
+			return <Icon name={icon} title={null} />;
+		}
+
+		return <span aria-hidden>{icon}</span>;
+	}, [icon]);
 
 	if (href) {
 		if (disabled) {
