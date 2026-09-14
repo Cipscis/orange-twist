@@ -16,7 +16,6 @@ import {
 import {
 	TaskStatus,
 	TaskStatusName,
-	TaskStatusSymbol,
 } from 'types/TaskStatus';
 
 import {
@@ -162,12 +161,9 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 	// Set up event listeners for closing the popover on UI signals like pressing the "Escape" key
 	useCloseWatcher(exitChangeMode, isInChangeMode);
 
-	const statusSymbol = TaskStatusSymbol[status];
 	const statusName = TaskStatusName[status];
 
-	if (!(
-		statusSymbol && statusName
-	)) {
+	if (!statusName) {
 		return null;
 	}
 
@@ -178,13 +174,10 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 			anchorName: positionAnchorName,
 		}}
 	>
-		<IconButton
+		<StatusButton
+			status={status}
+			onStatusSelect={enterChangeMode}
 			title={`${statusName} (click to edit)`}
-			icon={statusSymbol}
-			onClick={enterChangeMode}
-			style={{
-				color: `var(--colour-task--${status})`,
-			}}
 		/>
 
 		<dialog
