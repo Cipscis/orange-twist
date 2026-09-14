@@ -18,7 +18,7 @@ import { addTaskChangeListener } from '../liveAccessManager';
  * @see {@linkcode useAsyncData}
  */
 export function useTask(taskId: number): AsyncDataState<
-	Awaited<ReturnType<typeof getTask>>
+	Awaited<ReturnType<typeof loadTask>>
 > {
 	const getTask = useCallback(() => {
 		return loadTask(taskId);
