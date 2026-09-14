@@ -2,6 +2,7 @@ import { h } from 'preact';
 
 import {
 	afterEach,
+	beforeEach,
 	describe,
 	expect,
 	jest,
@@ -9,7 +10,13 @@ import {
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, render } from '@testing-library/preact';
+import {
+	cleanup,
+	render,
+	screen,
+	waitFor,
+} from '@testing-library/preact';
+import { act } from 'preact/test-utils';
 
 import { TaskStatus } from 'types/TaskStatus';
 import {
@@ -17,11 +24,13 @@ import {
 	setDayTaskInfo,
 	setTaskInfo,
 } from 'data';
+import { insertTestData } from 'database';
 
 import { Task } from './Task';
-import { act } from 'preact/test-utils';
 
 describe('Task', () => {
+	beforeEach(() => insertTestData());
+
 	afterEach(() => {
 		cleanup();
 		clear();
@@ -42,17 +51,17 @@ describe('Task', () => {
 		expect(content.innerHTML.trim()).toBe('<strong>Bold</strong> <em>italic</em> <code>code</code>');
 	});
 
-	test('renders the task status', () => {
+	test('renders the task status', async () => {
 		setTaskInfo(0, { status: TaskStatus.IN_PROGRESS });
 
 		const { getByTitle } = render(<Task taskId={0} />);
 
-		expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
+		await waitFor(() => {
+			expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
+		});
 	});
 
 	test('renders the task status for the specified day', async () => {
-		jest.useFakeTimers();
-
 		setTaskInfo(1, { status: TaskStatus.TODO });
 		setDayTaskInfo(
 			{ taskId: 1, dayName: '2023-11-23' },
@@ -63,26 +72,34 @@ describe('Task', () => {
 			taskId={1}
 			dayName="2023-11-25"
 		/>);
-		expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
+		await waitFor(() => {
+			expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
+		});
 
 		await act(() => {
+			jest.useFakeTimers();
 			setDayTaskInfo(
 				{ taskId: 1, dayName: '2023-11-24' },
 				{ status: TaskStatus.IN_REVIEW }
 			);
 			jest.advanceTimersByTime(1500);
+			jest.useRealTimers();
 		});
-		expect(getByTitle('In review (click to edit)')).toBeInTheDocument();
+		await waitFor(() => {
+			expect(getByTitle('In review (click to edit)')).toBeInTheDocument();
+		});
 
 		await act(() => {
+			jest.useFakeTimers();
 			setDayTaskInfo(
 				{ taskId: 1, dayName: '2023-11-25' },
 				{ status: TaskStatus.COMPLETED }
 			);
 			jest.advanceTimersByTime(1500);
+			jest.useRealTimers();
 		});
-		expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
-
-		jest.useRealTimers();
+		await waitFor(() => {
+			expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
+		});
 	});
 });

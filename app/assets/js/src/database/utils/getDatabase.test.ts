@@ -132,7 +132,9 @@ describe('getDatabase', () => {
 					sortIndex: 0,
 				},
 			},
-			status: Object.fromEntries(defaultStatuses.map((status) => [status.id, status])),
+			status: Object.fromEntries(
+				defaultStatuses.map((status) => [status.id, status])
+			),
 			template: {
 				1: {
 					id: 1,

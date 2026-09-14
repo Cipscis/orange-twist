@@ -1,1 +1,1 @@
-export { TaskStatusComponent } from './TaskStatusComponent';
+export { TaskStatusComponentDisplay } from './TaskStatusComponentDisplay';
