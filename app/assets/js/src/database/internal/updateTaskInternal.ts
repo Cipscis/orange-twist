@@ -5,7 +5,7 @@ import {
 } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Task } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing task.
@@ -17,7 +17,7 @@ import type { DatabaseData } from '../types';
  */
 export async function updateTaskInternal(
 	transaction: IDBTransaction,
-	task: OptionalExcept<DatabaseData[typeof ObjectStoreName.TASK][number], 'id'>
+	task: OptionalExcept<Task, 'id'>
 ): Promise<void> {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
@@ -25,7 +25,7 @@ export async function updateTaskInternal(
 
 	for await (const taskCursor of getIterableCursor(taskOS, task.id)) {
 		// This type assertion is safe because of other controls around what can be inserted into the database
-		const taskCursorValue = taskCursor.value as DatabaseData[typeof ObjectStoreName.TASK][number];
+		const taskCursorValue = taskCursor.value as Task;
 
 		const updatedTask = {
 			...taskCursorValue,

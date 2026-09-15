@@ -4,7 +4,7 @@ import { getIdbRequestPromise } from 'utils';
 
 import { getDatabase, getDayNameParts } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Day } from '../types';
 import {
 	addDayInternal,
 	addDayTaskInternal,
@@ -133,7 +133,7 @@ async function updateExistingDay(options: {
 	transaction: IDBTransaction;
 	dayTaskOS: IDBObjectStore;
 	dayInfo: DayInfo;
-	existingDay: DatabaseData[typeof ObjectStoreName.DAY][number];
+	existingDay: Day;
 }): Promise<void> {
 	const {
 		transaction,

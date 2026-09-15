@@ -6,7 +6,7 @@ import {
 } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { DayTask } from '../types';
 
 import { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
 import { getTaskInternal } from './getTaskInternal';
@@ -30,13 +30,13 @@ export async function addDayTaskInternal(
 	dayTask: ExpandType<
 		OptionalExcept<
 			Omit<
-				DatabaseData[typeof ObjectStoreName.DAY_TASK][number],
+				DayTask,
 				'id'
 			>,
 			'day' | 'task'
 		>
 	>
-): Promise<DatabaseData[typeof ObjectStoreName.DAY_TASK][number]['id']> {
+): Promise<DayTask['id']> {
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 
 	const existingDayTask = await getDayTaskForDayAndTaskInternal(transaction, dayTask);

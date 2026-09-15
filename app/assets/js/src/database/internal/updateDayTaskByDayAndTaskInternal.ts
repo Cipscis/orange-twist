@@ -1,7 +1,7 @@
 import type { OptionalExcept } from 'utils';
 
 import type { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { DayTask } from '../types';
 
 import { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
 import { updateDayTaskInternal } from './updateDayTaskInternal';
@@ -20,7 +20,7 @@ import { updateDayTaskInternal } from './updateDayTaskInternal';
 export async function updateDayTaskByDayAndTaskInternal(
 	transaction: IDBTransaction,
 	dayTask: OptionalExcept<
-		Omit<DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id'>,
+		Omit<DayTask, 'id'>,
 		'day' | 'task'
 	>
 ): Promise<number> {

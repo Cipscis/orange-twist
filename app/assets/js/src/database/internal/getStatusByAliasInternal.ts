@@ -1,7 +1,7 @@
 import { getIdbRequestPromise } from 'utils';
 
 import { IndexName, ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Status } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get a status by a specified alias.
@@ -15,7 +15,7 @@ export async function getStatusByAliasInternal(
 	transaction: IDBTransaction,
 	alias: string,
 ): Promise<
-	| DatabaseData[typeof ObjectStoreName.STATUS][number]
+	| Status
 	| null
 > {
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);
@@ -23,7 +23,7 @@ export async function getStatusByAliasInternal(
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = statusByAlias.get(alias) as IDBRequest<
-			| DatabaseData[typeof ObjectStoreName.STATUS][number]
+			| Status
 			| undefined
 		>;
 

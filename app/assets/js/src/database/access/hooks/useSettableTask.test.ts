@@ -17,8 +17,7 @@ import { save } from '../save';
 import { SaveType } from '../SaveAction';
 
 import { insertTestData } from '../../test-utils';
-import type { DatabaseData } from '../../types';
-import type { ObjectStoreName } from '../../metadata';
+import type { Task } from '../../types';
 
 import { useSettableTask } from './useSettableTask';
 
@@ -55,7 +54,7 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies DatabaseData[typeof ObjectStoreName.TASK][number],
+				} satisfies Task,
 			});
 		});
 	});
@@ -74,7 +73,7 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies DatabaseData[typeof ObjectStoreName.TASK][number],
+				} satisfies Task,
 			});
 		});
 
@@ -97,7 +96,7 @@ describe('useSettableTask', () => {
 					name: 'Test task 1 updated',
 					note: 'Test task 1 note updated',
 					sortIndex: 2,
-				} satisfies DatabaseData[typeof ObjectStoreName.TASK][number],
+				} satisfies Task,
 			});
 		});
 	});
@@ -117,7 +116,7 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies DatabaseData[typeof ObjectStoreName.TASK][number],
+				} satisfies Task,
 			});
 		});
 
@@ -132,7 +131,7 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies DatabaseData[typeof ObjectStoreName.TASK][number],
+				} satisfies Task,
 			});
 		});
 
@@ -145,7 +144,7 @@ describe('useSettableTask', () => {
 					name: 'Test task 2',
 					note: 'Test task 2 note',
 					sortIndex: 2,
-				} satisfies DatabaseData[typeof ObjectStoreName.TASK][number],
+				} satisfies Task,
 			});
 		});
 	});
@@ -164,7 +163,7 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies DatabaseData[typeof ObjectStoreName.TASK][number],
+				} satisfies Task,
 			});
 		});
 
@@ -185,7 +184,7 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note updated',
 					sortIndex: 1,
-				} satisfies DatabaseData[typeof ObjectStoreName.TASK][number],
+				} satisfies Task,
 			});
 		});
 
@@ -203,7 +202,7 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note updated',
 					sortIndex: 1,
-				} satisfies DatabaseData[typeof ObjectStoreName.TASK][number],
+				} satisfies Task,
 			});
 		});
 	});

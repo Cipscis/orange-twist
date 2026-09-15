@@ -5,7 +5,7 @@ import {
 } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Template } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to update an existing template.
@@ -20,7 +20,7 @@ import type { DatabaseData } from '../types';
 export async function updateTemplateInternal(
 	transaction: IDBTransaction,
 	template: OptionalExcept<
-		DatabaseData[typeof ObjectStoreName.TEMPLATE][number],
+		Template,
 		'id'
 	>
 ): Promise<number> {
@@ -30,7 +30,7 @@ export async function updateTemplateInternal(
 
 	for await (const templateCursor of getIterableCursor(templateOS, template.id)) {
 		// This type assertion is safe because of other controls around what can be inserted into the database
-		const templateCursorValue = templateCursor.value as DatabaseData[typeof ObjectStoreName.TEMPLATE][number];
+		const templateCursorValue = templateCursor.value as Template;
 
 		requests.push(
 			getIdbRequestPromise(

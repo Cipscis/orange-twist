@@ -1,7 +1,7 @@
 import { getIdbRequestPromise, type WithOptional } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Template } from '../types';
 
 import { getTemplateInternal } from './getTemplateInternal';
 
@@ -18,8 +18,8 @@ import { getTemplateInternal } from './getTemplateInternal';
  */
 export async function addTemplateInternal(
 	transaction: IDBTransaction,
-	template: WithOptional<DatabaseData[typeof ObjectStoreName.TEMPLATE][number], 'id'>
-): Promise<DatabaseData[typeof ObjectStoreName.TEMPLATE][number]['id']> {
+	template: WithOptional<Template, 'id'>
+): Promise<Template['id']> {
 	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
 
 	if (typeof template.id !== 'undefined') {

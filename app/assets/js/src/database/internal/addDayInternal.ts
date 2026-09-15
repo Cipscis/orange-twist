@@ -1,7 +1,7 @@
 import { getIdbRequestPromise, type ExpandType } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Day } from '../types';
 
 import { getDayByDateInternal } from './getDayByDateInternal';
 
@@ -18,8 +18,8 @@ import { getDayByDateInternal } from './getDayByDateInternal';
  */
 export async function addDayInternal(
 	transaction: IDBTransaction,
-	day: ExpandType<Omit<DatabaseData[typeof ObjectStoreName.DAY][number], 'id'>>
-): Promise<DatabaseData[typeof ObjectStoreName.DAY][number]['id']> {
+	day: ExpandType<Omit<Day, 'id'>>
+): Promise<Day['id']> {
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
 	const existingDay = await getDayByDateInternal(transaction, day);

@@ -1,7 +1,7 @@
 import { getIdbRequestPromise } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Task } from '../types';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to get the task with a specified ID.
@@ -15,14 +15,14 @@ export async function getTaskInternal(
 	transaction: IDBTransaction,
 	id: number
 ): Promise<
-	| DatabaseData[typeof ObjectStoreName.TASK][number]
+	| Task
 	| null
 > {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
 	const request = taskOS.get(id) as IDBRequest<
-		| DatabaseData[typeof ObjectStoreName.TASK][number]
+		| Task
 		| undefined
 	>;
 

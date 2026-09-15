@@ -1,6 +1,6 @@
 import { getIdbRequestPromise, type WithOptional } from 'utils';
 
-import type { DatabaseData } from '../types';
+import type { Status } from '../types';
 import { ObjectStoreName } from '../metadata';
 
 import { getStatusInternal } from './getStatusInternal';
@@ -19,7 +19,7 @@ import { getStatusInternal } from './getStatusInternal';
 export async function addStatusInternal(
 	transaction: IDBTransaction,
 	status: WithOptional<
-		DatabaseData[typeof ObjectStoreName.STATUS][number],
+		Status,
 		'id'
 	>
 ): Promise<number> {

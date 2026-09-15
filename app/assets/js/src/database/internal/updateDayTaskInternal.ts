@@ -5,7 +5,7 @@ import {
 } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { DayTask } from '../types';
 
 import { getStatusInternal } from './getStatusInternal';
 
@@ -23,7 +23,7 @@ import { getStatusInternal } from './getStatusInternal';
 export async function updateDayTaskInternal(
 	transaction: IDBTransaction,
 	dayTask: OptionalExcept<
-		DatabaseData[typeof ObjectStoreName.DAY_TASK][number], 'id'
+		DayTask, 'id'
 	>
 ): Promise<number> {
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
@@ -32,7 +32,7 @@ export async function updateDayTaskInternal(
 
 	for await (const dayTaskCursor of getIterableCursor(dayTaskOS, dayTask.id)) {
 		// This type assertion is safe because of other controls around what can be inserted into the database
-		const dayTaskCursorValue = dayTaskCursor.value as DatabaseData[typeof ObjectStoreName.DAY_TASK][number];
+		const dayTaskCursorValue = dayTaskCursor.value as DayTask;
 
 		if (
 			('day' in dayTask && dayTask.day !== dayTaskCursorValue.day) ||

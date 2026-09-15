@@ -1,10 +1,9 @@
 import type { ExpandType } from 'utils';
 
-import type { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Day } from '../types';
 
 type PartialDay = Pick<
-	DatabaseData[typeof ObjectStoreName.DAY][number],
+	Day,
 	'year' | 'month' | 'day'
 >;
 
