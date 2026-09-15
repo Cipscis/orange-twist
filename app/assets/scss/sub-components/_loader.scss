@@ -12,8 +12,9 @@
 		aspect-ratio: 1 / 1;
 		border-radius: 1em;
 
-		border: 0.2em solid var(--accent);
+		border: 0.15em solid var(--accent);
 		border-top-color: transparent;
+		box-sizing: border-box;
 
 		filter: drop-shadow(0 0 0.3em var(--accent));
 

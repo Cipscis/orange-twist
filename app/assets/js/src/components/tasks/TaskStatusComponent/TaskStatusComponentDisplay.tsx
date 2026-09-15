@@ -26,7 +26,7 @@ export function TaskStatusComponentDisplay(props: TaskStatusComponentDisplayProp
 	const statusAsyncDataState = useAllStatuses();
 
 	if (statusAsyncDataState.type === AsyncDataStateType.INITIAL) {
-		return <Loader />;
+		return <Loader class="icon-button--loader" />;
 	}
 
 	if (
