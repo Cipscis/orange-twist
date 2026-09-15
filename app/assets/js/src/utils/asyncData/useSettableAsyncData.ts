@@ -15,11 +15,12 @@ import {
 	useAsyncData,
 	type AsyncDataResult,
 	type GetAsyncDataOptions,
+	type UseAsyncDataOptions,
 } from './useAsyncData';
 
 import type { SettableAsyncDataState } from './SettableAsyncDataState';
 
-export interface UseSettableAsyncDataOptions<T> {
+export interface UseSettableAsyncDataOptions<T> extends UseAsyncDataOptions {
 	/**
 	 * A function that retrieves data asynchronously. Will be passed an {@linkcode AbortSignal} that will be aborted if a subsequent request is made, or if an external {@linkcode AbortSignal} provided to the returned getter is aborted.
 	 */
@@ -38,7 +39,10 @@ export interface UseSettableAsyncDataOptions<T> {
 const useSettableAsyncDataDefaultOptions = {
 	optimistic: false,
 } as const satisfies DefaultsFor<
-	UseSettableAsyncDataOptions<unknown>
+	Omit<
+		UseSettableAsyncDataOptions<unknown>,
+		keyof UseAsyncDataOptions
+	>
 >;
 
 export type SettableAsyncDataResult<T> = ExpandType<
@@ -71,7 +75,7 @@ export function useSettableAsyncData<T>(
 	const {
 		getData: getDataWrapper,
 		state: stateOfGet,
-	} = useAsyncData(getData);
+	} = useAsyncData(getData, options);
 
 	const [stateOfSet, setStateOfSet] = useState<SettableAsyncDataState>({
 		type: AsyncDataStateType.INITIAL,
