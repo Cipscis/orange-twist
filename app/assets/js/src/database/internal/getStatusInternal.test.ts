@@ -7,6 +7,7 @@ import {
 
 import { IconName } from 'types/IconName';
 
+import type { Status } from '../types';
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
@@ -29,7 +30,7 @@ describe('getStatusInternal', () => {
 			icon: IconName.TODO,
 			colour: 'var(--blue)',
 			completed: false,
-		} satisfies Awaited<ReturnType<typeof getStatusInternal>>);
+		} satisfies Status);
 	});
 
 	test('returns null if no status exists by that status ID', async () => {

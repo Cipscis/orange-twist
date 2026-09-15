@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { Day } from '../types';
 import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
@@ -42,6 +43,6 @@ describe('getDaysInternal', () => {
 				day: 27,
 				note: 'Test note 2',
 			},
-		] satisfies Awaited<ReturnType<typeof getDaysInternal>>);
+		] satisfies Day[]);
 	});
 });

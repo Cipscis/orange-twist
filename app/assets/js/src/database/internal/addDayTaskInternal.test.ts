@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { DayTask } from '../types';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -56,7 +57,7 @@ describe('addDayTaskInternal', () => {
 			summary: 'Summary for task 3 day 1',
 			status: 2,
 			sortIndex: null,
-		} satisfies Awaited<ReturnType<typeof getDayTaskForDayAndTaskInternal>>);
+		} satisfies DayTask);
 	});
 
 	test('fills in blanks with default values', async () => {
@@ -81,7 +82,7 @@ describe('addDayTaskInternal', () => {
 			summary: null,
 			status: 1,
 			sortIndex: null,
-		} satisfies Awaited<ReturnType<typeof getDayTaskForDayAndTaskInternal>>);
+		} satisfies DayTask);
 	});
 
 	test('throws an error if a day task already exists for that day and task combination', async () => {

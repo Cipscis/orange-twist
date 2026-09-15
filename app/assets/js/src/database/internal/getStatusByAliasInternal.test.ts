@@ -7,6 +7,7 @@ import {
 
 import { IconName } from 'types/IconName';
 
+import type { Status } from '../types';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
@@ -29,7 +30,7 @@ describe('getStatusByAliasInternal', () => {
 			icon: IconName.TODO,
 			colour: 'var(--blue)',
 			completed: false,
-		} satisfies Awaited<ReturnType<typeof getStatusByAliasInternal>>);
+		} satisfies Status);
 	});
 
 	test('returns null if no status exists with that name', async () => {

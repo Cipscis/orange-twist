@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { Day } from '../types';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { clearDatabase } from '../test-utils';
@@ -39,7 +40,7 @@ describe('addDayInternal', () => {
 			month: 5,
 			day: 3,
 			note: 'Test note',
-		} satisfies Awaited<ReturnType<typeof getDayInternal>>);
+		} satisfies Day);
 	});
 
 	test('throws an error if a day already exists with that date', async () => {
