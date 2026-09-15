@@ -3,11 +3,7 @@ import { h, type JSX } from 'preact';
 import { useAllStatuses } from 'database';
 import { AsyncDataStateType } from 'utils';
 
-import {
-	Loader,
-	Notice,
-	NoticeVariant,
-} from 'components/shared';
+import { Loader } from 'components/shared';
 
 import {
 	type TaskStatusComponentProps,
@@ -33,7 +29,8 @@ export function TaskStatusComponentDisplay(props: TaskStatusComponentDisplayProp
 		statusAsyncDataState.type === AsyncDataStateType.ERROR ||
 		statusAsyncDataState.type === AsyncDataStateType.ABORTED
 	) {
-		return <Notice variant={NoticeVariant.ERROR} message="Could not load load status information" />;
+		// Rely on `useAllStatuses` displaying an alert if status loading failed
+		return null;
 	}
 
 	return <TaskStatusComponent

@@ -1,3 +1,5 @@
+import * as ui from 'ui';
+
 import type { Status } from '../types';
 
 import { ObjectStoreName } from '../metadata';
@@ -12,6 +14,8 @@ let promise: Promise<Status[]> | null = null;
 
 /**
  * Loads data from all statuses. Will only ever request status data once, any subsequent requests will return the same result.
+ *
+ * Renders an alert to the UI if loading fails.
  */
 export async function loadAllStatuses(): Promise<Status[]> {
 	if (promise) {
@@ -19,6 +23,13 @@ export async function loadAllStatuses(): Promise<Status[]> {
 	}
 
 	promise = loadAllStatusesInternal();
+
+	promise.catch((error) => {
+		ui.alert('Failed to load status information', {
+			duration: null,
+			dismissible: true,
+		});
+	});
 
 	return promise;
 }
