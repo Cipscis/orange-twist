@@ -5,17 +5,24 @@
 
 @use "../tools" as *;
 
+$icon-button__size: 2em;
+
+.icon-button--loader {
+	font-size: $icon-button__size;
+}
+
 .icon-button--primary,
 .icon-button--secondary {
 	@include reset;
 
 	& {
-		@include typography.icons;
+		font-family: typography.$family-heading;
+		font-weight: typography.$weight-heading;
 
 		display: grid;
 		place-items: center;
 
-		height: 2em;
+		height: $icon-button__size;
 		aspect-ratio: 1 / 1;
 		border-radius: radius.$md-rel;
 

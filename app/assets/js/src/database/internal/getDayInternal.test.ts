@@ -6,6 +6,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { Day } from '../types';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
@@ -31,7 +32,7 @@ describe('getDayInternal', () => {
 			month: 4,
 			day: 26,
 			note: 'Test note 1',
-		} satisfies Awaited<ReturnType<typeof getDayInternal>>);
+		} satisfies Day);
 	});
 
 	test('returns null if no day exists for that ID', async () => {

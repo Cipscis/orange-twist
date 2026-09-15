@@ -14,23 +14,26 @@ import userEvent from '@testing-library/user-event';
 import {
 	TaskStatus,
 	TaskStatusName,
-	TaskStatusSymbol,
 } from 'types/TaskStatus';
+import { createTestData } from 'database';
 
 import { StatusButton } from './StatusButton';
 
+const testData = createTestData();
+const statuses = Object.fromEntries(
+	Object.values(testData.status).map(
+		(status) => [status.alias, status]
+	)
+);
+
 describe('StatusButton', () => {
-	test('renders a status\'s name and symbol', () => {
-		const {
-			getByTitle,
-			getByText,
-		} = render(<StatusButton
-			status={TaskStatus.TODO}
+	test('renders a status\'s name', () => {
+		const { getByTitle } = render(<StatusButton
+			status={statuses[TaskStatus.TODO]}
 			onStatusSelect={() => {}}
 		/>);
 
 		expect(getByTitle(TaskStatusName[TaskStatus.TODO])).toBeInTheDocument();
-		expect(getByText(TaskStatusSymbol[TaskStatus.TODO])).toBeInTheDocument();
 	});
 
 	test('calls its onStatusSelect callback with the correct status when clicked', async () => {
@@ -38,7 +41,7 @@ describe('StatusButton', () => {
 		const spy = jest.fn();
 
 		const { getByRole } = render(<StatusButton
-			status={TaskStatus.COMPLETED}
+			status={statuses[TaskStatus.COMPLETED]}
 			onStatusSelect={spy}
 		/>);
 
@@ -48,6 +51,6 @@ describe('StatusButton', () => {
 		await user.click(button);
 
 		expect(spy).toHaveBeenCalledTimes(1);
-		expect(spy).toHaveBeenCalledWith(TaskStatus.COMPLETED);
+		expect(spy).toHaveBeenCalledWith(3);
 	});
 });

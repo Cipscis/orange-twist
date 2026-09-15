@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { DayTask } from '../types';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -39,7 +40,7 @@ describe('removeDayTaskInternal', () => {
 				status: 2,
 				sortIndex: 0,
 			},
-		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
+		] satisfies DayTask[]);
 	});
 
 	test('throws an error if the specified day task does not exist', async () => {

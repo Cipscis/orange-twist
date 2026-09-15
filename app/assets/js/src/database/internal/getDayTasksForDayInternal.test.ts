@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { DayTask } from '../types';
 import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
@@ -39,6 +40,6 @@ describe('getDayTasksForDayInternal', () => {
 				status: 2,
 				sortIndex: 1,
 			},
-		] satisfies Awaited<ReturnType<typeof getDayTasksForDayInternal>>);
+		] satisfies DayTask[]);
 	});
 });

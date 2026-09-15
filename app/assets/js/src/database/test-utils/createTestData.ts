@@ -1,5 +1,6 @@
 import type { DatabaseData } from '../types';
 import { ObjectStoreName } from '../metadata';
+import { defaultStatuses } from '../migration';
 
 /**
  * **Important!** For use within tests only.
@@ -71,20 +72,7 @@ export function createTestData(): DatabaseData {
 				sortIndex: 0,
 			},
 		],
-		[ObjectStoreName.STATUS]: [
-			{
-				id: 1,
-				alias: 'todo',
-			},
-			{
-				id: 2,
-				alias: 'in-progress',
-			},
-			{
-				id: 3,
-				alias: 'completed',
-			},
-		],
+		[ObjectStoreName.STATUS]: defaultStatuses,
 		[ObjectStoreName.TEMPLATE]: [
 			{
 				id: 1,

@@ -1,1 +1,5 @@
 export { useTask } from './useTask';
+export { useSettableTask } from './useSettableTask';
+
+export { useStatus } from './useStatus';
+export { useAllStatuses } from './useAllStatuses';

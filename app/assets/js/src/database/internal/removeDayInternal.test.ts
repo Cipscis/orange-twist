@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { Day } from '../types';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -47,7 +48,7 @@ describe('removeDayInternal', () => {
 				day: 27,
 				note: 'Test note 2',
 			},
-		] satisfies Awaited<ReturnType<typeof getDaysInternal>>);
+		] satisfies Day[]);
 	});
 
 	test('throws an error if the specified day does not exist', async () => {

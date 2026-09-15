@@ -10,6 +10,7 @@ import '@testing-library/jest-dom/jest-globals';
 
 import { cleanup, render } from '@testing-library/preact';
 import { IconButton } from './IconButton';
+import { IconName } from 'types/IconName';
 
 describe('IconButton', () => {
 	afterEach(() => {
@@ -36,5 +37,15 @@ describe('IconButton', () => {
 		const link = getByRole('link', { name: 'Test Icon Button' });
 		expect(link).toBeInTheDocument();
 		expect((link as HTMLAnchorElement).href).toBe(`${location.origin}/path/`);
+	});
+
+	test('Renders an icon if passed a valid icon name', () => {
+		render(<IconButton
+			title="Test"
+			icon={IconName.COMPLETED}
+		/>);
+
+		const icon = document.querySelector('.icon');
+		expect(icon).toBeInTheDocument();
 	});
 });

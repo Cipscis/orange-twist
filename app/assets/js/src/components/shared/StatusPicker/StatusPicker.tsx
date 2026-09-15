@@ -13,11 +13,7 @@ import {
 	useCloseWatcher,
 } from 'utils';
 
-import {
-	TaskStatus,
-	TaskStatusName,
-	TaskStatusSymbol,
-} from 'types/TaskStatus';
+import type { Status } from 'database';
 
 import {
 	ButtonVariant,
@@ -27,8 +23,9 @@ import {
 import { StatusButton } from './StatusButton';
 
 interface StatusPickerProps {
-	status: TaskStatus;
-	onStatusSelect: (status: TaskStatus) => void;
+	status: Status;
+	statuses: Status[];
+	onStatusSelect: (status: number) => void;
 	onDelete: () => void;
 	deleteButtonTitle: string;
 }
@@ -39,6 +36,7 @@ interface StatusPickerProps {
 export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 	const {
 		status,
+		statuses,
 		onStatusSelect,
 		onDelete,
 		deleteButtonTitle,
@@ -69,7 +67,7 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 	const positionAnchorId = useId();
 	const positionAnchorName = `--taskStatus_${positionAnchorId}`;
 
-	const onStatusSelectWrapper = useCallback((status: TaskStatus) => {
+	const onStatusSelectWrapper = useCallback((status: number) => {
 		onStatusSelect(status);
 		exitChangeMode();
 	}, [exitChangeMode, onStatusSelect]);
@@ -162,12 +160,9 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 	// Set up event listeners for closing the popover on UI signals like pressing the "Escape" key
 	useCloseWatcher(exitChangeMode, isInChangeMode);
 
-	const statusSymbol = TaskStatusSymbol[status];
-	const statusName = TaskStatusName[status];
+	const statusName = status.name;
 
-	if (!(
-		statusSymbol && statusName
-	)) {
+	if (!statusName) {
 		return null;
 	}
 
@@ -178,13 +173,10 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 			anchorName: positionAnchorName,
 		}}
 	>
-		<IconButton
+		<StatusButton
+			status={status}
+			onStatusSelect={enterChangeMode}
 			title={`${statusName} (click to edit)`}
-			icon={statusSymbol}
-			onClick={enterChangeMode}
-			style={{
-				color: `var(--colour-task--${status})`,
-			}}
 		/>
 
 		<dialog
@@ -203,7 +195,7 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 				>
 					<li class="task-status__optgroup">
 						<ul class="task-status__optgroup-list">
-							{Object.values(TaskStatus).map((taskStatus) => (
+							{statuses.map((taskStatus) => (
 								<li
 									key={taskStatus}
 									class="task-status__option"

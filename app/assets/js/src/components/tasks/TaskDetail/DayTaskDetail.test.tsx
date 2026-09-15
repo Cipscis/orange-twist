@@ -15,6 +15,7 @@ import {
 	act,
 	cleanup,
 	render,
+	waitFor,
 } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
@@ -69,15 +70,17 @@ describe('DayTaskDetail', () => {
 		expect(status).toBeInTheDocument();
 	});
 
-	test('renders the day task\'s status', () => {
+	test('renders the day task\'s status', async () => {
 		const dayTaskInfo = getDayTaskInfo({ dayName: '2023-12-22', taskId: 1 })!;
 
 		const { getByRole } = render(<DayTaskDetail
 			dayTaskInfo={dayTaskInfo}
 		/>);
 
-		const statusEl = getByRole('button', { name: 'In progress (click to edit)' });
-		expect(statusEl).toBeInTheDocument();
+		await waitFor(() => {
+			const statusEl = getByRole('button', { name: 'In progress (click to edit)' });
+			expect(statusEl).toBeInTheDocument();
+		});
 	});
 
 	test('renders the day task\'s summary and edit summary button', () => {

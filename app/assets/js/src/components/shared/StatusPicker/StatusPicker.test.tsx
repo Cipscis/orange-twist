@@ -12,37 +12,37 @@ import '@testing-library/jest-dom/jest-globals';
 import userEvent from '@testing-library/user-event';
 import { cleanup, render } from '@testing-library/preact';
 
+import { createTestData } from 'database';
+
 import { StatusPicker } from './StatusPicker';
+
+const testData = createTestData();
+const statuses = Object.values(testData.status);
+const statusMap = new Map(
+	statuses.map(
+		(status) => [status.alias, status]
+	)
+);
 
 describe('StatusPicker', () => {
 	afterEach(() => {
 		cleanup();
 	});
 
-	test('renders nothing if passed an invalid status', () => {
-		const { container } = render(<StatusPicker
-			// @ts-expect-error Testing an invalid status
-			status="invalid-status"
-			onStatusSelect={jest.fn()}
-			onDelete={jest.fn()}
-			deleteButtonTitle="Delete"
-		/>);
-
-		expect(container).toBeEmptyDOMElement();
-	});
-
 	test('renders the status it\'s provided', () => {
 		const { getByRole, rerender } = render(<StatusPicker
-			status="ready-to-test"
+			status={statusMap.get('ready-to-test')!}
+			statuses={statuses}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
 		/>);
 
-		expect(getByRole('button', { name: 'Ready to test (click to edit)' })).toBeInTheDocument();
+		expect(getByRole('button', { name: 'Testing (click to edit)' })).toBeInTheDocument();
 
 		rerender(<StatusPicker
-			status="completed"
+			status={statusMap.get('completed')!}
+			statuses={statuses}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -55,7 +55,8 @@ describe('StatusPicker', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPicker
-			status="todo"
+			status={statusMap.get('todo')!}
+			statuses={statuses}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -75,7 +76,8 @@ describe('StatusPicker', () => {
 		const spy = jest.fn();
 
 		const { getByRole } = render(<StatusPicker
-			status="todo"
+			status={statusMap.get('todo')!}
+			statuses={statuses}
 			onStatusSelect={spy}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -89,14 +91,15 @@ describe('StatusPicker', () => {
 		await user.click(statusButton);
 
 		expect(spy).toHaveBeenCalledTimes(1);
-		expect(spy).toHaveBeenCalledWith('completed');
+		expect(spy).toHaveBeenCalledWith(3);
 	});
 
 	test('exits edit mode on status select', async () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPicker
-			status="todo"
+			status={statusMap.get('todo')!}
+			statuses={statuses}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -118,7 +121,8 @@ describe('StatusPicker', () => {
 		const spy = jest.fn();
 
 		const { getByRole } = render(<StatusPicker
-			status="todo"
+			status={statusMap.get('todo')!}
+			statuses={statuses}
 			onStatusSelect={jest.fn()}
 			onDelete={spy}
 			deleteButtonTitle="Delete"
@@ -138,7 +142,8 @@ describe('StatusPicker', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPicker
-			status="todo"
+			status={statusMap.get('todo')!}
+			statuses={statuses}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -159,7 +164,8 @@ describe('StatusPicker', () => {
 		const user = userEvent.setup();
 
 		const { getByRole } = render(<StatusPicker
-			status="todo"
+			status={statusMap.get('todo')!}
+			statuses={statuses}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Custom title"
@@ -176,7 +182,8 @@ describe('StatusPicker', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPicker
-			status="todo"
+			status={statusMap.get('todo')!}
+			statuses={statuses}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -197,7 +204,8 @@ describe('StatusPicker', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPicker
-			status="todo"
+			status={statusMap.get('todo')!}
+			statuses={statuses}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"

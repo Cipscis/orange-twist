@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { Task } from '../types';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
@@ -25,7 +26,7 @@ describe('getTaskInternal', () => {
 			name: 'Test task 1',
 			note: 'Test task 1 note',
 			sortIndex: 1,
-		} satisfies Awaited<ReturnType<typeof getTaskInternal>>);
+		} satisfies Task);
 	});
 
 	test('returns null if no task exists by that task ID', async () => {

@@ -14,6 +14,7 @@ import {
 	ObjectStoreName,
 } from '../metadata';
 import { clearDatabase, insertTestData } from '../test-utils';
+import { defaultStatuses } from '../migration';
 
 import { getDatabase } from './getDatabase';
 
@@ -131,20 +132,9 @@ describe('getDatabase', () => {
 					sortIndex: 0,
 				},
 			},
-			status: {
-				1: {
-					id: 1,
-					alias: 'todo',
-				},
-				2: {
-					id: 2,
-					alias: 'in-progress',
-				},
-				3: {
-					id: 3,
-					alias: 'completed',
-				},
-			},
+			status: Object.fromEntries(
+				defaultStatuses.map((status) => [status.id, status])
+			),
 			template: {
 				1: {
 					id: 1,

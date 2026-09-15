@@ -5,6 +5,9 @@ import {
 	test,
 } from '@jest/globals';
 
+import { IconName } from 'types/IconName';
+
+import type { Status } from '../types';
 import { ObjectStoreName } from '../metadata';
 import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
@@ -23,7 +26,11 @@ describe('getStatusInternal', () => {
 		expect(status).toEqual({
 			id: 1,
 			alias: 'todo',
-		} satisfies Awaited<ReturnType<typeof getStatusInternal>>);
+			name: 'Todo',
+			icon: IconName.TODO,
+			colour: 'var(--blue)',
+			completed: false,
+		} satisfies Status);
 	});
 
 	test('returns null if no status exists by that status ID', async () => {

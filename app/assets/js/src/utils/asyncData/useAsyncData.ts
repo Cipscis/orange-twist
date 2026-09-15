@@ -1,9 +1,12 @@
 import {
 	useCallback,
+	useEffect,
 	useMemo,
 	useRef,
 	useState,
 } from 'preact/hooks';
+
+import type { DefaultsFor } from '../DefaultsFor';
 
 import { extractError } from './extractError';
 import { AsyncDataStateType } from './AsyncDataStateType';
@@ -30,6 +33,17 @@ export interface GetAsyncDataOptions {
 	signal: AbortSignal;
 }
 
+export interface UseAsyncDataOptions {
+	/**
+	 * If set, the `AsyncDataState` will initialise with `loading: true` and will call `getData` immediately.
+	 */
+	immediate?: boolean;
+}
+
+const defaults = {
+	immediate: false,
+} as const satisfies DefaultsFor<UseAsyncDataOptions>;
+
 /**
  * Provides a getter function for asynchronous data, as well as an automatically updated state object that can be used to handle states like loading and error.
  *
@@ -37,10 +51,18 @@ export interface GetAsyncDataOptions {
  */
 export function useAsyncData<T>(
 	getData: (options: GetAsyncDataOptions) => Promise<T>,
+	options?: UseAsyncDataOptions,
 ): AsyncDataResult<T> {
+	const {
+		immediate,
+	} = {
+		...defaults,
+		...options,
+	};
+
 	const [state, setState] = useState<AsyncDataState<T>>({
 		type: AsyncDataStateType.INITIAL,
-		loading: false,
+		loading: immediate,
 	});
 
 	const abortControllerRef = useRef(new AbortController());
@@ -132,6 +154,19 @@ export function useAsyncData<T>(
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getData]
 	);
+
+	// If `immediate` option is set, load immediately
+	useEffect(() => {
+		if (!immediate) {
+			return;
+		}
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		getDataWrapper({ signal });
+
+		return () => controller.abort();
+	}, [immediate, getDataWrapper]);
 
 	const result = useMemo<AsyncDataResult<T>>(() => ({
 		state,
