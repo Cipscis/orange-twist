@@ -11,6 +11,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
+import { IconName } from 'types/IconName';
 import {
 	classNames,
 	nodeHasAncestor,
@@ -276,7 +277,7 @@ export function Note(props: NoteProps): JSX.Element {
 				<IconButton
 					class="note__edit"
 					title="Edit note"
-					icon="✏️"
+					icon={IconName.EDIT}
 					onClick={enterEditingMode}
 				/>
 			</div>
