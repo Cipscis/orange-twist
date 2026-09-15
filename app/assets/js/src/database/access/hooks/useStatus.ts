@@ -1,6 +1,5 @@
 import {
 	useCallback,
-	useEffect,
 	useRef,
 } from 'preact/hooks';
 
@@ -9,6 +8,7 @@ import {
 	type AsyncDataState,
 } from 'utils';
 
+import type { Status } from '../../types';
 import { loadStatus } from '../loadStatus';
 
 /**
@@ -16,28 +16,12 @@ import { loadStatus } from '../loadStatus';
  *
  * @see {@linkcode useAsyncData}
  */
-export function useStatus(statusId: number): AsyncDataState<
-	Awaited<ReturnType<typeof loadStatus>>
-> {
+export function useStatus(statusId: number): AsyncDataState<Status | null> {
 	const getStatus = useCallback(() => {
 		return loadStatus(statusId);
 	}, [statusId]);
 
-	const asyncDataResult = useAsyncData(getStatus);
-
-	useEffect(
-		() => {
-			const controller = new AbortController();
-			const { signal } = controller;
-
-			asyncDataResult.getData({ signal });
-
-			return () => controller.abort();
-		},
-		// Deliberately only fetch data (or abort prior fetches) if `getStatus` changes
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[getStatus]
-	);
+	const asyncDataResult = useAsyncData(getStatus, { immediate: true });
 
 	// No need to re-fetch status data, because it never changes
 
