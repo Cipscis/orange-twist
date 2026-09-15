@@ -1,5 +1,4 @@
-import type { ObjectStoreName } from '../metadata';
-import type { DatabaseData } from '../types';
+import type { Status } from '../types';
 
 export const defaultStatuses = [
 	{
@@ -74,4 +73,4 @@ export const defaultStatuses = [
 		colour: 'var(--red)',
 		completed: true,
 	},
-] as const satisfies DatabaseData[typeof ObjectStoreName.STATUS][number][];
+] as const satisfies Status[];
