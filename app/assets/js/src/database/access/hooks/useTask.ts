@@ -9,6 +9,8 @@ import {
 	type AsyncDataState,
 } from 'utils';
 
+import type { Task } from '../../types';
+
 import { loadTask } from '../loadTask';
 import { addTaskChangeListener } from '../liveAccessManager';
 
@@ -17,9 +19,7 @@ import { addTaskChangeListener } from '../liveAccessManager';
  *
  * @see {@linkcode useAsyncData}
  */
-export function useTask(taskId: number): AsyncDataState<
-	Awaited<ReturnType<typeof loadTask>>
-> {
+export function useTask(taskId: number): AsyncDataState<Task | null> {
 	const getTask = useCallback(() => {
 		return loadTask(taskId);
 	}, [taskId]);

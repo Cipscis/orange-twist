@@ -25,9 +25,7 @@ import { SaveType } from '../SaveAction';
  * @see {@linkcode useSettableAsyncData}
  */
 export function useSettableTask(taskId: number): ExpandType<
-	Omit<SettableAsyncDataResult<
-		NonNullable<Awaited<ReturnType<typeof getTask>>>
-	>, 'getData'>
+	Omit<SettableAsyncDataResult<Task>, 'getData'>
 > {
 	const getTask = useCallback(() => {
 		return loadTask(taskId);
