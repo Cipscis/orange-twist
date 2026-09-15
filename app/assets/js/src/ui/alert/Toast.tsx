@@ -10,6 +10,7 @@ import {
 	animate,
 	CSSKeyframes,
 } from 'utils';
+import { IconName } from 'types/IconName';
 import { ButtonVariant, IconButton } from 'components/shared';
 
 import { removeToast, renderToasts } from './toast-controller';
@@ -204,7 +205,7 @@ export function Toast(props: ToastProps): JSX.Element {
 				<IconButton
 					class="toast__dismiss"
 					variant={ButtonVariant.SECONDARY}
-					icon="❌"
+					icon={IconName.CLOSE}
 					title="Dismiss"
 					onClick={dismissToast}
 				/>
