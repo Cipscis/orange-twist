@@ -47,22 +47,8 @@ export function useSettableTask(taskId: number): ExpandType<
 		getData: getTask,
 		setData: setTask,
 		optimistic: true,
+		immediate: true,
 	});
-
-	// Fetch data immediately on initial load
-	useEffect(
-		() => {
-			const controller = new AbortController();
-			const { signal } = controller;
-
-			asyncDataResult.getData({ signal });
-
-			return () => controller.abort();
-		},
-		// Deliberately only fetch data (or abort prior fetches) if `getTask` changes
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[getTask]
-	);
 
 	// Re-fetch the data if it changes
 	useEffect(() => {
