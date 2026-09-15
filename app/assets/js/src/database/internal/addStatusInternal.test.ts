@@ -7,6 +7,7 @@ import {
 
 import { IconName } from 'types/IconName';
 
+import type { Status } from '../types';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -47,7 +48,7 @@ describe('addStatusInternal', () => {
 			icon: IconName.WILL_NOT_DO,
 			colour: 'var(--red)',
 			completed: true,
-		} satisfies Awaited<ReturnType<typeof getStatusInternal>>);
+		} satisfies Status);
 	});
 
 	test('throws an error if a status already exists with that ID', async () => {

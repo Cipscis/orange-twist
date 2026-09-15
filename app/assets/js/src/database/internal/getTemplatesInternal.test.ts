@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { Template } from '../types';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
@@ -33,6 +34,6 @@ describe('getTemplatesInternal', () => {
 				template: 'Template 1',
 				sortIndex: 1,
 			},
-		] satisfies Awaited<ReturnType<typeof getTemplatesInternal>>);
+		] satisfies Template[]);
 	});
 });

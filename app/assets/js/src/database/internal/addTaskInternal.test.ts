@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { Task } from '../types';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -43,7 +44,7 @@ describe('addTaskInternal', () => {
 			name: 'Test task',
 			note: 'Test task note',
 			sortIndex: 0,
-		} satisfies Awaited<ReturnType<typeof getTaskInternal>>);
+		} satisfies Task);
 	});
 
 	test('throws an error if a task already exists with that ID', async () => {

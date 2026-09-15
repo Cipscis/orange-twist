@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { Task } from '../types';
 import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
@@ -39,6 +40,6 @@ describe('getTasksInternal', () => {
 				note: 'Test task 2 note',
 				sortIndex: 2,
 			},
-		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);
+		] satisfies Task[]);
 	});
 });

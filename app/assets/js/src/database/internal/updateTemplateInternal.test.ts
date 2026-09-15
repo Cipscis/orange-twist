@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { Template } from '../types';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
@@ -39,7 +40,7 @@ describe('updateTemplateInternal', () => {
 			name: 'Template 1 name updated',
 			template: 'Template 1',
 			sortIndex: 1,
-		} satisfies Awaited<ReturnType<typeof getTemplateInternal>>);
+		} satisfies Template);
 	});
 
 	test('throws an error if the template doesn\'t exist', async () => {
