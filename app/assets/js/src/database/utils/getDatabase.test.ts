@@ -13,7 +13,7 @@ import {
 	dbVersion,
 	ObjectStoreName,
 } from '../metadata';
-import { clearDatabase, createTestData } from '../test-utils';
+import { clearDatabase, insertTestData } from '../test-utils';
 
 import { getDatabase } from './getDatabase';
 
@@ -57,7 +57,7 @@ describe('getDatabase', () => {
 	});
 
 	test('retains any existing data stored in the database v2', async () => {
-		await createTestData();
+		await insertTestData();
 		const dbToClose = await getDatabase();
 		dbToClose.close();
 

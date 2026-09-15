@@ -7,7 +7,7 @@ import {
 
 import { getIdbRequestPromise } from 'utils';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { getImagesInternal } from '../internal';
@@ -15,7 +15,7 @@ import { getImagesInternal } from '../internal';
 import { setImageV1 } from './setImageV1';
 
 describe('setImageV1', () => {
-	beforeEach(() => createTestData());
+	beforeEach(() => insertTestData());
 
 	test('adds new image', async () => {
 		// Start from a blank slate - remove all images

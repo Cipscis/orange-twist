@@ -6,13 +6,13 @@ import {
 } from '@jest/globals';
 
 import { getDatabase } from '../utils';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
 
 import { getDaysInternal } from './getDaysInternal';
 
 describe('getDaysInternal', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns all days in chronological order', async () => {
 		const db = await getDatabase();

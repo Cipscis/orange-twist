@@ -5,12 +5,12 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 
 import { getDaysV1 } from './getDaysV1';
 
 describe('getDaysV1', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns a Promise that resolves to day entries v1', async () => {
 		const days = await getDaysV1();

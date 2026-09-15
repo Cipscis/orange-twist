@@ -17,7 +17,7 @@ import {
 	createTask,
 	setDayTaskInfo,
 } from 'data';
-import { createTestData } from 'database';
+import { insertTestData } from 'database';
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import { TaskDetail } from './TaskDetail';
@@ -25,7 +25,7 @@ import { TaskDetail } from './TaskDetail';
 describe('TaskDetail', () => {
 	beforeEach(async () => {
 		clear();
-		await createTestData();
+		await insertTestData();
 	});
 
 	afterEach(() => {

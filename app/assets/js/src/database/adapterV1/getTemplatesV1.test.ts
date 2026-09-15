@@ -5,12 +5,12 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 
 import { getTemplatesV1 } from './getTemplatesV1';
 
 describe('getTemplatesV1', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns a Promise that resolves to template entries v1', async () => {
 		const templates = await getTemplatesV1();

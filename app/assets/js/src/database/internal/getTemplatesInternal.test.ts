@@ -7,12 +7,12 @@ import {
 
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 
 import { getTemplatesInternal } from './getTemplatesInternal';
 
 describe('getTemplatesInternal', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns all templates', async () => {
 		const db = await getDatabase();

@@ -6,13 +6,13 @@ import {
 } from '@jest/globals';
 
 import { ObjectStoreName } from '../metadata';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 
 import { getTaskInternal } from './getTaskInternal';
 
 describe('getTaskInternal', () => {
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	test('returns a task with the specified task ID', async () => {
 		const db = await getDatabase();

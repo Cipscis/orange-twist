@@ -1,0 +1,81 @@
+import { clearDatabase } from './clearDatabase';
+
+import type { DatabaseData } from '../types';
+import { getDatabase } from '../utils';
+import { ObjectStoreName } from '../metadata';
+import {
+	addDayInternal,
+	addDayTaskInternal,
+	addImageInternal,
+	addStatusInternal,
+	addTaskInternal,
+	addTemplateInternal,
+} from '../internal';
+
+import { createTestData } from './createTestData';
+
+/**
+ * **Important!** For use within tests only.
+ *
+ * Construct an Orange Twist database v2 containing test data.
+ */
+export async function insertTestData(
+	testData?: DatabaseData
+): Promise<void> {
+	testData = testData ?? createTestData();
+
+	// Start with a fresh database
+	await clearDatabase();
+	const database = await getDatabase(true);
+
+	const transaction = database.transaction([
+		ObjectStoreName.DAY,
+		ObjectStoreName.TASK,
+		ObjectStoreName.DAY_TASK,
+		ObjectStoreName.STATUS,
+		ObjectStoreName.TEMPLATE,
+		ObjectStoreName.IMAGE,
+	], 'readwrite');
+
+	// Insert test days
+	for (const day of Object.values(
+		testData[ObjectStoreName.DAY]
+	)) {
+		addDayInternal(transaction, day);
+	}
+
+	// Insert test statuses
+	for (const status of Object.values(
+		testData[ObjectStoreName.STATUS]
+	)) {
+		addStatusInternal(transaction, status);
+	}
+
+	// Insert test tasks
+	for (const task of Object.values(
+		testData[ObjectStoreName.TASK]
+	)) {
+		addTaskInternal(transaction, task);
+	}
+
+	// Insert test day tasks
+	for (const dayTask of Object.values(
+		testData[ObjectStoreName.DAY_TASK]
+	)) {
+		addDayTaskInternal(transaction, dayTask);
+	}
+
+	// Insert test templates
+	for (const template of Object.values(
+		testData[ObjectStoreName.TEMPLATE]
+	)) {
+		addTemplateInternal(transaction, template);
+	}
+
+	// Insert test images
+	for (const image of Object.values(
+		testData[ObjectStoreName.IMAGE]
+	)) {
+		addImageInternal(transaction, image);
+	}
+}

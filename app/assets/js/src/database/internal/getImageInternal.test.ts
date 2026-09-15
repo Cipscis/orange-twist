@@ -8,14 +8,14 @@ import {
 
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 
 import { getImageInternal } from './getImageInternal';
 
 describe('getImageInternal', () => {
 	let transaction: IDBTransaction;
 
-	beforeAll(() => createTestData());
+	beforeAll(() => insertTestData());
 
 	beforeEach(async () => {
 		const db = await getDatabase();

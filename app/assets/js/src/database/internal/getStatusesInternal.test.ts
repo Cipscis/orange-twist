@@ -5,14 +5,14 @@ import {
 	test,
 } from '@jest/globals';
 
-import { createTestData } from '../test-utils';
+import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 
 import { getStatusesInternal } from './getStatusesInternal';
 
 describe('getStatusesInternal', () => {
-	beforeEach(() => createTestData());
+	beforeEach(() => insertTestData());
 
 	test('returns all statuses', async () => {
 		const db = await getDatabase();
