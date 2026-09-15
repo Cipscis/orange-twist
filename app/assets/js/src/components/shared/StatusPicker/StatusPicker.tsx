@@ -7,6 +7,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
+import { IconName } from 'types/IconName';
 import {
 	animate,
 	CSSKeyframes,
@@ -215,7 +216,7 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 								<IconButton
 									variant={ButtonVariant.SECONDARY}
 									title={deleteButtonTitle}
-									icon="🗑️"
+									icon={IconName.DELETE}
 									onClick={onDeleteButtonClick}
 								/>
 							</li>

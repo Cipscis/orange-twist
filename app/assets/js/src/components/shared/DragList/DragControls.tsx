@@ -5,6 +5,7 @@ import {
 } from 'preact';
 import { useCallback } from 'preact/hooks';
 
+import { IconName } from 'types/IconName';
 import { IconButton } from '../IconButton';
 
 interface DragControlsProps {
@@ -38,7 +39,7 @@ export function DragControls(props: DragControlsProps): JSX.Element {
 		{/* Buttons for coarse pointer devices */}
 		<div class="drag-list__move-button">
 			<IconButton
-				icon="&#x2303;"
+				icon={IconName.CHEVRON_UP}
 				title="Move up"
 				onClick={moveUp}
 			/>
