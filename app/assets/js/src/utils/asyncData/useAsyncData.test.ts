@@ -1,6 +1,7 @@
 import {
 	describe,
 	expect,
+	jest,
 	test,
 } from '@jest/globals';
 
@@ -271,6 +272,44 @@ describe('useAsyncData', () => {
 			type: AsyncDataStateType.ERROR,
 			loading: false,
 			error,
+		});
+	});
+
+	test('respects `immediate` option', async () => {
+		const spy = jest.fn();
+		const {
+			promise,
+			resolve,
+		} = Promise.withResolvers();
+		const initialProps = {
+			getData: () => {
+				spy();
+				return promise;
+			},
+			options: { immediate: true },
+		};
+		const { result, rerender } = renderHook(
+			({
+				getData,
+				options,
+			}) => useAsyncData(getData, options),
+			{ initialProps },
+		);
+
+		// Starts in loading state
+		expect(result.current.state).toEqual({
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
+		});
+		expect(spy).toHaveBeenCalled();
+
+		await act(() => resolve(true));
+		rerender(initialProps);
+
+		expect(result.current.state).toEqual({
+			type: AsyncDataStateType.SUCCESS,
+			loading: false,
+			data: true,
 		});
 	});
 });
