@@ -5,25 +5,26 @@ import { classNames } from 'utils';
 import { DragList } from 'components/shared';
 import { Task } from './Task';
 
-interface TaskListProps {
+interface DayTaskListProps {
 	/**
 	 * The IDs of the tasks to display.
 	 */
 	taskIds: readonly number[];
+	dayName: string;
 	className?: string;
 
 	onReorder?: (taskIds: readonly number[]) => void;
 }
 
 /**
- * Renders a list of specified tasks, which can be
- * reordered via drag & drop.
+ * Renders a list of specified day tasks, specified by an array of task IDs and a single day name, which can be reordered via drag & drop.
  */
-export function TaskList(
-	props: TaskListProps,
+export function DayTaskList(
+	props: DayTaskListProps,
 ): JSX.Element {
 	const {
 		taskIds,
+		dayName,
 		className,
 
 		onReorder,
@@ -41,6 +42,7 @@ export function TaskList(
 			>
 				<Task
 					taskId={id}
+					dayName={dayName}
 				/>
 			</div>;
 		})}

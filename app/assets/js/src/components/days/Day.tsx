@@ -16,7 +16,7 @@ import * as ui from 'ui';
 
 import { Accordion, Button } from '../shared';
 import { DayNote } from './DayNote';
-import { TaskList } from '../tasks/TaskList';
+import { DayTaskList } from '../tasks/DayTaskList';
 
 interface DayProps {
 	day: Readonly<DayInfo>;
@@ -89,7 +89,7 @@ export const Day = memo((props: DayProps): JSX.Element => {
 
 			<DayNote day={day} />
 
-			<TaskList
+			<DayTaskList
 				taskIds={tasks}
 				dayName={name}
 				onReorder={reorderTasks}
