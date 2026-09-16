@@ -219,18 +219,13 @@ describe('TaskStatusComponent', () => {
 				name: 'In progress',
 			});
 			await user.click(inProgressButton);
-			// Wait for asynchronous UI update
-			await act(() => {
-				jest.useFakeTimers();
-				jest.advanceTimersByTime(1500);
-				jest.useRealTimers();
-			});
 
+			// Wait for asynchronous UI update
 			await waitFor(() => {
 				expect(getByRole('button', {
 					name: `In progress (click to edit)`,
 				})).toBeInTheDocument();
-			});
+			}, { timeout: 1500 });
 		});
 
 		test('edits a task\'s status for that day only', async () => {
