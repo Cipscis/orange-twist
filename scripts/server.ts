@@ -23,5 +23,9 @@ app.get('/*splat', (request, response, next) => {
 	response.status(404).sendFile(join(__dirname, '../app/404.html'));
 });
 
-app.listen(port, () => {});
-console.log(`Listening on port ${port}`);
+app.listen(port, (error) => {
+	if (error) {
+		throw error;
+	}
+	console.log(`Listening on port ${port}`);
+});
