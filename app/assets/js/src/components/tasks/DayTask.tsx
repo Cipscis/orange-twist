@@ -20,15 +20,16 @@ import {
 	InlineNote,
 } from 'components/shared';
 
-interface TaskProps {
+interface DayTaskProps {
 	taskId: number;
+	dayName: string;
 }
 
 /**
  * Renders a single task, and allows for it to be edited.
  */
-export function Task(props: TaskProps): JSX.Element | null {
-	const { taskId } = props;
+export function DayTask(props: DayTaskProps): JSX.Element | null {
+	const { taskId, dayName } = props;
 	const taskInfo = useTaskInfo(taskId);
 
 	/**
@@ -57,6 +58,7 @@ export function Task(props: TaskProps): JSX.Element | null {
 	return <div class="task">
 		<TaskStatusComponentDisplay
 			taskId={taskInfo.id}
+			dayName={dayName}
 		/>
 		<IconButton
 			href={getTaskDetailUrl(taskInfo.id)}

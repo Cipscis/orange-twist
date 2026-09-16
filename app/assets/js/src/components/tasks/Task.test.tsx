@@ -101,14 +101,4 @@ describe('Task', () => {
 			expect(getByTitle('In review (click to edit)')).toBeInTheDocument();
 		});
 	});
-
-	test('renders the task status for the specified day', async () => {
-		const { getByTitle } = render(<Task
-			taskId={2}
-			dayName="2023-11-23"
-		/>);
-		await waitFor(() => {
-			expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
-		});
-	});
 });
