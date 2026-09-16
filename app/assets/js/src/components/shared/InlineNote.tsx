@@ -6,6 +6,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
+import { IconName } from 'types/IconName';
 import { classNames, useBlurCallback } from 'utils';
 import { Markdown } from './Markdown';
 import { IconButton } from './IconButton';
@@ -179,7 +180,7 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 		<IconButton
 			class="inline-note__edit"
 			title={props.editButtonTitle ?? 'Edit note'}
-			icon="✏️"
+			icon={IconName.EDIT}
 			onClick={enterEditModeOnButtonClick}
 		/>
 	</form>;

@@ -9,6 +9,7 @@ import {
 	useRef,
 } from 'preact/hooks';
 
+import { IconName } from 'types/IconName';
 import {
 	classNames,
 	getDeepActiveElement,
@@ -161,7 +162,7 @@ export function Modal(props: ModalProps): JSX.Element {
 					closeButton &&
 					<IconButton
 						title="Close modal"
-						icon="❌"
+						icon={IconName.CLOSE}
 						class="modal__close"
 						onClick={onClose}
 					/>

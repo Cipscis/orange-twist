@@ -3,6 +3,7 @@ import {
 	useCallback,
 } from 'preact/hooks';
 
+import { IconName } from 'types/IconName';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
@@ -62,7 +63,7 @@ export function Task(props: TaskProps): JSX.Element | null {
 		<IconButton
 			href={getTaskDetailUrl(taskInfo.id)}
 			title="View task"
-			icon="📄"
+			icon={IconName.FILE}
 		/>
 		<InlineNote
 			note={taskInfo.name}
