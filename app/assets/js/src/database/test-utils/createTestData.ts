@@ -9,51 +9,51 @@ import { defaultStatuses } from '../migration';
  */
 export function createTestData(): DatabaseData {
 	return {
-		[ObjectStoreName.DAY]: [
-			{
+		[ObjectStoreName.DAY]: {
+			1: {
 				id: 1,
 				year: 2026,
 				month: 4,
 				day: 26,
 				note: 'Test note 1',
 			},
-			{
+			2: {
 				id: 2,
 				year: 2026,
 				month: 4,
 				day: 27,
 				note: 'Test note 2',
 			},
-			{
+			3: {
 				id: 3,
 				year: 2026,
 				month: 1,
 				day: 1,
 				note: 'Test note 3',
 			},
-		],
-		[ObjectStoreName.TASK]: [
-			{
+		},
+		[ObjectStoreName.TASK]: {
+			1: {
 				id: 1,
 				name: 'Test task 1',
 				note: 'Test task 1 note',
 				sortIndex: 1,
 			},
-			{
+			2: {
 				id: 2,
 				name: 'Test task 2',
 				note: 'Test task 2 note',
 				sortIndex: 2,
 			},
-			{
+			3: {
 				id: 3,
 				name: 'Test task 3',
 				note: 'Test task 3 note',
 				sortIndex: 0,
 			},
-		],
-		[ObjectStoreName.DAY_TASK]: [
-			{
+		},
+		[ObjectStoreName.DAY_TASK]: {
+			1: {
 				id: 1,
 				day: 1,
 				task: 1,
@@ -62,7 +62,7 @@ export function createTestData(): DatabaseData {
 				status: 2,
 				sortIndex: 1,
 			},
-			{
+			2: {
 				id: 2,
 				day: 1,
 				task: 2,
@@ -71,22 +71,24 @@ export function createTestData(): DatabaseData {
 				status: 2,
 				sortIndex: 0,
 			},
-		],
-		[ObjectStoreName.STATUS]: defaultStatuses,
-		[ObjectStoreName.TEMPLATE]: [
-			{
+		},
+		[ObjectStoreName.STATUS]: Object.fromEntries(
+			defaultStatuses.map((status) => [status.id, status])
+		),
+		[ObjectStoreName.TEMPLATE]: {
+			1: {
 				id: 1,
 				name: 'Template 1 name',
 				template: 'Template 1',
 				sortIndex: 1,
 			},
-			{
+			2: {
 				id: 2,
 				name: 'Template 2 name',
 				template: 'Template 2',
 				sortIndex: 0,
 			},
-		],
+		},
 		[ObjectStoreName.IMAGE]: {
 			'test-hash': {
 				hash: 'test-hash',
