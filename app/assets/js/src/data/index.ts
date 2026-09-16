@@ -68,6 +68,7 @@ export {
 	clear,
 	exportData,
 	getTaskStatusForDay,
+	loadAllRegisters,
 	importData,
 	StorageKey,
 } from './shared';
