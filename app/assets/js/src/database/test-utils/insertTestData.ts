@@ -23,9 +23,35 @@ import { createTestData } from './createTestData';
  * Construct an Orange Twist database v2 containing test data.
  */
 export async function insertTestData(
-	testData?: DatabaseData
+	testData?: Partial<DatabaseData>
 ): Promise<void> {
-	testData = testData ?? createTestData();
+	const defaultTestData = createTestData();
+	const fullTestData = {
+		[ObjectStoreName.DAY]: {
+			...defaultTestData[ObjectStoreName.DAY],
+			...testData?.[ObjectStoreName.DAY],
+		},
+		[ObjectStoreName.TASK]: {
+			...defaultTestData[ObjectStoreName.TASK],
+			...testData?.[ObjectStoreName.TASK],
+		},
+		[ObjectStoreName.DAY_TASK]: {
+			...defaultTestData[ObjectStoreName.DAY_TASK],
+			...testData?.[ObjectStoreName.DAY_TASK],
+		},
+		[ObjectStoreName.STATUS]: {
+			...defaultTestData[ObjectStoreName.STATUS],
+			...testData?.[ObjectStoreName.STATUS],
+		},
+		[ObjectStoreName.TEMPLATE]: {
+			...defaultTestData[ObjectStoreName.TEMPLATE],
+			...testData?.[ObjectStoreName.TEMPLATE],
+		},
+		[ObjectStoreName.IMAGE]: {
+			...defaultTestData[ObjectStoreName.IMAGE],
+			...testData?.[ObjectStoreName.IMAGE],
+		},
+	};
 
 	// Start with a fresh database
 	await clearDatabase();
@@ -42,42 +68,42 @@ export async function insertTestData(
 
 	// Insert test days
 	for (const day of Object.values(
-		testData[ObjectStoreName.DAY]
+		fullTestData[ObjectStoreName.DAY]
 	)) {
 		addDayInternal(transaction, day);
 	}
 
 	// Insert test statuses
 	for (const status of Object.values(
-		testData[ObjectStoreName.STATUS]
+		fullTestData[ObjectStoreName.STATUS]
 	)) {
 		addStatusInternal(transaction, status);
 	}
 
 	// Insert test tasks
 	for (const task of Object.values(
-		testData[ObjectStoreName.TASK]
+		fullTestData[ObjectStoreName.TASK]
 	)) {
 		addTaskInternal(transaction, task);
 	}
 
 	// Insert test day tasks
 	for (const dayTask of Object.values(
-		testData[ObjectStoreName.DAY_TASK]
+		fullTestData[ObjectStoreName.DAY_TASK]
 	)) {
 		addDayTaskInternal(transaction, dayTask);
 	}
 
 	// Insert test templates
 	for (const template of Object.values(
-		testData[ObjectStoreName.TEMPLATE]
+		fullTestData[ObjectStoreName.TEMPLATE]
 	)) {
 		addTemplateInternal(transaction, template);
 	}
 
 	// Insert test images
 	for (const image of Object.values(
-		testData[ObjectStoreName.IMAGE]
+		fullTestData[ObjectStoreName.IMAGE]
 	)) {
 		addImageInternal(transaction, image);
 	}
