@@ -15,54 +15,31 @@ import {
 } from '@testing-library/preact';
 import '@testing-library/jest-dom/jest-globals';
 
-import { TaskStatus } from 'types/TaskStatus';
-import {
-	clear,
-	createTask,
-	setDayTaskInfo,
-} from 'data';
 import { insertTestData } from 'database';
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import { TaskDetail } from './TaskDetail';
 
 describe('TaskDetail', () => {
-	beforeEach(async () => {
-		clear();
-		await insertTestData();
-	});
+	beforeEach(() => insertTestData());
 
 	afterEach(() => {
 		cleanup();
 	});
 
 	test('renders the task\'s note', async () => {
-		const taskId = createTask({
-			note: 'Task note',
-		});
-
 		const { findByText } = render(<OrangeTwistContext.Provider
 			value={{
 				isLoading: false,
 			}}
 		>
-			<TaskDetail taskId={taskId} />
+			<TaskDetail taskId={1} />
 		</OrangeTwistContext.Provider>);
 
 		expect(await findByText('Test task 1 note')).toBeInTheDocument();
 	});
 
 	test('renders the status and day name for day tasks', async () => {
-		const taskId = createTask();
-		const dayName = '2024-01-14';
-
-		setDayTaskInfo({
-			taskId,
-			dayName,
-		}, {
-			status: TaskStatus.IN_PROGRESS,
-		});
-
 		const {
 			getByText,
 			getByTitle,
@@ -71,10 +48,10 @@ describe('TaskDetail', () => {
 				isLoading: false,
 			}}
 		>
-			<TaskDetail taskId={taskId} />
+			<TaskDetail taskId={1} />
 		</OrangeTwistContext.Provider>);
 
-		const dayNameEl = getByText(dayName);
+		const dayNameEl = getByText('2026-04-26');
 		expect(dayNameEl).toBeInTheDocument();
 
 		await waitFor(() => {
