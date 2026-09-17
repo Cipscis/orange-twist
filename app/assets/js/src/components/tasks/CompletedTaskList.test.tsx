@@ -16,85 +16,122 @@ import {
 	render,
 } from '@testing-library/preact';
 
-import { TaskStatus } from 'types/TaskStatus';
-import {
-	clear,
-	setDayTaskInfo,
-	setTaskInfo,
-} from 'data';
+import { insertTestData } from 'database';
 
 import { CompletedTaskList } from './CompletedTaskList';
 
 describe('CompletedTaskList', () => {
-	beforeEach(() => {
-		clear();
-
-		setTaskInfo(1, {
-			name: 'Task one',
-			status: TaskStatus.IN_PROGRESS,
-			sortIndex: 1,
-		});
-		setDayTaskInfo({
-			taskId: 1,
-			dayName: '2024-03-04',
-		}, {
-			status: TaskStatus.IN_PROGRESS,
-		});
-
-		setTaskInfo(2, {
-			name: 'Task two',
-			status: TaskStatus.COMPLETED,
-			sortIndex: 3,
-		});
-		setDayTaskInfo({
-			taskId: 2,
-			dayName: '2024-03-03',
-		}, {
-			status: TaskStatus.COMPLETED,
-		});
-
-		setTaskInfo(3, {
-			name: 'Task three',
-			status: TaskStatus.WILL_NOT_DO,
-			sortIndex: 2,
-		});
-		setDayTaskInfo({
-			taskId: 3,
-			dayName: '2024-03-02',
-		}, {
-			status: TaskStatus.WILL_NOT_DO,
-		});
-
-		setTaskInfo(4, {
-			name: 'Task four',
-			status: TaskStatus.INVESTIGATING,
-			sortIndex: -1,
-		});
-		setDayTaskInfo({
-			taskId: 4,
-			dayName: '2024-03-01',
-		}, {
-			status: TaskStatus.INVESTIGATING,
-		});
-
-		setTaskInfo(5, {
-			name: 'Task five',
-			status: TaskStatus.COMPLETED,
-			sortIndex: -1,
-		});
-		setDayTaskInfo({
-			taskId: 5,
-			dayName: '2024-03-02',
-		}, {
-			status: TaskStatus.COMPLETED,
-		});
-
-		setTaskInfo(6, {
-			name: 'Task six',
-			status: TaskStatus.COMPLETED,
-			note: 'No day task info',
-		}, { forCurrentDay: false });
-	});
+	beforeEach(() => insertTestData({
+		task: {
+			1: {
+				id: 1,
+				name: 'Task one',
+				note: '',
+				sortIndex: 1,
+			},
+			2: {
+				id: 2,
+				name: 'Task two',
+				note: '',
+				sortIndex: 3,
+			},
+			3: {
+				id: 3,
+				name: 'Task three',
+				note: '',
+				sortIndex: 2,
+			},
+			4: {
+				id: 4,
+				name: 'Task four',
+				note: '',
+				sortIndex: -1,
+			},
+			5: {
+				id: 5,
+				name: 'Task five',
+				note: '',
+				sortIndex: -1,
+			},
+		},
+		day: {
+			1: {
+				id: 1,
+				year: 2024,
+				month: 3,
+				day: 1,
+				note: '',
+			},
+			2: {
+				id: 2,
+				year: 2024,
+				month: 3,
+				day: 2,
+				note: '',
+			},
+			3: {
+				id: 3,
+				year: 2024,
+				month: 3,
+				day: 3,
+				note: '',
+			},
+			4: {
+				id: 4,
+				year: 2024,
+				month: 3,
+				day: 4,
+				note: '',
+			},
+		},
+		day_task: {
+			1: {
+				id: 1,
+				day: 4,
+				task: 1,
+				status: 2,
+				note: '',
+				summary: null,
+				sortIndex: 1,
+			},
+			2: {
+				id: 2,
+				day: 3,
+				task: 2,
+				status: 3,
+				note: '',
+				summary: null,
+				sortIndex: 1,
+			},
+			3: {
+				id: 3,
+				day: 2,
+				task: 3,
+				status: 9,
+				note: '',
+				summary: null,
+				sortIndex: 1,
+			},
+			4: {
+				id: 4,
+				day: 1,
+				task: 4,
+				status: 4,
+				note: '',
+				summary: null,
+				sortIndex: 1,
+			},
+			5: {
+				id: 5,
+				day: 2,
+				task: 5,
+				status: 3,
+				note: '',
+				summary: null,
+				sortIndex: 1,
+			},
+		},
+	}));
 
 	afterEach(() => {
 		cleanup();
@@ -129,7 +166,6 @@ describe('CompletedTaskList', () => {
 			'Task two',
 			'Task five',
 			'Task three',
-			'Task six',
 		]);
 	});
 });
