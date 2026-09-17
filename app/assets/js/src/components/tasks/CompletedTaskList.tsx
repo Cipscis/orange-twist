@@ -15,8 +15,6 @@ import {
 } from 'data';
 import { sortElementsBySortIndex } from 'utils';
 
-import { sortElementsBySortIndex } from 'utils';
-
 import { Accordion } from 'components/shared';
 import { TaskList } from './TaskList';
 
@@ -70,15 +68,6 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 		return sortedTasks.map(([{ id }]) => id);
 	}, [
 		matchingTaskInfo,
-	]);
-
-	const matchingTaskInfo = useAllTaskInfo(matcher);
-	const sortedTaskIds = useMemo(() => {
-		const sortedTasks = matchingTaskInfo.toSorted(sorter);
-
-		return sortedTasks.map(({ id }) => id);
-	}, [
-		matchingTaskInfo, sorter,
 	]);
 
 	// Update list open state if prop changes
