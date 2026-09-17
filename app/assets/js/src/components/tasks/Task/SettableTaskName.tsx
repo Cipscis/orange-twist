@@ -3,11 +3,17 @@ import {
 	Fragment,
 	type JSX,
 } from 'preact';
-
-import { useSettableTask } from 'database';
-import { AsyncDataStateType } from 'utils';
-import { InlineNote, Loader } from 'components/shared';
 import { useCallback } from 'preact/hooks';
+
+import { AsyncDataStateType } from 'utils';
+import { useSettableTask } from 'database';
+
+import {
+	InlineNote,
+	Loader,
+	Notice,
+	NoticeVariant,
+} from 'components/shared';
 
 interface SettableTaskNameProps {
 	taskId: number;
@@ -47,8 +53,14 @@ export const SettableTaskName = (props: SettableTaskNameProps): JSX.Element => {
 			/>
 		}
 
-		{/* TODO: What if no data? */}
-
-		{/* TODO: What if error or aborted? */}
+		{
+			!(
+				stateOfGet.type === AsyncDataStateType.INITIAL ||
+				(
+					stateOfGet.type === AsyncDataStateType.SUCCESS &&
+					stateOfGet.data
+				)
+			) && <Notice variant={NoticeVariant.ERROR} message={`Failed to load task ${taskId}`} />
+		}
 	</>;
 };

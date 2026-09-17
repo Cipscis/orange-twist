@@ -12,5 +12,6 @@ export function Loader(props: LoaderProps): JSX.Element {
 		class={classNames('loader', props.class, {
 			'loader--immediate': props.immediate,
 		})}
+		data-testid="loader"
 	/>;
 }
