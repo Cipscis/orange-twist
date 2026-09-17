@@ -41,8 +41,9 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 	const matchingTaskInfo = useAllTaskInfo(matcher);
 	const sortedTaskIds = useMemo(() => {
 		// Construct a proxy array with all information needed for sorting
+		const allDayTaskInfo = getAllDayTaskInfo();
 		const sortableTaskInfo = matchingTaskInfo.map((taskInfo) => {
-			const dayTasks = getAllDayTaskInfo({ taskId: taskInfo.id });
+			const dayTasks = allDayTaskInfo.filter(({ taskId }) => taskId === taskInfo.id);
 			const lastUpdated = dayTasks.at(-1)?.dayName ?? '0001-01-01';
 
 			return [taskInfo, lastUpdated] as const;

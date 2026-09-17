@@ -14,12 +14,11 @@ import {
 	render,
 	waitFor,
 } from '@testing-library/preact';
-
 import { insertTestData } from 'database';
 
-import { Task } from './Task';
+import { DayTask } from './DayTask';
 
-describe('Task', () => {
+describe('DayTask', () => {
 	beforeEach(() => insertTestData({
 		day: {
 			1: {
@@ -27,13 +26,6 @@ describe('Task', () => {
 				year: 2023,
 				month: 11,
 				day: 23,
-				note: '',
-			},
-			2: {
-				id: 2,
-				year: 2023,
-				month: 11,
-				day: 24,
 				note: '',
 			},
 		},
@@ -44,37 +36,13 @@ describe('Task', () => {
 				note: '',
 				sortIndex: 1,
 			},
-			2: {
-				id: 2,
-				name: 'Task two',
-				note: '',
-				sortIndex: 2,
-			},
 		},
 		day_task: {
 			1: {
 				id: 1,
 				day: 1,
-				task: 2,
-				status: 2,
-				note: '',
-				summary: null,
-				sortIndex: 1,
-			},
-			2: {
-				id: 2,
-				day: 1,
 				task: 1,
 				status: 2,
-				note: '',
-				summary: null,
-				sortIndex: 1,
-			},
-			3: {
-				id: 3,
-				day: 2,
-				task: 1,
-				status: 5,
 				note: '',
 				summary: null,
 				sortIndex: 1,
@@ -86,7 +54,10 @@ describe('Task', () => {
 
 	test('renders the task name as Markdown', () => {
 		const { getByTestId } = render(
-			<Task taskId={1} />
+			<DayTask
+				taskId={1}
+				dayName="2023-11-23"
+			/>
 		);
 
 		const content = getByTestId('inline-note__note');
@@ -94,11 +65,13 @@ describe('Task', () => {
 		expect(content.innerHTML.trim()).toBe('<strong>Bold</strong> <em>italic</em> <code>code</code>');
 	});
 
-	test('renders the task status', async () => {
-		const { getByTitle } = render(<Task taskId={1} />);
-
+	test('renders the task status for the specified day', async () => {
+		const { getByTitle } = render(<DayTask
+			taskId={1}
+			dayName="2023-11-23"
+		/>);
 		await waitFor(() => {
-			expect(getByTitle('In review (click to edit)')).toBeInTheDocument();
+			expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
 		});
 	});
 });

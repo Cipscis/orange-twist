@@ -13,9 +13,9 @@ import { cleanup, render } from '@testing-library/preact';
 
 import { insertTestData } from 'database';
 
-import { TaskList } from './TaskList';
+import { DayTaskList } from './DayTaskList';
 
-describe('TaskList', () => {
+describe('DayTaskList', () => {
 	beforeEach(() => insertTestData({
 		task: {
 			1: {
@@ -43,44 +43,6 @@ describe('TaskList', () => {
 				sortIndex: -1,
 			},
 		},
-		day_task: {
-			1: {
-				id: 1,
-				day: 1,
-				task: 1,
-				status: 2,
-				note: '',
-				summary: null,
-				sortIndex: 1,
-			},
-			2: {
-				id: 2,
-				day: 1,
-				task: 2,
-				status: 3,
-				note: '',
-				summary: null,
-				sortIndex: 1,
-			},
-			3: {
-				id: 3,
-				day: 1,
-				task: 3,
-				status: 4,
-				note: '',
-				summary: null,
-				sortIndex: 1,
-			},
-			4: {
-				id: 4,
-				day: 1,
-				task: 4,
-				status: 3,
-				note: '',
-				summary: null,
-				sortIndex: 1,
-			},
-		},
 	}));
 
 	afterEach(() => {
@@ -88,8 +50,9 @@ describe('TaskList', () => {
 	});
 
 	test('renders a specified array of tasks in order', () => {
-		const { queryAllByText } = render(<TaskList
+		const { queryAllByText } = render(<DayTaskList
 			taskIds={[3, 2, 1]}
+			dayName="2026-09-16"
 		/>);
 
 		const tasks = queryAllByText(/^Task /);

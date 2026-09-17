@@ -11,36 +11,83 @@ import '@testing-library/jest-dom/jest-globals';
 
 import { cleanup, render } from '@testing-library/preact';
 
-import { TaskStatus } from 'types/TaskStatus';
-import { clear, setTaskInfo } from 'data';
+import { insertTestData } from 'database';
 
 import { UnfinishedTaskList } from './UnfinishedTaskList';
 
 describe('UnfinishedTaskList', () => {
-	beforeEach(() => {
-		clear();
-
-		setTaskInfo(1, {
-			name: 'Task one',
-			status: TaskStatus.IN_PROGRESS,
-			sortIndex: 1,
-		});
-		setTaskInfo(2, {
-			name: 'Task two',
-			status: TaskStatus.COMPLETED,
-			sortIndex: 3,
-		});
-		setTaskInfo(3, {
-			name: 'Task three',
-			status: TaskStatus.WILL_NOT_DO,
-			sortIndex: 2,
-		});
-		setTaskInfo(4, {
-			name: 'Task four',
-			status: TaskStatus.INVESTIGATING,
-			sortIndex: -1,
-		});
-	});
+	beforeEach(() => insertTestData({
+		task: {
+			1: {
+				id: 1,
+				name: 'Task one',
+				note: '',
+				sortIndex: 1,
+			},
+			2: {
+				id: 2,
+				name: 'Task two',
+				note: '',
+				sortIndex: 3,
+			},
+			3: {
+				id: 3,
+				name: 'Task three',
+				note: '',
+				sortIndex: 2,
+			},
+			4: {
+				id: 4,
+				name: 'Task four',
+				note: '',
+				sortIndex: -1,
+			},
+			5: {
+				id: 5,
+				name: 'Task five',
+				note: '',
+				sortIndex: -1,
+			},
+		},
+		day_task: {
+			1: {
+				id: 1,
+				day: 1,
+				task: 1,
+				status: 2,
+				note: '',
+				summary: '',
+				sortIndex: 1,
+			},
+			2: {
+				id: 2,
+				day: 1,
+				task: 2,
+				status: 3,
+				note: '',
+				summary: '',
+				sortIndex: 1,
+			},
+			3: {
+				id: 3,
+				day: 1,
+				task: 3,
+				status: 9,
+				note: '',
+				summary: '',
+				sortIndex: 1,
+			},
+			4: {
+				id: 4,
+				day: 1,
+				task: 4,
+				status: 4,
+				note: '',
+				summary: '',
+				sortIndex: 1,
+			},
+		},
+	}));
 
 	afterEach(() => {
 		cleanup();
@@ -51,6 +98,7 @@ describe('UnfinishedTaskList', () => {
 
 		expect(queryByText('Task one')).toBeInTheDocument();
 		expect(queryByText('Task four')).toBeInTheDocument();
+		expect(queryByText('Task five')).toBeInTheDocument();
 
 		expect(queryByText('Task two')).not.toBeInTheDocument();
 		expect(queryByText('Task three')).not.toBeInTheDocument();
