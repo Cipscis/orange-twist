@@ -11,49 +11,39 @@ import '@testing-library/jest-dom/jest-globals';
 
 import { cleanup, render } from '@testing-library/preact';
 
-import { TaskStatus } from 'types/TaskStatus';
-import {
-	clear,
-	setDayTaskInfo,
-	setTaskInfo,
-} from 'data';
+import { insertTestData } from 'database';
 
 import { DayTaskList } from './DayTaskList';
 
 describe('DayTaskList', () => {
-	beforeEach(() => {
-		clear();
-
-		setTaskInfo(1, {
-			name: 'Task one',
-			status: TaskStatus.IN_PROGRESS,
-			sortIndex: 1,
-		});
-		setDayTaskInfo({
-			taskId: 1,
-			dayName: '2026-09-16',
-		}, {
-			status: TaskStatus.COMPLETED,
-		});
-
-		setTaskInfo(2, {
-			name: 'Task two',
-			status: TaskStatus.COMPLETED,
-			sortIndex: 3,
-		});
-
-		setTaskInfo(3, {
-			name: 'Task three',
-			status: TaskStatus.INVESTIGATING,
-			sortIndex: 2,
-		});
-
-		setTaskInfo(4, {
-			name: 'Task four',
-			status: TaskStatus.COMPLETED,
-			sortIndex: -1,
-		});
-	});
+	beforeEach(() => insertTestData({
+		task: {
+			1: {
+				id: 1,
+				name: 'Task one',
+				note: '',
+				sortIndex: 1,
+			},
+			2: {
+				id: 2,
+				name: 'Task two',
+				note: '',
+				sortIndex: 3,
+			},
+			3: {
+				id: 3,
+				name: 'Task three',
+				note: '',
+				sortIndex: 2,
+			},
+			4: {
+				id: 4,
+				name: 'Task four',
+				note: '',
+				sortIndex: -1,
+			},
+		},
+	}));
 
 	afterEach(() => {
 		cleanup();
