@@ -47,7 +47,15 @@ describe('SettableTaskName', () => {
 		});
 	});
 
-	test.todo('displays an error if the task could not be loaded');
+	test('displays an error if the task could not be loaded', async () => {
+		const { findByTestId } = render(
+			<SettableTaskName taskId={-1} />
+		);
+
+		const errorNotice = await findByTestId('settable-task-name__error-notice');
+		expect(errorNotice).toBeInTheDocument();
+		expect(errorNotice.textContent).toBe('Failed to load task with ID -1');
+	});
 
 	test('renders the task name as Markdown', async () => {
 		const { findByTestId } = render(

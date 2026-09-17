@@ -60,7 +60,11 @@ export const SettableTaskName = (props: SettableTaskNameProps): JSX.Element => {
 					stateOfGet.type === AsyncDataStateType.SUCCESS &&
 					stateOfGet.data
 				)
-			) && <Notice variant={NoticeVariant.ERROR} message={`Failed to load task ${taskId}`} />
+			) && <Notice
+				variant={NoticeVariant.ERROR}
+				message={`Failed to load task with ID ${taskId}`}
+				dataTestid="settable-task-name__error-notice"
+			/>
 		}
 	</>;
 };
