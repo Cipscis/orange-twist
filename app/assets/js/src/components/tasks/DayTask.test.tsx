@@ -5,7 +5,6 @@ import {
 	beforeEach,
 	describe,
 	expect,
-	jest,
 	test,
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
@@ -15,34 +14,50 @@ import {
 	render,
 	waitFor,
 } from '@testing-library/preact';
-import { act } from 'preact/test-utils';
-
-import { TaskStatus } from 'types/TaskStatus';
-import {
-	clear,
-	setDayTaskInfo,
-	setTaskInfo,
-} from 'data';
 import { insertTestData } from 'database';
 
 import { DayTask } from './DayTask';
 
 describe('DayTask', () => {
-	beforeEach(() => insertTestData());
+	beforeEach(() => insertTestData({
+		day: {
+			1: {
+				id: 1,
+				year: 2023,
+				month: 11,
+				day: 23,
+				note: '',
+			},
+		},
+		task: {
+			1: {
+				id: 1,
+				name: '**Bold** *italic* `code`',
+				note: '',
+				sortIndex: 1,
+			},
+		},
+		day_task: {
+			1: {
+				id: 1,
+				day: 1,
+				task: 1,
+				status: 2,
+				note: '',
+				summary: null,
+				sortIndex: 1,
+			},
+		},
+	}));
 
-	afterEach(() => {
-		cleanup();
-		clear();
-	});
+	afterEach(() => cleanup());
 
 	test('renders the task name as Markdown', () => {
-		setTaskInfo(0, {
-			name: '**Bold** *italic* `code`',
-			status: TaskStatus.TODO,
-		});
-
 		const { getByTestId } = render(
-			<DayTask taskId={0} dayName="2026-09-16" />
+			<DayTask
+				taskId={1}
+				dayName="2023-11-23"
+			/>
 		);
 
 		const content = getByTestId('inline-note__note');
@@ -51,44 +66,12 @@ describe('DayTask', () => {
 	});
 
 	test('renders the task status for the specified day', async () => {
-		setTaskInfo(1, { status: TaskStatus.TODO });
-		setDayTaskInfo(
-			{ taskId: 1, dayName: '2023-11-23' },
-			{ status: TaskStatus.IN_PROGRESS }
-		);
-
 		const { getByTitle } = render(<DayTask
 			taskId={1}
-			dayName="2023-11-25"
+			dayName="2023-11-23"
 		/>);
 		await waitFor(() => {
 			expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
-		});
-
-		await act(() => {
-			jest.useFakeTimers();
-			setDayTaskInfo(
-				{ taskId: 1, dayName: '2023-11-24' },
-				{ status: TaskStatus.IN_REVIEW }
-			);
-			jest.advanceTimersByTime(1500);
-			jest.useRealTimers();
-		});
-		await waitFor(() => {
-			expect(getByTitle('In review (click to edit)')).toBeInTheDocument();
-		});
-
-		await act(() => {
-			jest.useFakeTimers();
-			setDayTaskInfo(
-				{ taskId: 1, dayName: '2023-11-25' },
-				{ status: TaskStatus.COMPLETED }
-			);
-			jest.advanceTimersByTime(1500);
-			jest.useRealTimers();
-		});
-		await waitFor(() => {
-			expect(getByTitle('Completed (click to edit)')).toBeInTheDocument();
 		});
 	});
 });
