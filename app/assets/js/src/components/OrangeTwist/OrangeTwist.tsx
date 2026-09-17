@@ -21,7 +21,11 @@ import { useCommandThemeToggle } from './useCommandThemeToggle';
 import { useCommandKeyboardShortcutShow } from './useCommandKeyboardShortcutShow';
 import { useCommandTemplatesEdit } from './useCommandTemplatesEdit';
 
-import { loadAllRegisters } from 'data';
+import {
+	getDayInfo,
+	loadAllRegisters,
+	setDayInfo,
+} from 'data';
 
 import {
 	KeyboardShortcutName,
@@ -32,6 +36,7 @@ import {
 import {
 	classNames,
 	type DefaultsFor,
+	getCurrentDateDayName,
 } from 'utils';
 
 import { type PersistApi, local } from 'persist';
@@ -100,6 +105,12 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	 */
 	const loadAllData = useCallback(async () => {
 		await loadAllRegisters(persist);
+
+		// If there's no info for the current day, set up a stub
+		const currentDateDayName = getCurrentDateDayName();
+		if (getDayInfo(currentDateDayName) === null) {
+			setDayInfo(currentDateDayName, {});
+		}
 	}, [persist]);
 
 	// Load persisted data on initial load
