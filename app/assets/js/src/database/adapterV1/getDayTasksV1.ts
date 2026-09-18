@@ -24,8 +24,13 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 		ObjectStoreName.STATUS,
 	], 'readonly');
 
-	const allDayTasks = await getDayTasksInternal(transaction);
-	const statuses = await getStatusesInternal(transaction);
+	const [
+		allDayTasks,
+		statuses,
+	] = await Promise.all([
+		getDayTasksInternal(transaction),
+		getStatusesInternal(transaction),
+	]);
 	const dayTasksV1 = await Promise.all(
 		allDayTasks.map(
 			(dayTask) => downgradeDayTask(dayTask, statuses, transaction)
