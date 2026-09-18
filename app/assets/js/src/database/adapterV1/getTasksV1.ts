@@ -42,11 +42,22 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 		getStatusesInternal(transaction),
 	]);
 
+	const daysById = new Map<number, Day>();
+	for (const day of allDays) {
+		daysById.set(day.id, day);
+	}
+
+	const dayTasksByTaskId = new Map<number, DayTask[]>();
+	for (const dayTask of allDayTasks) {
+		const dayTasks = dayTasksByTaskId.getOrInsert(dayTask.task, []);
+		dayTasks.push(dayTask);
+	}
+
 	for (const task of allTasks) {
 		const taskV1 = downgradeTask({
 			task,
-			allDays,
-			allDayTasks,
+			daysById,
+			dayTasksByTaskId,
 			statuses,
 		});
 
@@ -61,19 +72,19 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
  */
 function downgradeTask({
 	task,
-	allDays,
-	allDayTasks,
+	daysById,
+	dayTasksByTaskId,
 	statuses,
 }: {
 	task: Task;
-	allDays: readonly Day[];
-	allDayTasks: readonly DayTask[];
+	daysById: Map<number, Day>;
+	dayTasksByTaskId: Map<number, DayTask[]>;
 	statuses: readonly Status[];
 }): TaskInfo {
 	const status = getStatusForTask({
 		task,
-		allDays,
-		allDayTasks,
+		daysById,
+		dayTasksByTaskId,
 		statuses,
 	});
 
@@ -96,24 +107,17 @@ function downgradeTask({
  */
 function getStatusForTask({
 	task,
-	allDays,
-	allDayTasks,
+	daysById,
+	dayTasksByTaskId,
 	statuses,
 }: {
 	task: Task;
-	allDays: readonly Day[];
-	allDayTasks: readonly DayTask[];
+	daysById: Map<number, Day>;
+	dayTasksByTaskId: Map<number, DayTask[]>;
 	statuses: readonly Status[];
 }) {
 	// Find task status via the task's most recent day task
-	const dayTasks = allDayTasks.filter(
-		({ task: taskId }) => taskId === task.id
-	);
-
-	const daysById = new Map<number, Day>();
-	for (const day of allDays) {
-		daysById.set(day.id, day);
-	}
+	const dayTasks = dayTasksByTaskId.getOrInsert(task.id, []);
 
 	const sortedDayTasks = dayTasks.toSorted(
 		(dayTaskA, dayTaskB) => {
