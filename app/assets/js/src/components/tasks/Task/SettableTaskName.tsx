@@ -7,10 +7,12 @@ import { useCallback } from 'preact/hooks';
 
 import { AsyncDataStateType } from 'utils';
 import {
-	save,
 	SaveType,
 	useSettableTask,
 } from 'database';
+
+import { fireCommand } from 'registers/commands';
+import { Command } from 'types/Command';
 
 import * as ui from 'ui';
 import {
@@ -37,7 +39,7 @@ export const SettableTaskName = (props: SettableTaskNameProps): JSX.Element => {
 	const nameChangeHandler = useCallback(async (name: string) => {
 		if (name === '') {
 			if (await ui.confirm('Delete this task?')) {
-				save([{
+				fireCommand(Command.DATA_SAVE, [{
 					type: SaveType.TASK_DELETE,
 					id: taskId,
 				}]);

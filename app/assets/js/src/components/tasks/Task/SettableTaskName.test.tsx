@@ -17,6 +17,8 @@ import {
 
 import { insertTestData } from 'database';
 
+import { OrangeTwist } from 'components/OrangeTwist';
+
 import { SettableTaskName } from './SettableTaskName';
 import userEvent from '@testing-library/user-event';
 
@@ -96,7 +98,10 @@ describe('SettableTaskName', () => {
 		const user = userEvent.setup();
 
 		const { findByRole, findByTestId } = render(
-			<SettableTaskName taskId={1} />
+			// The <OrangeTwist> wrapper is needed to register the proper save command listener
+			<OrangeTwist>
+				<SettableTaskName taskId={1} />
+			</OrangeTwist>
 		);
 
 		const editButton = await findByRole('button', { name: 'Edit task name' });
