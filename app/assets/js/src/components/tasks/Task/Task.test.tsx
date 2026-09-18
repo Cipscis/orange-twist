@@ -12,7 +12,6 @@ import '@testing-library/jest-dom/jest-globals';
 import {
 	cleanup,
 	render,
-	waitFor,
 } from '@testing-library/preact';
 
 import { insertTestData } from 'database';
@@ -84,21 +83,21 @@ describe('Task', () => {
 
 	afterEach(() => cleanup());
 
-	test('renders the task name as Markdown', () => {
-		const { getByTestId } = render(
+	test('renders the task name as Markdown', async () => {
+		const { findByTestId } = render(
 			<Task taskId={1} />
 		);
 
-		const content = getByTestId('inline-note__note');
+		const content = await findByTestId('inline-note__note');
 		expect(content).toBeInTheDocument();
 		expect(content.innerHTML.trim()).toBe('<strong>Bold</strong> <em>italic</em> <code>code</code>');
 	});
 
 	test('renders the task status', async () => {
-		const { getByTitle } = render(<Task taskId={1} />);
+		const { findByTitle } = render(<Task taskId={1} />);
 
-		await waitFor(() => {
-			expect(getByTitle('In review (click to edit)')).toBeInTheDocument();
-		});
+		expect(
+			await findByTitle('In review (click to edit)')
+		).toBeInTheDocument();
 	});
 });

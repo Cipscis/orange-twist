@@ -9,7 +9,11 @@ import {
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, render } from '@testing-library/preact';
+import {
+	cleanup,
+	render,
+	waitFor,
+} from '@testing-library/preact';
 
 import { insertTestData } from 'database';
 
@@ -87,16 +91,18 @@ describe('TaskList', () => {
 		cleanup();
 	});
 
-	test('renders a specified array of tasks in order', () => {
+	test('renders a specified array of tasks in order', async () => {
 		const { queryAllByText } = render(<TaskList
 			taskIds={[3, 2, 1]}
 		/>);
 
-		const tasks = queryAllByText(/^Task /);
-		expect(tasks.map(({ textContent }) => textContent)).toEqual([
-			'Task three',
-			'Task two',
-			'Task one',
-		]);
+		await waitFor(() => {
+			const tasks = queryAllByText(/^Task /);
+			expect(tasks.map(({ textContent }) => textContent)).toEqual([
+				'Task three',
+				'Task two',
+				'Task one',
+			]);
+		});
 	});
 });
