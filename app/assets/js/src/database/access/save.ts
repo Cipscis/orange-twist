@@ -96,6 +96,7 @@ async function saveDayTask(
 	}
 
 	await updateDayTaskInternal(transaction, dayTaskToSave);
+	noticeChange(ChangeType.DAY_TASK, action.id);
 }
 
 /**
