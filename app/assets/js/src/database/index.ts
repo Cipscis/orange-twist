@@ -24,6 +24,10 @@ export type {
 } from './types';
 
 export {
+	getDayName,
+} from './utils';
+
+export {
 	createTestData,
 	insertTestData,
 } from './test-utils';
