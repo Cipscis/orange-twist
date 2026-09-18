@@ -19,7 +19,19 @@ describe('removeTaskInternal', () => {
 	let transaction: IDBTransaction;
 
 	beforeEach(async () => {
-		await insertTestData();
+		await insertTestData({
+			day_task: {
+				3: {
+					id: 3,
+					day: 2,
+					task: 1,
+					status: 1,
+					note: '',
+					summary: null,
+					sortIndex: 1,
+				},
+			},
+		});
 
 		const db = await getDatabase();
 		transaction = db.transaction([
@@ -71,5 +83,11 @@ describe('removeTaskInternal', () => {
 				sortIndex: 0,
 			},
 		] satisfies DayTask[]);
+	});
+
+	test('provides a list of all removed entities by ID', async () => {
+		const removedDayTaskIds = await removeTaskInternal(transaction, 1);
+
+		expect(removedDayTaskIds).toEqual([1, 3]);
 	});
 });
