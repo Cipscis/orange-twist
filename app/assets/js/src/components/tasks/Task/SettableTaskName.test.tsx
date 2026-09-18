@@ -14,13 +14,13 @@ import {
 	render,
 	waitFor,
 } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 
 import { insertTestData } from 'database';
 
 import { OrangeTwist } from 'components/OrangeTwist';
 
 import { SettableTaskName } from './SettableTaskName';
-import userEvent from '@testing-library/user-event';
 
 describe('SettableTaskName', () => {
 	beforeEach(() => insertTestData({

@@ -73,7 +73,7 @@ async function saveTask(
 }
 
 /**
- * Delete a single task, and any day tasks referencing itq.
+ * Delete a single task, and any day tasks referencing it.
  */
 async function deleteTask(
 	action: Extract<
