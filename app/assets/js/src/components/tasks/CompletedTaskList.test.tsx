@@ -14,6 +14,7 @@ import {
 	act,
 	cleanup,
 	render,
+	waitFor,
 } from '@testing-library/preact';
 
 import { insertTestData } from 'database';
@@ -137,7 +138,7 @@ describe('CompletedTaskList', () => {
 		cleanup();
 	});
 
-	test('renders all completed tasks', () => {
+	test('renders all completed tasks', async () => {
 		jest.useFakeTimers();
 		const { queryByText } = render(<CompletedTaskList open />);
 
@@ -145,15 +146,17 @@ describe('CompletedTaskList', () => {
 		act(() => jest.advanceTimersByTime(1500));
 		jest.useRealTimers();
 
-		expect(queryByText('Task two')).toBeInTheDocument();
-		expect(queryByText('Task three')).toBeInTheDocument();
-		expect(queryByText('Task five')).toBeInTheDocument();
+		await waitFor(() => {
+			expect(queryByText('Task two')).toBeInTheDocument();
+			expect(queryByText('Task three')).toBeInTheDocument();
+			expect(queryByText('Task five')).toBeInTheDocument();
 
-		expect(queryByText('Task one')).not.toBeInTheDocument();
-		expect(queryByText('Task four')).not.toBeInTheDocument();
+			expect(queryByText('Task one')).not.toBeInTheDocument();
+			expect(queryByText('Task four')).not.toBeInTheDocument();
+		});
 	});
 
-	test('renders completed tasks in reverse order of completion', () => {
+	test('renders completed tasks in reverse order of completion', async () => {
 		jest.useFakeTimers();
 		const { queryAllByText } = render(<CompletedTaskList open />);
 
@@ -161,11 +164,13 @@ describe('CompletedTaskList', () => {
 		act(() => jest.advanceTimersByTime(1500));
 		jest.useRealTimers();
 
-		const tasks = queryAllByText(/^Task /);
-		expect(tasks.map(({ textContent }) => textContent)).toEqual([
-			'Task two',
-			'Task five',
-			'Task three',
-		]);
+		await waitFor(() => {
+			const tasks = queryAllByText(/^Task /);
+			expect(tasks.map(({ textContent }) => textContent)).toEqual([
+				'Task two',
+				'Task five',
+				'Task three',
+			]);
+		});
 	});
 });

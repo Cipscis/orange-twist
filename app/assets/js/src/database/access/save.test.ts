@@ -13,6 +13,7 @@ import {
 	getDayInternal,
 	getDayTaskForDayAndTaskInternal,
 	getDayTaskInternal,
+	getDayTasksForTaskInternal,
 	getTaskInternal,
 } from '../internal';
 
@@ -173,6 +174,37 @@ describe('SaveHelper', () => {
 			status: 3,
 			summary: 'Test day task 2 updated',
 		});
+	});
+
+	test('deletes tasks, and all associated day tasks', async () => {
+		let readTransaction = db.transaction([
+			ObjectStoreName.TASK,
+		], 'readonly');
+		const beforeTask1 = await getTaskInternal(readTransaction, 1);
+
+		expect(beforeTask1).toEqual({
+			id: 1,
+			name: 'Test task 1',
+			note: 'Test task 1 note',
+			sortIndex: 1,
+		});
+
+		await save([
+			{
+				type: SaveType.TASK_DELETE,
+				id: 1,
+			},
+		]);
+
+		readTransaction = db.transaction([
+			ObjectStoreName.TASK,
+			ObjectStoreName.DAY_TASK,
+		], 'readonly');
+		const afterTask1 = await getTaskInternal(readTransaction, 1);
+		const afterDayTasks = await getDayTasksForTaskInternal(readTransaction, 1);
+
+		expect(afterTask1).toEqual(null);
+		expect(afterDayTasks).toEqual([]);
 	});
 
 	test('saves day tasks', async () => {

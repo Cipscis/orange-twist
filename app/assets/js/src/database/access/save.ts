@@ -5,6 +5,7 @@ import { getDayNameParts } from '../utils';
 import {
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
+	removeTaskInternal,
 	updateDayInternal,
 	updateDayTaskInternal,
 	updateTaskInternal,
@@ -12,7 +13,7 @@ import {
 
 import { SaveType, type SaveAction } from './SaveAction';
 import { requestTransaction } from './requestTransaction';
-import { noticeTaskChange } from './liveAccessManager';
+import { ChangeType, noticeChange } from './liveAccessManager';
 
 /**
  * Process any number of {@linkcode SaveAction}s.
@@ -28,6 +29,8 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
 			saveTask(action, transaction);
+		} else if (action.type === SaveType.TASK_DELETE) {
+			deleteTask(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
 			saveDayTaskLegacy(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK) {
@@ -66,7 +69,23 @@ async function saveTask(
 	}
 
 	await updateTaskInternal(transaction, taskToSave);
-	noticeTaskChange(action.id);
+	noticeChange(ChangeType.TASK, action.id);
+}
+
+/**
+ * Delete a single task, and any day tasks referencing it.
+ */
+async function deleteTask(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TASK_DELETE; }
+	>,
+	transaction: IDBTransaction
+): Promise<void> {
+	const removedDayTaskIds = await removeTaskInternal(transaction, action.id);
+	noticeChange(ChangeType.TASK, action.id);
+	for (const dayTaskId of removedDayTaskIds) {
+		noticeChange(ChangeType.DAY_TASK, dayTaskId);
+	}
 }
 
 /**
@@ -96,6 +115,7 @@ async function saveDayTask(
 	}
 
 	await updateDayTaskInternal(transaction, dayTaskToSave);
+	noticeChange(ChangeType.DAY_TASK, action.id);
 }
 
 /**
@@ -186,6 +206,9 @@ function gatherTransactionRequirements(
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
 			objectStores.add(ObjectStoreName.TASK);
+		} else if (action.type === SaveType.TASK_DELETE) {
+			objectStores.add(ObjectStoreName.TASK);
+			objectStores.add(ObjectStoreName.DAY_TASK);
 		} else if (action.type === SaveType.DAY_TASK) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.STATUS);

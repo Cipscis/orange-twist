@@ -23,7 +23,7 @@ export function ModalConfirm(props: ModalConfirmProps): JSX.Element {
 		resolve,
 	} = props;
 
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const confirm = useCallback(() => {
 		setIsOpen(false);

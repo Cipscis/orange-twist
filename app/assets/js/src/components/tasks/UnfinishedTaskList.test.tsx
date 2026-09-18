@@ -9,7 +9,11 @@ import {
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, render } from '@testing-library/preact';
+import {
+	cleanup,
+	render,
+	waitFor,
+} from '@testing-library/preact';
 
 import { insertTestData } from 'database';
 
@@ -93,14 +97,16 @@ describe('UnfinishedTaskList', () => {
 		cleanup();
 	});
 
-	test('renders all unfinished tasks', () => {
+	test('renders all unfinished tasks', async () => {
 		const { queryByText } = render(<UnfinishedTaskList />);
 
-		expect(queryByText('Task one')).toBeInTheDocument();
-		expect(queryByText('Task four')).toBeInTheDocument();
-		expect(queryByText('Task five')).toBeInTheDocument();
+		await waitFor(() => {
+			expect(queryByText('Task one')).toBeInTheDocument();
+			expect(queryByText('Task four')).toBeInTheDocument();
+			expect(queryByText('Task five')).toBeInTheDocument();
 
-		expect(queryByText('Task two')).not.toBeInTheDocument();
-		expect(queryByText('Task three')).not.toBeInTheDocument();
+			expect(queryByText('Task two')).not.toBeInTheDocument();
+			expect(queryByText('Task three')).not.toBeInTheDocument();
+		});
 	});
 });
