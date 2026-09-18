@@ -6,8 +6,13 @@ import {
 import { useCallback } from 'preact/hooks';
 
 import { AsyncDataStateType } from 'utils';
-import { useSettableTask } from 'database';
+import {
+	save,
+	SaveType,
+	useSettableTask,
+} from 'database';
 
+import * as ui from 'ui';
 import {
 	InlineNote,
 	Loader,
@@ -29,9 +34,19 @@ export const SettableTaskName = (props: SettableTaskNameProps): JSX.Element => {
 		stateOfGet,
 	} = useSettableTask(taskId);
 
-	const nameChangeHandler = useCallback((name: string) => {
+	const nameChangeHandler = useCallback(async (name: string) => {
+		if (name === '') {
+			if (await ui.confirm('Delete this task?')) {
+				save([{
+					type: SaveType.TASK_DELETE,
+					id: taskId,
+				}]);
+			}
+			return;
+		}
+
 		setData({ name });
-	}, [setData]);
+	}, [taskId, setData]);
 
 	return <>
 		{
