@@ -1,10 +1,13 @@
 export { save } from './save';
 export { SaveType, type SaveAction } from './SaveAction';
 
+export { loadAllDays } from './loadAllDays';
 export { loadTask } from './loadTask';
 export { loadStatus } from './loadStatus';
 export { loadAllStatuses } from './loadAllStatuses';
 export {
+	useAllDays,
+
 	useTask,
 	useSettableTask,
 

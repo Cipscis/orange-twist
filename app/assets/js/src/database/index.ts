@@ -4,6 +4,9 @@ export {
 	SaveType,
 	type SaveAction,
 
+	loadAllDays,
+	useAllDays,
+
 	loadTask,
 	useTask,
 	useSettableTask,
