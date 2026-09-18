@@ -6,10 +6,10 @@ import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
 import {
-	type DayInfo,
 	deleteDay,
 	setDayInfo,
 	setDayTaskInfo,
+	useDayInfo,
 } from 'data';
 
 import * as ui from 'ui';
@@ -19,7 +19,7 @@ import { DayNote } from './DayNote';
 import { DayTaskList } from '../tasks/DayTaskList';
 
 interface DayProps {
-	day: Readonly<DayInfo>;
+	dayName: string;
 	open?: boolean;
 }
 
@@ -28,9 +28,13 @@ interface DayProps {
  */
 export const Day = memo((props: DayProps): JSX.Element => {
 	const {
-		day,
+		dayName,
 		open,
 	} = props;
+
+	// This non-null assertion is not safe, but we'll be refactoring this to use the database
+	const day = useDayInfo(dayName)!;
+
 	const {
 		name,
 		tasks,
