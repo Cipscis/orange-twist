@@ -8,6 +8,7 @@ import type {
 
 export const SaveType = {
 	TASK: 'task',
+	TASK_DELETE: 'delete task',
 
 	// TODO: Remove this once day tasks can be saved via the day task's ID
 	DAY_TASK_LEGACY: 'day task (legacy)',
@@ -28,6 +29,9 @@ interface SaveActionByType {
 				'id'
 			>
 		>>;
+	};
+	[SaveType.TASK_DELETE]: {
+		id: number;
 	};
 	[SaveType.DAY_TASK_LEGACY]: {
 		dayName: string;

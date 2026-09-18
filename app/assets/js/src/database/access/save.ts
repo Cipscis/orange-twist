@@ -5,6 +5,7 @@ import { getDayNameParts } from '../utils';
 import {
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
+	removeTaskInternal,
 	updateDayInternal,
 	updateDayTaskInternal,
 	updateTaskInternal,
@@ -28,6 +29,8 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
 			saveTask(action, transaction);
+		} else if (action.type === SaveType.TASK_DELETE) {
+			deleteTask(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
 			saveDayTaskLegacy(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK) {
@@ -67,6 +70,22 @@ async function saveTask(
 
 	await updateTaskInternal(transaction, taskToSave);
 	noticeChange(ChangeType.TASK, action.id);
+}
+
+/**
+ * Delete a single task, and any day tasks referencing itq.
+ */
+async function deleteTask(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TASK_DELETE; }
+	>,
+	transaction: IDBTransaction
+): Promise<void> {
+	const removedDayTaskIds = await removeTaskInternal(transaction, action.id);
+	noticeChange(ChangeType.TASK, action.id);
+	for (const dayTaskId of removedDayTaskIds) {
+		noticeChange(ChangeType.DAY_TASK, dayTaskId);
+	}
 }
 
 /**
@@ -187,6 +206,9 @@ function gatherTransactionRequirements(
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
 			objectStores.add(ObjectStoreName.TASK);
+		} else if (action.type === SaveType.TASK_DELETE) {
+			objectStores.add(ObjectStoreName.TASK);
+			objectStores.add(ObjectStoreName.DAY_TASK);
 		} else if (action.type === SaveType.DAY_TASK) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.STATUS);
