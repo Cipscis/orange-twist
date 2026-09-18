@@ -30,10 +30,17 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 		ObjectStoreName.STATUS,
 	], 'readonly');
 
-	const allTasks = await getTasksInternal(transaction);
-	const allDayTasks = await getDayTasksInternal(transaction);
-	const allDays = await getDaysInternal(transaction);
-	const statuses = await getStatusesInternal(transaction);
+	const [
+		allTasks,
+		allDays,
+		allDayTasks,
+		statuses,
+	] = await Promise.all([
+		getTasksInternal(transaction),
+		getDaysInternal(transaction),
+		getDayTasksInternal(transaction),
+		getStatusesInternal(transaction),
+	]);
 
 	for (const task of allTasks) {
 		const taskV1 = downgradeTask({
