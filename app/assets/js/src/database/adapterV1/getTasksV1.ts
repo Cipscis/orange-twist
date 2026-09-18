@@ -36,26 +36,50 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 	const statuses = await getStatusesInternal(transaction);
 
 	for (const task of allTasks) {
-		const status = getStatusForTask({
+		const taskV1 = downgradeTask({
 			task,
-			allDayTasks,
 			allDays,
+			allDayTasks,
 			statuses,
 		});
-
-		const taskV1: TaskInfo = {
-			id: task.id,
-			name: task.name,
-			note: task.note,
-			sortIndex: task.sortIndex ?? 0,
-			// This type assertion is safe because statuses are hard-coded to match legacy status names
-			status: status.alias as LegacyStatusName,
-		};
 
 		tasksV1.push(taskV1);
 	}
 
 	return tasksV1.map((task) => [task.id, task]);
+}
+
+/**
+ * Downgrade a {@linkcode Task} from the database v2 to a {@linkcode TaskInfo} from the database v1, which includes a separate status record.
+ */
+function downgradeTask({
+	task,
+	allDays,
+	allDayTasks,
+	statuses,
+}: {
+	task: Task;
+	allDays: readonly Day[];
+	allDayTasks: readonly DayTask[];
+	statuses: readonly Status[];
+}): TaskInfo {
+	const status = getStatusForTask({
+		task,
+		allDays,
+		allDayTasks,
+		statuses,
+	});
+
+	const taskV1: TaskInfo = {
+		id: task.id,
+		name: task.name,
+		note: task.note,
+		sortIndex: task.sortIndex ?? 0,
+		// This type assertion is safe because statuses are hard-coded to match legacy status names
+		status: status.alias as LegacyStatusName,
+	};
+
+	return taskV1;
 }
 
 /**
@@ -70,9 +94,9 @@ function getStatusForTask({
 	statuses,
 }: {
 	task: Task;
-	allDays: Day[];
-	allDayTasks: DayTask[];
-	statuses: Status[];
+	allDays: readonly Day[];
+	allDayTasks: readonly DayTask[];
+	statuses: readonly Status[];
 }) {
 	// Find task status via the task's most recent day task
 	const dayTasks = allDayTasks.filter(
