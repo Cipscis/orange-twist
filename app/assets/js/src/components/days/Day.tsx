@@ -32,8 +32,12 @@ export const Day = memo((props: DayProps): JSX.Element => {
 		open,
 	} = props;
 
-	// This non-null assertion is not safe, but we'll be refactoring this to use the database
-	const day = useDayInfo(dayName)!;
+	// TODO: Remove this fallback once we read from the database
+	const day = useDayInfo(dayName) ?? {
+		name: dayName,
+		note: '',
+		tasks: [],
+	};
 
 	const {
 		name,

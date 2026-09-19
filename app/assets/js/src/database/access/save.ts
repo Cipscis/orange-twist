@@ -14,7 +14,11 @@ import {
 
 import { SaveType, type SaveAction } from './SaveAction';
 import { requestTransaction } from './requestTransaction';
-import { ChangeType, noticeChange } from './liveAccessManager';
+import {
+	ChangeType,
+	noticeChange,
+	noticeListChange,
+} from './liveAccessManager';
 
 /**
  * Process any number of {@linkcode SaveAction}s.
@@ -186,7 +190,7 @@ async function addDay(
 	transaction: IDBTransaction,
 ): Promise<void> {
 	const dayId = await addDayInternal(transaction, action.day);
-	// TODO: Notice change in lists of all days
+	noticeListChange(ChangeType.DAY);
 	noticeChange(ChangeType.DAY, dayId);
 }
 

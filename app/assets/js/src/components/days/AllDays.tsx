@@ -3,7 +3,7 @@ import {
 	Fragment,
 	type JSX,
 } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { getCurrentDate } from 'utils';
 import type { Day } from 'database';
@@ -42,9 +42,15 @@ export function AllDays(props: AllDaysProps): JSX.Element {
 	const currentDaysWindowStart = currentDayIndex - currentDaysWindowSize;
 	const currentDaysWindowEnd = currentDayIndex + currentDaysWindowSize + 1;
 
-	const previousDays = days.slice(0, currentDaysWindowStart);
-	const currentDays = days.slice(currentDaysWindowStart, currentDaysWindowEnd);
-	const futureDays = days.slice(currentDaysWindowEnd);
+	const previousDays = useMemo(() => {
+		return days.slice(0, currentDaysWindowStart);
+	}, [days, currentDaysWindowStart]);
+	const currentDays = useMemo(() => {
+		return days.slice(currentDaysWindowStart, currentDaysWindowEnd);
+	}, [days, currentDaysWindowStart, currentDaysWindowEnd]);
+	const futureDays = useMemo(() => {
+		return days.slice(currentDaysWindowEnd);
+	}, [days, currentDaysWindowEnd]);
 
 	return <>
 		{days.length <= 1 && (

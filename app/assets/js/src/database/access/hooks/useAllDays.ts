@@ -1,6 +1,9 @@
+import { useEffect, useRef } from 'preact/hooks';
+
 import { useAsyncData, type AsyncDataState } from 'utils';
 
 import type { Day } from '../../types';
+import { addListChangeListener, ChangeType } from '../liveAccessManager';
 import { loadAllDays } from '../loadAllDays';
 
 /**
@@ -11,7 +14,25 @@ import { loadAllDays } from '../loadAllDays';
 export function useAllDays(): AsyncDataState<Day[]> {
 	const asyncDataResult = useAsyncData(loadAllDays, { immediate: true });
 
-	// TODO: Refresh if any days are added or removed
+	// Refresh if any days are added or removed
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
 
-	return asyncDataResult.state;
+		addListChangeListener(
+			ChangeType.DAY,
+			asyncDataResult.getData,
+			{ signal },
+		);
+
+		return () => controller.abort();
+	}, [asyncDataResult.getData]);
+
+	// Don't re-enter loading state on re-requesting data
+	const asyncDataResultStateRef = useRef(asyncDataResult.state);
+	if (!asyncDataResult.state.loading) {
+		asyncDataResultStateRef.current = asyncDataResult.state;
+	}
+
+	return asyncDataResultStateRef.current;
 }

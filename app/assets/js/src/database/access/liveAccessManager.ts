@@ -53,7 +53,54 @@ export function removeChangeListener(
 	id: number,
 	callback: () => void,
 ): void {
-	const changeTarget = eventTargetLookup.task.get(id);
+	const changeTarget = eventTargetLookup[type].get(id);
+	if (!changeTarget) {
+		return;
+	}
+
+	changeTarget.removeEventListener('change', callback);
+}
+
+/**
+ * Internal record of {@linkcode EventTarget}s for various lists of objects.
+ */
+export const eventTargetListLookup = {
+	[ChangeType.DAY]: new EventTarget(),
+};
+
+/**
+ * Trigger a "change" event for a list of a specified type of item, causing any change listeners for that list to fire.
+ */
+export function noticeListChange(type: Extract<ChangeType, keyof typeof eventTargetListLookup>): void {
+	const changeTarget = eventTargetListLookup[type];
+	if (!changeTarget) {
+		return;
+	}
+
+	changeTarget.dispatchEvent(new Event('change'));
+}
+
+/**
+ * Adds a "change" listener for a list of a specified type of item.
+ */
+export function addListChangeListener(
+	type: Extract<ChangeType, keyof typeof eventTargetListLookup>,
+	callback: () => void,
+	options?: AddEventListenerOptions,
+): void {
+	const changeTarget = eventTargetListLookup[type];
+
+	changeTarget.addEventListener('change', callback, options);
+}
+
+/**
+ * Removes a "change" listener for a list of a specified type of item.
+ */
+export function removeListChangeListener(
+	type: Extract<ChangeType, keyof typeof eventTargetListLookup>,
+	callback: () => void,
+): void {
+	const changeTarget = eventTargetListLookup[type];
 	if (!changeTarget) {
 		return;
 	}
