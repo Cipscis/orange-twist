@@ -11,8 +11,6 @@ import {
 
 import { getCurrentDateDayName } from 'utils';
 
-import { useDayInfo } from 'data';
-
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
@@ -32,10 +30,10 @@ import { OrangeTwistContext } from './OrangeTwistContext';
 export function Help(): JSX.Element {
 	const { isLoading } = useContext(OrangeTwistContext);
 
-	const today = useDayInfo(getCurrentDateDayName());
+	const today = getCurrentDateDayName();
 	const createToday = useCallback(() => {
-		fireCommand(Command.DAY_ADD_NEW, getCurrentDateDayName());
-	}, []);
+		fireCommand(Command.DAY_ADD_NEW, today);
+	}, [today]);
 
 	const editTemplates = useCallback(() => {
 		fireCommand(Command.TEMPLATES_EDIT);
@@ -67,7 +65,7 @@ export function Help(): JSX.Element {
 			{
 				today
 					? (<Day
-						day={today}
+						dayName={today}
 						open
 					/>)
 					: (<>

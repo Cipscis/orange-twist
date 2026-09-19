@@ -22,7 +22,7 @@ import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
 
 import { randomUUID } from 'node:crypto';
 
-import { ls } from 'persist';
+import { local, ls } from 'persist';
 
 import { addCommandListener, fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -58,7 +58,7 @@ describe('OrangeTwist', () => {
 
 	test('renders its children', async () => {
 		const { getByTestId } = render(
-			<OrangeTwist persist={ls}>
+			<OrangeTwist persist={local}>
 				<div data-testid="orange-twist-child-1" />
 				<div data-testid="orange-twist-child-2" />
 			</OrangeTwist>
@@ -71,7 +71,7 @@ describe('OrangeTwist', () => {
 	});
 
 	test('sets up the toggle theme command', () => {
-		render(<OrangeTwist persist={ls} />);
+		render(<OrangeTwist persist={local} />);
 
 		fireCommand(Command.THEME_TOGGLE);
 		expect(
@@ -87,7 +87,7 @@ describe('OrangeTwist', () => {
 	test('sets up the keyboard shortcut to open the command palette', async () => {
 		const user = userEvent.setup();
 
-		const { getByTestId } = render(<OrangeTwist persist={ls} />);
+		const { getByTestId } = render(<OrangeTwist persist={local} />);
 
 		await user.keyboard('\\');
 
@@ -102,7 +102,7 @@ describe('OrangeTwist', () => {
 
 		const spy = jest.fn();
 
-		render(<OrangeTwist persist={ls} />);
+		render(<OrangeTwist persist={local} />);
 
 		addKeyboardShortcutListener(KeyboardShortcutName.EDITING_FINISH, spy, { signal });
 
@@ -117,7 +117,7 @@ describe('OrangeTwist', () => {
 	test('sets up the command and keyboard shortcut to save data', async () => {
 		const user = userEvent.setup();
 
-		render(<OrangeTwist persist={ls} />);
+		render(<OrangeTwist persist={local} />);
 
 		const spy = jest.fn();
 		addCommandListener(Command.DATA_SAVE, spy);
@@ -128,15 +128,17 @@ describe('OrangeTwist', () => {
 		removeEventListener(Command.DATA_SAVE, spy);
 	});
 
-	test('sets up the command to add a new day', () => {
-		render(<OrangeTwist persist={ls} />);
+	test('sets up the command to add a new day', async () => {
+		render(<OrangeTwist persist={local} />);
 
 		fireCommand(Command.DAY_ADD_NEW, '2023-11-26');
 
-		expect(getDayInfo('2023-11-26')).toEqual({
-			name: '2023-11-26',
-			note: '',
-			tasks: [],
+		await waitFor(() => {
+			expect(getDayInfo('2023-11-26')).toEqual({
+				name: '2023-11-26',
+				note: '',
+				tasks: [],
+			});
 		});
 	});
 
@@ -154,10 +156,10 @@ describe('OrangeTwist', () => {
 	});
 
 	test('renders a back button if passed a "backButton" prop', () => {
-		const { queryByRole, rerender } = render(<OrangeTwist persist={ls} />);
+		const { queryByRole, rerender } = render(<OrangeTwist persist={local} />);
 		expect(queryByRole('link', { name: 'Back' })).not.toBeInTheDocument();
 
-		rerender(<OrangeTwist persist={ls} backButton />);
+		rerender(<OrangeTwist persist={local} backButton />);
 		expect(queryByRole('link', { name: 'Back' })).toBeInTheDocument();
 	});
 });

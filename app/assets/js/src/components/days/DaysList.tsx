@@ -1,137 +1,74 @@
-import { type JSX, h } from 'preact';
 import type Preact from 'preact';
 import {
-	useCallback,
-	useContext,
-	useMemo,
-	useState,
-} from 'preact/hooks';
+	h,
+	type JSX,
+} from 'preact';
+import { useCallback, useState } from 'preact/hooks';
 
-import { Command } from 'types/Command';
-import { fireCommand } from 'registers/commands';
+import { getDayName, type Day } from 'database';
+import type { DefaultsFor } from 'utils';
 
-import { getCurrentDateDayName } from 'utils';
+import { Accordion, AccordionScrollBehaviour } from 'components/shared';
+import { Day as DayDetail } from './Day';
 
-import { useAllDayInfo } from 'data';
+export interface DaysListProps {
+	days: readonly Day[];
+	title: string;
+	selectedDayId?: number;
+	class?: string;
+	open?: boolean;
+	scrollBehaviour?: AccordionScrollBehaviour;
+}
 
-import { OrangeTwistContext } from '../OrangeTwistContext';
-import {
-	Accordion,
-	AccordionScrollBehaviour,
-	Button,
-} from '../shared';
-import { Day } from './Day';
+const defaultProps = {
+	open: false,
+	scrollBehaviour: AccordionScrollBehaviour.AUTO,
+} as const satisfies DefaultsFor<
+	Omit<DaysListProps, 'selectedDayId' | 'class'>
+>;
 
 /**
  * Renders a list of days.
  */
-export function DaysList(): JSX.Element {
-	const unsortedDays = useAllDayInfo();
+export function DaysList(props: DaysListProps): JSX.Element {
+	const {
+		days,
+		title,
+		selectedDayId,
+		class: className,
 
-	const { isLoading } = useContext(OrangeTwistContext);
+		open: openByDefault,
+		scrollBehaviour,
+	} = {
+		...defaultProps,
+		...props,
+	};
 
-	const days = useMemo(() => unsortedDays.toSorted(
-		({ name: nameA }, { name: nameB }) => nameA.localeCompare(nameB)
-	), [unsortedDays]);
-
-	const currentDayName = getCurrentDateDayName();
-
-	const expandedDayIndex = useMemo(
-		() => {
-			// If the days list includes the current day, expand it
-			const currentDayIndex = days.findIndex(
-				({ name }) => name === currentDayName
-			);
-
-			if (currentDayIndex !== -1) {
-				return currentDayIndex;
-			}
-
-			// Otherwise, expand the last day
-			return days.length - 1;
+	const [open, setOpen] = useState(openByDefault);
+	const onToggle = useCallback(
+		(event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => {
+			setOpen(event.currentTarget.open);
 		},
-		[days, currentDayName]
+		[]
 	);
 
-	// Display a window of 7 days, collapse previous and future days
-	const previousDays = days.slice(0, expandedDayIndex - 3);
-	const [previousDaysOpen, setPreviousDaysOpen] = useState(false);
-	const onPreviousDaysToggle = useCallback((event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => {
-		setPreviousDaysOpen(event.currentTarget.open);
-	}, []);
-
-	const currentDays = days.slice(expandedDayIndex - 3, expandedDayIndex + 4);
-
-	const futureDays = days.slice(expandedDayIndex + 4);
-	const [futureDaysOpen, setFutureDaysOpen] = useState(false);
-	const onFutureDaysToggle = useCallback((event: Preact.TargetedEvent<HTMLDetailsElement, Event>) => {
-		setFutureDaysOpen(event.currentTarget.open);
-	}, []);
-
-	return <section class="orange-twist__section">
-		{!isLoading && days.length <= 1 && (
-			<div class="content">
-				<p>If you need help getting started, try <a href="/help">the help page</a>.</p>
-			</div>
-		)}
-
-		{previousDays.length > 0 &&
-			<Accordion
-				class="orange-twist__section orange-twist__section--sticky-summary"
-				summary={
-					<h2 class="orange-twist__title">Previous days</h2>
-				}
-				onToggle={onPreviousDaysToggle}
-				scrollBehaviour={AccordionScrollBehaviour.ANCHOR_BOTTOM}
-			>
-				{previousDaysOpen &&
-					previousDays.map(((day) => (
-						<Day
-							key={day.name}
-							day={day}
-						/>
-					)))
-				}
-			</Accordion>
+	return <Accordion
+		class={className}
+		summary={
+			<h2 class="orange-twist__title">{title}</h2>
 		}
-
-		<Accordion
-			class="orange-twist__section"
-			summary={
-				<h2 class="orange-twist__title">Days</h2>
-			}
-			open
-		>
-			{currentDays.map((day) => (
-				<Day
-					key={day.name}
-					day={day}
-					open={day.name === currentDayName}
+		open={open}
+		onToggle={onToggle}
+		scrollBehaviour={scrollBehaviour}
+	>
+		{open &&
+			days.map(((day) => (
+				<DayDetail
+					key={day.id}
+					dayName={getDayName(day)}
+					open={selectedDayId === day.id}
 				/>
-			))}
-		</Accordion>
-
-		{futureDays.length > 0 &&
-			<Accordion
-				class="orange-twist__section"
-				summary={
-					<h2 class="orange-twist__title">Future days</h2>
-				}
-				onToggle={onFutureDaysToggle}
-			>
-				{futureDaysOpen &&
-					futureDays.map(((day) => (
-						<Day
-							key={day.name}
-							day={day}
-						/>
-					)))
-				}
-			</Accordion>
+			)))
 		}
-
-		<Button
-			onClick={useCallback(() => fireCommand(Command.DAY_ADD_NEW), [])}
-		>Add day</Button>
-	</section>;
+	</Accordion>;
 }

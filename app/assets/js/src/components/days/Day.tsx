@@ -6,11 +6,11 @@ import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
 import {
-	type DayInfo,
-	deleteDay,
 	setDayInfo,
 	setDayTaskInfo,
+	useDayInfo,
 } from 'data';
+import { SaveType } from 'database';
 
 import * as ui from 'ui';
 
@@ -19,7 +19,7 @@ import { DayNote } from './DayNote';
 import { DayTaskList } from '../tasks/DayTaskList';
 
 interface DayProps {
-	day: Readonly<DayInfo>;
+	dayName: string;
 	open?: boolean;
 }
 
@@ -28,9 +28,17 @@ interface DayProps {
  */
 export const Day = memo((props: DayProps): JSX.Element => {
 	const {
-		day,
+		dayName,
 		open,
 	} = props;
+
+	// TODO: Remove this fallback once we read from the database
+	const day = useDayInfo(dayName) ?? {
+		name: dayName,
+		note: '',
+		tasks: [],
+	};
+
 	const {
 		name,
 		tasks,
@@ -44,7 +52,10 @@ export const Day = memo((props: DayProps): JSX.Element => {
 			return;
 		}
 
-		deleteDay(name);
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.DAY_DELETE_LEGACY,
+			name,
+		}]);
 	}, [name]);
 
 	/**

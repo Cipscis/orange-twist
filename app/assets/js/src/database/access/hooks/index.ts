@@ -1,3 +1,5 @@
+export { useAllDays } from './useAllDays';
+
 export { useTask } from './useTask';
 export { useSettableTask } from './useSettableTask';
 

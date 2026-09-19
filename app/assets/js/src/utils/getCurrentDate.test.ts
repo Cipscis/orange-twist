@@ -7,9 +7,9 @@ import {
 	test,
 } from '@jest/globals';
 
-import { getCurrentDateDayName } from './getCurrentDateDayName';
+import { getCurrentDate } from './getCurrentDate';
 
-describe('getCurrentDateDayName', () => {
+describe('getCurrentDate', () => {
 	beforeAll(() => {
 		jest.useFakeTimers();
 	});
@@ -21,20 +21,36 @@ describe('getCurrentDateDayName', () => {
 	test('returns the current date during the day', () => {
 		jest.setSystemTime(new Date(2023, 9, 28, 12));
 
-		expect(getCurrentDateDayName()).toEqual('2023-10-28');
+		expect(getCurrentDate()).toEqual({
+			year: 2023,
+			month: 10,
+			day: 28,
+		});
 	});
 
 	test('returns the previous date between midnight and 3am', () => {
 		jest.setSystemTime(new Date(2023, 9, 29));
 
-		expect(getCurrentDateDayName()).toEqual('2023-10-28');
+		expect(getCurrentDate()).toEqual({
+			year: 2023,
+			month: 10,
+			day: 28,
+		});
 
 		jest.setSystemTime(new Date(2023, 9, 29, 2, 59, 59));
 
-		expect(getCurrentDateDayName()).toEqual('2023-10-28');
+		expect(getCurrentDate()).toEqual({
+			year: 2023,
+			month: 10,
+			day: 28,
+		});
 
 		jest.setSystemTime(new Date(2023, 9, 29, 3));
 
-		expect(getCurrentDateDayName()).toEqual('2023-10-29');
+		expect(getCurrentDate()).toEqual({
+			year: 2023,
+			month: 10,
+			day: 29,
+		});
 	});
 });

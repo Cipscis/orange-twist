@@ -4,6 +4,9 @@ export {
 	SaveType,
 	type SaveAction,
 
+	loadAllDays,
+	useAllDays,
+
 	loadTask,
 	useTask,
 	useSettableTask,
@@ -22,6 +25,11 @@ export type {
 	Template,
 	Image,
 } from './types';
+
+export {
+	getDayName,
+	getDayNameParts,
+} from './utils';
 
 export {
 	createTestData,
