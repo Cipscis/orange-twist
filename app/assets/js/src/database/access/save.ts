@@ -6,6 +6,7 @@ import {
 	addDayInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
+	removeDayInternal,
 	removeTaskInternal,
 	updateDayInternal,
 	updateDayTaskInternal,
@@ -44,8 +45,12 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			saveDay(action, transaction);
 		} else if (action.type === SaveType.DAY_ADD) {
 			addDay(action, transaction);
+		} else if (action.type === SaveType.DAY_DELETE) {
+			deleteDay(action, transaction);
 		} else if (action.type === SaveType.DAY_LEGACY) {
 			saveDayLegacy(action, transaction);
+		} else if (action.type === SaveType.DAY_DELETE_LEGACY) {
+			deleteDayLegacy(action, transaction);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}
@@ -88,11 +93,11 @@ async function deleteTask(
 	>,
 	transaction: IDBTransaction
 ): Promise<void> {
-	const removedDayTaskIds = await removeTaskInternal(transaction, action.id);
+	const deletedDayTaskIds = await removeTaskInternal(transaction, action.id);
 	// TODO: Notice changes in lists of all tasks
 	// TODO: Notice changes in lists of days tasks for this task
 	noticeChange(ChangeType.TASK, action.id);
-	for (const dayTaskId of removedDayTaskIds) {
+	for (const dayTaskId of deletedDayTaskIds) {
 		noticeChange(ChangeType.DAY_TASK, dayTaskId);
 	}
 }
@@ -181,7 +186,7 @@ async function saveDay(
 }
 
 /**
- * Adds a new day.
+ * Add a new day.
  */
 async function addDay(
 	action: Extract<
@@ -192,6 +197,45 @@ async function addDay(
 	const dayId = await addDayInternal(transaction, action.day);
 	noticeListChange(ChangeType.DAY);
 	noticeChange(ChangeType.DAY, dayId);
+}
+
+/**
+ * Delete a single day, and any day tasks referencing it.
+ */
+async function deleteDay(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.DAY_DELETE; }
+	>,
+	transaction: IDBTransaction,
+): Promise<void> {
+	const deletedDayTaskIds = await removeDayInternal(transaction, action.id);
+	noticeListChange(ChangeType.DAY);
+	// TODO: Notice changes in lists of days tasks for this day
+	noticeChange(ChangeType.DAY, action.id);
+	for (const dayTaskId of deletedDayTaskIds) {
+		noticeChange(ChangeType.DAY_TASK, dayTaskId);
+	}
+}
+
+async function deleteDayLegacy(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.DAY_DELETE_LEGACY; }
+	>,
+	transaction: IDBTransaction,
+): Promise<void> {
+	const [year, month, day] = getDayNameParts(action.name);
+	const dayInfo = await getDayByDateInternal(transaction, { year, month, day });
+	if (!dayInfo) {
+		throw new Error(`Could not delete day - unable to find associated day ${JSON.stringify({ year, month, day })}`);
+	}
+
+	await deleteDay(
+		{
+			type: SaveType.DAY_DELETE,
+			id: dayInfo.id,
+		},
+		transaction
+	);
 }
 
 /**
@@ -209,7 +253,7 @@ async function saveDayLegacy(
 
 	const dayInfo = await getDayByDateInternal(transaction, { year, month, day });
 	if (!dayInfo) {
-		throw new Error(`Could not save day task - unable to find associated day ${JSON.stringify({ year, month, day })}`);
+		throw new Error(`Could not save day - unable to find associated day ${JSON.stringify({ year, month, day })}`);
 	}
 
 	saveDay({
@@ -246,6 +290,12 @@ function gatherTransactionRequirements(
 			action.type === SaveType.DAY_LEGACY
 		) {
 			objectStores.add(ObjectStoreName.DAY);
+		} else if (
+			action.type === SaveType.DAY_DELETE ||
+			action.type === SaveType.DAY_DELETE_LEGACY
+		) {
+			objectStores.add(ObjectStoreName.DAY);
+			objectStores.add(ObjectStoreName.DAY_TASK);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}

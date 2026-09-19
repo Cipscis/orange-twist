@@ -6,11 +6,11 @@ import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
 import {
-	deleteDay,
 	setDayInfo,
 	setDayTaskInfo,
 	useDayInfo,
 } from 'data';
+import { SaveType } from 'database';
 
 import * as ui from 'ui';
 
@@ -52,7 +52,10 @@ export const Day = memo((props: DayProps): JSX.Element => {
 			return;
 		}
 
-		deleteDay(name);
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.DAY_DELETE_LEGACY,
+			name,
+		}]);
 	}, [name]);
 
 	/**

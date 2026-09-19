@@ -9,7 +9,7 @@ import { IndexName, ObjectStoreName } from '../metadata';
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.TASK} and {@linkcode ObjectStoreName.DAY_TASK} object stores.
  * @param id The ID of the task to delete.
  *
- * @returns A {@linkcode Promise} that resolves to a list of remove day task IDs, once the task and all its linked day tasks have been removed.
+ * @returns A {@linkcode Promise} that resolves to a list of removed day task IDs, once the task and all its linked day tasks have been removed.
  */
 export async function removeTaskInternal(
 	transaction: IDBTransaction,

@@ -1,5 +1,6 @@
 import { getIdbRequestPromise, getIterableCursor } from 'utils';
 
+import type { DayTask } from '../types';
 import { IndexName, ObjectStoreName } from '../metadata';
 
 /**
@@ -8,12 +9,12 @@ import { IndexName, ObjectStoreName } from '../metadata';
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.DAY} and {@linkcode ObjectStoreName.DAY_TASK} object stores.
  * @param id The ID of the day to delete.
  *
- * @returns A {@linkcode Promise} that resolves when the day and all its linked day tasks have been removed.
+ * @returns A {@linkcode Promise} that resolves to a list of removed day task IDs, once the day and all its linked day tasks have been removed.
  */
 export async function removeDayInternal(
 	transaction: IDBTransaction,
 	id: IDBValidKey,
-): Promise<void> {
+): Promise<number[]> {
 	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 	const dayTaskOS = transaction.objectStore(ObjectStoreName.DAY_TASK);
 
@@ -35,12 +36,19 @@ export async function removeDayInternal(
 	// Remove day tasks
 	const dayTaskByDay = dayTaskOS.index(IndexName.DAY_TASK_DAY);
 	const dayTaskIterableCursor = getIterableCursor(dayTaskByDay, id);
+	const deletedDayTaskIds: number[] = [];
 
 	for await (const cursor of dayTaskIterableCursor) {
+		// This type assertion is save because we're iterating through an index on the day task object store
+		const dayTask = cursor.value as DayTask;
+		deletedDayTaskIds.push(dayTask.id);
 		requests.push(cursor.delete());
 	}
 
-	await Promise.all(requests.map(
-		(request) => getIdbRequestPromise(request)
-	));
+	// Only wait for the last request, to save time on function overhead
+	// This non-null assertion is safe because requests always has at least one entry
+	const lastRequest = requests.at(-1)!;
+	await getIdbRequestPromise(lastRequest);
+
+	return deletedDayTaskIds;
 }
