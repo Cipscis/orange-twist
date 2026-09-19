@@ -1,6 +1,7 @@
 import type { EnumTypeOf } from 'utils';
 
 export const ChangeType = {
+	DAY: 'day',
 	TASK: 'task',
 	DAY_TASK: 'day_task',
 } as const;
@@ -10,6 +11,7 @@ export type ChangeType = EnumTypeOf<typeof ChangeType>;
  * Internal record of {@linkcode EventTarget}s for various observable objects.
  */
 export const eventTargetLookup = {
+	[ChangeType.DAY]: new Map<number, EventTarget>(),
 	[ChangeType.TASK]: new Map<number, EventTarget>(),
 	[ChangeType.DAY_TASK]: new Map<number, EventTarget>(),
 };

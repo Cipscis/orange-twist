@@ -1,11 +1,18 @@
 import { useCallback, useEffect } from 'preact/hooks';
 
-import { getAllDayInfo, setDayInfo } from 'data';
-
 import { Command } from 'types/Command';
-import { registerCommand, useCommand } from 'registers/commands';
+import {
+	fireCommand,
+	registerCommand,
+	useCommand,
+} from 'registers/commands';
 
 import { isValidDateString } from 'utils';
+import {
+	getDayNameParts,
+	loadAllDays,
+	SaveType,
+} from 'database';
 
 import * as ui from 'ui';
 
@@ -31,15 +38,28 @@ export function useCommandDayAddNew(): void {
 			ui.alert(`Invalid day ${dayName}`);
 			return;
 		}
+		const [year, month, day] = getDayNameParts(dayName);
 
-		const days = getAllDayInfo();
-		const existingDayData = days.find((day) => day.name === dayName);
+		const days = await loadAllDays();
+		const existingDayData = days.find((dbDay) => (
+			dbDay.year === year &&
+			dbDay.month === month &&
+			dbDay.day === day
+		));
 		if (existingDayData) {
 			ui.alert(`Day ${dayName} already exists`);
 			return;
 		}
 
-		setDayInfo(dayName, {});
+		fireCommand(Command.DATA_SAVE, ([{
+			type: SaveType.DAY_ADD,
+			day: {
+				year,
+				month,
+				day,
+				note: '',
+			},
+		}]));
 	}, []);
 
 	useCommand(Command.DAY_ADD_NEW, addNewDay);

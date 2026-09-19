@@ -3,6 +3,7 @@ import { assertAllUnionMembersHandled } from 'utils';
 import { ObjectStoreName } from '../metadata';
 import { getDayNameParts } from '../utils';
 import {
+	addDayInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
 	removeTaskInternal,
@@ -37,6 +38,8 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			saveDayTask(action, transaction);
 		} else if (action.type === SaveType.DAY) {
 			saveDay(action, transaction);
+		} else if (action.type === SaveType.DAY_ADD) {
+			addDay(action, transaction);
 		} else if (action.type === SaveType.DAY_LEGACY) {
 			saveDayLegacy(action, transaction);
 		} else {
@@ -82,6 +85,8 @@ async function deleteTask(
 	transaction: IDBTransaction
 ): Promise<void> {
 	const removedDayTaskIds = await removeTaskInternal(transaction, action.id);
+	// TODO: Notice changes in lists of all tasks
+	// TODO: Notice changes in lists of days tasks for this task
 	noticeChange(ChangeType.TASK, action.id);
 	for (const dayTaskId of removedDayTaskIds) {
 		noticeChange(ChangeType.DAY_TASK, dayTaskId);
@@ -168,6 +173,21 @@ async function saveDay(
 	}
 
 	await updateDayInternal(transaction, dayToSave);
+	noticeChange(ChangeType.DAY, action.id);
+}
+
+/**
+ * Adds a new day.
+ */
+async function addDay(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.DAY_ADD; }
+	>,
+	transaction: IDBTransaction,
+): Promise<void> {
+	const dayId = await addDayInternal(transaction, action.day);
+	// TODO: Notice change in lists of all days
+	noticeChange(ChangeType.DAY, dayId);
 }
 
 /**
@@ -218,6 +238,7 @@ function gatherTransactionRequirements(
 			objectStores.add(ObjectStoreName.DAY);
 		} else if (
 			action.type === SaveType.DAY ||
+			action.type === SaveType.DAY_ADD ||
 			action.type === SaveType.DAY_LEGACY
 		) {
 			objectStores.add(ObjectStoreName.DAY);

@@ -28,6 +28,7 @@ export type {
 
 export {
 	getDayName,
+	getDayNameParts,
 } from './utils';
 
 export {

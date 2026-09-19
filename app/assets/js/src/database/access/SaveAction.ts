@@ -17,6 +17,7 @@ export const SaveType = {
 	// TODO: Remove this once days can be saved via the day's ID
 	DAY_LEGACY: 'day (legacy)',
 	DAY: 'day',
+	DAY_ADD: 'add day',
 } as const;
 export type SaveType = EnumTypeOf<typeof SaveType>;
 
@@ -60,6 +61,11 @@ interface SaveActionByType {
 				'id' | 'year' | 'month' | 'day'
 			>
 		>>;
+	};
+	[SaveType.DAY_ADD]: {
+		day: ExpandType<
+			Omit<Day, 'id'>
+		>;
 	};
 	[SaveType.DAY_LEGACY]: {
 		dayName: string;
