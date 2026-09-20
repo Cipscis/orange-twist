@@ -11,7 +11,7 @@ import { Loader } from 'components/shared';
 import { AllDays } from './AllDays';
 
 /**
- * Renders a list of all days.
+ * Loads all days, and ensures today exists in the database, then displays all days via an {@linkcode AllDays} component.
  */
 export function AllDaysContainer(): JSX.Element {
 	const daysAsyncState = useAllDays();

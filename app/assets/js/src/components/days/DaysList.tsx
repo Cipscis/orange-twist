@@ -28,7 +28,7 @@ const defaultProps = {
 >;
 
 /**
- * Renders a list of days.
+ * Renders a list of days in an accordion.
  */
 export function DaysList(props: DaysListProps): JSX.Element {
 	const {

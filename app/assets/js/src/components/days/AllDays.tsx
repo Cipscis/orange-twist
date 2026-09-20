@@ -21,6 +21,17 @@ export interface AllDaysProps {
 	currentDay: Day;
 }
 
+/**
+ * Renders a list of all days, broken into three parts:
+ *
+ * - Past days
+ * - Days (current days)
+ * - Future days
+ *
+ * The past and future sections start collapsed, whereas the current days section starts expanded with the current day receiving focus. The current days section displays a window of 7 days centred around the current day.
+ *
+ * Also includes a button to add a new day.
+ */
 export function AllDays(props: AllDaysProps): JSX.Element {
 	const {
 		days,
@@ -56,7 +67,6 @@ export function AllDays(props: AllDaysProps): JSX.Element {
 				title="Previous days"
 				class="orange-twist__section orange-twist__section--sticky-summary"
 				scrollBehaviour={AccordionScrollBehaviour.ANCHOR_BOTTOM}
-
 			/>
 		}
 

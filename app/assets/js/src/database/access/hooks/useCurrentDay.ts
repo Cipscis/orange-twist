@@ -17,7 +17,7 @@ import { addChangeListener, ChangeType } from '../liveAccessManager';
 import { loadDayByDate } from '../loadDayByDate';
 
 /**
- * Provides a {@linkcode AsyncDataState} that immediately requests the current day. If it doesn't already exist, then it will be constructed.
+ * Provides an {@linkcode AsyncDataState} that immediately requests the current day. If it doesn't already exist, then it will be constructed.
  */
 export function useCurrentDay(): AsyncDataState<Day> {
 	const [currentDayId, setCurrentDayId] = useState<number | null>(null);
