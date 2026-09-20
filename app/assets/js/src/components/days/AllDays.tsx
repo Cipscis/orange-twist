@@ -5,7 +5,6 @@ import {
 } from 'preact';
 import { useCallback, useMemo } from 'preact/hooks';
 
-import { getCurrentDate } from 'utils';
 import type { Day } from 'database';
 
 import { Command } from 'types/Command';
@@ -19,24 +18,16 @@ import { DaysList } from './DaysList';
 
 export interface AllDaysProps {
 	days: readonly Day[];
+	currentDay: Day;
 }
 
 export function AllDays(props: AllDaysProps): JSX.Element {
-	const { days } = props;
+	const {
+		days,
+		currentDay,
+	} = props;
 
-	const currentDate = getCurrentDate();
-
-	const currentDay = days.find(({ year, month, day }) => {
-		return (
-			year === currentDate.year &&
-			month === currentDate.month &&
-			day ===  currentDate.day
-		);
-		// This non-null assertion is NOT safe!
-		// TODO: Insert the current day if it doesn't exist yet
-	})!;
-
-	const currentDayIndex = days.indexOf(currentDay);
+	const currentDayIndex = days.findIndex(({ id }) => id === currentDay.id);
 
 	const currentDaysWindowSize = 3;
 	const currentDaysWindowStart = currentDayIndex - currentDaysWindowSize;
