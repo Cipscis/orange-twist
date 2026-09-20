@@ -7,6 +7,7 @@ export { loadTask } from './loadTask';
 export { loadStatus } from './loadStatus';
 export { loadAllStatuses } from './loadAllStatuses';
 export {
+	useCurrentDay,
 	useAllDays,
 
 	useTask,

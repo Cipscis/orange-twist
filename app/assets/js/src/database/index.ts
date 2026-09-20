@@ -5,6 +5,7 @@ export {
 	type SaveAction,
 
 	loadDayByDate,
+	useCurrentDay,
 	loadAllDays,
 	useAllDays,
 
