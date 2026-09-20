@@ -1,10 +1,11 @@
 import { h, type JSX } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 import { memo } from 'preact/compat';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
+import { getCurrentDateDayName } from 'utils';
 import {
 	setDayInfo,
 	setDayTaskInfo,
@@ -33,11 +34,17 @@ export const Day = memo((props: DayProps): JSX.Element => {
 	} = props;
 
 	// TODO: Remove this fallback once we read from the database
-	const day = useDayInfo(dayName) ?? {
+	const fallbackDayInfo = useMemo(() => ({
 		name: dayName,
 		note: '',
 		tasks: [],
-	};
+	}), [dayName]);
+	const day = useDayInfo(dayName) ?? fallbackDayInfo;
+
+	const isCurrentDay = useMemo(() => {
+		const currentDateDayName = getCurrentDateDayName();
+		return day.name === currentDateDayName;
+	}, [day]);
 
 	const {
 		name,
@@ -94,9 +101,11 @@ export const Day = memo((props: DayProps): JSX.Element => {
 		summary={<h3 class="day__heading">{name}</h3>}
 	>
 		<div class="day__body">
-			<Button
-				onClick={removeDay}
-			>Remove day</Button>
+			{!isCurrentDay &&
+				<Button
+					onClick={removeDay}
+				>Remove day</Button>
+			}
 
 			<DayNote day={day} />
 
