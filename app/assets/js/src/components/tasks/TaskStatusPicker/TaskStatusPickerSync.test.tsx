@@ -40,7 +40,7 @@ import {
 } from 'data';
 import { createTestData, insertTestData } from 'database';
 
-import { TaskStatusComponent } from './TaskStatusComponent';
+import { TaskStatusPickerSync } from './TaskStatusPickerSync';
 
 configMocks({
 	afterEach,
@@ -51,7 +51,7 @@ mockAnimationsApi();
 const testData = createTestData();
 const statuses = Array.from(Object.values(testData.status));
 
-describe('TaskStatusComponent', () => {
+describe('TaskStatusPickerSync', () => {
 	beforeAll(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 	});
@@ -79,7 +79,7 @@ describe('TaskStatusComponent', () => {
 	});
 
 	test('renders nothing if passed an invalid task ID', () => {
-		const { container } = render(<TaskStatusComponent
+		const { container } = render(<TaskStatusPickerSync
 			taskId={-1}
 			statuses={statuses}
 		/>);
@@ -89,7 +89,7 @@ describe('TaskStatusComponent', () => {
 
 	describe('when not passed a day name', () => {
 		test('renders its task\'s status', async () => {
-			const { getByTitle } = render(<TaskStatusComponent
+			const { getByTitle } = render(<TaskStatusPickerSync
 				taskId={1}
 				statuses={statuses}
 			/>);
@@ -107,7 +107,7 @@ describe('TaskStatusComponent', () => {
 			const saveSpy = jest.fn();
 			addCommandListener(Command.DATA_SAVE, saveSpy);
 
-			const { getByRole } = render(<TaskStatusComponent
+			const { getByRole } = render(<TaskStatusPickerSync
 				taskId={1}
 				statuses={statuses}
 			/>);
@@ -139,7 +139,7 @@ describe('TaskStatusComponent', () => {
 			const saveSpy = jest.fn();
 			addCommandListener(Command.DATA_SAVE, saveSpy);
 
-			const { getByRole } = render(<TaskStatusComponent
+			const { getByRole } = render(<TaskStatusPickerSync
 				taskId={1}
 				statuses={statuses}
 			/>);
@@ -167,7 +167,7 @@ describe('TaskStatusComponent', () => {
 
 	describe('when passed a day name', () => {
 		test('renders its task\'s status on the specified day', () => {
-			const { getByTitle, rerender } = render(<TaskStatusComponent
+			const { getByTitle, rerender } = render(<TaskStatusPickerSync
 				taskId={1}
 				dayName="2023-11-20"
 				statuses={statuses}
@@ -175,14 +175,14 @@ describe('TaskStatusComponent', () => {
 
 			expect(getByTitle('Todo (click to edit)')).toBeInTheDocument();
 
-			rerender(<TaskStatusComponent
+			rerender(<TaskStatusPickerSync
 				taskId={1}
 				dayName="2023-11-25"
 				statuses={statuses}
 			/>);
 			expect(getByTitle('In progress (click to edit)')).toBeInTheDocument();
 
-			rerender(<TaskStatusComponent
+			rerender(<TaskStatusPickerSync
 				taskId={1}
 				dayName="2023-11-27"
 				statuses={statuses}
@@ -191,7 +191,7 @@ describe('TaskStatusComponent', () => {
 		});
 
 		test('renders nothing if given a day before the task existed', () => {
-			const { container } = render(<TaskStatusComponent
+			const { container } = render(<TaskStatusPickerSync
 				taskId={1}
 				dayName="2023-01-01"
 				statuses={statuses}
@@ -203,7 +203,7 @@ describe('TaskStatusComponent', () => {
 		test('updates if the task\'s status for that day is updated', async () => {
 			const user = userEvent.setup();
 
-			const { getByRole } = render(<TaskStatusComponent
+			const { getByRole } = render(<TaskStatusPickerSync
 				taskId={1}
 				dayName="2023-11-23"
 				statuses={statuses}
@@ -233,7 +233,7 @@ describe('TaskStatusComponent', () => {
 			const saveSpy = jest.fn();
 			addCommandListener(Command.DATA_SAVE, saveSpy);
 
-			const { getByRole } = render(<TaskStatusComponent
+			const { getByRole } = render(<TaskStatusPickerSync
 				taskId={1}
 				dayName="2023-11-24"
 				statuses={statuses}
@@ -274,7 +274,7 @@ describe('TaskStatusComponent', () => {
 			const saveSpy = jest.fn();
 			addCommandListener(Command.DATA_SAVE, saveSpy);
 
-			const { getByRole } = render(<TaskStatusComponent
+			const { getByRole } = render(<TaskStatusPickerSync
 				taskId={1}
 				dayName="2023-11-26"
 				statuses={statuses}

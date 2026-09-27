@@ -14,7 +14,7 @@ import {
 } from 'data';
 import { getTaskDetailUrl } from 'navigation';
 
-import { TaskStatusComponentDisplay } from './TaskStatusComponent';
+import { TaskStatusPicker } from './TaskStatusPicker';
 import {
 	IconButton,
 	InlineNote,
@@ -56,7 +56,7 @@ export function DayTask(props: DayTaskProps): JSX.Element | null {
 	}
 
 	return <div class="task">
-		<TaskStatusComponentDisplay
+		<TaskStatusPicker
 			taskId={taskInfo.id}
 			dayName={dayName}
 		/>

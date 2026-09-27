@@ -21,7 +21,7 @@ import type { Status } from 'database';
 import * as ui from 'ui';
 import { StatusPicker } from 'components/shared';
 
-export interface TaskStatusComponentProps {
+export interface TaskStatusPickerSyncProps {
 	taskId: number;
 	dayName?: string;
 
@@ -34,7 +34,7 @@ export interface TaskStatusComponentProps {
  *
  * Allows that status to be edited.
  */
-export function TaskStatusComponent(props: TaskStatusComponentProps): JSX.Element | null {
+export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Element | null {
 	const {
 		taskId,
 		dayName,
