@@ -25,10 +25,7 @@ export function TaskStatusComponentDisplay(props: TaskStatusComponentDisplayProp
 		return <Loader class="icon-button--loader" />;
 	}
 
-	if (
-		statusAsyncDataState.type === AsyncDataStateType.ERROR ||
-		statusAsyncDataState.type === AsyncDataStateType.ABORTED
-	) {
+	if (statusAsyncDataState.type === AsyncDataStateType.ERROR) {
 		// Rely on `useAllStatuses` displaying an alert if status loading failed
 		return null;
 	}

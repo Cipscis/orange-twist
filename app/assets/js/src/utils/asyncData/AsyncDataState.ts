@@ -3,9 +3,6 @@ import type { AsyncDataStateType } from './AsyncDataStateType';
 
 type AsyncDataStateMap<T> = {
 	[AsyncDataStateType.INITIAL]: {};
-	[AsyncDataStateType.ABORTED]: {
-		reason: unknown;
-	};
 	[AsyncDataStateType.ERROR]: {
 		error: Error;
 	};

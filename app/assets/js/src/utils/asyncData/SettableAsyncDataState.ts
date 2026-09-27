@@ -1,11 +1,6 @@
 import type { ExpandType } from '../ExpandType';
 import type { AsyncDataStateType } from './AsyncDataStateType';
 
-export type SettableDataStateType = Exclude<
-	AsyncDataStateType,
-	typeof AsyncDataStateType.ABORTED
->;
-
 type SettableAsyncDataStateMap = {
 	[AsyncDataStateType.INITIAL]: {};
 	[AsyncDataStateType.ERROR]: {
@@ -15,11 +10,11 @@ type SettableAsyncDataStateMap = {
 };
 
 export type SettableAsyncDataState = {
-	[S in SettableDataStateType]: ExpandType<
+	[S in AsyncDataStateType]: ExpandType<
 		{
 			type: S;
 			loading: boolean;
 		} &
 		SettableAsyncDataStateMap[S]
 	>;
-}[SettableDataStateType];
+}[AsyncDataStateType];
