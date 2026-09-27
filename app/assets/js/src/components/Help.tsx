@@ -9,7 +9,8 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { getCurrentDateDayName } from 'utils';
+import { AsyncDataStateType, getCurrentDateDayName } from 'utils';
+import { useCurrentDay } from 'database';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -30,10 +31,12 @@ import { OrangeTwistContext } from './OrangeTwistContext';
 export function Help(): JSX.Element {
 	const { isLoading } = useContext(OrangeTwistContext);
 
-	const today = getCurrentDateDayName();
 	const createToday = useCallback(() => {
-		fireCommand(Command.DAY_ADD_NEW, today);
-	}, [today]);
+		const todayName = getCurrentDateDayName();
+		fireCommand(Command.DAY_ADD_NEW, todayName);
+	}, []);
+
+	const todayDataState = useCurrentDay();
 
 	const editTemplates = useCallback(() => {
 		fireCommand(Command.TEMPLATES_EDIT);
@@ -63,9 +66,9 @@ export function Help(): JSX.Element {
 			</div>
 
 			{
-				today
+				todayDataState.type === AsyncDataStateType.SUCCESS && (todayDataState.data
 					? (<Day
-						dayName={today}
+						day={todayDataState.data}
 						open
 					/>)
 					: (<>
@@ -76,6 +79,7 @@ export function Help(): JSX.Element {
 							>Create data for today</Button>
 						</div>
 					</>)
+				)
 			}
 
 			<div className="content">

@@ -5,22 +5,23 @@ import { memo } from 'preact/compat';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import { getCurrentDateDayName } from 'utils';
+import { getCurrentDate } from 'utils';
 import {
 	setDayInfo,
 	setDayTaskInfo,
 	useDayInfo,
 } from 'data';
-import { SaveType } from 'database';
+import { SaveType, type Day as DBDay } from 'database';
 
 import * as ui from 'ui';
+import { formatDayName } from 'formatters/dayName';
 
 import { Accordion, Button } from '../shared';
 import { DayNote } from './DayNote';
 import { DayTaskList } from '../tasks/DayTaskList';
 
 interface DayProps {
-	dayName: string;
+	day: DBDay;
 	open?: boolean;
 }
 
@@ -29,27 +30,21 @@ interface DayProps {
  */
 export const Day = memo((props: DayProps): JSX.Element => {
 	const {
-		dayName,
+		day,
 		open,
 	} = props;
 
-	// TODO: Remove this fallback once we read from the database
-	const fallbackDayInfo = useMemo(() => ({
-		name: dayName,
-		note: '',
-		tasks: [],
-	}), [dayName]);
-	const day = useDayInfo(dayName) ?? fallbackDayInfo;
-
 	const isCurrentDay = useMemo(() => {
-		const currentDateDayName = getCurrentDateDayName();
-		return day.name === currentDateDayName;
+		const currentDate = getCurrentDate();
+		return day.year === currentDate.year &&
+			day.month === currentDate.month &&
+			day.day === currentDate.day;
 	}, [day]);
 
-	const {
-		name,
-		tasks,
-	} = day;
+	const name = formatDayName(day);
+
+	// TODO: Create `DayTasksForDay` component that takes Day ID and looks up day tasks
+	const { tasks } = useDayInfo(name)!;
 
 	/**
 	 * Ask for confirmation before deleting the current day.
@@ -60,11 +55,12 @@ export const Day = memo((props: DayProps): JSX.Element => {
 		}
 
 		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.DAY_DELETE_LEGACY,
-			name,
+			type: SaveType.DAY_DELETE,
+			id: day.id,
 		}]);
-	}, [name]);
+	}, [day.id]);
 
+	// TODO: Move this to `DayTaskList`
 	/**
 	 * Update the saved order of this day's tasks.
 	 */
@@ -73,6 +69,7 @@ export const Day = memo((props: DayProps): JSX.Element => {
 		fireCommand(Command.DATA_SAVE);
 	}, [name]);
 
+	// TODO: Move this to new `DayTaskListForDay` component
 	/**
 	 * Prompt the user to select an existing task, and add it to the specified day.
 	 */

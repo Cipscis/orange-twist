@@ -65,7 +65,7 @@ export function DaysList(props: DaysListProps): JSX.Element {
 			days.map(((day) => (
 				<DayDetail
 					key={day.id}
-					dayName={getDayName(day)}
+					day={day}
 					open={selectedDayId === day.id}
 				/>
 			)))
