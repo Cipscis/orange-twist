@@ -19,6 +19,7 @@ import {
 	IconButton,
 	InlineNote,
 } from 'components/shared';
+import { SettableTaskName } from './Task/SettableTaskName';
 
 interface DayTaskProps {
 	taskId: number;
@@ -65,14 +66,6 @@ export function DayTask(props: DayTaskProps): JSX.Element | null {
 			title="View task"
 			icon={IconName.FILE}
 		/>
-		<InlineNote
-			note={taskInfo.name}
-			onNoteChange={nameChangeHandler}
-
-			placeholder="Task name"
-			editButtonTitle="Edit task name"
-
-			class="task__name"
-		/>
+		<SettableTaskName taskId={taskId} />
 	</div>;
 }
