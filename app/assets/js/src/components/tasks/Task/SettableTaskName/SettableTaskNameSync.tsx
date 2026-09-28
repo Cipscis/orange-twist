@@ -1,12 +1,8 @@
 import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import { fireCommand } from 'registers/commands';
-import { Command } from 'types/Command';
+import type { Task } from 'database';
 
-import { SaveType, type Task } from 'database';
-
-import * as ui from 'ui';
 import { InlineNote } from 'components/shared';
 
 interface SettableTaskNameSyncProps {
@@ -22,19 +18,14 @@ export function SettableTaskNameSync(
 		setData,
 	} = props;
 
-	const nameChangeHandler = useCallback(async (name: string) => {
+	const nameChangeHandler = useCallback((name: string) => {
 		if (name === '') {
-			if (await ui.confirm('Delete this task?')) {
-				fireCommand(Command.DATA_SAVE, [{
-					type: SaveType.TASK_DELETE,
-					id: task.id,
-				}]);
-			}
+			// If the name is empty, cancel the edit operation
 			return;
 		}
 
 		setData({ name });
-	}, [task.id, setData]);
+	}, [setData]);
 
 	return <InlineNote
 		note={task.name}
