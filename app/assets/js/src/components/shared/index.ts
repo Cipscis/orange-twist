@@ -7,7 +7,7 @@ export { IconButton } from './IconButton';
 export { InlineNote } from './InlineNote';
 export { KeyboardShortcutCombos } from './KeyboardShortcutCombos';
 export { Loader } from './Loader';
-export { Markdown } from './Markdown';
+export { Markdown, type MarkdownApi } from './Markdown';
 export { Modal } from './Modal';
 export { Note } from './Note/Note';
 export { Notice, NoticeVariant } from './Notice';

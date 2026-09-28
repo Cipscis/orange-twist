@@ -21,7 +21,6 @@ import { clear } from 'data';
 
 import { insertTestData, SaveType } from 'database';
 
-import { OrangeTwistContext } from 'components/OrangeTwistContext';
 import { OrangeTwist } from 'components/OrangeTwist';
 
 import { TaskNote } from './TaskNote';
@@ -41,13 +40,7 @@ describe('TaskNote', () => {
 	});
 
 	test('renders the task\'s note', async () => {
-		const { findByText } = render(<OrangeTwistContext.Provider
-			value={{
-				isLoading: false,
-			}}
-		>
-			<TaskNote taskId={1} />
-		</OrangeTwistContext.Provider>);
+		const { findByText } = render(<TaskNote taskId={1} />);
 
 		expect(await findByText('Test task 1 note')).toBeInTheDocument();
 	});
@@ -62,13 +55,7 @@ describe('TaskNote', () => {
 
 		addCommandListener(Command.DATA_SAVE, spy, { signal });
 
-		const { findAllByRole } = render(<OrangeTwistContext.Provider
-			value={{
-				isLoading: false,
-			}}
-		>
-			<TaskNote taskId={1} />
-		</OrangeTwistContext.Provider>);
+		const { findAllByRole } = render(<TaskNote taskId={1} />);
 
 		const noteEditButton = (await findAllByRole('button', { name: 'Edit note' }))[0];
 		await user.click(noteEditButton);
