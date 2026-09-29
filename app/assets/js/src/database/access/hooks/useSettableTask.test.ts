@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -204,6 +204,20 @@ describe('useSettableTask', () => {
 					sortIndex: 1,
 				} satisfies Task,
 			});
+		});
+	});
+
+	test('enters error state if task could not be found', async () => {
+		const { result } = renderHook(
+			() => useSettableTask(-1),
+		);
+
+		await waitFor(() => {
+			expect(result.current.stateOfGet).toEqual({
+				type: AsyncDataStateType.ERROR,
+				error: new Error('Could not find task with ID -1'),
+				loading: false,
+			} satisfies AsyncDataState<Task>);
 		});
 	});
 });
