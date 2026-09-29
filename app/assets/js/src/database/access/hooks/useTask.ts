@@ -30,21 +30,7 @@ export function useTask(taskId: number): AsyncDataState<Task> {
 		return task;
 	}, [taskId]);
 
-	const asyncDataResult = useAsyncData(getTask);
-
-	useEffect(
-		() => {
-			const controller = new AbortController();
-			const { signal } = controller;
-
-			asyncDataResult.getData({ signal });
-
-			return () => controller.abort();
-		},
-		// Deliberately only fetch data (or abort prior fetches) if `getTask` changes
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[getTask]
-	);
+	const asyncDataResult = useAsyncData(getTask, { immediate: true });
 
 	// Re-fetch the data if it changes
 	useEffect(() => {
