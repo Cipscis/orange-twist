@@ -19,26 +19,18 @@ import { addChangeListener, ChangeType } from '../liveAccessManager';
  *
  * @see {@linkcode useAsyncData}
  */
-export function useTask(taskId: number): AsyncDataState<Task | null> {
-	const getTask = useCallback(() => {
-		return loadTask(taskId);
+export function useTask(taskId: number): AsyncDataState<Task> {
+	const getTask = useCallback(async () => {
+		const task = await loadTask(taskId);
+
+		if (task === null) {
+			throw new Error(`Could not find task with ID ${taskId}`);
+		}
+
+		return task;
 	}, [taskId]);
 
-	const asyncDataResult = useAsyncData(getTask);
-
-	useEffect(
-		() => {
-			const controller = new AbortController();
-			const { signal } = controller;
-
-			asyncDataResult.getData({ signal });
-
-			return () => controller.abort();
-		},
-		// Deliberately only fetch data (or abort prior fetches) if `getTask` changes
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[getTask]
-	);
+	const asyncDataResult = useAsyncData(getTask, { immediate: true });
 
 	// Re-fetch the data if it changes
 	useEffect(() => {

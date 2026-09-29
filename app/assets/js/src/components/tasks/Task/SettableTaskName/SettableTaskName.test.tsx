@@ -18,8 +18,6 @@ import userEvent from '@testing-library/user-event';
 
 import { insertTestData } from 'database';
 
-import { OrangeTwist } from 'components/OrangeTwist';
-
 import { SettableTaskName } from './SettableTaskName';
 
 describe('SettableTaskName', () => {

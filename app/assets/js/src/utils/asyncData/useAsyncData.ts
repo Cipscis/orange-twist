@@ -143,7 +143,9 @@ export function useAsyncData<T>(
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		getDataWrapper({ signal });
+		getDataWrapper({ signal }).catch(() => {
+			// Ignore error since there's no mechanism to handle it
+		});
 
 		return () => controller.abort();
 	}, [immediate, getDataWrapper]);

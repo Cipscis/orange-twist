@@ -27,8 +27,14 @@ import { SaveType } from '../SaveAction';
 export function useSettableTask(taskId: number): ExpandType<
 	Omit<SettableAsyncDataResult<Task>, 'getData'>
 > {
-	const getTask = useCallback(() => {
-		return loadTask(taskId);
+	const getTask = useCallback(async () => {
+		const task = await loadTask(taskId);
+
+		if (task === null) {
+			throw new Error(`Could not find task with ID ${taskId}`);
+		}
+
+		return task;
 	}, [taskId]);
 
 	const setTask = useCallback(async (task: Partial<

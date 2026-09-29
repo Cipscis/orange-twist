@@ -19,34 +19,30 @@ import { SaveType } from '../SaveAction';
 import { insertTestData } from '../../test-utils';
 import type { Task } from '../../types';
 
-import { useSettableTask } from './useSettableTask';
+import { useTask } from './useTask';
 
-describe('useSettableTask', () => {
+describe('useTask', () => {
 	beforeEach(async () => insertTestData());
 	afterEach(() => cleanup());
 
-	test('provide a SettableAsyncDataResult', () => {
+	test('provide an AsyncDataResult', () => {
 		const { result } = renderHook(
-			() => useSettableTask(1)
+			() => useTask(1)
 		);
 
-		expect(result.current.stateOfGet).toEqual({
+		expect(result.current).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
-		expect(result.current.stateOfSet).toEqual({
-			type: AsyncDataStateType.INITIAL,
-			loading: false,
 		});
 	});
 
 	test('fetches data on initial render', async () => {
 		const { result } = renderHook(
-			() => useSettableTask(1)
+			() => useTask(1)
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -61,11 +57,11 @@ describe('useSettableTask', () => {
 
 	test('re-fetches data if it changes', async () => {
 		const { result } = renderHook(
-			() => useSettableTask(1)
+			() => useTask(1)
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -88,7 +84,7 @@ describe('useSettableTask', () => {
 		}]);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -103,12 +99,12 @@ describe('useSettableTask', () => {
 
 	test('re-fetches data if provided a new task ID', async () => {
 		const { rerender, result } = renderHook(
-			(taskId) => useSettableTask(taskId),
+			(taskId) => useTask(taskId),
 			{ initialProps: 1 }
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -123,20 +119,20 @@ describe('useSettableTask', () => {
 		rerender(2);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
-				loading: true,
+				loading: false,
 				data: {
-					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note',
-					sortIndex: 1,
+					id: 2,
+					name: 'Test task 2',
+					note: 'Test task 2 note',
+					sortIndex: 2,
 				} satisfies Task,
 			});
 		});
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -149,71 +145,13 @@ describe('useSettableTask', () => {
 		});
 	});
 
-	test('can set data and provide optimistic results', async () => {
-		const { result } = renderHook(
-			() => useSettableTask(1),
-		);
-
-		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note',
-					sortIndex: 1,
-				} satisfies Task,
-			});
-		});
-
-		result.current.setData({ note: 'Test task 1 note updated' });
-
-		// While the set function processes, we have optimistic data
-		await waitFor(() => {
-			expect(result.current.stateOfSet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				// loading: true,
-				loading: false,
-			});
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note updated',
-					sortIndex: 1,
-				} satisfies Task,
-			});
-		});
-
-		// Eventually, the set function completes and we still have data
-		await waitFor(() => {
-			expect(result.current.stateOfSet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-			});
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note updated',
-					sortIndex: 1,
-				} satisfies Task,
-			});
-		});
-	});
-
 	test('enters error state if task could not be found', async () => {
 		const { result } = renderHook(
-			() => useSettableTask(-1),
+			() => useTask(-1),
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current).toEqual({
 				type: AsyncDataStateType.ERROR,
 				error: new Error('Could not find task with ID -1'),
 				loading: false,

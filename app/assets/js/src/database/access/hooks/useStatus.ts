@@ -16,9 +16,15 @@ import { loadStatus } from '../loadStatus';
  *
  * @see {@linkcode useAsyncData}
  */
-export function useStatus(statusId: number): AsyncDataState<Status | null> {
-	const getStatus = useCallback(() => {
-		return loadStatus(statusId);
+export function useStatus(statusId: number): AsyncDataState<Status> {
+	const getStatus = useCallback(async () => {
+		const status = await loadStatus(statusId);
+
+		if (status === null) {
+			throw new Error(`Could not find status with ID ${statusId}`);
+		}
+
+		return status;
 	}, [statusId]);
 
 	const asyncDataResult = useAsyncData(getStatus, { immediate: true });
