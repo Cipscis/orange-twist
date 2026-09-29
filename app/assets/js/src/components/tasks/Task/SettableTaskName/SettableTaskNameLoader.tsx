@@ -3,18 +3,10 @@ import {
 	Fragment,
 	type JSX,
 } from 'preact';
-import { useCallback } from 'preact/hooks';
 
 import { AsyncDataStateType } from 'utils';
-import {
-	SaveType,
-	type useSettableTask,
-} from 'database';
+import type { useSettableTask } from 'database';
 
-import { fireCommand } from 'registers/commands';
-import { Command } from 'types/Command';
-
-import * as ui from 'ui';
 import {
 	InlineNote,
 	Loader,
