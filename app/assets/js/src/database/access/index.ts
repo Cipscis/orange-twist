@@ -2,6 +2,7 @@ export { save } from './save';
 export { SaveType, type SaveAction } from './SaveAction';
 
 export { loadDayByDate } from './loadDayByDate';
+export { loadCurrentDay } from './loadCurrentDay';
 export { loadAllDays } from './loadAllDays';
 export { loadTask } from './loadTask';
 export { loadStatus } from './loadStatus';
