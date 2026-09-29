@@ -19,9 +19,15 @@ import { addChangeListener, ChangeType } from '../liveAccessManager';
  *
  * @see {@linkcode useAsyncData}
  */
-export function useTask(taskId: number): AsyncDataState<Task | null> {
-	const getTask = useCallback(() => {
-		return loadTask(taskId);
+export function useTask(taskId: number): AsyncDataState<Task> {
+	const getTask = useCallback(async () => {
+		const task = await loadTask(taskId);
+
+		if (task === null) {
+			throw new Error(`Could not find task with ID ${taskId}`);
+		}
+
+		return task;
 	}, [taskId]);
 
 	const asyncDataResult = useAsyncData(getTask);
