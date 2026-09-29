@@ -14,8 +14,7 @@ import { SaveType } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
-import type { MarkdownApi } from 'components/shared/Markdown';
-import { Note } from 'components/shared';
+import { Note, type MarkdownApi } from 'components/shared';
 
 interface DayTaskNoteProps {
 	dayTask: Readonly<DayTaskInfo>;

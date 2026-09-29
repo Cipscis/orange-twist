@@ -1,28 +1,7 @@
-import {
-	h,
-	Fragment,
-	type JSX,
-} from 'preact';
-import {
-	useCallback,
-	useContext,
-	useEffect,
-	useRef,
-} from 'preact/hooks';
-
-import { AsyncDataStateType } from 'utils';
+import { h, type JSX } from 'preact';
 
 import { useSettableTask } from 'database';
 
-import { OrangeTwistContext } from 'components/OrangeTwistContext';
-
-import type { MarkdownApi } from 'components/shared/Markdown';
-import {
-	Loader,
-	Note,
-	Notice,
-	NoticeVariant,
-} from 'components/shared';
 import { TaskNoteLoader } from './TaskNoteLoader';
 
 export interface TaskNoteProps {

@@ -22,4 +22,4 @@ At the time of this decision, Orange Twist's UI is rendered using Preact.
 
 ## Consequences
 
-Splitting components into these three layers makes it easier to write the bottom level component that only compares about the success state. It also makes layout testing easier as a statically constructed `AsyncDataState` can be provided to the `ComponentNameLoader` layer.
+Splitting components into these three layers makes it easier to write the bottom level component that only cares about the success state. It also makes layout testing easier as a statically constructed `AsyncDataState` can be provided to the `ComponentNameLoader` layer.
