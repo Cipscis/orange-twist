@@ -16,9 +16,10 @@ import { AsyncDataStateType } from 'utils';
 import { insertTestData } from '../../test-utils';
 import type { Day } from '../../types';
 
-import { useAllDays } from './useAllDays';
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
+
+import { useAllDays } from './useAllDays';
 
 describe('useAllDays', () => {
 	beforeEach(async () => insertTestData());
