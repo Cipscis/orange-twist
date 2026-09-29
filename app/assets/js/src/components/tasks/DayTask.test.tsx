@@ -52,7 +52,7 @@ describe('DayTask', () => {
 
 	afterEach(() => cleanup());
 
-	test('renders the task name as Markdown', () => {
+	test('renders the task name as Markdown', async () => {
 		const { getByTestId } = render(
 			<DayTask
 				taskId={1}
@@ -60,9 +60,11 @@ describe('DayTask', () => {
 			/>
 		);
 
-		const content = getByTestId('inline-note__note');
-		expect(content).toBeInTheDocument();
-		expect(content.innerHTML.trim()).toBe('<strong>Bold</strong> <em>italic</em> <code>code</code>');
+		await waitFor(() => {
+			const content = getByTestId('inline-note__note');
+			expect(content).toBeInTheDocument();
+			expect(content.innerHTML.trim()).toBe('<strong>Bold</strong> <em>italic</em> <code>code</code>');
+		});
 	});
 
 	test('renders the task status for the specified day', async () => {

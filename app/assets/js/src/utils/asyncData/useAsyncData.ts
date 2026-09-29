@@ -99,24 +99,6 @@ export function useAsyncData<T>(
 			abortPrevious();
 			const combinedAbortSignal = getCombinedAbortSignal(options);
 
-			// Add abort listeners to enter aborted state if signal is aborted before we reach success or error state
-			const abortSignalUpdateController = new AbortController();
-			const abortSignalUpdateSignal = abortSignalUpdateController.signal;
-
-			combinedAbortSignal.addEventListener(
-				'abort',
-				() => {
-					setState({
-						type: AsyncDataStateType.ABORTED,
-						loading: false,
-						reason: combinedAbortSignal.reason,
-					});
-				},
-				{
-					signal: abortSignalUpdateSignal,
-				}
-			);
-
 			try {
 				// 2. Enter loading state
 				if (!state.loading) {
@@ -146,8 +128,6 @@ export function useAsyncData<T>(
 					error,
 				});
 				throw error;
-			} finally {
-				abortSignalUpdateController.abort();
 			}
 		},
 		// Deliberately only rebuild this function when the `getData` function changes

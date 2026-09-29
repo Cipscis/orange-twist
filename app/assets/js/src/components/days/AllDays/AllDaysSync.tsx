@@ -14,9 +14,9 @@ import {
 	AccordionScrollBehaviour,
 	Button,
 } from 'components/shared';
-import { DaysList } from './DaysList';
+import { DaysList } from '../DaysList';
 
-export interface AllDaysProps {
+export interface AllDaysSyncProps {
 	days: readonly Day[];
 	currentDay: Day;
 }
@@ -32,7 +32,7 @@ export interface AllDaysProps {
  *
  * Also includes a button to add a new day.
  */
-export function AllDays(props: AllDaysProps): JSX.Element {
+export function AllDaysSync(props: AllDaysSyncProps): JSX.Element {
 	const {
 		days,
 		currentDay,

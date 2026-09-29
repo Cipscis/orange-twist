@@ -94,44 +94,25 @@ describe('SettableTaskName', () => {
 		);
 	});
 
-	test('if the task name is deleted, prompts the user to confirm deleting the task', async () => {
+	test('ignores the edit operation if an empty string is passed', async () => {
 		const user = userEvent.setup();
 
-		const { findByRole, findByTestId } = render(
-			// The <OrangeTwist> wrapper is needed to register the proper save command listener
-			<OrangeTwist>
-				<SettableTaskName taskId={1} />
-			</OrangeTwist>
+		const { findByRole, getByTestId } = render(
+			<SettableTaskName taskId={1} />
 		);
 
 		const editButton = await findByRole('button', { name: 'Edit task name' });
 
 		await user.click(editButton);
-		let input = await findByRole('textbox');
-		await user.click(input);
+
+		const input = await findByRole('textbox');
+
 		await user.clear(input);
 		await user.keyboard('{Enter}');
 
-		const cancelButton = await findByRole('button', { name: 'Cancel' });
-		await user.click(cancelButton);
-
-		expect(cancelButton).not.toBeInTheDocument();
-		const name = await findByTestId('inline-note__note');
+		const name = getByTestId('inline-note__note');
 		expect(name.innerHTML.trim()).toBe(
 			'<strong>Bold</strong> <em>italic</em> <code>code</code>'
 		);
-
-		await user.click(editButton);
-		input = await findByRole('textbox');
-		await user.click(input);
-		await user.clear(input);
-		await user.keyboard('{Enter}');
-
-		const confirmButton = await findByRole('button', { name: 'Confirm' });
-		await user.click(confirmButton);
-
-		const errorNotice = await findByTestId('settable-task-name__error-notice');
-		expect(errorNotice).toBeInTheDocument();
-		expect(errorNotice.textContent).toBe('Failed to load task with ID 1');
 	});
 });

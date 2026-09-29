@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 * Redesigned the database
+* Setting a task's name to an empty string now cancels the edit operation instead of deleting the day or day task
 
 ## [1.8.4] - 2026-09-01
 
