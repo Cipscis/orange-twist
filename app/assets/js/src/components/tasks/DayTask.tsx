@@ -5,9 +5,9 @@ import { IconName } from 'types/IconName';
 import { useTaskInfo } from 'data';
 import { getTaskDetailUrl } from 'navigation';
 
-import { TaskStatusPicker } from './TaskStatusPicker';
 import { IconButton } from 'components/shared';
-import { SettableTaskName } from './Task/SettableTaskName';
+import { TaskStatusPicker } from './TaskStatusPicker';
+import { SettableTaskName } from './SettableTaskName';
 
 interface DayTaskProps {
 	taskId: number;

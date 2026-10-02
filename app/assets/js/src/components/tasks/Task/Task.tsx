@@ -6,7 +6,7 @@ import { IconName } from 'types/IconName';
 
 import { IconButton } from 'components/shared';
 import { TaskStatusPicker } from '../TaskStatusPicker';
-import { SettableTaskName } from './SettableTaskName';
+import { SettableTaskName } from '../SettableTaskName';
 
 interface TaskProps {
 	taskId: number;
