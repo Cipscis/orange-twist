@@ -5,6 +5,7 @@ export { loadDayByDate } from './loadDayByDate';
 export { loadCurrentDay } from './loadCurrentDay';
 export { loadAllDays } from './loadAllDays';
 export { loadTask } from './loadTask';
+export { loadDayTask } from './loadDayTask';
 export { loadStatus } from './loadStatus';
 export { loadAllStatuses } from './loadAllStatuses';
 export {
@@ -13,6 +14,8 @@ export {
 
 	useTask,
 	useSettableTask,
+
+	useSettableDayTask,
 
 	useStatus,
 	useAllStatuses,
