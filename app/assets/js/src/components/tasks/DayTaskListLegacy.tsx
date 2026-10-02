@@ -3,9 +3,9 @@ import { h, type JSX } from 'preact';
 import { classNames } from 'utils';
 
 import { DragList } from 'components/shared';
-import { DayTask } from './DayTask';
+import { DayTaskLegacy } from './DayTaskLegacy';
 
-interface DayTaskListProps {
+interface DayTaskListLegacyProps {
 	/**
 	 * The IDs of the tasks to display.
 	 */
@@ -19,8 +19,8 @@ interface DayTaskListProps {
 /**
  * Renders a list of specified day tasks, specified by an array of task IDs and a single day name, which can be reordered via drag & drop.
  */
-export function DayTaskList(
-	props: DayTaskListProps,
+export function DayTaskListLegacy(
+	props: DayTaskListLegacyProps,
 ): JSX.Element {
 	const {
 		taskIds,
@@ -40,7 +40,7 @@ export function DayTaskList(
 				data-drag-list-key={id}
 				class="task-list__item"
 			>
-				<DayTask
+				<DayTaskLegacy
 					taskId={id}
 					dayName={dayName}
 				/>

@@ -16,9 +16,9 @@ import {
 } from '@testing-library/preact';
 import { insertTestData } from 'database';
 
-import { DayTask } from './DayTask';
+import { DayTaskLegacy } from './DayTaskLegacy';
 
-describe('DayTask', () => {
+describe('DayTaskLegacy', () => {
 	beforeEach(() => insertTestData({
 		day: {
 			1: {
@@ -54,7 +54,7 @@ describe('DayTask', () => {
 
 	test('renders the task name as Markdown', async () => {
 		const { getByTestId } = render(
-			<DayTask
+			<DayTaskLegacy
 				taskId={1}
 				dayName="2023-11-23"
 			/>
@@ -68,7 +68,7 @@ describe('DayTask', () => {
 	});
 
 	test('renders the task status for the specified day', async () => {
-		const { getByTitle } = render(<DayTask
+		const { getByTitle } = render(<DayTaskLegacy
 			taskId={1}
 			dayName="2023-11-23"
 		/>);

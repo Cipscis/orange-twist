@@ -9,7 +9,7 @@ import { IconButton } from 'components/shared';
 import { TaskStatusPicker } from './TaskStatusPicker';
 import { SettableTaskName } from './SettableTaskName';
 
-interface DayTaskProps {
+interface DayTaskLegacyProps {
 	taskId: number;
 	dayName: string;
 }
@@ -17,7 +17,7 @@ interface DayTaskProps {
 /**
  * Renders a single task, and allows for it to be edited.
  */
-export function DayTask(props: DayTaskProps): JSX.Element | null {
+export function DayTaskLegacy(props: DayTaskLegacyProps): JSX.Element | null {
 	const { taskId, dayName } = props;
 	const taskInfo = useTaskInfo(taskId);
 

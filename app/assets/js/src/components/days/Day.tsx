@@ -18,7 +18,7 @@ import { formatDayName } from 'formatters/dayName';
 
 import { Accordion, Button } from '../shared';
 import { DayNote } from './DayNote';
-import { DayTaskList } from '../tasks/DayTaskList';
+import { DayTaskListLegacy } from '../tasks/DayTaskListLegacy';
 
 interface DayProps {
 	day: DBDay;
@@ -106,7 +106,7 @@ export const Day = memo((props: DayProps): JSX.Element => {
 
 			<DayNote day={day} />
 
-			<DayTaskList
+			<DayTaskListLegacy
 				taskIds={tasks}
 				dayName={name}
 				onReorder={reorderTasks}

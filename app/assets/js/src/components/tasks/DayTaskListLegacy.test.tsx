@@ -17,9 +17,9 @@ import {
 
 import { insertTestData } from 'database';
 
-import { DayTaskList } from './DayTaskList';
+import { DayTaskListLegacy } from './DayTaskListLegacy';
 
-describe('DayTaskList', () => {
+describe('DayTaskListLegacy', () => {
 	beforeEach(() => insertTestData({
 		task: {
 			1: {
@@ -54,7 +54,7 @@ describe('DayTaskList', () => {
 	});
 
 	test('renders a specified array of tasks in order', async () => {
-		const { queryAllByText } = render(<DayTaskList
+		const { queryAllByText } = render(<DayTaskListLegacy
 			taskIds={[3, 2, 1]}
 			dayName="2026-09-16"
 		/>);
