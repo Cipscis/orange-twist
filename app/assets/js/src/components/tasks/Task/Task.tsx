@@ -5,7 +5,7 @@ import { getTaskDetailUrl } from 'navigation';
 import { IconName } from 'types/IconName';
 
 import { IconButton } from 'components/shared';
-import { TaskStatusPicker } from '../TaskStatusPicker';
+import { TaskStatusPickerLegacy } from '../TaskStatusPicker';
 import { SettableTaskName } from '../SettableTaskName';
 
 interface TaskProps {
@@ -16,7 +16,7 @@ export const Task = (props: TaskProps): JSX.Element => {
 	const { taskId } = props;
 
 	return <div class="task">
-		<TaskStatusPicker
+		<TaskStatusPickerLegacy
 			taskId={taskId}
 		/>
 		<IconButton

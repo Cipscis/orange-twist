@@ -6,7 +6,7 @@ import { useTaskInfo } from 'data';
 import { getTaskDetailUrl } from 'navigation';
 
 import { IconButton } from 'components/shared';
-import { TaskStatusPicker } from './TaskStatusPicker';
+import { TaskStatusPickerLegacy } from './TaskStatusPicker';
 import { SettableTaskName } from './SettableTaskName';
 
 interface DayTaskLegacyProps {
@@ -26,7 +26,7 @@ export function DayTaskLegacy(props: DayTaskLegacyProps): JSX.Element | null {
 	}
 
 	return <div class="task">
-		<TaskStatusPicker
+		<TaskStatusPickerLegacy
 			taskId={taskInfo.id}
 			dayName={dayName}
 		/>

@@ -2,10 +2,10 @@ import { h, type JSX } from 'preact';
 
 import { useAllStatuses } from 'database';
 
-import type { TaskStatusPickerSyncProps } from './TaskStatusPickerSync';
-import { TaskStatusPickerLoader } from './TaskStatusPickerLoader';
+import type { TaskStatusPickerLegacySyncProps } from './TaskStatusPickerLegacySync';
+import { TaskStatusPickerLegacyLoader } from './TaskStatusPickerLegacyLoader';
 
-export type TaskStatusPickerProps = Omit<TaskStatusPickerSyncProps, 'statuses'>;
+export type TaskStatusPickerLegacyProps = Omit<TaskStatusPickerLegacySyncProps, 'statuses'>;
 
 /**
  * Asynchronously retrieves all status information and passes it on to render a task status picker once loaded.
@@ -14,10 +14,10 @@ export type TaskStatusPickerProps = Omit<TaskStatusPickerSyncProps, 'statuses'>;
  *
  * Allows that status to be edited.
  */
-export function TaskStatusPicker(props: TaskStatusPickerProps): JSX.Element | null {
+export function TaskStatusPickerLegacy(props: TaskStatusPickerLegacyProps): JSX.Element | null {
 	const statusAsyncDataState = useAllStatuses();
 
-	return <TaskStatusPickerLoader
+	return <TaskStatusPickerLegacyLoader
 		{...props}
 		statusAsyncDataState={statusAsyncDataState}
 	/>;
