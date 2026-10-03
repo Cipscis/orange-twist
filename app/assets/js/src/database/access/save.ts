@@ -6,6 +6,7 @@ import {
 	addDayInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
+	getDayTaskInternal,
 	removeDayInternal,
 	removeDayTaskInternal,
 	removeTaskInternal,
@@ -176,8 +177,14 @@ async function deleteDayTask(
 	>,
 	transaction: IDBTransaction
 ): Promise<void> {
+	const dayTask = await getDayTaskInternal(transaction, action.id);
+
 	await removeDayTaskInternal(transaction, action.id);
-	// TODO: Make sure any lists of day tasks are updated
+
+	if (dayTask) {
+		noticeChange(ChangeType.DAY_TASK_DAY, dayTask.day);
+		noticeChange(ChangeType.DAY_TASK_TASK, dayTask.task);
+	}
 	noticeChange(ChangeType.DAY_TASK, action.id);
 }
 

@@ -3,7 +3,9 @@ import type { EnumTypeOf } from 'utils';
 export const ChangeType = {
 	DAY: 'day',
 	TASK: 'task',
-	DAY_TASK: 'day_task',
+	DAY_TASK: 'day task',
+	DAY_TASK_DAY: 'day task for day',
+	DAY_TASK_TASK: 'day task for task',
 } as const;
 export type ChangeType = EnumTypeOf<typeof ChangeType>;
 
@@ -14,6 +16,8 @@ export const eventTargetLookup = {
 	[ChangeType.DAY]: new Map<number, EventTarget>(),
 	[ChangeType.TASK]: new Map<number, EventTarget>(),
 	[ChangeType.DAY_TASK]: new Map<number, EventTarget>(),
+	[ChangeType.DAY_TASK_DAY]: new Map<number, EventTarget>(),
+	[ChangeType.DAY_TASK_TASK]: new Map<number, EventTarget>(),
 };
 
 /**
