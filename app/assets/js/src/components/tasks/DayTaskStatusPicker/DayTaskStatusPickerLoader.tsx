@@ -1,4 +1,4 @@
-import h, { type JSX } from 'preact';
+import { h, type JSX } from 'preact';
 
 import { AsyncDataStateType } from 'utils';
 

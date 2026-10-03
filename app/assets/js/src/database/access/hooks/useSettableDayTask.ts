@@ -31,7 +31,7 @@ export function useSettableDayTask(dayTaskId: number): ExpandType<
 		const dayTask = await loadDayTask(dayTaskId);
 
 		if (dayTask === null) {
-			throw new Error(`Could not find task with ID ${dayTaskId}`);
+			throw new Error(`Could not find day task with ID ${dayTaskId}`);
 		}
 
 		return dayTask;
