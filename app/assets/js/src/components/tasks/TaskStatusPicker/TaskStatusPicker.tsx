@@ -10,8 +10,7 @@ export type TaskStatusPickerProps = Omit<TaskStatusPickerSyncProps, 'statuses'>;
 /**
  * Asynchronously retrieves all status information and passes it on to render a task status picker once loaded.
  *
- * Renders the status for a specified task, optionally
- * for a specified day.
+ * Renders the status for a specific task, optionally for a specific day.
  *
  * Allows that status to be edited.
  */

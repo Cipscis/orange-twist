@@ -11,4 +11,4 @@ export { Markdown, type MarkdownApi } from './Markdown';
 export { Modal } from './Modal';
 export { Note } from './Note/Note';
 export { Notice, NoticeVariant } from './Notice';
-export { StatusPicker } from './StatusPicker';
+export { StatusPicker, StatusPickerSync } from './StatusPicker';

@@ -14,7 +14,7 @@ import { cleanup, render } from '@testing-library/preact';
 
 import { createTestData } from 'database';
 
-import { StatusPicker } from './StatusPicker';
+import { StatusPickerSync } from './StatusPickerSync';
 
 const testData = createTestData();
 const statuses = Object.values(testData.status);
@@ -24,13 +24,13 @@ const statusMap = new Map(
 	)
 );
 
-describe('StatusPicker', () => {
+describe('StatusPickerSync', () => {
 	afterEach(() => {
 		cleanup();
 	});
 
 	test('renders the status it\'s provided', () => {
-		const { getByRole, rerender } = render(<StatusPicker
+		const { getByRole, rerender } = render(<StatusPickerSync
 			status={statusMap.get('ready-to-test')!}
 			statuses={statuses}
 			onStatusSelect={jest.fn()}
@@ -40,7 +40,7 @@ describe('StatusPicker', () => {
 
 		expect(getByRole('button', { name: 'Testing (click to edit)' })).toBeInTheDocument();
 
-		rerender(<StatusPicker
+		rerender(<StatusPickerSync
 			status={statusMap.get('completed')!}
 			statuses={statuses}
 			onStatusSelect={jest.fn()}
@@ -54,7 +54,7 @@ describe('StatusPicker', () => {
 	test('enters edit mode on click', async () => {
 		const user = userEvent.setup();
 
-		const { getByRole, queryByRole } = render(<StatusPicker
+		const { getByRole, queryByRole } = render(<StatusPickerSync
 			status={statusMap.get('todo')!}
 			statuses={statuses}
 			onStatusSelect={jest.fn()}
@@ -75,7 +75,7 @@ describe('StatusPicker', () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
-		const { getByRole } = render(<StatusPicker
+		const { getByRole } = render(<StatusPickerSync
 			status={statusMap.get('todo')!}
 			statuses={statuses}
 			onStatusSelect={spy}
@@ -97,7 +97,7 @@ describe('StatusPicker', () => {
 	test('exits edit mode on status select', async () => {
 		const user = userEvent.setup();
 
-		const { getByRole, queryByRole } = render(<StatusPicker
+		const { getByRole, queryByRole } = render(<StatusPickerSync
 			status={statusMap.get('todo')!}
 			statuses={statuses}
 			onStatusSelect={jest.fn()}
@@ -120,7 +120,7 @@ describe('StatusPicker', () => {
 		const user = userEvent.setup();
 		const spy = jest.fn();
 
-		const { getByRole } = render(<StatusPicker
+		const { getByRole } = render(<StatusPickerSync
 			status={statusMap.get('todo')!}
 			statuses={statuses}
 			onStatusSelect={jest.fn()}
@@ -141,7 +141,7 @@ describe('StatusPicker', () => {
 	test('exits edit mode on delete button click', async () => {
 		const user = userEvent.setup();
 
-		const { getByRole, queryByRole } = render(<StatusPicker
+		const { getByRole, queryByRole } = render(<StatusPickerSync
 			status={statusMap.get('todo')!}
 			statuses={statuses}
 			onStatusSelect={jest.fn()}
@@ -163,7 +163,7 @@ describe('StatusPicker', () => {
 	test('renders correct delete button title', async () => {
 		const user = userEvent.setup();
 
-		const { getByRole } = render(<StatusPicker
+		const { getByRole } = render(<StatusPickerSync
 			status={statusMap.get('todo')!}
 			statuses={statuses}
 			onStatusSelect={jest.fn()}
@@ -181,7 +181,7 @@ describe('StatusPicker', () => {
 	test('exits edit mode on light dismiss', async () => {
 		const user = userEvent.setup();
 
-		const { getByRole, queryByRole } = render(<StatusPicker
+		const { getByRole, queryByRole } = render(<StatusPickerSync
 			status={statusMap.get('todo')!}
 			statuses={statuses}
 			onStatusSelect={jest.fn()}
@@ -203,7 +203,7 @@ describe('StatusPicker', () => {
 	test('exits edit mode on escape keypress', async () => {
 		const user = userEvent.setup();
 
-		const { getByRole, queryByRole } = render(<StatusPicker
+		const { getByRole, queryByRole } = render(<StatusPickerSync
 			status={statusMap.get('todo')!}
 			statuses={statuses}
 			onStatusSelect={jest.fn()}

@@ -51,7 +51,7 @@ mockAnimationsApi();
 const testData = createTestData();
 const statuses = Array.from(Object.values(testData.status));
 
-describe('TaskStatusPickerSync', () => {
+describe('TaskStatusPicker', () => {
 	beforeAll(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 	});

@@ -19,7 +19,7 @@ import {
 import type { Status } from 'database';
 
 import * as ui from 'ui';
-import { StatusPicker } from 'components/shared';
+import { StatusPickerSync } from 'components/shared';
 
 export interface TaskStatusPickerSyncProps {
 	taskId: number;
@@ -41,6 +41,7 @@ export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Elem
 
 		statuses,
 	} = props;
+
 	const taskInfo = useTaskInfo(taskId);
 
 	const dayTaskIdentifier = useMemo(() => {
@@ -145,7 +146,7 @@ export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Elem
 		return null;
 	}
 
-	return <StatusPicker
+	return <StatusPickerSync
 		status={status}
 		statuses={statuses}
 		onStatusSelect={changeStatus}
