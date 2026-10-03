@@ -11,7 +11,7 @@ import {
 } from './StatusPickerSync';
 
 export interface StatusPickerLoaderProps extends Omit<StatusPickerSyncProps, 'statuses'> {
-	statusAsyncDataState: AsyncDataState<Status[]>;
+	statusAsyncDataState: AsyncDataState<readonly Status[]>;
 }
 
 /**

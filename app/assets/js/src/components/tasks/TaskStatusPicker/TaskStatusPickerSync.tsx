@@ -25,7 +25,7 @@ export interface TaskStatusPickerSyncProps {
 	taskId: number;
 	dayName?: string;
 
-	statuses: Status[];
+	statuses: readonly Status[];
 }
 
 /**

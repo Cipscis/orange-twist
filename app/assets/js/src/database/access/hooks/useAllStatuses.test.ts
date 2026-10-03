@@ -46,4 +46,28 @@ describe('useAllStatuses', () => {
 			});
 		});
 	});
+
+	test('provides a success result immediately on subsequent initial renders', async () => {
+		const { result } = renderHook(
+			() => useAllStatuses()
+		);
+
+		await waitFor(() => {
+			expect(result.current).toEqual({
+				type: AsyncDataStateType.SUCCESS,
+				loading: false,
+				data: defaultStatuses,
+			});
+		});
+
+		const { result: result2 } = renderHook(
+			() => useAllStatuses()
+		);
+
+		expect(result2.current).toEqual({
+			type: AsyncDataStateType.SUCCESS,
+			loading: false,
+			data: defaultStatuses,
+		});
+	});
 });

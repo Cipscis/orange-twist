@@ -11,7 +11,7 @@ import {
 } from './TaskStatusPickerSync';
 
 export interface TaskStatusPickerLoaderProps extends Omit<TaskStatusPickerSyncProps, 'statuses'> {
-	statusAsyncDataState: AsyncDataState<Status[]>;
+	statusAsyncDataState: AsyncDataState<readonly Status[]>;
 }
 
 /**

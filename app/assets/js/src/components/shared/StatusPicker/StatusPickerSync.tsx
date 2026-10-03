@@ -25,7 +25,7 @@ import { StatusButton } from './StatusButton';
 
 export interface StatusPickerSyncProps {
 	status: Status;
-	statuses: Status[];
+	statuses: readonly Status[];
 	onStatusSelect: (status: number) => void;
 	onDelete: () => void;
 	deleteButtonTitle: string;
