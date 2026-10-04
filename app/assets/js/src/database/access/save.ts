@@ -116,6 +116,8 @@ async function saveDayTask(
 	transaction: IDBTransaction,
 ): Promise<void> {
 	// Protect against extraneous and undefined properties
+	const dayTask = await getDayTaskInternal(transaction, action.id);
+
 	const dayTaskToSave: Parameters<typeof updateDayTaskInternal>[1] = {
 		id: action.id,
 	};
@@ -133,6 +135,10 @@ async function saveDayTask(
 	}
 
 	await updateDayTaskInternal(transaction, dayTaskToSave);
+	if (dayTask) {
+		noticeChange(ChangeType.DAY_TASK_DAY, dayTask.day);
+		noticeChange(ChangeType.DAY_TASK_TASK, dayTask.task);
+	}
 	noticeChange(ChangeType.DAY_TASK, action.id);
 }
 

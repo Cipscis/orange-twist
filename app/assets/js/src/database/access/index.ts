@@ -16,6 +16,7 @@ export {
 	useTask,
 	useSettableTask,
 
+	useDayTaskIdsForDay,
 	useSettableDayTask,
 
 	useStatus,
