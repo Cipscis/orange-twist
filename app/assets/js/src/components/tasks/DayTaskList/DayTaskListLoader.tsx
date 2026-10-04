@@ -1,0 +1,35 @@
+import { h, type JSX } from 'preact';
+
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
+
+import {
+	Loader,
+	Notice,
+	NoticeVariant,
+} from 'components/shared';
+import { DayTaskListSync } from './DayTaskListSync';
+
+export interface DayTaskListLoaderProps {
+	dayTaskIdsDataState: AsyncDataState<readonly number[]>;
+}
+
+export function DayTaskListLoader(props: DayTaskListLoaderProps): JSX.Element {
+	const {
+		dayTaskIdsDataState,
+	} = props;
+
+	if (dayTaskIdsDataState.type === AsyncDataStateType.INITIAL) {
+		return <Loader />;
+	}
+
+	if (dayTaskIdsDataState.type === AsyncDataStateType.ERROR) {
+		return <Notice
+			variant={NoticeVariant.ERROR}
+			message={dayTaskIdsDataState.error.message}
+		/>;
+	}
+
+	return <DayTaskListSync
+		dayTaskIds={dayTaskIdsDataState.data}
+	/>;
+}
