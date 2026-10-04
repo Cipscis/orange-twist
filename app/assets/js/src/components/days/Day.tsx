@@ -6,19 +6,19 @@ import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
 import { getCurrentDate } from 'utils';
+import { setDayTaskInfo } from 'data';
 import {
-	setDayInfo,
-	setDayTaskInfo,
-	useDayInfo,
-} from 'data';
-import { SaveType, type Day as DBDay } from 'database';
+	loadDayTaskForDayAndTask,
+	SaveType,
+	type Day as DBDay,
+} from 'database';
 
 import * as ui from 'ui';
 import { formatDayName } from 'formatters/dayName';
 
 import { Accordion, Button } from '../shared';
 import { DayNote } from './DayNote';
-import { DayTaskListLegacy } from '../tasks/DayTaskListLegacy';
+import { DayTaskListForDay } from '../tasks/DayTaskList';
 
 interface DayProps {
 	day: DBDay;
@@ -43,9 +43,6 @@ export const Day = memo((props: DayProps): JSX.Element => {
 
 	const name = formatDayName(day);
 
-	// TODO: Create `DayTasksForDay` component that takes Day ID and looks up day tasks
-	const { tasks } = useDayInfo(name)!;
-
 	/**
 	 * Ask for confirmation before deleting the current day.
 	 */
@@ -60,16 +57,6 @@ export const Day = memo((props: DayProps): JSX.Element => {
 		}]);
 	}, [day.id]);
 
-	// TODO: Move this to `DayTaskList`
-	/**
-	 * Update the saved order of this day's tasks.
-	 */
-	const reorderTasks = useCallback((tasks: readonly number[]) => {
-		setDayInfo(name, { tasks });
-		fireCommand(Command.DATA_SAVE);
-	}, [name]);
-
-	// TODO: Move this to new `DayTaskListForDay` component
 	/**
 	 * Prompt the user to select an existing task, and add it to the specified day.
 	 */
@@ -81,14 +68,17 @@ export const Day = memo((props: DayProps): JSX.Element => {
 			return;
 		}
 
-		if (tasks.includes(taskId)) {
+		const dayTask = await loadDayTaskForDayAndTask({ day: day.id, task: taskId });
+
+		if (dayTask) {
 			ui.alert(`Task already exists on day ${name}`);
 			return;
 		}
 
+		// TODO: Create new day task via save action
 		setDayTaskInfo({ dayName: name, taskId }, {});
 		fireCommand(Command.DATA_SAVE);
-	}, [tasks, name]);
+	}, [day.id, name]);
 
 	return <Accordion
 		class="day js-day"
@@ -106,10 +96,8 @@ export const Day = memo((props: DayProps): JSX.Element => {
 
 			<DayNote day={day} />
 
-			<DayTaskListLegacy
-				taskIds={tasks}
-				dayName={name}
-				onReorder={reorderTasks}
+			<DayTaskListForDay
+				dayId={day.id}
 			/>
 
 			<Button
