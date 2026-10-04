@@ -5,7 +5,7 @@ import {
 } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 
-import { getDayName, type Day } from 'database';
+import type { Day } from 'database';
 import type { DefaultsFor } from 'utils';
 
 import { Accordion, AccordionScrollBehaviour } from 'components/shared';

@@ -99,7 +99,7 @@ async function deleteTask(
 ): Promise<void> {
 	const deletedDayTaskIds = await removeTaskInternal(transaction, action.id);
 	// TODO: Notice changes in lists of all tasks
-	// TODO: Notice changes in lists of days tasks for this task
+	noticeChange(ChangeType.DAY_TASK_TASK, action.id);
 	noticeChange(ChangeType.TASK, action.id);
 	for (const dayTaskId of deletedDayTaskIds) {
 		noticeChange(ChangeType.DAY_TASK, dayTaskId);
@@ -240,7 +240,7 @@ async function deleteDay(
 ): Promise<void> {
 	const deletedDayTaskIds = await removeDayInternal(transaction, action.id);
 	noticeListChange(ChangeType.DAY);
-	// TODO: Notice changes in lists of days tasks for this day
+	noticeChange(ChangeType.DAY_TASK_DAY, action.id);
 	noticeChange(ChangeType.DAY, action.id);
 	for (const dayTaskId of deletedDayTaskIds) {
 		noticeChange(ChangeType.DAY_TASK, dayTaskId);
