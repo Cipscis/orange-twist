@@ -9,7 +9,7 @@ import { requestTransaction } from './requestTransaction';
 export async function loadDayTaskForDayAndTask(
 	{ day, task }: Pick<DayTask, 'day' | 'task'>
 ): Promise<DayTask | null> {
-	const transaction = await requestTransaction([ObjectStoreName.TASK], 'readonly');
+	const transaction = await requestTransaction([ObjectStoreName.DAY_TASK], 'readonly');
 
 	const dayTask = await getDayTaskForDayAndTaskInternal(transaction, { day, task });
 

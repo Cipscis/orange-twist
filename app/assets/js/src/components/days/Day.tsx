@@ -6,7 +6,6 @@ import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
 import { getCurrentDate } from 'utils';
-import { setDayTaskInfo } from 'data';
 import {
 	loadDayTaskForDayAndTask,
 	SaveType,
@@ -75,9 +74,13 @@ export const Day = memo((props: DayProps): JSX.Element => {
 			return;
 		}
 
-		// TODO: Create new day task via save action
-		setDayTaskInfo({ dayName: name, taskId }, {});
-		fireCommand(Command.DATA_SAVE);
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.DAY_TASK_ADD,
+			dayTask: {
+				day: day.id,
+				task: taskId,
+			},
+		}]);
 	}, [day.id, name]);
 
 	return <Accordion
@@ -102,13 +105,14 @@ export const Day = memo((props: DayProps): JSX.Element => {
 
 			<Button
 				onClick={useCallback(
+					// TODO: Save directly to database
 					() => fireCommand(Command.TASK_ADD_NEW, name),
 					[name]
 				)}
 			>Add new task</Button>
 
 			<Button
-				onClick={useCallback(() => addExistingTask(), [addExistingTask])}
+				onClick={addExistingTask}
 			>Add existing task</Button>
 		</div>
 	</Accordion>;
