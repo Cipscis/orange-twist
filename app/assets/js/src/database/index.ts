@@ -13,6 +13,7 @@ export {
 	useTask,
 	useSettableTask,
 
+	loadDayTaskForDayAndTask,
 	loadDayTaskIdsForDay,
 	useDayTaskIdsForDay,
 	useSettableDayTask,
