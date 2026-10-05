@@ -18,7 +18,6 @@ export interface DayTaskLoaderProps {
 /**
  * Handles the loading, error, and success states for asynchronously retrieving day task information. If day task information is loaded, uses it to render that day task.
  */
-
 export function DayTaskLoader(props: DayTaskLoaderProps): JSX.Element {
 	const {
 		dayTaskDataState,

@@ -13,6 +13,9 @@ export interface DayTaskListLoaderProps {
 	dayTaskIdsDataState: AsyncDataState<readonly number[]>;
 }
 
+/**
+ * Handles the loading, error, and success states for asynchronously retrieving a day's sorted day task IDs. If those day task IDs are loaded, uses them to render a list of those day tasks.
+ */
 export function DayTaskListLoader(props: DayTaskListLoaderProps): JSX.Element {
 	const {
 		dayTaskIdsDataState,

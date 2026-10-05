@@ -13,6 +13,9 @@ export interface DayTaskListSyncProps {
 	dayTaskIds: readonly number[];
 }
 
+/**
+ * Renders a re-orderable list of day tasks.
+ */
 export function DayTaskListSync(props: DayTaskListSyncProps): JSX.Element {
 	const {
 		dayTaskIds,
