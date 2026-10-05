@@ -29,10 +29,15 @@ import { Command } from 'types/Command';
 
 import {
 	clear,
-	getAllDayTaskInfo,
-	getAllTaskInfo,
 	getDayInfo,
 } from 'data';
+import {
+	insertTestData,
+	loadDayTaskForDayAndTask,
+	loadTask,
+	type DayTask,
+	type Task,
+} from 'database';
 import { KeyboardShortcutName, addKeyboardShortcutListener } from 'registers/keyboard-shortcuts';
 
 import { OrangeTwist } from './OrangeTwist';
@@ -143,16 +148,36 @@ describe('OrangeTwist', () => {
 	});
 
 	test('sets up the command to create a new task', async () => {
+		await insertTestData();
+
 		const user = userEvent.setup();
 		render(<OrangeTwist persist={ls} />);
 
 		await act(async () => {
-			fireCommand(Command.TASK_ADD_NEW, '2023-11-26');
+			fireCommand(Command.TASK_ADD_NEW, 1);
 			await user.keyboard('Test event{Enter}');
 		});
 
-		expect(getAllDayTaskInfo({ dayName: '2023-11-26' }).length).toBe(1);
-		expect(getAllTaskInfo()?.[0]?.name).toBe('Test event');
+		const task = await loadTask(4);
+
+		expect(task).toEqual({
+			id: 4,
+			name: 'Test event',
+			note: '',
+			sortIndex: -4,
+		} satisfies Task);
+
+		const dayTask = await loadDayTaskForDayAndTask({ day: 1, task: 4 });
+
+		expect(dayTask).toEqual({
+			id: 3,
+			day: 1,
+			task: 4,
+			status: 1,
+			note: '',
+			summary: null,
+			sortIndex: null,
+		} satisfies DayTask);
 	});
 
 	test('renders a back button if passed a "backButton" prop', () => {

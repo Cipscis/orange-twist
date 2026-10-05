@@ -105,9 +105,8 @@ export const DaySync = memo((props: DaySyncProps): JSX.Element => {
 
 			<Button
 				onClick={useCallback(
-					// TODO: Save directly to database
-					() => fireCommand(Command.TASK_ADD_NEW, name),
-					[name]
+					() => fireCommand(Command.TASK_ADD_NEW, day.id),
+					[day.id]
 				)}
 			>Add new task</Button>
 
