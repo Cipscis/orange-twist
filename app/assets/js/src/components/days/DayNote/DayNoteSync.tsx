@@ -15,7 +15,7 @@ import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import { Note, type MarkdownApi } from 'components/shared';
 
-interface DayNoteProps {
+interface DayNoteSyncProps {
 	day: Readonly<Pick<
 		Day, 'id' | 'note'
 	>>;
@@ -25,7 +25,7 @@ interface DayNoteProps {
  * Renders a note for a specified day, including the ability to
  * edit that note.
  */
-export function DayNote(props: DayNoteProps): JSX.Element {
+export function DayNoteSync(props: DayNoteSyncProps): JSX.Element {
 	const { day } = props;
 
 	const { isLoading } = useContext(OrangeTwistContext);

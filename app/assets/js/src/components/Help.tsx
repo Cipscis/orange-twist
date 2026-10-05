@@ -20,7 +20,7 @@ import {
 	Loader,
 	Note,
 } from 'components/shared';
-import { Day } from 'components/days/Day';
+import { DaySync } from 'components/days/Day';
 import { UnfinishedTaskList } from 'components/tasks/UnfinishedTaskList';
 
 import { OrangeTwistContext } from './OrangeTwistContext';
@@ -67,7 +67,7 @@ export function Help(): JSX.Element {
 
 			{
 				todayDataState.type === AsyncDataStateType.SUCCESS && (todayDataState.data
-					? (<Day
+					? (<DaySync
 						day={todayDataState.data}
 						open
 					/>)

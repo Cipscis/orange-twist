@@ -21,9 +21,9 @@ import { clear } from 'data';
 
 import { SaveType } from 'database';
 
-import { DayNote } from './DayNote';
+import { DayNoteSync } from './DayNoteSync';
 
-describe('DayNote', () => {
+describe('DayNoteSync', () => {
 	beforeAll(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 	});
@@ -37,7 +37,7 @@ describe('DayNote', () => {
 	});
 
 	test('renders the day\'s note', () => {
-		const { getByText } = render(<DayNote
+		const { getByText } = render(<DayNoteSync
 			day={{
 				id: 1,
 				note: 'Day note',
@@ -57,7 +57,7 @@ describe('DayNote', () => {
 
 		addCommandListener(Command.DATA_SAVE, spy, { signal });
 
-		const { getByRole } = render(<DayNote
+		const { getByRole } = render(<DayNoteSync
 			day={{
 				id: 1,
 				note: 'Day note',

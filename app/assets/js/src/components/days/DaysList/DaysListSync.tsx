@@ -9,9 +9,9 @@ import type { Day } from 'database';
 import type { DefaultsFor } from 'utils';
 
 import { Accordion, AccordionScrollBehaviour } from 'components/shared';
-import { Day as DayDetail } from './Day';
+import { DaySync } from '../Day';
 
-export interface DaysListProps {
+export interface DaysListSyncProps {
 	days: readonly Day[];
 	title: string;
 	selectedDayId?: number;
@@ -24,13 +24,13 @@ const defaultProps = {
 	open: false,
 	scrollBehaviour: AccordionScrollBehaviour.AUTO,
 } as const satisfies DefaultsFor<
-	Omit<DaysListProps, 'selectedDayId' | 'class'>
+	Omit<DaysListSyncProps, 'selectedDayId' | 'class'>
 >;
 
 /**
  * Renders a list of days in an accordion.
  */
-export function DaysList(props: DaysListProps): JSX.Element {
+export function DaysListSync(props: DaysListSyncProps): JSX.Element {
 	const {
 		days,
 		title,
@@ -63,7 +63,7 @@ export function DaysList(props: DaysListProps): JSX.Element {
 	>
 		{open &&
 			days.map(((day) => (
-				<DayDetail
+				<DaySync
 					key={day.id}
 					day={day}
 					open={selectedDayId === day.id}

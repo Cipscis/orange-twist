@@ -9,25 +9,25 @@ import { getCurrentDate } from 'utils';
 import {
 	loadDayTaskForDayAndTask,
 	SaveType,
-	type Day as DBDay,
+	type Day,
 } from 'database';
 
 import * as ui from 'ui';
 import { formatDayName } from 'formatters/dayName';
 
-import { Accordion, Button } from '../shared';
-import { DayNote } from './DayNote';
-import { DayTaskListForDay } from '../tasks/DayTaskList';
+import { Accordion, Button } from '../../shared';
+import { DayTaskListForDay } from '../../tasks/DayTaskList';
+import { DayNoteSync } from '../DayNote';
 
-interface DayProps {
-	day: DBDay;
+interface DaySyncProps {
+	day: Day;
 	open?: boolean;
 }
 
 /**
  * Renders a day, including its notes and tasks, in a disclosure.
  */
-export const Day = memo((props: DayProps): JSX.Element => {
+export const DaySync = memo((props: DaySyncProps): JSX.Element => {
 	const {
 		day,
 		open,
@@ -97,7 +97,7 @@ export const Day = memo((props: DayProps): JSX.Element => {
 				>Remove day</Button>
 			}
 
-			<DayNote day={day} />
+			<DayNoteSync day={day} />
 
 			<DayTaskListForDay
 				dayId={day.id}
