@@ -14,7 +14,13 @@ import {
 	setDayTaskInfo,
 	useAllDayTaskInfo,
 } from 'data';
-import type { Task } from 'database';
+import {
+	getDayNameParts,
+	loadDayByDate,
+	loadDayTaskForDayAndTask,
+	SaveType,
+	type Task,
+} from 'database';
 
 import * as ui from 'ui';
 
@@ -45,6 +51,9 @@ export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 		({ dayName: dayNameA }, { dayName: dayNameB }) => dayNameA.localeCompare(dayNameB)
 	), [unsortedDayTasksInfo]);
 
+	/**
+	 * Prompt the user for which day to add a day task for. If a day task exists on that day, show an error. Otherwise, construct a day if necessary and then construct a day task too.
+	 */
 	const addNewDayTask = useCallback(async () => {
 		const dayName = await ui.prompt('What day?', { type: ui.PromptType.DATE });
 		if (!dayName) {
@@ -54,6 +63,32 @@ export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 			ui.alert(`Invalid day ${dayName}`);
 			return;
 		}
+
+		const [year, month, day] = getDayNameParts(dayName);
+		const existingDay = await loadDayByDate({ year, month, day });
+
+		const existingDayTask = existingDay && await loadDayTaskForDayAndTask({
+			day: existingDay.id,
+			task: task.id,
+		});
+		if (existingDayTask) {
+			ui.alert(`Day ${dayName} already exists`);
+			return;
+		}
+
+		if (existingDay) {
+			// If the day does exist, just create the day task
+			fireCommand(Command.DATA_SAVE, [{
+				type: SaveType.DAY_TASK_ADD,
+				dayTask: {
+					day: existingDay.id,
+					task: task.id,
+				},
+			}]);
+			return;
+		}
+
+		// TODO: If the day doesn't exist, create it and the day task with it
 
 		const existingDayData = getDayTaskInfo({ taskId: task.id, dayName });
 		if (existingDayData) {
