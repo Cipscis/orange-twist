@@ -157,10 +157,6 @@ export function StatusPickerSync(props: StatusPickerSyncProps): JSX.Element | nu
 	// Set up event listeners for closing the popover on UI signals like pressing the "Escape" key
 	useCloseWatcher(exitChangeMode, isInChangeMode);
 
-	if (!status) {
-		return null;
-	}
-
 	return <span
 		class="task-status"
 		ref={rootRef}
