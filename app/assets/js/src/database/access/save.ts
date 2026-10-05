@@ -5,6 +5,7 @@ import { getDayNameParts } from '../utils';
 import {
 	addDayInternal,
 	addDayTaskInternal,
+	addTaskInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
 	getDayTaskInternal,
@@ -38,6 +39,8 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
 			saveTask(action, transaction);
+		} else if (action.type === SaveType.TASK_ADD) {
+			addTask(action, transaction);
 		} else if (action.type === SaveType.TASK_DELETE) {
 			deleteTask(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
@@ -85,6 +88,21 @@ async function saveTask(
 
 	await updateTaskInternal(transaction, taskToSave);
 	noticeChange(ChangeType.TASK, action.id);
+}
+
+/**
+ * Adds a single task.
+ */
+async function addTask(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TASK_ADD; }
+	>,
+	transaction: IDBTransaction
+): Promise<void> {
+	const taskId = await addTaskInternal(transaction, action.task);
+
+	// TODO: Notice changes in lists of all tasks
+	noticeChange(ChangeType.DAY_TASK, taskId);
 }
 
 /**
@@ -272,7 +290,10 @@ function gatherTransactionRequirements(
 	// Gather requirements
 	const objectStores = new Set<ObjectStoreName>();
 	for (const action of actions) {
-		if (action.type === SaveType.TASK) {
+		if (
+			action.type === SaveType.TASK ||
+			action.type === SaveType.TASK_ADD
+		) {
 			objectStores.add(ObjectStoreName.TASK);
 		} else if (action.type === SaveType.TASK_DELETE) {
 			objectStores.add(ObjectStoreName.TASK);

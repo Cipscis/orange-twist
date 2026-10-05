@@ -94,6 +94,31 @@ describe('SaveHelper', () => {
 		});
 	});
 
+	test('adds tasks', async () => {
+		await save([
+			{
+				type: SaveType.TASK_ADD,
+				task: {
+					name: 'New task',
+					note: 'New note',
+					sortIndex: 0,
+				},
+			},
+		]);
+
+		const readTransaction = db.transaction([
+			ObjectStoreName.TASK,
+		], 'readonly');
+		const task = await getTaskInternal(readTransaction, 4);
+
+		expect(task).toEqual({
+			id: 4,
+			name: 'New task',
+			note: 'New note',
+			sortIndex: 0,
+		});
+	});
+
 	test('saves day tasks via legacy interface', async () => {
 		let readTransaction = db.transaction([
 			ObjectStoreName.DAY_TASK,
