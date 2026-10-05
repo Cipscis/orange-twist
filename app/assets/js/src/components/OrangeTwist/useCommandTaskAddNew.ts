@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from 'preact/hooks';
 
-import { createTask, setDayTaskInfo } from 'data';
 import { SaveType } from 'database';
 
 import {
