@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [2.0.0] - Unreleased
 
+### Fixed
+
+* The Help page no longer immediately scrolls down to where the current day is rendered
+
 ### Changed
 
 * Redesigned the database
