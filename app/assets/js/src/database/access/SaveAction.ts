@@ -17,8 +17,6 @@ export const SaveType = {
 	DAY_TASK_ADD: 'add day task',
 	DAY_TASK_DELETE: 'delete day task',
 
-	// TODO: Remove this once days can be saved via the day's ID
-	DAY_LEGACY: 'day (legacy)',
 	DAY: 'day',
 	DAY_ADD: 'add day',
 	DAY_DELETE: 'delete day',
@@ -79,15 +77,6 @@ interface SaveActionByType {
 	};
 	[SaveType.DAY_DELETE]: {
 		id: number;
-	};
-	[SaveType.DAY_LEGACY]: {
-		dayName: string;
-		day: ExpandType<Partial<
-			Omit<
-				Day,
-				'id' | 'year' | 'month' | 'day'
-			>
-		>>;
 	};
 }
 

@@ -54,8 +54,6 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			addDay(action, transaction);
 		} else if (action.type === SaveType.DAY_DELETE) {
 			deleteDay(action, transaction);
-		} else if (action.type === SaveType.DAY_LEGACY) {
-			saveDayLegacy(action, transaction);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}
@@ -267,31 +265,6 @@ async function deleteDay(
 }
 
 /**
- * Save the note of a single day, referenced by its day name instead of its ID.
- */
-async function saveDayLegacy(
-	action: Extract<
-		SaveAction, { type: typeof SaveType.DAY_LEGACY; }
-	>,
-	transaction: IDBTransaction
-): Promise<void> {
-	const { dayName } = action;
-
-	const [year, month, day] = getDayNameParts(dayName);
-
-	const dayInfo = await getDayByDateInternal(transaction, { year, month, day });
-	if (!dayInfo) {
-		throw new Error(`Could not save day - unable to find associated day ${JSON.stringify({ year, month, day })}`);
-	}
-
-	saveDay({
-		type: SaveType.DAY,
-		id: dayInfo.id,
-		day: action.day,
-	}, transaction);
-}
-
-/**
  * For a given set of {@linkcode SaveAction}s, gather the required object stores needed to process them all.
  */
 function gatherTransactionRequirements(
@@ -321,8 +294,7 @@ function gatherTransactionRequirements(
 			objectStores.add(ObjectStoreName.DAY_TASK);
 		} else if (
 			action.type === SaveType.DAY ||
-			action.type === SaveType.DAY_ADD ||
-			action.type === SaveType.DAY_LEGACY
+			action.type === SaveType.DAY_ADD
 		) {
 			objectStores.add(ObjectStoreName.DAY);
 		} else if (action.type === SaveType.DAY_DELETE) {
