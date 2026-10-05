@@ -150,8 +150,9 @@ describe('useSettableTask', () => {
 	});
 
 	test('can set data and provide optimistic results', async () => {
-		const { result } = renderHook(
-			() => useSettableTask(1),
+		const { rerender, result } = renderHook(
+			(dayId) => useSettableTask(dayId),
+			{ initialProps: 1 },
 		);
 
 		await waitFor(() => {
@@ -168,24 +169,23 @@ describe('useSettableTask', () => {
 		});
 
 		result.current.setData({ note: 'Test task 1 note updated' });
+		rerender(1);
 
 		// While the set function processes, we have optimistic data
-		await waitFor(() => {
-			expect(result.current.stateOfSet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				// loading: true,
-				loading: false,
-			});
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note updated',
-					sortIndex: 1,
-				} satisfies Task,
-			});
+		expect(result.current.stateOfSet).toEqual({
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
+			// loading: false,
+		});
+		expect(result.current.stateOfGet).toEqual({
+			type: AsyncDataStateType.SUCCESS,
+			loading: false,
+			data: {
+				id: 1,
+				name: 'Test task 1',
+				note: 'Test task 1 note updated',
+				sortIndex: 1,
+			} satisfies Task,
 		});
 
 		// Eventually, the set function completes and we still have data
