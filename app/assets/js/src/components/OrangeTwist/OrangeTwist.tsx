@@ -6,7 +6,6 @@ import {
 import {
 	useCallback,
 	useEffect,
-	useLayoutEffect,
 	useRef,
 	useState,
 } from 'preact/hooks';
@@ -66,6 +65,12 @@ interface OrangeTwistProps {
 	 */
 	backButton?: boolean;
 	/**
+	 * If set, attempts to scroll to the current day on load.
+	 *
+	 * @default false
+	 */
+	scrollToToday?: boolean;
+	/**
 	 * The method that should be used for persisting data.
 	 *
 	 * @default local
@@ -77,6 +82,7 @@ interface OrangeTwistProps {
 
 const defaultProps = {
 	backButton: false,
+	scrollToToday: false,
 	persist: local,
 } as const satisfies DefaultsFor<
 	Omit<OrangeTwistProps, 'children'>
@@ -89,6 +95,7 @@ const defaultProps = {
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const {
 		backButton,
+		scrollToToday,
 		persist,
 		children,
 	} = {
@@ -133,21 +140,41 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 
 	// Scroll to first open day when initial loading is complete
 	const hasDoneInitialScroll = useRef(false);
-	useLayoutEffect(() => {
-		if (hasDoneInitialScroll.current) {
+	useEffect(() => {
+		if (hasDoneInitialScroll.current || !scrollToToday) {
 			return;
 		}
 
-		if (!isLoading) {
-			const firstOpenDay = document.querySelector('.js-day[open]');
-			if (firstOpenDay) {
-				firstOpenDay.scrollIntoView({
-					behavior: 'instant',
-				});
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		// Poll for up to a second to see if the day has loaded
+		const delay = 10;
+		const maxTime = 1_000;
+		const maxAttempts = maxTime / delay;
+		let counter = 0;
+
+		const interval = setInterval(() => {
+			const firstOpenDay = document.querySelector('.js-day:open');
+			if (!firstOpenDay) {
+				counter += 1;
+				if (counter >= maxAttempts) {
+					controller.abort();
+				}
+
+				return;
 			}
+
+			firstOpenDay.scrollIntoView({
+				behavior: 'instant',
+			});
 			hasDoneInitialScroll.current = true;
-		}
-	}, [isLoading]);
+			controller.abort();
+		}, delay);
+		signal.addEventListener('abort', () => clearInterval(interval));
+
+		return () => controller.abort();
+	}, [scrollToToday]);
 
 	// Load persisted data when serialised data
 	// is updated from another source
