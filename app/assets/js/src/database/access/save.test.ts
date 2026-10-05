@@ -5,6 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
+import type { DayTask, Task } from '../types';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
@@ -92,6 +93,70 @@ describe('SaveHelper', () => {
 			note: 'New note 2',
 			sortIndex: 3,
 		});
+	});
+
+	test('adds tasks', async () => {
+		await save([
+			{
+				type: SaveType.TASK_ADD,
+				task: {
+					name: 'New task',
+					note: 'New note',
+					sortIndex: 0,
+				},
+			},
+		]);
+
+		const readTransaction = db.transaction([
+			ObjectStoreName.TASK,
+		], 'readonly');
+		const task = await getTaskInternal(readTransaction, 4);
+
+		expect(task).toEqual({
+			id: 4,
+			name: 'New task',
+			note: 'New note',
+			sortIndex: 0,
+		});
+	});
+
+	test('adds a new task and creates a day task for it', async () => {
+		await save([
+			{
+				type: SaveType.TASK_ADD_WITH_DAY,
+				task: {
+					name: 'New task',
+					note: 'New note',
+					sortIndex: 0,
+				},
+				dayId: 1,
+			},
+		]);
+
+		const readTransaction = db.transaction([
+			ObjectStoreName.TASK,
+			ObjectStoreName.DAY_TASK,
+		], 'readonly');
+		const task = await getTaskInternal(readTransaction, 4);
+
+		expect(task).toEqual({
+			id: 4,
+			name: 'New task',
+			note: 'New note',
+			sortIndex: 0,
+		} satisfies Task);
+
+		const dayTask = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 1, task: 4 });
+
+		expect(dayTask).toEqual({
+			id: 3,
+			day: 1,
+			task: 4,
+			status: 1,
+			note: '',
+			summary: null,
+			sortIndex: null,
+		} satisfies DayTask);
 	});
 
 	test('saves day tasks via legacy interface', async () => {

@@ -17,7 +17,7 @@ export type Command = EnumTypeOf<typeof Command>;
 declare module 'registers/commands' {
 	interface CommandsList {
 		[Command.DAY_ADD_NEW]: [dayName: string];
-		[Command.TASK_ADD_NEW]: [dayName: string];
+		[Command.TASK_ADD_NEW]: [dayId: number];
 		[Command.TASK_GO_TO_EXISTING]: [taskId: number];
 		[Command.DATA_SAVE]: [saveActions: readonly SaveAction[]];
 		[Command.DATA_EXPORT]: [];

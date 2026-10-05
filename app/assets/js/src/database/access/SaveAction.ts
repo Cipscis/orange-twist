@@ -5,10 +5,12 @@ import type {
 	DayTask,
 	Task,
 } from '../types';
-import type { addDayTaskInternal } from '../internal';
+import type { addDayTaskInternal, addTaskInternal } from '../internal';
 
 export const SaveType = {
 	TASK: 'task',
+	TASK_ADD: 'add task',
+	TASK_ADD_WITH_DAY: 'add task to day',
 	TASK_DELETE: 'delete task',
 
 	// TODO: Remove this once day tasks can be saved via the day task's ID
@@ -32,6 +34,13 @@ interface SaveActionByType {
 				'id'
 			>
 		>>;
+	};
+	[SaveType.TASK_ADD]: {
+		task: Parameters<typeof addTaskInternal>[1];
+	};
+	[SaveType.TASK_ADD_WITH_DAY]: {
+		task: Parameters<typeof addTaskInternal>[1];
+		dayId: number;
 	};
 	[SaveType.TASK_DELETE]: {
 		id: number;

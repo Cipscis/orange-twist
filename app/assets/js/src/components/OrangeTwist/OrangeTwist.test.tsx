@@ -3,7 +3,6 @@ import { h } from 'preact';
 import {
 	afterAll,
 	afterEach,
-	beforeAll,
 	describe,
 	expect,
 	jest,
@@ -20,19 +19,19 @@ import {
 import userEvent from '@testing-library/user-event';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
 
-import { randomUUID } from 'node:crypto';
-
 import { local, ls } from 'persist';
 
 import { addCommandListener, fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
+import { getDayInfo } from 'data';
 import {
-	clear,
-	getAllDayTaskInfo,
-	getAllTaskInfo,
-	getDayInfo,
-} from 'data';
+	insertTestData,
+	loadDayTaskForDayAndTask,
+	loadTask,
+	type DayTask,
+	type Task,
+} from 'database';
 import { KeyboardShortcutName, addKeyboardShortcutListener } from 'registers/keyboard-shortcuts';
 
 import { OrangeTwist } from './OrangeTwist';
@@ -44,17 +43,7 @@ configMocks({
 mockAnimationsApi();
 
 describe('OrangeTwist', () => {
-	beforeAll(() => {
-		// jsdom doesn't implement `window.crypto.randomUUID`, so use the Node version
-		// https://github.com/jsdom/jsdom/issues/1612
-		window.crypto.randomUUID = randomUUID;
-	});
-
-	afterEach(() => {
-		cleanup();
-		localStorage.clear();
-		clear();
-	});
+	afterEach(() => cleanup());
 
 	test('renders its children', async () => {
 		const { getByTestId } = render(
@@ -143,16 +132,36 @@ describe('OrangeTwist', () => {
 	});
 
 	test('sets up the command to create a new task', async () => {
+		await insertTestData();
+
 		const user = userEvent.setup();
 		render(<OrangeTwist persist={ls} />);
 
 		await act(async () => {
-			fireCommand(Command.TASK_ADD_NEW, '2023-11-26');
+			fireCommand(Command.TASK_ADD_NEW, 1);
 			await user.keyboard('Test event{Enter}');
 		});
 
-		expect(getAllDayTaskInfo({ dayName: '2023-11-26' }).length).toBe(1);
-		expect(getAllTaskInfo()?.[0]?.name).toBe('Test event');
+		const task = await loadTask(4);
+
+		expect(task).toEqual({
+			id: 4,
+			name: 'Test event',
+			note: '',
+			sortIndex: -4,
+		} satisfies Task);
+
+		const dayTask = await loadDayTaskForDayAndTask({ day: 1, task: 4 });
+
+		expect(dayTask).toEqual({
+			id: 3,
+			day: 1,
+			task: 4,
+			status: 1,
+			note: '',
+			summary: null,
+			sortIndex: null,
+		} satisfies DayTask);
 	});
 
 	test('renders a back button if passed a "backButton" prop', () => {

@@ -47,6 +47,28 @@ describe('addTaskInternal', () => {
 		} satisfies Task);
 	});
 
+	test('fills in blanks with default values', async () => {
+		const db = await getDatabase();
+		const transaction = db.transaction([
+			ObjectStoreName.TASK,
+			ObjectStoreName.STATUS,
+		], 'readwrite');
+
+		const taskId = await addTaskInternal(
+			transaction,
+			{ name: 'Test task' },
+		);
+
+		const task = await getTaskInternal(transaction, taskId);
+
+		expect(task).toEqual({
+			id: 4,
+			name: 'Test task',
+			note: '',
+			sortIndex: -4,
+		} satisfies Task);
+	});
+
 	test('throws an error if a task already exists with that ID', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction([

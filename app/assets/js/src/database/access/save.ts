@@ -5,6 +5,7 @@ import { getDayNameParts } from '../utils';
 import {
 	addDayInternal,
 	addDayTaskInternal,
+	addTaskInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
 	getDayTaskInternal,
@@ -38,6 +39,10 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
 			saveTask(action, transaction);
+		} else if (action.type === SaveType.TASK_ADD) {
+			addTask(action, transaction);
+		} else if (action.type === SaveType.TASK_ADD_WITH_DAY) {
+			addNewTaskToDay(action, transaction);
 		} else if (action.type === SaveType.TASK_DELETE) {
 			deleteTask(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
@@ -85,6 +90,46 @@ async function saveTask(
 
 	await updateTaskInternal(transaction, taskToSave);
 	noticeChange(ChangeType.TASK, action.id);
+}
+
+/**
+ * Adds a single task.
+ */
+async function addTask(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TASK_ADD; }
+	>,
+	transaction: IDBTransaction
+): Promise<number> {
+	const taskId = await addTaskInternal(transaction, action.task);
+
+	// TODO: Notice changes in lists of all tasks
+	noticeChange(ChangeType.TASK, taskId);
+
+	return taskId;
+}
+
+/**
+ * Adds a single task, and a day task for a specified day.
+ */
+async function addNewTaskToDay(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TASK_ADD_WITH_DAY; }
+	>,
+	transaction: IDBTransaction
+): Promise<void> {
+	const taskId = await addTask({
+		type: SaveType.TASK_ADD,
+		task: action.task,
+	}, transaction);
+
+	await addDayTask({
+		type: SaveType.DAY_TASK_ADD,
+		dayTask: {
+			day: action.dayId,
+			task: taskId,
+		},
+	}, transaction);
 }
 
 /**
@@ -181,12 +226,14 @@ async function addDayTask(
 		SaveAction, { type: typeof SaveType.DAY_TASK_ADD; }
 	>,
 	transaction: IDBTransaction
-): Promise<void> {
+): Promise<number> {
 	const dayTaskId = await addDayTaskInternal(transaction, action.dayTask);
 
 	noticeChange(ChangeType.DAY_TASK_DAY, action.dayTask.day);
 	noticeChange(ChangeType.DAY_TASK_TASK, action.dayTask.task);
 	noticeChange(ChangeType.DAY_TASK, dayTaskId);
+
+	return dayTaskId;
 }
 
 
@@ -272,7 +319,10 @@ function gatherTransactionRequirements(
 	// Gather requirements
 	const objectStores = new Set<ObjectStoreName>();
 	for (const action of actions) {
-		if (action.type === SaveType.TASK) {
+		if (
+			action.type === SaveType.TASK ||
+			action.type === SaveType.TASK_ADD
+		) {
 			objectStores.add(ObjectStoreName.TASK);
 		} else if (action.type === SaveType.TASK_DELETE) {
 			objectStores.add(ObjectStoreName.TASK);
@@ -284,7 +334,10 @@ function gatherTransactionRequirements(
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.STATUS);
 			objectStores.add(ObjectStoreName.DAY);
-		} else if (action.type === SaveType.DAY_TASK_ADD) {
+		} else if (
+			action.type === SaveType.DAY_TASK_ADD ||
+			action.type === SaveType.TASK_ADD_WITH_DAY
+		) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.DAY);
 			objectStores.add(ObjectStoreName.TASK);

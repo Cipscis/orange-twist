@@ -1,9 +1,15 @@
-import { getIdbRequestPromise, type WithOptional } from 'utils';
+import {
+	getIdbRequestPromise,
+	type DefaultsFor,
+	type ExpandType,
+	type OptionalExcept,
+} from 'utils';
 
 import { ObjectStoreName } from '../metadata';
 import type { Task } from '../types';
 
 import { getTaskInternal } from './getTaskInternal';
+import { updateTaskInternal } from './updateTaskInternal';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to insert a new task to the task object store.
@@ -18,7 +24,12 @@ import { getTaskInternal } from './getTaskInternal';
  */
 export async function addTaskInternal(
 	transaction: IDBTransaction,
-	task: WithOptional<Task, 'id'>
+	task: ExpandType<
+		OptionalExcept<
+			Task,
+			'name'
+		>
+	>
 ): Promise<Task['id']> {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
@@ -29,11 +40,25 @@ export async function addTaskInternal(
 		}
 	}
 
-	const request = taskOS.add(task);
+	const defaults = {
+		note: '',
+		sortIndex: null,
+	} as const satisfies DefaultsFor<Omit<typeof task, 'id'>>;
+	const taskWithDefaults = {
+		...defaults,
+		...task,
+	};
+
+	const request = taskOS.add(taskWithDefaults);
 
 	const result = await getIdbRequestPromise(request);
 	if (!(typeof result === 'number')) {
 		throw new TypeError(`The key for a task should be a number. Received ${JSON.stringify(result, null, '\t')}`);
+	}
+
+	// If no sortIndex was specified, then update it to the inverse of the ID to make sure new tasks go at the top
+	if (!('sortIndex' in task)) {
+		await updateTaskInternal(transaction, { id: result, sortIndex: -result });
 	}
 
 	return result;
