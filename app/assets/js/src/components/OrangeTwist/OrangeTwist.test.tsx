@@ -3,7 +3,6 @@ import { h } from 'preact';
 import {
 	afterAll,
 	afterEach,
-	beforeAll,
 	describe,
 	expect,
 	jest,
@@ -20,17 +19,12 @@ import {
 import userEvent from '@testing-library/user-event';
 import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
 
-import { randomUUID } from 'node:crypto';
-
 import { local, ls } from 'persist';
 
 import { addCommandListener, fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
-import {
-	clear,
-	getDayInfo,
-} from 'data';
+import { getDayInfo } from 'data';
 import {
 	insertTestData,
 	loadDayTaskForDayAndTask,
@@ -49,17 +43,7 @@ configMocks({
 mockAnimationsApi();
 
 describe('OrangeTwist', () => {
-	beforeAll(() => {
-		// jsdom doesn't implement `window.crypto.randomUUID`, so use the Node version
-		// https://github.com/jsdom/jsdom/issues/1612
-		window.crypto.randomUUID = randomUUID;
-	});
-
-	afterEach(() => {
-		cleanup();
-		localStorage.clear();
-		clear();
-	});
+	afterEach(() => cleanup());
 
 	test('renders its children', async () => {
 		const { getByTestId } = render(
