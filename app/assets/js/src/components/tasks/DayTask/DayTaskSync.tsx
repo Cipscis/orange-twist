@@ -13,6 +13,9 @@ export interface DayTaskSyncProps {
 	dayTask: DayTask;
 }
 
+/**
+ * Renders a brief view of a day task. Allows its status to be changed, and its task's name to be updated. Also renders a link to the task's detail view.
+ */
 export function DayTaskSync(props: DayTaskSyncProps): JSX.Element {
 	const {
 		dayTask,

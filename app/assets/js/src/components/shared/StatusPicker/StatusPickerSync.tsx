@@ -73,10 +73,6 @@ export function StatusPickerSync(props: StatusPickerSyncProps): JSX.Element | nu
 		exitChangeMode();
 	}, [exitChangeMode, onStatusSelect]);
 
-	/**
-	 * Remove the task from the current day, if there is one,
-	 * otherwise delete it entirely.
-	 */
 	const onDeleteButtonClick = useCallback(() => {
 		if (onDelete) {
 			onDelete();
@@ -161,9 +157,7 @@ export function StatusPickerSync(props: StatusPickerSyncProps): JSX.Element | nu
 	// Set up event listeners for closing the popover on UI signals like pressing the "Escape" key
 	useCloseWatcher(exitChangeMode, isInChangeMode);
 
-	const statusName = status.name;
-
-	if (!statusName) {
+	if (!status) {
 		return null;
 	}
 
@@ -177,7 +171,7 @@ export function StatusPickerSync(props: StatusPickerSyncProps): JSX.Element | nu
 		<StatusButton
 			status={status}
 			onStatusSelect={enterChangeMode}
-			title={`${statusName} (click to edit)`}
+			title={`${status.name} (click to edit)`}
 		/>
 
 		<dialog
