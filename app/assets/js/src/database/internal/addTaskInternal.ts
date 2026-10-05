@@ -1,4 +1,9 @@
-import { getIdbRequestPromise, type WithOptional } from 'utils';
+import {
+	getIdbRequestPromise,
+	type DefaultsFor,
+	type ExpandType,
+	type OptionalExcept,
+} from 'utils';
 
 import { ObjectStoreName } from '../metadata';
 import type { Task } from '../types';
@@ -18,7 +23,12 @@ import { getTaskInternal } from './getTaskInternal';
  */
 export async function addTaskInternal(
 	transaction: IDBTransaction,
-	task: WithOptional<Task, 'id'>
+	task: ExpandType<
+		OptionalExcept<
+			Task,
+			'name'
+		>
+	>
 ): Promise<Task['id']> {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);
 
@@ -29,7 +39,16 @@ export async function addTaskInternal(
 		}
 	}
 
-	const request = taskOS.add(task);
+	const defaults = {
+		note: '',
+		sortIndex: null,
+	} as const satisfies DefaultsFor<Omit<typeof task, 'id'>>;
+	const taskWithDefaults = {
+		...defaults,
+		...task,
+	};
+
+	const request = taskOS.add(taskWithDefaults);
 
 	const result = await getIdbRequestPromise(request);
 	if (!(typeof result === 'number')) {
