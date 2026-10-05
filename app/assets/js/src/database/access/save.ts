@@ -56,8 +56,6 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			deleteDay(action, transaction);
 		} else if (action.type === SaveType.DAY_LEGACY) {
 			saveDayLegacy(action, transaction);
-		} else if (action.type === SaveType.DAY_DELETE_LEGACY) {
-			deleteDayLegacy(action, transaction);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}
@@ -268,27 +266,6 @@ async function deleteDay(
 	}
 }
 
-async function deleteDayLegacy(
-	action: Extract<
-		SaveAction, { type: typeof SaveType.DAY_DELETE_LEGACY; }
-	>,
-	transaction: IDBTransaction,
-): Promise<void> {
-	const [year, month, day] = getDayNameParts(action.name);
-	const dayInfo = await getDayByDateInternal(transaction, { year, month, day });
-	if (!dayInfo) {
-		throw new Error(`Could not delete day - unable to find associated day ${JSON.stringify({ year, month, day })}`);
-	}
-
-	await deleteDay(
-		{
-			type: SaveType.DAY_DELETE,
-			id: dayInfo.id,
-		},
-		transaction
-	);
-}
-
 /**
  * Save the note of a single day, referenced by its day name instead of its ID.
  */
@@ -348,10 +325,7 @@ function gatherTransactionRequirements(
 			action.type === SaveType.DAY_LEGACY
 		) {
 			objectStores.add(ObjectStoreName.DAY);
-		} else if (
-			action.type === SaveType.DAY_DELETE ||
-			action.type === SaveType.DAY_DELETE_LEGACY
-		) {
+		} else if (action.type === SaveType.DAY_DELETE) {
 			objectStores.add(ObjectStoreName.DAY);
 			objectStores.add(ObjectStoreName.DAY_TASK);
 		} else {
