@@ -182,7 +182,6 @@ async function addDayTask(
 	>,
 	transaction: IDBTransaction
 ): Promise<void> {
-	console.log({ action });
 	const dayTaskId = await addDayTaskInternal(transaction, action.dayTask);
 
 	noticeChange(ChangeType.DAY_TASK_DAY, action.dayTask.day);
