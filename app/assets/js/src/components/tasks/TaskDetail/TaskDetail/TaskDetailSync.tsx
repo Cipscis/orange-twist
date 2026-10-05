@@ -1,7 +1,6 @@
 import { h, type JSX } from 'preact';
 import {
 	useCallback,
-	useContext,
 	useMemo,
 } from 'preact/hooks';
 
@@ -14,7 +13,6 @@ import {
 	getDayTaskInfo,
 	setDayTaskInfo,
 	useAllDayTaskInfo,
-	useTaskInfo,
 } from 'data';
 import type { Task } from 'database';
 
@@ -22,13 +20,9 @@ import * as ui from 'ui';
 
 import {
 	Button,
-	Loader,
 	Markdown,
-	Notice,
-	NoticeVariant,
 } from 'components/shared';
 
-import { OrangeTwistContext } from 'components/OrangeTwistContext';
 import { DayTaskDetail } from '../DayTaskDetail';
 import { TaskNote } from '../TaskNote';
 
@@ -45,11 +39,6 @@ export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 		task,
 	} = props;
 
-	const {
-		isLoading,
-	} = useContext(OrangeTwistContext);
-
-	const taskInfo = useTaskInfo(task.id);
 	const unsortedDayTasksInfo = useAllDayTaskInfo({ taskId: task.id });
 
 	const dayTasksInfo = useMemo(() => unsortedDayTasksInfo.toSorted(
@@ -95,23 +84,12 @@ export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 		[dayTasksInfo, currentDayName]
 	);
 
-	if (isLoading) {
-		return <Loader />;
-	}
-
-	if (!taskInfo) {
-		return <Notice
-			message={`No task with ID ${task.id} exists`}
-			variant={NoticeVariant.ERROR}
-		/>;
-	}
-
 	return <section class="orange-twist__section">
 		<Markdown
-			content={`## ${taskInfo.name}`}
+			content={`## ${task.name}`}
 			inline
 		/>
-		<TaskNote taskId={taskInfo.id} />
+		<TaskNote taskId={task.id} />
 		{dayTasksInfo.map((dayTaskInfo, i, arr) => (
 			<DayTaskDetail
 				key={dayTaskInfo.dayName}
