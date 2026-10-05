@@ -6,12 +6,12 @@ import { AsyncDataStateType, type AsyncDataState } from 'utils';
 import { Loader } from 'components/shared';
 
 import {
-	type TaskStatusPickerSyncProps,
-	TaskStatusPickerSync,
-} from './TaskStatusPickerSync';
+	type TaskStatusPickerLegacySyncProps,
+	TaskStatusPickerLegacySync,
+} from './TaskStatusPickerLegacySync';
 
-export interface TaskStatusPickerLoaderProps extends Omit<TaskStatusPickerSyncProps, 'statuses'> {
-	statusAsyncDataState: AsyncDataState<Status[]>;
+export interface TaskStatusPickerLegacyLoaderProps extends Omit<TaskStatusPickerLegacySyncProps, 'statuses'> {
+	statusAsyncDataState: AsyncDataState<readonly Status[]>;
 }
 
 /**
@@ -22,7 +22,7 @@ export interface TaskStatusPickerLoaderProps extends Omit<TaskStatusPickerSyncPr
  *
  * Allows that status to be edited.
  */
-export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.Element | null {
+export function TaskStatusPickerLegacyLoader(props: TaskStatusPickerLegacyLoaderProps): JSX.Element | null {
 	const { statusAsyncDataState } = props;
 
 	if (statusAsyncDataState.type === AsyncDataStateType.INITIAL) {
@@ -34,7 +34,7 @@ export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.
 		return null;
 	}
 
-	return <TaskStatusPickerSync
+	return <TaskStatusPickerLegacySync
 		{...props}
 		statuses={statusAsyncDataState.data}
 	/>;

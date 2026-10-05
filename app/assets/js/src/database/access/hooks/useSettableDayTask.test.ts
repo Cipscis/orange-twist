@@ -17,17 +17,17 @@ import { save } from '../save';
 import { SaveType } from '../SaveAction';
 
 import { insertTestData } from '../../test-utils';
-import type { Task } from '../../types';
+import type { DayTask } from '../../types';
 
-import { useSettableTask } from './useSettableTask';
+import { useSettableDayTask } from './useSettableDayTask';
 
-describe('useSettableTask', () => {
+describe('useSettableDayTask', () => {
 	beforeEach(async () => insertTestData());
 	afterEach(() => cleanup());
 
 	test('provide a SettableAsyncDataResult', () => {
 		const { result } = renderHook(
-			() => useSettableTask(1)
+			() => useSettableDayTask(1)
 		);
 
 		expect(result.current.stateOfGet).toEqual({
@@ -42,7 +42,7 @@ describe('useSettableTask', () => {
 
 	test('fetches data on initial render', async () => {
 		const { result } = renderHook(
-			() => useSettableTask(1)
+			() => useSettableDayTask(1)
 		);
 
 		await waitFor(() => {
@@ -51,17 +51,20 @@ describe('useSettableTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note',
+					day: 1,
+					task: 1,
+					status: 2,
+					summary: 'Summary for task 1 day 1',
+					note: 'Note for task 1 day 1',
 					sortIndex: 1,
-				} satisfies Task,
+				} satisfies DayTask,
 			});
 		});
 	});
 
 	test('re-fetches data if it changes', async () => {
 		const { result } = renderHook(
-			() => useSettableTask(1)
+			() => useSettableDayTask(1)
 		);
 
 		await waitFor(() => {
@@ -70,19 +73,21 @@ describe('useSettableTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note',
+					day: 1,
+					task: 1,
+					status: 2,
+					summary: 'Summary for task 1 day 1',
+					note: 'Note for task 1 day 1',
 					sortIndex: 1,
-				} satisfies Task,
+				} satisfies DayTask,
 			});
 		});
 
 		save([{
-			type: SaveType.TASK,
+			type: SaveType.DAY_TASK,
 			id: 1,
-			task: {
-				name: 'Test task 1 updated',
-				note: 'Test task 1 note updated',
+			dayTask: {
+				note: 'Test day task 1 note updated',
 				sortIndex: 2,
 			},
 		}]);
@@ -92,18 +97,22 @@ describe('useSettableTask', () => {
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
+
 					id: 1,
-					name: 'Test task 1 updated',
-					note: 'Test task 1 note updated',
+					day: 1,
+					task: 1,
+					status: 2,
+					summary: 'Summary for task 1 day 1',
+					note: 'Test day task 1 note updated',
 					sortIndex: 2,
-				} satisfies Task,
+				} satisfies DayTask,
 			});
 		});
 	});
 
-	test('re-fetches data if provided a new task ID', async () => {
+	test('re-fetches data if provided a new day task ID', async () => {
 		const { rerender, result } = renderHook(
-			(taskId) => useSettableTask(taskId),
+			(taskId) => useSettableDayTask(taskId),
 			{ initialProps: 1 }
 		);
 
@@ -113,10 +122,13 @@ describe('useSettableTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note',
+					day: 1,
+					task: 1,
+					status: 2,
+					summary: 'Summary for task 1 day 1',
+					note: 'Note for task 1 day 1',
 					sortIndex: 1,
-				} satisfies Task,
+				} satisfies DayTask,
 			});
 		});
 
@@ -128,10 +140,13 @@ describe('useSettableTask', () => {
 				loading: true,
 				data: {
 					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note',
+					day: 1,
+					task: 1,
+					status: 2,
+					summary: 'Summary for task 1 day 1',
+					note: 'Note for task 1 day 1',
 					sortIndex: 1,
-				} satisfies Task,
+				} satisfies DayTask,
 			});
 		});
 
@@ -141,18 +156,21 @@ describe('useSettableTask', () => {
 				loading: false,
 				data: {
 					id: 2,
-					name: 'Test task 2',
-					note: 'Test task 2 note',
-					sortIndex: 2,
-				} satisfies Task,
+					day: 1,
+					task: 2,
+					status: 2,
+					summary: 'Summary for task 2 day 1',
+					note: 'Note for task 2 day 1',
+					sortIndex: 0,
+				} satisfies DayTask,
 			});
 		});
 	});
 
 	test('can set data and provide optimistic results', async () => {
 		const { rerender, result } = renderHook(
-			(dayId) => useSettableTask(dayId),
-			{ initialProps: 1 },
+			(dayTask) => useSettableDayTask(dayTask),
+			{ initialProps: 1 }
 		);
 
 		await waitFor(() => {
@@ -161,31 +179,36 @@ describe('useSettableTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note',
+					day: 1,
+					task: 1,
+					status: 2,
+					summary: 'Summary for task 1 day 1',
+					note: 'Note for task 1 day 1',
 					sortIndex: 1,
-				} satisfies Task,
+				} satisfies DayTask,
 			});
 		});
 
-		result.current.setData({ note: 'Test task 1 note updated' });
+		result.current.setData({ note: 'Test day task 1 note updated' });
 		rerender(1);
 
 		// While the set function processes, we have optimistic data
 		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-			// loading: false,
 		});
 		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: {
 				id: 1,
-				name: 'Test task 1',
-				note: 'Test task 1 note updated',
+				day: 1,
+				task: 1,
+				status: 2,
+				summary: 'Summary for task 1 day 1',
+				note: 'Test day task 1 note updated',
 				sortIndex: 1,
-			} satisfies Task,
+			} satisfies DayTask,
 		});
 
 		// Eventually, the set function completes and we still have data
@@ -199,25 +222,28 @@ describe('useSettableTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note updated',
+					day: 1,
+					task: 1,
+					status: 2,
+					summary: 'Summary for task 1 day 1',
+					note: 'Test day task 1 note updated',
 					sortIndex: 1,
-				} satisfies Task,
+				} satisfies DayTask,
 			});
 		});
 	});
 
-	test('enters error state if task could not be found', async () => {
+	test('enters error state if day task could not be found', async () => {
 		const { result } = renderHook(
-			() => useSettableTask(-1),
+			() => useSettableDayTask(-1),
 		);
 
 		await waitFor(() => {
 			expect(result.current.stateOfGet).toEqual({
 				type: AsyncDataStateType.ERROR,
-				error: new Error('Could not find task with ID -1'),
+				error: new Error('Could not find day task with ID -1'),
 				loading: false,
-			} satisfies AsyncDataState<Task>);
+			} satisfies AsyncDataState<DayTask>);
 		});
 	});
 });

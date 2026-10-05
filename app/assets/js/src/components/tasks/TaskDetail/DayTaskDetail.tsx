@@ -17,7 +17,7 @@ import {
 	Accordion,
 	InlineNote,
 } from 'components/shared';
-import { TaskStatusPicker } from '../TaskStatusPicker';
+import { TaskStatusPickerLegacy } from '../TaskStatusPicker';
 import { DayTaskNote } from './DayTaskNote';
 
 interface DayTaskDetailProps {
@@ -53,7 +53,7 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 
 		summaryClass="day__summary"
 		summary={<>
-			<TaskStatusPicker
+			<TaskStatusPickerLegacy
 				taskId={taskId}
 				dayName={dayTaskInfo.dayName}
 			/>

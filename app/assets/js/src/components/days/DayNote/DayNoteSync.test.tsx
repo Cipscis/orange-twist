@@ -21,11 +21,9 @@ import { clear } from 'data';
 
 import { SaveType } from 'database';
 
-import { OrangeTwistContext } from 'components/OrangeTwistContext';
+import { DayNoteSync } from './DayNoteSync';
 
-import { DayNote } from './DayNote';
-
-describe('DayNote', () => {
+describe('DayNoteSync', () => {
 	beforeAll(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 	});
@@ -39,19 +37,12 @@ describe('DayNote', () => {
 	});
 
 	test('renders the day\'s note', () => {
-		const { getByText } = render(<OrangeTwistContext.Provider
-			value={{
-				isLoading: false,
+		const { getByText } = render(<DayNoteSync
+			day={{
+				id: 1,
+				note: 'Day note',
 			}}
-		>
-			<DayNote
-				day={{
-					name: '2026-08-04',
-					note: 'Day note',
-					tasks: [],
-				}}
-			/>
-		</OrangeTwistContext.Provider>);
+		/>);
 
 		expect(getByText('Day note')).toBeInTheDocument();
 	});
@@ -66,19 +57,12 @@ describe('DayNote', () => {
 
 		addCommandListener(Command.DATA_SAVE, spy, { signal });
 
-		const { getByRole } = render(<OrangeTwistContext.Provider
-			value={{
-				isLoading: false,
+		const { getByRole } = render(<DayNoteSync
+			day={{
+				id: 1,
+				note: 'Day note',
 			}}
-		>
-			<DayNote
-				day={{
-					name: '2026-08-04',
-					note: 'Day note',
-					tasks: [],
-				}}
-			/>
-		</OrangeTwistContext.Provider>);
+		/>);
 
 		const noteEditButton = getByRole('button', { name: 'Edit note' });
 		await user.click(noteEditButton);
@@ -90,8 +74,8 @@ describe('DayNote', () => {
 
 		expect(spy).toHaveBeenCalledTimes(1);
 		expect(spy).toHaveBeenCalledWith([{
-			type: SaveType.DAY_LEGACY,
-			dayName: '2026-08-04',
+			type: SaveType.DAY,
+			id: 1,
 			day: { note: 'Day note edited' },
 		}]);
 

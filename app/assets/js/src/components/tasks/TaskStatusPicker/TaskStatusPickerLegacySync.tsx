@@ -19,13 +19,13 @@ import {
 import type { Status } from 'database';
 
 import * as ui from 'ui';
-import { StatusPicker } from 'components/shared';
+import { StatusPickerSync } from 'components/shared';
 
-export interface TaskStatusPickerSyncProps {
+export interface TaskStatusPickerLegacySyncProps {
 	taskId: number;
 	dayName?: string;
 
-	statuses: Status[];
+	statuses: readonly Status[];
 }
 
 /**
@@ -34,13 +34,14 @@ export interface TaskStatusPickerSyncProps {
  *
  * Allows that status to be edited.
  */
-export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Element | null {
+export function TaskStatusPickerLegacySync(props: TaskStatusPickerLegacySyncProps): JSX.Element | null {
 	const {
 		taskId,
 		dayName,
 
 		statuses,
 	} = props;
+
 	const taskInfo = useTaskInfo(taskId);
 
 	const dayTaskIdentifier = useMemo(() => {
@@ -145,7 +146,7 @@ export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Elem
 		return null;
 	}
 
-	return <StatusPicker
+	return <StatusPickerSync
 		status={status}
 		statuses={statuses}
 		onStatusSelect={changeStatus}

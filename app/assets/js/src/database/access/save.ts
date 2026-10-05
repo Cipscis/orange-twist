@@ -4,9 +4,12 @@ import { ObjectStoreName } from '../metadata';
 import { getDayNameParts } from '../utils';
 import {
 	addDayInternal,
+	addDayTaskInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
+	getDayTaskInternal,
 	removeDayInternal,
+	removeDayTaskInternal,
 	removeTaskInternal,
 	updateDayInternal,
 	updateDayTaskInternal,
@@ -41,16 +44,16 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			saveDayTaskLegacy(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK) {
 			saveDayTask(action, transaction);
+		} else if (action.type === SaveType.DAY_TASK_ADD) {
+			addDayTask(action, transaction);
+		} else if (action.type === SaveType.DAY_TASK_DELETE) {
+			deleteDayTask(action, transaction);
 		} else if (action.type === SaveType.DAY) {
 			saveDay(action, transaction);
 		} else if (action.type === SaveType.DAY_ADD) {
 			addDay(action, transaction);
 		} else if (action.type === SaveType.DAY_DELETE) {
 			deleteDay(action, transaction);
-		} else if (action.type === SaveType.DAY_LEGACY) {
-			saveDayLegacy(action, transaction);
-		} else if (action.type === SaveType.DAY_DELETE_LEGACY) {
-			deleteDayLegacy(action, transaction);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}
@@ -95,7 +98,7 @@ async function deleteTask(
 ): Promise<void> {
 	const deletedDayTaskIds = await removeTaskInternal(transaction, action.id);
 	// TODO: Notice changes in lists of all tasks
-	// TODO: Notice changes in lists of days tasks for this task
+	noticeChange(ChangeType.DAY_TASK_TASK, action.id);
 	noticeChange(ChangeType.TASK, action.id);
 	for (const dayTaskId of deletedDayTaskIds) {
 		noticeChange(ChangeType.DAY_TASK, dayTaskId);
@@ -112,6 +115,8 @@ async function saveDayTask(
 	transaction: IDBTransaction,
 ): Promise<void> {
 	// Protect against extraneous and undefined properties
+	const dayTask = await getDayTaskInternal(transaction, action.id);
+
 	const dayTaskToSave: Parameters<typeof updateDayTaskInternal>[1] = {
 		id: action.id,
 	};
@@ -129,6 +134,10 @@ async function saveDayTask(
 	}
 
 	await updateDayTaskInternal(transaction, dayTaskToSave);
+	if (dayTask) {
+		noticeChange(ChangeType.DAY_TASK_DAY, dayTask.day);
+		noticeChange(ChangeType.DAY_TASK_TASK, dayTask.task);
+	}
 	noticeChange(ChangeType.DAY_TASK, action.id);
 }
 
@@ -162,6 +171,43 @@ async function saveDayTaskLegacy(
 		id: dayTask.id,
 		dayTask: action.dayTask,
 	}, transaction);
+}
+
+/**
+ * Adds a single day task.
+ */
+async function addDayTask(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.DAY_TASK_ADD; }
+	>,
+	transaction: IDBTransaction
+): Promise<void> {
+	const dayTaskId = await addDayTaskInternal(transaction, action.dayTask);
+
+	noticeChange(ChangeType.DAY_TASK_DAY, action.dayTask.day);
+	noticeChange(ChangeType.DAY_TASK_TASK, action.dayTask.task);
+	noticeChange(ChangeType.DAY_TASK, dayTaskId);
+}
+
+
+/**
+ * Deletes a single day task.
+ */
+async function deleteDayTask(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.DAY_TASK_DELETE; }
+	>,
+	transaction: IDBTransaction
+): Promise<void> {
+	const dayTask = await getDayTaskInternal(transaction, action.id);
+
+	await removeDayTaskInternal(transaction, action.id);
+
+	if (dayTask) {
+		noticeChange(ChangeType.DAY_TASK_DAY, dayTask.day);
+		noticeChange(ChangeType.DAY_TASK_TASK, dayTask.task);
+	}
+	noticeChange(ChangeType.DAY_TASK, action.id);
 }
 
 /**
@@ -210,57 +256,11 @@ async function deleteDay(
 ): Promise<void> {
 	const deletedDayTaskIds = await removeDayInternal(transaction, action.id);
 	noticeListChange(ChangeType.DAY);
-	// TODO: Notice changes in lists of days tasks for this day
+	noticeChange(ChangeType.DAY_TASK_DAY, action.id);
 	noticeChange(ChangeType.DAY, action.id);
 	for (const dayTaskId of deletedDayTaskIds) {
 		noticeChange(ChangeType.DAY_TASK, dayTaskId);
 	}
-}
-
-async function deleteDayLegacy(
-	action: Extract<
-		SaveAction, { type: typeof SaveType.DAY_DELETE_LEGACY; }
-	>,
-	transaction: IDBTransaction,
-): Promise<void> {
-	const [year, month, day] = getDayNameParts(action.name);
-	const dayInfo = await getDayByDateInternal(transaction, { year, month, day });
-	if (!dayInfo) {
-		throw new Error(`Could not delete day - unable to find associated day ${JSON.stringify({ year, month, day })}`);
-	}
-
-	await deleteDay(
-		{
-			type: SaveType.DAY_DELETE,
-			id: dayInfo.id,
-		},
-		transaction
-	);
-}
-
-/**
- * Save the note of a single day, referenced by its day name instead of its ID.
- */
-async function saveDayLegacy(
-	action: Extract<
-		SaveAction, { type: typeof SaveType.DAY_LEGACY; }
-	>,
-	transaction: IDBTransaction
-): Promise<void> {
-	const { dayName } = action;
-
-	const [year, month, day] = getDayNameParts(dayName);
-
-	const dayInfo = await getDayByDateInternal(transaction, { year, month, day });
-	if (!dayInfo) {
-		throw new Error(`Could not save day - unable to find associated day ${JSON.stringify({ year, month, day })}`);
-	}
-
-	saveDay({
-		type: SaveType.DAY,
-		id: dayInfo.id,
-		day: action.day,
-	}, transaction);
 }
 
 /**
@@ -284,16 +284,19 @@ function gatherTransactionRequirements(
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.STATUS);
 			objectStores.add(ObjectStoreName.DAY);
+		} else if (action.type === SaveType.DAY_TASK_ADD) {
+			objectStores.add(ObjectStoreName.DAY_TASK);
+			objectStores.add(ObjectStoreName.DAY);
+			objectStores.add(ObjectStoreName.TASK);
+			objectStores.add(ObjectStoreName.STATUS);
+		} else if (action.type === SaveType.DAY_TASK_DELETE) {
+			objectStores.add(ObjectStoreName.DAY_TASK);
 		} else if (
 			action.type === SaveType.DAY ||
-			action.type === SaveType.DAY_ADD ||
-			action.type === SaveType.DAY_LEGACY
+			action.type === SaveType.DAY_ADD
 		) {
 			objectStores.add(ObjectStoreName.DAY);
-		} else if (
-			action.type === SaveType.DAY_DELETE ||
-			action.type === SaveType.DAY_DELETE_LEGACY
-		) {
+		} else if (action.type === SaveType.DAY_DELETE) {
 			objectStores.add(ObjectStoreName.DAY);
 			objectStores.add(ObjectStoreName.DAY_TASK);
 		} else {

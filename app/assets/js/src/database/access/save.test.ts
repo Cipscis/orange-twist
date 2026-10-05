@@ -9,7 +9,6 @@ import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import {
-	getDayByDateInternal,
 	getDayInternal,
 	getDayTaskForDayAndTaskInternal,
 	getDayTaskInternal,
@@ -270,73 +269,6 @@ describe('SaveHelper', () => {
 		});
 	});
 
-	test('saves days via legacy interface', async () => {
-		let readTransaction = db.transaction([
-			ObjectStoreName.DAY,
-		], 'readonly');
-		const beforeDay1 = await getDayByDateInternal(readTransaction, { year: 2026, month: 4, day: 26 });
-		const beforeDay2 = await getDayByDateInternal(readTransaction, { year: 2026, month: 4, day: 27 });
-
-		expect(beforeDay1).toEqual({
-			id: 1,
-			year: 2026,
-			month: 4,
-			day: 26,
-			note: 'Test note 1',
-		});
-		expect(beforeDay2).toEqual({
-			id: 2,
-			year: 2026,
-			month: 4,
-			day: 27,
-			note: 'Test note 2',
-		});
-
-		await save([
-			{
-				type: SaveType.DAY_LEGACY,
-				dayName: '2026-04-26',
-				// Ensure undefined and extraneous properties are ignored
-				day: {
-					note: 'New note 1',
-					// @ts-expect-error Ignore for test
-					extra: 'test',
-				},
-			},
-			{
-				type: SaveType.DAY_LEGACY,
-				dayName: '2026-04-27',
-				// Ensure all properties get updated
-				day: {
-					note: 'New note 2',
-				} satisfies Required<
-					Extract<SaveAction, { type: typeof SaveType.DAY_LEGACY; }>['day']
-				>,
-			},
-		]);
-
-		readTransaction = db.transaction([
-			ObjectStoreName.DAY,
-		], 'readonly');
-		const afterDay1 = await getDayByDateInternal(readTransaction, { year: 2026, month: 4, day: 26 });
-		const afterDay2 = await getDayByDateInternal(readTransaction, { year: 2026, month: 4, day: 27 });
-
-		expect(afterDay1).toEqual({
-			id: 1,
-			year: 2026,
-			month: 4,
-			day: 26,
-			note: 'New note 1',
-		});
-		expect(afterDay2).toEqual({
-			id: 2,
-			year: 2026,
-			month: 4,
-			day: 27,
-			note: 'New note 2',
-		});
-	});
-
 	test('saves days', async () => {
 		let readTransaction = db.transaction([
 			ObjectStoreName.DAY,
@@ -377,7 +309,7 @@ describe('SaveHelper', () => {
 				day: {
 					note: 'New note 2',
 				} satisfies Required<
-					Extract<SaveAction, { type: typeof SaveType.DAY_LEGACY; }>['day']
+					Extract<SaveAction, { type: typeof SaveType.DAY; }>['day']
 				>,
 			},
 		]);

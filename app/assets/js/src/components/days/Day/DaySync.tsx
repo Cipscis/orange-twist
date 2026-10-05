@@ -5,51 +5,42 @@ import { memo } from 'preact/compat';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import { getCurrentDateDayName } from 'utils';
+import { getCurrentDate } from 'utils';
 import {
-	setDayInfo,
-	setDayTaskInfo,
-	useDayInfo,
-} from 'data';
-import { SaveType } from 'database';
+	loadDayTaskForDayAndTask,
+	SaveType,
+	type Day,
+} from 'database';
 
 import * as ui from 'ui';
+import { formatDayName } from 'formatters/dayName';
 
-import { Accordion, Button } from '../shared';
-import { DayNote } from './DayNote';
-import { DayTaskList } from '../tasks/DayTaskList';
+import { Accordion, Button } from '../../shared';
+import { DayTaskListForDay } from '../../tasks/DayTaskList';
+import { DayNoteSync } from '../DayNote';
 
-interface DayProps {
-	dayName: string;
+interface DaySyncProps {
+	day: Day;
 	open?: boolean;
 }
 
 /**
  * Renders a day, including its notes and tasks, in a disclosure.
  */
-export const Day = memo((props: DayProps): JSX.Element => {
+export const DaySync = memo((props: DaySyncProps): JSX.Element => {
 	const {
-		dayName,
+		day,
 		open,
 	} = props;
 
-	// TODO: Remove this fallback once we read from the database
-	const fallbackDayInfo = useMemo(() => ({
-		name: dayName,
-		note: '',
-		tasks: [],
-	}), [dayName]);
-	const day = useDayInfo(dayName) ?? fallbackDayInfo;
-
 	const isCurrentDay = useMemo(() => {
-		const currentDateDayName = getCurrentDateDayName();
-		return day.name === currentDateDayName;
+		const currentDate = getCurrentDate();
+		return day.year === currentDate.year &&
+			day.month === currentDate.month &&
+			day.day === currentDate.day;
 	}, [day]);
 
-	const {
-		name,
-		tasks,
-	} = day;
+	const name = formatDayName(day);
 
 	/**
 	 * Ask for confirmation before deleting the current day.
@@ -60,18 +51,10 @@ export const Day = memo((props: DayProps): JSX.Element => {
 		}
 
 		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.DAY_DELETE_LEGACY,
-			name,
+			type: SaveType.DAY_DELETE,
+			id: day.id,
 		}]);
-	}, [name]);
-
-	/**
-	 * Update the saved order of this day's tasks.
-	 */
-	const reorderTasks = useCallback((tasks: readonly number[]) => {
-		setDayInfo(name, { tasks });
-		fireCommand(Command.DATA_SAVE);
-	}, [name]);
+	}, [day.id]);
 
 	/**
 	 * Prompt the user to select an existing task, and add it to the specified day.
@@ -84,14 +67,21 @@ export const Day = memo((props: DayProps): JSX.Element => {
 			return;
 		}
 
-		if (tasks.includes(taskId)) {
+		const dayTask = await loadDayTaskForDayAndTask({ day: day.id, task: taskId });
+
+		if (dayTask) {
 			ui.alert(`Task already exists on day ${name}`);
 			return;
 		}
 
-		setDayTaskInfo({ dayName: name, taskId }, {});
-		fireCommand(Command.DATA_SAVE);
-	}, [tasks, name]);
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.DAY_TASK_ADD,
+			dayTask: {
+				day: day.id,
+				task: taskId,
+			},
+		}]);
+	}, [day.id, name]);
 
 	return <Accordion
 		class="day js-day"
@@ -107,23 +97,22 @@ export const Day = memo((props: DayProps): JSX.Element => {
 				>Remove day</Button>
 			}
 
-			<DayNote day={day} />
+			<DayNoteSync day={day} />
 
-			<DayTaskList
-				taskIds={tasks}
-				dayName={name}
-				onReorder={reorderTasks}
+			<DayTaskListForDay
+				dayId={day.id}
 			/>
 
 			<Button
 				onClick={useCallback(
+					// TODO: Save directly to database
 					() => fireCommand(Command.TASK_ADD_NEW, name),
 					[name]
 				)}
 			>Add new task</Button>
 
 			<Button
-				onClick={useCallback(() => addExistingTask(), [addExistingTask])}
+				onClick={addExistingTask}
 			>Add existing task</Button>
 		</div>
 	</Accordion>;

@@ -14,7 +14,7 @@ import {
 	AccordionScrollBehaviour,
 	Button,
 } from 'components/shared';
-import { DaysList } from '../DaysList';
+import { DaysListSync } from '../DaysList';
 
 export interface AllDaysSyncProps {
 	days: readonly Day[];
@@ -62,7 +62,7 @@ export function AllDaysSync(props: AllDaysSyncProps): JSX.Element {
 		)}
 
 		{previousDays.length > 0 &&
-			<DaysList
+			<DaysListSync
 				days={previousDays}
 				title="Previous days"
 				class="orange-twist__section orange-twist__section--sticky-summary"
@@ -70,7 +70,7 @@ export function AllDaysSync(props: AllDaysSyncProps): JSX.Element {
 			/>
 		}
 
-		<DaysList
+		<DaysListSync
 			days={currentDays}
 			title="Days"
 			class="orange-twist__section"
@@ -79,7 +79,7 @@ export function AllDaysSync(props: AllDaysSyncProps): JSX.Element {
 		/>
 
 		{futureDays.length > 0 &&
-			<DaysList
+			<DaysListSync
 				days={futureDays}
 				title="Future days"
 				class="orange-twist__section orange-twist__section--sticky-summary"

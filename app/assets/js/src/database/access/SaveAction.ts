@@ -5,6 +5,7 @@ import type {
 	DayTask,
 	Task,
 } from '../types';
+import type { addDayTaskInternal } from '../internal';
 
 export const SaveType = {
 	TASK: 'task',
@@ -13,11 +14,9 @@ export const SaveType = {
 	// TODO: Remove this once day tasks can be saved via the day task's ID
 	DAY_TASK_LEGACY: 'day task (legacy)',
 	DAY_TASK: 'day task',
+	DAY_TASK_ADD: 'add day task',
+	DAY_TASK_DELETE: 'delete day task',
 
-	// TODO: Remove this once days can be saved via the day's ID
-	DAY_LEGACY: 'day (legacy)',
-	// TODO: Remove this once days can be deleted via the day's ID
-	DAY_DELETE_LEGACY: 'delete day (legacy)',
 	DAY: 'day',
 	DAY_ADD: 'add day',
 	DAY_DELETE: 'delete day',
@@ -56,6 +55,12 @@ interface SaveActionByType {
 			>
 		>>;
 	};
+	[SaveType.DAY_TASK_ADD]: {
+		dayTask: Parameters<typeof addDayTaskInternal>[1];
+	};
+	[SaveType.DAY_TASK_DELETE]: {
+		id: number;
+	};
 	[SaveType.DAY]: {
 		id: number;
 		day: ExpandType<Partial<
@@ -72,18 +77,6 @@ interface SaveActionByType {
 	};
 	[SaveType.DAY_DELETE]: {
 		id: number;
-	};
-	[SaveType.DAY_LEGACY]: {
-		dayName: string;
-		day: ExpandType<Partial<
-			Omit<
-				Day,
-				'id' | 'year' | 'month' | 'day'
-			>
-		>>;
-	};
-	[SaveType.DAY_DELETE_LEGACY]: {
-		name: string;
 	};
 }
 

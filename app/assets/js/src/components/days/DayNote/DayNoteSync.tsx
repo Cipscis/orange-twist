@@ -9,27 +9,24 @@ import {
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import {
-	setDayInfo,
-	type DayInfo,
-} from 'data';
-import { SaveType } from 'database';
+import { SaveType, type Day } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import { Note, type MarkdownApi } from 'components/shared';
 
-interface DayNoteProps {
-	day: Readonly<DayInfo>;
+interface DayNoteSyncProps {
+	day: Readonly<Pick<
+		Day, 'id' | 'note'
+	>>;
 }
 
 /**
  * Renders a note for a specified day, including the ability to
  * edit that note.
  */
-export function DayNote(props: DayNoteProps): JSX.Element {
+export function DayNoteSync(props: DayNoteSyncProps): JSX.Element {
 	const { day } = props;
-	const { name } = day;
 
 	const { isLoading } = useContext(OrangeTwistContext);
 	/** Keep a reference to the note for immediate saving before re-rendering. */
@@ -42,15 +39,13 @@ export function DayNote(props: DayNoteProps): JSX.Element {
 	const onNoteChange = useCallback(
 		(note: string) => {
 			noteRef.current = note;
-			setDayInfo(name, { note });
-
 			fireCommand(Command.DATA_SAVE, [{
-				type: SaveType.DAY_LEGACY,
-				dayName: day.name,
+				type: SaveType.DAY,
+				id: day.id,
 				day: { note: noteRef.current },
 			}]);
 		},
-		[name, day.name]
+		[day.id]
 	);
 
 	const markdownApiRef = useRef<MarkdownApi | null>(null);

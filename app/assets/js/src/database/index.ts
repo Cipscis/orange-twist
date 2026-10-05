@@ -5,6 +5,7 @@ export {
 	type SaveAction,
 
 	loadDayByDate,
+	loadCurrentDay,
 	useCurrentDay,
 	loadAllDays,
 	useAllDays,
@@ -12,6 +13,12 @@ export {
 	loadTask,
 	useTask,
 	useSettableTask,
+
+	loadDayTask,
+	loadDayTaskForDayAndTask,
+	loadDayTaskIdsForDay,
+	useDayTaskIdsForDay,
+	useSettableDayTask,
 
 	loadStatus,
 	useStatus,
