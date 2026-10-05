@@ -16,6 +16,7 @@ import {
 	useAllDayTaskInfo,
 	useTaskInfo,
 } from 'data';
+import type { Task } from 'database';
 
 import * as ui from 'ui';
 
@@ -28,27 +29,28 @@ import {
 } from 'components/shared';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
-import { DayTaskDetail } from './DayTaskDetail';
-import { TaskNote } from './TaskNote';
+import { DayTaskDetail } from '../DayTaskDetail';
+import { TaskNote } from '../TaskNote';
 
-interface TaskDetailProps {
-	taskId: number;
+interface TaskDetailSyncProps {
+	task: Task;
+	setTask: (data: Partial<Task>) => Promise<void>;
 }
 
 /**
  * Renders a detailed view for a task, including its notes.
  */
-export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
+export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 	const {
-		taskId,
+		task,
 	} = props;
 
 	const {
 		isLoading,
 	} = useContext(OrangeTwistContext);
 
-	const taskInfo = useTaskInfo(taskId);
-	const unsortedDayTasksInfo = useAllDayTaskInfo({ taskId });
+	const taskInfo = useTaskInfo(task.id);
+	const unsortedDayTasksInfo = useAllDayTaskInfo({ taskId: task.id });
 
 	const dayTasksInfo = useMemo(() => unsortedDayTasksInfo.toSorted(
 		({ dayName: dayNameA }, { dayName: dayNameB }) => dayNameA.localeCompare(dayNameB)
@@ -64,15 +66,15 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 			return;
 		}
 
-		const existingDayData = getDayTaskInfo({ taskId, dayName });
+		const existingDayData = getDayTaskInfo({ taskId: task.id, dayName });
 		if (existingDayData) {
 			ui.alert(`Day ${dayName} already exists`);
 			return;
 		}
 
-		setDayTaskInfo({ dayName, taskId }, {});
+		setDayTaskInfo({ dayName, taskId: task.id }, {});
 		fireCommand(Command.DATA_SAVE);
-	}, [taskId]);
+	}, [task.id]);
 
 	const currentDayName = getCurrentDateDayName();
 
@@ -99,7 +101,7 @@ export function TaskDetail(props: TaskDetailProps): JSX.Element | null {
 
 	if (!taskInfo) {
 		return <Notice
-			message={`No task with ID ${taskId} exists`}
+			message={`No task with ID ${task.id} exists`}
 			variant={NoticeVariant.ERROR}
 		/>;
 	}

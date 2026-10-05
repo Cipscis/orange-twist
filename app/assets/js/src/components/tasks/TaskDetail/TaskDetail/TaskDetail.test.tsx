@@ -41,8 +41,8 @@ describe('TaskDetail', () => {
 
 	test('renders the status and day name for day tasks', async () => {
 		const {
-			getByText,
-			getByTitle,
+			findByText,
+			findByTitle,
 		} = render(<OrangeTwistContext.Provider
 			value={{
 				isLoading: false,
@@ -51,12 +51,10 @@ describe('TaskDetail', () => {
 			<TaskDetail taskId={1} />
 		</OrangeTwistContext.Provider>);
 
-		const dayNameEl = getByText('2026-04-26');
+		const dayNameEl = await findByText('2026-04-26');
 		expect(dayNameEl).toBeInTheDocument();
 
-		await waitFor(() => {
-			const status = getByTitle('In progress (click to edit)');
-			expect(status).toBeInTheDocument();
-		});
+		const status = await findByTitle('In progress (click to edit)');
+		expect(status).toBeInTheDocument();
 	});
 });
