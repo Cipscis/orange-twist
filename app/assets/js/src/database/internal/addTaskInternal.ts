@@ -9,6 +9,7 @@ import { ObjectStoreName } from '../metadata';
 import type { Task } from '../types';
 
 import { getTaskInternal } from './getTaskInternal';
+import { updateTaskInternal } from './updateTaskInternal';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to insert a new task to the task object store.
@@ -53,6 +54,11 @@ export async function addTaskInternal(
 	const result = await getIdbRequestPromise(request);
 	if (!(typeof result === 'number')) {
 		throw new TypeError(`The key for a task should be a number. Received ${JSON.stringify(result, null, '\t')}`);
+	}
+
+	// If no sortIndex was specified, then update it to the inverse of the ID to make sure new tasks go at the top
+	if (!('sortIndex' in task)) {
+		await updateTaskInternal(transaction, { id: result, sortIndex: -result });
 	}
 
 	return result;

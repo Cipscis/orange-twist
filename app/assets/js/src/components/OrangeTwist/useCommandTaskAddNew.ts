@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'preact/hooks';
 
 import { createTask, setDayTaskInfo } from 'data';
+import { SaveType } from 'database';
 
 import {
 	fireCommand,
@@ -30,12 +31,18 @@ export function useCommandTaskAddNew(): void {
 			return;
 		}
 
-		const taskId = createTask({ name });
+		// TODO: Take a day ID instead, and do this via SaveAction
 		if (dayName) {
+			const taskId = createTask({ name });
 			setDayTaskInfo({ dayName, taskId }, {});
+			fireCommand(Command.DATA_SAVE);
+			return;
 		}
 
-		fireCommand(Command.DATA_SAVE);
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.TASK_ADD,
+			task: { name },
+		}]);
 	}, []);
 
 	useCommand(Command.TASK_ADD_NEW, createNewTask);

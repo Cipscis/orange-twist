@@ -65,7 +65,7 @@ describe('addTaskInternal', () => {
 			id: 4,
 			name: 'Test task',
 			note: '',
-			sortIndex: null,
+			sortIndex: -4,
 		} satisfies Task);
 	});
 
