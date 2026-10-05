@@ -37,5 +37,6 @@ export function DayTaskLoader(props: DayTaskLoaderProps): JSX.Element {
 
 	return <DayTaskSync
 		dayTask={dayTaskDataState.stateOfGet.data}
+		setDayTask={dayTaskDataState.setData}
 	/>;
 }

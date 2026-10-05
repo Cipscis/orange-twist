@@ -6,11 +6,12 @@ import type { DayTask } from 'database';
 import { getTaskDetailUrl } from 'navigation';
 
 import { IconButton } from 'components/shared';
-import { DayTaskStatusPicker } from '../DayTaskStatusPicker';
+import { DayTaskStatusPickerSync } from '../DayTaskStatusPicker';
 import { SettableTaskName } from '../SettableTaskName';
 
 export interface DayTaskSyncProps {
 	dayTask: DayTask;
+	setDayTask: (data: Partial<DayTask>) => Promise<void>;
 }
 
 /**
@@ -19,11 +20,13 @@ export interface DayTaskSyncProps {
 export function DayTaskSync(props: DayTaskSyncProps): JSX.Element {
 	const {
 		dayTask,
+		setDayTask,
 	} = props;
 
 	return <div class="task">
-		<DayTaskStatusPicker
-			dayTaskId={dayTask.id}
+		<DayTaskStatusPickerSync
+			dayTask={dayTask}
+			setDayTask={setDayTask}
 		/>
 		<IconButton
 			href={getTaskDetailUrl(dayTask.task)}
