@@ -65,11 +65,11 @@ interface OrangeTwistProps {
 	 */
 	backButton?: boolean;
 	/**
-	 * If set, attempts to scroll to the current day on load.
+	 * If set, attempts to scroll to the first open day on load.
 	 *
 	 * @default false
 	 */
-	scrollToToday?: boolean;
+	scrollToActiveDay?: boolean;
 	/**
 	 * The method that should be used for persisting data.
 	 *
@@ -82,7 +82,7 @@ interface OrangeTwistProps {
 
 const defaultProps = {
 	backButton: false,
-	scrollToToday: false,
+	scrollToActiveDay: false,
 	persist: local,
 } as const satisfies DefaultsFor<
 	Omit<OrangeTwistProps, 'children'>
@@ -95,7 +95,7 @@ const defaultProps = {
 export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const {
 		backButton,
-		scrollToToday,
+		scrollToActiveDay,
 		persist,
 		children,
 	} = {
@@ -141,7 +141,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	// Scroll to first open day when initial loading is complete
 	const hasDoneInitialScroll = useRef(false);
 	useEffect(() => {
-		if (hasDoneInitialScroll.current || !scrollToToday) {
+		if (hasDoneInitialScroll.current || !scrollToActiveDay) {
 			return;
 		}
 
@@ -174,7 +174,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		signal.addEventListener('abort', () => clearInterval(interval));
 
 		return () => controller.abort();
-	}, [scrollToToday]);
+	}, [scrollToActiveDay]);
 
 	// Load persisted data when serialised data
 	// is updated from another source

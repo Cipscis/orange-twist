@@ -15,7 +15,7 @@ const taskId = taskIdParam === null ? null : Number(taskIdParam);
 
 render(<OrangeTwist
 	backButton
-	scrollToToday
+	scrollToActiveDay
 >
 	{taskId === null || isNaN(taskId)
 		? (

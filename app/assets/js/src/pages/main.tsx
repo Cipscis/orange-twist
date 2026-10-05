@@ -10,7 +10,7 @@ if (main === null) {
 	throw new Error('Missing main element');
 }
 
-render(<OrangeTwist scrollToToday>
+render(<OrangeTwist scrollToActiveDay>
 	<AllDays />
 
 	<UnfinishedTaskList />
