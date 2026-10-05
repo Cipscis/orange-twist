@@ -13,6 +13,9 @@ export interface DayTaskStatusPickerSyncProps {
 	setDayTask: (data: Partial<DayTask>) => Promise<void>;
 }
 
+/**
+ * Renders a status picker for a day task.
+ */
 export function DayTaskStatusPickerSync(props: DayTaskStatusPickerSyncProps): JSX.Element {
 	const {
 		dayTask,

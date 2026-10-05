@@ -15,6 +15,9 @@ export interface DayTaskStatusPickerLoaderProps {
 	dayTaskDataState: ReturnType<typeof useSettableDayTask>;
 }
 
+/**
+ * Handles the loading, error, and success states for asynchronously retrieving day task information. If day task information is loaded, uses it to render a status picker for that day task.
+ */
 export function DayTaskStatusPickerLoader(props: DayTaskStatusPickerLoaderProps): JSX.Element {
 	const {
 		dayTaskDataState,

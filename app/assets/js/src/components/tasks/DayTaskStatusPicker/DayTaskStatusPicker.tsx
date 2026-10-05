@@ -7,6 +7,9 @@ export interface DayTaskStatusPickerProps {
 	dayTaskId: number;
 }
 
+/**
+ * Asynchronously retrieves information about a day task and passes it on to render a status picker for that day task once loaded.
+ */
 export function DayTaskStatusPicker(props: DayTaskStatusPickerProps): JSX.Element {
 	const {
 		dayTaskId,
