@@ -6,6 +6,7 @@ export {
 
 	loadDay,
 	useDay,
+	useSettableDay,
 	loadDayByDate,
 	loadCurrentDay,
 	useCurrentDay,

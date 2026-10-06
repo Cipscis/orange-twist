@@ -13,6 +13,7 @@ export { loadStatus } from './loadStatus';
 export { loadAllStatuses } from './loadAllStatuses';
 export {
 	useDay,
+	useSettableDay,
 	useCurrentDay,
 	useAllDays,
 	useAllDayIds,

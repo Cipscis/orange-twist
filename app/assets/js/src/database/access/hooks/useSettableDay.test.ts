@@ -17,17 +17,17 @@ import { save } from '../save';
 import { SaveType } from '../SaveAction';
 
 import { insertTestData } from '../../test-utils';
-import type { DayTask } from '../../types';
+import type { Day } from '../../types';
 
-import { useSettableDayTask } from './useSettableDayTask';
+import { useSettableDay } from './useSettableDay';
 
-describe('useSettableDayTask', () => {
+describe('useSettableDay', () => {
 	beforeEach(async () => insertTestData());
 	afterEach(() => cleanup());
 
 	test('provide a SettableAsyncDataResult', () => {
 		const { result } = renderHook(
-			() => useSettableDayTask(1)
+			() => useSettableDay(1)
 		);
 
 		expect(result.current.stateOfGet).toEqual({
@@ -42,7 +42,7 @@ describe('useSettableDayTask', () => {
 
 	test('fetches data on initial render', async () => {
 		const { result } = renderHook(
-			() => useSettableDayTask(1)
+			() => useSettableDay(1)
 		);
 
 		await waitFor(() => {
@@ -51,20 +51,18 @@ describe('useSettableDayTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					day: 1,
-					task: 1,
-					status: 2,
-					summary: 'Summary for task 1 day 1',
-					note: 'Note for task 1 day 1',
-					sortIndex: 1,
-				} satisfies DayTask,
+					year: 2026,
+					month: 4,
+					day: 26,
+					note: 'Test note 1',
+				} satisfies Day,
 			});
 		});
 	});
 
 	test('re-fetches data if it changes', async () => {
 		const { result } = renderHook(
-			() => useSettableDayTask(1)
+			() => useSettableDay(1)
 		);
 
 		await waitFor(() => {
@@ -73,22 +71,19 @@ describe('useSettableDayTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					day: 1,
-					task: 1,
-					status: 2,
-					summary: 'Summary for task 1 day 1',
-					note: 'Note for task 1 day 1',
-					sortIndex: 1,
-				} satisfies DayTask,
+					year: 2026,
+					month: 4,
+					day: 26,
+					note: 'Test note 1',
+				} satisfies Day,
 			});
 		});
 
 		save([{
-			type: SaveType.DAY_TASK,
+			type: SaveType.DAY,
 			id: 1,
-			dayTask: {
-				note: 'Test day task 1 note updated',
-				sortIndex: 2,
+			day: {
+				note: 'Test day 1 note updated',
 			},
 		}]);
 
@@ -98,20 +93,18 @@ describe('useSettableDayTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					day: 1,
-					task: 1,
-					status: 2,
-					summary: 'Summary for task 1 day 1',
-					note: 'Test day task 1 note updated',
-					sortIndex: 2,
-				} satisfies DayTask,
+					year: 2026,
+					month: 4,
+					day: 26,
+					note: 'Test day 1 note updated',
+				} satisfies Day,
 			});
 		});
 	});
 
 	test('re-fetches data if provided a new day task ID', async () => {
 		const { rerender, result } = renderHook(
-			(taskId) => useSettableDayTask(taskId),
+			(taskId) => useSettableDay(taskId),
 			{ initialProps: 1 }
 		);
 
@@ -121,13 +114,11 @@ describe('useSettableDayTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					day: 1,
-					task: 1,
-					status: 2,
-					summary: 'Summary for task 1 day 1',
-					note: 'Note for task 1 day 1',
-					sortIndex: 1,
-				} satisfies DayTask,
+					year: 2026,
+					month: 4,
+					day: 26,
+					note: 'Test note 1',
+				} satisfies Day,
 			});
 		});
 
@@ -139,13 +130,11 @@ describe('useSettableDayTask', () => {
 				loading: true,
 				data: {
 					id: 1,
-					day: 1,
-					task: 1,
-					status: 2,
-					summary: 'Summary for task 1 day 1',
-					note: 'Note for task 1 day 1',
-					sortIndex: 1,
-				} satisfies DayTask,
+					year: 2026,
+					month: 4,
+					day: 26,
+					note: 'Test note 1',
+				} satisfies Day,
 			});
 		});
 
@@ -155,20 +144,18 @@ describe('useSettableDayTask', () => {
 				loading: false,
 				data: {
 					id: 2,
-					day: 1,
-					task: 2,
-					status: 2,
-					summary: 'Summary for task 2 day 1',
-					note: 'Note for task 2 day 1',
-					sortIndex: 0,
-				} satisfies DayTask,
+					year: 2026,
+					month: 4,
+					day: 27,
+					note: 'Test note 2',
+				} satisfies Day,
 			});
 		});
 	});
 
 	test('can set data and provide optimistic results', async () => {
 		const { rerender, result } = renderHook(
-			(dayTask) => useSettableDayTask(dayTask),
+			(dayTask) => useSettableDay(dayTask),
 			{ initialProps: 1 }
 		);
 
@@ -178,17 +165,15 @@ describe('useSettableDayTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					day: 1,
-					task: 1,
-					status: 2,
-					summary: 'Summary for task 1 day 1',
-					note: 'Note for task 1 day 1',
-					sortIndex: 1,
-				} satisfies DayTask,
+					year: 2026,
+					month: 4,
+					day: 26,
+					note: 'Test note 1',
+				} satisfies Day,
 			});
 		});
 
-		result.current.setData({ note: 'Test day task 1 note updated' });
+		result.current.setData({ note: 'Test day 1 note updated' });
 		rerender(1);
 
 		// While the set function processes, we have optimistic data
@@ -201,13 +186,11 @@ describe('useSettableDayTask', () => {
 			loading: false,
 			data: {
 				id: 1,
-				day: 1,
-				task: 1,
-				status: 2,
-				summary: 'Summary for task 1 day 1',
-				note: 'Test day task 1 note updated',
-				sortIndex: 1,
-			} satisfies DayTask,
+				year: 2026,
+				month: 4,
+				day: 26,
+				note: 'Test day 1 note updated',
+			} satisfies Day,
 		});
 
 		// Eventually, the set function completes and we still have data
@@ -221,28 +204,26 @@ describe('useSettableDayTask', () => {
 				loading: false,
 				data: {
 					id: 1,
-					day: 1,
-					task: 1,
-					status: 2,
-					summary: 'Summary for task 1 day 1',
-					note: 'Test day task 1 note updated',
-					sortIndex: 1,
-				} satisfies DayTask,
+					year: 2026,
+					month: 4,
+					day: 26,
+					note: 'Test day 1 note updated',
+				} satisfies Day,
 			});
 		});
 	});
 
 	test('enters error state if day task could not be found', async () => {
 		const { result } = renderHook(
-			() => useSettableDayTask(-1),
+			() => useSettableDay(-1),
 		);
 
 		await waitFor(() => {
 			expect(result.current.stateOfGet).toEqual({
 				type: AsyncDataStateType.ERROR,
-				error: new Error('Could not find day task with ID -1'),
+				error: new Error('Could not find day with ID -1'),
 				loading: false,
-			} satisfies AsyncDataState<DayTask>);
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 });
