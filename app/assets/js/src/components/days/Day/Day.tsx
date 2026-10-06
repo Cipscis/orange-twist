@@ -3,12 +3,12 @@ import {
 	type JSX,
 } from 'preact';
 
-import { useDay } from 'database';
+import { useSettableDay } from 'database';
 
 import type { DaySync, DaySyncProps } from './DaySync';
 import { DayLoader } from './DayLoader';
 
-export interface DayProps extends Omit<DaySyncProps, 'day'> {
+export interface DayProps extends Omit<DaySyncProps, 'day' | 'setDay'> {
 	day: number;
 }
 
@@ -20,7 +20,7 @@ export function Day(props: DayProps): JSX.Element {
 		day,
 	} = props;
 
-	const dayDataState = useDay(day);
+	const dayDataState = useSettableDay(day);
 
 	return <DayLoader
 		{...props}

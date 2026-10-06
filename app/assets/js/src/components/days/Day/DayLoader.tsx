@@ -1,15 +1,15 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
-import type { Day } from 'database';
+import { AsyncDataStateType } from 'utils';
+import type { useSettableDay } from 'database';
 
 import { Loader } from 'components/shared';
 
 import type { DaySyncProps } from './DaySync';
 import { DaySync } from './DaySync';
 
-export interface DayLoaderProps extends Omit<DaySyncProps, 'day'> {
-	dayDataState: AsyncDataState<Day>;
+export interface DayLoaderProps extends Omit<DaySyncProps, 'day' | 'setDay'> {
+	dayDataState: ReturnType<typeof useSettableDay>;
 }
 
 /**
@@ -24,13 +24,14 @@ export function DayLoader(
 
 	return <section class="orange-twist__section">
 		{
-			(dayDataState.type === AsyncDataStateType.INITIAL) &&
+			(dayDataState.stateOfGet.type === AsyncDataStateType.INITIAL) &&
 			<Loader />
 		}
-		{dayDataState.type === AsyncDataStateType.SUCCESS &&
+		{dayDataState.stateOfGet.type === AsyncDataStateType.SUCCESS &&
 			<DaySync
 				{...props}
-				day={dayDataState.data}
+				day={dayDataState.stateOfGet.data}
+				setDay={dayDataState.setData}
 			/>
 		}
 		{/* TODO: Handle error state */}

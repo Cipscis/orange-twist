@@ -6,10 +6,7 @@ import {
 	useRef,
 } from 'preact/hooks';
 
-import { Command } from 'types/Command';
-import { fireCommand } from 'registers/commands';
-
-import { SaveType, type Day } from 'database';
+import type { Day } from 'database';
 
 import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
@@ -19,6 +16,7 @@ interface DayNoteSyncProps {
 	day: Readonly<Pick<
 		Day, 'id' | 'note'
 	>>;
+	setDay: (data: Partial<Pick<Day, 'note'>>) => Promise<void>;
 }
 
 /**
@@ -26,26 +24,18 @@ interface DayNoteSyncProps {
  * edit that note.
  */
 export function DayNoteSync(props: DayNoteSyncProps): JSX.Element {
-	const { day } = props;
+	const {
+		day,
+		setDay,
+	} = props;
 
 	const { isLoading } = useContext(OrangeTwistContext);
-	/** Keep a reference to the note for immediate saving before re-rendering. */
-	const noteRef = useRef(day.note);
-	// Make sure to update the ref if the task note changes from other sources
-	useEffect(() => {
-		noteRef.current = day.note;
-	}, [day.note]);
 
 	const onNoteChange = useCallback(
 		(note: string) => {
-			noteRef.current = note;
-			fireCommand(Command.DATA_SAVE, [{
-				type: SaveType.DAY,
-				id: day.id,
-				day: { note: noteRef.current },
-			}]);
+			setDay({ note });
 		},
-		[day.id]
+		[setDay]
 	);
 
 	const markdownApiRef = useRef<MarkdownApi | null>(null);
