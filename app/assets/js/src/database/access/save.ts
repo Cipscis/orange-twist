@@ -144,8 +144,8 @@ async function deleteTask(
 	const deletedDayTaskIds = await removeTaskInternal(transaction, action.id);
 	// TODO: Notice changes in lists of all tasks
 	noticeChange(ChangeType.DAY_TASK_TASK, action.id);
-	noticeChange(ChangeType.TASK, action.id);
 	for (const dayTaskId of deletedDayTaskIds) {
+		// TODO: Each of these day tasks needs its day's list of day tasks to update
 		noticeChange(ChangeType.DAY_TASK, dayTaskId);
 	}
 }
@@ -250,11 +250,11 @@ async function deleteDayTask(
 
 	await removeDayTaskInternal(transaction, action.id);
 
+	// TODO: Notice change in list of all day tasks
 	if (dayTask) {
 		noticeChange(ChangeType.DAY_TASK_DAY, dayTask.day);
 		noticeChange(ChangeType.DAY_TASK_TASK, dayTask.task);
 	}
-	noticeChange(ChangeType.DAY_TASK, action.id);
 }
 
 /**
@@ -304,8 +304,8 @@ async function deleteDay(
 	const deletedDayTaskIds = await removeDayInternal(transaction, action.id);
 	noticeListChange(ChangeType.DAY);
 	noticeChange(ChangeType.DAY_TASK_DAY, action.id);
-	noticeChange(ChangeType.DAY, action.id);
 	for (const dayTaskId of deletedDayTaskIds) {
+		// TODO: Each of these day tasks needs its task's list of day tasks updated
 		noticeChange(ChangeType.DAY_TASK, dayTaskId);
 	}
 }
