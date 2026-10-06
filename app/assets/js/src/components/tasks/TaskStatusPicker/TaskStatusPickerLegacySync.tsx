@@ -16,8 +16,6 @@ import {
 	useTaskInfo,
 } from 'data';
 import {
-	loadCurrentDay,
-	loadDayTaskForDayAndTask,
 	SaveType,
 	type Status,
 } from 'database';
@@ -67,7 +65,7 @@ export function TaskStatusPickerLegacySync(props: TaskStatusPickerLegacySyncProp
 	/**
 	 * Update task data to reflect new status.
 	 */
-	const changeStatus = useCallback(async (status: number) => {
+	const changeStatus = useCallback((status: number) => {
 		if (!taskInfo) {
 			return;
 		}
@@ -85,32 +83,10 @@ export function TaskStatusPickerLegacySync(props: TaskStatusPickerLegacySyncProp
 			return;
 		}
 
-		// If we're showing a picker for a task directly, we'll need to find or create a day task to add
-		// In any case, that day task will be for the current day, so ensure it exists and get its ID
-		const today = (await loadCurrentDay()).id;
-
-		// If a day task already exists for this task today, modify it
-		const dayTask = await loadDayTaskForDayAndTask({
-			day: today,
-			task: taskId,
-		});
-		if (dayTask) {
-			fireCommand(Command.DATA_SAVE, [{
-				type: SaveType.DAY_TASK,
-				id: dayTask.id,
-				dayTask: { status },
-			}]);
-			return;
-		}
-
-		// Otherwise, create a new day task for this task today, and give it this status
 		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.DAY_TASK_ADD,
-			dayTask: {
-				day: today,
-				task: taskId,
-				status,
-			},
+			type: SaveType.TASK_STATUS,
+			id: taskId,
+			status,
 		}]);
 	}, [statuses, dayName, taskId, taskInfo]);
 
