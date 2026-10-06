@@ -141,12 +141,11 @@ async function deleteTask(
 	>,
 	transaction: IDBTransaction
 ): Promise<void> {
-	const deletedDayTaskIds = await removeTaskInternal(transaction, action.id);
+	const deletedDayTaskDayIds = await removeTaskInternal(transaction, action.id);
 	// TODO: Notice changes in lists of all tasks
 	noticeChange(ChangeType.DAY_TASK_TASK, action.id);
-	for (const dayTaskId of deletedDayTaskIds) {
-		// TODO: Each of these day tasks needs its day's list of day tasks to update
-		noticeChange(ChangeType.DAY_TASK, dayTaskId);
+	for (const dayId of deletedDayTaskDayIds) {
+		noticeChange(ChangeType.DAY_TASK_DAY, dayId);
 	}
 }
 
@@ -301,12 +300,11 @@ async function deleteDay(
 	>,
 	transaction: IDBTransaction,
 ): Promise<void> {
-	const deletedDayTaskIds = await removeDayInternal(transaction, action.id);
+	const deletedDayTaskTaskIds = await removeDayInternal(transaction, action.id);
 	noticeListChange(ChangeType.DAY);
 	noticeChange(ChangeType.DAY_TASK_DAY, action.id);
-	for (const dayTaskId of deletedDayTaskIds) {
-		// TODO: Each of these day tasks needs its task's list of day tasks updated
-		noticeChange(ChangeType.DAY_TASK, dayTaskId);
+	for (const taskId of deletedDayTaskTaskIds) {
+		noticeChange(ChangeType.DAY_TASK_TASK, taskId);
 	}
 }
 
