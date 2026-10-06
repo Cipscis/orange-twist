@@ -7,7 +7,7 @@ import { addListChangeListener, ChangeType } from '../liveAccessManager';
 import { loadAllDays } from '../loadAllDays';
 
 /**
- * Attempts to load all days immediately. Provides a {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load all days immediately, sorted chronologically. Provides a {@linkcode AsyncDataState} representing the state of that loading operation.
  *
  * @see {@linkcode useAsyncData}
  */

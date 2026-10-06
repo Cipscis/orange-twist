@@ -19,7 +19,7 @@ import { Accordion, Button } from '../../shared';
 import { DayTaskListForDay } from '../../tasks/DayTaskList';
 import { DayNoteSync } from '../DayNote';
 
-interface DaySyncProps {
+export interface DaySyncProps {
 	day: Day;
 	open?: boolean;
 }
