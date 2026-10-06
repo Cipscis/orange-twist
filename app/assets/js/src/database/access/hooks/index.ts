@@ -1,3 +1,4 @@
+export { useDay } from './useDay';
 export { useCurrentDay } from './useCurrentDay';
 export { useAllDays } from './useAllDays';
 

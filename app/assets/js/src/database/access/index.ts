@@ -12,6 +12,7 @@ export { loadDayTaskIdsForDay } from './loadDayTaskIdsForDay';
 export { loadStatus } from './loadStatus';
 export { loadAllStatuses } from './loadAllStatuses';
 export {
+	useDay,
 	useCurrentDay,
 	useAllDays,
 
