@@ -4,11 +4,14 @@ export {
 	SaveType,
 	type SaveAction,
 
+	loadDay,
+	useDay,
+	useSettableDay,
 	loadDayByDate,
 	loadCurrentDay,
 	useCurrentDay,
 	loadAllDays,
-	useAllDays,
+	useAllDayIds,
 
 	loadTask,
 	useTask,

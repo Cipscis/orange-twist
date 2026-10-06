@@ -2,7 +2,6 @@ import { h } from 'preact';
 
 import {
 	afterEach,
-	beforeAll,
 	beforeEach,
 	describe,
 	expect,
@@ -14,9 +13,6 @@ import '@testing-library/jest-dom/jest-globals';
 import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
-import { Command } from 'types/Command';
-import { addCommandListener, registerCommand } from 'registers/commands';
-
 import { clear } from 'data';
 
 import { SaveType } from 'database';
@@ -24,10 +20,6 @@ import { SaveType } from 'database';
 import { DayNoteSync } from './DayNoteSync';
 
 describe('DayNoteSync', () => {
-	beforeAll(() => {
-		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
-	});
-
 	beforeEach(() => {
 		clear();
 	});
@@ -42,25 +34,25 @@ describe('DayNoteSync', () => {
 				id: 1,
 				note: 'Day note',
 			}}
+			setDay={async () => {}}
 		/>);
 
 		expect(getByText('Day note')).toBeInTheDocument();
 	});
 
 	test('saves note after change', async () => {
-		const controller = new AbortController();
-		const { signal } = controller;
-
 		const user = userEvent.setup();
 
 		const spy = jest.fn();
-
-		addCommandListener(Command.DATA_SAVE, spy, { signal });
 
 		const { getByRole } = render(<DayNoteSync
 			day={{
 				id: 1,
 				note: 'Day note',
+			}}
+			setDay={(...args) => {
+				spy(...args);
+				return Promise.resolve();
 			}}
 		/>);
 
@@ -73,12 +65,6 @@ describe('DayNoteSync', () => {
 		await user.click(document.body);
 
 		expect(spy).toHaveBeenCalledTimes(1);
-		expect(spy).toHaveBeenCalledWith([{
-			type: SaveType.DAY,
-			id: 1,
-			day: { note: 'Day note edited' },
-		}]);
-
-		controller.abort();
+		expect(spy).toHaveBeenCalledWith({ note: 'Day note edited' });
 	});
 });

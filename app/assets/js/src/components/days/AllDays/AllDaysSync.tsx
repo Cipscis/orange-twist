@@ -17,7 +17,7 @@ import {
 import { DaysListSync } from '../DaysList';
 
 export interface AllDaysSyncProps {
-	days: readonly Day[];
+	dayIds: readonly number[];
 	currentDay: Day;
 }
 
@@ -34,36 +34,36 @@ export interface AllDaysSyncProps {
  */
 export function AllDaysSync(props: AllDaysSyncProps): JSX.Element {
 	const {
-		days,
+		dayIds,
 		currentDay,
 	} = props;
 
-	const currentDayIndex = days.findIndex(({ id }) => id === currentDay.id);
+	const currentDayIndex = dayIds.findIndex((id) => id === currentDay.id);
 
 	const currentDaysWindowSize = 3;
 	const currentDaysWindowStart = currentDayIndex - currentDaysWindowSize;
 	const currentDaysWindowEnd = currentDayIndex + currentDaysWindowSize + 1;
 
-	const previousDays = useMemo(() => {
-		return days.slice(0, currentDaysWindowStart);
-	}, [days, currentDaysWindowStart]);
-	const currentDays = useMemo(() => {
-		return days.slice(currentDaysWindowStart, currentDaysWindowEnd);
-	}, [days, currentDaysWindowStart, currentDaysWindowEnd]);
-	const futureDays = useMemo(() => {
-		return days.slice(currentDaysWindowEnd);
-	}, [days, currentDaysWindowEnd]);
+	const previousDayIds = useMemo(() => {
+		return dayIds.slice(0, currentDaysWindowStart);
+	}, [dayIds, currentDaysWindowStart]);
+	const currentDayIds = useMemo(() => {
+		return dayIds.slice(currentDaysWindowStart, currentDaysWindowEnd);
+	}, [dayIds, currentDaysWindowStart, currentDaysWindowEnd]);
+	const futureDayIds = useMemo(() => {
+		return dayIds.slice(currentDaysWindowEnd);
+	}, [dayIds, currentDaysWindowEnd]);
 
 	return <>
-		{days.length <= 1 && (
+		{dayIds.length <= 1 && (
 			<div class="content">
 				<p>If you need help getting started, try <a href="/help">the help page</a>.</p>
 			</div>
 		)}
 
-		{previousDays.length > 0 &&
+		{previousDayIds.length > 0 &&
 			<DaysListSync
-				days={previousDays}
+				dayIds={previousDayIds}
 				title="Previous days"
 				class="orange-twist__section orange-twist__section--sticky-summary"
 				scrollBehaviour={AccordionScrollBehaviour.ANCHOR_BOTTOM}
@@ -71,16 +71,16 @@ export function AllDaysSync(props: AllDaysSyncProps): JSX.Element {
 		}
 
 		<DaysListSync
-			days={currentDays}
+			dayIds={currentDayIds}
 			title="Days"
 			class="orange-twist__section"
 			selectedDayId={currentDay.id}
 			open
 		/>
 
-		{futureDays.length > 0 &&
+		{futureDayIds.length > 0 &&
 			<DaysListSync
-				days={futureDays}
+				dayIds={futureDayIds}
 				title="Future days"
 				class="orange-twist__section orange-twist__section--sticky-summary"
 			/>

@@ -8,7 +8,7 @@ import { Loader } from 'components/shared';
 import { AllDaysSync } from './AllDaysSync';
 
 export interface AllDaysLoaderProps {
-	daysDataState: AsyncDataState<Day[]>;
+	dayIdsDataState: AsyncDataState<readonly number[]>;
 	currentDayDataState: AsyncDataState<Day>;
 }
 
@@ -19,25 +19,23 @@ export function AllDaysLoader(
 	props: AllDaysLoaderProps
 ): JSX.Element {
 	const {
-		daysDataState,
+		dayIdsDataState,
 		currentDayDataState,
 	} = props;
 
 	return <section class="orange-twist__section">
 		{
 			(
-				daysDataState.type === AsyncDataStateType.INITIAL ||
+				dayIdsDataState.type === AsyncDataStateType.INITIAL ||
 				currentDayDataState.type === AsyncDataStateType.INITIAL
 			) &&
 			<Loader />
 		}
 		{
-			daysDataState.type === AsyncDataStateType.SUCCESS &&
-			daysDataState.data &&
+			dayIdsDataState.type === AsyncDataStateType.SUCCESS &&
 			currentDayDataState.type === AsyncDataStateType.SUCCESS &&
-			currentDayDataState.data &&
 			<AllDaysSync
-				days={daysDataState.data}
+				dayIds={dayIdsDataState.data}
 				currentDay={currentDayDataState.data}
 			/>
 		}

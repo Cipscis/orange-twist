@@ -5,14 +5,13 @@ import {
 } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 
-import type { Day } from 'database';
 import type { DefaultsFor } from 'utils';
 
 import { Accordion, AccordionScrollBehaviour } from 'components/shared';
-import { DaySync } from '../Day';
+import { Day } from '../Day';
 
 export interface DaysListSyncProps {
-	days: readonly Day[];
+	dayIds: readonly number[];
 	title: string;
 	selectedDayId?: number;
 	class?: string;
@@ -32,7 +31,7 @@ const defaultProps = {
  */
 export function DaysListSync(props: DaysListSyncProps): JSX.Element {
 	const {
-		days,
+		dayIds,
 		title,
 		selectedDayId,
 		class: className,
@@ -62,11 +61,11 @@ export function DaysListSync(props: DaysListSyncProps): JSX.Element {
 		scrollBehaviour={scrollBehaviour}
 	>
 		{open &&
-			days.map(((day) => (
-				<DaySync
-					key={day.id}
-					day={day}
-					open={selectedDayId === day.id}
+			dayIds.map(((dayId) => (
+				<Day
+					key={dayId}
+					day={dayId}
+					open={selectedDayId === dayId}
 				/>
 			)))
 		}

@@ -1,6 +1,7 @@
 export { save } from './save';
 export { SaveType, type SaveAction } from './SaveAction';
 
+export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';
 export { loadCurrentDay } from './loadCurrentDay';
 export { loadAllDays } from './loadAllDays';
@@ -11,8 +12,10 @@ export { loadDayTaskIdsForDay } from './loadDayTaskIdsForDay';
 export { loadStatus } from './loadStatus';
 export { loadAllStatuses } from './loadAllStatuses';
 export {
+	useDay,
+	useSettableDay,
 	useCurrentDay,
-	useAllDays,
+	useAllDayIds,
 
 	useTask,
 	useSettableTask,

@@ -8,7 +8,7 @@ import { getDaysInternal } from '../internal';
 import { requestTransaction } from './requestTransaction';
 
 /**
- * Loads data from all days.
+ * Loads data from all days, sorted chronologically.
  *
  * Renders an alert to the UI if loading fails.
  */

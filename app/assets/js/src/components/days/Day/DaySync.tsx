@@ -19,8 +19,9 @@ import { Accordion, Button } from '../../shared';
 import { DayTaskListForDay } from '../../tasks/DayTaskList';
 import { DayNoteSync } from '../DayNote';
 
-interface DaySyncProps {
+export interface DaySyncProps {
 	day: Day;
+	setDay: (data: Partial<Day>) => Promise<void>;
 	open?: boolean;
 }
 
@@ -30,6 +31,7 @@ interface DaySyncProps {
 export const DaySync = memo((props: DaySyncProps): JSX.Element => {
 	const {
 		day,
+		setDay,
 		open,
 	} = props;
 
@@ -97,7 +99,10 @@ export const DaySync = memo((props: DaySyncProps): JSX.Element => {
 				>Remove day</Button>
 			}
 
-			<DayNoteSync day={day} />
+			<DayNoteSync
+				day={day}
+				setDay={setDay}
+			/>
 
 			<DayTaskListForDay
 				dayId={day.id}
