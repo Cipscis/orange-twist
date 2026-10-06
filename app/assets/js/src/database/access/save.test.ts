@@ -95,6 +95,16 @@ describe('SaveHelper', () => {
 		});
 	});
 
+	describe('sets tasks\' statuses', () => {
+		test.todo('when the current day does not exist');
+
+		test.todo('when the current day does exist');
+
+		test.todo('when a day task for the current day does not exist');
+
+		test.todo('when a day task for the current day does exist');
+	});
+
 	test('adds tasks', async () => {
 		await save([
 			{

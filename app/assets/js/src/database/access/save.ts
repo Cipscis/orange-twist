@@ -1,4 +1,4 @@
-import { assertAllUnionMembersHandled } from 'utils';
+import { assertAllUnionMembersHandled, getCurrentDate } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
 import { getDayNameParts } from '../utils';
@@ -7,6 +7,7 @@ import {
 	addDayTaskInternal,
 	addTaskInternal,
 	getDayByDateInternal,
+	getDayInternal,
 	getDayTaskForDayAndTaskInternal,
 	getDayTaskInternal,
 	removeDayInternal,
@@ -39,6 +40,8 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 	for (const action of actions) {
 		if (action.type === SaveType.TASK) {
 			saveTask(action, transaction);
+		} else if (action.type === SaveType.TASK_STATUS) {
+			setTaskStatus(action, transaction);
 		} else if (action.type === SaveType.TASK_ADD) {
 			addTask(action, transaction);
 		} else if (action.type === SaveType.TASK_ADD_WITH_DAY) {
@@ -90,6 +93,57 @@ async function saveTask(
 
 	await updateTaskInternal(transaction, taskToSave);
 	noticeChange(ChangeType.TASK, action.id);
+}
+
+/**
+ * Sets the status for a task. This is saved to a day task against this task and the current day. This operation will try to create the current day if it doesn't already exist, and may also involve creating a day task.
+ */
+async function setTaskStatus(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TASK_STATUS; }
+	>,
+	transaction: IDBTransaction
+): Promise<void> {
+	// Try to get the current day
+	const currentDate = getCurrentDate();
+	let todayId = (await getDayByDateInternal(transaction, currentDate))?.id ?? null;
+
+	if (todayId === null) {
+		// If today doesn't exist, create it
+		todayId = await addDay({
+			type: SaveType.DAY_ADD,
+			day: {
+				...currentDate,
+				note: '',
+			},
+		}, transaction);
+	}
+
+	// Try to get the day task for this task today
+	const dayTask = await getDayTaskForDayAndTaskInternal(transaction, {
+		day: todayId,
+		task: action.id,
+	});
+
+	if (dayTask) {
+		// If the day task already exists, apply the right status
+		await saveDayTask({
+			type: SaveType.DAY_TASK,
+			id: dayTask.id,
+			dayTask: { status: action.status },
+		}, transaction);
+		return;
+	}
+
+	// Otherwise, create a new day task with the right status
+	await addDayTask({
+		type: SaveType.DAY_TASK_ADD,
+		dayTask: {
+			day: todayId,
+			task: action.id,
+			status: action.status,
+		},
+	}, transaction);
 }
 
 /**
@@ -287,11 +341,13 @@ async function addDay(
 		SaveAction, { type: typeof SaveType.DAY_ADD; }
 	>,
 	transaction: IDBTransaction,
-): Promise<void> {
+): Promise<number> {
 	const dayId = await addDayInternal(transaction, action.day);
 
 	noticeListChange(ChangeType.DAY);
 	noticeChange(ChangeType.DAY, dayId);
+
+	return dayId;
 }
 
 /**
@@ -338,7 +394,8 @@ function gatherTransactionRequirements(
 			objectStores.add(ObjectStoreName.DAY);
 		} else if (
 			action.type === SaveType.DAY_TASK_ADD ||
-			action.type === SaveType.TASK_ADD_WITH_DAY
+			action.type === SaveType.TASK_ADD_WITH_DAY ||
+			action.type === SaveType.TASK_STATUS
 		) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.DAY);

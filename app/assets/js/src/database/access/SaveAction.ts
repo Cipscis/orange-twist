@@ -9,8 +9,9 @@ import type { addDayTaskInternal, addTaskInternal } from '../internal';
 
 export const SaveType = {
 	TASK: 'task',
+	TASK_STATUS: 'set task status',
 	TASK_ADD: 'add task',
-	TASK_ADD_WITH_DAY: 'add task to day',
+	TASK_ADD_WITH_DAY: 'add new task to existing day',
 	TASK_DELETE: 'delete task',
 
 	// TODO: Remove this once day tasks can be saved via the day task's ID
@@ -34,6 +35,10 @@ interface SaveActionByType {
 				'id'
 			>
 		>>;
+	};
+	[SaveType.TASK_STATUS]: {
+		id: number;
+		status: number;
 	};
 	[SaveType.TASK_ADD]: {
 		task: Parameters<typeof addTaskInternal>[1];
