@@ -11,6 +11,7 @@ export {
 	useCurrentDay,
 	loadAllDays,
 	useAllDays,
+	useAllDayIds,
 
 	loadTask,
 	useTask,
