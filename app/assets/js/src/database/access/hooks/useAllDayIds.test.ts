@@ -62,21 +62,27 @@ describe('useAllDayIds', () => {
 			});
 		});
 
-		save([{
-			type: SaveType.DAY_ADD,
-			day: {
-				year: 2026,
-				month: 9,
-				day: 29,
-				note: 'New day',
+		save([
+			{
+				type: SaveType.DAY_ADD,
+				day: {
+					year: 2026,
+					month: 9,
+					day: 29,
+					note: 'New day',
+				},
 			},
-		}]);
+			{
+				type: SaveType.DAY_DELETE,
+				id: 1,
+			},
+		]);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
-				data: [3, 1, 2, 4] satisfies number[],
+				data: [3, 2, 4] satisfies number[],
 			});
 		});
 	});

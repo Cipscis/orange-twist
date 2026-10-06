@@ -33,9 +33,7 @@ export function AllDaysLoader(
 		}
 		{
 			dayIdsDataState.type === AsyncDataStateType.SUCCESS &&
-			dayIdsDataState.data &&
 			currentDayDataState.type === AsyncDataStateType.SUCCESS &&
-			currentDayDataState.data &&
 			<AllDaysSync
 				dayIds={dayIdsDataState.data}
 				currentDay={currentDayDataState.data}

@@ -3,10 +3,13 @@ import { h, type JSX } from 'preact';
 import { AsyncDataStateType } from 'utils';
 import type { useSettableDay } from 'database';
 
-import { Loader } from 'components/shared';
+import {
+	Loader,
+	Notice,
+	NoticeVariant,
+} from 'components/shared';
 
-import type { DaySyncProps } from './DaySync';
-import { DaySync } from './DaySync';
+import { DaySync, type DaySyncProps } from './DaySync';
 
 export interface DayLoaderProps extends Omit<DaySyncProps, 'day' | 'setDay'> {
 	dayDataState: ReturnType<typeof useSettableDay>;
@@ -27,6 +30,13 @@ export function DayLoader(
 			(dayDataState.stateOfGet.type === AsyncDataStateType.INITIAL) &&
 			<Loader />
 		}
+		{
+			dayDataState.stateOfGet.type === AsyncDataStateType.ERROR &&
+			<Notice
+				variant={NoticeVariant.ERROR}
+				message={dayDataState.stateOfGet.error.message}
+			/>
+		}
 		{dayDataState.stateOfGet.type === AsyncDataStateType.SUCCESS &&
 			<DaySync
 				{...props}
@@ -34,6 +44,5 @@ export function DayLoader(
 				setDay={dayDataState.setData}
 			/>
 		}
-		{/* TODO: Handle error state */}
 	</section>;
 }

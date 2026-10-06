@@ -61,11 +61,11 @@ export function DaysListSync(props: DaysListSyncProps): JSX.Element {
 		scrollBehaviour={scrollBehaviour}
 	>
 		{open &&
-			dayIds.map(((day) => (
+			dayIds.map(((dayId) => (
 				<Day
-					key={day}
-					day={day}
-					open={selectedDayId === day}
+					key={dayId}
+					day={dayId}
+					open={selectedDayId === dayId}
 				/>
 			)))
 		}
