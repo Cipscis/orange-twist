@@ -1,5 +1,4 @@
 import {
-	afterAll,
 	beforeEach,
 	describe,
 	expect,
@@ -102,11 +101,7 @@ describe('SaveHelper', () => {
 		});
 	});
 
-	describe('sets tasks\' statuses', () => {
-		afterAll(() => {
-			jest.useRealTimers();
-		});
-
+	describe('sets tasks\' statuses for a given day', () => {
 		beforeEach(async () => {
 			await insertTestData({
 				day: {
@@ -133,17 +128,12 @@ describe('SaveHelper', () => {
 			db = await getDatabase();
 		});
 
-		test('when the current day does not exist', async () => {
-			jest.useFakeTimers({
-				advanceTimers: true,
-			}).setSystemTime(
-				new Date(2026, 9, 6, 12)
-			);
-
+		test('when the given day does not exist', async () => {
 			await save([{
-				type: SaveType.TASK_STATUS,
+				type: SaveType.TASK_STATUS_FOR_DATE,
 				id: 1,
 				status: 3,
+				day: { year: 2026, month: 10, day: 6 },
 			}]);
 
 			const readTransaction = db.transaction([
@@ -171,17 +161,12 @@ describe('SaveHelper', () => {
 			} satisfies Pick<DayTask, 'id' | 'day' | 'task' | 'status'>);
 		});
 
-		test('when the current day does exist and a day task for the current day does not exist', async () => {
-			jest.useFakeTimers({
-				advanceTimers: true,
-			}).setSystemTime(
-				new Date(2026, 9, 7, 12)
-			);
-
+		test('when the given day does exist and a day task for the given day does not exist', async () => {
 			await save([{
-				type: SaveType.TASK_STATUS,
+				type: SaveType.TASK_STATUS_FOR_DATE,
 				id: 1,
 				status: 3,
+				day: { year: 2026, month: 10, day: 7 },
 			}]);
 
 			const readTransaction = db.transaction([
@@ -198,17 +183,12 @@ describe('SaveHelper', () => {
 			} satisfies Pick<DayTask, 'id' | 'day' | 'task' | 'status'>);
 		});
 
-		test('when the current day does exist and a day task for the current day does exist', async () => {
-			jest.useFakeTimers({
-				advanceTimers: true,
-			}).setSystemTime(
-				new Date(2026, 9, 7, 12)
-			);
-
+		test('when the given day does exist and a day task for the given day does exist', async () => {
 			await save([{
-				type: SaveType.TASK_STATUS,
+				type: SaveType.TASK_STATUS_FOR_DATE,
 				id: 2,
 				status: 3,
+				day: { year: 2026, month: 10, day: 7 },
 			}]);
 
 			const readTransaction = db.transaction([
@@ -224,6 +204,70 @@ describe('SaveHelper', () => {
 				status: 3,
 			} satisfies Pick<DayTask, 'id' | 'day' | 'task' | 'status'>);
 		});
+	});
+
+	test('sets tasks\' statuses for today', async () => {
+		await insertTestData({
+			day: {
+				3: {
+					id: 3,
+					year: 2026,
+					month: 10,
+					day: 7,
+					note: '',
+				},
+			},
+			day_task: {
+				3: {
+					id: 3,
+					day: 3,
+					task: 2,
+					status: 1,
+					summary: null,
+					note: '',
+					sortIndex: null,
+				},
+			},
+		});
+		db = await getDatabase();
+
+		jest.useFakeTimers({
+			advanceTimers: true,
+		}).setSystemTime(
+			new Date(2026, 9, 6, 8)
+		);
+
+		await save([{
+			type: SaveType.TASK_STATUS,
+			id: 1,
+			status: 3,
+		}]);
+
+		const readTransaction = db.transaction([
+			ObjectStoreName.DAY,
+			ObjectStoreName.DAY_TASK,
+		], 'readonly');
+
+		const afterDay = await getDayByDateInternal(readTransaction, { year: 2026, month: 10, day: 6 });
+
+		expect(afterDay).toEqual({
+			id: 4,
+			year: 2026,
+			month: 10,
+			day: 6,
+			note: '',
+		} satisfies Day);
+
+		const afterDayTask = await getDayTaskForDayAndTaskInternal(readTransaction, { day: afterDay!.id, task: 1 });
+
+		expect(afterDayTask).toMatchObject({
+			id: 4,
+			day: 4,
+			task: 1,
+			status: 3,
+		} satisfies Pick<DayTask, 'id' | 'day' | 'task' | 'status'>);
+
+		jest.useRealTimers();
 	});
 
 	test('adds tasks', async () => {
