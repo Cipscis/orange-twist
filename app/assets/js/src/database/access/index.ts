@@ -9,6 +9,7 @@ export { loadTask } from './loadTask';
 export { loadDayTask } from './loadDayTask';
 export { loadDayTaskForDayAndTask } from './loadDayTaskForDayAndTask';
 export { loadDayTaskIdsForDay } from './loadDayTaskIdsForDay';
+export { loadDayTaskIdsForTask } from './loadDayTaskIdsForTask';
 export { loadStatus } from './loadStatus';
 export { loadAllStatuses } from './loadAllStatuses';
 export {
