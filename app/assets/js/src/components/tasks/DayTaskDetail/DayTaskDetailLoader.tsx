@@ -9,9 +9,9 @@ import {
 	Notice,
 	NoticeVariant,
 } from 'components/shared';
-import { DayTaskDetailSync } from './DayTaskDetailSync';
+import { DayTaskDetailSync, type DayTaskDetailSyncProps } from './DayTaskDetailSync';
 
-export interface DayTaskDetailLoaderProps {
+export interface DayTaskDetailLoaderProps extends Omit<DayTaskDetailSyncProps, 'dayTask' | 'setDayTask'> {
 	dayTaskDataState: ReturnType<typeof useSettableDayTask>;
 }
 
@@ -35,6 +35,7 @@ export function DayTaskDetailLoader(props: DayTaskDetailLoaderProps): JSX.Elemen
 	}
 
 	return <DayTaskDetailSync
+		{...props}
 		dayTask={dayTaskDataState.stateOfGet.data}
 		setDayTask={dayTaskDataState.setData}
 	/>;

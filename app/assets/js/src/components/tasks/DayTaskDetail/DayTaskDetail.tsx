@@ -3,8 +3,9 @@ import { h, type JSX } from 'preact';
 import { useSettableDayTask } from 'database';
 
 import { DayTaskDetailLoader } from './DayTaskDetailLoader';
+import type { DayTaskDetailSyncProps } from './DayTaskDetailSync';
 
-export interface DayTaskDetailProps {
+export interface DayTaskDetailProps extends Omit<DayTaskDetailSyncProps, 'dayTask' | 'setDayTask'> {
 	dayTaskId: number;
 }
 
@@ -19,6 +20,7 @@ export function DayTaskDetail(props: DayTaskDetailProps): JSX.Element {
 	const dayTaskDataState = useSettableDayTask(dayTaskId);
 
 	return <DayTaskDetailLoader
+		{...props}
 		dayTaskDataState={dayTaskDataState}
 	/>;
 }

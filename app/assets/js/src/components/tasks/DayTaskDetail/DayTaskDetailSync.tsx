@@ -28,7 +28,7 @@ export function DayTaskDetailSync(props: DayTaskDetailSyncProps): JSX.Element {
 	const {
 		dayTask,
 		setDayTask,
-		open,
+		open: openByDefault,
 	} = props;
 
 	const commitSummary = useCallback((summary: string) => {
@@ -41,7 +41,7 @@ export function DayTaskDetailSync(props: DayTaskDetailSyncProps): JSX.Element {
 
 	return <Accordion
 		class="day js-day"
-		open={open}
+		open={openByDefault}
 
 		summaryClass="day__summary"
 		summary={<>
