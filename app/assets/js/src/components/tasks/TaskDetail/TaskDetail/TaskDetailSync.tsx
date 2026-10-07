@@ -9,11 +9,7 @@ import { getCurrentDateDayName, isValidDateString } from 'utils';
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
-import {
-	getDayTaskInfo,
-	setDayTaskInfo,
-	useAllDayTaskInfo,
-} from 'data';
+import { useAllDayTaskInfo } from 'data';
 import {
 	getDayNameParts,
 	loadDayByDate,
