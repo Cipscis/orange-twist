@@ -70,6 +70,8 @@ export function removeChangeListener(
  */
 export const eventTargetListLookup = {
 	[ChangeType.DAY]: new EventTarget(),
+	[ChangeType.TASK]: new EventTarget(),
+	[ChangeType.DAY_TASK]: new EventTarget(),
 };
 
 /**
