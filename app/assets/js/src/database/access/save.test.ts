@@ -436,6 +436,7 @@ describe('SaveHelper', () => {
 		]);
 
 		readTransaction = db.transaction([
+			ObjectStoreName.DAY,
 			ObjectStoreName.TASK,
 			ObjectStoreName.DAY_TASK,
 		], 'readonly');

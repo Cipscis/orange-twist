@@ -4,7 +4,7 @@ import { getDayTasksForDayInternal } from '../internal';
 import { requestTransaction } from './requestTransaction';
 
 /**
- * Loads all day task IDs for a given day.
+ * Loads all day task IDs for a given day, sorted by their sort index.
  */
 export async function loadDayTaskIdsForDay(
 	id: number,
