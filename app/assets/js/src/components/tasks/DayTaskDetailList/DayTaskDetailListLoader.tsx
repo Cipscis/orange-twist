@@ -7,10 +7,12 @@ import {
 	Notice,
 	NoticeVariant,
 } from 'components/shared';
-import { DayTaskDetailListSync, type DayTaskDetailListSyncProps } from './DayTaskDetailListSync';
+import { DayTaskDetailListSync } from './DayTaskDetailListSync';
+import type { DayTask } from 'database';
 
-export interface DayTaskDetailListLoaderProps extends Omit<DayTaskDetailListSyncProps, 'dayTaskIds'> {
+export interface DayTaskDetailListLoaderProps {
 	dayTaskIdsDataState: AsyncDataState<readonly number[]>;
+	currentDayTaskDataState: AsyncDataState<DayTask | null>;
 }
 
 /**
@@ -19,9 +21,13 @@ export interface DayTaskDetailListLoaderProps extends Omit<DayTaskDetailListSync
 export function DayTaskDetailListLoader(props: DayTaskDetailListLoaderProps): JSX.Element {
 	const {
 		dayTaskIdsDataState,
+		currentDayTaskDataState,
 	} = props;
 
-	if (dayTaskIdsDataState.type === AsyncDataStateType.INITIAL) {
+	if (
+		dayTaskIdsDataState.type === AsyncDataStateType.INITIAL ||
+		currentDayTaskDataState.type === AsyncDataStateType.INITIAL
+	) {
 		return <Loader />;
 	}
 
@@ -30,10 +36,15 @@ export function DayTaskDetailListLoader(props: DayTaskDetailListLoaderProps): JS
 			variant={NoticeVariant.ERROR}
 			message={dayTaskIdsDataState.error.message}
 		/>;
+	} else if (currentDayTaskDataState.type === AsyncDataStateType.ERROR) {
+		return <Notice
+			variant={NoticeVariant.ERROR}
+			message={currentDayTaskDataState.error.message}
+		/>;
 	}
 
 	return <DayTaskDetailListSync
-		{...props}
 		dayTaskIds={dayTaskIdsDataState.data}
+		currentDayTaskId={currentDayTaskDataState.data?.id}
 	/>;
 }

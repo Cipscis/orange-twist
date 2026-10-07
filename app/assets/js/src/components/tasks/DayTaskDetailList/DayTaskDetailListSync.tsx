@@ -8,7 +8,7 @@ import { DayTaskDetail } from '../DayTaskDetail/DayTaskDetail';
 
 export interface DayTaskDetailListSyncProps {
 	dayTaskIds: readonly number[];
-	selectedDayTaskId?: number;
+	currentDayTaskId?: number;
 }
 
 /**
@@ -17,15 +17,19 @@ export interface DayTaskDetailListSyncProps {
 export function DayTaskDetailListSync(props: DayTaskDetailListSyncProps): JSX.Element {
 	const {
 		dayTaskIds,
-		selectedDayTaskId,
+		currentDayTaskId,
 	} = props;
 
+	// Open the current day task if possible, otherwise open the last one
+	const currentDayTaskIndex = currentDayTaskId && dayTaskIds.findIndex((id) => id === currentDayTaskId);
+	const openIndex = currentDayTaskIndex ?? dayTaskIds.length - 1;
+
 	return <>
-		{dayTaskIds.map((id) => (
+		{dayTaskIds.map((id, i) => (
 			<DayTaskDetail
 				key={id}
 				dayTaskId={id}
-				open={id === selectedDayTaskId}
+				open={i === openIndex}
 			/>
 		))}
 	</>;

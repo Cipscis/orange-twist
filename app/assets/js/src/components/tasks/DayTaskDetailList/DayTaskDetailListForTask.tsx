@@ -1,11 +1,10 @@
 import { h, type JSX } from 'preact';
 
-import { useDayTaskIdsForTask } from 'database';
+import { useCurrentDayTaskForTask, useDayTaskIdsForTask } from 'database';
 
 import { DayTaskDetailListLoader } from './DayTaskDetailListLoader';
-import type { DayTaskDetailListSyncProps } from './DayTaskDetailListSync';
 
-export interface DayTaskDetailListForTask extends Omit<DayTaskDetailListSyncProps, 'dayTaskIds'> {
+export interface DayTaskDetailListForTask {
 	taskId: number;
 }
 
@@ -18,12 +17,10 @@ export function DayTaskDetailListForTask(props: DayTaskDetailListForTask): JSX.E
 	} = props;
 
 	const dayTaskIdsDataState = useDayTaskIdsForTask(taskId);
-
-	// TODO: Determine which day task ID should be open by default
-	const selectedDayTaskId = 1;
+	const currentDayTaskDataState = useCurrentDayTaskForTask(taskId);
 
 	return <DayTaskDetailListLoader
 		dayTaskIdsDataState={dayTaskIdsDataState}
-		selectedDayTaskId={selectedDayTaskId}
+		currentDayTaskDataState={currentDayTaskDataState}
 	/>;
 }

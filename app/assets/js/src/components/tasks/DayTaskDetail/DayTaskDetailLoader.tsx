@@ -21,6 +21,7 @@ export interface DayTaskDetailLoaderProps extends Omit<DayTaskDetailSyncProps, '
 export function DayTaskDetailLoader(props: DayTaskDetailLoaderProps): JSX.Element {
 	const {
 		dayTaskDataState,
+		open,
 	} = props;
 
 	if (dayTaskDataState.stateOfGet.type === AsyncDataStateType.INITIAL) {
@@ -38,5 +39,6 @@ export function DayTaskDetailLoader(props: DayTaskDetailLoaderProps): JSX.Elemen
 		{...props}
 		dayTask={dayTaskDataState.stateOfGet.data}
 		setDayTask={dayTaskDataState.setData}
+		open={open}
 	/>;
 }
