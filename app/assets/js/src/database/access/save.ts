@@ -103,7 +103,7 @@ async function addTask(
 ): Promise<number> {
 	const taskId = await addTaskInternal(transaction, action.task);
 
-	// TODO: Notice changes in lists of all tasks
+	noticeListChange(ChangeType.TASK);
 	noticeChange(ChangeType.TASK, taskId);
 
 	return taskId;
@@ -141,12 +141,12 @@ async function deleteTask(
 	>,
 	transaction: IDBTransaction
 ): Promise<void> {
-	const deletedDayTaskIds = await removeTaskInternal(transaction, action.id);
-	// TODO: Notice changes in lists of all tasks
+	const deletedDayTaskDayIds = await removeTaskInternal(transaction, action.id);
+
+	noticeListChange(ChangeType.TASK);
 	noticeChange(ChangeType.DAY_TASK_TASK, action.id);
-	noticeChange(ChangeType.TASK, action.id);
-	for (const dayTaskId of deletedDayTaskIds) {
-		noticeChange(ChangeType.DAY_TASK, dayTaskId);
+	for (const dayId of deletedDayTaskDayIds) {
+		noticeChange(ChangeType.DAY_TASK_DAY, dayId);
 	}
 }
 
@@ -229,6 +229,7 @@ async function addDayTask(
 ): Promise<number> {
 	const dayTaskId = await addDayTaskInternal(transaction, action.dayTask);
 
+	noticeListChange(ChangeType.DAY_TASK);
 	noticeChange(ChangeType.DAY_TASK_DAY, action.dayTask.day);
 	noticeChange(ChangeType.DAY_TASK_TASK, action.dayTask.task);
 	noticeChange(ChangeType.DAY_TASK, dayTaskId);
@@ -250,11 +251,11 @@ async function deleteDayTask(
 
 	await removeDayTaskInternal(transaction, action.id);
 
+	noticeListChange(ChangeType.DAY_TASK);
 	if (dayTask) {
 		noticeChange(ChangeType.DAY_TASK_DAY, dayTask.day);
 		noticeChange(ChangeType.DAY_TASK_TASK, dayTask.task);
 	}
-	noticeChange(ChangeType.DAY_TASK, action.id);
 }
 
 /**
@@ -288,6 +289,7 @@ async function addDay(
 	transaction: IDBTransaction,
 ): Promise<void> {
 	const dayId = await addDayInternal(transaction, action.day);
+
 	noticeListChange(ChangeType.DAY);
 	noticeChange(ChangeType.DAY, dayId);
 }
@@ -301,12 +303,12 @@ async function deleteDay(
 	>,
 	transaction: IDBTransaction,
 ): Promise<void> {
-	const deletedDayTaskIds = await removeDayInternal(transaction, action.id);
+	const deletedDayTaskTaskIds = await removeDayInternal(transaction, action.id);
+
 	noticeListChange(ChangeType.DAY);
 	noticeChange(ChangeType.DAY_TASK_DAY, action.id);
-	noticeChange(ChangeType.DAY, action.id);
-	for (const dayTaskId of deletedDayTaskIds) {
-		noticeChange(ChangeType.DAY_TASK, dayTaskId);
+	for (const taskId of deletedDayTaskTaskIds) {
+		noticeChange(ChangeType.DAY_TASK_TASK, taskId);
 	}
 }
 
