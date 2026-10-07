@@ -9,6 +9,7 @@ export { useSettableTask } from './useSettableTask';
 export { useDayTaskIdsForDay } from './useDayTaskIdsForDay';
 export { useDayTaskIdsForTask } from './useDayTaskIdsForTask';
 export { useSettableDayTask } from './useSettableDayTask';
+export { useCurrentDayTaskForTask } from './useCurrentDayTaskForTask';
 
 export { useStatus } from './useStatus';
 export { useAllStatuses } from './useAllStatuses';
