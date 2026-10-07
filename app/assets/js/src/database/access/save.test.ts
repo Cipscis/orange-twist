@@ -1,15 +1,22 @@
 import {
+	afterAll,
 	beforeEach,
 	describe,
 	expect,
+	jest,
 	test,
 } from '@jest/globals';
 
-import type { DayTask, Task } from '../types';
+import type {
+	Day,
+	DayTask,
+	Task,
+} from '../types';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import {
+	getDayByDateInternal,
 	getDayInternal,
 	getDayTaskForDayAndTaskInternal,
 	getDayTaskInternal,
@@ -96,13 +103,127 @@ describe('SaveHelper', () => {
 	});
 
 	describe('sets tasks\' statuses', () => {
-		test.todo('when the current day does not exist');
+		afterAll(() => {
+			jest.useRealTimers();
+		});
 
-		test.todo('when the current day does exist');
+		beforeEach(async () => {
+			await insertTestData({
+				day: {
+					3: {
+						id: 3,
+						year: 2026,
+						month: 10,
+						day: 7,
+						note: '',
+					},
+				},
+				day_task: {
+					3: {
+						id: 3,
+						day: 3,
+						task: 2,
+						status: 1,
+						summary: null,
+						note: '',
+						sortIndex: null,
+					},
+				},
+			});
+			db = await getDatabase();
+		});
 
-		test.todo('when a day task for the current day does not exist');
+		test('when the current day does not exist', async () => {
+			jest.useFakeTimers({
+				advanceTimers: true,
+			}).setSystemTime(
+				new Date(2026, 9, 6, 12)
+			);
 
-		test.todo('when a day task for the current day does exist');
+			await save([{
+				type: SaveType.TASK_STATUS,
+				id: 1,
+				status: 3,
+			}]);
+
+			const readTransaction = db.transaction([
+				ObjectStoreName.DAY,
+				ObjectStoreName.DAY_TASK,
+			], 'readonly');
+
+			const afterDay = await getDayByDateInternal(readTransaction, { year: 2026, month: 10, day: 6 });
+
+			expect(afterDay).toEqual({
+				id: 4,
+				year: 2026,
+				month: 10,
+				day: 6,
+				note: '',
+			} satisfies Day);
+
+			const afterDayTask = await getDayTaskForDayAndTaskInternal(readTransaction, { day: afterDay!.id, task: 1 });
+
+			expect(afterDayTask).toMatchObject({
+				id: 4,
+				day: 4,
+				task: 1,
+				status: 3,
+			} satisfies Pick<DayTask, 'id' | 'day' | 'task' | 'status'>);
+		});
+
+		test('when the current day does exist and a day task for the current day does not exist', async () => {
+			jest.useFakeTimers({
+				advanceTimers: true,
+			}).setSystemTime(
+				new Date(2026, 9, 7, 12)
+			);
+
+			await save([{
+				type: SaveType.TASK_STATUS,
+				id: 1,
+				status: 3,
+			}]);
+
+			const readTransaction = db.transaction([
+				ObjectStoreName.DAY_TASK,
+			], 'readonly');
+
+			const afterDayTask = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 3, task: 1 });
+
+			expect(afterDayTask).toMatchObject({
+				id: 4,
+				day: 3,
+				task: 1,
+				status: 3,
+			} satisfies Pick<DayTask, 'id' | 'day' | 'task' | 'status'>);
+		});
+
+		test('when the current day does exist and a day task for the current day does exist', async () => {
+			jest.useFakeTimers({
+				advanceTimers: true,
+			}).setSystemTime(
+				new Date(2026, 9, 7, 12)
+			);
+
+			await save([{
+				type: SaveType.TASK_STATUS,
+				id: 2,
+				status: 3,
+			}]);
+
+			const readTransaction = db.transaction([
+				ObjectStoreName.DAY_TASK,
+			], 'readonly');
+
+			const afterDayTask = await getDayTaskForDayAndTaskInternal(readTransaction, { day: 3, task: 2 });
+
+			expect(afterDayTask).toMatchObject({
+				id: 3,
+				day: 3,
+				task: 2,
+				status: 3,
+			} satisfies Pick<DayTask, 'id' | 'day' | 'task' | 'status'>);
+		});
 	});
 
 	test('adds tasks', async () => {
