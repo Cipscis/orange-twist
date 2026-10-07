@@ -12,11 +12,13 @@ import {
 	deleteTask,
 	getTaskStatusForDay,
 	setDayTaskInfo,
-	setTaskInfo,
 	useAllDayTaskInfo,
 	useTaskInfo,
 } from 'data';
-import type { Status } from 'database';
+import {
+	SaveType,
+	type Status,
+} from 'database';
 
 import * as ui from 'ui';
 import { StatusPickerSync } from 'components/shared';
@@ -70,15 +72,22 @@ export function TaskStatusPickerLegacySync(props: TaskStatusPickerLegacySyncProp
 
 		const statusAlias = statuses.find(({ id }) => id === status)!.alias;
 
+		// If we're showing a picker for a day task, update that day task
+		// TODO: Talk directly to the database V2
 		if (dayName) {
 			setDayTaskInfo({
 				dayName,
 				taskId,
 			}, { status: statusAlias });
-		} else {
-			setTaskInfo(taskId, { status: statusAlias });
+			fireCommand(Command.DATA_SAVE);
+			return;
 		}
-		fireCommand(Command.DATA_SAVE);
+
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.TASK_STATUS,
+			id: taskId,
+			status,
+		}]);
 	}, [statuses, dayName, taskId, taskInfo]);
 
 	/**

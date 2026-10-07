@@ -40,6 +40,8 @@ import {
 } from 'data';
 import { createTestData, insertTestData } from 'database';
 
+import { OrangeTwist } from 'components/OrangeTwist';
+
 import { TaskStatusPickerLegacySync } from './TaskStatusPickerLegacySync';
 
 configMocks({
@@ -107,29 +109,34 @@ describe('TaskStatusPickerLegacySync', () => {
 			const saveSpy = jest.fn();
 			addCommandListener(Command.DATA_SAVE, saveSpy);
 
-			const { getByRole } = render(<TaskStatusPickerLegacySync
-				taskId={1}
-				statuses={statuses}
-			/>);
+			// Render OrangeTwist wrapper to set up real saving
+			const { findByRole } = render(<OrangeTwist>
+				<TaskStatusPickerLegacySync
+					taskId={1}
+					statuses={statuses}
+				/>
+			</OrangeTwist>);
 
-			const editButton = getByRole('button', {
-				name: `Completed (click to edit)`,
+			const editButton = await findByRole('button', {
+				name: `In progress (click to edit)`,
 			});
 			expect(editButton).toBeInTheDocument();
 
 			await user.click(editButton);
 
-			const inProgressStatusButton = getByRole('button', {
-				name: 'In progress',
+			const inProgressStatusButton = await findByRole('button', {
+				name: 'Completed',
 			});
 			expect(inProgressStatusButton).toBeInTheDocument();
 
 			await user.click(inProgressStatusButton);
-			expect(saveSpy).toHaveBeenCalledTimes(1);
-			expect(getByRole('button', {
-				name: `In progress (click to edit)`,
+			await waitFor(() => {
+				expect(saveSpy).toHaveBeenCalledTimes(1);
+			});
+			expect(await findByRole('button', {
+				name: `Completed (click to edit)`,
 			})).toBeInTheDocument();
-			expect(getTaskInfo(1)?.status).toBe(TaskStatus.IN_PROGRESS);
+			expect(getTaskInfo(1)?.status).toBe(TaskStatus.COMPLETED);
 
 			removeCommandListener(Command.DATA_SAVE, saveSpy);
 		});
