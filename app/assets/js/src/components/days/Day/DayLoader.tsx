@@ -1,4 +1,8 @@
-import { h, type JSX } from 'preact';
+import {
+	h,
+	Fragment,
+	type JSX,
+} from 'preact';
 
 import { AsyncDataStateType } from 'utils';
 import type { useSettableDay } from 'database';
@@ -25,7 +29,7 @@ export function DayLoader(
 		dayDataState: dayDataState,
 	} = props;
 
-	return <section class="orange-twist__section">
+	return <>
 		{
 			(dayDataState.stateOfGet.type === AsyncDataStateType.INITIAL) &&
 			<Loader />
@@ -44,5 +48,5 @@ export function DayLoader(
 				setDay={dayDataState.setData}
 			/>
 		}
-	</section>;
+	</>;
 }
