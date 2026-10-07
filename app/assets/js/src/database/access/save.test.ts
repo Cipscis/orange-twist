@@ -286,7 +286,7 @@ describe('SaveHelper', () => {
 			status: 1,
 			note: '',
 			summary: null,
-			sortIndex: null,
+			sortIndex: -3,
 		} satisfies DayTask);
 	});
 
