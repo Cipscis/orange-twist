@@ -1,0 +1,1 @@
+export { DayTaskDetail } from './DayTaskDetail';
