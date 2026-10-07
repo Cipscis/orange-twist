@@ -22,6 +22,7 @@ export {
 	loadDayTaskIdsForDay,
 	useDayTaskIdsForDay,
 	loadDayTaskIdsForTask,
+	useDayTaskIdsForTask,
 	useSettableDayTask,
 
 	loadStatus,
