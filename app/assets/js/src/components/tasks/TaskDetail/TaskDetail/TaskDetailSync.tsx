@@ -64,13 +64,23 @@ export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 			return;
 		}
 
-		const [year, month, day] = getDayNameParts(dayName);
+		const [year, month, date] = getDayNameParts(dayName);
+
+		// Do nothing if a day task already exists for this day
+		const day = await loadDayByDate({ year, month, day: date });
+		if (day) {
+			const dayTask = await loadDayTaskForDayAndTask({ day: day.id, task: task.id });
+			if (dayTask) {
+				ui.alert(`Day ${dayName} already exists`);
+				return;
+			}
+		}
 
 		fireCommand(Command.DATA_SAVE, [{
 			type: SaveType.TASK_STATUS_FOR_DATE,
 			id: task.id,
 			status: 1, // Use default status
-			day: { year, month, day },
+			day: { year, month, day: date },
 		}]);
 	}, [task.id]);
 
