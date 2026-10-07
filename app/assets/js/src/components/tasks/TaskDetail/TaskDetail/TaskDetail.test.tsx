@@ -8,11 +8,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import {
-	cleanup,
-	render,
-	waitFor,
-} from '@testing-library/preact';
+import { cleanup, render } from '@testing-library/preact';
 import '@testing-library/jest-dom/jest-globals';
 
 import { insertTestData } from 'database';

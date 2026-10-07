@@ -1,15 +1,11 @@
 import { h, type JSX } from 'preact';
-import {
-	useCallback,
-	useMemo,
-} from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 
-import { getCurrentDateDayName, isValidDateString } from 'utils';
+import { isValidDateString } from 'utils';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
-import { useAllDayTaskInfo } from 'data';
 import {
 	getDayNameParts,
 	loadDayByDate,
@@ -40,12 +36,6 @@ export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 	const {
 		task,
 	} = props;
-
-	const unsortedDayTasksInfo = useAllDayTaskInfo({ taskId: task.id });
-
-	const dayTasksInfo = useMemo(() => unsortedDayTasksInfo.toSorted(
-		({ dayName: dayNameA }, { dayName: dayNameB }) => dayNameA.localeCompare(dayNameB)
-	), [unsortedDayTasksInfo]);
 
 	/**
 	 * Prompt the user for which day to add a day task for. If a day task exists on that day, show an error. Otherwise, construct a day if necessary and then construct a day task too.
@@ -79,25 +69,6 @@ export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 			day: { year, month, day: date },
 		}]);
 	}, [task.id]);
-
-	const currentDayName = getCurrentDateDayName();
-
-	const expandedDayTaskIndex = useMemo(
-		() => {
-			// If the day tasks list includes the current day, expand it
-			const currentDayIndex = dayTasksInfo.findIndex(
-				({ dayName }) => dayName === currentDayName
-			);
-
-			if (currentDayIndex !== -1) {
-				return currentDayIndex;
-			}
-
-			// Otherwise, expand the last day task
-			return dayTasksInfo.length - 1;
-		},
-		[dayTasksInfo, currentDayName]
-	);
 
 	return <section class="orange-twist__section">
 		<Markdown
