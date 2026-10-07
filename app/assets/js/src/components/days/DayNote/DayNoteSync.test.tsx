@@ -15,8 +15,6 @@ import userEvent from '@testing-library/user-event';
 
 import { clear } from 'data';
 
-import { SaveType } from 'database';
-
 import { DayNoteSync } from './DayNoteSync';
 
 describe('DayNoteSync', () => {
