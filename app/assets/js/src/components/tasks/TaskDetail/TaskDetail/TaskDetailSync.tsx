@@ -65,39 +65,13 @@ export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 		}
 
 		const [year, month, day] = getDayNameParts(dayName);
-		const existingDay = await loadDayByDate({ year, month, day });
 
-		const existingDayTask = existingDay && await loadDayTaskForDayAndTask({
-			day: existingDay.id,
-			task: task.id,
-		});
-		if (existingDayTask) {
-			ui.alert(`Day ${dayName} already exists`);
-			return;
-		}
-
-		if (existingDay) {
-			// If the day does exist, just create the day task
-			fireCommand(Command.DATA_SAVE, [{
-				type: SaveType.DAY_TASK_ADD,
-				dayTask: {
-					day: existingDay.id,
-					task: task.id,
-				},
-			}]);
-			return;
-		}
-
-		// TODO: If the day doesn't exist, create it and the day task with it
-
-		const existingDayData = getDayTaskInfo({ taskId: task.id, dayName });
-		if (existingDayData) {
-			ui.alert(`Day ${dayName} already exists`);
-			return;
-		}
-
-		setDayTaskInfo({ dayName, taskId: task.id }, {});
-		fireCommand(Command.DATA_SAVE);
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.TASK_STATUS_FOR_DATE,
+			id: task.id,
+			status: 1, // Use default status
+			day: { year, month, day },
+		}]);
 	}, [task.id]);
 
 	const currentDayName = getCurrentDateDayName();
