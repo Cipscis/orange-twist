@@ -25,8 +25,8 @@ import {
 	Markdown,
 } from 'components/shared';
 
-import { DayTaskDetail } from '../DayTaskDetail';
 import { TaskNote } from '../TaskNote';
+import { DayTaskDetailListForTask } from 'components/tasks/DayTaskDetailList';
 
 interface TaskDetailSyncProps {
 	task: Task;
@@ -105,13 +105,7 @@ export function TaskDetailSync(props: TaskDetailSyncProps): JSX.Element | null {
 			inline
 		/>
 		<TaskNote taskId={task.id} />
-		{dayTasksInfo.map((dayTaskInfo, i, arr) => (
-			<DayTaskDetail
-				key={dayTaskInfo.dayName}
-				dayTaskInfo={dayTaskInfo}
-				open={i === expandedDayTaskIndex}
-			/>
-		))}
+		<DayTaskDetailListForTask taskId={task.id} />
 
 		<Button
 			onClick={addNewDayTask}
