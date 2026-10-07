@@ -12,6 +12,7 @@ import { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskIntern
 import { getTaskInternal } from './getTaskInternal';
 import { getDayInternal } from './getDayInternal';
 import { getStatusInternal } from './getStatusInternal';
+import { updateDayTaskInternal } from './updateDayTaskInternal';
 
 /**
  * Takes an existing {@linkcode IDBTransaction} and adds a request to insert a new day task to the day task object store.
@@ -75,6 +76,11 @@ export async function addDayTaskInternal(
 	const result = await getIdbRequestPromise(request);
 	if (!(typeof result === 'number')) {
 		throw new TypeError(`The key for a day task should be a number. Received ${JSON.stringify(result, null, '\t')}`);
+	}
+
+	// If no sortIndex was specified, then update it to the inverse of the ID to make sure new day tasks go at the top
+	if (!('sortIndex' in dayTask)) {
+		await updateDayTaskInternal(transaction, { id: result, sortIndex: -result });
 	}
 
 	return result;

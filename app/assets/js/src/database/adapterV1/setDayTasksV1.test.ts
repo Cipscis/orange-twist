@@ -51,22 +51,22 @@ describe('setDayTasksV1', () => {
 		// IDs don't start at 1 because the database had data entered before it was cleared
 		expect(dayTasks).toEqual([
 			{
-				id: 3,
-				day: 1,
-				task: 1,
-				note: 'Note for 2026-04-26 task 1',
-				summary: 'Summary for 2026-04-26 task 1',
-				status: 1,
-				sortIndex: null,
-			},
-			{
 				id: 4,
 				day: 1,
 				task: 2,
 				note: 'Note for 2026-04-26 task 2',
 				summary: 'Summary for 2026-04-26 task 2',
 				status: 3,
-				sortIndex: null,
+				sortIndex: -4,
+			},
+			{
+				id: 3,
+				day: 1,
+				task: 1,
+				note: 'Note for 2026-04-26 task 1',
+				summary: 'Summary for 2026-04-26 task 1',
+				status: 1,
+				sortIndex: -3,
 			},
 		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
 	});

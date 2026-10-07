@@ -81,7 +81,7 @@ describe('addDayTaskInternal', () => {
 			note: '',
 			summary: null,
 			status: 1,
-			sortIndex: null,
+			sortIndex: -3,
 		} satisfies DayTask);
 	});
 
