@@ -2,14 +2,14 @@ import { useCallback, useEffect } from 'preact/hooks';
 
 import { useAsyncData, type AsyncDataState } from 'utils';
 
-import { loadDayTaskIdsForDay } from '../loadDayTaskIdsForDay';
+import { loadDayTaskIdsForTask } from '../loadDayTaskIdsForTask';
 import { addChangeListener, ChangeType } from '../liveAccessManager';
 
 /**
- * Attempts to load a list of all day task IDs for a given day. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load a list of all day task IDs for a given task. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
  */
-export function useDayTaskIdsForDay(dayId: number): AsyncDataState<readonly number[]> {
-	const getDayTaskIds = useCallback(() => loadDayTaskIdsForDay(dayId), [dayId]);
+export function useDayTaskIdsForTask(taskId: number): AsyncDataState<readonly number[]> {
+	const getDayTaskIds = useCallback(() => loadDayTaskIdsForTask(taskId), [taskId]);
 
 	const asyncDataResult = useAsyncData(getDayTaskIds, { immediate: true });
 
@@ -19,14 +19,14 @@ export function useDayTaskIdsForDay(dayId: number): AsyncDataState<readonly numb
 		const { signal } = controller;
 
 		addChangeListener(
-			ChangeType.DAY_TASK_DAY,
-			dayId,
+			ChangeType.DAY_TASK_TASK,
+			taskId,
 			asyncDataResult.getData,
 			{ signal },
 		);
 
 		return () => controller.abort();
-	}, [dayId, asyncDataResult.getData]);
+	}, [taskId, asyncDataResult.getData]);
 
 	return asyncDataResult.state;
 }

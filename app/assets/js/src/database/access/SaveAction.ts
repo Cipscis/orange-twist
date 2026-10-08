@@ -9,7 +9,8 @@ import type { addDayTaskInternal, addTaskInternal } from '../internal';
 
 export const SaveType = {
 	TASK: 'task',
-	TASK_STATUS: 'set task status',
+	TASK_STATUS: 'set task status for current day',
+	TASK_STATUS_FOR_DATE: 'set task status for specified date',
 	TASK_ADD: 'add task',
 	TASK_ADD_WITH_DAY: 'add new task to existing day',
 	TASK_DELETE: 'delete task',
@@ -39,6 +40,11 @@ interface SaveActionByType {
 	[SaveType.TASK_STATUS]: {
 		id: number;
 		status: number;
+	};
+	[SaveType.TASK_STATUS_FOR_DATE]: {
+		id: number;
+		status: number;
+		day: Pick<Day, 'year' | 'month' | 'day'>;
 	};
 	[SaveType.TASK_ADD]: {
 		task: Parameters<typeof addTaskInternal>[1];

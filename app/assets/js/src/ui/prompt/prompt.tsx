@@ -29,6 +29,10 @@ interface PromptOptions<T extends PromptType> {
  * Display a prompt asking the user to enter a string. The returned
  * `Promise` will resolve when the prompt is closed, either with the
  * string entered by the user or `null` if the prompt was cancelled.
+ *
+ * For dates, a `YYYY-MM-DD` string will be returned.
+ *
+ * @see {@link https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#dates Dates | HTML Specification}
  */
 export async function prompt<T extends PromptType>(
 	message: string,

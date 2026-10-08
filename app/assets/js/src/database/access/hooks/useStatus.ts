@@ -12,7 +12,7 @@ import type { Status } from '../../types';
 import { loadStatus } from '../loadStatus';
 
 /**
- * Attempts to load a specified status immediately. Provides a {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load a specified status immediately. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
  *
  * @see {@linkcode useAsyncData}
  */

@@ -7,7 +7,6 @@ import {
 	addDayTaskInternal,
 	addTaskInternal,
 	getDayByDateInternal,
-	getDayInternal,
 	getDayTaskForDayAndTaskInternal,
 	getDayTaskInternal,
 	removeDayInternal,
@@ -42,6 +41,8 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			saveTask(action, transaction);
 		} else if (action.type === SaveType.TASK_STATUS) {
 			setTaskStatus(action, transaction);
+		} else if (action.type === SaveType.TASK_STATUS_FOR_DATE) {
+			setTaskStatusForDate(action, transaction);
 		} else if (action.type === SaveType.TASK_ADD) {
 			addTask(action, transaction);
 		} else if (action.type === SaveType.TASK_ADD_WITH_DAY) {
@@ -106,14 +107,33 @@ async function setTaskStatus(
 ): Promise<void> {
 	// Try to get the current day
 	const currentDate = getCurrentDate();
-	let todayId = (await getDayByDateInternal(transaction, currentDate))?.id ?? null;
+
+	await setTaskStatusForDate({
+		type: SaveType.TASK_STATUS_FOR_DATE,
+		id: action.id,
+		status: action.status,
+		day: currentDate,
+	}, transaction);
+}
+
+/**
+ * Sets the status for a task against a specified date. This is saved to a day task against this task and the day for the specified date. This operation will try to create a day for the specified date if it doesn't already exist, and may also involve creating a day task.
+ */
+async function setTaskStatusForDate(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TASK_STATUS_FOR_DATE; }
+	>,
+	transaction: IDBTransaction
+): Promise<void> {
+	// Try to get the current day
+	let todayId = (await getDayByDateInternal(transaction, action.day))?.id ?? null;
 
 	if (todayId === null) {
 		// If today doesn't exist, create it
 		todayId = await addDay({
 			type: SaveType.DAY_ADD,
 			day: {
-				...currentDate,
+				...action.day,
 				note: '',
 			},
 		}, transaction);
@@ -395,7 +415,8 @@ function gatherTransactionRequirements(
 		} else if (
 			action.type === SaveType.DAY_TASK_ADD ||
 			action.type === SaveType.TASK_ADD_WITH_DAY ||
-			action.type === SaveType.TASK_STATUS
+			action.type === SaveType.TASK_STATUS ||
+			action.type === SaveType.TASK_STATUS_FOR_DATE
 		) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.DAY);

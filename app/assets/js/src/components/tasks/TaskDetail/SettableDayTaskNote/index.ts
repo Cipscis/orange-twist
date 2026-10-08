@@ -1,0 +1,1 @@
+export { SettableDayTaskNoteSync } from './SettableDayTaskNoteSync';

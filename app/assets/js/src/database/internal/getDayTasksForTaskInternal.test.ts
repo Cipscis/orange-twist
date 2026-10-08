@@ -17,12 +17,12 @@ describe('getDayTasksForTaskInternal', () => {
 		day_task: {
 			1: {
 				id: 1,
-				day: 1,
+				day: 2,
 				task: 1,
 				note: 'Note for task 1 day 1',
 				summary: 'Summary for task 1 day 1',
 				status: 2,
-				sortIndex: 1,
+				sortIndex: 0,
 			},
 			2: {
 				id: 2,
@@ -31,14 +31,17 @@ describe('getDayTasksForTaskInternal', () => {
 				note: 'Note for task 1 day 1',
 				summary: 'Summary for task 1 day 1',
 				status: 2,
-				sortIndex: 0,
+				sortIndex: 1,
 			},
 		},
 	}));
 
 	test('returns all day tasks in correct sorted order', async () => {
 		const db = await getDatabase();
-		const transaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
+		const transaction = db.transaction([
+			ObjectStoreName.DAY,
+			ObjectStoreName.DAY_TASK,
+		], 'readonly');
 
 		const dayTasks = await getDayTasksForTaskInternal(transaction, 1);
 
@@ -50,16 +53,16 @@ describe('getDayTasksForTaskInternal', () => {
 				note: 'Note for task 1 day 1',
 				summary: 'Summary for task 1 day 1',
 				status: 2,
-				sortIndex: 0,
+				sortIndex: 1,
 			},
 			{
 				id: 1,
-				day: 1,
+				day: 2,
 				task: 1,
 				note: 'Note for task 1 day 1',
 				summary: 'Summary for task 1 day 1',
 				status: 2,
-				sortIndex: 1,
+				sortIndex: 0,
 			},
 		] satisfies DayTask[]);
 	});
