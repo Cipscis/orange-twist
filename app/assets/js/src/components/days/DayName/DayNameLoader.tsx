@@ -1,8 +1,4 @@
-import {
-	h,
-	Fragment,
-	type JSX,
-} from 'preact';
+import { h, type JSX } from 'preact';
 
 import { AsyncDataStateType, type AsyncDataState } from 'utils';
 import type { Day } from 'database';
@@ -29,22 +25,18 @@ export function DayNameLoader(
 		dayDataState: dayDataState,
 	} = props;
 
-	return <>
-		{
-			(dayDataState.type === AsyncDataStateType.INITIAL) &&
-			<Loader />
-		}
-		{
-			dayDataState.type === AsyncDataStateType.ERROR &&
-			<Notice
-				variant={NoticeVariant.ERROR}
-				message={dayDataState.error.message}
-			/>
-		}
-		{dayDataState.type === AsyncDataStateType.SUCCESS &&
-			<DayNameSync
-				day={dayDataState.data}
-			/>
-		}
-	</>;
+	if (dayDataState.type === AsyncDataStateType.INITIAL) {
+		return <Loader />;
+	}
+
+	if (dayDataState.type === AsyncDataStateType.ERROR) {
+		return <Notice
+			variant={NoticeVariant.ERROR}
+			message={dayDataState.error.message}
+		/>;
+	}
+
+	return <DayNameSync
+		day={dayDataState.data}
+	/>;
 }

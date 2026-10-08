@@ -21,8 +21,8 @@ import {
 	Markdown,
 } from 'components/shared';
 
+import { DayTaskDetailListForTask } from '../../../tasks/DayTaskDetailList';
 import { TaskNote } from '../TaskNote';
-import { DayTaskDetailListForTask } from 'components/tasks/DayTaskDetailList';
 
 interface TaskDetailSyncProps {
 	task: Task;

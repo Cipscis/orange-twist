@@ -4,12 +4,15 @@ import {
 	type JSX,
 } from 'preact';
 
+import type { ExpandType } from 'utils';
 import type { Day } from 'database';
 
 import { formatDayName } from 'formatters/dayName';
 
 export interface DayNameSyncProps {
-	day: Day;
+	day: ExpandType<
+		Pick<Day, 'year' | 'month' | 'day'>
+	>;
 }
 
 /**

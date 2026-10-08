@@ -39,7 +39,7 @@ export async function getDayTasksForTaskInternal(
 	);
 	// Just wait for the last request to save effort on function overhead
 	await getIdbRequestPromise(
-		// This non-null assertion is safe because we already ensured there is at least two day task results
+		// This non-null assertion is safe because we already ensured there are at least two day task results
 		dayRequests.at(-1)!
 	);
 	const days = dayRequests.map(({ result }) => result);

@@ -11,7 +11,7 @@ import { loadAllStatuses } from '../loadAllStatuses';
 let statuses: readonly Status[] | null = null;
 
 /**
- * Attempts to load all statuses immediately. Provides a {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load all statuses immediately. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
  *
  * @see {@linkcode useAsyncData}
  */

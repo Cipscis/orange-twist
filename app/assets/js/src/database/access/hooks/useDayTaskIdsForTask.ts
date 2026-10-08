@@ -6,7 +6,7 @@ import { loadDayTaskIdsForTask } from '../loadDayTaskIdsForTask';
 import { addChangeListener, ChangeType } from '../liveAccessManager';
 
 /**
- * Attempts to load a list of all day task IDs for a given task. Provides a {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load a list of all day task IDs for a given task. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
  */
 export function useDayTaskIdsForTask(taskId: number): AsyncDataState<readonly number[]> {
 	const getDayTaskIds = useCallback(() => loadDayTaskIdsForTask(taskId), [taskId]);

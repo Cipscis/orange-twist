@@ -15,7 +15,7 @@ import { loadTask } from '../loadTask';
 import { addChangeListener, ChangeType } from '../liveAccessManager';
 
 /**
- * Attempts to load a specified task immediately, and reloads it if it is changed in the database. Provides a {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load a specified task immediately, and reloads it if it is changed in the database. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
  *
  * @see {@linkcode useAsyncData}
  */

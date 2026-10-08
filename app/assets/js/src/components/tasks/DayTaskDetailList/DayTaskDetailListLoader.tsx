@@ -2,13 +2,14 @@ import { h, type JSX } from 'preact';
 
 import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
+import type { DayTask } from 'database';
+
 import {
 	Loader,
 	Notice,
 	NoticeVariant,
 } from 'components/shared';
 import { DayTaskDetailListSync } from './DayTaskDetailListSync';
-import type { DayTask } from 'database';
 
 export interface DayTaskDetailListLoaderProps {
 	dayTaskIdsDataState: AsyncDataState<readonly number[]>;
