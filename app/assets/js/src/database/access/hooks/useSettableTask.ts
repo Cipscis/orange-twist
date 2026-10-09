@@ -65,8 +65,7 @@ export function useSettableTask(taskId: number): ExpandType<
 
 		addChangeListener(
 			ChangeType.CHANGE,
-			ChangeEntityType.TASK,
-			taskId,
+			{ type: ChangeEntityType.TASK, id: taskId },
 			asyncDataResult.getData,
 			{ signal },
 		);

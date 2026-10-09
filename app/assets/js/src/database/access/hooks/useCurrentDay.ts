@@ -42,8 +42,7 @@ export function useCurrentDay(): AsyncDataState<Day> {
 
 		addChangeListener(
 			ChangeType.CHANGE,
-			ChangeEntityType.DAY,
-			currentDayId,
+			{ type: ChangeEntityType.DAY, id: currentDayId },
 			asyncDataResult.getData,
 			{ signal }
 		);

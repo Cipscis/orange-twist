@@ -40,8 +40,7 @@ export function useDay(dayId: number): AsyncDataState<Day> {
 
 		addChangeListener(
 			ChangeType.CHANGE,
-			ChangeEntityType.DAY,
-			dayId,
+			{ type: ChangeEntityType.DAY, id: dayId },
 			asyncDataResult.getData,
 			{ signal }
 		);

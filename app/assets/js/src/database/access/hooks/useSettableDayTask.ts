@@ -65,8 +65,7 @@ export function useSettableDayTask(dayTaskId: number): ExpandType<
 
 		addChangeListener(
 			ChangeType.CHANGE,
-			ChangeEntityType.DAY_TASK,
-			dayTaskId,
+			{ type: ChangeEntityType.DAY_TASK, id: dayTaskId },
 			asyncDataResult.getData,
 			{ signal },
 		);

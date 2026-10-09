@@ -65,8 +65,7 @@ export function useSettableDay(taskId: number): ExpandType<
 
 		addChangeListener(
 			ChangeType.CHANGE,
-			ChangeEntityType.DAY,
-			taskId,
+			{ type: ChangeEntityType.DAY, id: taskId },
 			asyncDataResult.getData,
 			{ signal },
 		);

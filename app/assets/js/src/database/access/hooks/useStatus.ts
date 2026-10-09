@@ -31,11 +31,5 @@ export function useStatus(statusId: number): AsyncDataState<Status> {
 
 	// No need to re-fetch status data, because it never changes
 
-	// Don't re-enter loading state on re-requesting data
-	const asyncDataResultStateRef = useRef(asyncDataResult.state);
-	if (!asyncDataResult.state.loading) {
-		asyncDataResultStateRef.current = asyncDataResult.state;
-	}
-
-	return asyncDataResultStateRef.current;
+	return asyncDataResult.state;
 }

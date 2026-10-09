@@ -4,6 +4,7 @@ import {
 } from 'preact/hooks';
 
 import {
+	AsyncDataStateType,
 	getCurrentDate,
 	useAsyncData,
 	type AsyncDataState,
@@ -43,18 +44,35 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		// TODO: Refactor to listening to new day tasks being added for this task and the current day tasks being updated or deleted
+		// TODO: Limit refreshes to when the day task is for this task
+		addChangeListener(
+			ChangeType.ADD,
+			{ type: ChangeEntityType.DAY_TASK, id: -1 },
+			asyncDataResult.getData,
+			{ signal },
+		);
 
-		// addChangeListener(
-		// 	ChangeType.CHANGE,
-		// 	ChangeEntityType.DAY_TASK_TASK,
-		// 	taskId,
-		// 	asyncDataResult.getData,
-		// 	{ signal }
-		// );
+		if (
+			asyncDataResult.state.type === AsyncDataStateType.SUCCESS &&
+			asyncDataResult.state.data !== null
+		) {
+			addChangeListener(
+				ChangeType.CHANGE,
+				{ type: ChangeEntityType.DAY_TASK, id: -1 },
+				asyncDataResult.getData,
+				{ signal },
+			);
+
+			addChangeListener(
+				ChangeType.DELETE,
+				{ type: ChangeEntityType.DAY_TASK, id: -1 },
+				asyncDataResult.getData,
+				{ signal },
+			);
+		}
 
 		return () => controller.abort();
-	}, [taskId, asyncDataResult.getData]);
+	}, [taskId, asyncDataResult]);
 
 	return asyncDataResult.state;
 }

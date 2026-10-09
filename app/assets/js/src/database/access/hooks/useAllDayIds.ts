@@ -10,7 +10,11 @@ import {
 	type AsyncDataState,
 } from 'utils';
 
-import { addListChangeListener, ChangeEntityType } from '../liveAccessManager';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+} from '../liveAccessManager';
 import { loadAllDays } from '../loadAllDays';
 
 /**
@@ -26,14 +30,26 @@ export function useAllDayIds(): AsyncDataState<readonly number[]> {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		addListChangeListener(
-			ChangeEntityType.DAY,
+		addChangeListener(
+			ChangeType.ADD,
+			{ type: ChangeEntityType.DAY, id: -1 },
 			daysAsyncDataResult.getData,
 			{ signal },
 		);
 
+		if (daysAsyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
+			for (const day of daysAsyncDataResult.state.data) {
+				addChangeListener(
+					ChangeType.DELETE,
+					{ type: ChangeEntityType.DAY, id: day.id },
+					daysAsyncDataResult.getData,
+					{ signal },
+				);
+			}
+		}
+
 		return () => controller.abort();
-	}, [daysAsyncDataResult.getData]);
+	}, [daysAsyncDataResult]);
 
 	const asyncDataResult: AsyncDataState<readonly number[]> = useMemo(() => {
 		if (daysAsyncDataResult.state.type !== AsyncDataStateType.SUCCESS) {

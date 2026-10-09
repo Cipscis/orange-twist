@@ -43,8 +43,7 @@ export function useTask(taskId: number): AsyncDataState<Task> {
 
 		addChangeListener(
 			ChangeType.CHANGE,
-			ChangeEntityType.TASK,
-			taskId,
+			{ type: ChangeEntityType.TASK, id: taskId },
 			asyncDataResult.getData,
 			{ signal },
 		);

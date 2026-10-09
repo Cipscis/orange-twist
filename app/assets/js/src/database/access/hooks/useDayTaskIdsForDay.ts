@@ -1,6 +1,10 @@
 import { useCallback, useEffect } from 'preact/hooks';
 
-import { useAsyncData, type AsyncDataState } from 'utils';
+import {
+	AsyncDataStateType,
+	useAsyncData,
+	type AsyncDataState,
+} from 'utils';
 
 import { loadDayTaskIdsForDay } from '../loadDayTaskIdsForDay';
 import {
@@ -22,18 +26,34 @@ export function useDayTaskIdsForDay(dayId: number): AsyncDataState<readonly numb
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		// TODO: Refactor to listening to new day tasks being added for this day and listed day tasks being updated or deleted
+		// TODO: Limit refreshes to when the day task is for this day
+		addChangeListener(
+			ChangeType.ADD,
+			{ type: ChangeEntityType.DAY_TASK, id: -1 },
+			asyncDataResult.getData,
+			{ signal },
+		);
 
-		// addChangeListener(
-		// 	ChangeType.CHANGE,
-		// 	ChangeEntityType.DAY_TASK_DAY,
-		// 	dayId,
-		// 	asyncDataResult.getData,
-		// 	{ signal },
-		// );
+		if (asyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
+			for (const dayTaskId of asyncDataResult.state.data) {
+				addChangeListener(
+					ChangeType.CHANGE,
+					{ type: ChangeEntityType.DAY_TASK, id: dayTaskId },
+					asyncDataResult.getData,
+					{ signal },
+				);
+
+				addChangeListener(
+					ChangeType.DELETE,
+					{ type: ChangeEntityType.DAY_TASK, id: dayTaskId },
+					asyncDataResult.getData,
+					{ signal },
+				);
+			}
+		}
 
 		return () => controller.abort();
-	}, [dayId, asyncDataResult.getData]);
+	}, [asyncDataResult]);
 
 	return asyncDataResult.state;
 }

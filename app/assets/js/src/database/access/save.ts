@@ -8,7 +8,6 @@ import {
 	addTaskInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
-	getDayTaskInternal,
 	removeDayInternal,
 	removeDayTaskInternal,
 	removeTaskInternal,
@@ -23,7 +22,6 @@ import {
 	ChangeEntityType,
 	ChangeType,
 	noticeChange,
-	noticeListChange,
 } from './liveAccessManager';
 
 /**
@@ -94,7 +92,7 @@ async function saveTask(
 	}
 
 	await updateTaskInternal(transaction, taskToSave);
-	noticeChange(ChangeEntityType.TASK, action.id);
+	noticeChange(ChangeType.CHANGE, { type: ChangeEntityType.TASK, id: action.id });
 }
 
 /**
@@ -178,8 +176,7 @@ async function addTask(
 ): Promise<number> {
 	const taskId = await addTaskInternal(transaction, action.task);
 
-	noticeListChange(ChangeEntityType.TASK);
-	noticeChange(ChangeEntityType.TASK, taskId);
+	noticeChange(ChangeType.ADD, { type: ChangeEntityType.TASK, id: taskId });
 
 	return taskId;
 }
@@ -218,9 +215,9 @@ async function deleteTask(
 ): Promise<void> {
 	const deletedDayTaskIds = await removeTaskInternal(transaction, action.id);
 
-	noticeChange(ChangeEntityType.TASK, action.id, ChangeType.DELETE);
+	noticeChange(ChangeType.DELETE, { type: ChangeEntityType.TASK, id: action.id });
 	for (const dayTaskId of deletedDayTaskIds) {
-		noticeChange(ChangeEntityType.DAY_TASK, dayTaskId, ChangeType.DELETE);
+		noticeChange(ChangeType.DELETE, { type: ChangeEntityType.DAY_TASK, id: dayTaskId });
 	}
 }
 
@@ -251,7 +248,7 @@ async function saveDayTask(
 	}
 
 	await updateDayTaskInternal(transaction, dayTaskToSave);
-	noticeChange(ChangeEntityType.DAY_TASK, action.id);
+	noticeChange(ChangeType.CHANGE, { type: ChangeEntityType.DAY_TASK, id: action.id });
 }
 
 /**
@@ -297,7 +294,7 @@ async function addDayTask(
 ): Promise<number> {
 	const dayTaskId = await addDayTaskInternal(transaction, action.dayTask);
 
-	noticeChange(ChangeEntityType.DAY_TASK, dayTaskId, ChangeType.ADD);
+	noticeChange(ChangeType.ADD, { type: ChangeEntityType.DAY_TASK, id: dayTaskId });
 
 	return dayTaskId;
 }
@@ -314,7 +311,7 @@ async function deleteDayTask(
 ): Promise<void> {
 	await removeDayTaskInternal(transaction, action.id);
 
-	noticeChange(ChangeEntityType.DAY_TASK, action.id, ChangeType.DELETE);
+	noticeChange(ChangeType.DELETE, { type: ChangeEntityType.DAY_TASK, id: action.id });
 }
 
 /**
@@ -335,7 +332,7 @@ async function saveDay(
 	}
 
 	await updateDayInternal(transaction, dayToSave);
-	noticeChange(ChangeEntityType.DAY, action.id);
+	noticeChange(ChangeType.CHANGE, { type: ChangeEntityType.DAY, id: action.id });
 }
 
 /**
@@ -349,8 +346,7 @@ async function addDay(
 ): Promise<number> {
 	const dayId = await addDayInternal(transaction, action.day);
 
-	noticeListChange(ChangeEntityType.DAY);
-	noticeChange(ChangeEntityType.DAY, dayId);
+	noticeChange(ChangeType.ADD, { type: ChangeEntityType.DAY, id: dayId });
 
 	return dayId;
 }
@@ -366,9 +362,9 @@ async function deleteDay(
 ): Promise<void> {
 	const deletedDayTaskIds = await removeDayInternal(transaction, action.id);
 
-	noticeChange(ChangeEntityType.DAY, action.id, ChangeType.DELETE);
+	noticeChange(ChangeType.DELETE, { type: ChangeEntityType.DAY, id: action.id });
 	for (const dayTaskId of deletedDayTaskIds) {
-		noticeChange(ChangeEntityType.DAY_TASK, dayTaskId, ChangeType.DELETE);
+		noticeChange(ChangeType.DELETE, { type: ChangeEntityType.DAY_TASK, id: dayTaskId });
 	}
 }
 

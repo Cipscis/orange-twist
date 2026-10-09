@@ -7,6 +7,16 @@ export const ChangeEntityType = {
 } as const;
 export type ChangeEntityType = EnumTypeOf<typeof ChangeEntityType>;
 
+/**
+ * A trimmed down representation of an item that can be observed for database changes.
+ *
+ * For observations not tied to a particular ID, e.g. when listening for {@linkcode ChangeType.ADD} events, use a negative ID like `-1`.
+ */
+export interface ChangeEntity {
+	type: ChangeEntityType;
+	id: number;
+}
+
 export const ChangeType = {
 	ADD: 'add',
 	CHANGE: 'change',
@@ -26,8 +36,9 @@ export const eventTargetLookup = {
 /**
  * Trigger an event tracking a type of change against a specified item, causing any listeners for that type of change against that item to fire.
  */
-export function noticeChange(type: ChangeEntityType, id: number, eventType: ChangeType = ChangeType.CHANGE): void {
-	const changeTarget = eventTargetLookup[type].get(id);
+export function noticeChange(eventType: ChangeType, { type, id }: ChangeEntity): void {
+	const changeTargetId = getEventTargetId(eventType, { id });
+	const changeTarget = eventTargetLookup[type].get(changeTargetId);
 	if (!changeTarget) {
 		return;
 	}
@@ -40,13 +51,13 @@ export function noticeChange(type: ChangeEntityType, id: number, eventType: Chan
  */
 export function addChangeListener(
 	eventType: ChangeType,
-	type: ChangeEntityType,
-	id: number,
+	{ type, id }: ChangeEntity,
 	callback: () => void,
 	options?: AddEventListenerOptions,
 ): void {
+	const changeTargetId = getEventTargetId(eventType, { id });
 	const changeTarget = eventTargetLookup[type].getOrInsert(
-		id,
+		changeTargetId,
 		new EventTarget(),
 	);
 
@@ -58,11 +69,11 @@ export function addChangeListener(
  */
 export function removeChangeListener(
 	eventType: ChangeType,
-	type: ChangeEntityType,
-	id: number,
+	{ type, id }: ChangeEntity,
 	callback: () => void,
 ): void {
-	const changeTarget = eventTargetLookup[type].get(id);
+	const changeTargetId = getEventTargetId(eventType, { id });
+	const changeTarget = eventTargetLookup[type].get(changeTargetId);
 	if (!changeTarget) {
 		return;
 	}
@@ -71,50 +82,13 @@ export function removeChangeListener(
 }
 
 /**
- * Internal record of {@linkcode EventTarget}s for various lists of objects.
+ * Determines which ID to use for getting an event listener for a particular {@linkcode ChangeType} and {@linkcode ChangeEntity}. In most cases, this will be the {@linkcode ChangeEntity}'s ID, but for {@linkcode ChangeType.ADD} events `-1` is used instead to be linked only to a {@linkcode ChangeEntityType}.
+ *
+ * This allows changes and deletions to be watched for individual items, and add events to be watched for a type of item, since knowing the ID of an added item ahead of time is not possible.
  */
-export const eventTargetListLookup = {
-	[ChangeEntityType.DAY]: new EventTarget(),
-	[ChangeEntityType.TASK]: new EventTarget(),
-	[ChangeEntityType.DAY_TASK]: new EventTarget(),
-};
+function getEventTargetId(eventType: ChangeType, { id }: Pick<ChangeEntity, 'id'>): number {
+	// -1 represents all items
+	const eventTargetId = eventType === ChangeType.ADD ? -1 : id;
 
-/**
- * Trigger a "change" event for a list of a specified type of item, causing any change listeners for that list to fire.
- */
-export function noticeListChange(type: Extract<ChangeEntityType, keyof typeof eventTargetListLookup>): void {
-	const changeTarget = eventTargetListLookup[type];
-	if (!changeTarget) {
-		return;
-	}
-
-	changeTarget.dispatchEvent(new Event('change'));
-}
-
-/**
- * Adds a "change" listener for a list of a specified type of item.
- */
-export function addListChangeListener(
-	type: Extract<ChangeEntityType, keyof typeof eventTargetListLookup>,
-	callback: () => void,
-	options?: AddEventListenerOptions,
-): void {
-	const changeTarget = eventTargetListLookup[type];
-
-	changeTarget.addEventListener('change', callback, options);
-}
-
-/**
- * Removes a "change" listener for a list of a specified type of item.
- */
-export function removeListChangeListener(
-	type: Extract<ChangeEntityType, keyof typeof eventTargetListLookup>,
-	callback: () => void,
-): void {
-	const changeTarget = eventTargetListLookup[type];
-	if (!changeTarget) {
-		return;
-	}
-
-	changeTarget.removeEventListener('change', callback);
+	return eventTargetId;
 }
