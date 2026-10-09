@@ -21,6 +21,7 @@ import { SaveType, type SaveAction } from './SaveAction';
 import { requestTransaction } from './requestTransaction';
 import {
 	ChangeEntityType,
+	ChangeType,
 	noticeChange,
 	noticeListChange,
 } from './liveAccessManager';
@@ -217,7 +218,7 @@ async function deleteTask(
 ): Promise<void> {
 	const deletedDayTaskDayIds = await removeTaskInternal(transaction, action.id);
 
-	noticeListChange(ChangeEntityType.TASK);
+	noticeChange(ChangeEntityType.TASK, action.id, ChangeType.DELETE);
 	noticeChange(ChangeEntityType.DAY_TASK_TASK, action.id);
 	for (const dayId of deletedDayTaskDayIds) {
 		noticeChange(ChangeEntityType.DAY_TASK_DAY, dayId);
@@ -325,6 +326,7 @@ async function deleteDayTask(
 
 	await removeDayTaskInternal(transaction, action.id);
 
+	noticeChange(ChangeEntityType.DAY_TASK, action.id, ChangeType.DELETE);
 	noticeListChange(ChangeEntityType.DAY_TASK);
 	if (dayTask) {
 		noticeChange(ChangeEntityType.DAY_TASK_DAY, dayTask.day);

@@ -10,7 +10,11 @@ import {
 } from 'utils';
 
 import type { Day } from '../../types';
-import { addChangeListener, ChangeEntityType } from '../liveAccessManager';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+} from '../liveAccessManager';
 import { loadDay } from '../loadDay';
 
 /**
@@ -35,6 +39,7 @@ export function useDay(dayId: number): AsyncDataState<Day> {
 		const { signal } = controller;
 
 		addChangeListener(
+			ChangeType.CHANGE,
 			ChangeEntityType.DAY,
 			dayId,
 			asyncDataResult.getData,

@@ -1,7 +1,6 @@
 import {
 	useCallback,
 	useEffect,
-	useState,
 } from 'preact/hooks';
 
 import {
@@ -11,7 +10,11 @@ import {
 } from 'utils';
 
 import type { DayTask } from '../../types';
-import { addChangeListener, ChangeEntityType } from '../liveAccessManager';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+} from '../liveAccessManager';
 import { loadDayByDate } from '../loadDayByDate';
 import { loadDayTaskForDayAndTask } from '../loadDayTaskForDayAndTask';
 
@@ -41,6 +44,7 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask
 		const { signal } = controller;
 
 		addChangeListener(
+			ChangeType.CHANGE,
 			ChangeEntityType.DAY_TASK_TASK,
 			taskId,
 			asyncDataResult.getData,
