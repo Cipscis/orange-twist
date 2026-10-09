@@ -4,6 +4,7 @@ import {
 } from 'preact/hooks';
 
 import {
+	AsyncDataStateType,
 	useSettableAsyncData,
 	type AsyncDataState,
 	type ExpandType,
@@ -20,6 +21,7 @@ import {
 	addChangeListener,
 	ChangeEntityType,
 	ChangeType,
+	type ChangeEntity,
 } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
 
@@ -63,15 +65,36 @@ export function useSettableDayTask(dayTaskId: number): ExpandType<
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		addChangeListener(
-			ChangeType.CHANGE,
-			{ type: ChangeEntityType.DAY_TASK, id: dayTaskId },
-			asyncDataResult.getData,
-			{ signal },
-		);
+		const changeEntity: ChangeEntity = {
+			type: ChangeEntityType.DAY_TASK,
+			id: dayTaskId,
+		};
+
+		if (asyncDataResult.stateOfGet.type === AsyncDataStateType.ERROR) {
+			addChangeListener(
+				ChangeType.ADD,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+		} else if (asyncDataResult.stateOfGet.type === AsyncDataStateType.SUCCESS) {
+			addChangeListener(
+				ChangeType.CHANGE,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+
+			addChangeListener(
+				ChangeType.DELETE,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+		}
 
 		return () => controller.abort();
-	}, [dayTaskId, asyncDataResult.getData]);
+	}, [dayTaskId, asyncDataResult]);
 
 	return asyncDataResult;
 }

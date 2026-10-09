@@ -62,49 +62,124 @@ describe('useSettableDayTask', () => {
 		});
 	});
 
-	test('re-fetches data if it changes', async () => {
-		const { result } = renderHook(
-			() => useSettableDayTask(1)
-		);
+	describe('re-fetches data if it changes', () => {
+		test('when the day task changes', async () => {
+			const { result } = renderHook(
+				() => useSettableDayTask(1)
+			);
 
-		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
-					day: 1,
-					task: 1,
-					status: 2,
-					summary: 'Summary for task 1 day 1',
-					note: 'Note for task 1 day 1',
-					sortIndex: 1,
-				} satisfies DayTask,
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						day: 1,
+						task: 1,
+						status: 2,
+						summary: 'Summary for task 1 day 1',
+						note: 'Note for task 1 day 1',
+						sortIndex: 1,
+					} satisfies DayTask,
+				});
+			});
+
+			save([{
+				type: SaveType.DAY_TASK,
+				id: 1,
+				dayTask: {
+					note: 'Test day task 1 note updated',
+					sortIndex: 2,
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						day: 1,
+						task: 1,
+						status: 2,
+						summary: 'Summary for task 1 day 1',
+						note: 'Test day task 1 note updated',
+						sortIndex: 2,
+					} satisfies DayTask,
+				});
 			});
 		});
 
-		save([{
-			type: SaveType.DAY_TASK,
-			id: 1,
-			dayTask: {
-				note: 'Test day task 1 note updated',
-				sortIndex: 2,
-			},
-		}]);
+		test('when the day task is removed', async () => {
+			const { result } = renderHook(
+				() => useSettableDayTask(1)
+			);
 
-		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
-					day: 1,
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						day: 1,
+						task: 1,
+						status: 2,
+						summary: 'Summary for task 1 day 1',
+						note: 'Note for task 1 day 1',
+						sortIndex: 1,
+					} satisfies DayTask,
+				});
+			});
+
+			save([{
+				type: SaveType.DAY_DELETE,
+				id: 1,
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.ERROR,
+					loading: false,
+					error: new Error('Could not find day task with ID 1'),
+				});
+			});
+		});
+
+		test('when the day task is created', async () => {
+			const { result } = renderHook(
+				() => useSettableDayTask(3)
+			);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.ERROR,
+					loading: false,
+					error: new Error('Could not find day task with ID 3'),
+				});
+			});
+
+			save([{
+				type: SaveType.DAY_TASK_ADD,
+				dayTask: {
+					day: 3,
 					task: 1,
-					status: 2,
-					summary: 'Summary for task 1 day 1',
-					note: 'Test day task 1 note updated',
-					sortIndex: 2,
-				} satisfies DayTask,
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 3,
+						day: 3,
+						task: 1,
+						summary: null,
+						note: '',
+						status: 1,
+						sortIndex: -3,
+					} satisfies DayTask,
+				});
 			});
 		});
 	});
