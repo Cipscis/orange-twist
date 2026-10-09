@@ -59,44 +59,112 @@ describe('useSettableTask', () => {
 		});
 	});
 
-	test('re-fetches data if it changes', async () => {
-		const { result } = renderHook(
-			() => useSettableTask(1)
-		);
+	describe('re-fetches data if it changes', () => {
+		test('when the task changes', async () => {
+			const { result } = renderHook(
+				() => useSettableTask(1)
+			);
 
-		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note',
-					sortIndex: 1,
-				} satisfies Task,
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						name: 'Test task 1',
+						note: 'Test task 1 note',
+						sortIndex: 1,
+					} satisfies Task,
+				});
 			});
-		});
 
-		save([{
-			type: SaveType.TASK,
-			id: 1,
-			task: {
-				name: 'Test task 1 updated',
-				note: 'Test task 1 note updated',
-				sortIndex: 2,
-			},
-		}]);
-
-		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
+			save([{
+				type: SaveType.TASK,
+				id: 1,
+				task: {
 					name: 'Test task 1 updated',
 					note: 'Test task 1 note updated',
 					sortIndex: 2,
-				} satisfies Task,
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						name: 'Test task 1 updated',
+						note: 'Test task 1 note updated',
+						sortIndex: 2,
+					} satisfies Task,
+				});
+			});
+		});
+
+		test('when the task is removed', async () => {
+			const { result } = renderHook(
+				() => useSettableTask(1)
+			);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						name: 'Test task 1',
+						note: 'Test task 1 note',
+						sortIndex: 1,
+					} satisfies Task,
+				});
+			});
+
+			save([{
+				type: SaveType.TASK_DELETE,
+				id: 1,
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.ERROR,
+					loading: false,
+					error: new Error('Could not find task with ID 1'),
+				});
+			});
+		});
+
+		test('when the task is created', async () => {
+			const { result } = renderHook(
+				() => useSettableTask(4)
+			);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.ERROR,
+					loading: false,
+					error: new Error('Could not find day task with ID 3'),
+				});
+			});
+
+			save([{
+				type: SaveType.TASK_ADD,
+				task: {
+					name: 'New task',
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 4,
+						name: 'New task',
+						note: '',
+						sortIndex: -4,
+					} satisfies Task,
+				});
 			});
 		});
 	});
