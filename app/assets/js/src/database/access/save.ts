@@ -216,12 +216,12 @@ async function deleteTask(
 	>,
 	transaction: IDBTransaction
 ): Promise<void> {
-	const deletedDayTaskDayIds = await removeTaskInternal(transaction, action.id);
+	const deletedDayTaskIds = await removeTaskInternal(transaction, action.id);
 
 	noticeChange(ChangeEntityType.TASK, action.id, ChangeType.DELETE);
 	noticeChange(ChangeEntityType.DAY_TASK_TASK, action.id);
-	for (const dayId of deletedDayTaskDayIds) {
-		noticeChange(ChangeEntityType.DAY_TASK_DAY, dayId);
+	for (const dayTaskId of deletedDayTaskIds) {
+		noticeChange(ChangeEntityType.DAY_TASK_DAY, dayTaskId, ChangeType.DELETE);
 	}
 }
 
@@ -381,12 +381,12 @@ async function deleteDay(
 	>,
 	transaction: IDBTransaction,
 ): Promise<void> {
-	const deletedDayTaskTaskIds = await removeDayInternal(transaction, action.id);
+	const deletedDayTaskIds = await removeDayInternal(transaction, action.id);
 
 	noticeListChange(ChangeEntityType.DAY);
 	noticeChange(ChangeEntityType.DAY_TASK_DAY, action.id);
-	for (const taskId of deletedDayTaskTaskIds) {
-		noticeChange(ChangeEntityType.DAY_TASK_TASK, taskId);
+	for (const dayTaskId of deletedDayTaskIds) {
+		noticeChange(ChangeEntityType.DAY_TASK_TASK, dayTaskId, ChangeType.DELETE);
 	}
 }
 
