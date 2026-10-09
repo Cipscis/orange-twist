@@ -144,16 +144,25 @@ export function useAsyncData<T>(
 		const { signal } = controller;
 
 		getDataWrapper({ signal }).catch(() => {
-			// Ignore error since there's no mechanism to handle it
+			// Ignore error since it's handled by the async data state providing an error
 		});
 
 		return () => controller.abort();
 	}, [immediate, getDataWrapper]);
 
+	const getDataSafe = useCallback(() => {
+		const result = getDataWrapper();
+		result.catch(() => {
+			// Prevent rejection being caught as unhandled error
+			// This error is handled by the result state providing an error
+		});
+		return result;
+	}, [getDataWrapper]);
+
 	const result = useMemo<AsyncDataResult<T>>(() => ({
 		state,
-		getData: getDataWrapper,
-	}), [state, getDataWrapper]);
+		getData: getDataSafe,
+	}), [state, getDataSafe]);
 
 	return result;
 }
