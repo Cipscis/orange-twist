@@ -60,44 +60,117 @@ describe('useSettableDay', () => {
 		});
 	});
 
-	test('re-fetches data if it changes', async () => {
-		const { result } = renderHook(
-			() => useSettableDay(1)
-		);
+	describe('re-fetches data if it changes', () => {
+		test('when the day is changed', async () => {
+			const { result } = renderHook(
+				() => useSettableDay(1)
+			);
 
-		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
-					year: 2026,
-					month: 4,
-					day: 26,
-					note: 'Test note 1',
-				} satisfies Day,
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						year: 2026,
+						month: 4,
+						day: 26,
+						note: 'Test note 1',
+					} satisfies Day,
+				});
+			});
+
+			save([{
+				type: SaveType.DAY,
+				id: 1,
+				day: {
+					note: 'Test day 1 note updated',
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						year: 2026,
+						month: 4,
+						day: 26,
+						note: 'Test day 1 note updated',
+					} satisfies Day,
+				});
 			});
 		});
 
-		save([{
-			type: SaveType.DAY,
-			id: 1,
-			day: {
-				note: 'Test day 1 note updated',
-			},
-		}]);
+		test('when the day is removed', async () => {
+			const { result } = renderHook(
+				() => useSettableDay(1)
+			);
 
-		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						year: 2026,
+						month: 4,
+						day: 26,
+						note: 'Test note 1',
+					} satisfies Day,
+				});
+			});
+
+			save([{
+				type: SaveType.DAY_DELETE,
+				id: 1,
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.ERROR,
+					loading: false,
+					error: new Error('Could not find day with ID 1'),
+				});
+			});
+		});
+
+		test('when the day is created', async () => {
+			const { result } = renderHook(
+				() => useSettableDay(4)
+			);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.ERROR,
+					loading: false,
+					error: new Error('Could not find day with ID 4'),
+				});
+			});
+
+			save([{
+				type: SaveType.DAY_ADD,
+				day: {
 					year: 2026,
-					month: 4,
-					day: 26,
-					note: 'Test day 1 note updated',
-				} satisfies Day,
+					month: 10,
+					day: 9,
+					note: '',
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 4,
+						year: 2026,
+						month: 10,
+						day: 9,
+						note: '',
+					} satisfies Day,
+				});
 			});
 		});
 	});
