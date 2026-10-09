@@ -5,6 +5,7 @@ import {
 } from 'preact/hooks';
 
 import {
+	AsyncDataStateType,
 	useAsyncData,
 	type AsyncDataState,
 } from 'utils';
@@ -14,6 +15,7 @@ import {
 	addChangeListener,
 	ChangeEntityType,
 	ChangeType,
+	type ChangeEntity,
 } from '../liveAccessManager';
 import { loadDay } from '../loadDay';
 
@@ -38,21 +40,36 @@ export function useDay(dayId: number): AsyncDataState<Day> {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		addChangeListener(
-			ChangeType.CHANGE,
-			{ type: ChangeEntityType.DAY, id: dayId },
-			asyncDataResult.getData,
-			{ signal }
-		);
+		const changeEntity: ChangeEntity = {
+			type: ChangeEntityType.DAY,
+			id: dayId,
+		};
+
+		if (asyncDataResult.state.type === AsyncDataStateType.ERROR) {
+			addChangeListener(
+				ChangeType.ADD,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+		} else if (asyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
+			addChangeListener(
+				ChangeType.CHANGE,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+
+			addChangeListener(
+				ChangeType.DELETE,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+		}
 
 		return () => controller.abort();
-	}, [dayId, asyncDataResult.getData]);
+	}, [dayId, asyncDataResult]);
 
-	// Don't re-enter loading state on re-requesting data
-	const asyncDataResultStateRef = useRef(asyncDataResult.state);
-	if (!asyncDataResult.state.loading) {
-		asyncDataResultStateRef.current = asyncDataResult.state;
-	}
-
-	return asyncDataResultStateRef.current;
+	return asyncDataResult.state;
 }

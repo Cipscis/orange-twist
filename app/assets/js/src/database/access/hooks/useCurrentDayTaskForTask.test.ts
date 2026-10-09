@@ -198,6 +198,22 @@ describe('useCurrentDayTaskForTask', () => {
 				() => useCurrentDayTaskForTask(1)
 			);
 
+			await waitFor(() => {
+				expect(result.current).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						day: 1,
+						task: 1,
+						summary: null,
+						note: '',
+						status: 1,
+						sortIndex: null,
+					} satisfies DayTask,
+				});
+			});
+
 			await save([{
 				type: SaveType.DAY_TASK_DELETE,
 				id: 1,

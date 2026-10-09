@@ -10,7 +10,7 @@ export type ChangeEntityType = EnumTypeOf<typeof ChangeEntityType>;
 /**
  * A trimmed down representation of an item that can be observed for database changes.
  *
- * For observations not tied to a particular ID, e.g. when listening for {@linkcode ChangeType.ADD} events, use a negative ID like `-1`.
+ * For observations not tied to a particular ID, e.g. when listening for {@linkcode ChangeType.ADD} events, the ID is ignored. You can use a negative ID like `-1` as a placeholder.
  */
 export interface ChangeEntity {
 	type: ChangeEntityType;
