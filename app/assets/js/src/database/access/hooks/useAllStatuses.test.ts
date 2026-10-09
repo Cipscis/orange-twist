@@ -11,8 +11,9 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
+import type { Status } from '../../types';
 import { insertTestData } from '../../test-utils';
 import { defaultStatuses } from '../../migration';
 
@@ -30,7 +31,7 @@ describe('useAllStatuses', () => {
 		expect(result.current).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<readonly Status[]>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -43,7 +44,7 @@ describe('useAllStatuses', () => {
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: defaultStatuses,
-			});
+			} satisfies AsyncDataState<readonly Status[]>);
 		});
 	});
 
@@ -57,7 +58,7 @@ describe('useAllStatuses', () => {
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: defaultStatuses,
-			});
+			} satisfies AsyncDataState<readonly Status[]>);
 		});
 
 		const { result: result2 } = renderHook(
@@ -68,6 +69,6 @@ describe('useAllStatuses', () => {
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: defaultStatuses,
-		});
+		} satisfies AsyncDataState<readonly Status[]>);
 	});
 });

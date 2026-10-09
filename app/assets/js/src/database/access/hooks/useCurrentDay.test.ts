@@ -12,7 +12,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -55,7 +55,7 @@ describe('useCurrentDay', () => {
 		expect(result.current).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<Day>);
 	});
 
 	test('when current day exists, fetches it on initial render', async () => {
@@ -73,8 +73,8 @@ describe('useCurrentDay', () => {
 					month: 9,
 					day: 29,
 					note: 'Test day note',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 
@@ -97,8 +97,8 @@ describe('useCurrentDay', () => {
 					month: 9,
 					day: 30,
 					note: '',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 
@@ -117,8 +117,8 @@ describe('useCurrentDay', () => {
 					month: 9,
 					day: 29,
 					note: 'Test day note',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 
 		save([{
@@ -139,8 +139,8 @@ describe('useCurrentDay', () => {
 					month: 9,
 					day: 29,
 					note: 'Updated day note',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 });

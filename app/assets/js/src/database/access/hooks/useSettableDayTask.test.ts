@@ -33,7 +33,7 @@ describe('useSettableDayTask', () => {
 		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<DayTask>);
 		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
@@ -57,8 +57,8 @@ describe('useSettableDayTask', () => {
 					summary: 'Summary for task 1 day 1',
 					note: 'Note for task 1 day 1',
 					sortIndex: 1,
-				} satisfies DayTask,
-			});
+				},
+			} satisfies AsyncDataState<DayTask>);
 		});
 	});
 
@@ -80,8 +80,8 @@ describe('useSettableDayTask', () => {
 						summary: 'Summary for task 1 day 1',
 						note: 'Note for task 1 day 1',
 						sortIndex: 1,
-					} satisfies DayTask,
-				});
+					},
+				} satisfies AsyncDataState<DayTask>);
 			});
 
 			save([{
@@ -105,8 +105,8 @@ describe('useSettableDayTask', () => {
 						summary: 'Summary for task 1 day 1',
 						note: 'Test day task 1 note updated',
 						sortIndex: 2,
-					} satisfies DayTask,
-				});
+					},
+				} satisfies AsyncDataState<DayTask>);
 			});
 		});
 
@@ -127,8 +127,8 @@ describe('useSettableDayTask', () => {
 						summary: 'Summary for task 1 day 1',
 						note: 'Note for task 1 day 1',
 						sortIndex: 1,
-					} satisfies DayTask,
-				});
+					},
+				} satisfies AsyncDataState<DayTask>);
 			});
 
 			save([{
@@ -141,7 +141,7 @@ describe('useSettableDayTask', () => {
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find day task with ID 1'),
-				});
+				} satisfies AsyncDataState<DayTask>);
 			});
 		});
 
@@ -155,7 +155,7 @@ describe('useSettableDayTask', () => {
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find day task with ID 3'),
-				});
+				} satisfies AsyncDataState<DayTask>);
 			});
 
 			save([{
@@ -178,8 +178,8 @@ describe('useSettableDayTask', () => {
 						note: '',
 						status: 1,
 						sortIndex: -3,
-					} satisfies DayTask,
-				});
+					},
+				} satisfies AsyncDataState<DayTask>);
 			});
 		});
 	});
@@ -202,8 +202,8 @@ describe('useSettableDayTask', () => {
 					summary: 'Summary for task 1 day 1',
 					note: 'Note for task 1 day 1',
 					sortIndex: 1,
-				} satisfies DayTask,
-			});
+				},
+			} satisfies AsyncDataState<DayTask>);
 		});
 
 		rerender(2);
@@ -220,8 +220,8 @@ describe('useSettableDayTask', () => {
 					summary: 'Summary for task 1 day 1',
 					note: 'Note for task 1 day 1',
 					sortIndex: 1,
-				} satisfies DayTask,
-			});
+				},
+			} satisfies AsyncDataState<DayTask>);
 		});
 
 		await waitFor(() => {
@@ -236,8 +236,8 @@ describe('useSettableDayTask', () => {
 					summary: 'Summary for task 2 day 1',
 					note: 'Note for task 2 day 1',
 					sortIndex: 0,
-				} satisfies DayTask,
-			});
+				},
+			} satisfies AsyncDataState<DayTask>);
 		});
 	});
 
@@ -259,8 +259,8 @@ describe('useSettableDayTask', () => {
 					summary: 'Summary for task 1 day 1',
 					note: 'Note for task 1 day 1',
 					sortIndex: 1,
-				} satisfies DayTask,
-			});
+				},
+			} satisfies AsyncDataState<DayTask>);
 		});
 
 		result.current.setData({ note: 'Test day task 1 note updated' });
@@ -282,8 +282,8 @@ describe('useSettableDayTask', () => {
 				summary: 'Summary for task 1 day 1',
 				note: 'Test day task 1 note updated',
 				sortIndex: 1,
-			} satisfies DayTask,
-		});
+			},
+		} satisfies AsyncDataState<DayTask>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
@@ -302,8 +302,8 @@ describe('useSettableDayTask', () => {
 					summary: 'Summary for task 1 day 1',
 					note: 'Test day task 1 note updated',
 					sortIndex: 1,
-				} satisfies DayTask,
-			});
+				},
+			} satisfies AsyncDataState<DayTask>);
 		});
 	});
 

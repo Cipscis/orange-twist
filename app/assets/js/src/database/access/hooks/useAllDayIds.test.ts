@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import { insertTestData } from '../../test-utils';
 
@@ -32,7 +32,7 @@ describe('useAllDayIds', () => {
 		expect(result.current).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<number[]>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -44,8 +44,8 @@ describe('useAllDayIds', () => {
 			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
-				data: [3, 1, 2] satisfies number[],
-			});
+				data: [3, 1, 2],
+			} satisfies AsyncDataState<number[]>);
 		});
 	});
 
@@ -59,8 +59,8 @@ describe('useAllDayIds', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [3, 1, 2] satisfies number[],
-				});
+					data: [3, 1, 2],
+				} satisfies AsyncDataState<number[]>);
 			});
 
 			save([{
@@ -77,8 +77,8 @@ describe('useAllDayIds', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [3, 1, 2, 4] satisfies number[],
-				});
+					data: [3, 1, 2, 4],
+				} satisfies AsyncDataState<number[]>);
 			});
 		});
 		test('when deleting a day', async () => {
@@ -90,8 +90,8 @@ describe('useAllDayIds', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [3, 1, 2] satisfies number[],
-				});
+					data: [3, 1, 2],
+				} satisfies AsyncDataState<number[]>);
 			});
 
 			save([{
@@ -103,8 +103,8 @@ describe('useAllDayIds', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [3, 2] satisfies number[],
-				});
+					data: [3, 2],
+				} satisfies AsyncDataState<number[]>);
 			});
 		});
 	});

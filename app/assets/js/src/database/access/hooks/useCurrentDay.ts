@@ -40,12 +40,16 @@ export function useCurrentDay(): AsyncDataState<Day> {
 		const controller = new AbortController();
 		const { signal } = controller;
 
+		// Don't need to watch for it being added, because this hook creates it
+
 		addChangeListener(
 			ChangeType.CHANGE,
 			{ type: ChangeEntityType.DAY, id: currentDayId },
 			asyncDataResult.getData,
 			{ signal }
 		);
+
+		// Don't need to watch for it being deleted, because the UI doesn't allow this
 
 		return () => controller.abort();
 	}, [currentDayId, asyncDataResult.getData]);

@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import { insertTestData } from '../../test-utils';
 
@@ -53,7 +53,7 @@ describe('useDayTaskIdsForTask', () => {
 		expect(result.current).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<readonly number[]>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -65,8 +65,8 @@ describe('useDayTaskIdsForTask', () => {
 			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
-				data: [1, 2] satisfies number[],
-			});
+				data: [1, 2],
+			} satisfies AsyncDataState<readonly number[]>);
 		});
 	});
 
@@ -80,8 +80,8 @@ describe('useDayTaskIdsForTask', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [1, 2] satisfies number[],
-				});
+					data: [1, 2],
+				} satisfies AsyncDataState<readonly number[]>);
 			});
 
 			save([{
@@ -96,8 +96,8 @@ describe('useDayTaskIdsForTask', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [1, 2] satisfies number[],
-				});
+					data: [1, 2],
+				} satisfies AsyncDataState<readonly number[]>);
 			});
 		});
 		test('when deleting a day task', async () => {
@@ -109,8 +109,8 @@ describe('useDayTaskIdsForTask', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [1, 2] satisfies number[],
-				});
+					data: [1, 2],
+				} satisfies AsyncDataState<readonly number[]>);
 			});
 
 			save([{
@@ -122,8 +122,8 @@ describe('useDayTaskIdsForTask', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [2] satisfies number[],
-				});
+					data: [2],
+				} satisfies AsyncDataState<readonly number[]>);
 			});
 		});
 	});

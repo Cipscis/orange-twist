@@ -33,7 +33,7 @@ describe('useSettableDay', () => {
 		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<Day>);
 		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
@@ -55,8 +55,8 @@ describe('useSettableDay', () => {
 					month: 4,
 					day: 26,
 					note: 'Test note 1',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 
@@ -76,8 +76,8 @@ describe('useSettableDay', () => {
 						month: 4,
 						day: 26,
 						note: 'Test note 1',
-					} satisfies Day,
-				});
+					},
+				} satisfies AsyncDataState<Day>);
 			});
 
 			save([{
@@ -98,8 +98,8 @@ describe('useSettableDay', () => {
 						month: 4,
 						day: 26,
 						note: 'Test day 1 note updated',
-					} satisfies Day,
-				});
+					},
+				} satisfies AsyncDataState<Day>);
 			});
 		});
 
@@ -118,8 +118,8 @@ describe('useSettableDay', () => {
 						month: 4,
 						day: 26,
 						note: 'Test note 1',
-					} satisfies Day,
-				});
+					},
+				} satisfies AsyncDataState<Day>);
 			});
 
 			save([{
@@ -132,7 +132,7 @@ describe('useSettableDay', () => {
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find day with ID 1'),
-				});
+				} satisfies AsyncDataState<Day>);
 			});
 		});
 
@@ -146,7 +146,7 @@ describe('useSettableDay', () => {
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find day with ID 4'),
-				});
+				} satisfies AsyncDataState<Day>);
 			});
 
 			save([{
@@ -169,8 +169,8 @@ describe('useSettableDay', () => {
 						month: 10,
 						day: 9,
 						note: '',
-					} satisfies Day,
-				});
+					},
+				} satisfies AsyncDataState<Day>);
 			});
 		});
 	});
@@ -191,8 +191,8 @@ describe('useSettableDay', () => {
 					month: 4,
 					day: 26,
 					note: 'Test note 1',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 
 		rerender(2);
@@ -207,8 +207,8 @@ describe('useSettableDay', () => {
 					month: 4,
 					day: 26,
 					note: 'Test note 1',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 
 		await waitFor(() => {
@@ -221,8 +221,8 @@ describe('useSettableDay', () => {
 					month: 4,
 					day: 27,
 					note: 'Test note 2',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 
@@ -242,8 +242,8 @@ describe('useSettableDay', () => {
 					month: 4,
 					day: 26,
 					note: 'Test note 1',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 
 		result.current.setData({ note: 'Test day 1 note updated' });
@@ -263,8 +263,8 @@ describe('useSettableDay', () => {
 				month: 4,
 				day: 26,
 				note: 'Test day 1 note updated',
-			} satisfies Day,
-		});
+			},
+		} satisfies AsyncDataState<Day>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
@@ -281,8 +281,8 @@ describe('useSettableDay', () => {
 					month: 4,
 					day: 26,
 					note: 'Test day 1 note updated',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 

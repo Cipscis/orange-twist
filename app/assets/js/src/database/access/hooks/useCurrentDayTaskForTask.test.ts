@@ -12,7 +12,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -66,7 +66,7 @@ describe('useCurrentDayTaskForTask', () => {
 		expect(result.current).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<DayTask>);
 	});
 
 	test('when a current day task exists, fetches it on initial render', async () => {
@@ -86,8 +86,8 @@ describe('useCurrentDayTaskForTask', () => {
 					note: '',
 					status: 1,
 					sortIndex: null,
-				} satisfies DayTask,
-			});
+				},
+			} satisfies AsyncDataState<DayTask>);
 		});
 	});
 
@@ -107,7 +107,7 @@ describe('useCurrentDayTaskForTask', () => {
 				type: AsyncDataStateType.ERROR,
 				loading: false,
 				error: new Error('Could not find current day task for task 1'),
-			});
+			} satisfies AsyncDataState<DayTask>);
 		});
 	});
 
@@ -128,7 +128,7 @@ describe('useCurrentDayTaskForTask', () => {
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find current day task for task 1'),
-				});
+				} satisfies AsyncDataState<DayTask>);
 			});
 
 			await save([{
@@ -155,8 +155,8 @@ describe('useCurrentDayTaskForTask', () => {
 						note: 'Note',
 						status: 2,
 						sortIndex: 1,
-					} satisfies DayTask,
-				});
+					},
+				} satisfies AsyncDataState<DayTask>);
 			});
 		});
 
@@ -188,8 +188,8 @@ describe('useCurrentDayTaskForTask', () => {
 						note: 'Updated',
 						status: 2,
 						sortIndex: 1,
-					} satisfies DayTask,
-				});
+					},
+				} satisfies AsyncDataState<DayTask>);
 			});
 		});
 
@@ -210,8 +210,8 @@ describe('useCurrentDayTaskForTask', () => {
 						note: '',
 						status: 1,
 						sortIndex: null,
-					} satisfies DayTask,
-				});
+					},
+				} satisfies AsyncDataState<DayTask>);
 			});
 
 			await save([{
@@ -224,7 +224,7 @@ describe('useCurrentDayTaskForTask', () => {
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find current day task for task 1'),
-				});
+				} satisfies AsyncDataState<DayTask>);
 			});
 		});
 	});

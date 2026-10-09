@@ -33,7 +33,7 @@ describe('useSettableTask', () => {
 		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<Task>);
 		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
@@ -54,8 +54,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 	});
 
@@ -74,8 +74,8 @@ describe('useSettableTask', () => {
 						name: 'Test task 1',
 						note: 'Test task 1 note',
 						sortIndex: 1,
-					} satisfies Task,
-				});
+					},
+				} satisfies AsyncDataState<Task>);
 			});
 
 			save([{
@@ -97,8 +97,8 @@ describe('useSettableTask', () => {
 						name: 'Test task 1 updated',
 						note: 'Test task 1 note updated',
 						sortIndex: 2,
-					} satisfies Task,
-				});
+					},
+				} satisfies AsyncDataState<Task>);
 			});
 		});
 
@@ -116,8 +116,8 @@ describe('useSettableTask', () => {
 						name: 'Test task 1',
 						note: 'Test task 1 note',
 						sortIndex: 1,
-					} satisfies Task,
-				});
+					},
+				} satisfies AsyncDataState<Task>);
 			});
 
 			save([{
@@ -130,7 +130,7 @@ describe('useSettableTask', () => {
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find task with ID 1'),
-				});
+				} satisfies AsyncDataState<Task>);
 			});
 		});
 
@@ -144,7 +144,7 @@ describe('useSettableTask', () => {
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find day task with ID 3'),
-				});
+				} satisfies AsyncDataState<Task>);
 			});
 
 			save([{
@@ -163,8 +163,8 @@ describe('useSettableTask', () => {
 						name: 'New task',
 						note: '',
 						sortIndex: -4,
-					} satisfies Task,
-				});
+					},
+				} satisfies AsyncDataState<Task>);
 			});
 		});
 	});
@@ -184,8 +184,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 
 		rerender(2);
@@ -199,8 +199,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 
 		await waitFor(() => {
@@ -212,8 +212,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 2',
 					note: 'Test task 2 note',
 					sortIndex: 2,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 	});
 
@@ -232,8 +232,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 
 		result.current.setData({ note: 'Test task 1 note updated' });
@@ -243,7 +243,6 @@ describe('useSettableTask', () => {
 		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-			// loading: false,
 		});
 		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
@@ -253,8 +252,8 @@ describe('useSettableTask', () => {
 				name: 'Test task 1',
 				note: 'Test task 1 note updated',
 				sortIndex: 1,
-			} satisfies Task,
-		});
+			},
+		} satisfies AsyncDataState<Task>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
@@ -270,8 +269,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note updated',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 	});
 
