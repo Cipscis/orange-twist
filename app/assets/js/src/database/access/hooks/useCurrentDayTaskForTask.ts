@@ -44,31 +44,30 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		// TODO: Limit refreshes to when the day task is for this task
-		addChangeListener(
-			ChangeType.ADD,
-			{ type: ChangeEntityType.DAY_TASK, id: -1 },
-			asyncDataResult.getData,
-			{ signal },
-		);
+		if (asyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
+			if (asyncDataResult.state.data === null) {
+				// TODO: Limit refreshes to when the day task is for this task
+				addChangeListener(
+					ChangeType.ADD,
+					{ type: ChangeEntityType.DAY_TASK, id: -1 },
+					asyncDataResult.getData,
+					{ signal },
+				);
+			} else if (asyncDataResult.state.data !== null) {
+				addChangeListener(
+					ChangeType.CHANGE,
+					{ type: ChangeEntityType.DAY_TASK, id: -1 },
+					asyncDataResult.getData,
+					{ signal },
+				);
 
-		if (
-			asyncDataResult.state.type === AsyncDataStateType.SUCCESS &&
-			asyncDataResult.state.data !== null
-		) {
-			addChangeListener(
-				ChangeType.CHANGE,
-				{ type: ChangeEntityType.DAY_TASK, id: -1 },
-				asyncDataResult.getData,
-				{ signal },
-			);
-
-			addChangeListener(
-				ChangeType.DELETE,
-				{ type: ChangeEntityType.DAY_TASK, id: -1 },
-				asyncDataResult.getData,
-				{ signal },
-			);
+				addChangeListener(
+					ChangeType.DELETE,
+					{ type: ChangeEntityType.DAY_TASK, id: -1 },
+					asyncDataResult.getData,
+					{ signal },
+				);
+			}
 		}
 
 		return () => controller.abort();

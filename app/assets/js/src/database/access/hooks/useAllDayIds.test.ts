@@ -49,21 +49,21 @@ describe('useAllDayIds', () => {
 		});
 	});
 
-	test('re-fetches data if it changes', async () => {
-		const { result } = renderHook(
-			() => useAllDayIds()
-		);
+	describe('re-fetches data if it changes', () => {
+		test('when adding a day', async () => {
+			const { result } = renderHook(
+				() => useAllDayIds()
+			);
 
-		await waitFor(() => {
-			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: [3, 1, 2] satisfies number[],
+			await waitFor(() => {
+				expect(result.current).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [3, 1, 2] satisfies number[],
+				});
 			});
-		});
 
-		save([
-			{
+			save([{
 				type: SaveType.DAY_ADD,
 				day: {
 					year: 2026,
@@ -71,18 +71,40 @@ describe('useAllDayIds', () => {
 					day: 29,
 					note: 'New day',
 				},
-			},
-			{
+			}]);
+
+			await waitFor(() => {
+				expect(result.current).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [3, 1, 2, 4] satisfies number[],
+				});
+			});
+		});
+		test('when deleting a day', async () => {
+			const { result } = renderHook(
+				() => useAllDayIds()
+			);
+
+			await waitFor(() => {
+				expect(result.current).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [3, 1, 2] satisfies number[],
+				});
+			});
+
+			save([{
 				type: SaveType.DAY_DELETE,
 				id: 1,
-			},
-		]);
+			}]);
 
-		await waitFor(() => {
-			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: [3, 2, 4] satisfies number[],
+			await waitFor(() => {
+				expect(result.current).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [3, 2] satisfies number[],
+				});
 			});
 		});
 	});

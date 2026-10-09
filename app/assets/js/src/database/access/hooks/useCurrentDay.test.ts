@@ -87,8 +87,6 @@ describe('useCurrentDay', () => {
 			() => useCurrentDay()
 		);
 
-		jest.advanceTimersByTime(0);
-
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
@@ -108,8 +106,6 @@ describe('useCurrentDay', () => {
 		const { result } = renderHook(
 			() => useCurrentDay()
 		);
-
-		jest.advanceTimersByTime(0);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
@@ -132,8 +128,6 @@ describe('useCurrentDay', () => {
 				note: 'Updated day note',
 			},
 		}]);
-
-		jest.advanceTimersByTime(0);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
