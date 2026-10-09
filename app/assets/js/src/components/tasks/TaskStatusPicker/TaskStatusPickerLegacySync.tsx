@@ -9,7 +9,6 @@ import { fireCommand } from 'registers/commands';
 
 import {
 	deleteDayTask,
-	deleteTask,
 	getTaskStatusForDay,
 	setDayTaskInfo,
 	useAllDayTaskInfo,
@@ -98,8 +97,10 @@ export function TaskStatusPickerLegacySync(props: TaskStatusPickerLegacySyncProp
 			return;
 		}
 
-		deleteTask(taskId);
-		fireCommand(Command.DATA_SAVE);
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.TASK_DELETE,
+			id: taskId,
+		}]);
 	}, [taskId]);
 
 	/**

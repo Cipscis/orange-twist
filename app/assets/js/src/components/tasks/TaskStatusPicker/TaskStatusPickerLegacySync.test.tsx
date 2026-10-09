@@ -146,19 +146,22 @@ describe('TaskStatusPickerLegacySync', () => {
 			const saveSpy = jest.fn();
 			addCommandListener(Command.DATA_SAVE, saveSpy);
 
-			const { getByRole } = render(<TaskStatusPickerLegacySync
-				taskId={1}
-				statuses={statuses}
-			/>);
+			// Render OrangeTwist wrapper to set up real saving
+			const { findByRole } = render(<OrangeTwist>
+				<TaskStatusPickerLegacySync
+					taskId={1}
+					statuses={statuses}
+				/>
+			</OrangeTwist>);
 
-			const editButton = getByRole('button', {
-				name: `Completed (click to edit)`,
+			const editButton = await findByRole('button', {
+				name: `In progress (click to edit)`,
 			});
 			expect(editButton).toBeInTheDocument();
 
 			await user.click(editButton);
 
-			const deleteButton = getByRole('button', {
+			const deleteButton = await findByRole('button', {
 				name: 'Delete task',
 			});
 			expect(deleteButton).toBeInTheDocument();
@@ -166,7 +169,9 @@ describe('TaskStatusPickerLegacySync', () => {
 			await user.click(deleteButton);
 			await user.click(screen.getByRole('button', { name: 'Confirm' }));
 
-			expect(getTaskInfo(1)).toBeNull();
+			await waitFor(() => {
+				expect(getTaskInfo(1)).toBeNull();
+			});
 
 			removeCommandListener(Command.DATA_SAVE, saveSpy);
 		});
