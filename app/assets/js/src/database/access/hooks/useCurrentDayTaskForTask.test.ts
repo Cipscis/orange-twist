@@ -91,7 +91,7 @@ describe('useCurrentDayTaskForTask', () => {
 		});
 	});
 
-	test('when no current day task exists, fetches null', async () => {
+	test('when no current day task exists, enters an error state', async () => {
 		// Start by removing the day task
 		await save([{
 			type: SaveType.DAY_TASK_DELETE,
@@ -104,9 +104,9 @@ describe('useCurrentDayTaskForTask', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncDataStateType.ERROR,
 				loading: false,
-				data: null,
+				error: new Error('Could not find current day task for task 1'),
 			});
 		});
 	});
@@ -125,9 +125,9 @@ describe('useCurrentDayTaskForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncDataStateType.ERROR,
 					loading: false,
-					data: null,
+					error: new Error('Could not find current day task for task 1'),
 				});
 			});
 
@@ -205,9 +205,9 @@ describe('useCurrentDayTaskForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncDataStateType.ERROR,
 					loading: false,
-					data: null,
+					error: new Error('Could not find current day task for task 1'),
 				});
 			});
 		});
