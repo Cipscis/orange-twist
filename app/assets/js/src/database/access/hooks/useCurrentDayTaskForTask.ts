@@ -11,7 +11,7 @@ import {
 } from 'utils';
 
 import type { DayTask } from '../../types';
-import { addChangeListener, ChangeType } from '../liveAccessManager';
+import { addChangeListener, ChangeEntityType } from '../liveAccessManager';
 import { loadDayByDate } from '../loadDayByDate';
 import { loadDayTaskForDayAndTask } from '../loadDayTaskForDayAndTask';
 
@@ -41,7 +41,7 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask
 		const { signal } = controller;
 
 		addChangeListener(
-			ChangeType.DAY_TASK_TASK,
+			ChangeEntityType.DAY_TASK_TASK,
 			taskId,
 			asyncDataResult.getData,
 			{ signal }

@@ -16,7 +16,7 @@ import { Command } from 'types/Command';
 import type { DayTask } from '../../types';
 
 import { loadDayTask } from '../loadDayTask';
-import { addChangeListener, ChangeType } from '../liveAccessManager';
+import { addChangeListener, ChangeEntityType } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
 
 /**
@@ -60,7 +60,7 @@ export function useSettableDayTask(dayTaskId: number): ExpandType<
 		const { signal } = controller;
 
 		addChangeListener(
-			ChangeType.DAY_TASK,
+			ChangeEntityType.DAY_TASK,
 			dayTaskId,
 			asyncDataResult.getData,
 			{ signal },

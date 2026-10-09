@@ -10,7 +10,7 @@ import {
 	type AsyncDataState,
 } from 'utils';
 
-import { addListChangeListener, ChangeType } from '../liveAccessManager';
+import { addListChangeListener, ChangeEntityType } from '../liveAccessManager';
 import { loadAllDays } from '../loadAllDays';
 
 /**
@@ -27,7 +27,7 @@ export function useAllDayIds(): AsyncDataState<readonly number[]> {
 		const { signal } = controller;
 
 		addListChangeListener(
-			ChangeType.DAY,
+			ChangeEntityType.DAY,
 			daysAsyncDataResult.getData,
 			{ signal },
 		);

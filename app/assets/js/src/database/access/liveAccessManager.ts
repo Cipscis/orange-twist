@@ -1,29 +1,29 @@
 import type { EnumTypeOf } from 'utils';
 
-export const ChangeType = {
+export const ChangeEntityType = {
 	DAY: 'day',
 	TASK: 'task',
 	DAY_TASK: 'day task',
 	DAY_TASK_DAY: 'day task for day',
 	DAY_TASK_TASK: 'day task for task',
 } as const;
-export type ChangeType = EnumTypeOf<typeof ChangeType>;
+export type ChangeEntityType = EnumTypeOf<typeof ChangeEntityType>;
 
 /**
  * Internal record of {@linkcode EventTarget}s for various observable objects.
  */
 export const eventTargetLookup = {
-	[ChangeType.DAY]: new Map<number, EventTarget>(),
-	[ChangeType.TASK]: new Map<number, EventTarget>(),
-	[ChangeType.DAY_TASK]: new Map<number, EventTarget>(),
-	[ChangeType.DAY_TASK_DAY]: new Map<number, EventTarget>(),
-	[ChangeType.DAY_TASK_TASK]: new Map<number, EventTarget>(),
+	[ChangeEntityType.DAY]: new Map<number, EventTarget>(),
+	[ChangeEntityType.TASK]: new Map<number, EventTarget>(),
+	[ChangeEntityType.DAY_TASK]: new Map<number, EventTarget>(),
+	[ChangeEntityType.DAY_TASK_DAY]: new Map<number, EventTarget>(),
+	[ChangeEntityType.DAY_TASK_TASK]: new Map<number, EventTarget>(),
 };
 
 /**
  * Trigger a "change" event for a specified type of item, causing any change listeners for that item to fire.
  */
-export function noticeChange(type: ChangeType, id: number): void {
+export function noticeChange(type: ChangeEntityType, id: number): void {
 	const changeTarget = eventTargetLookup[type].get(id);
 	if (!changeTarget) {
 		return;
@@ -36,7 +36,7 @@ export function noticeChange(type: ChangeType, id: number): void {
  * Adds a "change" listener for a specified type of item.
  */
 export function addChangeListener(
-	type: ChangeType,
+	type: ChangeEntityType,
 	id: number,
 	callback: () => void,
 	options?: AddEventListenerOptions,
@@ -53,7 +53,7 @@ export function addChangeListener(
  * Removes a "change" listener for a specified type of item.
  */
 export function removeChangeListener(
-	type: ChangeType,
+	type: ChangeEntityType,
 	id: number,
 	callback: () => void,
 ): void {
@@ -69,15 +69,15 @@ export function removeChangeListener(
  * Internal record of {@linkcode EventTarget}s for various lists of objects.
  */
 export const eventTargetListLookup = {
-	[ChangeType.DAY]: new EventTarget(),
-	[ChangeType.TASK]: new EventTarget(),
-	[ChangeType.DAY_TASK]: new EventTarget(),
+	[ChangeEntityType.DAY]: new EventTarget(),
+	[ChangeEntityType.TASK]: new EventTarget(),
+	[ChangeEntityType.DAY_TASK]: new EventTarget(),
 };
 
 /**
  * Trigger a "change" event for a list of a specified type of item, causing any change listeners for that list to fire.
  */
-export function noticeListChange(type: Extract<ChangeType, keyof typeof eventTargetListLookup>): void {
+export function noticeListChange(type: Extract<ChangeEntityType, keyof typeof eventTargetListLookup>): void {
 	const changeTarget = eventTargetListLookup[type];
 	if (!changeTarget) {
 		return;
@@ -90,7 +90,7 @@ export function noticeListChange(type: Extract<ChangeType, keyof typeof eventTar
  * Adds a "change" listener for a list of a specified type of item.
  */
 export function addListChangeListener(
-	type: Extract<ChangeType, keyof typeof eventTargetListLookup>,
+	type: Extract<ChangeEntityType, keyof typeof eventTargetListLookup>,
 	callback: () => void,
 	options?: AddEventListenerOptions,
 ): void {
@@ -103,7 +103,7 @@ export function addListChangeListener(
  * Removes a "change" listener for a list of a specified type of item.
  */
 export function removeListChangeListener(
-	type: Extract<ChangeType, keyof typeof eventTargetListLookup>,
+	type: Extract<ChangeEntityType, keyof typeof eventTargetListLookup>,
 	callback: () => void,
 ): void {
 	const changeTarget = eventTargetListLookup[type];

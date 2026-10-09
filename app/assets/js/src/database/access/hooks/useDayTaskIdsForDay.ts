@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'preact/hooks';
 import { useAsyncData, type AsyncDataState } from 'utils';
 
 import { loadDayTaskIdsForDay } from '../loadDayTaskIdsForDay';
-import { addChangeListener, ChangeType } from '../liveAccessManager';
+import { addChangeListener, ChangeEntityType } from '../liveAccessManager';
 
 /**
  * Attempts to load a list of all day task IDs for a given day. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
@@ -19,7 +19,7 @@ export function useDayTaskIdsForDay(dayId: number): AsyncDataState<readonly numb
 		const { signal } = controller;
 
 		addChangeListener(
-			ChangeType.DAY_TASK_DAY,
+			ChangeEntityType.DAY_TASK_DAY,
 			dayId,
 			asyncDataResult.getData,
 			{ signal },

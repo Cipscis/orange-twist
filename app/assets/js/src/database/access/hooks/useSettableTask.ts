@@ -16,7 +16,7 @@ import { Command } from 'types/Command';
 import type { Task } from '../../types';
 
 import { loadTask } from '../loadTask';
-import { addChangeListener, ChangeType } from '../liveAccessManager';
+import { addChangeListener, ChangeEntityType } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
 
 /**
@@ -60,7 +60,7 @@ export function useSettableTask(taskId: number): ExpandType<
 		const { signal } = controller;
 
 		addChangeListener(
-			ChangeType.TASK,
+			ChangeEntityType.TASK,
 			taskId,
 			asyncDataResult.getData,
 			{ signal },

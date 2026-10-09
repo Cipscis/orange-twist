@@ -16,7 +16,7 @@ import { Command } from 'types/Command';
 import type { Day } from '../../types';
 
 import { loadDay } from '../loadDay';
-import { addChangeListener, ChangeType } from '../liveAccessManager';
+import { addChangeListener, ChangeEntityType } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
 
 /**
@@ -60,7 +60,7 @@ export function useSettableDay(taskId: number): ExpandType<
 		const { signal } = controller;
 
 		addChangeListener(
-			ChangeType.DAY,
+			ChangeEntityType.DAY,
 			taskId,
 			asyncDataResult.getData,
 			{ signal },
