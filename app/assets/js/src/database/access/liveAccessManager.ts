@@ -4,8 +4,6 @@ export const ChangeEntityType = {
 	DAY: 'day',
 	TASK: 'task',
 	DAY_TASK: 'day task',
-	DAY_TASK_DAY: 'day task for day',
-	DAY_TASK_TASK: 'day task for task',
 } as const;
 export type ChangeEntityType = EnumTypeOf<typeof ChangeEntityType>;
 
@@ -23,8 +21,6 @@ export const eventTargetLookup = {
 	[ChangeEntityType.DAY]: new Map<number, EventTarget>(),
 	[ChangeEntityType.TASK]: new Map<number, EventTarget>(),
 	[ChangeEntityType.DAY_TASK]: new Map<number, EventTarget>(),
-	[ChangeEntityType.DAY_TASK_DAY]: new Map<number, EventTarget>(),
-	[ChangeEntityType.DAY_TASK_TASK]: new Map<number, EventTarget>(),
 };
 
 /**

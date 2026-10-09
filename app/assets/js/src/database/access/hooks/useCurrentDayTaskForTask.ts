@@ -43,13 +43,15 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		addChangeListener(
-			ChangeType.CHANGE,
-			ChangeEntityType.DAY_TASK_TASK,
-			taskId,
-			asyncDataResult.getData,
-			{ signal }
-		);
+		// TODO: Refactor to listening to new day tasks being added for this task and the current day tasks being updated or deleted
+
+		// addChangeListener(
+		// 	ChangeType.CHANGE,
+		// 	ChangeEntityType.DAY_TASK_TASK,
+		// 	taskId,
+		// 	asyncDataResult.getData,
+		// 	{ signal }
+		// );
 
 		return () => controller.abort();
 	}, [taskId, asyncDataResult.getData]);

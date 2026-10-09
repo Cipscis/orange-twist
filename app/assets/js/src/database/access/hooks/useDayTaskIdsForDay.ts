@@ -22,13 +22,15 @@ export function useDayTaskIdsForDay(dayId: number): AsyncDataState<readonly numb
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		addChangeListener(
-			ChangeType.CHANGE,
-			ChangeEntityType.DAY_TASK_DAY,
-			dayId,
-			asyncDataResult.getData,
-			{ signal },
-		);
+		// TODO: Refactor to listening to new day tasks being added for this day and listed day tasks being updated or deleted
+
+		// addChangeListener(
+		// 	ChangeType.CHANGE,
+		// 	ChangeEntityType.DAY_TASK_DAY,
+		// 	dayId,
+		// 	asyncDataResult.getData,
+		// 	{ signal },
+		// );
 
 		return () => controller.abort();
 	}, [dayId, asyncDataResult.getData]);
