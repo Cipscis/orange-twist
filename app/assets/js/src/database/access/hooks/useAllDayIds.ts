@@ -1,8 +1,4 @@
-import {
-	useEffect,
-	useMemo,
-	useRef,
-} from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 
 import {
 	AsyncDataStateType,
@@ -62,11 +58,5 @@ export function useAllDayIds(): AsyncDataState<readonly number[]> {
 		};
 	}, [daysAsyncDataResult]);
 
-	// Don't re-enter loading state on re-requesting data
-	const asyncDataResultStateRef = useRef(asyncDataResult);
-	if (!asyncDataResult.loading) {
-		asyncDataResultStateRef.current = asyncDataResult;
-	}
-
-	return asyncDataResultStateRef.current;
+	return asyncDataResult;
 }
