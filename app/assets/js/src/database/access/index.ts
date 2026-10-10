@@ -11,6 +11,7 @@ export { loadDayTaskForDayAndTask } from './loadDayTaskForDayAndTask';
 export { loadDayTaskIdsForDay } from './loadDayTaskIdsForDay';
 export { loadDayTaskIdsForTask } from './loadDayTaskIdsForTask';
 export { loadStatus } from './loadStatus';
+export { loadStatusForTask } from './loadStatusForTask';
 export { loadAllStatuses } from './loadAllStatuses';
 export {
 	useDay,
@@ -27,5 +28,6 @@ export {
 	useCurrentDayTaskForTask,
 
 	useStatus,
+	useSettableStatusForTask,
 	useAllStatuses,
 } from './hooks';

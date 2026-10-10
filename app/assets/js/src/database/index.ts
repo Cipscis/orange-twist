@@ -28,6 +28,8 @@ export {
 
 	loadStatus,
 	useStatus,
+	loadStatusForTask,
+	useSettableStatusForTask,
 	loadAllStatuses,
 	useAllStatuses,
 } from './access';
