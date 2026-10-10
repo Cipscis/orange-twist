@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { useCurrentDayTaskForTask, useTask } from 'database';
+import { useSettableStatusForTask, useTask } from 'database';
 import { TaskStatusPickerLoader } from './TaskStatusPickerLoader';
 
 export interface TaskStatusPickerProps {
@@ -16,10 +16,10 @@ export function TaskStatusPicker(props: TaskStatusPickerProps): JSX.Element {
 	} = props;
 
 	const taskDataState = useTask(taskId);
-	const currentDayTaskDataState = useCurrentDayTaskForTask(taskId);
+	const taskStatusDataState = useSettableStatusForTask(taskId);
 
 	return <TaskStatusPickerLoader
 		taskDataState={taskDataState}
-		currentDayTaskDataState={currentDayTaskDataState}
+		taskStatusDataState={taskStatusDataState}
 	/>;
 }

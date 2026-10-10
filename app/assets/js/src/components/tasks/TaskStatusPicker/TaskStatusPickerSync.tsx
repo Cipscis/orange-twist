@@ -11,6 +11,7 @@ import { Command } from 'types/Command';
 export interface TaskStatusPickerSyncProps {
 	task: Task;
 	status: number;
+	setStatus: (status: number) => Promise<void>;
 }
 
 /**
@@ -20,16 +21,8 @@ export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Elem
 	const {
 		task,
 		status,
+		setStatus,
 	} = props;
-
-	const setTaskStatus = useCallback((status: number) => {
-		// TODO: This should use a `setDayTaskStatus` prop so it can use optimistic data, which will require a `useSettableCurrentDayTaskForTask` hook
-		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.TASK_STATUS,
-			id: task.id,
-			status,
-		}]);
-	}, [task.id]);
 
 	/**
 	 * Ask for confirmation, then remove this task.
@@ -48,7 +41,7 @@ export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Elem
 	return <StatusPicker
 		status={status}
 
-		onStatusSelect={setTaskStatus}
+		onStatusSelect={setStatus}
 		deleteButtonTitle="Delete task"
 		onDelete={deleteTask}
 	/>;

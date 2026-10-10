@@ -3,9 +3,8 @@ import { h, type JSX } from 'preact';
 import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import type {
-	DayTask,
 	Task,
-	useSettableTask,
+	useSettableStatusForTask,
 } from 'database';
 
 import {
@@ -17,7 +16,7 @@ import { TaskStatusPickerSync } from './TaskStatusPickerSync';
 
 export interface TaskStatusPickerLoaderProps {
 	taskDataState: AsyncDataState<Task>;
-	currentDayTaskDataState: AsyncDataState<DayTask>;
+	taskStatusDataState: ReturnType<typeof useSettableStatusForTask>;
 }
 
 /**
@@ -26,12 +25,12 @@ export interface TaskStatusPickerLoaderProps {
 export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.Element {
 	const {
 		taskDataState,
-		currentDayTaskDataState,
+		taskStatusDataState,
 	} = props;
 
 	if (
 		taskDataState.type === AsyncDataStateType.INITIAL ||
-		currentDayTaskDataState.type === AsyncDataStateType.INITIAL
+		taskStatusDataState.stateOfGet.type === AsyncDataStateType.INITIAL
 	) {
 		return <Loader />;
 	}
@@ -41,15 +40,16 @@ export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.
 			variant={NoticeVariant.ERROR}
 			message={taskDataState.error.message}
 		/>;
-	} else if (currentDayTaskDataState.type === AsyncDataStateType.ERROR) {
+	} else if (taskStatusDataState.stateOfGet.type === AsyncDataStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
-			message={currentDayTaskDataState.error.message}
+			message={taskStatusDataState.stateOfGet.error.message}
 		/>;
 	}
 
 	return <TaskStatusPickerSync
 		task={taskDataState.data}
-		status={currentDayTaskDataState.data.status}
+		status={taskStatusDataState.stateOfGet.data}
+		setStatus={taskStatusDataState.setData}
 	/>;
 }

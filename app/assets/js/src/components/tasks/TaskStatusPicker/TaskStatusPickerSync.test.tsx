@@ -60,6 +60,7 @@ describe('TaskStatusPickerSync', () => {
 				sortIndex: 1,
 			}}
 			status={3}
+			setStatus={async () => {}}
 		/>);
 
 		expect(await findByTitle('Completed (click to edit)')).toBeInTheDocument();
@@ -67,8 +68,7 @@ describe('TaskStatusPickerSync', () => {
 
 	test('edits a task\'s status directly', async () => {
 		const user = userEvent.setup();
-		const saveSpy = jest.fn();
-		addCommandListener(Command.DATA_SAVE, saveSpy);
+		const saveSpy = jest.fn(async (status: number) => {});
 
 		const { findByRole } = render(<TaskStatusPickerSync
 			task={{
@@ -78,6 +78,7 @@ describe('TaskStatusPickerSync', () => {
 				sortIndex: 1,
 			}}
 			status={2}
+			setStatus={saveSpy}
 		/>);
 
 		const editButton = await findByRole('button', {
@@ -95,14 +96,9 @@ describe('TaskStatusPickerSync', () => {
 		await user.click(completedStatusButton);
 		await waitFor(() => {
 			expect(saveSpy).toHaveBeenCalledTimes(1);
-			expect(saveSpy).toHaveBeenCalledWith([{
-				type: SaveType.TASK_STATUS,
-				id: 1,
-				status: 3,
-			}] satisfies SaveAction[]);
+			expect(saveSpy).toHaveBeenCalledWith(3);
 		});
 
-		removeCommandListener(Command.DATA_SAVE, saveSpy);
 	});
 
 	test('can remove a task entirely', async () => {
@@ -118,6 +114,7 @@ describe('TaskStatusPickerSync', () => {
 				sortIndex: 1,
 			}}
 			status={2}
+			setStatus={async () => {}}
 		/>);
 
 		const editButton = await findByRole('button', {
