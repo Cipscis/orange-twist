@@ -52,7 +52,7 @@ export function noticeChange(
 }
 
 /**
- * Adds a listener for a specified type of change against a particular item.
+ * Adds a listener for a specified type of change against a particular item or type of item.
  */
 export function addChangeListener(
 	eventType: ChangeType,
@@ -70,7 +70,7 @@ export function addChangeListener(
 }
 
 /**
- * Removes a listener for a specified type of change against a particular item.
+ * Removes a listener for a specified type of change against a particular item or type of item.
  */
 export function removeChangeListener(
 	eventType: ChangeType,
