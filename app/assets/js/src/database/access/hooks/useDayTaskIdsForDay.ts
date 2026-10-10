@@ -36,6 +36,7 @@ export function useDayTaskIdsForDay(dayId: number): AsyncDataState<readonly numb
 
 		if (asyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
 			for (const dayTaskId of asyncDataResult.state.data) {
+				// TODO: Limit refreshes to when the day task's sortIndex was updated
 				addChangeListener(
 					ChangeType.CHANGE,
 					{ type: ChangeEntityType.DAY_TASK, id: dayTaskId },
