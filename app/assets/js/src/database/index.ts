@@ -14,6 +14,7 @@ export {
 	useAllDayIds,
 
 	loadTask,
+	useTask,
 	useSettableTask,
 
 	loadDayTask,
@@ -27,6 +28,8 @@ export {
 
 	loadStatus,
 	useStatus,
+	loadStatusForTask,
+	useSettableStatusForTask,
 	loadAllStatuses,
 	useAllStatuses,
 } from './access';
