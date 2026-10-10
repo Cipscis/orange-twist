@@ -3,6 +3,7 @@ export { useSettableDay } from './useSettableDay';
 export { useCurrentDay } from './useCurrentDay';
 export { useAllDayIds } from './useAllDayIds';
 
+export { useTask } from './useTask';
 export { useSettableTask } from './useSettableTask';
 
 export { useDayTaskIdsForDay } from './useDayTaskIdsForDay';

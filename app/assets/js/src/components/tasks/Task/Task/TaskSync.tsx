@@ -6,7 +6,7 @@ import type { Task } from 'database';
 import { getTaskDetailUrl } from 'navigation';
 
 import { IconButton } from 'components/shared';
-import { TaskStatusPickerLegacy } from '../../TaskStatusPicker';
+import { TaskStatusPicker } from '../../TaskStatusPicker';
 import { SettableTaskNameSync } from '../../SettableTaskName';
 
 export interface TaskSyncProps {
@@ -24,7 +24,7 @@ export function TaskSync(props: TaskSyncProps): JSX.Element {
 	} = props;
 
 	return <div class="task">
-		<TaskStatusPickerLegacy
+		<TaskStatusPicker
 			taskId={task.id}
 		/>
 		<IconButton

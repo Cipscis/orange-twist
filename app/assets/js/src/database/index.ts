@@ -14,6 +14,7 @@ export {
 	useAllDayIds,
 
 	loadTask,
+	useTask,
 	useSettableTask,
 
 	loadDayTask,

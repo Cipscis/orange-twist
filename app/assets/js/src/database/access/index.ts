@@ -18,6 +18,7 @@ export {
 	useCurrentDay,
 	useAllDayIds,
 
+	useTask,
 	useSettableTask,
 
 	useDayTaskIdsForDay,
