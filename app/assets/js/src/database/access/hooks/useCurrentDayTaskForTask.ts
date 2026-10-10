@@ -52,7 +52,7 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask
 			// TODO: Limit refreshes to when the day task is for this task
 			addChangeListener(
 				ChangeType.ADD,
-				{ type: ChangeEntityType.DAY_TASK, id: -1 },
+				{ type: ChangeEntityType.DAY_TASK },
 				asyncDataResult.getData,
 				{ signal },
 			);

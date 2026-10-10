@@ -28,7 +28,7 @@ export function useAllDayIds(): AsyncDataState<readonly number[]> {
 
 		addChangeListener(
 			ChangeType.ADD,
-			{ type: ChangeEntityType.DAY, id: -1 },
+			{ type: ChangeEntityType.DAY },
 			daysAsyncDataResult.getData,
 			{ signal },
 		);

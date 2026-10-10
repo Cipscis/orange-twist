@@ -29,4 +29,16 @@ describe('liveAccessManager', () => {
 		noticeChange(ChangeType.CHANGE, { type: ChangeEntityType.TASK, id: 1 });
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
+
+	test('listens for changes for all items', () => {
+		const listener = jest.fn();
+
+		addChangeListener(ChangeType.ADD, { type: ChangeEntityType.TASK }, listener);
+
+		noticeChange(ChangeType.ADD, { type: ChangeEntityType.TASK, id: 1 });
+		expect(listener).toHaveBeenCalledTimes(1);
+
+		noticeChange(ChangeType.ADD, { type: ChangeEntityType.TASK, id: 2 });
+		expect(listener).toHaveBeenCalledTimes(2);
+	});
 });
