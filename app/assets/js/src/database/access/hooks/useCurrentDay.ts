@@ -10,7 +10,11 @@ import {
 } from 'utils';
 
 import type { Day } from '../../types';
-import { addChangeListener, ChangeType } from '../liveAccessManager';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+} from '../liveAccessManager';
 import { loadCurrentDay } from '../loadCurrentDay';
 
 /**
@@ -36,12 +40,16 @@ export function useCurrentDay(): AsyncDataState<Day> {
 		const controller = new AbortController();
 		const { signal } = controller;
 
+		// Don't need to watch for it being added, because this hook creates it
+
 		addChangeListener(
-			ChangeType.DAY,
-			currentDayId,
+			ChangeType.CHANGE,
+			{ type: ChangeEntityType.DAY, id: currentDayId },
 			asyncDataResult.getData,
 			{ signal }
 		);
+
+		// Don't need to watch for it being deleted, because the UI doesn't allow this
 
 		return () => controller.abort();
 	}, [currentDayId, asyncDataResult.getData]);

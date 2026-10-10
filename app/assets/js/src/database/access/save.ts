@@ -8,7 +8,6 @@ import {
 	addTaskInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
-	getDayTaskInternal,
 	removeDayInternal,
 	removeDayTaskInternal,
 	removeTaskInternal,
@@ -20,9 +19,9 @@ import {
 import { SaveType, type SaveAction } from './SaveAction';
 import { requestTransaction } from './requestTransaction';
 import {
+	ChangeEntityType,
 	ChangeType,
 	noticeChange,
-	noticeListChange,
 } from './liveAccessManager';
 
 /**
@@ -67,6 +66,18 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			assertAllUnionMembersHandled(action);
 		}
 	}
+
+	const {
+		promise,
+		resolve,
+		reject,
+	} = Promise.withResolvers<void>();
+
+	transaction.addEventListener('complete', () => resolve());
+	transaction.addEventListener('abort', () => reject(transaction.error));
+	transaction.addEventListener('error', () => reject(transaction.error));
+
+	return promise;
 }
 
 /**
@@ -93,7 +104,7 @@ async function saveTask(
 	}
 
 	await updateTaskInternal(transaction, taskToSave);
-	noticeChange(ChangeType.TASK, action.id);
+	noticeChange(ChangeType.CHANGE, { type: ChangeEntityType.TASK, id: action.id });
 }
 
 /**
@@ -177,8 +188,9 @@ async function addTask(
 ): Promise<number> {
 	const taskId = await addTaskInternal(transaction, action.task);
 
-	noticeListChange(ChangeType.TASK);
-	noticeChange(ChangeType.TASK, taskId);
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.ADD, { type: ChangeEntityType.TASK, id: taskId });
+	});
 
 	return taskId;
 }
@@ -215,13 +227,14 @@ async function deleteTask(
 	>,
 	transaction: IDBTransaction
 ): Promise<void> {
-	const deletedDayTaskDayIds = await removeTaskInternal(transaction, action.id);
+	const deletedDayTaskIds = await removeTaskInternal(transaction, action.id);
 
-	noticeListChange(ChangeType.TASK);
-	noticeChange(ChangeType.DAY_TASK_TASK, action.id);
-	for (const dayId of deletedDayTaskDayIds) {
-		noticeChange(ChangeType.DAY_TASK_DAY, dayId);
-	}
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.DELETE, { type: ChangeEntityType.TASK, id: action.id });
+		for (const dayTaskId of deletedDayTaskIds) {
+			noticeChange(ChangeType.DELETE, { type: ChangeEntityType.DAY_TASK, id: dayTaskId });
+		}
+	});
 }
 
 /**
@@ -234,8 +247,6 @@ async function saveDayTask(
 	transaction: IDBTransaction,
 ): Promise<void> {
 	// Protect against extraneous and undefined properties
-	const dayTask = await getDayTaskInternal(transaction, action.id);
-
 	const dayTaskToSave: Parameters<typeof updateDayTaskInternal>[1] = {
 		id: action.id,
 	};
@@ -253,11 +264,10 @@ async function saveDayTask(
 	}
 
 	await updateDayTaskInternal(transaction, dayTaskToSave);
-	if (dayTask) {
-		noticeChange(ChangeType.DAY_TASK_DAY, dayTask.day);
-		noticeChange(ChangeType.DAY_TASK_TASK, dayTask.task);
-	}
-	noticeChange(ChangeType.DAY_TASK, action.id);
+
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.CHANGE, { type: ChangeEntityType.DAY_TASK, id: action.id });
+	});
 }
 
 /**
@@ -303,10 +313,9 @@ async function addDayTask(
 ): Promise<number> {
 	const dayTaskId = await addDayTaskInternal(transaction, action.dayTask);
 
-	noticeListChange(ChangeType.DAY_TASK);
-	noticeChange(ChangeType.DAY_TASK_DAY, action.dayTask.day);
-	noticeChange(ChangeType.DAY_TASK_TASK, action.dayTask.task);
-	noticeChange(ChangeType.DAY_TASK, dayTaskId);
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.ADD, { type: ChangeEntityType.DAY_TASK, id: dayTaskId });
+	});
 
 	return dayTaskId;
 }
@@ -321,15 +330,11 @@ async function deleteDayTask(
 	>,
 	transaction: IDBTransaction
 ): Promise<void> {
-	const dayTask = await getDayTaskInternal(transaction, action.id);
-
 	await removeDayTaskInternal(transaction, action.id);
 
-	noticeListChange(ChangeType.DAY_TASK);
-	if (dayTask) {
-		noticeChange(ChangeType.DAY_TASK_DAY, dayTask.day);
-		noticeChange(ChangeType.DAY_TASK_TASK, dayTask.task);
-	}
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.DELETE, { type: ChangeEntityType.DAY_TASK, id: action.id });
+	});
 }
 
 /**
@@ -350,7 +355,10 @@ async function saveDay(
 	}
 
 	await updateDayInternal(transaction, dayToSave);
-	noticeChange(ChangeType.DAY, action.id);
+
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.CHANGE, { type: ChangeEntityType.DAY, id: action.id });
+	});
 }
 
 /**
@@ -364,8 +372,9 @@ async function addDay(
 ): Promise<number> {
 	const dayId = await addDayInternal(transaction, action.day);
 
-	noticeListChange(ChangeType.DAY);
-	noticeChange(ChangeType.DAY, dayId);
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.ADD, { type: ChangeEntityType.DAY, id: dayId });
+	});
 
 	return dayId;
 }
@@ -379,13 +388,14 @@ async function deleteDay(
 	>,
 	transaction: IDBTransaction,
 ): Promise<void> {
-	const deletedDayTaskTaskIds = await removeDayInternal(transaction, action.id);
+	const deletedDayTaskIds = await removeDayInternal(transaction, action.id);
 
-	noticeListChange(ChangeType.DAY);
-	noticeChange(ChangeType.DAY_TASK_DAY, action.id);
-	for (const taskId of deletedDayTaskTaskIds) {
-		noticeChange(ChangeType.DAY_TASK_TASK, taskId);
-	}
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.DELETE, { type: ChangeEntityType.DAY, id: action.id });
+		for (const dayTaskId of deletedDayTaskIds) {
+			noticeChange(ChangeType.DELETE, { type: ChangeEntityType.DAY_TASK, id: dayTaskId });
+		}
+	});
 }
 
 /**

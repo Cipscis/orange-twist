@@ -9,7 +9,7 @@ import { IndexName, ObjectStoreName } from '../metadata';
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.TASK} and {@linkcode ObjectStoreName.DAY_TASK} object stores.
  * @param id The ID of the task to delete.
  *
- * @returns A {@linkcode Promise} that resolves to a list of removed day tasks' days' IDs, once the task and all its linked day tasks have been removed.
+ * @returns A {@linkcode Promise} that resolves to a list of removed day tasks' IDs, once the task and all its linked day tasks have been removed.
  */
 export async function removeTaskInternal(
 	transaction: IDBTransaction,
@@ -34,12 +34,12 @@ export async function removeTaskInternal(
 	// Remove day tasks
 	const dayTaskByTask = dayTaskOS.index(IndexName.DAY_TASK_TASK);
 	const dayTaskIterableCursor = getIterableCursor(dayTaskByTask, id);
-	const deletedDayTaskDayIds: number[] = [];
+	const deletedDayTaskIds: number[] = [];
 
 	for await (const cursor of dayTaskIterableCursor) {
 		// This type assertion is save because we're iterating through an index on the day task object store
 		const dayTask = cursor.value as DayTask;
-		deletedDayTaskDayIds.push(dayTask.day);
+		deletedDayTaskIds.push(dayTask.id);
 		requests.push(cursor.delete());
 	}
 
@@ -48,5 +48,5 @@ export async function removeTaskInternal(
 	const lastRequest = requests.at(-1)!;
 	await getIdbRequestPromise(lastRequest);
 
-	return deletedDayTaskDayIds;
+	return deletedDayTaskIds;
 }

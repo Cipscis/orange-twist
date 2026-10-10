@@ -12,7 +12,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -55,7 +55,7 @@ describe('useCurrentDay', () => {
 		expect(result.current).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<Day>);
 	});
 
 	test('when current day exists, fetches it on initial render', async () => {
@@ -73,8 +73,8 @@ describe('useCurrentDay', () => {
 					month: 9,
 					day: 29,
 					note: 'Test day note',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 
@@ -87,8 +87,6 @@ describe('useCurrentDay', () => {
 			() => useCurrentDay()
 		);
 
-		jest.advanceTimersByTime(0);
-
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
@@ -99,8 +97,8 @@ describe('useCurrentDay', () => {
 					month: 9,
 					day: 30,
 					note: '',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 
@@ -108,8 +106,6 @@ describe('useCurrentDay', () => {
 		const { result } = renderHook(
 			() => useCurrentDay()
 		);
-
-		jest.advanceTimersByTime(0);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
@@ -121,8 +117,8 @@ describe('useCurrentDay', () => {
 					month: 9,
 					day: 29,
 					note: 'Test day note',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 
 		save([{
@@ -132,8 +128,6 @@ describe('useCurrentDay', () => {
 				note: 'Updated day note',
 			},
 		}]);
-
-		jest.advanceTimersByTime(0);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
@@ -145,8 +139,8 @@ describe('useCurrentDay', () => {
 					month: 9,
 					day: 29,
 					note: 'Updated day note',
-				} satisfies Day,
-			});
+				},
+			} satisfies AsyncDataState<Day>);
 		});
 	});
 });

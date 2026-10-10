@@ -18,58 +18,56 @@ import { insertTestData } from '../../test-utils';
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
 
-import { useAllDayIds } from './useAllDayIds';
+import { useDayTaskIdsForDay } from './useDayTaskIdsForDay';
 
-describe('useAllDayIds', () => {
+describe('useDayTaskIdsForDay', () => {
 	beforeEach(async () => insertTestData());
 	afterEach(() => cleanup());
 
 	test('provide an AsyncDataResult', () => {
 		const { result } = renderHook(
-			() => useAllDayIds()
+			() => useDayTaskIdsForDay(1)
 		);
 
 		expect(result.current).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<number[]>);
+		} satisfies AsyncDataState<readonly number[]>);
 	});
 
 	test('fetches data on initial render', async () => {
 		const { result } = renderHook(
-			() => useAllDayIds()
+			() => useDayTaskIdsForDay(1)
 		);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
-				data: [3, 1, 2],
-			} satisfies AsyncDataState<number[]>);
+				data: [2, 1],
+			} satisfies AsyncDataState<readonly number[]>);
 		});
 	});
 
 	describe('re-fetches data if it changes', () => {
-		test('when adding a day', async () => {
+		test('when adding a day task', async () => {
 			const { result } = renderHook(
-				() => useAllDayIds()
+				() => useDayTaskIdsForDay(1)
 			);
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [3, 1, 2],
-				} satisfies AsyncDataState<number[]>);
+					data: [2, 1],
+				} satisfies AsyncDataState<readonly number[]>);
 			});
 
 			save([{
-				type: SaveType.DAY_ADD,
-				day: {
-					year: 2026,
-					month: 9,
-					day: 29,
-					note: 'New day',
+				type: SaveType.DAY_TASK_ADD,
+				dayTask: {
+					day: 1,
+					task: 3,
 				},
 			}]);
 
@@ -77,25 +75,54 @@ describe('useAllDayIds', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [3, 1, 2, 4],
-				} satisfies AsyncDataState<number[]>);
+					data: [3, 2, 1],
+				} satisfies AsyncDataState<readonly number[]>);
 			});
 		});
-		test('when deleting a day', async () => {
+		test('when updating a day task sort index', async () => {
 			const { result } = renderHook(
-				() => useAllDayIds()
+				() => useDayTaskIdsForDay(1)
 			);
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [3, 1, 2],
-				} satisfies AsyncDataState<number[]>);
+					data: [2, 1],
+				} satisfies AsyncDataState<readonly number[]>);
 			});
 
 			save([{
-				type: SaveType.DAY_DELETE,
+				type: SaveType.DAY_TASK,
+				id: 1,
+				dayTask: {
+					sortIndex: -1,
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [1, 2],
+				} satisfies AsyncDataState<readonly number[]>);
+			});
+		});
+		test('when deleting a day task', async () => {
+			const { result } = renderHook(
+				() => useDayTaskIdsForDay(1)
+			);
+
+			await waitFor(() => {
+				expect(result.current).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [2, 1],
+				} satisfies AsyncDataState<readonly number[]>);
+			});
+
+			save([{
+				type: SaveType.DAY_TASK_DELETE,
 				id: 1,
 			}]);
 
@@ -103,8 +130,8 @@ describe('useAllDayIds', () => {
 				expect(result.current).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
-					data: [3, 2],
-				} satisfies AsyncDataState<number[]>);
+					data: [2],
+				} satisfies AsyncDataState<readonly number[]>);
 			});
 		});
 	});

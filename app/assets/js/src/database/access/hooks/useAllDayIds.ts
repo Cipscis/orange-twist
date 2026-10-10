@@ -1,8 +1,4 @@
-import {
-	useEffect,
-	useMemo,
-	useRef,
-} from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 
 import {
 	AsyncDataStateType,
@@ -10,7 +6,11 @@ import {
 	type AsyncDataState,
 } from 'utils';
 
-import { addListChangeListener, ChangeType } from '../liveAccessManager';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+} from '../liveAccessManager';
 import { loadAllDays } from '../loadAllDays';
 
 /**
@@ -26,14 +26,26 @@ export function useAllDayIds(): AsyncDataState<readonly number[]> {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		addListChangeListener(
-			ChangeType.DAY,
+		addChangeListener(
+			ChangeType.ADD,
+			{ type: ChangeEntityType.DAY },
 			daysAsyncDataResult.getData,
 			{ signal },
 		);
 
+		if (daysAsyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
+			for (const day of daysAsyncDataResult.state.data) {
+				addChangeListener(
+					ChangeType.DELETE,
+					{ type: ChangeEntityType.DAY, id: day.id },
+					daysAsyncDataResult.getData,
+					{ signal },
+				);
+			}
+		}
+
 		return () => controller.abort();
-	}, [daysAsyncDataResult.getData]);
+	}, [daysAsyncDataResult]);
 
 	const asyncDataResult: AsyncDataState<readonly number[]> = useMemo(() => {
 		if (daysAsyncDataResult.state.type !== AsyncDataStateType.SUCCESS) {
@@ -46,11 +58,5 @@ export function useAllDayIds(): AsyncDataState<readonly number[]> {
 		};
 	}, [daysAsyncDataResult]);
 
-	// Don't re-enter loading state on re-requesting data
-	const asyncDataResultStateRef = useRef(asyncDataResult);
-	if (!asyncDataResult.loading) {
-		asyncDataResultStateRef.current = asyncDataResult;
-	}
-
-	return asyncDataResultStateRef.current;
+	return asyncDataResult;
 }

@@ -30,5 +30,7 @@ export function useAllStatuses(): AsyncDataState<readonly Status[]> {
 		statuses = asyncDataResult.state.data;
 	}
 
+	// No need to re-fetch status data, because it never changes
+
 	return asyncDataResult.state;
 }

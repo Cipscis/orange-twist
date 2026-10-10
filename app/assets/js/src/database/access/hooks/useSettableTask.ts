@@ -4,6 +4,7 @@ import {
 } from 'preact/hooks';
 
 import {
+	AsyncDataStateType,
 	useSettableAsyncData,
 	type AsyncDataState,
 	type ExpandType,
@@ -16,7 +17,12 @@ import { Command } from 'types/Command';
 import type { Task } from '../../types';
 
 import { loadTask } from '../loadTask';
-import { addChangeListener, ChangeType } from '../liveAccessManager';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+	type ChangeEntity,
+} from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
 
 /**
@@ -59,15 +65,36 @@ export function useSettableTask(taskId: number): ExpandType<
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		addChangeListener(
-			ChangeType.TASK,
-			taskId,
-			asyncDataResult.getData,
-			{ signal },
-		);
+		const changeEntity: ChangeEntity = {
+			type: ChangeEntityType.TASK,
+			id: taskId,
+		};
+
+		if (asyncDataResult.stateOfGet.type === AsyncDataStateType.ERROR) {
+			addChangeListener(
+				ChangeType.ADD,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+		} else if (asyncDataResult.stateOfGet.type === AsyncDataStateType.SUCCESS) {
+			addChangeListener(
+				ChangeType.CHANGE,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+
+			addChangeListener(
+				ChangeType.DELETE,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+		}
 
 		return () => controller.abort();
-	}, [taskId, asyncDataResult.getData]);
+	}, [taskId, asyncDataResult]);
 
 	return asyncDataResult;
 }

@@ -85,9 +85,9 @@ describe('removeTaskInternal', () => {
 		] satisfies DayTask[]);
 	});
 
-	test('provides a list of all removed day tasks\' days by ID', async () => {
+	test('provides a list of all removed day tasks by ID', async () => {
 		const removedDayTaskIds = await removeTaskInternal(transaction, 1);
 
-		expect(removedDayTaskIds).toEqual([1, 2]);
+		expect(removedDayTaskIds).toEqual([1, 3]);
 	});
 });

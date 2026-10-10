@@ -13,7 +13,7 @@ import { DayTaskDetailListSync } from './DayTaskDetailListSync';
 
 export interface DayTaskDetailListLoaderProps {
 	dayTaskIdsDataState: AsyncDataState<readonly number[]>;
-	currentDayTaskDataState: AsyncDataState<DayTask | null>;
+	currentDayTaskDataState: AsyncDataState<DayTask>;
 }
 
 /**
@@ -37,15 +37,14 @@ export function DayTaskDetailListLoader(props: DayTaskDetailListLoaderProps): JS
 			variant={NoticeVariant.ERROR}
 			message={dayTaskIdsDataState.error.message}
 		/>;
-	} else if (currentDayTaskDataState.type === AsyncDataStateType.ERROR) {
-		return <Notice
-			variant={NoticeVariant.ERROR}
-			message={currentDayTaskDataState.error.message}
-		/>;
 	}
+
+	const currentDayTaskId = currentDayTaskDataState.type === AsyncDataStateType.SUCCESS
+		? currentDayTaskDataState.data.id
+		: undefined;
 
 	return <DayTaskDetailListSync
 		dayTaskIds={dayTaskIdsDataState.data}
-		currentDayTaskId={currentDayTaskDataState.data?.id}
+		currentDayTaskId={currentDayTaskId}
 	/>;
 }

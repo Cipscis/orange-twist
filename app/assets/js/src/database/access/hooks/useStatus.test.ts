@@ -30,7 +30,7 @@ describe('useStatus', () => {
 		expect(result.current).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<Status>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -49,8 +49,8 @@ describe('useStatus', () => {
 					colour: 'var(--blue)',
 					icon: 'todo',
 					completed: false,
-				} satisfies Status,
-			});
+				},
+			} satisfies AsyncDataState<Status>);
 		});
 	});
 
@@ -71,8 +71,8 @@ describe('useStatus', () => {
 					colour: 'var(--blue)',
 					icon: 'todo',
 					completed: false,
-				} satisfies Status,
-			});
+				},
+			} satisfies AsyncDataState<Status>);
 		});
 
 		rerender(2);
@@ -88,8 +88,8 @@ describe('useStatus', () => {
 					colour: 'var(--blue)',
 					icon: 'in progress',
 					completed: false,
-				} satisfies Status,
-			});
+				},
+			} satisfies AsyncDataState<Status>);
 		});
 
 		await waitFor(() => {
@@ -103,8 +103,8 @@ describe('useStatus', () => {
 					colour: 'var(--blue)',
 					icon: 'in progress',
 					completed: false,
-				} satisfies Status,
-			});
+				},
+			} satisfies AsyncDataState<Status>);
 		});
 	});
 

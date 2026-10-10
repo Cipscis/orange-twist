@@ -33,7 +33,7 @@ describe('useSettableTask', () => {
 		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-		});
+		} satisfies AsyncDataState<Task>);
 		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
@@ -54,49 +54,117 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 	});
 
-	test('re-fetches data if it changes', async () => {
-		const { result } = renderHook(
-			() => useSettableTask(1)
-		);
+	describe('re-fetches data if it changes', () => {
+		test('when the task changes', async () => {
+			const { result } = renderHook(
+				() => useSettableTask(1)
+			);
 
-		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
-					name: 'Test task 1',
-					note: 'Test task 1 note',
-					sortIndex: 1,
-				} satisfies Task,
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						name: 'Test task 1',
+						note: 'Test task 1 note',
+						sortIndex: 1,
+					},
+				} satisfies AsyncDataState<Task>);
 			});
-		});
 
-		save([{
-			type: SaveType.TASK,
-			id: 1,
-			task: {
-				name: 'Test task 1 updated',
-				note: 'Test task 1 note updated',
-				sortIndex: 2,
-			},
-		}]);
-
-		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
-				data: {
-					id: 1,
+			save([{
+				type: SaveType.TASK,
+				id: 1,
+				task: {
 					name: 'Test task 1 updated',
 					note: 'Test task 1 note updated',
 					sortIndex: 2,
-				} satisfies Task,
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						name: 'Test task 1 updated',
+						note: 'Test task 1 note updated',
+						sortIndex: 2,
+					},
+				} satisfies AsyncDataState<Task>);
+			});
+		});
+
+		test('when the task is removed', async () => {
+			const { result } = renderHook(
+				() => useSettableTask(1)
+			);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 1,
+						name: 'Test task 1',
+						note: 'Test task 1 note',
+						sortIndex: 1,
+					},
+				} satisfies AsyncDataState<Task>);
+			});
+
+			save([{
+				type: SaveType.TASK_DELETE,
+				id: 1,
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.ERROR,
+					loading: false,
+					error: new Error('Could not find task with ID 1'),
+				} satisfies AsyncDataState<Task>);
+			});
+		});
+
+		test('when the task is created', async () => {
+			const { result } = renderHook(
+				() => useSettableTask(4)
+			);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.ERROR,
+					loading: false,
+					error: new Error('Could not find day task with ID 3'),
+				} satisfies AsyncDataState<Task>);
+			});
+
+			save([{
+				type: SaveType.TASK_ADD,
+				task: {
+					name: 'New task',
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.stateOfGet).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: {
+						id: 4,
+						name: 'New task',
+						note: '',
+						sortIndex: -4,
+					},
+				} satisfies AsyncDataState<Task>);
 			});
 		});
 	});
@@ -116,8 +184,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 
 		rerender(2);
@@ -131,8 +199,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 
 		await waitFor(() => {
@@ -144,8 +212,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 2',
 					note: 'Test task 2 note',
 					sortIndex: 2,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 	});
 
@@ -164,8 +232,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 
 		result.current.setData({ note: 'Test task 1 note updated' });
@@ -175,7 +243,6 @@ describe('useSettableTask', () => {
 		expect(result.current.stateOfSet).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
-			// loading: false,
 		});
 		expect(result.current.stateOfGet).toEqual({
 			type: AsyncDataStateType.SUCCESS,
@@ -185,8 +252,8 @@ describe('useSettableTask', () => {
 				name: 'Test task 1',
 				note: 'Test task 1 note updated',
 				sortIndex: 1,
-			} satisfies Task,
-		});
+			},
+		} satisfies AsyncDataState<Task>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
@@ -202,8 +269,8 @@ describe('useSettableTask', () => {
 					name: 'Test task 1',
 					note: 'Test task 1 note updated',
 					sortIndex: 1,
-				} satisfies Task,
-			});
+				},
+			} satisfies AsyncDataState<Task>);
 		});
 	});
 

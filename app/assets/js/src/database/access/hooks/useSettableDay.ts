@@ -4,6 +4,7 @@ import {
 } from 'preact/hooks';
 
 import {
+	AsyncDataStateType,
 	useSettableAsyncData,
 	type AsyncDataState,
 	type ExpandType,
@@ -16,7 +17,12 @@ import { Command } from 'types/Command';
 import type { Day } from '../../types';
 
 import { loadDay } from '../loadDay';
-import { addChangeListener, ChangeType } from '../liveAccessManager';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+	type ChangeEntity,
+} from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
 
 /**
@@ -24,28 +30,28 @@ import { SaveType } from '../SaveAction';
  *
  * @see {@linkcode useSettableAsyncData}
  */
-export function useSettableDay(taskId: number): ExpandType<
+export function useSettableDay(dayId: number): ExpandType<
 	Omit<SettableAsyncDataResult<Day>, 'getData'>
 > {
 	const getDay = useCallback(async () => {
-		const day = await loadDay(taskId);
+		const day = await loadDay(dayId);
 
 		if (day === null) {
-			throw new Error(`Could not find day task with ID ${taskId}`);
+			throw new Error(`Could not find day with ID ${dayId}`);
 		}
 
 		return day;
-	}, [taskId]);
+	}, [dayId]);
 
 	const setDay = useCallback(async (day: Partial<
 		Omit<Day, 'id'>
 	>) => {
 		await fireCommand(Command.DATA_SAVE, [{
 			type: SaveType.DAY,
-			id: taskId,
+			id: dayId,
 			day,
 		}]);
-	}, [taskId]);
+	}, [dayId]);
 
 	const asyncDataResult = useSettableAsyncData({
 		getData: getDay,
@@ -59,15 +65,36 @@ export function useSettableDay(taskId: number): ExpandType<
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		addChangeListener(
-			ChangeType.DAY,
-			taskId,
-			asyncDataResult.getData,
-			{ signal },
-		);
+		const changeEntity: ChangeEntity = {
+			type: ChangeEntityType.DAY,
+			id: dayId,
+		};
+
+		if (asyncDataResult.stateOfGet.type === AsyncDataStateType.ERROR) {
+			addChangeListener(
+				ChangeType.ADD,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+		} else if (asyncDataResult.stateOfGet.type === AsyncDataStateType.SUCCESS) {
+			addChangeListener(
+				ChangeType.CHANGE,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+
+			addChangeListener(
+				ChangeType.DELETE,
+				changeEntity,
+				asyncDataResult.getData,
+				{ signal },
+			);
+		}
 
 		return () => controller.abort();
-	}, [taskId, asyncDataResult.getData]);
+	}, [dayId, asyncDataResult]);
 
 	return asyncDataResult;
 }

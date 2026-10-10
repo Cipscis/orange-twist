@@ -1,9 +1,17 @@
 import { useCallback, useEffect } from 'preact/hooks';
 
-import { useAsyncData, type AsyncDataState } from 'utils';
+import {
+	AsyncDataStateType,
+	useAsyncData,
+	type AsyncDataState,
+} from 'utils';
 
 import { loadDayTaskIdsForTask } from '../loadDayTaskIdsForTask';
-import { addChangeListener, ChangeType } from '../liveAccessManager';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+} from '../liveAccessManager';
 
 /**
  * Attempts to load a list of all day task IDs for a given task. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
@@ -18,15 +26,34 @@ export function useDayTaskIdsForTask(taskId: number): AsyncDataState<readonly nu
 		const controller = new AbortController();
 		const { signal } = controller;
 
+		// TODO: Limit refreshes to when the day task is for this task
 		addChangeListener(
-			ChangeType.DAY_TASK_TASK,
-			taskId,
+			ChangeType.ADD,
+			{ type: ChangeEntityType.DAY_TASK },
 			asyncDataResult.getData,
 			{ signal },
 		);
 
+		if (asyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
+			for (const dayTaskId of asyncDataResult.state.data) {
+				addChangeListener(
+					ChangeType.CHANGE,
+					{ type: ChangeEntityType.DAY_TASK, id: dayTaskId },
+					asyncDataResult.getData,
+					{ signal },
+				);
+
+				addChangeListener(
+					ChangeType.DELETE,
+					{ type: ChangeEntityType.DAY_TASK, id: dayTaskId },
+					asyncDataResult.getData,
+					{ signal },
+				);
+			}
+		}
+
 		return () => controller.abort();
-	}, [taskId, asyncDataResult.getData]);
+	}, [asyncDataResult]);
 
 	return asyncDataResult.state;
 }
