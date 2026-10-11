@@ -1,1 +1,1 @@
-export { TaskStatusPickerLegacy } from './TaskStatusPickerLegacy';
+export { TaskStatusPicker } from './TaskStatusPicker';

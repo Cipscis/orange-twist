@@ -100,10 +100,15 @@ export function useSettableAsyncData<T>(
 			const baseData = optimisticDataRef.current ?? (stateOfGet.type === 'success' ? stateOfGet.data : null);
 
 			if (baseData !== null) {
-				optimisticDataRef.current = {
-					...baseData,
-					...data,
-				};
+				if (typeof baseData === 'object') {
+					optimisticDataRef.current = {
+						...baseData,
+						...data,
+					};
+				} else {
+					// When T is a primitive, don't worry about combining
+					optimisticDataRef.current = data as T;
+				}
 			}
 		}
 
