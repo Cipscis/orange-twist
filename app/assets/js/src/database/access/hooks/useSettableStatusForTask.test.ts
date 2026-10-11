@@ -108,7 +108,7 @@ describe('useSettableStatusForTask', () => {
 			});
 
 			save([{
-				type: SaveType.DAY_DELETE,
+				type: SaveType.DAY_TASK_DELETE,
 				id: 1,
 			}]);
 
