@@ -1,7 +1,6 @@
 import { h } from 'preact';
 
 import {
-	afterAll,
 	afterEach,
 	beforeAll,
 	beforeEach,
@@ -19,7 +18,6 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { configMocks, mockAnimationsApi } from 'jsdom-testing-mocks';
 
 import {
 	addCommandListener,
@@ -35,12 +33,6 @@ import {
 } from 'database';
 
 import { TaskStatusPickerSync } from './TaskStatusPickerSync';
-
-configMocks({
-	afterEach,
-	afterAll,
-});
-mockAnimationsApi();
 
 describe('TaskStatusPickerSync', () => {
 	beforeAll(() => {
