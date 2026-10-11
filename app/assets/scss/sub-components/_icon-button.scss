@@ -26,9 +26,7 @@ $icon-button__size: 2em;
 		aspect-ratio: 1 / 1;
 		border-radius: radius.$md-rel;
 
-		transition:
-			background-color animation.$speed-fast animation.$easing-default,
-			color animation.$speed-fast animation.$easing-default;
+		transition: background-color animation.$speed-fast animation.$easing-default;
 	}
 }
 
