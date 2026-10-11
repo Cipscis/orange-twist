@@ -1,7 +1,7 @@
 import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import { SaveType, type Task } from 'database';
+import { SaveType } from 'database';
 
 import { StatusPicker } from 'components/shared';
 import * as ui from 'ui';
@@ -9,7 +9,7 @@ import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
 export interface TaskStatusPickerSyncProps {
-	task: Task;
+	taskId: number;
 	status: number;
 	setStatus: (status: number) => Promise<void>;
 }
@@ -19,7 +19,7 @@ export interface TaskStatusPickerSyncProps {
  */
 export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Element {
 	const {
-		task,
+		taskId,
 		status,
 		setStatus,
 	} = props;
@@ -34,9 +34,9 @@ export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Elem
 
 		fireCommand(Command.DATA_SAVE, [{
 			type: SaveType.TASK_DELETE,
-			id: task.id,
+			id: taskId,
 		}]);
-	}, [task]);
+	}, [taskId]);
 
 	return <StatusPicker
 		status={status}

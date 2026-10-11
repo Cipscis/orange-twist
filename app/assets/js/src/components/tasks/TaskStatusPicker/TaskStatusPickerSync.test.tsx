@@ -45,12 +45,7 @@ describe('TaskStatusPickerSync', () => {
 
 	test('renders its task\'s status', async () => {
 		const { findByTitle } = render(<TaskStatusPickerSync
-			task={{
-				id: 1,
-				name: 'Test task',
-				note: '',
-				sortIndex: 1,
-			}}
+			taskId={1}
 			status={3}
 			setStatus={async () => {}}
 		/>);
@@ -63,12 +58,7 @@ describe('TaskStatusPickerSync', () => {
 		const saveSpy = jest.fn(async (status: number) => {});
 
 		const { findByRole } = render(<TaskStatusPickerSync
-			task={{
-				id: 1,
-				name: 'Test task',
-				note: '',
-				sortIndex: 1,
-			}}
+			taskId={1}
 			status={2}
 			setStatus={saveSpy}
 		/>);
@@ -99,12 +89,7 @@ describe('TaskStatusPickerSync', () => {
 		addCommandListener(Command.DATA_SAVE, saveSpy);
 
 		const { findByRole } = render(<TaskStatusPickerSync
-			task={{
-				id: 1,
-				name: 'Test task',
-				note: '',
-				sortIndex: 1,
-			}}
+			taskId={1}
 			status={2}
 			setStatus={async () => {}}
 		/>);
