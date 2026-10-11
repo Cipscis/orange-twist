@@ -8,7 +8,7 @@ export interface TaskStatusPickerProps {
 }
 
 /**
- * Asynchronously retrieves information about a day task and passes it on to render a status picker for that day task once loaded.
+ * Asynchronously retrieves information about a task and passes it on to render a status picker for that task once loaded.
  */
 export function TaskStatusPicker(props: TaskStatusPickerProps): JSX.Element {
 	const {

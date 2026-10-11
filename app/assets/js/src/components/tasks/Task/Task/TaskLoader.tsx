@@ -16,7 +16,7 @@ export interface TaskLoaderProps {
 }
 
 /**
- * Handles the loading, error, and success states for asynchronously retrieving day task information. If day task information is loaded, uses it to render that day task.
+ * Handles the loading, error, and success states for asynchronously retrieving task information. If task information is loaded, uses it to render that task.
  */
 export function TaskLoader(props: TaskLoaderProps): JSX.Element {
 	const {

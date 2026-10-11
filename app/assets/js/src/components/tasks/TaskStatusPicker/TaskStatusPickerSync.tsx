@@ -15,7 +15,7 @@ export interface TaskStatusPickerSyncProps {
 }
 
 /**
- * Renders a status picker for a day task.
+ * Renders a status picker for a task.
  */
 export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Element {
 	const {

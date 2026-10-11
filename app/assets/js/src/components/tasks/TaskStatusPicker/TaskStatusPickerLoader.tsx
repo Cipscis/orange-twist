@@ -20,7 +20,7 @@ export interface TaskStatusPickerLoaderProps {
 }
 
 /**
- * Handles the loading, error, and success states for asynchronously retrieving day task information. If day task information is loaded, uses it to render a status picker for that day task.
+ * Handles the loading, error, and success states for asynchronously retrieving task information. If task information is loaded, uses it to render a status picker for that task.
  */
 export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.Element {
 	const {

@@ -15,7 +15,7 @@ export interface TaskSyncProps {
 }
 
 /**
- * Renders a brief view of a task. Allows its status to be changed, and its task's name to be updated. Also renders a link to the task's detail view.
+ * Renders a brief view of a task. Allows its status to be changed, and its name to be updated. Also renders a link to the task's detail view.
  */
 export function TaskSync(props: TaskSyncProps): JSX.Element {
 	const {
