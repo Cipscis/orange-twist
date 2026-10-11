@@ -15,8 +15,9 @@ import {
 import { TaskStatusPickerSync } from './TaskStatusPickerSync';
 
 export interface TaskStatusPickerLoaderProps {
-	taskDataState: AsyncDataState<Pick<Task, 'id'>>;
+	taskDataState: AsyncDataState<Task>;
 	taskStatusDataState: ReturnType<typeof useSettableStatusForTask>;
+	deleteTask: () => Promise<void>;
 }
 
 /**
@@ -26,6 +27,7 @@ export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.
 	const {
 		taskDataState,
 		taskStatusDataState,
+		deleteTask,
 	} = props;
 
 	if (
@@ -48,8 +50,8 @@ export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.
 	}
 
 	return <TaskStatusPickerSync
-		taskId={taskDataState.data.id}
 		status={taskStatusDataState.stateOfGet.data}
 		setStatus={taskStatusDataState.setData}
+		deleteTask={deleteTask}
 	/>;
 }

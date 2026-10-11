@@ -1,17 +1,11 @@
 import { h, type JSX } from 'preact';
-import { useCallback } from 'preact/hooks';
-
-import { SaveType } from 'database';
 
 import { StatusPicker } from 'components/shared';
-import * as ui from 'ui';
-import { fireCommand } from 'registers/commands';
-import { Command } from 'types/Command';
 
 export interface TaskStatusPickerSyncProps {
-	taskId: number;
 	status: number;
 	setStatus: (status: number) => Promise<void>;
+	deleteTask: () => Promise<void>;
 }
 
 /**
@@ -19,24 +13,10 @@ export interface TaskStatusPickerSyncProps {
  */
 export function TaskStatusPickerSync(props: TaskStatusPickerSyncProps): JSX.Element {
 	const {
-		taskId,
 		status,
 		setStatus,
+		deleteTask,
 	} = props;
-
-	/**
-	 * Ask for confirmation, then remove this task.
-	 */
-	const deleteTask = useCallback(async () => {
-		if (!await ui.confirm(`Are you sure you want to delete this task?`)) {
-			return;
-		}
-
-		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.TASK_DELETE,
-			id: taskId,
-		}]);
-	}, [taskId]);
 
 	return <StatusPicker
 		status={status}
