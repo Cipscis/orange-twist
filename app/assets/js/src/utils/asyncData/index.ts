@@ -1,3 +1,5 @@
+export { extractError } from './extractError';
+
 export { AsyncDataStateType } from './AsyncDataStateType';
 export type { AsyncDataState } from './AsyncDataState';
 

@@ -1,6 +1,14 @@
 export { save } from './save';
 export { SaveType, type SaveAction } from './SaveAction';
 
+export {
+	type ChangeEntity,
+	ChangeEntityType,
+	ChangeType,
+} from './liveAccessManager';
+
+export { ObservableEntity } from './ObservableEntity';
+
 export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';
 export { loadCurrentDay } from './loadCurrentDay';

@@ -36,6 +36,8 @@ export { startAnimationLoop } from './startAnimationLoop';
 export { strMatch, type StrMatchOptions } from './strMatch';
 export { tryStartViewTransition } from './tryStartViewTransition';
 export {
+	extractError,
+
 	AsyncDataStateType,
 	type AsyncDataState,
 
