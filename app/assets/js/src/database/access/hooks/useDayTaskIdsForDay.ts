@@ -30,7 +30,7 @@ export function useDayTaskIdsForDay(dayId: number): AsyncDataState<readonly numb
 		addChangeListener(
 			ChangeType.ADD,
 			{ type: ChangeEntityType.DAY_TASK },
-			asyncDataResult.getData,
+			() => asyncDataResult.getData(),
 			{ signal },
 		);
 
@@ -40,14 +40,14 @@ export function useDayTaskIdsForDay(dayId: number): AsyncDataState<readonly numb
 				addChangeListener(
 					ChangeType.CHANGE,
 					{ type: ChangeEntityType.DAY_TASK, id: dayTaskId },
-					asyncDataResult.getData,
+					() => asyncDataResult.getData(),
 					{ signal },
 				);
 
 				addChangeListener(
 					ChangeType.DELETE,
 					{ type: ChangeEntityType.DAY_TASK, id: dayTaskId },
-					asyncDataResult.getData,
+					() => asyncDataResult.getData(),
 					{ signal },
 				);
 			}

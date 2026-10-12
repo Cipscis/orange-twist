@@ -21,7 +21,7 @@ import {
 	addChangeListener,
 	ChangeEntityType,
 	ChangeType,
-	type ChangeEntity,
+	defineChangeEntity,
 } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
 
@@ -65,30 +65,30 @@ export function useSettableTask(taskId: number): ExpandType<
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		const changeEntity: ChangeEntity = {
+		const changeEntity = defineChangeEntity({
 			type: ChangeEntityType.TASK,
 			id: taskId,
-		};
+		});
 
 		if (asyncDataResult.stateOfGet.type === AsyncDataStateType.ERROR) {
 			addChangeListener(
 				ChangeType.ADD,
 				changeEntity,
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 		} else if (asyncDataResult.stateOfGet.type === AsyncDataStateType.SUCCESS) {
 			addChangeListener(
 				ChangeType.CHANGE,
 				changeEntity,
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 
 			addChangeListener(
 				ChangeType.DELETE,
 				changeEntity,
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 		}

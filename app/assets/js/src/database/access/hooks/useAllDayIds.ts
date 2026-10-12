@@ -29,7 +29,7 @@ export function useAllDayIds(): AsyncDataState<readonly number[]> {
 		addChangeListener(
 			ChangeType.ADD,
 			{ type: ChangeEntityType.DAY },
-			daysAsyncDataResult.getData,
+			() => daysAsyncDataResult.getData(),
 			{ signal },
 		);
 
@@ -38,7 +38,7 @@ export function useAllDayIds(): AsyncDataState<readonly number[]> {
 				addChangeListener(
 					ChangeType.DELETE,
 					{ type: ChangeEntityType.DAY, id: day.id },
-					daysAsyncDataResult.getData,
+					() => daysAsyncDataResult.getData(),
 					{ signal },
 				);
 			}

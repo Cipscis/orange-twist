@@ -1,7 +1,6 @@
 import {
 	useCallback,
 	useEffect,
-	useRef,
 } from 'preact/hooks';
 
 import {
@@ -15,7 +14,7 @@ import {
 	addChangeListener,
 	ChangeEntityType,
 	ChangeType,
-	type ChangeEntity,
+	defineChangeEntity,
 } from '../liveAccessManager';
 import { loadDay } from '../loadDay';
 
@@ -40,30 +39,30 @@ export function useDay(dayId: number): AsyncDataState<Day> {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		const changeEntity: ChangeEntity = {
+		const changeEntity = defineChangeEntity({
 			type: ChangeEntityType.DAY,
 			id: dayId,
-		};
+		});
 
 		if (asyncDataResult.state.type === AsyncDataStateType.ERROR) {
 			addChangeListener(
 				ChangeType.ADD,
 				changeEntity,
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 		} else if (asyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
 			addChangeListener(
 				ChangeType.CHANGE,
 				changeEntity,
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 
 			addChangeListener(
 				ChangeType.DELETE,
 				changeEntity,
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 		}

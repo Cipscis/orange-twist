@@ -2,9 +2,8 @@ export { save } from './save';
 export { SaveType, type SaveAction } from './SaveAction';
 
 export {
-	type ChangeEntity,
+	defineChangeEntity,
 	ChangeEntityType,
-	ChangeType,
 } from './liveAccessManager';
 
 export { ObservableEntity } from './ObservableEntity';

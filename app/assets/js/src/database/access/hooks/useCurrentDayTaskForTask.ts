@@ -53,21 +53,21 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask
 			addChangeListener(
 				ChangeType.ADD,
 				{ type: ChangeEntityType.DAY_TASK },
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 		} else if (asyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
 			addChangeListener(
 				ChangeType.CHANGE,
 				{ type: ChangeEntityType.DAY_TASK, id: asyncDataResult.state.data.id },
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 
 			addChangeListener(
 				ChangeType.DELETE,
 				{ type: ChangeEntityType.DAY_TASK, id: asyncDataResult.state.data.id },
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 		}

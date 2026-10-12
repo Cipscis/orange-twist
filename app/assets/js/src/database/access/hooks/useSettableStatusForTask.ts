@@ -18,7 +18,7 @@ import {
 	addChangeListener,
 	ChangeEntityType,
 	ChangeType,
-	type ChangeEntity,
+	defineChangeEntity,
 } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
 
@@ -61,29 +61,29 @@ export function useSettableStatusForTask(taskId: number): ExpandType<
 		const { signal } = controller;
 
 		// TODO: Only care about changes to day tasks for this task
-		const changeEntity: ChangeEntity = {
+		const changeEntity = defineChangeEntity({
 			type: ChangeEntityType.DAY_TASK,
-		};
+		});
 
 		if (asyncDataResult.stateOfGet.type === AsyncDataStateType.SUCCESS) {
 			addChangeListener(
 				ChangeType.ADD,
 				changeEntity,
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 
 			addChangeListener(
 				ChangeType.CHANGE,
 				changeEntity,
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 
 			addChangeListener(
 				ChangeType.DELETE,
 				changeEntity,
-				asyncDataResult.getData,
+				() => asyncDataResult.getData(),
 				{ signal },
 			);
 		}

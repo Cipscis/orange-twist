@@ -45,14 +45,14 @@ export function useCurrentDay(): AsyncDataState<Day> {
 		addChangeListener(
 			ChangeType.CHANGE,
 			{ type: ChangeEntityType.DAY, id: currentDayId },
-			asyncDataResult.getData,
+			() => asyncDataResult.getData(),
 			{ signal }
 		);
 
 		// Don't need to watch for it being deleted, because the UI doesn't allow this
 
 		return () => controller.abort();
-	}, [currentDayId, asyncDataResult.getData]);
+	}, [currentDayId, asyncDataResult]);
 
 	return asyncDataResult.state;
 }

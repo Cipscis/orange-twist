@@ -4,7 +4,7 @@ export {
 	SaveType,
 	type SaveAction,
 
-	type ChangeEntity,
+	defineChangeEntity,
 	ChangeEntityType,
 
 	ObservableEntity,
