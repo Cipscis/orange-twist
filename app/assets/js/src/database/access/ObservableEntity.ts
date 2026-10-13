@@ -1,7 +1,5 @@
 import {
 	assertAllUnionMembersHandled,
-	AsyncDataStateType,
-	extractError,
 	type AsyncDataState,
 } from 'utils';
 
@@ -10,6 +8,8 @@ import type {
 	DayTask,
 	Task,
 } from '../types';
+
+import { LiveData } from './LiveData';
 
 import {
 	addChangeListener,
@@ -26,13 +26,6 @@ interface ChangeEntityTypeMap {
 	[ChangeEntityType.DAY]: Day;
 	[ChangeEntityType.TASK]: Task;
 	[ChangeEntityType.DAY_TASK]: DayTask;
-}
-
-interface ObservableEntityObserveOptions {
-	/**
-	 * An {@linkcode AbortSignal} that, when aborted, will unobserve the {@linkcode ObservableEntity}.
-	 */
-	signal?: AbortSignal;
 }
 
 /**
@@ -57,11 +50,11 @@ interface ObservableEntityObserveOptions {
  * 	// Do something with loading state
  * });
  * observableDay.addEventListener('load', function () {
- * 	const { data } = this.asyncDataState;
+ * 	const { data } = this.state;
  * 	// Do something with data
  * });
  * observableDay.addEventListener('error', function () {
- * 	const { error } = this.asyncDataState;
+ * 	const { error } = this.state;
  * 	// Do something with error
  * });
  *
@@ -74,151 +67,43 @@ interface ObservableEntityObserveOptions {
  * observableDay.unobserve();
  * ```
  */
-// This class is intentionally modified with declaration merging to make event binding easier
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class ObservableEntity<T extends ChangeEntityType> extends EventTarget {
-	#entity: Required<QualifiedChangeEntity<T>>;
-	#unobserveController: AbortController | null;
-
-	asyncDataState: AsyncDataState<ChangeEntityTypeMap[T]>;
-
+export class ObservableEntity<T extends ChangeEntityType> extends LiveData<ChangeEntityTypeMap[T]> {
 	constructor(changeEntity: QualifiedChangeEntity<T>) {
-		super();
+		super({
+			async getData(_options) {
+				const value = await getChangeEntityValue(changeEntity);
 
-		this.#entity = changeEntity;
-		this.asyncDataState = {
-			type: AsyncDataStateType.INITIAL,
-			loading: false,
-		};
+				if (value === null) {
+					// TODO: Should type be transformed somehow to be more user-friendly?
+					throw new Error(`Could not find ${changeEntity.type} with ID ${changeEntity.id}`);
+				}
 
-		this.#unobserveController = null;
-	}
-
-	/**
-	 * Load data for the {@linkcode QualifiedChangeEntity}, and begin listening for database changes.
-	 */
-	observe(
-		options?: ObservableEntityObserveOptions,
-	): void {
-		if (this.#unobserveController) {
-			throw new Error(`ObservableEntity is already being observed`);
-		}
-
-		this.#unobserveController = new AbortController();
-
-		// Combine internal and external AbortSignals
-		const signals = [this.#unobserveController.signal];
-		if (options?.signal) {
-			signals.push(options.signal);
-		}
-		const signal = AbortSignal.any(signals);
-
-		this.#load();
-
-		addChangeListener(
-			ChangeType.ADD,
-			this.#entity,
-			() => this.#load(),
-			{ signal }
-		);
-
-		addChangeListener(
-			ChangeType.CHANGE,
-			this.#entity,
-			() => this.#load(),
-			{ signal }
-		);
-
-		addChangeListener(
-			ChangeType.DELETE,
-			this.#entity,
-			() => this.#load(),
-			{ signal }
-		);
-	}
-
-	/**
-	 * Stop listening for database changes.
-	 */
-	unobserve(): void {
-		this.#unobserveController?.abort();
-		this.#unobserveController = null;
-	}
-
-	[Symbol.dispose](): void {
-		this.unobserve();
-	}
-
-	/**
-	 * Load data from the database and update the {@linkcode AsyncDataState} accordingly.
-	 */
-	async #load(): Promise<void> {
-		this.asyncDataState.loading = true;
-		this.dispatchEvent(new ProgressEvent('loadstart'));
-		try {
-			const value = await getChangeEntityValue(this.#entity);
-
-			if (value === null) {
-				// TODO: Should type be transformed somehow to be more user-friendly?
-				throw new Error(`Could not find ${this.#entity.type} with ID ${this.#entity.id}`);
-			}
-
-			this.asyncDataState = {
-				type: AsyncDataStateType.SUCCESS,
-				data: value,
-				loading: false,
-			};
-			this.dispatchEvent(new ProgressEvent('load'));
-		} catch (e) {
-			this.asyncDataState = {
-				type: AsyncDataStateType.ERROR,
-				error: extractError(e),
-				loading: false,
-			};
-			this.dispatchEvent(new ProgressEvent('error'));
-		}
-	}
-}
-
-interface ObservableEntityEventMap {
-	loadstart: [ProgressEvent, AsyncDataStateType];
-	loadend: [ProgressEvent, AsyncDataStateType];
-	load: [ProgressEvent, typeof AsyncDataStateType.SUCCESS];
-	error: [ProgressEvent, typeof AsyncDataStateType.ERROR];
-}
-
-export interface ObservableEntity<T extends ChangeEntityType> {
-	addEventListener<
-		K extends keyof ObservableEntityEventMap
-	>(
-		type: K,
-		listener: (
-			this: ObservableEntity<T> & {
-				asyncDataState: Extract<
-					ObservableEntity<T>['asyncDataState'],
-					{ type: ObservableEntityEventMap[K][1]; }
-				>;
+				return value;
 			},
-			ev: ObservableEntityEventMap[K][0]
-		) => void,
-		options?: boolean | AddEventListenerOptions,
-	): void;
+			observe(getData, signal) {
+				addChangeListener(
+					ChangeType.ADD,
+					changeEntity,
+					() => getData(),
+					{ signal }
+				);
 
-	removeEventListener<
-		K extends keyof ObservableEntityEventMap
-	>(
-		type: K,
-		listener: (
-			this: ObservableEntity<T> & {
-				asyncDataState: Extract<
-					ObservableEntity<T>['asyncDataState'],
-					{ type: ObservableEntityEventMap[K][1]; }
-				>;
+				addChangeListener(
+					ChangeType.CHANGE,
+					changeEntity,
+					() => getData(),
+					{ signal }
+				);
+
+				addChangeListener(
+					ChangeType.DELETE,
+					changeEntity,
+					() => getData(),
+					{ signal }
+				);
 			},
-			ev: ObservableEntityEventMap[K][0]
-		) => void,
-		options?: boolean | EventListenerOptions,
-	): void;
+		});
+	}
 }
 
 /**

@@ -19,6 +19,7 @@ import {
 } from './useAsyncData';
 
 import type { SettableAsyncDataState } from './SettableAsyncDataState';
+import type { AsyncDataState } from './AsyncDataState';
 
 export interface UseSettableAsyncDataOptions<T> extends UseAsyncDataOptions {
 	/**
@@ -129,21 +130,24 @@ export function useSettableAsyncData<T>(
 	}, [stateOfGet, optimistic, setData]);
 
 	const stateCombined = useMemo(() => {
-		const proxyStateOfGet = structuredClone(stateOfGet);
-
 		// Use options to determine if there should be some optimistic state
-		if (
-			optimistic &&
+		const optimisticData = (optimistic &&
 			optimisticDataRef.current &&
-			proxyStateOfGet.type === AsyncDataStateType.SUCCESS
-		) {
-			proxyStateOfGet.data = optimisticDataRef.current;
-		}
+			stateOfGet.type === AsyncDataStateType.SUCCESS)
+			? { data: optimisticDataRef.current }
+			: {};
+
+		// Construct new object with `Object.assign` to maintain immutability of `AsyncDataState`
+		const updatedStateOfGet: AsyncDataState<T> = Object.assign(
+			{},
+			structuredClone(stateOfGet),
+			optimisticData,
+		);
 
 		const settableState = {
 			getData: getDataWrapper,
 			setData: setDataWrapper,
-			stateOfGet: proxyStateOfGet,
+			stateOfGet: updatedStateOfGet,
 			stateOfSet,
 		};
 		return settableState;
