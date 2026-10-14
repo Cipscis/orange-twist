@@ -3,7 +3,7 @@ import {
 	extractError,
 	type AsyncDataState,
 	type GetAsyncDataOptions,
-} from 'utils';
+} from 'utils/asyncData';
 
 export interface LiveDataOptions<T> {
 	/**
