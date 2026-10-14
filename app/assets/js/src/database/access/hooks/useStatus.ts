@@ -1,15 +1,12 @@
-import {
-	useCallback,
-	useRef,
-} from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
-import {
-	useAsyncData,
-	type AsyncDataState,
-} from 'utils';
+import { useAsyncData, type AsyncDataState } from 'utils';
 
 import type { Status } from '../../types';
 import { loadStatus } from '../loadStatus';
+
+import { LiveData } from '../LiveData';
+import { useLiveData } from './useLiveData';
 
 /**
  * Attempts to load a specified status immediately. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
@@ -17,19 +14,24 @@ import { loadStatus } from '../loadStatus';
  * @see {@linkcode useAsyncData}
  */
 export function useStatus(statusId: number): AsyncDataState<Status> {
-	const getStatus = useCallback(async () => {
-		const status = await loadStatus(statusId);
+	const liveStatus = useMemo(() => {
+		const liveStatus = new LiveData({
+			async getData(_options) {
+				const status = await loadStatus(statusId);
 
-		if (status === null) {
-			throw new Error(`Could not find status with ID ${statusId}`);
-		}
+				if (status === null) {
+					throw new Error(`Could not find status with ID ${statusId}`);
+				}
 
-		return status;
+				return status;
+			},
+			observe(_getData, _unobserveSignal) {
+				// No need to re-fetch status data, because it never changes
+			},
+		});
+		liveStatus.observe();
+		return liveStatus;
 	}, [statusId]);
 
-	const asyncDataResult = useAsyncData(getStatus, { immediate: true });
-
-	// No need to re-fetch status data, because it never changes
-
-	return asyncDataResult.state;
+	return useLiveData(liveStatus);
 }
