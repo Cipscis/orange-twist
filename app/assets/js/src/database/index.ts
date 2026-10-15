@@ -7,8 +7,6 @@ export {
 	defineChangeEntity,
 	ChangeEntityType,
 
-	ObservableEntity,
-
 	loadDay,
 	useDay,
 	useSettableDay,
