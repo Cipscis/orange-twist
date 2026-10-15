@@ -17,7 +17,7 @@ export interface LiveDataOptions<T> {
 	 */
 	observe: (
 		getData: (options?: GetAsyncDataOptions) => Promise<void>,
-		unobserveSignal: AbortSignal,
+		signal: AbortSignal,
 	) => void;
 	/**
 	 * A function that sets up any necessary event listeners that rely on the async data state and/or the value of the loaded data to re-fetch the data.
@@ -34,7 +34,7 @@ export interface LiveDataOptions<T> {
 					| typeof AsyncDataStateType.ERROR;
 			}
 		>,
-		unobserveSignal: AbortSignal,
+		signal: AbortSignal,
 	) => void;
 }
 

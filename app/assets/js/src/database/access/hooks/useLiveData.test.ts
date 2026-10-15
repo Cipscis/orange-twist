@@ -21,7 +21,7 @@ describe('useLiveData', () => {
 			getData(_options) {
 				return Promise.resolve(value);
 			},
-			observe(getData, _unobserveSignal) {
+			observe(getData, _signal) {
 				promise.then(() => getData());
 			},
 		};
@@ -83,8 +83,8 @@ describe('useLiveData', () => {
 			getData(_options) {
 				return Promise.resolve(true);
 			},
-			observe(_getData, unobserveSignal) {
-				cleanupSignal = unobserveSignal;
+			observe(_getData, signal) {
+				cleanupSignal = signal;
 			},
 		};
 

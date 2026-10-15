@@ -32,7 +32,7 @@ export function useAllStatuses(): AsyncDataState<readonly Status[]> {
 				}
 				return statuses;
 			},
-			observe(_getData, _unobserveSignal) {
+			observe(_getData, _signal) {
 				// No need to re-fetch status data, because it never changes
 			},
 		});
