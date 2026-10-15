@@ -40,6 +40,7 @@ export {
 
 	AsyncDataStateType,
 	type AsyncDataState,
+	type SettableAsyncDataState,
 
 	useAsyncData,
 	type GetAsyncDataOptions,

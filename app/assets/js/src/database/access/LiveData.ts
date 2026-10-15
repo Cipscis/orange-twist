@@ -57,7 +57,7 @@ export class LiveData<T> extends EventTarget {
 		loading: false,
 	};
 	/**
-	 * A {@linkcode AsyncDataState} representing the current loading state of the represented data, which is updated automatically when in observing mode.
+	 * An {@linkcode AsyncDataState} representing the current loading state of the represented data, which is updated automatically when in observing mode.
 	 */
 	get state(): AsyncDataState<T> {
 		return this.#state;
@@ -125,6 +125,8 @@ export class LiveData<T> extends EventTarget {
 	 * Handle loading the data, updating the internal {@linkcode AsyncDataState}, and firing the relevant `'loadstart'`, `'load'`, `'error'`, and `'loadend'` {@linkcode ProgressEvent}s.
 	 */
 	#loadDataAndUpdateState = async function (this: LiveData<T>, getDataOptions?: GetAsyncDataOptions): Promise<void> {
+		const getDataPromise = this.#getData(getDataOptions);
+
 		this.#state = {
 			...this.state,
 			loading: true,
@@ -133,11 +135,11 @@ export class LiveData<T> extends EventTarget {
 		// Get the data, enter success or error state correspondingly, and fire necessary events
 		this.dispatchEvent(new ProgressEvent('loadstart'));
 		try {
-			const value = await this.#getData(getDataOptions);
+			const data = await getDataPromise;
 
 			this.#state = {
 				type: AsyncDataStateType.SUCCESS,
-				data: value,
+				data,
 				loading: false,
 			};
 			this.dispatchEvent(new ProgressEvent('load'));
