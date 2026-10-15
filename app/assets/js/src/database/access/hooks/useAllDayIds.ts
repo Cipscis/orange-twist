@@ -1,10 +1,6 @@
 import { useMemo } from 'preact/hooks';
 
-import {
-	AsyncDataStateType,
-	useAsyncData,
-	type AsyncDataState,
-} from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import {
 	addChangeListener,
@@ -18,8 +14,6 @@ import { useLiveData } from './useLiveData';
 
 /**
  * Attempts to load the IDs of all days immediately, sorted chronologically. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
- *
- * @see {@linkcode useAsyncData}
  */
 export function useAllDayIds(): AsyncDataState<readonly number[]> {
 	const liveAllDayIds = useMemo(() => {
