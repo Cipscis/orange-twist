@@ -1,11 +1,17 @@
 import { useMemo } from 'preact/hooks';
 
-import type { AsyncDataState } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import type { Day } from '../../types';
 
-import { ChangeEntityType } from '../liveAccessManager';
-import { ObservableEntity } from '../ObservableEntity';
+import { loadDay } from '../loadDay';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+} from '../liveAccessManager';
+
+import { LiveData } from '../LiveData';
 import { useLiveData } from './useLiveData';
 
 /**
@@ -13,9 +19,48 @@ import { useLiveData } from './useLiveData';
  */
 export function useDay(dayId: number): AsyncDataState<Day> {
 	const liveDay = useMemo(() => {
-		const liveDay = new ObservableEntity({
-			type: ChangeEntityType.DAY,
-			id: dayId,
+		const liveDay = new LiveData({
+			async getData(options) {
+				const day = await loadDay(dayId);
+
+				if (day === null) {
+					throw new Error(`Could not find day with ID ${dayId}`);
+				}
+
+				return day;
+			},
+			observe(getData, signal) {
+
+			},
+			observeState(getData, state, signal) {
+				const changeEntity = {
+					type: ChangeEntityType.DAY,
+					id: dayId,
+				};
+
+				if (state.type === AsyncDataStateType.ERROR) {
+					addChangeListener(
+						ChangeType.ADD,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+				} else if (state.type === AsyncDataStateType.SUCCESS) {
+					addChangeListener(
+						ChangeType.CHANGE,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+
+					addChangeListener(
+						ChangeType.DELETE,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+				}
+			},
 		});
 		liveDay.observe();
 		return liveDay;
