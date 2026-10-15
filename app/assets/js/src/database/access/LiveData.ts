@@ -15,7 +15,7 @@ export interface LiveDataOptions<T> {
 	 *
 	 * An {@linkcode AbortSignal} is provided so that it can be used to define any necessary cleanup.
 	 */
-	observe: (
+	observe?: (
 		getData: (options?: GetAsyncDataOptions) => Promise<void>,
 		signal: AbortSignal,
 	) => void;
@@ -99,7 +99,9 @@ export class LiveData<T> extends EventTarget {
 		this.#loadDataAndUpdateState({ signal }).catch(() => {
 			// Consider any errors thrown within this async function as handled
 		});
-		this.#observe(this.#loadDataAndUpdateState, signal);
+		if (this.#observe) {
+			this.#observe(this.#loadDataAndUpdateState, signal);
+		}
 	}
 
 	/**
