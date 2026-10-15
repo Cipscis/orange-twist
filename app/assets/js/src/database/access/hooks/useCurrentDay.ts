@@ -1,58 +1,43 @@
-import {
-	useCallback,
-	useEffect,
-	useState,
-} from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
-import {
-	useAsyncData,
-	type AsyncDataState,
-} from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import type { Day } from '../../types';
+
+import { loadCurrentDay } from '../loadCurrentDay';
 import {
 	addChangeListener,
 	ChangeEntityType,
 	ChangeType,
 } from '../liveAccessManager';
-import { loadCurrentDay } from '../loadCurrentDay';
+
+import { LiveData } from '../LiveData';
+import { useLiveData } from './useLiveData';
 
 /**
  * Provides an {@linkcode AsyncDataState} that immediately requests the current day. If it doesn't already exist, then it will be constructed.
  */
 export function useCurrentDay(): AsyncDataState<Day> {
-	const [currentDayId, setCurrentDayId] = useState<number | null>(null);
-
-	const getCurrentDay = useCallback(async () => {
-		const currentDay = await loadCurrentDay();
-		setCurrentDayId(currentDay.id);
-		return currentDay;
+	const liveCurrentDay = useMemo(() => {
+		const liveCurrentDay = new LiveData({
+			async getData(_options) {
+				const currentDay = await loadCurrentDay();
+				return currentDay;
+			},
+			observeState(getData, state, signal) {
+				if (state.type === AsyncDataStateType.SUCCESS) {
+					addChangeListener(
+						ChangeType.CHANGE,
+						{ type: ChangeEntityType.DAY, id: state.data.id },
+						() => getData(),
+						{ signal }
+					);
+				}
+			},
+		});
+		liveCurrentDay.observe();
+		return liveCurrentDay;
 	}, []);
 
-	const asyncDataResult = useAsyncData(getCurrentDay, { immediate: true });
-
-	// Re-fetch the data if it changes
-	useEffect(() => {
-		if (currentDayId === null) {
-			return;
-		}
-
-		const controller = new AbortController();
-		const { signal } = controller;
-
-		// Don't need to watch for it being added, because this hook creates it
-
-		addChangeListener(
-			ChangeType.CHANGE,
-			{ type: ChangeEntityType.DAY, id: currentDayId },
-			() => asyncDataResult.getData(),
-			{ signal }
-		);
-
-		// Don't need to watch for it being deleted, because the UI doesn't allow this
-
-		return () => controller.abort();
-	}, [currentDayId, asyncDataResult]);
-
-	return asyncDataResult.state;
+	return useLiveData(liveCurrentDay);
 }
