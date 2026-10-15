@@ -25,9 +25,7 @@ export function useStatus(statusId: number): AsyncDataState<Status> {
 
 				return status;
 			},
-			observe(_getData, _signal) {
-				// No need to re-fetch status data, because it never changes
-			},
+			// No need to re-fetch status data, because it never changes
 		});
 		liveStatus.observe();
 		return liveStatus;

@@ -32,9 +32,7 @@ export function useAllStatuses(): AsyncDataState<readonly Status[]> {
 				}
 				return statuses;
 			},
-			observe(_getData, _signal) {
-				// No need to re-fetch status data, because it never changes
-			},
+			// No need to re-fetch status data, because it never changes
 		});
 		liveStatusesGlobal.observe();
 		return liveStatusesGlobal;
