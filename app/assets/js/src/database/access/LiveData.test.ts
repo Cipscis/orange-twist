@@ -265,7 +265,7 @@ describe('LiveData', () => {
 	});
 
 	test('when `observe` is called, calls `observe` function provided as an option', () => {
-		const getData = jest.fn(() => Promise.resolve(true));
+		const getData = () => Promise.resolve(true);
 		const observe = jest.fn();
 
 		const liveData = new LiveData({
@@ -276,6 +276,138 @@ describe('LiveData', () => {
 		expect(observe).not.toHaveBeenCalled();
 		liveData.observe();
 		expect(observe).toHaveBeenCalledTimes(1);
+	});
+
+	test('when the data is loaded, calls `observeState` function provided as an option', async () => {
+		const {
+			promise: loadPromise,
+			resolve: loadResolve,
+		} = Promise.withResolvers<void>();
+
+		const getData = () => {
+			loadResolve();
+			return Promise.resolve(true);
+		};
+		const observe = noop;
+		const observeState = jest.fn();
+
+		const liveData = new LiveData({
+			getData,
+			observe,
+			observeState,
+		});
+
+		expect(observeState).not.toHaveBeenCalled();
+		liveData.observe();
+		expect(observeState).not.toHaveBeenCalled();
+
+		await loadPromise;
+		expect(observeState).toHaveBeenCalled();
+	});
+
+	test('when data changes, aborts the `AbortSignal` passed to `observeState', async () => {
+		let {
+			promise: loadPromise,
+			resolve: loadResolve,
+		} = Promise.withResolvers<void>();
+		const {
+			promise: changePromise,
+			resolve: changeResolve,
+		} = Promise.withResolvers<void>();
+
+		let value = true;
+		const observeState = jest.fn((
+			_getData,
+			_data,
+			abortSignal: AbortSignal,
+		) => {
+			if (unobserveStateSignal === null) {
+				unobserveStateSignal = abortSignal;
+			}
+		});
+
+		let unobserveStateSignal: AbortSignal | null = null;
+		const liveData = new LiveData({
+			getData: () => {
+				loadResolve();
+				return Promise.resolve(value);
+			},
+			observe: (getData) => {
+				changePromise.then(() => getData());
+			},
+			observeState,
+		});
+
+		// Load data initially
+		liveData.observe();
+		expect(observeState).not.toHaveBeenCalled();
+
+		// Allow data to load
+		await loadPromise;
+
+		// Set up next load trigger
+		const loadResult = Promise.withResolvers<void>();
+		loadPromise = loadResult.promise;
+		loadResolve = loadResult.resolve;
+
+		expect(observeState).toHaveBeenCalledTimes(1);
+		expect(unobserveStateSignal!.aborted).toBe(false);
+
+		// Trigger a data change detection
+		value = false;
+		changeResolve();
+		await changePromise;
+
+		expect(observeState).toHaveBeenCalledTimes(1);
+		expect(unobserveStateSignal!.aborted).toBe(false);
+
+		// Allow new data to load
+		await loadPromise;
+
+		expect(observeState).toHaveBeenCalledTimes(2);
+		expect(unobserveStateSignal!.aborted).toBe(true);
+	});
+
+	test('runs `observeState` cleanup code when `unobserve` is called', async () => {
+		const {
+			promise: loadPromise,
+			resolve: loadResolve,
+		} = Promise.withResolvers<void>();
+
+		const observeState = jest.fn((
+			_getData,
+			_data,
+			abortSignal: AbortSignal,
+		) => {
+			if (unobserveStateSignal === null) {
+				unobserveStateSignal = abortSignal;
+			}
+		});
+
+		let unobserveStateSignal: AbortSignal | null = null;
+		const liveData = new LiveData({
+			getData: () => {
+				loadResolve();
+				return Promise.resolve(true);
+			},
+			observe: noop,
+			observeState,
+		});
+
+		// Load data initially
+		liveData.observe();
+		expect(observeState).not.toHaveBeenCalled();
+
+		// Allow data to load
+		await loadPromise;
+
+		expect(observeState).toHaveBeenCalledTimes(1);
+		expect(unobserveStateSignal!.aborted).toBe(false);
+
+		liveData.unobserve();
+
+		expect(observeState).toHaveBeenCalledTimes(1);
+		expect(unobserveStateSignal!.aborted).toBe(true);
 	});
 
 	describe('aborts the AbortSignal passed to `observe`', () => {
