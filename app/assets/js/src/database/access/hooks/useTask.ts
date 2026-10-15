@@ -1,11 +1,17 @@
 import { useMemo } from 'preact/hooks';
 
-import type { AsyncDataState } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 import type { Task } from '../../types';
 
-import { ChangeEntityType } from '../liveAccessManager';
-import { ObservableEntity } from '../ObservableEntity';
+import { loadTask } from '../loadTask';
+import {
+	addChangeListener,
+	ChangeEntityType,
+	ChangeType,
+} from '../liveAccessManager';
+
+import { LiveData } from '../LiveData';
 import { useLiveData } from './useLiveData';
 
 /**
@@ -13,9 +19,45 @@ import { useLiveData } from './useLiveData';
  */
 export function useTask(taskId: number): AsyncDataState<Task> {
 	const liveTask = useMemo(() => {
-		const liveTask = new ObservableEntity({
-			type: ChangeEntityType.TASK,
-			id: taskId,
+		const liveTask = new LiveData({
+			async getData(options) {
+				const task = await loadTask(taskId);
+
+				if (task === null) {
+					throw new Error(`Could not find task with ID ${taskId}`);
+				}
+
+				return task;
+			},
+			observeState(getData, state, signal) {
+				const changeEntity = {
+					type: ChangeEntityType.TASK,
+					id: taskId,
+				};
+
+				if (state.type === AsyncDataStateType.ERROR) {
+					addChangeListener(
+						ChangeType.ADD,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+				} else if (state.type === AsyncDataStateType.SUCCESS) {
+					addChangeListener(
+						ChangeType.CHANGE,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+
+					addChangeListener(
+						ChangeType.DELETE,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+				}
+			},
 		});
 		liveTask.observe();
 		return liveTask;
