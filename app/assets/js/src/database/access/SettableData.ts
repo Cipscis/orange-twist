@@ -54,6 +54,11 @@ export class SettableData<T> extends EventTarget {
 		const { signal } = this.#abortController;
 
 		const setDataPromise = this.#setData(data, signal);
+		const {
+			promise: abortPromise,
+			resolve: abortResolve,
+		} = Promise.withResolvers<void>();
+		signal.addEventListener('abort', () => abortResolve());
 
 		this.#state = {
 			...this.#state,
@@ -62,13 +67,18 @@ export class SettableData<T> extends EventTarget {
 
 		this.dispatchEvent(new ProgressEvent('loadstart'));
 		try {
-			await setDataPromise;
+			await Promise.race([setDataPromise, abortPromise]);
 
+			if (signal.aborted) {
+				// State and event code is handled synchronously in abort method
+				return;
+			}
 			this.#state = {
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 			};
 			this.dispatchEvent(new ProgressEvent('load'));
+			this.dispatchEvent(new ProgressEvent('loadend'));
 		} catch (e) {
 			this.#state = {
 				type: AsyncDataStateType.ERROR,
@@ -76,9 +86,10 @@ export class SettableData<T> extends EventTarget {
 				loading: false,
 			};
 			this.dispatchEvent(new ProgressEvent('error'));
+			this.dispatchEvent(new ProgressEvent('loadend'));
+		} finally {
+			this.#abortController = null;
 		}
-		this.#abortController = null;
-		this.dispatchEvent(new ProgressEvent('loadend'));
 	}
 
 	/**
@@ -92,7 +103,13 @@ export class SettableData<T> extends EventTarget {
 
 		this.#abortController.abort();
 		this.#abortController = null;
+		// Reset state and fire events synchronously
+		this.#state = {
+			...this.#state,
+			loading: false,
+		};
 		this.dispatchEvent(new ProgressEvent('abort'));
+		this.dispatchEvent(new ProgressEvent('loadend'));
 	}
 
 	[Symbol.dispose](): void {
@@ -105,6 +122,7 @@ interface SettableDataEventMap {
 	loadend: [ProgressEvent, AsyncDataStateType];
 	load: [ProgressEvent, typeof AsyncDataStateType.SUCCESS];
 	error: [ProgressEvent, typeof AsyncDataStateType.ERROR];
+	abort: [ProgressEvent, AsyncDataStateType];
 }
 
 // Use declaration merging to give hints about event listeners
