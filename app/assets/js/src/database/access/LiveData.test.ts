@@ -153,6 +153,8 @@ describe('LiveData', () => {
 				loading: false,
 			} satisfies AsyncDataState<boolean>);
 		});
+
+		test.todo('to its prior state when `getData` is aborted');
 	});
 
 	describe('reports events', () => {
@@ -216,6 +218,8 @@ describe('LiveData', () => {
 			expect(error).toHaveBeenCalledTimes(1);
 		});
 
+		test.todo('an abort event on abort');
+
 		describe('a loadend event on load end', () => {
 			test('when load succeeds', async () => {
 				const { promise, resolve } = Promise.withResolvers();
@@ -261,6 +265,8 @@ describe('LiveData', () => {
 				await promise.catch(noop);
 				expect(loadend).toHaveBeenCalledTimes(1);
 			});
+
+			test.todo('when load is aborted');
 		});
 	});
 
