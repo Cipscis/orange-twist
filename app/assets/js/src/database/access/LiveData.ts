@@ -126,6 +126,23 @@ export class LiveData<T> extends EventTarget {
 	 */
 	#loadDataAndUpdateState = async function (this: LiveData<T>, getDataOptions?: GetAsyncDataOptions): Promise<void> {
 		const getDataPromise = this.#getData(getDataOptions);
+		const {
+			promise: abortPromise,
+			resolve: abortResolve,
+		} = Promise.withResolvers<void>();
+		if (getDataOptions) {
+			const signal = getDataOptions.signal;
+			signal.addEventListener('abort', () => {
+				// Reset state and fire events synchronously
+				this.#state = {
+					...this.#state,
+					loading: false,
+				};
+				this.dispatchEvent(new ProgressEvent('abort'));
+				this.dispatchEvent(new ProgressEvent('loadend'));
+				abortResolve();
+			});
+		}
 
 		this.#state = {
 			...this.state,
@@ -135,14 +152,20 @@ export class LiveData<T> extends EventTarget {
 		// Get the data, enter success or error state correspondingly, and fire necessary events
 		this.dispatchEvent(new ProgressEvent('loadstart'));
 		try {
-			const data = await getDataPromise;
+			const data = await Promise.race([getDataPromise, abortPromise]);
 
-			this.#state = {
-				type: AsyncDataStateType.SUCCESS,
-				data,
-				loading: false,
-			};
-			this.dispatchEvent(new ProgressEvent('load'));
+			if (getDataOptions?.signal.aborted) {
+				// No need to re-do `observeStatus`
+				return;
+			} else {
+				this.#state = {
+					type: AsyncDataStateType.SUCCESS,
+					// This type assertion is safe because if `signal.aborted` is `false` that means `getDataPromise` resolved first
+					data: data as T,
+					loading: false,
+				};
+				this.dispatchEvent(new ProgressEvent('load'));
+			}
 		} catch (e) {
 			this.#state = {
 				type: AsyncDataStateType.ERROR,
@@ -150,8 +173,9 @@ export class LiveData<T> extends EventTarget {
 				loading: false,
 			};
 			this.dispatchEvent(new ProgressEvent('error'));
+		} finally {
+			this.dispatchEvent(new ProgressEvent('loadend'));
 		}
-		this.dispatchEvent(new ProgressEvent('loadend'));
 
 		// Clean up any previous `observeState` call
 		if (this.#unobserveStateController) {
@@ -179,6 +203,7 @@ interface LiveDataEventMap {
 	loadend: [ProgressEvent, AsyncDataStateType];
 	load: [ProgressEvent, typeof AsyncDataStateType.SUCCESS];
 	error: [ProgressEvent, typeof AsyncDataStateType.ERROR];
+	abort: [ProgressEvent, AsyncDataStateType];
 }
 
 // Use declaration merging to give hints about event listeners
