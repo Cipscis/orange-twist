@@ -480,6 +480,107 @@ describe('LiveData', () => {
 		expect(unobserveStateSignal!.aborted).toBe(true);
 	});
 
+	describe('aborts the AbortSignal passed to `getData` when `unobserve` is called while getting data', () => {
+		test('for the initial `getData` call', () => {
+			let abortSignal: AbortSignal | null = null;
+
+			const liveData = new LiveData({
+				getData(options) {
+					abortSignal = options.signal;
+					return Promise.resolve(true);
+				},
+			});
+
+			liveData.observe();
+
+			expect(abortSignal!.aborted).toBe(false);
+			liveData.unobserve();
+			expect(abortSignal!.aborted).toBe(true);
+		});
+
+		test('for a `getData` call from within `observe`', async () => {
+			let initialCall = true;
+			let abortSignal: AbortSignal | null = null;
+			const {
+				promise: initialLoadPromise,
+				resolve: initialLoadResolve,
+			} = Promise.withResolvers<void>();
+			const {
+				promise: reloadPromise,
+				resolve: reloadResolve,
+			} = Promise.withResolvers<void>();
+
+			const liveData = new LiveData({
+				getData(options) {
+					if (initialCall) {
+						initialCall = false;
+					} else {
+						abortSignal = options.signal;
+					}
+					initialLoadResolve();
+					return Promise.resolve(true);
+				},
+				observe(getData, signal) {
+					reloadPromise.then(() => getData());
+				},
+			});
+
+			liveData.observe();
+
+			// Wait for inital load
+			await Promise.race([initialLoadPromise]);
+
+			// Trigger reload
+			reloadResolve();
+			await Promise.resolve();
+
+			expect(abortSignal!.aborted).toBe(false);
+			liveData.unobserve();
+			expect(abortSignal!.aborted).toBe(true);
+		});
+
+		test('for a `getData` call from within `observeState`', async () => {
+			let initialCall = true;
+			let abortSignal: AbortSignal | null = null;
+			const {
+				promise: initialLoadPromise,
+				resolve: initialLoadResolve,
+			} = Promise.withResolvers<void>();
+			const {
+				promise: reloadPromise,
+				resolve: reloadResolve,
+			} = Promise.withResolvers<void>();
+
+			const liveData = new LiveData({
+				getData(options) {
+					if (initialCall) {
+						initialCall = false;
+					} else {
+						abortSignal = options.signal;
+					}
+					initialLoadResolve();
+					return Promise.resolve(true);
+				},
+				observeState(getData, state, signal) {
+					reloadPromise.then(() => getData());
+				},
+			});
+
+			liveData.observe();
+
+			// Wait for inital load
+			await Promise.race([initialLoadPromise]);
+
+			// Trigger reload
+			reloadResolve();
+			await Promise.resolve();
+
+			expect(abortSignal!.aborted).toBe(false);
+			liveData.unobserve();
+			expect(abortSignal!.aborted).toBe(true);
+		});
+	});
+
 	describe('aborts the AbortSignal passed to `observe`', () => {
 		test('when `unobserve` is called', () => {
 			const abort = jest.fn();

@@ -9,7 +9,7 @@ export interface LiveDataOptions<T> {
 	/**
 	 * A method to asynchronously retrieve the data that should be represented by the {@linkcode LiveData} instance.
 	 */
-	getData: (options?: GetAsyncDataOptions) => Promise<T>;
+	getData: (options: GetAsyncDataOptions) => Promise<T>;
 	/**
 	 * A function that sets up the necessary event listeners to re-fetch the data.
 	 *
@@ -100,7 +100,15 @@ export class LiveData<T> extends EventTarget {
 			// Consider any errors thrown within this async function as handled
 		});
 		if (this.#observe) {
-			this.#observe(this.#loadDataAndUpdateState, signal);
+			const internalGetData = (options?: GetAsyncDataOptions) => {
+				const signals = [signal];
+				if (options) {
+					signals.push(options.signal);
+				}
+				return this.#loadDataAndUpdateState({ signal: AbortSignal.any(signals) });
+			};
+
+			this.#observe(internalGetData, signal);
 		}
 	}
 
@@ -124,7 +132,7 @@ export class LiveData<T> extends EventTarget {
 	/**
 	 * Handle loading the data, updating the internal {@linkcode AsyncDataState}, and firing the relevant `'loadstart'`, `'load'`, `'error'`, and `'loadend'` {@linkcode ProgressEvent}s.
 	 */
-	#loadDataAndUpdateState = async function (this: LiveData<T>, getDataOptions?: GetAsyncDataOptions): Promise<void> {
+	#loadDataAndUpdateState = async function (this: LiveData<T>, getDataOptions: GetAsyncDataOptions): Promise<void> {
 		const getDataPromise = this.#getData(getDataOptions);
 		const {
 			promise: abortPromise,
@@ -189,8 +197,12 @@ export class LiveData<T> extends EventTarget {
 			if (getDataOptions?.signal) {
 				signals.push(getDataOptions.signal);
 			}
+			const signal = AbortSignal.any(signals);
+			const internalGetData = (options?: GetAsyncDataOptions) => {
+				return this.#loadDataAndUpdateState({ signal });
+			};
 			this.#observeState(
-				this.#loadDataAndUpdateState,
+				internalGetData,
 				this.#state,
 				AbortSignal.any(signals),
 			);
