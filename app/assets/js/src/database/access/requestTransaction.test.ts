@@ -4,8 +4,8 @@ import {
 	test,
 } from '@jest/globals';
 
+import { ObjectStoreName } from '../metadata';
 import { requestTransaction } from './requestTransaction';
-import { ObjectStoreName } from 'database/metadata';
 
 describe('requestTransaction', () => {
 	test('returns a Promise that resolves a transaction with the requested access', async () => {

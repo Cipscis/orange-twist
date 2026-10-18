@@ -1,10 +1,7 @@
 export { save } from './save';
 export { SaveType, type SaveAction } from './SaveAction';
 
-export {
-	defineChangeEntity,
-	ChangeEntityType,
-} from './liveAccessManager';
+export { ChangeEntityType } from './liveAccessManager';
 
 export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';

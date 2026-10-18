@@ -17,12 +17,11 @@ import {
 	addChangeListener,
 	ChangeEntityType,
 	ChangeType,
-	defineChangeEntity,
 } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
 
 /**
- * Attempts to load a specified task immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode AsyncDataState} representing the state of that loading operation and providing a setter method.
+ * Attempts to load a specified task immediately, and reloads it if it is changed in the database. Provides a {@linkcode UseSettableLiveDataResult} representing the state of that loading operation, also providing a setter method and the state of any set operation.
  */
 export function useSettableTask(taskId: number): UseSettableLiveDataResult<Task> {
 	const settableTask = useMemo(() => {
@@ -46,10 +45,10 @@ export function useSettableTask(taskId: number): UseSettableLiveDataResult<Task>
 				}]);
 			},
 			observeState(getData, state, signal) {
-				const changeEntity = defineChangeEntity({
+				const changeEntity = {
 					type: ChangeEntityType.TASK,
 					id: taskId,
-				});
+				};
 
 				if (state.type === AsyncDataStateType.ERROR) {
 					addChangeListener(

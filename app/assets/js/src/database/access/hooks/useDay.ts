@@ -17,7 +17,7 @@ import {
 } from '../liveAccessManager';
 
 /**
- * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
  */
 export function useDay(dayId: number): AsyncDataState<Day> {
 	const liveDay = useMemo(() => {
@@ -30,9 +30,6 @@ export function useDay(dayId: number): AsyncDataState<Day> {
 				}
 
 				return day;
-			},
-			observe(getData, signal) {
-
 			},
 			observeState(getData, state, signal) {
 				const changeEntity = {

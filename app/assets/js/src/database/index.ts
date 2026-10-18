@@ -4,7 +4,6 @@ export {
 	SaveType,
 	type SaveAction,
 
-	defineChangeEntity,
 	ChangeEntityType,
 
 	loadDay,

@@ -48,15 +48,6 @@ export const eventTargetLookup = {
 };
 
 /**
- * A helper function for letting TypeScript infer the type of a {@linkcode ChangeEntity}.
- */
-export function defineChangeEntity<T extends ChangeEntityType>(
-	changeEntity: ChangeEntity<T>,
-): ChangeEntity<T> {
-	return changeEntity;
-}
-
-/**
  * Trigger an event tracking a type of change against a specified item, causing any listeners for that type of change against that item to fire.
  */
 export function noticeChange<T extends ChangeEntityType>(
@@ -98,7 +89,7 @@ export function addChangeListener<T extends ChangeEntityType>(
 export function removeChangeListener<T extends ChangeEntityType>(
 	eventType: ChangeType,
 	{ type, id }: ChangeEntity<T>,
-	callback: () => void,
+	callback: (e: Event) => void,
 ): void {
 	const changeTargetId = id ?? null;
 	const changeTarget = eventTargetLookup[type].get(changeTargetId);

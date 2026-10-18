@@ -21,7 +21,7 @@ import {
 import { SaveType } from '../SaveAction';
 
 /**
- * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode AsyncDataState} representing the state of that loading operation and providing a setter method.
+ * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides a {@linkcode UseSettableLiveDataResult} representing the state of that loading operation, also providing a setter method and the state of any set operation.
  */
 export function useSettableDay(dayId: number): UseSettableLiveDataResult<Day> {
 	const settableDay = useMemo(() => {
