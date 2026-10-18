@@ -4,6 +4,8 @@ export {
 	SaveType,
 	type SaveAction,
 
+	ChangeEntityType,
+
 	loadDay,
 	useDay,
 	useSettableDay,

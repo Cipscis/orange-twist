@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -39,11 +39,11 @@ describe('useSettableStatusForTask', () => {
 			() => useSettableStatusForTask(1)
 		);
 
-		expect(result.current.stateOfGet).toEqual({
+		expect(result.current.getterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		} satisfies AsyncDataState<number>);
-		expect(result.current.stateOfSet).toEqual({
+		expect(result.current.setterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
 		});
@@ -55,7 +55,7 @@ describe('useSettableStatusForTask', () => {
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: 2,
@@ -70,7 +70,7 @@ describe('useSettableStatusForTask', () => {
 			);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: 2,
@@ -86,7 +86,7 @@ describe('useSettableStatusForTask', () => {
 			}]);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: 3,
@@ -100,7 +100,7 @@ describe('useSettableStatusForTask', () => {
 			);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: 2,
@@ -113,7 +113,7 @@ describe('useSettableStatusForTask', () => {
 			}]);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: 1,
@@ -127,7 +127,7 @@ describe('useSettableStatusForTask', () => {
 			);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: 2,
@@ -144,7 +144,7 @@ describe('useSettableStatusForTask', () => {
 			}]);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: 3,
@@ -160,7 +160,7 @@ describe('useSettableStatusForTask', () => {
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: 2,
@@ -170,7 +170,7 @@ describe('useSettableStatusForTask', () => {
 		rerender(3);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: true,
 				data: 2,
@@ -178,7 +178,7 @@ describe('useSettableStatusForTask', () => {
 		});
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: 1,
@@ -193,7 +193,7 @@ describe('useSettableStatusForTask', () => {
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: 2,
@@ -204,11 +204,11 @@ describe('useSettableStatusForTask', () => {
 		rerender(1);
 
 		// While the set function processes, we have optimistic data
-		expect(result.current.stateOfSet).toEqual({
+		expect(result.current.setterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
-		expect(result.current.stateOfGet).toEqual({
+		expect(result.current.getterState).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: 3,
@@ -216,11 +216,11 @@ describe('useSettableStatusForTask', () => {
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
-			expect(result.current.stateOfSet).toEqual({
+			expect(result.current.setterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 			});
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: 3,
@@ -234,7 +234,7 @@ describe('useSettableStatusForTask', () => {
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.ERROR,
 				error: new Error('Could not find task with ID -1'),
 				loading: false,

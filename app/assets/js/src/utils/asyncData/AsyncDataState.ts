@@ -4,10 +4,10 @@ import type { AsyncDataStateType } from './AsyncDataStateType';
 type AsyncDataStateMap<T> = {
 	[AsyncDataStateType.INITIAL]: {};
 	[AsyncDataStateType.ERROR]: {
-		error: Error;
+		readonly error: Error;
 	};
 	[AsyncDataStateType.SUCCESS]: {
-		data: T;
+		readonly data: Readonly<T>;
 	};
 };
 
@@ -17,8 +17,8 @@ type AsyncDataStateMap<T> = {
 export type AsyncDataState<T> = {
 	[S in AsyncDataStateType]: ExpandType<
 		{
-			type: S;
-			loading: boolean;
+			readonly type: S;
+			readonly loading: boolean;
 		} &
 		AsyncDataStateMap<T>[S]
 	>;

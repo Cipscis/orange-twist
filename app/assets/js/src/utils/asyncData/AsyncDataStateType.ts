@@ -1,4 +1,4 @@
-import type { EnumTypeOf } from 'utils/EnumTypeOf';
+import type { EnumTypeOf } from '../EnumTypeOf';
 
 export const AsyncDataStateType = {
 	INITIAL: 'initial',

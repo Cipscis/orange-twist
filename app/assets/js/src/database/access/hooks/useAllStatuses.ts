@@ -1,8 +1,13 @@
 import {
-	AsyncDataStateType,
-	useAsyncData,
+	useEffect,
+	useMemo,
+	useState,
+} from 'preact/hooks';
+
+import {
 	type AsyncDataState,
-} from 'utils';
+	LiveData,
+} from 'utils/asyncData';
 
 import type { Status } from '../../types';
 import { loadAllStatuses } from '../loadAllStatuses';
@@ -11,26 +16,54 @@ import { loadAllStatuses } from '../loadAllStatuses';
 let statuses: readonly Status[] | null = null;
 
 /**
+ * Once loaded once, the same {@linkcode LiveData} is reused across all uses.
+ */
+let liveStatusesGlobal: LiveData<readonly Status[]> | null = null;
+
+/**
  * Attempts to load all statuses immediately. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
- *
- * @see {@linkcode useAsyncData}
  */
 export function useAllStatuses(): AsyncDataState<readonly Status[]> {
-	const asyncDataResult = useAsyncData(loadAllStatuses, { immediate: true });
+	const liveStatuses = useMemo(() => {
+		if (liveStatusesGlobal !== null) {
+			return liveStatusesGlobal;
+		}
 
-	if (statuses !== null) {
-		return {
-			type: AsyncDataStateType.SUCCESS,
-			data: statuses,
-			loading: false,
-		};
-	}
+		liveStatusesGlobal = new LiveData({
+			async getData(_options) {
+				if (statuses === null) {
+					statuses = await loadAllStatuses();
+				}
+				return statuses;
+			},
+			// No need to re-fetch status data, because it never changes
+		});
+		liveStatusesGlobal.observe();
+		return liveStatusesGlobal;
+	}, []);
 
-	if (asyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
-		statuses = asyncDataResult.state.data;
-	}
+	// Replicate most of useLiveData, but without cleanup since the same LiveData is reused across components so shouldn't be aborted etc.
+	const [state, setState] = useState(liveStatuses.state);
 
-	// No need to re-fetch status data, because it never changes
+	// Add necessary event listeners to update state
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
 
-	return asyncDataResult.state;
+		liveStatuses.addEventListener(
+			'loadstart',
+			() => setState(liveStatuses.state),
+			{ signal },
+		);
+
+		liveStatuses.addEventListener(
+			'loadend',
+			() => setState(liveStatuses.state),
+			{ signal },
+		);
+
+		return () => controller.abort();
+	}, [liveStatuses]);
+
+	return state;
 }

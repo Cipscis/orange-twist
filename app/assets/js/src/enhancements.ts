@@ -6,8 +6,11 @@
  * libraries, to keep its file size to an absolute minimum.
  */
 
+import { initPolyfills } from './polyfill';
 import { FpsCounter } from 'dev/fps-counter';
 import { createElement } from 'utils/createElement';
+
+initPolyfills();
 
 if (navigator.serviceWorker) {
 	navigator.serviceWorker.register('/service-worker.js');

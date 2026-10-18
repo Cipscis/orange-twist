@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -30,11 +30,11 @@ describe('useSettableDay', () => {
 			() => useSettableDay(1)
 		);
 
-		expect(result.current.stateOfGet).toEqual({
+		expect(result.current.getterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		} satisfies AsyncDataState<Day>);
-		expect(result.current.stateOfSet).toEqual({
+		expect(result.current.setterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
 		});
@@ -46,7 +46,7 @@ describe('useSettableDay', () => {
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -67,7 +67,7 @@ describe('useSettableDay', () => {
 			);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: {
@@ -89,7 +89,7 @@ describe('useSettableDay', () => {
 			}]);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: {
@@ -109,7 +109,7 @@ describe('useSettableDay', () => {
 			);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: {
@@ -128,7 +128,7 @@ describe('useSettableDay', () => {
 			}]);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find day with ID 1'),
@@ -142,7 +142,7 @@ describe('useSettableDay', () => {
 			);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find day with ID 4'),
@@ -160,7 +160,7 @@ describe('useSettableDay', () => {
 			}]);
 
 			await waitFor(() => {
-				expect(result.current.stateOfGet).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: {
@@ -182,7 +182,7 @@ describe('useSettableDay', () => {
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -198,7 +198,7 @@ describe('useSettableDay', () => {
 		rerender(2);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: true,
 				data: {
@@ -212,7 +212,7 @@ describe('useSettableDay', () => {
 		});
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -233,7 +233,7 @@ describe('useSettableDay', () => {
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -250,11 +250,11 @@ describe('useSettableDay', () => {
 		rerender(1);
 
 		// While the set function processes, we have optimistic data
-		expect(result.current.stateOfSet).toEqual({
+		expect(result.current.setterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		});
-		expect(result.current.stateOfGet).toEqual({
+		expect(result.current.getterState).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			loading: false,
 			data: {
@@ -268,11 +268,11 @@ describe('useSettableDay', () => {
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
-			expect(result.current.stateOfSet).toEqual({
+			expect(result.current.setterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 			});
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: {
@@ -292,7 +292,7 @@ describe('useSettableDay', () => {
 		);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.ERROR,
 				error: new Error('Could not find day with ID -1'),
 				loading: false,

@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType } from 'utils/asyncData';
 
 import type { useSettableTask } from 'database';
 
@@ -23,19 +23,19 @@ export function TaskDetailLoader(props: TaskDetailLoaderProps): JSX.Element {
 		taskDataState,
 	} = props;
 
-	if (taskDataState.stateOfGet.type === AsyncDataStateType.INITIAL) {
+	if (taskDataState.getterState.type === AsyncDataStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (taskDataState.stateOfGet.type === AsyncDataStateType.ERROR) {
+	if (taskDataState.getterState.type === AsyncDataStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
-			message={taskDataState.stateOfGet.error.message}
+			message={taskDataState.getterState.error.message}
 		/>;
 	}
 
 	return <TaskDetailSync
-		task={taskDataState.stateOfGet.data}
+		task={taskDataState.getterState.data}
 		setTask={taskDataState.setData}
 	/>;
 }

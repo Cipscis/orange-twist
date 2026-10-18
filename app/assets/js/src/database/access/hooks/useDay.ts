@@ -1,75 +1,69 @@
-import {
-	useCallback,
-	useEffect,
-	useRef,
-} from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
 import {
 	AsyncDataStateType,
-	useAsyncData,
 	type AsyncDataState,
-} from 'utils';
+	LiveData,
+	useLiveData,
+} from 'utils/asyncData';
 
 import type { Day } from '../../types';
+
+import { loadDay } from '../loadDay';
 import {
 	addChangeListener,
 	ChangeEntityType,
 	ChangeType,
-	type ChangeEntity,
 } from '../liveAccessManager';
-import { loadDay } from '../loadDay';
 
 /**
- * Provides an {@linkcode AsyncDataState} that immediately requests a specified day.
+ * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
  */
 export function useDay(dayId: number): AsyncDataState<Day> {
-	const getDay = useCallback(async () => {
-		const day = await loadDay(dayId);
+	const liveDay = useMemo(() => {
+		const liveDay = new LiveData({
+			async getData(options) {
+				const day = await loadDay(dayId);
 
-		if (day === null) {
-			throw new Error(`Could not find day with ID ${dayId}`);
-		}
+				if (day === null) {
+					throw new Error(`Could not find day with ID ${dayId}`);
+				}
 
-		return day;
+				return day;
+			},
+			observeState(getData, state, signal) {
+				const changeEntity = {
+					type: ChangeEntityType.DAY,
+					id: dayId,
+				};
+
+				if (state.type === AsyncDataStateType.ERROR) {
+					addChangeListener(
+						ChangeType.ADD,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+				} else if (state.type === AsyncDataStateType.SUCCESS) {
+					addChangeListener(
+						ChangeType.CHANGE,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+
+					addChangeListener(
+						ChangeType.DELETE,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+				}
+			},
+		});
+		liveDay.observe();
+		return liveDay;
 	}, [dayId]);
 
-	const asyncDataResult = useAsyncData(getDay, { immediate: true });
-
-	// Re-fetch the data if it changes
-	useEffect(() => {
-		const controller = new AbortController();
-		const { signal } = controller;
-
-		const changeEntity: ChangeEntity = {
-			type: ChangeEntityType.DAY,
-			id: dayId,
-		};
-
-		if (asyncDataResult.state.type === AsyncDataStateType.ERROR) {
-			addChangeListener(
-				ChangeType.ADD,
-				changeEntity,
-				asyncDataResult.getData,
-				{ signal },
-			);
-		} else if (asyncDataResult.state.type === AsyncDataStateType.SUCCESS) {
-			addChangeListener(
-				ChangeType.CHANGE,
-				changeEntity,
-				asyncDataResult.getData,
-				{ signal },
-			);
-
-			addChangeListener(
-				ChangeType.DELETE,
-				changeEntity,
-				asyncDataResult.getData,
-				{ signal },
-			);
-		}
-
-		return () => controller.abort();
-	}, [dayId, asyncDataResult]);
-
-	return asyncDataResult.state;
+	return useLiveData(liveDay);
 }

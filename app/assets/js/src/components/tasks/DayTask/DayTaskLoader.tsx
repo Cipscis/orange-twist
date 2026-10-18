@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType } from 'utils/asyncData';
 
 import type { useSettableDayTask } from 'database';
 
@@ -23,19 +23,19 @@ export function DayTaskLoader(props: DayTaskLoaderProps): JSX.Element {
 		dayTaskDataState,
 	} = props;
 
-	if (dayTaskDataState.stateOfGet.type === AsyncDataStateType.INITIAL) {
+	if (dayTaskDataState.getterState.type === AsyncDataStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (dayTaskDataState.stateOfGet.type === AsyncDataStateType.ERROR) {
+	if (dayTaskDataState.getterState.type === AsyncDataStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
-			message={dayTaskDataState.stateOfGet.error.message}
+			message={dayTaskDataState.getterState.error.message}
 		/>;
 	}
 
 	return <DayTaskSync
-		dayTask={dayTaskDataState.stateOfGet.data}
+		dayTask={dayTaskDataState.getterState.data}
 		setDayTask={dayTaskDataState.setData}
 	/>;
 }

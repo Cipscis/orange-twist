@@ -9,7 +9,8 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import { AsyncDataStateType, getCurrentDateDayName } from 'utils';
+import { getCurrentDateDayName } from 'utils';
+import { AsyncDataStateType } from 'utils/asyncData';
 import { useCurrentDay } from 'database';
 
 import { Command } from 'types/Command';

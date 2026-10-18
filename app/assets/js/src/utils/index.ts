@@ -35,18 +35,6 @@ export { sortElementsBySortIndex } from './sortElementsBySortIndex';
 export { startAnimationLoop } from './startAnimationLoop';
 export { strMatch, type StrMatchOptions } from './strMatch';
 export { tryStartViewTransition } from './tryStartViewTransition';
-export {
-	AsyncDataStateType,
-	type AsyncDataState,
-
-	useAsyncData,
-	type GetAsyncDataOptions,
-	type AsyncDataResult,
-
-	useSettableAsyncData,
-	type UseSettableAsyncDataOptions,
-	type SettableAsyncDataResult,
-} from './asyncData';
 export { useBlurCallback } from './useBlurCallback';
 export { useCloseWatcher } from './useCloseWatcher';
 export { useViewTransition } from './useViewTransition';

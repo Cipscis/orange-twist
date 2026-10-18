@@ -1,20 +1,34 @@
+import { ObjectStoreName } from '../metadata';
 import type { EnumTypeOf } from 'utils';
 
 export const ChangeEntityType = {
-	DAY: 'day',
-	TASK: 'task',
-	DAY_TASK: 'day task',
-} as const;
+	DAY: ObjectStoreName.DAY,
+	TASK: ObjectStoreName.TASK,
+	DAY_TASK: ObjectStoreName.DAY_TASK,
+} as const satisfies Record<string, ObjectStoreName>;
 export type ChangeEntityType = EnumTypeOf<typeof ChangeEntityType>;
 
 /**
  * A trimmed down representation of an item that can be observed for database changes.
- *
- * If `id` is omitted, all items of this type are represented.
  */
-export interface ChangeEntity {
-	type: ChangeEntityType;
-	id?: number;
+export interface QualifiedChangeEntity<T extends ChangeEntityType> {
+	readonly type: T;
+	readonly id: number;
+}
+
+/**
+ * A trimmed down representation of a _type_ of item that can be observed for database changes.
+ */
+export interface UnqualifiedChangeEntity<T extends ChangeEntityType> {
+	readonly type: T;
+}
+
+/**
+ * A combination of {@linkcode QualifiedChangeEntity} and {@linkcode UnqualifiedChangeEntity}, representing either a specific item or a type of item that can be observed for database changes.
+ */
+export interface ChangeEntity<T extends ChangeEntityType> {
+	readonly type: T;
+	readonly id?: number;
 }
 
 export const ChangeType = {
@@ -36,9 +50,9 @@ export const eventTargetLookup = {
 /**
  * Trigger an event tracking a type of change against a specified item, causing any listeners for that type of change against that item to fire.
  */
-export function noticeChange(
+export function noticeChange<T extends ChangeEntityType>(
 	eventType: ChangeType,
-	{ type, id }: Required<ChangeEntity>
+	{ type, id }: QualifiedChangeEntity<T>
 ): void {
 	const allChangeTarget = eventTargetLookup[type].get(null);
 	if (allChangeTarget) {
@@ -54,10 +68,10 @@ export function noticeChange(
 /**
  * Adds a listener for a specified type of change against a particular item or type of item.
  */
-export function addChangeListener(
+export function addChangeListener<T extends ChangeEntityType>(
 	eventType: ChangeType,
-	{ type, id }: ChangeEntity,
-	callback: () => void,
+	{ type, id }: ChangeEntity<T>,
+	callback: (e: Event) => void,
 	options?: AddEventListenerOptions,
 ): void {
 	const changeTargetId = id ?? null;
@@ -72,10 +86,10 @@ export function addChangeListener(
 /**
  * Removes a listener for a specified type of change against a particular item or type of item.
  */
-export function removeChangeListener(
+export function removeChangeListener<T extends ChangeEntityType>(
 	eventType: ChangeType,
-	{ type, id }: ChangeEntity,
-	callback: () => void,
+	{ type, id }: ChangeEntity<T>,
+	callback: (e: Event) => void,
 ): void {
 	const changeTargetId = id ?? null;
 	const changeTarget = eventTargetLookup[type].get(changeTargetId);
