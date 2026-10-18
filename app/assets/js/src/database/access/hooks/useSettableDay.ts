@@ -49,14 +49,14 @@ export function useSettableDay(dayId: number): UseSettableLiveDataResult<Day> {
 					id: dayId,
 				};
 
-				if (settableDay.liveData.state.type === AsyncDataStateType.ERROR) {
+				if (settableDay.getter.state.type === AsyncDataStateType.ERROR) {
 					addChangeListener(
 						ChangeType.ADD,
 						changeEntity,
 						() => getData(),
 						{ signal },
 					);
-				} else if (settableDay.liveData.state.type === AsyncDataStateType.SUCCESS) {
+				} else if (settableDay.getter.state.type === AsyncDataStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.CHANGE,
 						changeEntity,

@@ -23,18 +23,18 @@ export function TaskNoteLoader(props: TaskNoteLoaderProps): JSX.Element {
 	} = props;
 
 	// Don't display a loading state while setting or re-retrieving data
-	const isLoading = taskDataState.stateOfGet.type === AsyncDataStateType.INITIAL;
+	const isLoading = taskDataState.getterState.type === AsyncDataStateType.INITIAL;
 
 	if (isLoading) {
 		return <Loader />;
 	}
 
 	if (
-		taskDataState.stateOfGet.type === AsyncDataStateType.SUCCESS &&
-		taskDataState.stateOfGet.data
+		taskDataState.getterState.type === AsyncDataStateType.SUCCESS &&
+		taskDataState.getterState.data
 	) {
 		return <TaskNoteSync
-			task={taskDataState.stateOfGet.data}
+			task={taskDataState.getterState.data}
 			setData={taskDataState.setData}
 		/>;
 	}

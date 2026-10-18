@@ -51,14 +51,14 @@ describe('useSettableLiveData', () => {
 		);
 
 		// Check initial loading state
-		expect(result.current.stateOfGet).toEqual({
+		expect(result.current.getterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		} satisfies AsyncDataState<boolean>);
 
 		// Check initial loading success
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: true,
 				loading: false,
@@ -66,7 +66,7 @@ describe('useSettableLiveData', () => {
 		});
 
 		// Check initial save state
-		expect(result.current.stateOfSet).toEqual({
+		expect(result.current.setterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: false,
 		} satisfies SettableAsyncDataState);
@@ -75,11 +75,11 @@ describe('useSettableLiveData', () => {
 		const savePromise = result.current.setData(false);
 		rerender(initialProps);
 		await waitFor(() => {
-			expect(result.current.stateOfSet).toEqual({
+			expect(result.current.setterState).toEqual({
 				type: AsyncDataStateType.INITIAL,
 				loading: true,
 			} satisfies SettableAsyncDataState);
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: false,
 				loading: false,
@@ -89,7 +89,7 @@ describe('useSettableLiveData', () => {
 		// Wait for save to complete and check save success
 		await savePromise;
 		await waitFor(() => {
-			expect(result.current.stateOfSet).toEqual({
+			expect(result.current.setterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 			} satisfies SettableAsyncDataState);
@@ -102,7 +102,7 @@ describe('useSettableLiveData', () => {
 		rerender(initialProps);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: false,
 				loading: true,
@@ -111,7 +111,7 @@ describe('useSettableLiveData', () => {
 
 		// Check reload success
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: false,
 				loading: false,
@@ -148,7 +148,7 @@ describe('useSettableLiveData', () => {
 			{ initialProps },
 		);
 
-		expect(result.current.stateOfGet).toEqual({
+		expect(result.current.getterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		} satisfies AsyncDataState<boolean>);
@@ -185,13 +185,13 @@ describe('useSettableLiveData', () => {
 			{ initialProps },
 		);
 
-		expect(result.current.stateOfGet).toEqual({
+		expect(result.current.getterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		} satisfies AsyncDataState<boolean>);
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: true,
 				loading: false,
@@ -210,7 +210,7 @@ describe('useSettableLiveData', () => {
 		});
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: true,
 				loading: true,
@@ -218,7 +218,7 @@ describe('useSettableLiveData', () => {
 		});
 
 		await waitFor(() => {
-			expect(result.current.stateOfGet).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: false,
 				loading: false,

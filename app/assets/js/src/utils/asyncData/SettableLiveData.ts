@@ -57,10 +57,10 @@ export class SettableLiveData<T> {
 	}
 	#optimisticDataOverride: Partial<T> | undefined;
 
-	liveData: Readonly<
+	readonly getter: Readonly<
 		Pick<LiveData<T>, 'addEventListener' | 'removeEventListener' | 'state'>
 	>;
-	settableData: Readonly<
+	readonly setter: Readonly<
 		Pick<SettableData<T>, 'addEventListener' | 'removeEventListener' | 'state'>
 	>;
 
@@ -81,7 +81,7 @@ export class SettableLiveData<T> {
 				}
 			},
 		});
-		this.liveData = {
+		this.getter = {
 			addEventListener: this.#liveData.addEventListener.bind(this.#liveData),
 			removeEventListener: this.#liveData.removeEventListener.bind(this.#liveData),
 			get state() {
@@ -102,7 +102,7 @@ export class SettableLiveData<T> {
 				return setPromise;
 			},
 		});
-		this.settableData = {
+		this.setter = {
 			addEventListener: this.#settableData.addEventListener.bind(this.#settableData),
 			removeEventListener: this.#settableData.removeEventListener.bind(this.#settableData),
 			get state() {

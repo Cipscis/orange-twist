@@ -32,7 +32,7 @@ export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.
 
 	if (
 		taskDataState.type === AsyncDataStateType.INITIAL ||
-		taskStatusDataState.stateOfGet.type === AsyncDataStateType.INITIAL
+		taskStatusDataState.getterState.type === AsyncDataStateType.INITIAL
 	) {
 		return <Loader />;
 	}
@@ -42,15 +42,15 @@ export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.
 			variant={NoticeVariant.ERROR}
 			message={taskDataState.error.message}
 		/>;
-	} else if (taskStatusDataState.stateOfGet.type === AsyncDataStateType.ERROR) {
+	} else if (taskStatusDataState.getterState.type === AsyncDataStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
-			message={taskStatusDataState.stateOfGet.error.message}
+			message={taskStatusDataState.getterState.error.message}
 		/>;
 	}
 
 	return <TaskStatusPickerSync
-		status={taskStatusDataState.stateOfGet.data}
+		status={taskStatusDataState.getterState.data}
 		setStatus={taskStatusDataState.setData}
 		deleteTask={deleteTask}
 	/>;

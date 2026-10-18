@@ -23,19 +23,19 @@ export function DayTaskStatusPickerLoader(props: DayTaskStatusPickerLoaderProps)
 		dayTaskDataState,
 	} = props;
 
-	if (dayTaskDataState.stateOfGet.type === AsyncDataStateType.INITIAL) {
+	if (dayTaskDataState.getterState.type === AsyncDataStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (dayTaskDataState.stateOfGet.type === AsyncDataStateType.ERROR) {
+	if (dayTaskDataState.getterState.type === AsyncDataStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
-			message={dayTaskDataState.stateOfGet.error.message}
+			message={dayTaskDataState.getterState.error.message}
 		/>;
 	}
 
 	return <DayTaskStatusPickerSync
-		dayTask={dayTaskDataState.stateOfGet.data}
+		dayTask={dayTaskDataState.getterState.data}
 		setDayTask={dayTaskDataState.setData}
 	/>;
 }

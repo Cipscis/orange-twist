@@ -9,24 +9,24 @@ import type { SettableAsyncDataState } from '../SettableAsyncDataState';
 import type { SettableLiveData } from '../SettableLiveData';
 
 export interface UseSettableLiveDataResult<T> {
-	stateOfGet: AsyncDataState<T>;
-	stateOfSet: SettableAsyncDataState;
+	getterState: AsyncDataState<T>;
+	setterState: SettableAsyncDataState;
 	setData: (data: Partial<T>) => Promise<void>;
 }
 
 export function useSettableLiveData<T>(settableLiveData: SettableLiveData<T>): UseSettableLiveDataResult<T> {
-	const [stateOfGet, setStateOfGet] = useState(settableLiveData.liveData.state);
-	const [stateOfSet, setStateOfSet] = useState(settableLiveData.settableData.state);
+	const [getterState, setGetterState] = useState(settableLiveData.getter.state);
+	const [setterState, setSetterState] = useState(settableLiveData.setter.state);
 
 	// Construct temporary hybrid state if liveData is updated
 	useLayoutEffect(() => {
-		setStateOfGet((state) => ({
+		setGetterState((state) => ({
 			...state,
-			loading: settableLiveData.liveData.state.loading,
+			loading: settableLiveData.getter.state.loading,
 		}));
-		setStateOfSet((state) => ({
+		setSetterState((state) => ({
 			...state,
-			loading: settableLiveData.settableData.state.loading,
+			loading: settableLiveData.setter.state.loading,
 		}));
 	}, [settableLiveData]);
 
@@ -35,29 +35,29 @@ export function useSettableLiveData<T>(settableLiveData: SettableLiveData<T>): U
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		settableLiveData.liveData.addEventListener(
+		settableLiveData.getter.addEventListener(
 			'loadstart',
-			() => setStateOfGet(settableLiveData.liveData.state),
+			() => setGetterState(settableLiveData.getter.state),
 			{ signal },
 		);
-		settableLiveData.settableData.addEventListener(
+		settableLiveData.setter.addEventListener(
 			'loadstart',
 			() => {
-				// Set stateOfGet too for optimistic data
-				setStateOfGet(settableLiveData.liveData.state);
-				setStateOfSet(settableLiveData.settableData.state);
+				// Set getterState too for optimistic data
+				setGetterState(settableLiveData.getter.state);
+				setSetterState(settableLiveData.setter.state);
 			},
 			{ signal },
 		);
 
-		settableLiveData.liveData.addEventListener(
+		settableLiveData.getter.addEventListener(
 			'loadend',
-			() => setStateOfGet(settableLiveData.liveData.state),
+			() => setGetterState(settableLiveData.getter.state),
 			{ signal },
 		);
-		settableLiveData.settableData.addEventListener(
+		settableLiveData.setter.addEventListener(
 			'loadend',
-			() => setStateOfSet(settableLiveData.settableData.state),
+			() => setSetterState(settableLiveData.setter.state),
 			{ signal },
 		);
 
@@ -70,8 +70,8 @@ export function useSettableLiveData<T>(settableLiveData: SettableLiveData<T>): U
 	}, [settableLiveData]);
 
 	return {
-		stateOfGet,
-		stateOfSet,
+		getterState: getterState,
+		setterState: setterState,
 		setData: settableLiveData.setData.bind(settableLiveData),
 	};
 }

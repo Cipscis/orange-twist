@@ -50,7 +50,7 @@ describe('SettableLiveData', () => {
 			settableLiveData.observe();
 
 			// Check the initial load has started
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.INITIAL,
 				loading: true,
 			} satisfies AsyncDataState<typeof data>);
@@ -62,7 +62,7 @@ describe('SettableLiveData', () => {
 			loadResolve = result.resolve;
 
 			// Check the initial load has succeeded
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: {
 					foo: 1,
@@ -73,7 +73,7 @@ describe('SettableLiveData', () => {
 
 			// Set data and check optimistic state
 			settableLiveData.setData({ foo: 2 });
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: {
 					foo: 2,
@@ -82,19 +82,19 @@ describe('SettableLiveData', () => {
 				loading: false,
 			} satisfies AsyncDataState<typeof data>);
 
-			expect(settableLiveData.settableData.state).toEqual({
+			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncDataStateType.INITIAL,
 				loading: true,
 			} satisfies SettableAsyncDataState);
 
 			await Promise.race([setPromise]);
 
-			expect(settableLiveData.settableData.state).toEqual({
+			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 			});
 
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: {
 					foo: 2,
@@ -106,7 +106,7 @@ describe('SettableLiveData', () => {
 			// Check the reload succeeds and still displays the updated state
 			await loadPromise;
 
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: {
 					foo: 2,
@@ -147,7 +147,7 @@ describe('SettableLiveData', () => {
 			settableLiveData.observe();
 
 			// Check the initial load has started
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.INITIAL,
 				loading: true,
 			} satisfies AsyncDataState<typeof data>);
@@ -159,7 +159,7 @@ describe('SettableLiveData', () => {
 			loadResolve = result.resolve;
 
 			// Check the initial load has succeeded
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: 3,
 				loading: false,
@@ -167,25 +167,25 @@ describe('SettableLiveData', () => {
 
 			// Set data and check optimistic state
 			settableLiveData.setData(4);
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: 4,
 				loading: false,
 			} satisfies AsyncDataState<typeof data>);
 
-			expect(settableLiveData.settableData.state).toEqual({
+			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncDataStateType.INITIAL,
 				loading: true,
 			} satisfies SettableAsyncDataState);
 
 			await Promise.race([setPromise]);
 
-			expect(settableLiveData.settableData.state).toEqual({
+			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 			});
 
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: 4,
 				loading: true,
@@ -194,7 +194,7 @@ describe('SettableLiveData', () => {
 			// Check the reload succeeds and still displays the updated state
 			await loadPromise;
 
-			expect(settableLiveData.liveData.state).toEqual({
+			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: 4,
 				loading: false,
@@ -233,7 +233,7 @@ describe('SettableLiveData', () => {
 		settableLiveData.observe();
 
 		// Check the initial load has started
-		expect(settableLiveData.liveData.state).toEqual({
+		expect(settableLiveData.getter.state).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		} satisfies AsyncDataState<typeof data>);
@@ -241,7 +241,7 @@ describe('SettableLiveData', () => {
 		await Promise.race([loadPromise]);
 
 		// Check the initial load has succeeded
-		expect(settableLiveData.liveData.state).toEqual({
+		expect(settableLiveData.getter.state).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			data: {
 				foo: 1,
@@ -252,7 +252,7 @@ describe('SettableLiveData', () => {
 
 		// Set data and check optimistic state reverts on error
 		settableLiveData.setData({ foo: 2 });
-		expect(settableLiveData.liveData.state).toEqual({
+		expect(settableLiveData.getter.state).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			data: {
 				foo: 2,
@@ -261,20 +261,20 @@ describe('SettableLiveData', () => {
 			loading: false,
 		} satisfies AsyncDataState<typeof data>);
 
-		expect(settableLiveData.settableData.state).toEqual({
+		expect(settableLiveData.setter.state).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		} satisfies SettableAsyncDataState);
 
 		await Promise.race([setPromise]);
 
-		expect(settableLiveData.settableData.state).toEqual({
+		expect(settableLiveData.setter.state).toEqual({
 			type: AsyncDataStateType.ERROR,
 			error: new Error('Test set error'),
 			loading: false,
 		});
 
-		expect(settableLiveData.liveData.state).toEqual({
+		expect(settableLiveData.getter.state).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			data: {
 				foo: 1,

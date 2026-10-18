@@ -25,20 +25,20 @@ export function DayLoader(
 		dayDataState: dayDataState,
 	} = props;
 
-	if (dayDataState.stateOfGet.type === AsyncDataStateType.INITIAL) {
+	if (dayDataState.getterState.type === AsyncDataStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (dayDataState.stateOfGet.type === AsyncDataStateType.ERROR) {
+	if (dayDataState.getterState.type === AsyncDataStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
-			message={dayDataState.stateOfGet.error.message}
+			message={dayDataState.getterState.error.message}
 		/>;
 	}
 
 	return <DaySync
 		{...props}
-		day={dayDataState.stateOfGet.data}
+		day={dayDataState.getterState.data}
 		setDay={dayDataState.setData}
 	/>;
 }

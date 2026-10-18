@@ -31,31 +31,31 @@ export const SettableTaskNameLoader = (props: SettableTaskNameLoaderProps): JSX.
 		taskId,
 		taskDataState: {
 			setData,
-			stateOfGet,
+			getterState,
 		},
 	} = props;
 
 	return <>
 		{
-			stateOfGet.type === AsyncDataStateType.INITIAL &&
+			getterState.type === AsyncDataStateType.INITIAL &&
 			<Loader />
 		}
 
 		{
-			stateOfGet.type === AsyncDataStateType.SUCCESS &&
-			stateOfGet.data &&
+			getterState.type === AsyncDataStateType.SUCCESS &&
+			getterState.data &&
 			<SettableTaskNameSync
-				task={stateOfGet.data}
+				task={getterState.data}
 				setData={setData}
 			/>
 		}
 
 		{
 			!(
-				stateOfGet.type === AsyncDataStateType.INITIAL ||
+				getterState.type === AsyncDataStateType.INITIAL ||
 				(
-					stateOfGet.type === AsyncDataStateType.SUCCESS &&
-					stateOfGet.data
+					getterState.type === AsyncDataStateType.SUCCESS &&
+					getterState.data
 				)
 			) && <Notice
 				variant={NoticeVariant.ERROR}
