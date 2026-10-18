@@ -11,15 +11,12 @@ import type { AsyncDataState } from './AsyncDataState';
 import { LiveData } from './LiveData';
 
 describe('LiveData', () => {
-	const noop = () => {};
-
 	describe('updates its internal state', () => {
 		test('to an initial data state on creation', () => {
 			const getData = () => Promise.resolve(true);
 
 			const liveData = new LiveData({
 				getData,
-				observe: noop,
 			});
 
 			expect(liveData.state).toEqual({
@@ -38,7 +35,6 @@ describe('LiveData', () => {
 
 			const liveData = new LiveData({
 				getData,
-				observe: noop,
 			});
 
 			expect(getData).not.toHaveBeenCalled();
@@ -138,7 +134,6 @@ describe('LiveData', () => {
 					resolve(true);
 					return Promise.reject(new Error('Test rejection'));
 				},
-				observe: noop,
 			});
 
 			const error = jest.fn();
@@ -147,8 +142,7 @@ describe('LiveData', () => {
 
 			liveData.observe();
 
-			// Pass noop to prevent test failure due to error in promise
-			await promise.catch(noop);
+			await Promise.race([promise]);
 			expect(liveData.state).toEqual({
 				type: AsyncDataStateType.ERROR,
 				error: new Error('Test rejection'),
@@ -197,7 +191,6 @@ describe('LiveData', () => {
 
 			const liveData = new LiveData({
 				getData: () => Promise.resolve(true),
-				observe: noop,
 			});
 			liveData.addEventListener('loadstart', loadstart);
 
@@ -215,7 +208,6 @@ describe('LiveData', () => {
 					resolve(true);
 					return Promise.resolve(true);
 				},
-				observe: noop,
 			});
 			liveData.addEventListener('load', load);
 
@@ -236,15 +228,13 @@ describe('LiveData', () => {
 					resolve(true);
 					return Promise.reject(new Error('Test rejection'));
 				},
-				observe: noop,
 			});
 			liveData.addEventListener('error', error);
 
 			liveData.observe();
 
 			expect(error).not.toHaveBeenCalled();
-			// Pass noop to prevent test failure due to error in promise
-			await promise.catch(noop);
+			await Promise.race([promise]);
 			expect(error).toHaveBeenCalledTimes(1);
 		});
 
@@ -275,7 +265,6 @@ describe('LiveData', () => {
 						resolve(true);
 						return Promise.resolve(true);
 					},
-					observe: noop,
 				});
 				liveData.addEventListener('loadend', loadend);
 
@@ -296,15 +285,13 @@ describe('LiveData', () => {
 						resolve(true);
 						return Promise.reject(new Error('Test rejection'));
 					},
-					observe: noop,
 				});
 				liveData.addEventListener('loadend', loadend);
 
 				liveData.observe();
 
 				expect(loadend).not.toHaveBeenCalled();
-				// Pass noop to prevent test failure due to error in promise
-				await promise.catch(noop);
+				await Promise.race([promise]);
 				expect(loadend).toHaveBeenCalledTimes(1);
 			});
 
@@ -351,12 +338,10 @@ describe('LiveData', () => {
 			loadResolve();
 			return Promise.resolve(true);
 		};
-		const observe = noop;
 		const observeState = jest.fn();
 
 		const liveData = new LiveData({
 			getData,
-			observe,
 			observeState,
 		});
 
@@ -457,7 +442,6 @@ describe('LiveData', () => {
 				loadResolve();
 				return Promise.resolve(true);
 			},
-			observe: noop,
 			observeState,
 		});
 
