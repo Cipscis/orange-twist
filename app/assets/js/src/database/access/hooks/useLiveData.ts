@@ -56,7 +56,7 @@ export function useLiveData<T>(liveData: LiveData<T>): AsyncDataState<T> {
 
 	// Ensure LiveData stops observing when no longer used/when the component is unmounted
 	useEffect(() => {
-		return () => liveData.unobserve();
+		return () => liveData[Symbol.dispose]();
 	}, [liveData]);
 
 	return state;
