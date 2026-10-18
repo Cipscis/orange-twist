@@ -5,12 +5,9 @@ export type { AsyncDataState } from './AsyncDataState';
 export type { SettableAsyncDataState } from './SettableAsyncDataState';
 
 export {
-	useAsyncData,
 	type GetAsyncDataOptions,
 	type AsyncDataResult,
 } from './useAsyncData';
 export {
-	useSettableAsyncData,
-	type UseSettableAsyncDataOptions,
 	type SettableAsyncDataResult,
 } from './useSettableAsyncData';

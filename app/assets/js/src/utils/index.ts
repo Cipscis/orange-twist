@@ -42,12 +42,6 @@ export {
 	type AsyncDataState,
 	type SettableAsyncDataState,
 
-	useAsyncData,
-	type GetAsyncDataOptions,
-	type AsyncDataResult,
-
-	useSettableAsyncData,
-	type UseSettableAsyncDataOptions,
 	type SettableAsyncDataResult,
 } from './asyncData';
 export { useBlurCallback } from './useBlurCallback';

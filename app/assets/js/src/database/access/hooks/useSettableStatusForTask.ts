@@ -2,7 +2,6 @@ import { useMemo } from 'preact/hooks';
 
 import {
 	AsyncDataStateType,
-	useSettableAsyncData,
 	type ExpandType,
 	type SettableAsyncDataResult,
 } from 'utils';
@@ -23,8 +22,6 @@ import { SettableLiveData } from '../SettableLiveData';
 
 /**
  * Attempts to load a the status for a specified task immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode SettableAsyncDataResult} representing the state of that loading operation and providing a setter method.
- *
- * @see {@linkcode useSettableAsyncData}
  */
 export function useSettableStatusForTask(taskId: number): ExpandType<
 	Omit<SettableAsyncDataResult<number>, 'getData'>

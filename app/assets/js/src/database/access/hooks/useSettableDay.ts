@@ -2,7 +2,6 @@ import { useMemo } from 'preact/hooks';
 
 import {
 	AsyncDataStateType,
-	useSettableAsyncData,
 	type AsyncDataState,
 	type ExpandType,
 	type SettableAsyncDataResult,
@@ -25,8 +24,6 @@ import { useSettableLiveData } from './useSettableLiveData';
 
 /**
  * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode AsyncDataState} representing the state of that loading operation and providing a setter method.
- *
- * @see {@linkcode useSettableAsyncData}
  */
 export function useSettableDay(dayId: number): ExpandType<
 	Omit<SettableAsyncDataResult<Day>, 'getData'>
