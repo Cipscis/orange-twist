@@ -1,6 +1,6 @@
 import { useMemo } from 'preact/hooks';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
 
 import {
 	addChangeListener,
@@ -9,8 +9,10 @@ import {
 } from '../liveAccessManager';
 import { loadAllDays } from '../loadAllDays';
 
-import { LiveData } from '../LiveData';
-import { useLiveData } from './useLiveData';
+import {
+	LiveData,
+	useLiveData,
+} from 'utils/asyncData';
 
 /**
  * Attempts to load the IDs of all days immediately, sorted chronologically. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.

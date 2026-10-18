@@ -1,8 +1,6 @@
-import {
-	AsyncDataStateType,
-	extractError,
-	type SettableAsyncDataState,
-} from 'utils';
+import { extractError } from './extractError';
+import { AsyncDataStateType } from './AsyncDataStateType';
+import type { SettableAsyncDataState } from './SettableAsyncDataState';
 
 export interface SettableDataOptions<T> {
 	/**

@@ -1,10 +1,16 @@
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
+import { AsyncDataStateType } from './AsyncDataStateType';
+import type { AsyncDataState } from './AsyncDataState';
+
 import {
 	LiveData,
-	type LiveDataObserveOptions,
 	type LiveDataOptions,
+	type LiveDataObserveOptions,
 } from './LiveData';
-import { SettableData, type SettableDataOptions } from './SettableData';
+
+import {
+	SettableData,
+	type SettableDataOptions,
+} from './SettableData';
 
 export interface SettableLiveDataOptions<T> extends LiveDataOptions<T>, SettableDataOptions<T> {
 	/**

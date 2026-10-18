@@ -4,12 +4,13 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import type { AsyncDataState } from 'utils';
+import {
+	type AsyncDataState,
+	LiveData,
+} from 'utils/asyncData';
 
 import type { Status } from '../../types';
 import { loadAllStatuses } from '../loadAllStatuses';
-
-import { LiveData } from '../LiveData';
 
 // An in-memory cache of statuses, used to load directly into success state if it's already been fetched
 let statuses: readonly Status[] | null = null;

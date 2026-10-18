@@ -12,7 +12,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';

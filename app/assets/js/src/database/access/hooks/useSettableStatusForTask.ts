@@ -2,9 +2,10 @@ import { useMemo } from 'preact/hooks';
 
 import {
 	AsyncDataStateType,
-	type ExpandType,
-	type SettableAsyncDataResult,
-} from 'utils';
+	SettableLiveData,
+	useSettableLiveData,
+	type UseSettableLiveDataResult,
+} from 'utils/asyncData';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -17,15 +18,11 @@ import {
 	defineChangeEntity,
 } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
-import { useSettableLiveData } from './useSettableLiveData';
-import { SettableLiveData } from '../SettableLiveData';
 
 /**
  * Attempts to load a the status for a specified task immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode SettableAsyncDataResult} representing the state of that loading operation and providing a setter method.
  */
-export function useSettableStatusForTask(taskId: number): ExpandType<
-	Omit<SettableAsyncDataResult<number>, 'getData'>
-> {
+export function useSettableStatusForTask(taskId: number): UseSettableLiveDataResult<number> {
 	const settableStatusForTask = useMemo(() => {
 		const settableStatusForTask = new SettableLiveData({
 			optimistic: true,

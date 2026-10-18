@@ -5,8 +5,10 @@ import {
 	test,
 } from '@jest/globals';
 
+import { AsyncDataStateType } from './AsyncDataStateType';
+import type { SettableAsyncDataState } from './SettableAsyncDataState';
+
 import { SettableData } from './SettableData';
-import { AsyncDataStateType, type SettableAsyncDataState } from 'utils';
 
 describe('SettableData', () => {
 	describe('updates its internal state', () => {

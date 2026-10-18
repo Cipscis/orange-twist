@@ -4,11 +4,17 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import type { SettableAsyncDataResult } from 'utils';
-
+import type { AsyncDataState } from '../AsyncDataState';
+import type { SettableAsyncDataState } from '../SettableAsyncDataState';
 import type { SettableLiveData } from '../SettableLiveData';
 
-export function useSettableLiveData<T>(settableLiveData: SettableLiveData<T>): Omit<SettableAsyncDataResult<T>, 'getData'> {
+export interface UseSettableLiveDataResult<T> {
+	stateOfGet: AsyncDataState<T>;
+	stateOfSet: SettableAsyncDataState;
+	setData: (data: Partial<T>) => Promise<void>;
+}
+
+export function useSettableLiveData<T>(settableLiveData: SettableLiveData<T>): UseSettableLiveDataResult<T> {
 	const [stateOfGet, setStateOfGet] = useState(settableLiveData.liveData.state);
 	const [stateOfSet, setStateOfSet] = useState(settableLiveData.settableData.state);
 

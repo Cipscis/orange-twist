@@ -4,12 +4,11 @@ import {
 	test,
 } from '@jest/globals';
 
+import { AsyncDataStateType } from './AsyncDataStateType';
+import type { AsyncDataState } from './AsyncDataState';
+import type { SettableAsyncDataState } from './SettableAsyncDataState';
+
 import { SettableLiveData } from './SettableLiveData';
-import {
-	AsyncDataStateType,
-	type AsyncDataState,
-	type SettableAsyncDataState,
-} from 'utils';
 
 describe('SettableLiveData', () => {
 	describe('provides optimistic data when optimistic option is set', () => {

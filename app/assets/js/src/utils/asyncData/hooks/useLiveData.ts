@@ -4,8 +4,7 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import type { AsyncDataState } from 'utils';
-
+import type { AsyncDataState } from '../AsyncDataState';
 import type { LiveData } from '../LiveData';
 
 /**

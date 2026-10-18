@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType } from 'utils';
+import { AsyncDataStateType } from 'utils/asyncData';
 
 import type { useSettableTask } from 'database';
 

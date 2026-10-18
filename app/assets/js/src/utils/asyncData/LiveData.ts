@@ -1,9 +1,13 @@
-import {
-	AsyncDataStateType,
-	extractError,
-	type AsyncDataState,
-	type GetAsyncDataOptions,
-} from 'utils/asyncData';
+import { extractError } from './extractError';
+import { AsyncDataStateType } from './AsyncDataStateType';
+import type { AsyncDataState } from './AsyncDataState';
+
+export interface GetAsyncDataOptions {
+	/**
+	 * An `AbortSignal`. If it is aborted, the asynchronous request for data should also be aborted.
+	 */
+	signal: AbortSignal;
+}
 
 export interface LiveDataOptions<T> {
 	/**

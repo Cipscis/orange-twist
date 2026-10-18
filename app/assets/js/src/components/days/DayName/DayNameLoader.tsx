@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
 import type { Day } from 'database';
 
 import {

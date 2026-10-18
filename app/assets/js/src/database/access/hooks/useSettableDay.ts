@@ -2,10 +2,10 @@ import { useMemo } from 'preact/hooks';
 
 import {
 	AsyncDataStateType,
-	type AsyncDataState,
-	type ExpandType,
-	type SettableAsyncDataResult,
-} from 'utils';
+	SettableLiveData,
+	useSettableLiveData,
+	type UseSettableLiveDataResult,
+} from 'utils/asyncData';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -19,15 +19,11 @@ import {
 	ChangeType,
 } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
-import { SettableLiveData } from '../SettableLiveData';
-import { useSettableLiveData } from './useSettableLiveData';
 
 /**
  * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode AsyncDataState} representing the state of that loading operation and providing a setter method.
  */
-export function useSettableDay(dayId: number): ExpandType<
-	Omit<SettableAsyncDataResult<Day>, 'getData'>
-> {
+export function useSettableDay(dayId: number): UseSettableLiveDataResult<Day> {
 	const settableDay = useMemo(() => {
 		const settableDay = new SettableLiveData({
 			optimistic: true,

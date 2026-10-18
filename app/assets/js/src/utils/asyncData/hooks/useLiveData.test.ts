@@ -6,10 +6,15 @@ import {
 import { renderHook, waitFor } from '@testing-library/preact';
 import { useMemo } from 'preact/hooks';
 
-import { LiveData, type LiveDataOptions } from '../LiveData';
+import { AsyncDataStateType } from '../AsyncDataStateType';
+import type { AsyncDataState } from '../AsyncDataState';
+
+import {
+	LiveData,
+	type LiveDataOptions,
+} from '../LiveData';
 
 import { useLiveData } from './useLiveData';
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
 
 describe('useLiveData', () => {
 	test('updates state on load start and end', async () => {

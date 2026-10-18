@@ -1,6 +1,6 @@
 import { useMemo } from 'preact/hooks';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
+import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
 
 import type { Day } from '../../types';
 
@@ -11,8 +11,10 @@ import {
 	ChangeType,
 } from '../liveAccessManager';
 
-import { LiveData } from '../LiveData';
-import { useLiveData } from './useLiveData';
+import {
+	LiveData,
+	useLiveData,
+} from 'utils/asyncData';
 
 /**
  * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode AsyncDataState} representing the state of that loading operation.

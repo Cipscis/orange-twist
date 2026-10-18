@@ -1,6 +1,11 @@
 import { useMemo } from 'preact/hooks';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils';
+import {
+	AsyncDataStateType,
+	type AsyncDataState,
+	LiveData,
+	useLiveData,
+} from 'utils/asyncData';
 
 import type { Task } from '../../types';
 
@@ -10,9 +15,6 @@ import {
 	ChangeEntityType,
 	ChangeType,
 } from '../liveAccessManager';
-
-import { LiveData } from '../LiveData';
-import { useLiveData } from './useLiveData';
 
 /**
  * Attempts to load a specified task immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode AsyncDataState} representing the state of that loading operation.

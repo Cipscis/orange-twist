@@ -1,12 +1,13 @@
 import { useMemo } from 'preact/hooks';
 
-import type { AsyncDataState } from 'utils';
+import {
+	type AsyncDataState,
+	LiveData,
+	useLiveData,
+} from 'utils/asyncData';
 
 import type { Status } from '../../types';
 import { loadStatus } from '../loadStatus';
-
-import { LiveData } from '../LiveData';
-import { useLiveData } from './useLiveData';
 
 /**
  * Attempts to load a specified status immediately. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.

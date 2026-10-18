@@ -5,10 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
-import {
-	AsyncDataStateType,
-	type AsyncDataState,
-} from 'utils';
+import { AsyncDataStateType } from './AsyncDataStateType';
+import type { AsyncDataState } from './AsyncDataState';
 
 import { LiveData } from './LiveData';
 
