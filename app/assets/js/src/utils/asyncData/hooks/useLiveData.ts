@@ -8,7 +8,7 @@ import type { AsyncDataState } from '../AsyncDataState';
 import type { LiveData } from '../LiveData';
 
 /**
- * Provides a live {@linkcode AsyncDataState} that begins loading immediately.
+ * Provides a live {@linkcode AsyncDataState}.
  *
  * @example
  * ```ts

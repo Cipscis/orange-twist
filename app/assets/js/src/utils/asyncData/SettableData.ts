@@ -76,7 +76,6 @@ export class SettableData<T> extends EventTarget {
 				loading: false,
 			};
 			this.dispatchEvent(new ProgressEvent('load'));
-			this.dispatchEvent(new ProgressEvent('loadend'));
 		} catch (e) {
 			this.#state = {
 				type: AsyncDataStateType.ERROR,
@@ -84,9 +83,9 @@ export class SettableData<T> extends EventTarget {
 				loading: false,
 			};
 			this.dispatchEvent(new ProgressEvent('error'));
-			this.dispatchEvent(new ProgressEvent('loadend'));
 		} finally {
 			this.#abortController = null;
+			this.dispatchEvent(new ProgressEvent('loadend'));
 		}
 	}
 
@@ -140,6 +139,7 @@ export interface SettableData<T> {
 		) => void,
 		options?: boolean | AddEventListenerOptions,
 	): void;
+	addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
 
 	removeEventListener<
 		K extends keyof SettableDataEventMap
@@ -156,4 +156,5 @@ export interface SettableData<T> {
 		) => void,
 		options?: boolean | EventListenerOptions,
 	): void;
+	removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }

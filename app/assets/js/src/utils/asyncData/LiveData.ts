@@ -43,6 +43,9 @@ export interface LiveDataOptions<T> {
 }
 
 export interface LiveDataObserveOptions {
+	/**
+	 * An `AbortSignal`. If it is aborted, it will trigger the cleanup of the {@linkcode LiveDataOptions.observe observe} and {@linkcode LiveDataOptions.observeState observeState} options.
+	 */
 	signal?: AbortSignal;
 }
 
@@ -50,8 +53,6 @@ export interface LiveDataObserveOptions {
  * A representation of asynchronously loaded data that can be updated live.
  *
  * To load data and begin live observation, call the {@linkcode LiveData.observe observe} method. To stop live observation, call the {@linkcode LiveData.unobserve unobserve} method.
- *
- * This class is primarily intended as a base class to be extended by other classes that load and observe particular types of data.
  */
 // This class is intentionally modified with declaration merging to make event binding easier
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -70,7 +71,7 @@ export class LiveData<T> extends EventTarget {
 	#unobserveStateController: AbortController | null = null;
 
 	#getData: LiveDataOptions<T>['getData'];
-	#observe: LiveDataOptions<T>['observe'];
+	#observe: Required<LiveDataOptions<T>>['observe'] | null = null;
 	#observeState: Required<LiveDataOptions<T>>['observeState'] | null = null;
 
 	constructor(
@@ -79,7 +80,9 @@ export class LiveData<T> extends EventTarget {
 		super();
 
 		this.#getData = options.getData;
-		this.#observe = options.observe;
+		if (options.observe) {
+			this.#observe = options.observe;
+		}
 		if (options.observeState) {
 			this.#observeState = options.observeState;
 		}
@@ -203,7 +206,11 @@ export class LiveData<T> extends EventTarget {
 			}
 			const signal = AbortSignal.any(signals);
 			const internalGetData = (options?: GetAsyncDataOptions) => {
-				return this.#loadDataAndUpdateState({ signal });
+				const signals = [signal];
+				if (options?.signal) {
+					signals.push(options.signal);
+				}
+				return this.#loadDataAndUpdateState({ signal: AbortSignal.any(signals) });
 			};
 			this.#observeState(
 				internalGetData,
@@ -239,6 +246,7 @@ export interface LiveData<T> {
 		) => void,
 		options?: boolean | AddEventListenerOptions,
 	): void;
+	addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
 
 	removeEventListener<
 		K extends keyof LiveDataEventMap
@@ -255,4 +263,5 @@ export interface LiveData<T> {
 		) => void,
 		options?: boolean | EventListenerOptions,
 	): void;
+	removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }

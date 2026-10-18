@@ -3,16 +3,19 @@ import {
 	expect,
 	test,
 } from '@jest/globals';
-
 import { renderHook, waitFor } from '@testing-library/preact';
 import { useMemo } from 'preact/hooks';
 
 import { AsyncDataStateType } from '../AsyncDataStateType';
 import type { AsyncDataState } from '../AsyncDataState';
-import { SettableLiveData, type SettableLiveDataOptions } from '../SettableLiveData';
+
+import {
+	SettableLiveData,
+	type SettableLiveDataOptions,
+} from '../SettableLiveData';
+import type { SettableAsyncDataState } from '../SettableAsyncDataState';
 
 import { useSettableLiveData } from './useSettableLiveData';
-import type { SettableAsyncDataState } from '../SettableAsyncDataState';
 
 describe('useSettableLiveData', () => {
 	test('update states on load start and end', async () => {
