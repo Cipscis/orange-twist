@@ -1,4 +1,8 @@
-import { useMemo } from 'preact/hooks';
+import {
+	useEffect,
+	useMemo,
+	useState,
+} from 'preact/hooks';
 
 import type { AsyncDataState } from 'utils';
 
@@ -6,7 +10,6 @@ import type { Status } from '../../types';
 import { loadAllStatuses } from '../loadAllStatuses';
 
 import { LiveData } from '../LiveData';
-import { useLiveData } from './useLiveData';
 
 // An in-memory cache of statuses, used to load directly into success state if it's already been fetched
 let statuses: readonly Status[] | null = null;
@@ -38,5 +41,28 @@ export function useAllStatuses(): AsyncDataState<readonly Status[]> {
 		return liveStatusesGlobal;
 	}, []);
 
-	return useLiveData(liveStatuses);
+	// Replicate most of useLiveData, but without cleanup since the same LiveData is reused across components so shouldn't be aborted etc.
+	const [state, setState] = useState(liveStatuses.state);
+
+	// Add necessary event listeners to update state
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		liveStatuses.addEventListener(
+			'loadstart',
+			() => setState(liveStatuses.state),
+			{ signal },
+		);
+
+		liveStatuses.addEventListener(
+			'loadend',
+			() => setState(liveStatuses.state),
+			{ signal },
+		);
+
+		return () => controller.abort();
+	}, [liveStatuses]);
+
+	return state;
 }
