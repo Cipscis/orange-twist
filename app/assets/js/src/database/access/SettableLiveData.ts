@@ -30,13 +30,21 @@ export class SettableLiveData<T> {
 			typeof this.#optimisticDataOverride !== 'undefined' &&
 			this.#liveData.state.type === AsyncDataStateType.SUCCESS
 		) {
-			return {
-				...this.#liveData.state,
-				data: {
-					...this.#liveData.state.data,
-					...this.#optimisticDataOverride,
-				},
-			};
+			if (typeof this.#optimisticDataOverride === 'object') {
+				return {
+					...this.#liveData.state,
+					data: {
+						...this.#liveData.state.data,
+						...this.#optimisticDataOverride,
+					},
+				};
+			} else {
+				return {
+					...this.#liveData.state,
+					// This type assertion is safe because non-object types can't be set partially
+					data: this.#optimisticDataOverride as T,
+				};
+			}
 		}
 
 		return this.#liveData.state;
