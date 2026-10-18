@@ -143,7 +143,7 @@ describe('useSettableTask', () => {
 				expect(result.current.stateOfGet).toEqual({
 					type: AsyncDataStateType.ERROR,
 					loading: false,
-					error: new Error('Could not find day task with ID 3'),
+					error: new Error('Could not find task with ID 4'),
 				} satisfies AsyncDataState<Task>);
 			});
 
