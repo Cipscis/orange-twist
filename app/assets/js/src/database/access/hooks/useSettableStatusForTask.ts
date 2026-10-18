@@ -1,7 +1,4 @@
-import {
-	useCallback,
-	useEffect,
-} from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
 import {
 	AsyncDataStateType,
@@ -21,6 +18,8 @@ import {
 	defineChangeEntity,
 } from '../liveAccessManager';
 import { SaveType } from '../SaveAction';
+import { useSettableLiveData } from './useSettableLiveData';
+import { SettableLiveData } from '../SettableLiveData';
 
 /**
  * Attempts to load a the status for a specified task immediately, and reloads it if it is changed in the database. Provides a partial {@linkcode SettableAsyncDataResult} representing the state of that loading operation and providing a setter method.
@@ -30,66 +29,57 @@ import { SaveType } from '../SaveAction';
 export function useSettableStatusForTask(taskId: number): ExpandType<
 	Omit<SettableAsyncDataResult<number>, 'getData'>
 > {
-	const getStatusForTask = useCallback(async () => {
-		const status = await loadStatusForTask(taskId);
+	const settableStatusForTask = useMemo(() => {
+		const settableStatusForTask = new SettableLiveData({
+			optimistic: true,
+			async getData(_options) {
+				const status = await loadStatusForTask(taskId);
 
-		if (status === null) {
-			throw new Error(`Could not find task with ID ${taskId}`);
-		}
+				if (status === null) {
+					throw new Error(`Could not find task with ID ${taskId}`);
+				}
 
-		return status;
-	}, [taskId]);
+				return status;
+			},
+			async setData(status, _signal) {
+				await fireCommand(Command.DATA_SAVE, [{
+					type: SaveType.TASK_STATUS,
+					id: taskId,
+					status,
+				}]);
+			},
+			observeState(getData, state, signal) {
+				const changeEntity = defineChangeEntity({
+					type: ChangeEntityType.DAY_TASK,
+				});
 
-	const setStatusForTask = useCallback(async (status: number) => {
-		await fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.TASK_STATUS,
-			id: taskId,
-			status,
-		}]);
-	}, [taskId]);
+				if (state.type === AsyncDataStateType.SUCCESS) {
+					addChangeListener(
+						ChangeType.ADD,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
 
-	const asyncDataResult = useSettableAsyncData({
-		getData: getStatusForTask,
-		setData: setStatusForTask,
-		optimistic: true,
-		immediate: true,
-	});
+					addChangeListener(
+						ChangeType.CHANGE,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
 
-	// Re-fetch the data if it changes
-	useEffect(() => {
-		const controller = new AbortController();
-		const { signal } = controller;
-
-		// TODO: Only care about changes to day tasks for this task
-		const changeEntity = defineChangeEntity({
-			type: ChangeEntityType.DAY_TASK,
+					addChangeListener(
+						ChangeType.DELETE,
+						changeEntity,
+						() => getData(),
+						{ signal },
+					);
+				}
+			},
 		});
+		settableStatusForTask.observe();
+		return settableStatusForTask;
+	}, [taskId]);
 
-		if (asyncDataResult.stateOfGet.type === AsyncDataStateType.SUCCESS) {
-			addChangeListener(
-				ChangeType.ADD,
-				changeEntity,
-				() => asyncDataResult.getData(),
-				{ signal },
-			);
-
-			addChangeListener(
-				ChangeType.CHANGE,
-				changeEntity,
-				() => asyncDataResult.getData(),
-				{ signal },
-			);
-
-			addChangeListener(
-				ChangeType.DELETE,
-				changeEntity,
-				() => asyncDataResult.getData(),
-				{ signal },
-			);
-		}
-
-		return () => controller.abort();
-	}, [taskId, asyncDataResult]);
-
-	return asyncDataResult;
+	return useSettableLiveData(settableStatusForTask);
 }
