@@ -2,6 +2,15 @@ import { extractError } from './extractError';
 import { AsyncDataStateType } from './AsyncDataStateType';
 import type { SettableAsyncDataState } from './SettableAsyncDataState';
 
+/**
+ * This utility type constructs a stripped down type that can be used for setting data via partial update.
+ *
+ * For literals or array data, the complete value is required.
+ */
+export type SettablePartial<T> = T extends readonly unknown[]
+	? T
+	: Partial<T>;
+
 export interface SettableDataOptions<T> {
 	/**
 	 * A function that sets data via partial update.
@@ -9,7 +18,7 @@ export interface SettableDataOptions<T> {
 	 * Takes an {@linkcode AbortSignal} to allow requests to be aborted.
 	 */
 	setData: (
-		data: Partial<T>,
+		data: SettablePartial<T>,
 		signal: AbortSignal,
 	) => Promise<void>;
 }
@@ -45,7 +54,7 @@ export class SettableData<T> extends EventTarget {
 	/**
 	 * Set the data via partial update.
 	 */
-	async setData(data: Partial<T>): Promise<void> {
+	async setData(data: SettablePartial<T>): Promise<void> {
 		this.abort();
 
 		this.#abortController = new AbortController();
