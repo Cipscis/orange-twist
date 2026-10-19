@@ -8,6 +8,9 @@ import {
 	type UseSettableLiveDataResult,
 } from 'utils/asyncData';
 
+import { fireCommand } from 'registers/commands';
+import { Command } from 'types/Command';
+
 import { loadDayTaskIdsForDay } from '../loadDayTaskIdsForDay';
 import {
 	addChangeListener,
@@ -15,8 +18,6 @@ import {
 	ChangeType,
 } from '../liveAccessManager';
 import { SaveType, type SaveAction } from '../SaveAction';
-import { fireCommand } from 'registers/commands';
-import { Command } from 'types/Command';
 
 /**
  * Attempts to load a list of all day task IDs for a given day. Provides an {@linkcode AsyncDataState} representing the state of that loading operation, as well as a setter for updating their order.
