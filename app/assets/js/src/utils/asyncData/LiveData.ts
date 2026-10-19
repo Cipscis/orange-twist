@@ -101,21 +101,35 @@ export class LiveData<T> extends EventTarget {
 		if (options?.signal) {
 			signals.push(options.signal);
 		}
-		const signal = AbortSignal.any(signals);
+		/**
+		 * This {@linkcode AbortSignal} will be aborted if:
+		 *
+		 * - `unobserve()` is called
+		 * - The {@linkcode AbortSignal} passed to `observe()` is aborted
+		 */
+		const observeCleanupSignal = AbortSignal.any(signals);
 
-		this.#loadDataAndUpdateState({ signal }).catch(() => {
+		this.#loadDataAndUpdateState({ signal: observeCleanupSignal }).catch(() => {
 			// Consider any errors thrown within this async function as handled
 		});
 		if (this.#observe) {
 			const internalGetData = (options?: GetAsyncDataOptions) => {
-				const signals = [signal];
+				const signals = [observeCleanupSignal];
 				if (options) {
 					signals.push(options.signal);
 				}
-				return this.#loadDataAndUpdateState({ signal: AbortSignal.any(signals) });
+				/**
+				 * This {@linkcode AbortSignal} will be aborted if:
+				 *
+				 * - `unobserve()` is called
+				 * - The {@linkcode AbortSignal} passed to `observe()` is aborted
+				 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
+				 */
+				const abortGetDataSignal = AbortSignal.any(signals);
+				return this.#loadDataAndUpdateState({ signal: abortGetDataSignal });
 			};
 
-			this.#observe(internalGetData, signal);
+			this.#observe(internalGetData, observeCleanupSignal);
 		}
 	}
 
@@ -145,19 +159,26 @@ export class LiveData<T> extends EventTarget {
 			promise: abortPromise,
 			resolve: abortResolve,
 		} = Promise.withResolvers<void>();
-		if (getDataOptions) {
-			const signal = getDataOptions.signal;
-			signal.addEventListener('abort', () => {
-				// Reset state and fire events synchronously
-				this.#state = {
-					...this.#state,
-					loading: false,
-				};
-				this.dispatchEvent(new ProgressEvent('abort'));
-				this.dispatchEvent(new ProgressEvent('loadend'));
-				abortResolve();
-			});
-		}
+
+		/**
+		 * This {@linkcode AbortSignal} will be aborted if:
+		 *
+		 * - `unobserve()` is called
+		 * - The {@linkcode AbortSignal} passed to `observe()` is aborted
+		 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
+		 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observeState()` is aborted
+		 */
+		const abortGetDataSignal = getDataOptions.signal;
+		abortGetDataSignal.addEventListener('abort', () => {
+			// Reset state and fire events synchronously
+			this.#state = {
+				...this.#state,
+				loading: false,
+			};
+			this.dispatchEvent(new ProgressEvent('abort'));
+			this.dispatchEvent(new ProgressEvent('loadend'));
+			abortResolve();
+		});
 
 		this.#state = {
 			...this.state,
@@ -169,7 +190,7 @@ export class LiveData<T> extends EventTarget {
 		try {
 			const data = await Promise.race([getDataPromise, abortPromise]);
 
-			if (getDataOptions?.signal.aborted) {
+			if (getDataOptions.signal.aborted) {
 				// No need to re-do `observeStatus`
 				return;
 			} else {
@@ -200,22 +221,38 @@ export class LiveData<T> extends EventTarget {
 		// Call any `observeState` method with the updated state
 		if (this.#observeState) {
 			this.#unobserveStateController = new AbortController();
-			const signals = [this.#unobserveStateController.signal];
-			if (getDataOptions?.signal) {
-				signals.push(getDataOptions.signal);
-			}
-			const signal = AbortSignal.any(signals);
+			/**
+			 * This {@linkcode AbortSignal} will be aborted if:
+			 *
+			 * - `unobserve()` is called
+			 * - The {@linkcode AbortSignal} passed to `observe()` is aborted
+			 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
+			 * - A state change completes
+			 */
+			const observeStateCleanupSignal = AbortSignal.any([
+				abortGetDataSignal,
+				this.#unobserveStateController.signal,
+			]);
 			const internalGetData = (options?: GetAsyncDataOptions) => {
-				const signals = [signal];
+				const signals = [abortGetDataSignal];
 				if (options?.signal) {
 					signals.push(options.signal);
 				}
-				return this.#loadDataAndUpdateState({ signal: AbortSignal.any(signals) });
+				/**
+				 * This {@linkcode AbortSignal} will be aborted if:
+				 *
+				 * - `unobserve()` is called
+				 * - The {@linkcode AbortSignal} passed to `observe()` is aborted
+				 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
+				 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observeState()` is aborted
+				 */
+				const abortGetDataWithStateSignal = AbortSignal.any(signals);
+				return this.#loadDataAndUpdateState({ signal: abortGetDataWithStateSignal });
 			};
 			this.#observeState(
 				internalGetData,
 				this.#state,
-				AbortSignal.any(signals),
+				observeStateCleanupSignal,
 			);
 		}
 	}.bind(this);
