@@ -354,7 +354,7 @@ describe('LiveData', () => {
 		expect(observeState).toHaveBeenCalled();
 	});
 
-	test('when data changes, aborts the `AbortSignal` passed to `observeState', async () => {
+	test('when data changes, aborts the `AbortSignal` passed to `observeState`', async () => {
 		let {
 			promise: loadPromise,
 			resolve: loadResolve,
