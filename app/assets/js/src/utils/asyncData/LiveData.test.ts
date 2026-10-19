@@ -516,6 +516,9 @@ describe('LiveData', () => {
 			reloadResolve();
 			await Promise.resolve();
 
+			// Process microtask queue to ensure getData is called
+			await Promise.resolve();
+
 			expect(abortSignal!.aborted).toBe(false);
 			liveData.unobserve();
 			expect(abortSignal!.aborted).toBe(true);
@@ -555,6 +558,9 @@ describe('LiveData', () => {
 
 			// Trigger reload
 			reloadResolve();
+			await reloadPromise;
+
+			// Process microtask queue to ensure getData is called
 			await Promise.resolve();
 
 			expect(abortSignal!.aborted).toBe(false);
