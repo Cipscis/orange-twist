@@ -6,6 +6,7 @@ export { useAllDayIds } from './useAllDayIds';
 export { useTask } from './useTask';
 export { useSettableTask } from './useSettableTask';
 
+export { useSettableDayTaskIdsForDay } from './useSettableDayTaskIdsForDay';
 export { useDayTaskIdsForDay } from './useDayTaskIdsForDay';
 export { useDayTaskIdsForTask } from './useDayTaskIdsForTask';
 export { useSettableDayTask } from './useSettableDayTask';
