@@ -200,7 +200,7 @@ describe('SettableLiveData', () => {
 				loading: false,
 			} satisfies AsyncDataState<typeof data>);
 		});
-		test('for iterable types', async () => {
+		test('for array types', async () => {
 			let data = [1, 2, 3];
 
 			let {
