@@ -20,7 +20,7 @@ export interface LiveDataOptions<T> {
 	 * An {@linkcode AbortSignal} is provided so that it can be used to define any necessary cleanup.
 	 */
 	observe?: (
-		getData: (options?: GetAsyncDataOptions) => Promise<void>,
+		getData: (options?: GetAsyncDataOptions) => void,
 		signal: AbortSignal,
 	) => void;
 	/**
@@ -29,7 +29,7 @@ export interface LiveDataOptions<T> {
 	 * An {@linkcode AbortSignal} is provided so that it can be used to define any necessary cleanup.
 	 */
 	observeState?: (
-		getData: (options?: GetAsyncDataOptions) => Promise<void>,
+		getData: (options?: GetAsyncDataOptions) => void,
 		state: Extract<
 			AsyncDataState<T>,
 			{
@@ -129,7 +129,10 @@ export class LiveData<T> extends EventTarget {
 				return this.#loadDataAndUpdateState({ signal: abortGetDataSignal });
 			};
 
-			this.#observe(internalGetData, observeCleanupSignal);
+			this.#observe(
+				microDebounce(internalGetData),
+				observeCleanupSignal,
+			);
 		}
 	}
 
@@ -213,48 +216,63 @@ export class LiveData<T> extends EventTarget {
 			this.dispatchEvent(new ProgressEvent('loadend'));
 		}
 
+		this.#observeStateWrapper(abortGetDataSignal, this.#state);
+	}.bind(this);
+
+	/**
+	 * If necessary, clean up any previous `observeState` call then re-call `observeState` with the provided state.
+	 */
+	#observeStateWrapper = function (
+		this: LiveData<T>,
+		abortGetDataSignal: AbortSignal,
+		state: Extract<AsyncDataState<T>, { type: typeof AsyncDataStateType.SUCCESS; } | { type: typeof AsyncDataStateType.ERROR; }>
+	): void {
 		// Clean up any previous `observeState` call
 		if (this.#unobserveStateController) {
 			this.#unobserveStateController.abort();
 			this.#unobserveStateController = null;
 		}
+		if (!this.#observeState) {
+			return;
+		}
+
 		// Call any `observeState` method with the updated state
-		if (this.#observeState) {
-			this.#unobserveStateController = new AbortController();
+		this.#unobserveStateController = new AbortController();
+
+		const internalGetData = (options?: GetAsyncDataOptions) => {
+			const signals = [abortGetDataSignal];
+			if (options?.signal) {
+				signals.push(options.signal);
+			}
 			/**
 			 * This {@linkcode AbortSignal} will be aborted if:
 			 *
 			 * - `unobserve()` is called
 			 * - The {@linkcode AbortSignal} passed to `observe()` is aborted
 			 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
-			 * - A state change completes
+			 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observeState()` is aborted
 			 */
-			const observeStateCleanupSignal = AbortSignal.any([
-				abortGetDataSignal,
-				this.#unobserveStateController.signal,
-			]);
-			const internalGetData = (options?: GetAsyncDataOptions) => {
-				const signals = [abortGetDataSignal];
-				if (options?.signal) {
-					signals.push(options.signal);
-				}
-				/**
-				 * This {@linkcode AbortSignal} will be aborted if:
-				 *
-				 * - `unobserve()` is called
-				 * - The {@linkcode AbortSignal} passed to `observe()` is aborted
-				 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
-				 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observeState()` is aborted
-				 */
-				const abortGetDataWithStateSignal = AbortSignal.any(signals);
-				return this.#loadDataAndUpdateState({ signal: abortGetDataWithStateSignal });
-			};
-			this.#observeState(
-				internalGetData,
-				this.#state,
-				observeStateCleanupSignal,
-			);
-		}
+			const abortGetDataWithStateSignal = AbortSignal.any(signals);
+			return this.#loadDataAndUpdateState({ signal: abortGetDataWithStateSignal });
+		};
+
+		/**
+		 * This {@linkcode AbortSignal} will be aborted if:
+		 *
+		 * - `unobserve()` is called
+		 * - The {@linkcode AbortSignal} passed to `observe()` is aborted
+		 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
+		 * - A state change completes
+		 */
+		const observeStateCleanupSignal = AbortSignal.any([
+			abortGetDataSignal,
+			this.#unobserveStateController.signal,
+		]);
+		this.#observeState(
+			microDebounce(internalGetData),
+			state,
+			observeStateCleanupSignal,
+		);
 	}.bind(this);
 }
 
@@ -302,3 +320,25 @@ export interface LiveData<T> {
 	): void;
 	removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
+
+/**
+ * Debounce a function so it will actually be called once after next processing the microtask queue, if called multiple times synchronously.
+ */
+function microDebounce<
+	T extends (...args: any[]) => unknown
+>(fn: T): (
+	this: ThisParameterType<T>,
+	...args: Parameters<T>
+) => void {
+	let call = false;
+
+	return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+		if (call) {
+			return;
+		}
+		call = true;
+
+		queueMicrotask(() => fn.apply(this, args));
+	};
+}
+

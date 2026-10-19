@@ -62,6 +62,9 @@ describe('useLiveData', () => {
 		resolve();
 		await promise;
 
+		// Process microtask queue to ensure getData is called
+		await Promise.resolve();
+
 		rerender(initialProps);
 
 		await waitFor(() => {

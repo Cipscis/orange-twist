@@ -73,6 +73,10 @@ describe('SettableLiveData', () => {
 
 			// Set data and check optimistic state
 			settableLiveData.setData({ foo: 2 });
+
+			// Process microtask queue to ensure getData is called
+			await Promise.resolve();
+
 			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: {
@@ -167,6 +171,10 @@ describe('SettableLiveData', () => {
 
 			// Set data and check optimistic state
 			settableLiveData.setData(4);
+
+			// Process microtask queue to ensure getData is called
+			await Promise.resolve();
+
 			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: 4,
@@ -252,6 +260,10 @@ describe('SettableLiveData', () => {
 
 			// Set data and check optimistic state
 			settableLiveData.setData([1, 4, 3, 2]);
+
+			// Process microtask queue to ensure getData is called
+			await Promise.resolve();
+
 			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				data: [1, 4, 3, 2],
@@ -337,6 +349,7 @@ describe('SettableLiveData', () => {
 
 		// Set data and check optimistic state reverts on error
 		settableLiveData.setData({ foo: 2 });
+
 		expect(settableLiveData.getter.state).toEqual({
 			type: AsyncDataStateType.SUCCESS,
 			data: {

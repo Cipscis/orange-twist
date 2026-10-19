@@ -73,6 +73,7 @@ describe('useSettableLiveData', () => {
 
 		// Save data and check loading save state and optimistic loading state
 		const savePromise = result.current.setData(false);
+
 		rerender(initialProps);
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
@@ -98,6 +99,9 @@ describe('useSettableLiveData', () => {
 		// Trigger reload and check reloading with optimistic data
 		resolve();
 		await promise;
+
+		// Process microtask queue to ensure getData is called
+		await Promise.resolve();
 
 		rerender(initialProps);
 
