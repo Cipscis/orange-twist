@@ -40,6 +40,7 @@ export class SettableLiveData<T> {
 			if (Array.isArray(this.#optimisticDataOverride)) {
 				return {
 					...this.#liveData.state,
+					// This type assertion is safe because array types can't be set partially
 					data: this.#optimisticDataOverride as T,
 				};
 			} else if (typeof this.#optimisticDataOverride === 'object') {
