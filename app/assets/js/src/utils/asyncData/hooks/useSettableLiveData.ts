@@ -7,11 +7,12 @@ import {
 import type { AsyncDataState } from '../AsyncDataState';
 import type { SettableAsyncDataState } from '../SettableAsyncDataState';
 import type { SettableLiveData } from '../SettableLiveData';
+import type { SettablePartial } from '../SettableData';
 
 export interface UseSettableLiveDataResult<T> {
 	getterState: AsyncDataState<T>;
 	setterState: SettableAsyncDataState;
-	setData: (data: Partial<T>) => Promise<void>;
+	setData: (data: SettablePartial<T>) => Promise<void>;
 }
 
 export function useSettableLiveData<T>(settableLiveData: SettableLiveData<T>): UseSettableLiveDataResult<T> {

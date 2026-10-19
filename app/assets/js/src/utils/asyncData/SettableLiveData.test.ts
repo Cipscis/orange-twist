@@ -200,6 +200,91 @@ describe('SettableLiveData', () => {
 				loading: false,
 			} satisfies AsyncDataState<typeof data>);
 		});
+		test('for array types', async () => {
+			let data = [1, 2, 3];
+
+			let {
+				promise: loadPromise,
+				resolve: loadResolve,
+			} = Promise.withResolvers<void>();
+
+			const {
+				promise: setPromise,
+				resolve: setResolve,
+			} = Promise.withResolvers<void>();
+
+			const settableLiveData = new SettableLiveData({
+				optimistic: true,
+				getData(_options) {
+					loadResolve();
+					return Promise.resolve(data);
+				},
+				observe(getData, _signal) {
+					setPromise.then(() => getData());
+				},
+				setData(newData, _signal) {
+					data = Array.from(newData);
+					setResolve();
+					return Promise.resolve();
+				},
+			});
+
+			settableLiveData.observe();
+
+			// Check the initial load has started
+			expect(settableLiveData.getter.state).toEqual({
+				type: AsyncDataStateType.INITIAL,
+				loading: true,
+			} satisfies AsyncDataState<typeof data>);
+
+			await Promise.race([loadPromise]);
+
+			const result = Promise.withResolvers<void>();
+			loadPromise = result.promise;
+			loadResolve = result.resolve;
+
+			// Check the initial load has succeeded
+			expect(settableLiveData.getter.state).toEqual({
+				type: AsyncDataStateType.SUCCESS,
+				data: [1, 2, 3],
+				loading: false,
+			} satisfies AsyncDataState<typeof data>);
+
+			// Set data and check optimistic state
+			settableLiveData.setData([1, 4, 3, 2]);
+			expect(settableLiveData.getter.state).toEqual({
+				type: AsyncDataStateType.SUCCESS,
+				data: [1, 4, 3, 2],
+				loading: false,
+			} satisfies AsyncDataState<typeof data>);
+
+			expect(settableLiveData.setter.state).toEqual({
+				type: AsyncDataStateType.INITIAL,
+				loading: true,
+			} satisfies SettableAsyncDataState);
+
+			await Promise.race([setPromise]);
+
+			expect(settableLiveData.setter.state).toEqual({
+				type: AsyncDataStateType.SUCCESS,
+				loading: false,
+			});
+
+			expect(settableLiveData.getter.state).toEqual({
+				type: AsyncDataStateType.SUCCESS,
+				data: [1, 4, 3, 2],
+				loading: true,
+			} satisfies AsyncDataState<typeof data>);
+
+			// Check the reload succeeds and still displays the updated state
+			await loadPromise;
+
+			expect(settableLiveData.getter.state).toEqual({
+				type: AsyncDataStateType.SUCCESS,
+				data: [1, 4, 3, 2],
+				loading: false,
+			} satisfies AsyncDataState<typeof data>);
+		});
 	});
 
 	test('reverts to previous data if set operation fails', async () => {

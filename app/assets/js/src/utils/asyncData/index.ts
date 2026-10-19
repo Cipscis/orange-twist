@@ -8,6 +8,7 @@ export {
 export {
 	SettableData,
 	type SettableDataOptions,
+	type SettablePartial,
 } from './SettableData';
 export {
 	SettableLiveData,

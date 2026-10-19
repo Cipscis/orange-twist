@@ -10,6 +10,7 @@ import {
 import {
 	SettableData,
 	type SettableDataOptions,
+	type SettablePartial,
 } from './SettableData';
 
 export interface SettableLiveDataOptions<T> extends LiveDataOptions<T>, SettableDataOptions<T> {
@@ -36,7 +37,13 @@ export class SettableLiveData<T> {
 			typeof this.#optimisticDataOverride !== 'undefined' &&
 			this.#liveData.state.type === AsyncDataStateType.SUCCESS
 		) {
-			if (typeof this.#optimisticDataOverride === 'object') {
+			if (Array.isArray(this.#optimisticDataOverride)) {
+				return {
+					...this.#liveData.state,
+					// This type assertion is safe because array types can't be set partially
+					data: this.#optimisticDataOverride as T,
+				};
+			} else if (typeof this.#optimisticDataOverride === 'object') {
 				return {
 					...this.#liveData.state,
 					data: {
@@ -55,7 +62,7 @@ export class SettableLiveData<T> {
 
 		return this.#liveData.state;
 	}
-	#optimisticDataOverride: Partial<T> | undefined;
+	#optimisticDataOverride: SettablePartial<T> | undefined;
 
 	readonly getter: Readonly<
 		Pick<LiveData<T>, 'addEventListener' | 'removeEventListener' | 'state'>
@@ -126,7 +133,7 @@ export class SettableLiveData<T> {
 	}
 
 	/** Set the data via partial update. */
-	setData(data: Partial<T>): Promise<void> {
+	setData(data: SettablePartial<T>): Promise<void> {
 		return this.#settableData.setData(data);
 	}
 

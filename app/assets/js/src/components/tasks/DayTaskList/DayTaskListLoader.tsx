@@ -1,6 +1,9 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import {
+	AsyncDataStateType,
+	type UseSettableLiveDataResult,
+} from 'utils/asyncData';
 
 import {
 	Loader,
@@ -10,7 +13,7 @@ import {
 import { DayTaskListSync } from './DayTaskListSync';
 
 export interface DayTaskListLoaderProps {
-	dayTaskIdsDataState: AsyncDataState<readonly number[]>;
+	dayTaskIdsDataState: UseSettableLiveDataResult<readonly number[]>;
 }
 
 /**
@@ -21,18 +24,19 @@ export function DayTaskListLoader(props: DayTaskListLoaderProps): JSX.Element {
 		dayTaskIdsDataState,
 	} = props;
 
-	if (dayTaskIdsDataState.type === AsyncDataStateType.INITIAL) {
+	if (dayTaskIdsDataState.getterState.type === AsyncDataStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (dayTaskIdsDataState.type === AsyncDataStateType.ERROR) {
+	if (dayTaskIdsDataState.getterState.type === AsyncDataStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
-			message={dayTaskIdsDataState.error.message}
+			message={dayTaskIdsDataState.getterState.error.message}
 		/>;
 	}
 
 	return <DayTaskListSync
-		dayTaskIds={dayTaskIdsDataState.data}
+		dayTaskIds={dayTaskIdsDataState.getterState.data}
+		setDayTaskIdOrder={dayTaskIdsDataState.setData}
 	/>;
 }
