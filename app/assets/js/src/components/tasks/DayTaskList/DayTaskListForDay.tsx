@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { useDayTaskIdsForDay } from 'database';
+import { useSettableDayTaskIdsForDay } from 'database';
 
 import { DayTaskListLoader } from './DayTaskListLoader';
 
@@ -16,7 +16,7 @@ export function DayTaskListForDay(props: DayTaskListForDayProps): JSX.Element {
 		dayId,
 	} = props;
 
-	const dayTaskIdsDataState = useDayTaskIdsForDay(dayId);
+	const dayTaskIdsDataState = useSettableDayTaskIdsForDay(dayId);
 
 	return <DayTaskListLoader
 		dayTaskIdsDataState={dayTaskIdsDataState}
