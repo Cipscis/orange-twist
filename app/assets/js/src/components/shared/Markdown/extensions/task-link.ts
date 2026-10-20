@@ -1,5 +1,7 @@
 import type { TokenizerAndRendererExtension } from 'marked';
 
+import { TaskLink } from './TaskLink';
+
 export const taskLink: TokenizerAndRendererExtension = {
 	name: 'taskLink',
 	level: 'inline',
@@ -26,6 +28,10 @@ export const taskLink: TokenizerAndRendererExtension = {
 		return token;
 	},
 	renderer(token) {
+		if (!customElements.get('task-link')) {
+			customElements.define('task-link', TaskLink);
+		}
+
 		const taskLink = `<task-link task-id="${token.taskId}"></task-link>`;
 		return taskLink;
 	},
