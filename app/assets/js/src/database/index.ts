@@ -6,6 +6,8 @@ export {
 
 	ChangeEntityType,
 
+	LiveTask,
+
 	loadDay,
 	useDay,
 	useSettableDay,
