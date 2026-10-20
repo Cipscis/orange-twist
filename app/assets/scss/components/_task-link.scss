@@ -23,12 +23,8 @@
 }
 
 .task-link__status {
-	display: inline-block;
-	vertical-align: middle;
 	// Manual adjustment to improve apparent vertical alignment
 	margin-top: -0.1em;
-	line-height: 1;
-	color: var(--colour);
 }
 
 .task-link__name {
