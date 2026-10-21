@@ -1,3 +1,5 @@
+import { microDebounce } from 'utils/microDebounce';
+
 import { extractError } from './extractError';
 import { AsyncDataStateType } from './AsyncDataStateType';
 import type { AsyncDataState } from './AsyncDataState';
@@ -319,28 +321,4 @@ export interface LiveData<T> {
 		options?: boolean | EventListenerOptions,
 	): void;
 	removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-}
-
-/**
- * Debounce a function so it will actually be called once after next processing the microtask queue, if called multiple times synchronously.
- */
-function microDebounce<
-	T extends (...args: any[]) => unknown
->(fn: T): (
-	this: ThisParameterType<T>,
-	...args: Parameters<T>
-) => void {
-	let callingBlocked = false;
-
-	return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-		if (callingBlocked) {
-			return;
-		}
-		callingBlocked = true;
-
-		queueMicrotask(() => {
-			fn.apply(this, args);
-			callingBlocked = false;
-		});
-	};
 }
