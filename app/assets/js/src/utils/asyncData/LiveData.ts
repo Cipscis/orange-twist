@@ -330,15 +330,17 @@ function microDebounce<
 	this: ThisParameterType<T>,
 	...args: Parameters<T>
 ) => void {
-	let call = false;
+	let callingBlocked = false;
 
 	return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-		if (call) {
+		if (callingBlocked) {
 			return;
 		}
-		call = true;
+		callingBlocked = true;
 
-		queueMicrotask(() => fn.apply(this, args));
+		queueMicrotask(() => {
+			fn.apply(this, args);
+			callingBlocked = false;
+		});
 	};
 }
-
