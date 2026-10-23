@@ -1,6 +1,11 @@
 export { extractError } from './extractError';
 
 export {
+	AsyncData,
+	type AsyncDataOptions,
+	type GetAsyncDataOptions,
+} from './AsyncData';
+export {
 	LiveData,
 	type LiveDataOptions,
 	type LiveDataObserveOptions,

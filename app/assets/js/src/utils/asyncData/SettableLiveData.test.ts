@@ -56,6 +56,7 @@ describe('SettableLiveData', () => {
 			} satisfies AsyncDataState<typeof data>);
 
 			await Promise.race([loadPromise]);
+			await Promise.resolve();
 
 			const result = Promise.withResolvers<void>();
 			loadPromise = result.promise;
@@ -157,6 +158,7 @@ describe('SettableLiveData', () => {
 			} satisfies AsyncDataState<typeof data>);
 
 			await Promise.race([loadPromise]);
+			await Promise.resolve();
 
 			const result = Promise.withResolvers<void>();
 			loadPromise = result.promise;
@@ -246,6 +248,7 @@ describe('SettableLiveData', () => {
 			} satisfies AsyncDataState<typeof data>);
 
 			await Promise.race([loadPromise]);
+			await Promise.resolve();
 
 			const result = Promise.withResolvers<void>();
 			loadPromise = result.promise;
