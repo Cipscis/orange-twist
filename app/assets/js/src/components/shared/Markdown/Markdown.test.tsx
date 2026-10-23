@@ -154,35 +154,16 @@ this is the second line`;
 		expect(contentEl.innerHTML).toBe('This is <strong>the</strong> <em>first</em> <code>line</code>');
 	});
 
-	describe('renders task links', () => {
-		test('for a valid task ID', () => {
-			setTaskInfo(1, {
-				name: 'Task name',
-				status: TaskStatus.IN_PROGRESS,
-			});
+	test('renders task links', () => {
+		const { getByTestId } = render(
+			<Markdown
+				content="Here's a task link: [[1]] *what do you think?*"
+				data-testid="markdown-content"
+			/>
+		);
 
-			const { getByTestId } = render(
-				<Markdown
-					content="Here's a task link: [[1]] *what do you think?*"
-					data-testid="markdown-content"
-				/>
-			);
-
-			const content = getByTestId('markdown-content');
-			expect(content).toMatchSnapshot();
-		});
-
-		test('for an invalid task ID', () => {
-			const { getByTestId } = render(
-				<Markdown
-					content="Here's a task link: [[1]] *what do you think?*"
-					data-testid="markdown-content"
-				/>
-			);
-
-			const content = getByTestId('markdown-content');
-			expect(content).toMatchSnapshot();
-		});
+		const content = getByTestId('markdown-content');
+		expect(content).toMatchSnapshot();
 	});
 
 	describe('renders templates', () => {

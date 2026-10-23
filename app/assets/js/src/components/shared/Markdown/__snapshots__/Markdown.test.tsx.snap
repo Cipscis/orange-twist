@@ -1,54 +1,19 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Markdown renders task links for a valid task ID 1`] = `
+exports[`Markdown renders task links 1`] = `
 <div
   class="content"
   data-testid="markdown-content"
 >
   <p>
     Here's a task link: 
-    <a
-      class="task-link"
-      href="/task/?id=1"
+    <task-link
+      taskid="1"
     >
       <span
-        class="task-link__status"
-        style="--colour:var(--colour-task--in-progress);"
-      >
-        <span
-          class="icon"
-          style="mask-image:url("/assets/images/icons/triangle-solid-right.svg");"
-          title="In progress"
-        />
-      </span>
-      <span
-        class="task-link__name"
-      >
-        Task name
-      </span>
-    </a>
-     
-    <em>
-      what do you think?
-    </em>
-  </p>
-  
-
-</div>
-`;
-
-exports[`Markdown renders task links for an invalid task ID 1`] = `
-<div
-  class="content"
-  data-testid="markdown-content"
->
-  <p>
-    Here's a task link: 
-    <span
-      class="task-link task-link--invalid"
-    >
-      No task with ID 1
-    </span>
+        class="task-link task-link--initial"
+      />
+    </task-link>
      
     <em>
       what do you think?
