@@ -1,21 +1,14 @@
 import { microDebounce } from 'utils/microDebounce';
 
-import { extractError } from './extractError';
 import { AsyncDataStateType } from './AsyncDataStateType';
 import type { AsyncDataState } from './AsyncDataState';
+import {
+	AsyncData,
+	type AsyncDataOptions,
+	type GetAsyncDataOptions,
+} from './AsyncData';
 
-export interface GetAsyncDataOptions {
-	/**
-	 * An `AbortSignal`. If it is aborted, the asynchronous request for data should also be aborted.
-	 */
-	signal: AbortSignal;
-}
-
-export interface LiveDataOptions<T> {
-	/**
-	 * A method to asynchronously retrieve the data that should be represented by the {@linkcode LiveData} instance.
-	 */
-	getData: (options: GetAsyncDataOptions) => Promise<T>;
+export interface LiveDataOptions<T> extends AsyncDataOptions<T> {
 	/**
 	 * A function that sets up the necessary event listeners to re-fetch the data.
 	 *
@@ -56,32 +49,18 @@ export interface LiveDataObserveOptions {
  *
  * To load data and begin live observation, call the {@linkcode LiveData.observe observe} method. To stop live observation, call the {@linkcode LiveData.unobserve unobserve} method.
  */
-// This class is intentionally modified with declaration merging to make event binding easier
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class LiveData<T> extends EventTarget {
-	#state: AsyncDataState<T> = {
-		type: AsyncDataStateType.INITIAL,
-		loading: false,
-	};
-	/**
-	 * An {@linkcode AsyncDataState} representing the current loading state of the represented data, which is updated automatically when in observing mode.
-	 */
-	get state(): AsyncDataState<T> {
-		return this.#state;
-	}
+export class LiveData<T> extends AsyncData<T> {
 	#unobserveController: AbortController | null = null;
 	#unobserveStateController: AbortController | null = null;
 
-	#getData: LiveDataOptions<T>['getData'];
 	#observe: Required<LiveDataOptions<T>>['observe'] | null = null;
 	#observeState: Required<LiveDataOptions<T>>['observeState'] | null = null;
 
 	constructor(
 		options: LiveDataOptions<T>,
 	) {
-		super();
+		super(options);
 
-		this.#getData = options.getData;
 		if (options.observe) {
 			this.#observe = options.observe;
 		}
@@ -111,7 +90,7 @@ export class LiveData<T> extends EventTarget {
 		 */
 		const observeCleanupSignal = AbortSignal.any(signals);
 
-		this.#loadDataAndUpdateState({ signal: observeCleanupSignal }).catch(() => {
+		this.getData({ signal: observeCleanupSignal }).catch(() => {
 			// Consider any errors thrown within this async function as handled
 		});
 		if (this.#observe) {
@@ -128,7 +107,7 @@ export class LiveData<T> extends EventTarget {
 				 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
 				 */
 				const abortGetDataSignal = AbortSignal.any(signals);
-				return this.#loadDataAndUpdateState({ signal: abortGetDataSignal });
+				return this.getData({ signal: abortGetDataSignal });
 			};
 
 			this.#observe(
@@ -158,68 +137,19 @@ export class LiveData<T> extends EventTarget {
 	/**
 	 * Handle loading the data, updating the internal {@linkcode AsyncDataState}, and firing the relevant `'loadstart'`, `'load'`, `'error'`, and `'loadend'` {@linkcode ProgressEvent}s.
 	 */
-	#loadDataAndUpdateState = async function (this: LiveData<T>, getDataOptions: GetAsyncDataOptions): Promise<void> {
-		const getDataPromise = this.#getData(getDataOptions);
-		const {
-			promise: abortPromise,
-			resolve: abortResolve,
-		} = Promise.withResolvers<void>();
+	async getData(getDataOptions: GetAsyncDataOptions): Promise<void> {
+		await super.getData(getDataOptions);
 
-		/**
-		 * This {@linkcode AbortSignal} will be aborted if:
-		 *
-		 * - `unobserve()` is called
-		 * - The {@linkcode AbortSignal} passed to `observe()` is aborted
-		 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
-		 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observeState()` is aborted
-		 */
-		const abortGetDataSignal = getDataOptions.signal;
-		abortGetDataSignal.addEventListener('abort', () => {
-			// Reset state and fire events synchronously
-			this.#state = {
-				...this.#state,
-				loading: false,
-			};
-			this.dispatchEvent(new ProgressEvent('abort'));
-			this.dispatchEvent(new ProgressEvent('loadend'));
-			abortResolve();
-		});
-
-		this.#state = {
-			...this.state,
-			loading: true,
-		};
-
-		// Get the data, enter success or error state correspondingly, and fire necessary events
-		this.dispatchEvent(new ProgressEvent('loadstart'));
-		try {
-			const data = await Promise.race([getDataPromise, abortPromise]);
-
-			if (getDataOptions.signal.aborted) {
-				// No need to re-do `observeStatus`
-				return;
-			} else {
-				this.#state = {
-					type: AsyncDataStateType.SUCCESS,
-					// This type assertion is safe because if `signal.aborted` is `false` that means `getDataPromise` resolved first
-					data: data as T,
-					loading: false,
-				};
-				this.dispatchEvent(new ProgressEvent('load'));
-			}
-		} catch (e) {
-			this.#state = {
-				type: AsyncDataStateType.ERROR,
-				error: extractError(e),
-				loading: false,
-			};
-			this.dispatchEvent(new ProgressEvent('error'));
-		} finally {
-			this.dispatchEvent(new ProgressEvent('loadend'));
+		if (
+			getDataOptions.signal.aborted ||
+			this.state.type === AsyncDataStateType.INITIAL
+		) {
+			// No need to re-do `observeStatus`
+			return;
 		}
 
-		this.#observeStateWrapper(abortGetDataSignal, this.#state);
-	}.bind(this);
+		this.#observeStateWrapper(getDataOptions.signal, this.state);
+	}
 
 	/**
 	 * If necessary, clean up any previous `observeState` call then re-call `observeState` with the provided state.
@@ -255,7 +185,7 @@ export class LiveData<T> extends EventTarget {
 			 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observeState()` is aborted
 			 */
 			const abortGetDataWithStateSignal = AbortSignal.any(signals);
-			return this.#loadDataAndUpdateState({ signal: abortGetDataWithStateSignal });
+			return this.getData({ signal: abortGetDataWithStateSignal });
 		};
 
 		/**
@@ -276,49 +206,4 @@ export class LiveData<T> extends EventTarget {
 			observeStateCleanupSignal,
 		);
 	}.bind(this);
-}
-
-interface LiveDataEventMap {
-	loadstart: [ProgressEvent, AsyncDataStateType];
-	loadend: [ProgressEvent, AsyncDataStateType];
-	load: [ProgressEvent, typeof AsyncDataStateType.SUCCESS];
-	error: [ProgressEvent, typeof AsyncDataStateType.ERROR];
-	abort: [ProgressEvent, AsyncDataStateType];
-}
-
-// Use declaration merging to give hints about event listeners
-export interface LiveData<T> {
-	addEventListener<
-		K extends keyof LiveDataEventMap
-	>(
-		type: K,
-		listener: (
-			this: LiveData<T> & {
-				state: Extract<
-					LiveData<T>['state'],
-					{ type: LiveDataEventMap[K][1]; }
-				>;
-			},
-			ev: LiveDataEventMap[K][0]
-		) => void,
-		options?: boolean | AddEventListenerOptions,
-	): void;
-	addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-
-	removeEventListener<
-		K extends keyof LiveDataEventMap
-	>(
-		type: K,
-		listener: (
-			this: LiveData<T> & {
-				state: Extract<
-					LiveData<T>['state'],
-					{ type: LiveDataEventMap[K][1]; }
-				>;
-			},
-			ev: LiveDataEventMap[K][0]
-		) => void,
-		options?: boolean | EventListenerOptions,
-	): void;
-	removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }

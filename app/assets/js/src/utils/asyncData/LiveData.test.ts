@@ -11,307 +11,35 @@ import type { AsyncDataState } from './AsyncDataState';
 import { LiveData } from './LiveData';
 
 describe('LiveData', () => {
-	describe('updates its internal state', () => {
-		test('to an initial data state on creation', () => {
-			const getData = () => Promise.resolve(true);
+	test('triggers getting the data when `observe` is called', async () => {
+		const { promise, resolve } = Promise.withResolvers();
 
-			const liveData = new LiveData({
-				getData,
-			});
-
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
-				loading: false,
-			} satisfies AsyncDataState<boolean>);
+		const getData = jest.fn(() => {
+			resolve(true);
+			return Promise.resolve(true);
 		});
 
-		test('to a success state when `observe` is called', async () => {
-			const { promise, resolve } = Promise.withResolvers();
-
-			const getData = jest.fn(() => {
-				resolve(true);
-				return Promise.resolve(true);
-			});
-
-			const liveData = new LiveData({
-				getData,
-			});
-
-			expect(getData).not.toHaveBeenCalled();
-			liveData.observe();
-			expect(getData).toHaveBeenCalledTimes(1);
-
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
-				loading: true,
-			} satisfies AsyncDataState<boolean>);
-
-			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
-			await Promise.race([promise]);
-
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				data: true,
-				loading: false,
-			} satisfies AsyncDataState<boolean>);
+		const liveData = new LiveData({
+			getData,
 		});
 
-		test('to a success state if a change is detected while observing', async () => {
-			const {
-				promise: promiseInitialLoad,
-				resolve: resolveInitialLoad,
-			} = Promise.withResolvers<void>();
-			const {
-				promise: promiseObserveChange,
-				resolve: resolveObserveChange,
-			} = Promise.withResolvers<void>();
-			const {
-				promise: promiseObservedChange,
-				resolve: resolveObservedChange,
-			} = Promise.withResolvers<void>();
+		expect(getData).not.toHaveBeenCalled();
+		liveData.observe();
+		expect(getData).toHaveBeenCalledTimes(1);
 
-			/** Change this to change the next retrieved value */
-			let value = true;
-			const getData = jest.fn(() => {
-				resolveInitialLoad();
-				return Promise.resolve(value);
-			});
+		expect(liveData.state).toEqual({
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
+		} satisfies AsyncDataState<boolean>);
 
-			const liveData = new LiveData({
-				getData,
-				observe: (getData) => {
-					// Allow us to trigger observing a change
-					promiseObserveChange.then(() => getData());
-				},
-			});
+		// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
+		await Promise.race([promise]);
 
-			liveData.observe();
-
-			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
-			await Promise.race([promiseInitialLoad]);
-
-			// Initial load should load `true`
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				data: true,
-				loading: false,
-			} satisfies AsyncDataState<boolean>);
-
-			// Prepare to detect a change and load `false`
-			value = false;
-			liveData.addEventListener('loadend', () => resolveObservedChange());
-
-			// Trigger a change detection
-			resolveObserveChange();
-			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
-			await Promise.race([promiseObserveChange]);
-
-			// First we load
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				data: true,
-				loading: true,
-			} satisfies AsyncDataState<boolean>);
-
-			// Trigger end of loading
-			resolveObservedChange();
-			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
-			await Promise.race([promiseObservedChange]);
-
-			// Check the new value is `false`
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				data: false,
-				loading: false,
-			} satisfies AsyncDataState<boolean>);
-		});
-
-		test('to an error state if loading data throws an error', async () => {
-			const { promise, resolve } = Promise.withResolvers();
-
-			const liveData = new LiveData({
-				getData: () => {
-					resolve(true);
-					return Promise.reject(new Error('Test rejection'));
-				},
-			});
-
-			const error = jest.fn();
-
-			liveData.addEventListener('error', error);
-
-			liveData.observe();
-
-			await Promise.race([promise]);
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.ERROR,
-				error: new Error('Test rejection'),
-				loading: false,
-			} satisfies AsyncDataState<boolean>);
-		});
-
-		test('to its prior state when `getData` is aborted', async () => {
-			const { promise, resolve } = Promise.withResolvers<void>();
-
-			const liveData = new LiveData({
-				getData(options) {
-					resolve();
-					return Promise.resolve(true);
-				},
-			});
-
-			liveData.observe();
-
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
-				loading: true,
-			} satisfies AsyncDataState<boolean>);
-
-			liveData.unobserve();
-
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
-				loading: false,
-			} satisfies AsyncDataState<boolean>);
-
-			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
-			await Promise.race([promise]);
-
-			// State shouldn't have updated after aborting
-			expect(liveData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
-				loading: false,
-			} satisfies AsyncDataState<boolean>);
-		});
-	});
-
-	describe('reports events', () => {
-		test('a loadstart event on load start', () => {
-			const loadstart = jest.fn();
-
-			const liveData = new LiveData({
-				getData: () => Promise.resolve(true),
-			});
-			liveData.addEventListener('loadstart', loadstart);
-
-			expect(loadstart).not.toHaveBeenCalled();
-			liveData.observe();
-			expect(loadstart).toHaveBeenCalledTimes(1);
-		});
-
-		test('a load event on load complete', async () => {
-			const { promise, resolve } = Promise.withResolvers();
-			const load = jest.fn();
-
-			const liveData = new LiveData({
-				getData: () => {
-					resolve(true);
-					return Promise.resolve(true);
-				},
-			});
-			liveData.addEventListener('load', load);
-
-			liveData.observe();
-
-			expect(load).not.toHaveBeenCalled();
-			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
-			await Promise.race([promise]);
-			expect(load).toHaveBeenCalledTimes(1);
-		});
-
-		test('an error event on load error', async () => {
-			const { promise, resolve } = Promise.withResolvers();
-			const error = jest.fn();
-
-			const liveData = new LiveData({
-				getData: () => {
-					resolve(true);
-					return Promise.reject(new Error('Test rejection'));
-				},
-			});
-			liveData.addEventListener('error', error);
-
-			liveData.observe();
-
-			expect(error).not.toHaveBeenCalled();
-			await Promise.race([promise]);
-			expect(error).toHaveBeenCalledTimes(1);
-		});
-
-		test('an abort event on abort', () => {
-			const abort = jest.fn();
-
-			const liveData = new LiveData({
-				getData(options) {
-					return Promise.resolve(true);
-				},
-			});
-			liveData.addEventListener('abort', abort);
-
-			liveData.observe();
-
-			expect(abort).not.toHaveBeenCalled();
-			liveData.unobserve();
-			expect(abort).toHaveBeenCalledTimes(1);
-		});
-
-		describe('a loadend event on load end', () => {
-			test('when load succeeds', async () => {
-				const { promise, resolve } = Promise.withResolvers();
-				const loadend = jest.fn();
-
-				const liveData = new LiveData({
-					getData: () => {
-						resolve(true);
-						return Promise.resolve(true);
-					},
-				});
-				liveData.addEventListener('loadend', loadend);
-
-				liveData.observe();
-
-				expect(loadend).not.toHaveBeenCalled();
-				// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
-				await Promise.race([promise]);
-				expect(loadend).toHaveBeenCalledTimes(1);
-			});
-
-			test('when load fails', async () => {
-				const { promise, resolve } = Promise.withResolvers();
-				const loadend = jest.fn();
-
-				const liveData = new LiveData({
-					getData: () => {
-						resolve(true);
-						return Promise.reject(new Error('Test rejection'));
-					},
-				});
-				liveData.addEventListener('loadend', loadend);
-
-				liveData.observe();
-
-				expect(loadend).not.toHaveBeenCalled();
-				await Promise.race([promise]);
-				expect(loadend).toHaveBeenCalledTimes(1);
-			});
-
-			test('when load is aborted', () => {
-				const loadend = jest.fn();
-
-				const liveData = new LiveData({
-					getData(options) {
-						return Promise.resolve(true);
-					},
-				});
-				liveData.addEventListener('loadend', loadend);
-
-				liveData.observe();
-
-				expect(loadend).not.toHaveBeenCalled();
-				liveData.unobserve();
-				expect(loadend).toHaveBeenCalledTimes(1);
-			});
-		});
+		expect(liveData.state).toEqual({
+			type: AsyncDataStateType.SUCCESS,
+			data: true,
+			loading: false,
+		} satisfies AsyncDataState<boolean>);
 	});
 
 	test('when `observe` is called, calls `observe` function provided as an option', () => {
@@ -351,6 +79,7 @@ describe('LiveData', () => {
 
 		// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
 		await Promise.race([loadPromise]);
+		await Promise.resolve();
 		expect(observeState).toHaveBeenCalled();
 	});
 
@@ -394,6 +123,7 @@ describe('LiveData', () => {
 		// Allow data to load
 		// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
 		await Promise.race([loadPromise]);
+		await Promise.resolve();
 
 		// Set up next load trigger
 		const loadResult = Promise.withResolvers<void>();
@@ -408,6 +138,7 @@ describe('LiveData', () => {
 		changeResolve();
 		// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
 		await Promise.race([changePromise]);
+		await Promise.resolve();
 
 		expect(observeState).toHaveBeenCalledTimes(1);
 		expect(unobserveStateSignal!.aborted).toBe(false);
@@ -452,6 +183,7 @@ describe('LiveData', () => {
 		// Allow data to load
 		// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
 		await Promise.race([loadPromise]);
+		await Promise.resolve();
 
 		expect(observeState).toHaveBeenCalledTimes(1);
 		expect(unobserveStateSignal!.aborted).toBe(false);
@@ -555,6 +287,7 @@ describe('LiveData', () => {
 
 			// Wait for inital load
 			await Promise.race([initialLoadPromise]);
+			await Promise.resolve();
 
 			// Trigger reload
 			reloadResolve();
