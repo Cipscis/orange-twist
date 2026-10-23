@@ -90,9 +90,7 @@ export class LiveData<T> extends AsyncData<T> {
 		 */
 		const observeCleanupSignal = AbortSignal.any(signals);
 
-		this.getData({ signal: observeCleanupSignal }).catch(() => {
-			// Consider any errors thrown within this async function as handled
-		});
+		this.getData({ signal: observeCleanupSignal });
 		if (this.#observe) {
 			const internalGetData = (options?: GetAsyncDataOptions) => {
 				const signals = [observeCleanupSignal];
