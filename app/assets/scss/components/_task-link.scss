@@ -14,7 +14,7 @@
 			transition: background-color animation.$speed-fast animation.$easing-default;
 		}
 	}
-	&:where(task-link--invalid) {
+	&:where(.task-link--invalid) {
 		@include palette.primary(false);
 
 		border-color: currentColor;
