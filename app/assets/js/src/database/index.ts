@@ -8,6 +8,7 @@ export {
 
 	LiveTask,
 	LiveStatusForTask,
+	LiveTaskWithStatus,
 
 	loadDay,
 	useDay,
