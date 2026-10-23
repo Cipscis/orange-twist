@@ -32,7 +32,7 @@ export const taskLink: TokenizerAndRendererExtension = {
 			customElements.define('task-link', TaskLink);
 		}
 
-		const taskLink = `<task-link task-id="${token.taskId}"></task-link>`;
+		const taskLink = `<task-link taskid="${token.taskId}"></task-link>`;
 		return taskLink;
 	},
 };

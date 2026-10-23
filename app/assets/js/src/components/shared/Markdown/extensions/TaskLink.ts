@@ -11,14 +11,27 @@ import {
 	type Task,
 } from 'database';
 
+type TaskLinkStateElements = {
+	[AsyncDataStateType.INITIAL]: {
+		initialEl: HTMLElement;
+	};
+	[AsyncDataStateType.ERROR]: {
+		errorEl: HTMLElement;
+	};
+	[AsyncDataStateType.SUCCESS]: {
+		iconEl: HTMLElement;
+		linkEl: HTMLAnchorElement;
+		nameEl: HTMLElement;
+	};
+};
+
 /**
  * A link to a task that displays a live view of its status and name.
  */
 export class TaskLink extends HTMLElement {
-	static observedAttributes = ['task-id'];
+	static observedAttributes = ['taskid'];
 
 	// Internal state
-	#taskId: number | null = null;
 	#lastBuildState: AsyncDataState<[Task, Status]> | null = null;
 
 	// LiveData properties
@@ -27,7 +40,7 @@ export class TaskLink extends HTMLElement {
 	// Internal markup
 	#initialEl: HTMLElement | null = null;
 	#errorEl: HTMLElement | null = null;
-	#linkEl: HTMLElement | null = null;
+	#linkEl: HTMLAnchorElement | null = null;
 	#iconEl: HTMLElement | null = null;
 	#iconMaskEl: HTMLElement | null = null;
 	#nameEl: HTMLElement | null = null;
@@ -39,7 +52,7 @@ export class TaskLink extends HTMLElement {
 	constructor() {
 		super();
 
-		const taskIdAttribute = this.getAttribute('task-id');
+		const taskIdAttribute = this.getAttribute('taskid');
 		const taskId = (() => {
 			if (taskIdAttribute === null) {
 				return null;
@@ -58,7 +71,6 @@ export class TaskLink extends HTMLElement {
 	connectedCallback(): void {
 		this.#connectedAbortController = new AbortController();
 
-		this.#constructMarkup();
 		this.#observe();
 	}
 
@@ -78,7 +90,7 @@ export class TaskLink extends HTMLElement {
 		_oldValue: string | null,
 		newValue: string | null,
 	): void {
-		if (name !== 'task-id') {
+		if (name !== 'taskid') {
 			return;
 		}
 
@@ -86,6 +98,9 @@ export class TaskLink extends HTMLElement {
 		this.#setTaskId(taskId);
 	}
 
+	/**
+	 * Turn an attribute value for 'taskid' into a value that can be used directly.
+	 */
 	#parseTaskId(value: string | null): number | null {
 		if (value === null) {
 			return null;
@@ -99,28 +114,23 @@ export class TaskLink extends HTMLElement {
 		return taskId;
 	}
 
+	/**
+	 * Configure the internal `LiveTaskWithStatus` with a given task ID
+	 */
 	#setTaskId(taskId: number | null): void {
-		this.#taskId = taskId;
-
 		if (this.#taskIdChangeAbortController) {
 			this.#taskIdChangeAbortController.abort();
+			this.#taskIdChangeAbortController = null;
 		}
 
 		if (taskId === null) {
-			if (this.#linkEl) {
-				this.#linkEl.removeAttribute('href');
-			}
+			this.#liveTaskWithStatus = null;
+			this.#render();
 			return;
 		}
 
-		if (this.#linkEl) {
-			this.#linkEl.setAttribute('href', getTaskDetailUrl(taskId));
-		}
-
 		this.#taskIdChangeAbortController = new AbortController();
-
 		this.#liveTaskWithStatus = new LiveTaskWithStatus(taskId);
-
 		this.#observe();
 	}
 
@@ -141,54 +151,31 @@ export class TaskLink extends HTMLElement {
 			this.#taskIdChangeAbortController.signal,
 		]);
 
-		this.#liveTaskWithStatus.addEventListener('loadstart', () => this.#constructMarkup());
-		this.#liveTaskWithStatus.addEventListener('loadend', () => this.#constructMarkup());
+		this.#liveTaskWithStatus.addEventListener('loadstart', () => this.#render());
+		this.#liveTaskWithStatus.addEventListener('loadend', () => this.#render());
 
 		this.#liveTaskWithStatus.observe({ signal });
 	}
 
-	#constructMarkup(): void {
+	#render(): void {
 		const oldBuildState = this.#lastBuildState;
-		const newBuildState = this.#liveTaskWithStatus?.state ?? null;
+		const newBuildState = this.#liveTaskWithStatus?.state ?? {
+			type: AsyncDataStateType.ERROR,
+			error: new Error('No valid taskid attribute was found'),
+			loading: false,
+		};
 
 		this.#lastBuildState = newBuildState;
-		if (newBuildState === null) {
-			return;
-		}
 
 		if (newBuildState.type === AsyncDataStateType.INITIAL) {
-			this.#buildInitialMarkup(oldBuildState);
+			const elements = this.#buildInitialMarkup(oldBuildState);
+			this.#applyInitialContent(elements, oldBuildState, newBuildState);
 		} else if (newBuildState.type === AsyncDataStateType.ERROR) {
-			const {
-				errorEl,
-			} = this.#buildErrorMarkup(oldBuildState);
-
-			errorEl.textContent = newBuildState.error.message;
+			const elements = this.#buildErrorMarkup(oldBuildState);
+			this.#applyErrorContent(elements, oldBuildState, newBuildState);
 		} else if (newBuildState.type === AsyncDataStateType.SUCCESS) {
-			const {
-				iconEl,
-				linkEl,
-				nameEl,
-			} = this.#buildSuccessMarkup(oldBuildState);
-			const [task, status] = newBuildState.data;
-
-			iconEl.style.setProperty('--colour', status.colour);
-			linkEl.style.setProperty('--icon', status.icon);
-			iconEl.setAttribute('title', status.name);
-
-			Promise.try(() =>
-				marked.parse(task.name.replace(/</g, '&lt;'), {
-					breaks: true,
-				})).then((taskName) => {
-				const rawTaskName = taskName
-					.replace(/<p>(.+)<\/p>\n?/, '$1');
-				// TODO: Is there a safer way to set this as HTML? Chromium and Firefox have shipped the HTML Sanitizer API, but Safari hasn't
-				// if (nameEl.setHTML) {
-				// 	nameEl.setHTML(rawTaskName);
-				// } else {
-				nameEl.setHTMLUnsafe(rawTaskName);
-				// }
-			});
+			const elements = this.#buildSuccessMarkup(oldBuildState);
+			this.#applySuccessContent(elements, oldBuildState, newBuildState);
 		} else {
 			assertAllUnionMembersHandled(newBuildState);
 		}
@@ -196,9 +183,7 @@ export class TaskLink extends HTMLElement {
 
 	#buildInitialMarkup(
 		oldBuildState: AsyncDataState<[Task, Status]> | null,
-	): {
-		initialEl: HTMLElement;
-	} {
+	): TaskLinkStateElements[typeof AsyncDataStateType.INITIAL] {
 		if (oldBuildState?.type === AsyncDataStateType.INITIAL) {
 			// If we're already in error state, just provide existing elements
 			if (this.#initialEl) {
@@ -220,6 +205,17 @@ export class TaskLink extends HTMLElement {
 		return {
 			initialEl: this.#initialEl,
 		};
+	}
+
+	#applyInitialContent(
+		_elements: TaskLinkStateElements[typeof AsyncDataStateType.INITIAL],
+		_oldBuildState: AsyncDataState<[Task, Status]> | null,
+		_newBuildState: Extract<
+			AsyncDataState<[Task, Status]>,
+			{ type: typeof AsyncDataStateType.INITIAL; }
+		> | null,
+	): void {
+		// No initial content necessary
 	}
 
 	#buildErrorMarkup(
@@ -251,13 +247,25 @@ export class TaskLink extends HTMLElement {
 		};
 	}
 
+	#applyErrorContent(
+		elements: TaskLinkStateElements[typeof AsyncDataStateType.ERROR],
+		oldBuildState: AsyncDataState<[Task, Status]> | null,
+		newBuildState: Extract<
+			AsyncDataState<[Task, Status]>,
+			{ type: typeof AsyncDataStateType.ERROR; }
+		>
+	) {
+		if (
+			oldBuildState?.type !== AsyncDataStateType.ERROR ||
+			newBuildState.error.message !== oldBuildState.error.message
+		) {
+			elements.errorEl.textContent = newBuildState.error.message;
+		}
+	}
+
 	#buildSuccessMarkup(
 		oldBuildState: AsyncDataState<[Task, Status]> | null,
-	): {
-		iconEl: HTMLElement;
-		linkEl: HTMLElement;
-		nameEl: HTMLElement;
-	} {
+	): TaskLinkStateElements[typeof AsyncDataStateType.SUCCESS] {
 		if (oldBuildState?.type === AsyncDataStateType.SUCCESS) {
 			// If we're already in success state, just provide existing elements
 			if (
@@ -279,9 +287,6 @@ export class TaskLink extends HTMLElement {
 		// Then construct the DOM
 		this.#linkEl = createElement('a', {
 			className: 'task-link',
-			href: this.#taskId === null
-				? undefined
-				: getTaskDetailUrl(this.#taskId),
 		});
 		this.#iconEl = createElement('span', {
 			className: 'icon task-link__status',
@@ -303,6 +308,66 @@ export class TaskLink extends HTMLElement {
 			linkEl: this.#linkEl,
 			nameEl: this.#nameEl,
 		};
+	}
+
+	#applySuccessContent(
+		elements: TaskLinkStateElements[typeof AsyncDataStateType.SUCCESS],
+		oldBuildState: AsyncDataState<[Task, Status]> | null,
+		newBuildState: Extract<
+			AsyncDataState<[Task, Status]>,
+			{ type: typeof AsyncDataStateType.SUCCESS; }
+		>
+	): void {
+		const [task, status] = newBuildState.data;
+		const {
+			iconEl,
+			linkEl,
+			nameEl,
+		} = elements;
+
+		// Icon
+		if (
+			oldBuildState?.type !== AsyncDataStateType.SUCCESS ||
+			oldBuildState.data[1].colour !== status.colour ||
+			oldBuildState.data[1].icon !== status.icon ||
+			oldBuildState.data[1].name !== status.name
+		) {
+			iconEl.style.setProperty('--colour', status.colour);
+			linkEl.style.setProperty('--icon', status.icon);
+			iconEl.setAttribute('title', status.name);
+		}
+
+		// Link
+		if (
+			oldBuildState?.type !== AsyncDataStateType.SUCCESS ||
+			oldBuildState.data[0].id !== task.id
+		) {
+			linkEl.href = getTaskDetailUrl(task.id);
+		}
+
+		// Name
+		if (
+			oldBuildState?.type !== AsyncDataStateType.SUCCESS ||
+			oldBuildState.data[0].name !== task.name
+		) {
+			// TODO: This step should be standardised somehow
+			const safeTaskName = task.name.replace(/</g, '&lt;');
+			const parseResult = Promise.try(
+				() => marked.parse(safeTaskName, { breaks: true })
+			);
+
+			parseResult.then((taskName) => {
+				// TODO: This step should be standardised somehow
+				const inlineTaskName = taskName.replace(/<p>(.+)<\/p>\n?/, '$1');
+
+				// TODO: Is there a safer way to set this as HTML? Chromium and Firefox have shipped the HTML Sanitizer API, but Safari hasn't
+				// if (nameEl.setHTML) {
+				// 	nameEl.setHTML(rawTaskName);
+				// } else {
+				nameEl.setHTMLUnsafe(inlineTaskName);
+				// }
+			});
+		}
 	}
 
 	#clearMarkup(): void {
