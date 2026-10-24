@@ -81,6 +81,8 @@ These dependencies are used when working on the project locally.
 
 * [TypeScript](https://www.typescriptlang.org/): JavaScript extension for static type checking
 
+	* [@types/web](https://www.npmjs.com/package/@types/web): Provides TypeScript types for web APIs, decoupled from the installed version of TypeScript
+
 * [Jest](https://jestjs.io/): Testing framework
 
 	* [@jest/globals](https://www.npmjs.com/package/@jest/globals): Allows Jest utilities to be imported instead of polluting the global scope

@@ -38,7 +38,7 @@
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
 		// Include types from packages
 		// https://www.typescriptlang.org/tsconfig#types
-		"types": ["node"],
+		"types": ["web", "node"],
 
 		// Copied from [Preact TypeScript docs](https://preactjs.com/guide/v10/typescript/)
 		// https://www.typescriptlang.org/tsconfig#jsx
