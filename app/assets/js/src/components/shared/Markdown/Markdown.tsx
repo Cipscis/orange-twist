@@ -13,16 +13,7 @@ import {
 } from 'preact/hooks';
 
 import { classNames } from 'utils';
-
-import { marked } from 'marked';
-import { markedHighlight } from 'marked-highlight';
-import hljs from 'highlight.js/lib/common';
-
-import {
-	taskLink,
-	template,
-} from './extensions';
-import { renderer } from './renderer';
+import { render, renderInline } from 'utils/markdown';
 
 import { useAllTemplateInfo } from 'data';
 import { consumeAllImageUrlPlaceholders } from 'images';
@@ -74,33 +65,6 @@ interface MarkdownProps extends Preact.HTMLAttributes<HTMLDivElement> {
 	inline?: boolean;
 }
 
-let isMarkedInitialised = false;
-/**
- * Initialise the "marked" package once before use.
- */
-function initMarked() {
-	if (isMarkedInitialised) {
-		return;
-	}
-	isMarkedInitialised = true;
-
-	marked.use({
-		renderer,
-		extensions: [
-			taskLink,
-			template,
-		],
-	});
-
-	marked.use(markedHighlight({
-		langPrefix: 'hljs language-',
-		highlight(code, lang, info) {
-			const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-			return hljs.highlight(code, { language }).value;
-		},
-	}));
-}
-
 export function Markdown(props: MarkdownProps): JSX.Element {
 	const {
 		content,
@@ -139,44 +103,18 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 			return;
 		}
 
-		const contentToRender = (() => {
-			if (inline) {
-				const firstLine = content.split('\n')[0];
-				// Insert zero-width space to prevent task link shortcode
-				return firstLine.replace(/\[\[(\d)/g, '[[&ZeroWidthSpace;$1');
-			}
-
-			return content;
-		})();
-
 		const updateRenderedContent = ((content: string) => {
 			wrapper.innerHTML = content;
 		});
 
 		(async () => {
-			initMarked();
-			let renderedContent = marked.parse(contentToRender, {
-				breaks: true,
-			});
+			const renderedContent = await (async () => {
+				if (inline) {
+					return renderInline(content);
+				}
 
-			if (typeof renderedContent !== 'string') {
-				renderedContent = await renderedContent;
-			}
-
-			renderedContent = renderedContent
-				// Stupid fucking plugin replaces tabs with spaces
-				.replace(/ {4}/g, '\t')
-				// To allow HTML tags to be written as text in task names,
-				// I replace `<` with `&lt;`. So, when displaying the rendered
-				// content, reverse it. This also means if I were type "&amp;lt;"
-				// in a task name it would become "<" but that's fine)
-				.replace(/&amp;lt;/g, '&lt;');
-
-			if (inline) {
-				renderedContent = renderedContent.replace(/<p>(.+)<\/p>\n?/, '$1');
-				// Remove any zero-width spaces used to prevent task link shortcode
-				renderedContent = renderedContent.replace(/\[\[&ZeroWidthSpace;(\d)/g, '[[$1');
-			}
+				return render(content);
+			})();
 
 			updateRenderedContent(renderedContent);
 

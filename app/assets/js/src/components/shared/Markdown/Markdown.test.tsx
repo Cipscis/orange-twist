@@ -10,16 +10,18 @@ import {
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, render } from '@testing-library/preact';
+import {
+	cleanup,
+	render,
+	waitFor,
+} from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import { Markdown } from './Markdown';
 import {
 	clear,
-	setTaskInfo,
 	setTemplateInfo,
 } from 'data';
-import { TaskStatus } from 'types/TaskStatus';
 
 describe('Markdown', () => {
 	afterEach(() => {
@@ -27,7 +29,7 @@ describe('Markdown', () => {
 		clear();
 	});
 
-	test('renders its content, converted to HTML', () => {
+	test('renders its content, converted to HTML', async () => {
 		const { getByTestId } = render(
 			<Markdown
 				content="**Bold** *italic* `code`"
@@ -37,61 +39,11 @@ describe('Markdown', () => {
 
 		const content = getByTestId('markdown-content');
 		expect(content).toBeInTheDocument();
-		expect(content.innerHTML.trim()).toBe('<p><strong>Bold</strong> <em>italic</em> <code>code</code></p>');
-	});
-
-	test('uses tabs for indentation, not spaces', () => {
-		const text = `\`\`\`
-	This is some code
-\`\`\``;
-		const { getByTestId } = render(
-			<Markdown
-				content={text}
-				data-testid="markdown-content"
-			/>
-		);
-
-		const content = getByTestId('markdown-content');
-		expect(content.innerHTML.trim()).toBe('<pre><code>\tThis is some code\n</code></pre>');
-	});
-
-	test('converts "&amplt;" into "&lt;"', () => {
-		const { getByText } = render(
-			<Markdown content="&amp;lt;example>" />
-		);
-
-		const content = getByText(/<example>/);
-		expect(content).toBeInTheDocument();
-	});
-
-	test('renders external links with `target="_blank"`', () => {
-		const { getByText } = render(
-			<Markdown content={`[Internal link](/test/ "Title")\n[External link](https://example.com "Title")`} />
-		);
-
-		const internalLink = getByText('Internal link');
-		expect(internalLink).toBeInTheDocument();
-		expect(internalLink.getAttribute('href')).toBe('/test/');
-		expect(internalLink.getAttribute('target')).toBe(null);
-		expect(internalLink.getAttribute('title')).toBe('Title');
-
-		const externalLink = getByText('External link');
-		expect(externalLink).toBeInTheDocument();
-		expect(externalLink.getAttribute('href')).toBe('https://example.com');
-		expect(externalLink.getAttribute('target')).toBe('_blank');
-		expect(externalLink.getAttribute('title')).toBe('Title');
-	});
-
-	test('allows line breaks without any extra syntax', () => {
-		const { getByTestId } = render(
-			<Markdown
-				content={`First line\nSecond line`}
-				data-testid="markdown-content"
-			/>
-		);
-
-		const content = getByTestId('markdown-content');
-		expect(content.innerHTML).toBe('<p>First line<br>Second line</p>\n');
+		await waitFor(() => {
+			expect(content.innerHTML).toBe(
+				'<p><strong>Bold</strong> <em>italic</em> <code>code</code></p>'
+			);
+		});
 	});
 
 	test('passes through additional props to the internal `<div>`, adding CSS classes to its existing ones', async () => {
@@ -125,7 +77,7 @@ describe('Markdown', () => {
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
 
-	test('sanitises content', () => {
+	test('sanitises content', async () => {
 		const { getByTestId } = render(
 			<Markdown
 				content="<script>window.alert('xss')</script>"
@@ -134,10 +86,12 @@ describe('Markdown', () => {
 		);
 
 		const content = getByTestId('markdown-content');
-		expect(content.textContent).toBe('window.alert(\'xss\')');
+		await waitFor(() => {
+			expect(content.textContent).toBe('window.alert(\'xss\')');
+		});
 	});
 
-	test('displays the first line of content only, unwrapped, when using the inline prop', () => {
+	test('displays the first line of content only, unwrapped, when using the inline prop', async () => {
 		const content = `This is **the** *first* \`line\`
 
 this is the second line`;
@@ -151,19 +105,11 @@ this is the second line`;
 		);
 
 		const contentEl = getByTestId('markdown-content');
-		expect(contentEl.innerHTML).toBe('This is <strong>the</strong> <em>first</em> <code>line</code>');
-	});
-
-	test('renders task links', () => {
-		const { getByTestId } = render(
-			<Markdown
-				content="Here's a task link: [[1]] *what do you think?*"
-				data-testid="markdown-content"
-			/>
-		);
-
-		const content = getByTestId('markdown-content');
-		expect(content).toMatchSnapshot();
+		await waitFor(() => {
+			expect(contentEl.innerHTML).toBe(
+				'This is <strong>the</strong> <em>first</em> <code>line</code>'
+			);
+		});
 	});
 
 	describe('renders templates', () => {
@@ -190,7 +136,7 @@ this is the second line`;
 			clear();
 		});
 
-		test('ignores unrecognised templates', () => {
+		test('ignores unrecognised templates', async () => {
 			const { getByTestId } = render(
 				<Markdown
 					content="{{no-template}}"
@@ -198,11 +144,14 @@ this is the second line`;
 				/>
 			);
 
+			// Rendering is asynchronous, so wait for the next task. Snapshot testing doesn't seem to support waitFor
+			await new Promise<void>((resolve) => setTimeout(() => resolve()));
+
 			const content = getByTestId('markdown-content');
 			expect(content).toMatchSnapshot();
 		});
 
-		test('with a recognised name', () => {
+		test('with a recognised name', async () => {
 			const { getByTestId } = render(
 				<Markdown
 					content="{{simple}}"
@@ -210,11 +159,14 @@ this is the second line`;
 				/>
 			);
 
+			// Rendering is asynchronous, so wait for the next task. Snapshot testing doesn't seem to support waitFor
+			await new Promise<void>((resolve) => setTimeout(() => resolve()));
+
 			const content = getByTestId('markdown-content');
 			expect(content).toMatchSnapshot();
 		});
 
-		test('with numbered arguments', () => {
+		test('with numbered arguments', async () => {
 			const { getByTestId } = render(
 				<Markdown
 					content="{{args|arg0|arg1}}"
@@ -222,11 +174,14 @@ this is the second line`;
 				/>
 			);
 
+			// Rendering is asynchronous, so wait for the next task. Snapshot testing doesn't seem to support waitFor
+			await new Promise<void>((resolve) => setTimeout(() => resolve()));
+
 			const content = getByTestId('markdown-content');
 			expect(content).toMatchSnapshot();
 		});
 
-		test('with default argument values', () => {
+		test('with default argument values', async () => {
 			const { getByTestId } = render(
 				<Markdown
 					content="{{args-defaults|https://www.example.com}}"
@@ -234,11 +189,14 @@ this is the second line`;
 				/>
 			);
 
+			// Rendering is asynchronous, so wait for the next task. Snapshot testing doesn't seem to support waitFor
+			await new Promise<void>((resolve) => setTimeout(() => resolve()));
+
 			const content = getByTestId('markdown-content');
 			expect(content).toMatchSnapshot();
 		});
 
-		test('renders message for empty templates', () => {
+		test('renders message for empty templates', async () => {
 			const { getByTestId } = render(
 				<Markdown
 					content="{{empty}}"
@@ -246,17 +204,23 @@ this is the second line`;
 				/>
 			);
 
+			// Rendering is asynchronous, so wait for the next task. Snapshot testing doesn't seem to support waitFor
+			await new Promise<void>((resolve) => setTimeout(() => resolve()));
+
 			const content = getByTestId('markdown-content');
 			expect(content).toMatchSnapshot();
 		});
 
-		test('renders two templates with arguments on the same line', () => {
+		test('renders two templates with arguments on the same line', async () => {
 			const { getByTestId } = render(
 				<Markdown
 					content="{{args|arg0|arg1}} {{args|arg0|arg1}}"
 					data-testid="markdown-content"
 				/>
 			);
+
+			// Rendering is asynchronous, so wait for the next task. Snapshot testing doesn't seem to support waitFor
+			await new Promise<void>((resolve) => setTimeout(() => resolve()));
 
 			const content = getByTestId('markdown-content');
 			expect(content).toMatchSnapshot();

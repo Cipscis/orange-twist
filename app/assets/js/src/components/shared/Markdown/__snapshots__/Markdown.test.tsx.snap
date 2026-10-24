@@ -1,29 +1,5 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Markdown renders task links 1`] = `
-<div
-  class="content"
-  data-testid="markdown-content"
->
-  <p>
-    Here's a task link: 
-    <task-link
-      taskid="1"
-    >
-      <span
-        class="task-link task-link--initial"
-      />
-    </task-link>
-     
-    <em>
-      what do you think?
-    </em>
-  </p>
-  
-
-</div>
-`;
-
 exports[`Markdown renders templates ignores unrecognised templates 1`] = `
 <div
   class="content"
@@ -32,8 +8,6 @@ exports[`Markdown renders templates ignores unrecognised templates 1`] = `
   <p>
     {{no-template}}
   </p>
-  
-
 </div>
 `;
 
@@ -47,8 +21,6 @@ exports[`Markdown renders templates renders message for empty templates 1`] = `
       Empty template
     </em>
   </p>
-  
-
 </div>
 `;
 
@@ -74,8 +46,6 @@ exports[`Markdown renders templates renders two templates with arguments on the 
       arg1
     </em>
   </p>
-  
-
 </div>
 `;
 
@@ -89,8 +59,6 @@ exports[`Markdown renders templates with a recognised name 1`] = `
       simple
     </strong>
   </p>
-  
-
 </div>
 `;
 
@@ -106,8 +74,6 @@ exports[`Markdown renders templates with default argument values 1`] = `
       default
     </a>
   </p>
-  
-
 </div>
 `;
 
@@ -125,7 +91,5 @@ exports[`Markdown renders templates with numbered arguments 1`] = `
       arg1
     </em>
   </p>
-  
-
 </div>
 `;
