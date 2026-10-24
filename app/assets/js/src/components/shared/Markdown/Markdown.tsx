@@ -104,7 +104,12 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 		}
 
 		const updateRenderedContent = ((content: string) => {
-			wrapper.innerHTML = content;
+			if (wrapper.setHTML) {
+				wrapper.setHTML(content);
+			} else {
+				// This fallback still exists because, as of 2026-10-24, Safari has not shipped Element.setHTML
+				wrapper.setHTMLUnsafe(content);
+			}
 		});
 
 		(async () => {

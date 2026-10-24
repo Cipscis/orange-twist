@@ -351,12 +351,13 @@ export class TaskLink extends HTMLElement {
 			oldBuildState.data[0].name !== task.name
 		) {
 			renderInline(task.name).then((taskName) => {
-				// TODO: Is there a safer way to set this as HTML? Chromium and Firefox have shipped the HTML Sanitizer API, but Safari hasn't
-				// if (nameEl.setHTML) {
-				// 	nameEl.setHTML(rawTaskName);
-				// } else {
-				nameEl.setHTMLUnsafe(taskName);
-				// }
+				if (nameEl.setHTML) {
+					nameEl.setHTML(taskName);
+				} else {
+					// This should still be safe, since `renderInline` replaces `'<'` with `'&lt;'`, but still better to use the HTML Sanitizer API where possible
+					// This still exists because, as of 2026-10-24, Safari has not shipped Element.setHTML
+					nameEl.setHTMLUnsafe(taskName);
+				}
 			});
 		}
 	}
