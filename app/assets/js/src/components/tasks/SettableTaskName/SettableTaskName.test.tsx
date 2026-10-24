@@ -64,9 +64,11 @@ describe('SettableTaskName', () => {
 
 		const content = await findByTestId('inline-note__note');
 		expect(content).toBeInTheDocument();
-		expect(content.innerHTML.trim()).toBe(
-			'<strong>Bold</strong> <em>italic</em> <code>code</code>'
-		);
+		await waitFor(() => {
+			expect(content.innerHTML).toBe(
+				'<strong>Bold</strong> <em>italic</em> <code>code</code>'
+			);
+		});
 	});
 
 	test('allows the task name to be edited', async () => {

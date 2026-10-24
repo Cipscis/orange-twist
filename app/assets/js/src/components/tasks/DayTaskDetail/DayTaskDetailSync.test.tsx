@@ -22,9 +22,9 @@ import { DayTaskDetailSync } from './DayTaskDetailSync';
 describe('DayTaskDetailSync', () => {
 	afterEach(() => cleanup());
 
-	test('renders the day task\'s note', () => {
+	test('renders the day task\'s note', async () => {
 		jest.useFakeTimers();
-		const { getByText } = render(<DayTaskDetailSync
+		const { findByText } = render(<DayTaskDetailSync
 			dayTask={{
 				id: 1,
 				day: 1,
@@ -41,7 +41,7 @@ describe('DayTaskDetailSync', () => {
 		act(() => jest.advanceTimersByTime(1500));
 		jest.useRealTimers();
 
-		const status = getByText('Day task note');
+		const status = await findByText('Day task note');
 		expect(status).toBeInTheDocument();
 	});
 
@@ -65,10 +65,10 @@ describe('DayTaskDetailSync', () => {
 		});
 	});
 
-	test('renders the day task\'s summary and edit summary button', () => {
+	test('renders the day task\'s summary and edit summary button', async () => {
 		const {
 			getByRole,
-			getByText,
+			findByText,
 		} = render(<DayTaskDetailSync
 			dayTask={{
 				id: 1,
@@ -82,7 +82,7 @@ describe('DayTaskDetailSync', () => {
 			setDayTask={async () => {}}
 		/>);
 
-		const summaryText = getByText('Test summary');
+		const summaryText = await findByText('Test summary');
 		expect(summaryText).toBeInTheDocument();
 
 		const summaryEditButton = getByRole('button', { name: 'Edit summary' });
