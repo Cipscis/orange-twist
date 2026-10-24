@@ -17,6 +17,10 @@ export default class FixedJSDOMEnvironment extends JSDOMEnvironment {
 		this.global.Request = Request;
 		this.global.Response = Response;
 
+		this.global.Element.prototype.setHTMLUnsafe = function (string) {
+			this.innerHTML = string;
+		};
+
 		// JSDOM's Blob implementation doesn't work properly when creating my test data using `new Blob`
 		this.global.Blob = Blob;
 	}
