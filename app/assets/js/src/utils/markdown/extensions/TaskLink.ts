@@ -1,5 +1,3 @@
-import { marked } from 'marked';
-
 import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
 import { createElement } from 'utils/createElement';
 import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
@@ -10,6 +8,8 @@ import {
 	type Status,
 	type Task,
 } from 'database';
+
+import { renderInline } from '../renderInline';
 
 type TaskLinkStateElements = {
 	[AsyncDataStateType.INITIAL]: {
@@ -350,21 +350,12 @@ export class TaskLink extends HTMLElement {
 			oldBuildState?.type !== AsyncDataStateType.SUCCESS ||
 			oldBuildState.data[0].name !== task.name
 		) {
-			// TODO: This step should be standardised somehow
-			const safeTaskName = task.name.replace(/</g, '&lt;');
-			const parseResult = Promise.try(
-				() => marked.parse(safeTaskName, { breaks: true })
-			);
-
-			parseResult.then((taskName) => {
-				// TODO: This step should be standardised somehow
-				const inlineTaskName = taskName.replace(/<p>(.+)<\/p>\n?/, '$1');
-
+			renderInline(task.name).then((taskName) => {
 				// TODO: Is there a safer way to set this as HTML? Chromium and Firefox have shipped the HTML Sanitizer API, but Safari hasn't
 				// if (nameEl.setHTML) {
 				// 	nameEl.setHTML(rawTaskName);
 				// } else {
-				nameEl.setHTMLUnsafe(inlineTaskName);
+				nameEl.setHTMLUnsafe(taskName);
 				// }
 			});
 		}
