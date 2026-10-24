@@ -52,21 +52,6 @@ export class HTMLTaskLinkElement extends HTMLElement {
 
 	constructor() {
 		super();
-
-		const taskIdAttribute = this.getAttribute('taskid');
-		const taskId = (() => {
-			if (taskIdAttribute === null) {
-				return null;
-			}
-
-			const taskId = parseInt(taskIdAttribute, 10);
-			if (isNaN(taskId)) {
-				return null;
-			}
-
-			return taskId;
-		})();
-		this.#setTaskId(taskId);
 	}
 
 	connectedCallback(): void {
@@ -125,6 +110,9 @@ export class HTMLTaskLinkElement extends HTMLElement {
 		}
 
 		if (taskId === null) {
+			if (this.#liveTaskWithStatus) {
+				this.#liveTaskWithStatus[Symbol.dispose]();
+			}
 			this.#liveTaskWithStatus = null;
 			this.#render();
 			return;
@@ -152,8 +140,17 @@ export class HTMLTaskLinkElement extends HTMLElement {
 			this.#taskIdChangeAbortController.signal,
 		]);
 
-		this.#liveTaskWithStatus.addEventListener('loadstart', () => this.#render());
-		this.#liveTaskWithStatus.addEventListener('loadend', () => this.#render());
+		const render = () => this.#render();
+		this.#liveTaskWithStatus.addEventListener(
+			'loadstart',
+			render,
+			{ signal },
+		);
+		this.#liveTaskWithStatus.addEventListener(
+			'loadend',
+			render,
+			{ signal },
+		);
 
 		this.#liveTaskWithStatus.observe({ signal });
 	}
@@ -256,10 +253,10 @@ export class HTMLTaskLinkElement extends HTMLElement {
 			{ type: typeof AsyncDataStateType.ERROR; }
 		>
 	) {
-		if (
-			oldBuildState?.type !== AsyncDataStateType.ERROR ||
-			newBuildState.error.message !== oldBuildState.error.message
-		) {
+		if (!(
+			oldBuildState?.type === AsyncDataStateType.ERROR &&
+			newBuildState.error.message === oldBuildState.error.message
+		)) {
 			elements.errorEl.textContent = newBuildState.error.message;
 		}
 	}
@@ -327,30 +324,30 @@ export class HTMLTaskLinkElement extends HTMLElement {
 		} = elements;
 
 		// Icon
-		if (
-			oldBuildState?.type !== AsyncDataStateType.SUCCESS ||
-			oldBuildState.data[1].colour !== status.colour ||
-			oldBuildState.data[1].icon !== status.icon ||
-			oldBuildState.data[1].name !== status.name
-		) {
+		if (!(
+			oldBuildState?.type === AsyncDataStateType.SUCCESS &&
+			oldBuildState.data[1].colour === status.colour &&
+			oldBuildState.data[1].icon === status.icon &&
+			oldBuildState.data[1].name === status.name
+		)) {
 			iconEl.style.setProperty('--colour', status.colour);
 			linkEl.style.setProperty('--icon', status.icon);
 			iconEl.setAttribute('title', status.name);
 		}
 
 		// Link
-		if (
-			oldBuildState?.type !== AsyncDataStateType.SUCCESS ||
-			oldBuildState.data[0].id !== task.id
-		) {
+		if (!(
+			oldBuildState?.type === AsyncDataStateType.SUCCESS &&
+			oldBuildState.data[0].id === task.id
+		)) {
 			linkEl.href = getTaskDetailUrl(task.id);
 		}
 
 		// Name
-		if (
-			oldBuildState?.type !== AsyncDataStateType.SUCCESS ||
-			oldBuildState.data[0].name !== task.name
-		) {
+		if (!(
+			oldBuildState?.type === AsyncDataStateType.SUCCESS &&
+			oldBuildState.data[0].name === task.name
+		)) {
 			renderInline(task.name).then((taskName) => {
 				if (nameEl.setHTML) {
 					nameEl.setHTML(taskName, { sanitizer: getSanitiser() });

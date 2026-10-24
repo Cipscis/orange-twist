@@ -11,10 +11,13 @@ import { loadTask } from './loadTask';
 import { loadStatusForTask } from './loadStatusForTask';
 import { loadStatus } from './loadStatus';
 
+/**
+ * Provides live access to a task and its status, derived from its canonical day task.
+ */
 export class LiveTaskWithStatus extends LiveData<[Task, Status]> {
 	constructor(taskId: number) {
 		super({
-			async getData(options) {
+			async getData(_options) {
 				const taskPromise = loadTask(taskId);
 				const statusId = await loadStatusForTask(taskId);
 
@@ -35,32 +38,34 @@ export class LiveTaskWithStatus extends LiveData<[Task, Status]> {
 
 				return [task, status];
 			},
-			observeState(getData, state, signal) {
+			observeState(getDataArg, state, signal) {
 				// Task listeners
 				const taskChangeEntity = {
 					type: ChangeEntityType.TASK,
 					id: taskId,
 				};
 
+				const getData = () => getDataArg();
+
 				if (state.type === AsyncDataStateType.ERROR) {
 					addChangeListener(
 						ChangeType.ADD,
 						taskChangeEntity,
-						() => getData(),
+						getData,
 						{ signal },
 					);
 				} else if (state.type === AsyncDataStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.CHANGE,
 						taskChangeEntity,
-						() => getData(),
+						getData,
 						{ signal },
 					);
 
 					addChangeListener(
 						ChangeType.DELETE,
 						taskChangeEntity,
-						() => getData(),
+						getData,
 						{ signal },
 					);
 				}
@@ -75,21 +80,21 @@ export class LiveTaskWithStatus extends LiveData<[Task, Status]> {
 					addChangeListener(
 						ChangeType.ADD,
 						dayTaskChangeEntity,
-						() => getData(),
+						getData,
 						{ signal },
 					);
 
 					addChangeListener(
 						ChangeType.CHANGE,
 						dayTaskChangeEntity,
-						() => getData(),
+						getData,
 						{ signal },
 					);
 
 					addChangeListener(
 						ChangeType.DELETE,
 						dayTaskChangeEntity,
-						() => getData(),
+						getData,
 						{ signal },
 					);
 				}

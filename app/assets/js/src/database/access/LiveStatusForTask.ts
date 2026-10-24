@@ -10,6 +10,9 @@ import {
 import { loadStatusForTask } from './loadStatusForTask';
 import { loadStatus } from './loadStatus';
 
+/**
+ * Provides live access to a task's status, derived from its canonical day task.
+ */
 export class LiveStatusForTask extends LiveData<Status> {
 	constructor(taskId: number) {
 		super({
@@ -28,7 +31,7 @@ export class LiveStatusForTask extends LiveData<Status> {
 
 				return status;
 			},
-			observeState(getData, state, signal) {
+			observeState(getDataArg, state, signal) {
 				// Don't need to watch for status changes as they never change
 
 				// TODO: Only care about day tasks for this task
@@ -36,25 +39,27 @@ export class LiveStatusForTask extends LiveData<Status> {
 					type: ChangeEntityType.DAY_TASK,
 				};
 
+				const getData = () => getDataArg();
+
 				if (state.type === AsyncDataStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.ADD,
 						changeEntity,
-						() => getData(),
+						getData,
 						{ signal },
 					);
 
 					addChangeListener(
 						ChangeType.CHANGE,
 						changeEntity,
-						() => getData(),
+						getData,
 						{ signal },
 					);
 
 					addChangeListener(
 						ChangeType.DELETE,
 						changeEntity,
-						() => getData(),
+						getData,
 						{ signal },
 					);
 				}
