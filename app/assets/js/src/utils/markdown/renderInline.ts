@@ -1,5 +1,10 @@
 import { render } from './render';
 
+/**
+ * Renders the first line of a markdown string into an HTML string.
+ *
+ * `[[123]]` type task link shortcodes will not be converted, and any HTML tags will be converted to text instead of being left as tags.
+ */
 export async function renderInline(string: string): Promise<string> {
 	const firstLine = string.split('\n')[0];
 	const contentToRender = firstLine

@@ -32,6 +32,9 @@ function initMarked() {
 	}));
 }
 
+/**
+ * Renders a string of markdown into an HTML string.
+ */
 export async function render(string: string): Promise<string> {
 	initMarked();
 	let renderedContent = marked.parse(string, {
