@@ -1,6 +1,7 @@
 import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
 import { createElement } from 'utils/createElement';
 import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { renderInline } from 'utils/markdown';
 
 import { getTaskDetailUrl } from 'navigation';
 import {
@@ -8,8 +9,6 @@ import {
 	type Status,
 	type Task,
 } from 'database';
-
-import { renderInline } from '../renderInline';
 
 type TaskLinkStateElements = {
 	[AsyncDataStateType.INITIAL]: {
@@ -28,7 +27,7 @@ type TaskLinkStateElements = {
 /**
  * A link to a task that displays a live view of its status and name.
  */
-export class TaskLink extends HTMLElement {
+export class HTMLTaskLinkElement extends HTMLElement {
 	static observedAttributes = ['taskid'];
 
 	// Internal state

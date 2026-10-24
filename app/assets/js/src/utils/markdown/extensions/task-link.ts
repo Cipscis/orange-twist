@@ -1,6 +1,6 @@
 import type { TokenizerAndRendererExtension } from 'marked';
 
-import { TaskLink } from './TaskLink';
+import { HTMLTaskLinkElement } from 'custom-elements/HTMLTaskLinkElement';
 
 export const taskLink: TokenizerAndRendererExtension = {
 	name: 'taskLink',
@@ -29,7 +29,7 @@ export const taskLink: TokenizerAndRendererExtension = {
 	},
 	renderer(token) {
 		if (!customElements.get('task-link')) {
-			customElements.define('task-link', TaskLink);
+			customElements.define('task-link', HTMLTaskLinkElement);
 		}
 
 		const taskLink = `<task-link taskid="${token.taskId}"></task-link>`;
