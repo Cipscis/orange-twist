@@ -18,6 +18,8 @@ import { render, renderInline } from 'utils/markdown';
 import { useAllTemplateInfo } from 'data';
 import { consumeAllImageUrlPlaceholders } from 'images';
 
+import { getSanitiser } from 'custom-elements/getSanitiser';
+
 /**
  * An externally accessible API exposed through a forwarded ref prop.
  */
@@ -105,7 +107,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 		const updateRenderedContent = ((content: string) => {
 			if (wrapper.setHTML) {
-				wrapper.setHTML(content);
+				wrapper.setHTML(content, { sanitizer: getSanitiser() });
 			} else {
 				// This fallback still exists because, as of 2026-10-24, Safari has not shipped Element.setHTML
 				wrapper.setHTMLUnsafe(content);

@@ -10,6 +10,8 @@ import {
 	type Task,
 } from 'database';
 
+import { getSanitiser } from './getSanitiser';
+
 type TaskLinkStateElements = {
 	[AsyncDataStateType.INITIAL]: {
 		initialEl: HTMLElement;
@@ -351,7 +353,7 @@ export class HTMLTaskLinkElement extends HTMLElement {
 		) {
 			renderInline(task.name).then((taskName) => {
 				if (nameEl.setHTML) {
-					nameEl.setHTML(taskName);
+					nameEl.setHTML(taskName, { sanitizer: getSanitiser() });
 				} else {
 					// This should still be safe, since `renderInline` replaces `'<'` with `'&lt;'`, but still better to use the HTML Sanitizer API where possible
 					// This still exists because, as of 2026-10-24, Safari has not shipped Element.setHTML
