@@ -9,7 +9,11 @@ import {
 } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 
-import { cleanup, render } from '@testing-library/preact';
+import {
+	cleanup,
+	render,
+	waitFor,
+} from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import { InlineNote } from './InlineNote';
@@ -19,7 +23,7 @@ describe('InlineNote', () => {
 		cleanup();
 	});
 
-	test('renders the note as markdown', () => {
+	test('renders the note as markdown', async () => {
 		const { getByTestId } = render(
 			<InlineNote
 				note="**Bold** *italic* `code`"
@@ -29,7 +33,11 @@ describe('InlineNote', () => {
 
 		const content = getByTestId('inline-note__note');
 		expect(content).toBeInTheDocument();
-		expect(content.innerHTML.trim()).toBe('<strong>Bold</strong> <em>italic</em> <code>code</code>');
+		await waitFor(() => {
+			expect(content.innerHTML).toBe(
+				'<strong>Bold</strong> <em>italic</em> <code>code</code>'
+			);
+		});
 	});
 
 	test('renders any specific CSS classes', () => {
@@ -100,14 +108,14 @@ describe('InlineNote', () => {
 	test('opens edit mode when the note is clicked', async () => {
 		const user = userEvent.setup();
 
-		const { getByRole, getByText } = render(
+		const { getByRole, findByText } = render(
 			<InlineNote
 				note="Task note"
 				onNoteChange={() => {}}
 			/>
 		);
 
-		const name = getByText('Task note');
+		const name = await findByText('Task note');
 		await user.click(name);
 
 		const inputEl = getByRole('textbox');
@@ -118,14 +126,14 @@ describe('InlineNote', () => {
 	test('does not open edit mode when a link inside the note is clicked', async () => {
 		const user = userEvent.setup();
 
-		const { getByRole, queryByRole } = render(
+		const { findByRole, queryByRole } = render(
 			<InlineNote
 				note="[Link text](#)"
 				onNoteChange={() => {}}
 			/>
 		);
 
-		const name = getByRole('link', { name: 'Link text' });
+		const name = await findByRole('link', { name: 'Link text' });
 		await user.click(name);
 
 		const inputEl = queryByRole('textbox');

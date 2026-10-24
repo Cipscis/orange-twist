@@ -59,8 +59,6 @@ This file is intended to differ from environment to environment, so it is ignore
 
 * [Preact](https://preactjs.com/): Rendering framework, alternative to React.
 
-* [preact-render-to-string](https://www.npmjs.com/package/preact-render-to-string): Preact's server-side rendering framework.
-
 * [zod](https://zod.dev/): A library for writing type schemas, designed for working with TypeScript.
 
 * [marked](https://marked.js.org/): A Markdown compiler.
@@ -77,9 +75,13 @@ These dependencies are used when working on the project locally.
 
 * [Node.js](https://nodejs.org/en/): Runtime environment
 
+	* [@types/node](http://www.npmjs.com/package/@types/node): Provides TypeScript types for working with Node
+
 * [npm](https://www.npmjs.com/): Package manager
 
 * [TypeScript](https://www.typescriptlang.org/): JavaScript extension for static type checking
+
+	* [@types/web](https://www.npmjs.com/package/@types/web): Provides TypeScript types for web APIs, decoupled from the installed version of TypeScript
 
 * [Jest](https://jestjs.io/): Testing framework
 
@@ -106,6 +108,8 @@ These dependencies are used when working on the project locally.
 * [sass](https://www.npmjs.com/package/sass): Compiling CSS from [Sass](https://sass-lang.com/)
 
 * [Express](https://expressjs.com/): Running a Node.js server, accessed at `http://localhost:<PORT>`
+
+	* [@types/express](https://www.npmjs.com/package/@types/express): Provides TypeScript types for working with `express`
 
 * [Concurrently](https://www.npmjs.com/package/concurrently): Running server and development build tasks concurrently
 

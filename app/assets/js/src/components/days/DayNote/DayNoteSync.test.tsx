@@ -26,8 +26,8 @@ describe('DayNoteSync', () => {
 		cleanup();
 	});
 
-	test('renders the day\'s note', () => {
-		const { getByText } = render(<DayNoteSync
+	test('renders the day\'s note', async () => {
+		const { findByText } = render(<DayNoteSync
 			day={{
 				id: 1,
 				note: 'Day note',
@@ -35,7 +35,7 @@ describe('DayNoteSync', () => {
 			setDay={async () => {}}
 		/>);
 
-		expect(getByText('Day note')).toBeInTheDocument();
+		expect(await findByText('Day note')).toBeInTheDocument();
 	});
 
 	test('saves note after change', async () => {

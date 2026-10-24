@@ -1,64 +1,5 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Markdown renders task links for a valid task ID 1`] = `
-<div
-  class="content"
-  data-testid="markdown-content"
->
-  <p>
-    Here's a task link: 
-    <a
-      class="task-link"
-      href="/task/?id=1"
-    >
-      <span
-        class="task-link__status"
-        style="--colour:var(--colour-task--in-progress);"
-      >
-        <span
-          class="icon"
-          style="mask-image:url("/assets/images/icons/triangle-solid-right.svg");"
-          title="In progress"
-        />
-      </span>
-      <span
-        class="task-link__name"
-      >
-        Task name
-      </span>
-    </a>
-     
-    <em>
-      what do you think?
-    </em>
-  </p>
-  
-
-</div>
-`;
-
-exports[`Markdown renders task links for an invalid task ID 1`] = `
-<div
-  class="content"
-  data-testid="markdown-content"
->
-  <p>
-    Here's a task link: 
-    <span
-      class="task-link task-link--invalid"
-    >
-      No task with ID 1
-    </span>
-     
-    <em>
-      what do you think?
-    </em>
-  </p>
-  
-
-</div>
-`;
-
 exports[`Markdown renders templates ignores unrecognised templates 1`] = `
 <div
   class="content"
@@ -67,8 +8,6 @@ exports[`Markdown renders templates ignores unrecognised templates 1`] = `
   <p>
     {{no-template}}
   </p>
-  
-
 </div>
 `;
 
@@ -82,8 +21,6 @@ exports[`Markdown renders templates renders message for empty templates 1`] = `
       Empty template
     </em>
   </p>
-  
-
 </div>
 `;
 
@@ -109,8 +46,6 @@ exports[`Markdown renders templates renders two templates with arguments on the 
       arg1
     </em>
   </p>
-  
-
 </div>
 `;
 
@@ -124,8 +59,6 @@ exports[`Markdown renders templates with a recognised name 1`] = `
       simple
     </strong>
   </p>
-  
-
 </div>
 `;
 
@@ -141,8 +74,6 @@ exports[`Markdown renders templates with default argument values 1`] = `
       default
     </a>
   </p>
-  
-
 </div>
 `;
 
@@ -160,7 +91,5 @@ exports[`Markdown renders templates with numbered arguments 1`] = `
       arg1
     </em>
   </p>
-  
-
 </div>
 `;

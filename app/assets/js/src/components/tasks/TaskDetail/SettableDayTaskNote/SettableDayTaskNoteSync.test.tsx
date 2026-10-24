@@ -26,8 +26,8 @@ describe('SettableDayTaskNoteSync', () => {
 		cleanup();
 	});
 
-	test('renders the day task\'s note', () => {
-		const { getByText } = render(<OrangeTwistContext.Provider
+	test('renders the day task\'s note', async () => {
+		const { findByText } = render(<OrangeTwistContext.Provider
 			value={{
 				isLoading: false,
 			}}
@@ -41,7 +41,7 @@ describe('SettableDayTaskNoteSync', () => {
 			/>
 		</OrangeTwistContext.Provider>);
 
-		expect(getByText('Day task note')).toBeInTheDocument();
+		expect(await findByText('Day task note')).toBeInTheDocument();
 	});
 
 	test('saves note after change', async () => {

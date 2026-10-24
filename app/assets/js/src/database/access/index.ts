@@ -3,6 +3,10 @@ export { SaveType, type SaveAction } from './SaveAction';
 
 export { ChangeEntityType } from './liveAccessManager';
 
+export { LiveTask } from './LiveTask';
+export { LiveStatusForTask } from './LiveStatusForTask';
+export { LiveTaskWithStatus } from './LiveTaskWithStatus';
+
 export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';
 export { loadCurrentDay } from './loadCurrentDay';

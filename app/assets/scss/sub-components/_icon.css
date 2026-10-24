@@ -1,0 +1,73 @@
+.icon {
+	display: inline-block;
+	vertical-align: middle;
+	width: 1em;
+	height: 1em;
+
+	color: var(--colour, inherit);
+}
+
+.icon__mask {
+	display: block;
+	width: 100%;
+	height: 100%;
+
+	@container style(--icon) {
+		background-color: currentColor;
+		mask-size: 100% 100%;
+	}
+
+	@container style(--icon: todo) {
+		mask-image: url("/assets/images/icons/checkbox-empty.svg");
+	}
+	@container style(--icon: in progress) {
+		mask-image: url("/assets/images/icons/triangle-solid-right.svg");
+	}
+	@container style(--icon: completed) {
+		mask-image: url("/assets/images/icons/checkbox-filled.svg");
+	}
+	@container style(--icon: investigating) {
+		mask-image: url("/assets/images/icons/magnifying-glass.svg");
+	}
+	@container style(--icon: in review) {
+		mask-image: url("/assets/images/icons/eye.svg");
+	}
+	@container style(--icon: testing) {
+		mask-image: url("/assets/images/icons/test-tube.svg");
+	}
+	@container style(--icon: paused) {
+		mask-image: url("/assets/images/icons/paused.svg");
+	}
+	@container style(--icon: approved) {
+		mask-image: url("/assets/images/icons/thumbs-up.svg");
+	}
+	@container style(--icon: will-not-do) {
+		mask-image: url("/assets/images/icons/crossed-circle.svg");
+	}
+
+	@container style(--icon: chevron up) {
+		mask-image: url("/assets/images/icons/chevron-up.svg");
+	}
+	@container style(--icon: chevron right) {
+		mask-image: url("/assets/images/icons/chevron-right.svg");
+	}
+	@container style(--icon: chevron down) {
+		mask-image: url("/assets/images/icons/chevron-down.svg");
+	}
+	@container style(--icon: chevron left) {
+		mask-image: url("/assets/images/icons/chevron-left.svg");
+	}
+
+	@container style(--icon: file) {
+		mask-image: url("/assets/images/icons/file-lines.svg");
+	}
+	@container style(--icon: edit) {
+		mask-image: url("/assets/images/icons/pencil-in-square.svg");
+	}
+	@container style(--icon: delete) {
+		mask-image: url("/assets/images/icons/rubbish-bin.svg");
+	}
+	@container style(--icon: close) {
+		mask-image: url("/assets/images/icons/cross.svg");
+	}
+}

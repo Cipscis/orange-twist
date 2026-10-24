@@ -3,6 +3,7 @@
 @use "../theme/typography";
 
 .task-link {
+	display: inline-block;
 	text-decoration: none;
 	border: 2px solid var(--link);
 	border-radius: 0.2em;
@@ -14,7 +15,15 @@
 			transition: background-color animation.$speed-fast animation.$easing-default;
 		}
 	}
-	&:where(task-link--invalid) {
+	&:where(.task-link--initial) {
+		&::before {
+			// Fake some text to get the right height
+			content: " ";
+			display: inline-block;
+		}
+		min-width: 8ch;
+	}
+	&:where(.task-link--invalid) {
 		@include palette.primary(false);
 
 		border-color: currentColor;
@@ -23,12 +32,8 @@
 }
 
 .task-link__status {
-	display: inline-block;
-	vertical-align: middle;
 	// Manual adjustment to improve apparent vertical alignment
 	margin-top: -0.1em;
-	line-height: 1;
-	color: var(--colour);
 }
 
 .task-link__name {

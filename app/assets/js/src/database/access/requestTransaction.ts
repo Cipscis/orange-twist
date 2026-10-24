@@ -14,6 +14,9 @@ export async function requestTransaction(
 	objectStores: Iterable<ObjectStoreName>,
 	mode: IDBTransactionMode,
 ): Promise<IDBTransaction> {
+	// Allow time for more requests to accumulate
+	await Promise.resolve();
+
 	// Register interest for requested object stores
 	for (const store of objectStores) {
 		requestedObjectStores.add(store);
@@ -23,11 +26,6 @@ export async function requestTransaction(
 	if (mode === 'readwrite') {
 		requestedMode = mode;
 	}
-
-	// Allow time for more requests to accumulate
-	await new Promise<void>(
-		(resolve) => queueMicrotask(() => resolve())
-	);
 
 	if (transactionPromise) {
 		// Another request is handling fulfilling the promise

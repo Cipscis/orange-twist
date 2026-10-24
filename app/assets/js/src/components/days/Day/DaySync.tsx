@@ -1,6 +1,5 @@
 import { h, type JSX } from 'preact';
 import { useCallback, useMemo } from 'preact/hooks';
-import { memo } from 'preact/compat';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
@@ -28,7 +27,7 @@ export interface DaySyncProps {
 /**
  * Renders a day, including its notes and tasks, in a disclosure.
  */
-export const DaySync = memo((props: DaySyncProps): JSX.Element => {
+export const DaySync = (props: DaySyncProps): JSX.Element => {
 	const {
 		day,
 		setDay,
@@ -120,4 +119,4 @@ export const DaySync = memo((props: DaySyncProps): JSX.Element => {
 			>Add existing task</Button>
 		</div>
 	</Accordion>;
-});
+};

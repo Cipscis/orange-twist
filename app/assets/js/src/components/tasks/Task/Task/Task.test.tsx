@@ -12,6 +12,7 @@ import '@testing-library/jest-dom/jest-globals';
 import {
 	cleanup,
 	render,
+	waitFor,
 } from '@testing-library/preact';
 
 import { insertTestData } from 'database';
@@ -90,7 +91,9 @@ describe('Task', () => {
 
 		const content = await findByTestId('inline-note__note');
 		expect(content).toBeInTheDocument();
-		expect(content.innerHTML.trim()).toBe('<strong>Bold</strong> <em>italic</em> <code>code</code>');
+		await waitFor(() => {
+			expect(content.innerHTML).toBe('<strong>Bold</strong> <em>italic</em> <code>code</code>');
+		});
 	});
 
 	test('renders the task status', async () => {

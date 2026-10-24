@@ -51,11 +51,11 @@ describe('Note', () => {
 		expect(editButton).toBeInTheDocument();
 	});
 
-	test('renders note content', () => {
+	test('renders note content', async () => {
 		const note = 'Note content';
 
 		const {
-			queryByText,
+			findByText,
 		} = render(
 			<Note
 				note={note}
@@ -63,7 +63,7 @@ describe('Note', () => {
 			/>
 		);
 
-		expect(queryByText(note)).toBeInTheDocument();
+		expect(await findByText(note)).toBeInTheDocument();
 	});
 
 	test('renders any specified CSS classes', () => {
@@ -107,7 +107,7 @@ describe('Note', () => {
 
 		const {
 			queryByRole,
-			getByText,
+			findByText,
 		} = render(
 			<Note
 				note={note}
@@ -115,7 +115,7 @@ describe('Note', () => {
 			/>
 		);
 
-		const noteContent = getByText(note);
+		const noteContent = await findByText(note);
 		await user.click(noteContent);
 
 		const textarea = queryByRole('textbox') as HTMLTextAreaElement;
@@ -131,6 +131,7 @@ describe('Note', () => {
 		const noteWithLink = 'This note has [a link](#)';
 
 		const {
+			findByRole,
 			getByRole,
 			queryByRole,
 		} = render(
@@ -140,7 +141,7 @@ describe('Note', () => {
 			/>
 		);
 
-		const linkInContent = getByRole('link');
+		const linkInContent = await findByRole('link');
 		expect(linkInContent).toBeInTheDocument();
 		await user.click(linkInContent);
 
