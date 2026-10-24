@@ -16,4 +16,10 @@ this is the second line`;
 
 		expect(result).toBe('This is <strong>the</strong> <em>first</em> <code>line</code>');
 	});
+
+	test('allows HTML elements to be written as text', async () => {
+		const result = await renderInline('<script>alert(1);</script>');
+
+		expect(result).toBe('&lt;script&gt;alert(1);&lt;/script&gt;');
+	});
 });

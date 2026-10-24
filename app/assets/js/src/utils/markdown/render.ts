@@ -44,12 +44,7 @@ export async function render(string: string): Promise<string> {
 
 	renderedContent = renderedContent
 		// Stupid fucking plugin replaces tabs with spaces
-		.replace(/ {4}/g, '\t')
-		// To allow HTML tags to be written as text in task names,
-		// I replace `<` with `&lt;`. So, when displaying the rendered
-		// content, reverse it. This also means if I were type "&amp;lt;"
-		// in a task name it would become "<" but that's fine)
-		.replace(/&amp;lt;/g, '&lt;');
+		.replace(/ {4}/g, '\t');
 
 	return renderedContent.trim();
 }

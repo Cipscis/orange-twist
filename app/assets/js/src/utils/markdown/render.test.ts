@@ -26,12 +26,6 @@ describe('render', () => {
 		);
 	});
 
-	test('converts "&amplt;" into "&lt;"', async () => {
-		const result = await render('&amp;lt;example>');
-
-		expect(result).toBe('<p>&lt;example&gt;</p>');
-	});
-
 	test('renders external links with `target="_blank"`', async () => {
 		const result = await render(`[Internal link](/test/ "Title")\n[External link](https://example.com "Title")`);
 

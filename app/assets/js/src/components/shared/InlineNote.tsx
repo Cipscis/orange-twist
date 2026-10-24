@@ -169,7 +169,7 @@ export function InlineNote(props: InlineNoteProps): JSX.Element {
 		{
 			!isEditing && note &&
 			<Markdown
-				content={note.replace(/</g, '&lt;')}
+				content={note}
 				inline
 				class="inline-note__display"
 				onClick={enterEditModeOnNoteClick}
