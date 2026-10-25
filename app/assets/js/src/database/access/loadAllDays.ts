@@ -3,7 +3,7 @@ import * as ui from 'ui';
 import type { Day } from '../types';
 
 import { ObjectStoreName } from '../metadata';
-import { getDaysInternal } from '../internal';
+import { getAllDaysInternal } from '../internal';
 
 import { requestTransaction } from './requestTransaction';
 
@@ -16,7 +16,7 @@ export async function loadAllDays(): Promise<Day[]> {
 	const transaction = await requestTransaction([ObjectStoreName.DAY], 'readonly');
 
 	try {
-		const days = await getDaysInternal(transaction);
+		const days = await getAllDaysInternal(transaction);
 
 		return days;
 	} catch (error) {

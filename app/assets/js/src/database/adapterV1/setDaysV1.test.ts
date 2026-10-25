@@ -10,7 +10,7 @@ import { getIdbRequestPromise } from 'utils';
 import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
-import { getDaysInternal, getDayTasksInternal } from '../internal';
+import { getAllDaysInternal, getDayTasksInternal } from '../internal';
 
 import { setDaysV1 } from './setDaysV1';
 
@@ -42,7 +42,7 @@ describe('setDaysV1', () => {
 		]);
 
 		const readTransaction = db.transaction(ObjectStoreName.DAY, 'readonly');
-		const days = await getDaysInternal(readTransaction);
+		const days = await getAllDaysInternal(readTransaction);
 		// IDs don't start at 1 because the database had data entered before it was cleared
 		expect(days).toEqual([
 			{
@@ -59,7 +59,7 @@ describe('setDaysV1', () => {
 				day: 2,
 				note: '2020-01-02 note',
 			},
-		] satisfies Awaited<ReturnType<typeof getDaysInternal>>);
+		] satisfies Awaited<ReturnType<typeof getAllDaysInternal>>);
 	});
 
 	test('adds day tasks for new days', async () => {
@@ -154,7 +154,7 @@ describe('setDaysV1', () => {
 
 		const db = await getDatabase();
 		const readTransaction = db.transaction(ObjectStoreName.DAY, 'readonly');
-		const days = await getDaysInternal(readTransaction);
+		const days = await getAllDaysInternal(readTransaction);
 		expect(days).toEqual([
 			{
 				id: 3,
@@ -177,7 +177,7 @@ describe('setDaysV1', () => {
 				day: 27,
 				note: 'Test note 2 updated',
 			},
-		] satisfies Awaited<ReturnType<typeof getDaysInternal>>);
+		] satisfies Awaited<ReturnType<typeof getAllDaysInternal>>);
 	});
 
 	test('updates existing days\' day tasks', async () => {
@@ -269,7 +269,7 @@ describe('setDaysV1', () => {
 
 		const db = await getDatabase();
 		const readTransaction = db.transaction(ObjectStoreName.DAY, 'readonly');
-		const days = await getDaysInternal(readTransaction);
+		const days = await getAllDaysInternal(readTransaction);
 		expect(days).toEqual([]);
 	});
 

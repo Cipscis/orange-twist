@@ -3,7 +3,7 @@ import type { DayInfo } from 'data/days';
 import type { Day } from '../types';
 import { getDatabase, getDayName } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { getDaysInternal, getDayTasksForDayInternal } from '../internal';
+import { getAllDaysInternal, getDayTasksForDayInternal } from '../internal';
 
 /**
  * Retrieve all schema v1 {@linkcode DayInfo} information from the database v2.
@@ -16,7 +16,7 @@ export async function getDaysV1(): Promise<[string, DayInfo][]> {
 		ObjectStoreName.DAY_TASK,
 	], 'readonly');
 
-	const allDays = await getDaysInternal(transaction);
+	const allDays = await getAllDaysInternal(transaction);
 	const daysV1 = await Promise.all(
 		allDays.map((day) => downgradeDay(day, transaction))
 	);

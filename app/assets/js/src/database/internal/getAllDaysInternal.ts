@@ -11,7 +11,7 @@ import { sortDaysChronologically } from '../utils';
  *
  * @returns A {@linkcode Promise} that resolves with an array containing all day objects, sorted chronologically.
  */
-export async function getDaysInternal(transaction: IDBTransaction): Promise<
+export async function getAllDaysInternal(transaction: IDBTransaction): Promise<
 	Day[]
 > {
 	const daysOS = transaction.objectStore(ObjectStoreName.DAY);

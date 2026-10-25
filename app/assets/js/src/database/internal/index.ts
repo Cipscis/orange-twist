@@ -3,7 +3,7 @@ export { getDayByDateInternal } from './getDayByDateInternal';
 export { addDayInternal } from './addDayInternal';
 export { removeDayInternal } from './removeDayInternal';
 export { updateDayInternal } from './updateDayInternal';
-export { getDaysInternal } from './getDaysInternal';
+export { getAllDaysInternal } from './getAllDaysInternal';
 
 export { getTaskInternal } from './getTaskInternal';
 export { addTaskInternal } from './addTaskInternal';

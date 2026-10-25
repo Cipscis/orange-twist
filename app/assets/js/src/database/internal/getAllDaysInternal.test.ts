@@ -10,16 +10,16 @@ import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
 
-import { getDaysInternal } from './getDaysInternal';
+import { getAllDaysInternal } from './getAllDaysInternal';
 
-describe('getDaysInternal', () => {
+describe('getAllDaysInternal', () => {
 	beforeAll(() => insertTestData());
 
 	test('returns all days in chronological order', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY, 'readonly');
 
-		const days = await getDaysInternal(transaction);
+		const days = await getAllDaysInternal(transaction);
 
 		expect(days).toEqual([
 			{
