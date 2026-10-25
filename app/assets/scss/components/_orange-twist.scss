@@ -46,10 +46,6 @@
 	@include patterns.disclosure-title;
 }
 
-.orange-twist__task-list {
-	margin-block: spacing.$md;
-}
-
 .orange-twist__footer {
 	margin-top: spacing.$lg;
 	border-top: 1px solid var(--accent);

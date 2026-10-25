@@ -22,7 +22,7 @@ import {
 	Note,
 } from 'components/shared';
 import { Day } from 'components/days/Day';
-import { UnfinishedTaskList } from 'components/tasks/UnfinishedTaskList';
+import { UnfinishedTaskList } from 'components/tasks/TaskList';
 
 import { OrangeTwistContext } from './OrangeTwistContext';
 
