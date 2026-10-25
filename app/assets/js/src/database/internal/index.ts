@@ -22,6 +22,7 @@ export { updateDayTaskByDayAndTaskInternal } from './updateDayTaskByDayAndTaskIn
 export { getDayTasksInternal } from './getDayTasksInternal';
 export { getDayTasksForDayInternal } from './getDayTasksForDayInternal';
 export { getDayTasksForTaskInternal } from './getDayTasksForTaskInternal';
+export { getAllCanonicalDayTasksInternal } from './getAllCanonicalDayTasksInternal';
 
 export { getStatusInternal } from './getStatusInternal';
 export { getStatusByAliasInternal } from './getStatusByAliasInternal';
