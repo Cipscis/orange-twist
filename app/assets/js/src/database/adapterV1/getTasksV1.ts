@@ -13,7 +13,7 @@ import {
 	getDaysInternal,
 	getDayTasksInternal,
 	getStatusesInternal,
-	getTasksInternal,
+	getAllTasksInternal,
 } from '../internal';
 
 /**
@@ -36,7 +36,7 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 		allDayTasks,
 		statuses,
 	] = await Promise.all([
-		getTasksInternal(transaction),
+		getAllTasksInternal(transaction),
 		getDaysInternal(transaction),
 		getDayTasksInternal(transaction),
 		getStatusesInternal(transaction),

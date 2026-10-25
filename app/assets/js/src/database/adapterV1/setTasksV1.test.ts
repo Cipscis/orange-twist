@@ -10,7 +10,7 @@ import { getIdbRequestPromise } from 'utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
-import { getDayTasksInternal, getTasksInternal } from '../internal';
+import { getDayTasksInternal, getAllTasksInternal } from '../internal';
 
 import { setTasksV1 } from './setTasksV1';
 
@@ -44,7 +44,7 @@ describe('setTasksV1', () => {
 		const readTransaction = db.transaction([
 			ObjectStoreName.TASK,
 		], 'readonly');
-		const tasks = await getTasksInternal(readTransaction);
+		const tasks = await getAllTasksInternal(readTransaction);
 		expect(tasks).toEqual([
 			{
 				id: 1,
@@ -58,7 +58,7 @@ describe('setTasksV1', () => {
 				note: 'Note for task 2',
 				sortIndex: 1,
 			},
-		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);
+		] satisfies Awaited<ReturnType<typeof getAllTasksInternal>>);
 	});
 
 	test('updates existing tasks', async () => {
@@ -89,7 +89,7 @@ describe('setTasksV1', () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TASK, 'readonly');
 
-		const tasks = await getTasksInternal(transaction);
+		const tasks = await getAllTasksInternal(transaction);
 		expect(tasks).toEqual([
 			{
 				id: 1,
@@ -109,7 +109,7 @@ describe('setTasksV1', () => {
 				note: 'Test task 3 note updated',
 				sortIndex: 2,
 			},
-		] satisfies Awaited<ReturnType<typeof getTasksInternal>>);
+		] satisfies Awaited<ReturnType<typeof getAllTasksInternal>>);
 	});
 
 	test('throws an error if a task is given a non-existent status', async () => {
@@ -147,7 +147,7 @@ describe('setTasksV1', () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TASK, 'readonly');
 
-		const tasks = await getTasksInternal(transaction);
+		const tasks = await getAllTasksInternal(transaction);
 		expect(tasks).toEqual([]);
 	});
 

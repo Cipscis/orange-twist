@@ -10,7 +10,7 @@ import type { Task } from '../types';
  *
  * @returns A {@linkcode Promise} that resolves to an array containing all tasks, sorted according to their `sortIndex` property.
  */
-export async function getTasksInternal(transaction: IDBTransaction): Promise<
+export async function getAllTasksInternal(transaction: IDBTransaction): Promise<
 	Task[]
 > {
 	const taskOS = transaction.objectStore(ObjectStoreName.TASK);

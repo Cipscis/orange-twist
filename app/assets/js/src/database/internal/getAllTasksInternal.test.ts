@@ -10,16 +10,16 @@ import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
 
-import { getTasksInternal } from './getTasksInternal';
+import { getAllTasksInternal } from './getAllTasksInternal';
 
-describe('getTasksInternal', () => {
+describe('getAllTasksInternal', () => {
 	beforeAll(() => insertTestData());
 
 	test('returns all tasks', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TASK, 'readonly');
 
-		const tasks = await getTasksInternal(transaction);
+		const tasks = await getAllTasksInternal(transaction);
 
 		expect(tasks).toEqual([
 			{
