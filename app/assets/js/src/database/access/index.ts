@@ -6,6 +6,7 @@ export { ChangeEntityType } from './liveAccessManager';
 export { LiveTask } from './LiveTask';
 export { LiveStatusForTask } from './LiveStatusForTask';
 export { LiveTaskWithStatus } from './LiveTaskWithStatus';
+export { LiveUnfinishedTaskIds } from './LiveUnfinishedTaskIds';
 
 export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';
@@ -27,6 +28,7 @@ export {
 
 	useTask,
 	useSettableTask,
+	useUnfinishedTaskIds,
 
 	useDayTaskIdsForDay,
 	useSettableDayTaskIdsForDay,

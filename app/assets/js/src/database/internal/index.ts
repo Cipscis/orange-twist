@@ -12,6 +12,7 @@ export { removeTaskInternal } from './removeTaskInternal';
 export { updateTaskInternal } from './updateTaskInternal';
 export { getTasksInternal } from './getTasksInternal';
 export { getAllTasksInternal } from './getAllTasksInternal';
+export { getAllTaskIdsInternal } from './getAllTaskIdsInternal';
 
 export { getDayTaskInternal } from './getDayTaskInternal';
 export { getDayTaskForDayAndTaskInternal } from './getDayTaskForDayAndTaskInternal';
