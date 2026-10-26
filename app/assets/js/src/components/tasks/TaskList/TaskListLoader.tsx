@@ -2,8 +2,7 @@ import { h, type JSX } from 'preact';
 
 import {
 	AsyncDataStateType,
-	type AsyncDataState,
-	// type UseSettableLiveDataResult,
+	type UseSettableLiveDataResult,
 } from 'utils/asyncData';
 
 import {
@@ -14,7 +13,7 @@ import {
 import { TaskListSync } from './TaskListSync';
 
 export interface TaskListLoaderProps {
-	taskIdsDataState: AsyncDataState<readonly number[]>;
+	taskIdsDataState: UseSettableLiveDataResult<readonly number[]>;
 }
 
 /**
@@ -25,19 +24,19 @@ export function TaskListLoader(props: TaskListLoaderProps): JSX.Element {
 		taskIdsDataState: taskIdsDataState,
 	} = props;
 
-	if (taskIdsDataState.type === AsyncDataStateType.INITIAL) {
+	if (taskIdsDataState.getterState.type === AsyncDataStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (taskIdsDataState.type === AsyncDataStateType.ERROR) {
+	if (taskIdsDataState.getterState.type === AsyncDataStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
-			message={taskIdsDataState.error.message}
+			message={taskIdsDataState.getterState.error.message}
 		/>;
 	}
 
 	return <TaskListSync
-		taskIds={taskIdsDataState.data}
-		// setTaskIdOrder={taskIdsDataState.setData}
+		taskIds={taskIdsDataState.getterState.data}
+		setTaskIdOrder={taskIdsDataState.setData}
 	/>;
 }

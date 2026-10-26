@@ -19,9 +19,9 @@ import { ObjectStoreName } from '../../metadata';
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
 
-import { useUnfinishedTaskIds } from './useUnfinishedTaskIds';
+import { useSettableUnfinishedTaskIds } from './useSettableUnfinishedTaskIds';
 
-describe('useUnfinishedTaskIds', () => {
+describe('useSettableUnfinishedTaskIds', () => {
 	beforeEach(async () => insertTestData({
 		[ObjectStoreName.DAY]: {
 			4: {
@@ -57,10 +57,10 @@ describe('useUnfinishedTaskIds', () => {
 
 	test('provide an AsyncDataResult', () => {
 		const { result } = renderHook(
-			() => useUnfinishedTaskIds()
+			() => useSettableUnfinishedTaskIds()
 		);
 
-		expect(result.current).toEqual({
+		expect(result.current.getterState).toEqual({
 			type: AsyncDataStateType.INITIAL,
 			loading: true,
 		} satisfies AsyncDataState<readonly number[]>);
@@ -68,11 +68,11 @@ describe('useUnfinishedTaskIds', () => {
 
 	test('fetches data on initial render', async () => {
 		const { result } = renderHook(
-			() => useUnfinishedTaskIds()
+			() => useSettableUnfinishedTaskIds()
 		);
 
 		await waitFor(() => {
-			expect(result.current).toEqual({
+			expect(result.current.getterState).toEqual({
 				type: AsyncDataStateType.SUCCESS,
 				loading: false,
 				data: [3, 2],
@@ -83,11 +83,11 @@ describe('useUnfinishedTaskIds', () => {
 	describe('re-fetches data if it changes', () => {
 		test('when adding a day task', async () => {
 			const { result } = renderHook(
-				() => useUnfinishedTaskIds()
+				() => useSettableUnfinishedTaskIds()
 			);
 
 			await waitFor(() => {
-				expect(result.current).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: [3, 2],
@@ -104,7 +104,7 @@ describe('useUnfinishedTaskIds', () => {
 			}]);
 
 			await waitFor(() => {
-				expect(result.current).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: [3, 1, 2],
@@ -114,11 +114,11 @@ describe('useUnfinishedTaskIds', () => {
 		test('when changing a day task\'s status', async () => {
 
 			const { result } = renderHook(
-				() => useUnfinishedTaskIds()
+				() => useSettableUnfinishedTaskIds()
 			);
 
 			await waitFor(() => {
-				expect(result.current).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: [3, 2],
@@ -134,7 +134,7 @@ describe('useUnfinishedTaskIds', () => {
 			}]);
 
 			await waitFor(() => {
-				expect(result.current).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: [3, 1, 2],
@@ -143,11 +143,11 @@ describe('useUnfinishedTaskIds', () => {
 		});
 		test('when deleting a day task', async () => {
 			const { result } = renderHook(
-				() => useUnfinishedTaskIds()
+				() => useSettableUnfinishedTaskIds()
 			);
 
 			await waitFor(() => {
-				expect(result.current).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: [3, 2],
@@ -160,12 +160,17 @@ describe('useUnfinishedTaskIds', () => {
 			}]);
 
 			await waitFor(() => {
-				expect(result.current).toEqual({
+				expect(result.current.getterState).toEqual({
 					type: AsyncDataStateType.SUCCESS,
 					loading: false,
 					data: [3, 1, 2],
 				} satisfies AsyncDataState<readonly number[]>);
 			});
 		});
+		test.todo('when a task is added');
+		test.todo('when an unfinished task\'s sortIndex is updated');
+		test.todo('when an unfinished task is deleted');
 	});
+
+	test.todo('can reorder unfinished tasks');
 });

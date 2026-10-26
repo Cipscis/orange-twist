@@ -103,8 +103,11 @@ async function saveTask(
 		taskToSave.sortIndex = action.task.sortIndex;
 	}
 
-	await updateTaskInternal(transaction, taskToSave);
-	noticeChange(ChangeType.CHANGE, { type: ChangeEntityType.TASK, id: action.id });
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.CHANGE, { type: ChangeEntityType.TASK, id: action.id });
+	});
+
+	return updateTaskInternal(transaction, taskToSave);
 }
 
 /**

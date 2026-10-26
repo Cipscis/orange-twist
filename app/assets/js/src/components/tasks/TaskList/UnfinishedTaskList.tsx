@@ -3,7 +3,7 @@ import { useCallback } from 'preact/hooks';
 
 import { classNames } from 'utils';
 
-import { useUnfinishedTaskIds } from 'database';
+import { useSettableUnfinishedTaskIds } from 'database';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -17,7 +17,7 @@ import { TaskListLoader } from './TaskListLoader';
  * Renders a {@linkcode TaskList} of all unfinished tasks in a disclosure.
  */
 export function UnfinishedTaskList(): JSX.Element {
-	const unfinishedTaskIdsState  = useUnfinishedTaskIds();
+	const unfinishedTaskIdsState  = useSettableUnfinishedTaskIds();
 
 	return <section
 		class={classNames({

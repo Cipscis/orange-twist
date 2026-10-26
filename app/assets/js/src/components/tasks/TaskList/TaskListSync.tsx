@@ -5,7 +5,7 @@ import { Task } from '../Task';
 
 export interface TaskListSyncProps {
 	taskIds: readonly number[];
-	// setTaskIdOrder: (data: readonly number[]) => Promise<void>;
+	setTaskIdOrder: (data: readonly number[]) => Promise<void>;
 }
 
 /**
@@ -14,12 +14,12 @@ export interface TaskListSyncProps {
 export function TaskListSync(props: TaskListSyncProps): JSX.Element {
 	const {
 		taskIds,
-		// setTaskIdOrder,
+		setTaskIdOrder,
 	} = props;
 
 	return <DragList
 		class="task-list"
-		// onReorder={setTaskIdOrder}
+		onReorder={setTaskIdOrder}
 	>
 		{taskIds.map((id) => (
 			<div
