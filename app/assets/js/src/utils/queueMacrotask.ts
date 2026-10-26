@@ -21,8 +21,6 @@ export function queueMacrotask(callback: () => void): void {
 		return queueTaskChannel;
 	})();
 
-	channel.port1.start();
-
 	channel.port1.addEventListener('message', () => callback(), { once: true });
 	channel.port2.postMessage('');
 }

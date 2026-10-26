@@ -15,7 +15,7 @@ import { getAllDayTasksInternal } from './getAllDayTasksInternal';
 describe('getAllDayTasksInternal', () => {
 	beforeAll(() => insertTestData());
 
-	test('returns all tasks', async () => {
+	test('returns all day tasks', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
 

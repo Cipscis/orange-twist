@@ -1,4 +1,6 @@
 import { sortBySortIndex } from 'utils';
+
+import type { Task } from '../types';
 import {
 	getAllCanonicalDayTasksInternal,
 	getAllTaskIdsInternal,
@@ -7,7 +9,6 @@ import {
 import { ObjectStoreName } from '../metadata';
 
 import { requestTransaction } from './requestTransaction';
-import type { Task } from 'database/types';
 
 /**
  * Loads a list of task IDs for tasks with one of a given set of statuses, sorted by those tasks' `sortIndex` values.
