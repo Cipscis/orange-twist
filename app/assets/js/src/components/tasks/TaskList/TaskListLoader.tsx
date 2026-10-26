@@ -2,7 +2,7 @@ import { h, type JSX } from 'preact';
 
 import {
 	AsyncDataStateType,
-	type UseSettableLiveDataResult,
+	type AsyncDataState,
 } from 'utils/asyncData';
 
 import {
@@ -13,7 +13,8 @@ import {
 import { TaskListSync } from './TaskListSync';
 
 export interface TaskListLoaderProps {
-	taskIdsDataState: UseSettableLiveDataResult<readonly number[]>;
+	taskIdsDataState: AsyncDataState<readonly number[]>;
+	setTaskIdOrder?: (data: readonly number[]) => Promise<void>;
 }
 
 /**
@@ -21,22 +22,23 @@ export interface TaskListLoaderProps {
  */
 export function TaskListLoader(props: TaskListLoaderProps): JSX.Element {
 	const {
-		taskIdsDataState: taskIdsDataState,
+		taskIdsDataState,
+		setTaskIdOrder,
 	} = props;
 
-	if (taskIdsDataState.getterState.type === AsyncDataStateType.INITIAL) {
+	if (taskIdsDataState.type === AsyncDataStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (taskIdsDataState.getterState.type === AsyncDataStateType.ERROR) {
+	if (taskIdsDataState.type === AsyncDataStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
-			message={taskIdsDataState.getterState.error.message}
+			message={taskIdsDataState.error.message}
 		/>;
 	}
 
 	return <TaskListSync
-		taskIds={taskIdsDataState.getterState.data}
-		setTaskIdOrder={taskIdsDataState.setData}
+		taskIds={taskIdsDataState.data}
+		setTaskIdOrder={setTaskIdOrder}
 	/>;
 }

@@ -7,6 +7,7 @@ export { LiveTask } from './LiveTask';
 export { LiveStatusForTask } from './LiveStatusForTask';
 export { LiveTaskWithStatus } from './LiveTaskWithStatus';
 export { LiveSettableUnfinishedTaskIds } from './LiveSettableUnfinishedTaskIds';
+export { LiveCompletedTaskIds } from './LiveCompletedTaskIds';
 
 export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';
@@ -29,6 +30,7 @@ export {
 	useTask,
 	useSettableTask,
 	useSettableUnfinishedTaskIds,
+	useCompletedTaskIds,
 
 	useDayTaskIdsForDay,
 	useSettableDayTaskIdsForDay,

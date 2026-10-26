@@ -14,7 +14,7 @@ import { TaskList } from './TaskList';
 import { TaskListLoader } from './TaskListLoader';
 
 /**
- * Renders a {@linkcode TaskList} of all unfinished tasks in a disclosure.
+ * Renders a {@linkcode TaskList} of all unfinished tasks.
  */
 export function UnfinishedTaskList(): JSX.Element {
 	const unfinishedTaskIdsState  = useSettableUnfinishedTaskIds();
@@ -27,7 +27,8 @@ export function UnfinishedTaskList(): JSX.Element {
 		<h2 class="orange-twist__title">Tasks</h2>
 
 		<TaskListLoader
-			taskIdsDataState={unfinishedTaskIdsState}
+			taskIdsDataState={unfinishedTaskIdsState.getterState}
+			setTaskIdOrder={unfinishedTaskIdsState.setData}
 		/>
 
 		<Button

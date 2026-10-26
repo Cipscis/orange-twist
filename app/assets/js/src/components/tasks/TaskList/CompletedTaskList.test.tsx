@@ -124,7 +124,7 @@ describe('CompletedTaskList', () => {
 			},
 			5: {
 				id: 5,
-				day: 2,
+				day: 3,
 				task: 5,
 				status: 3,
 				note: '',
