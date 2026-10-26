@@ -9,7 +9,7 @@ import {
 } from './liveAccessManager';
 
 /**
- * Provides live access to a list of all task IDs for tasks with a status that has marked them as completed. This list is sorted in reverse chronological order according to the day associated with those tasks' canonical day task.
+ * Provides live access to a list of all task IDs for tasks with a status that has marked them as completed. This list is sorted in reverse chronological order according to the day associated with those tasks' canonical day tasks.
  */
 export class LiveCompletedTaskIds extends LiveData<readonly number[]> {
 	constructor() {

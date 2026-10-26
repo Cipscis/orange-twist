@@ -1,6 +1,10 @@
-import type Preact from 'preact';
 import { h, type JSX } from 'preact';
-import { useCallback, useState } from 'preact/hooks';
+import type Preact from 'preact';
+import {
+	useCallback,
+	useEffect,
+	useState,
+} from 'preact/hooks';
 
 import { useCompletedTaskIds } from 'database';
 
@@ -25,6 +29,11 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 		setListOpen(event.currentTarget.open);
 	}, []);
 
+	// Update list open state if prop changes
+	useEffect(() => {
+		setListOpen(props.open ?? false);
+	}, [props.open]);
+
 	return <Accordion
 		class="orange-twist__section"
 		summary={
@@ -33,8 +42,10 @@ export function CompletedTaskList(props: CompletedTaskListProps): JSX.Element | 
 		onToggle={onListToggle}
 		open={listOpen}
 	>
-		<TaskListLoader
-			taskIdsDataState={completedTaskIdsState}
-		/>
+		{listOpen &&
+			<TaskListLoader
+				taskIdsDataState={completedTaskIdsState}
+			/>
+		}
 	</Accordion>;
 }
