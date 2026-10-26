@@ -10,6 +10,7 @@ export {
 	LiveStatusForTask,
 	LiveTaskWithStatus,
 	LiveSettableUnfinishedTaskIds,
+	LiveCompletedTaskIds,
 
 	loadDay,
 	useDay,
@@ -24,6 +25,7 @@ export {
 	useTask,
 	useSettableTask,
 	useSettableUnfinishedTaskIds,
+	useCompletedTaskIds,
 
 	loadDayTask,
 	loadDayTaskForDayAndTask,
