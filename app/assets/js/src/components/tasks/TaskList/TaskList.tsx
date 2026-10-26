@@ -3,7 +3,7 @@ import { h, type JSX } from 'preact';
 import { classNames } from 'utils';
 
 import { DragList } from 'components/shared';
-import { Task } from './Task';
+import { Task } from '../Task';
 
 interface TaskListProps {
 	/**

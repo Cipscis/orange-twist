@@ -1,7 +1,9 @@
+import { queueMacrotask } from './queueMacrotask';
+
 /**
- * Debounce a function so it will actually be called once after next processing the microtask queue, if called multiple times synchronously.
+ * Debounce a function so it will actually be called once after the end of the current task, if called multiple times within the same task.
  */
-export function microDebounce<
+export function taskDebounce<
 	T extends (...args: any[]) => unknown
 >(fn: T): (
 	this: ThisParameterType<T>,
@@ -15,7 +17,7 @@ export function microDebounce<
 		}
 		callingBlocked = true;
 
-		queueMicrotask(() => {
+		queueMacrotask(() => {
 			fn.apply(this, args);
 			callingBlocked = false;
 		});

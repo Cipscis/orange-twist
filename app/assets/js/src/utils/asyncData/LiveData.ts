@@ -1,4 +1,4 @@
-import { microDebounce } from 'utils/microDebounce';
+import { taskDebounce } from 'utils/taskDebounce';
 
 import { AsyncDataStateType } from './AsyncDataStateType';
 import type { AsyncDataState } from './AsyncDataState';
@@ -109,7 +109,7 @@ export class LiveData<T> extends AsyncData<T> {
 			};
 
 			this.#observe(
-				microDebounce(internalGetData),
+				taskDebounce(internalGetData),
 				observeCleanupSignal,
 			);
 		}
@@ -199,7 +199,7 @@ export class LiveData<T> extends AsyncData<T> {
 			this.#unobserveStateController.signal,
 		]);
 		this.#observeState(
-			microDebounce(internalGetData),
+			taskDebounce(internalGetData),
 			state,
 			observeStateCleanupSignal,
 		);

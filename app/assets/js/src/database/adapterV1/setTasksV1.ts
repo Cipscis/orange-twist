@@ -6,7 +6,7 @@ import {
 	addTaskInternal,
 	getStatusByAliasInternal,
 	getTaskInternal,
-	getTasksInternal,
+	getAllTasksInternal,
 	removeTaskInternal,
 	updateTaskInternal,
 } from '../internal';
@@ -27,7 +27,7 @@ export async function setTasksV1(
 	const promises: (Promise<unknown>)[] = [];
 
 	const priorTaskIds = new Set(
-		(await getTasksInternal(transaction))
+		(await getAllTasksInternal(transaction))
 			.map(({ id }) => id)
 	);
 	const newTaskIds = new Set(tasks.map(([id]) => id));

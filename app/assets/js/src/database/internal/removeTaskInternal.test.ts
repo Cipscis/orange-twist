@@ -10,7 +10,7 @@ import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 
-import { getTasksInternal } from './getTasksInternal';
+import { getAllTasksInternal } from './getAllTasksInternal';
 import { getDayTasksInternal } from './getDayTasksInternal';
 
 import { removeTaskInternal } from './removeTaskInternal';
@@ -43,7 +43,7 @@ describe('removeTaskInternal', () => {
 	test('removes a specified task', async () => {
 		await removeTaskInternal(transaction, 1);
 
-		const tasks = await getTasksInternal(transaction);
+		const tasks = await getAllTasksInternal(transaction);
 
 		expect(tasks).toEqual([
 			{

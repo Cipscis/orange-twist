@@ -2,8 +2,10 @@ import { h, render } from 'preact';
 
 import { OrangeTwist } from 'components/OrangeTwist';
 import { AllDays } from 'components/days/AllDays';
-import { UnfinishedTaskList } from 'components/tasks/UnfinishedTaskList';
-import { CompletedTaskList } from 'components/tasks/CompletedTaskList';
+import {
+	UnfinishedTaskList,
+	CompletedTaskList,
+} from 'components/tasks/TaskList';
 
 const main = document.getElementById('main');
 if (main === null) {

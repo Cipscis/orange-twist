@@ -2,27 +2,37 @@ import { getIdbRequestPromise } from 'utils';
 
 import { ObjectStoreName } from '../metadata';
 import type { Day } from '../types';
-import { sortDaysChronologically } from '../utils';
 
 /**
- * Takes an existing {@linkcode IDBTransaction} and adds a request to get all days.
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to get a list of days based on a provided list of IDs.
  *
  * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.DAY} object store.
+ * @param ids A list of numeric day IDs.
  *
- * @returns A {@linkcode Promise} that resolves with an array containing all day objects, sorted chronologically.
+ * @returns A {@linkcode Promise} that resolves to an array containing each day with an ID in the `ids` param, in the same order as those IDs are provided.
  */
-export async function getDaysInternal(transaction: IDBTransaction): Promise<
-	Day[]
+export async function getDaysInternal(
+	transaction: IDBTransaction,
+	ids: Iterable<number>,
+): Promise<
+	(Day | null)[]
 > {
-	const daysOS = transaction.objectStore(ObjectStoreName.DAY);
+	const dayOS = transaction.objectStore(ObjectStoreName.DAY);
 
-	// This type assertion is safe because of other controls around what can be inserted into the database
-	const request = daysOS.getAll() as IDBRequest<
-		Day[]
-	>;
+	const requests: IDBRequest<Day | undefined>[] = [];
+	for (const id of ids) {
+		// This type assertion is safe because of other controls around what can be inserted into the database
+		const request = dayOS.get(id) as IDBRequest<Day | undefined>;
+		requests.push(request);
+	}
 
-	const days = await getIdbRequestPromise(request);
-	const sortedDays = days.toSorted(sortDaysChronologically);
+	// Just wait for the last request to fulfill to save on function overhead
+	const lastRequest = requests.at(-1);
+	if (lastRequest) {
+		await getIdbRequestPromise(lastRequest);
+	}
 
-	return sortedDays;
+	const days = requests.map(({ result }) => result ?? null);
+
+	return days;
 }

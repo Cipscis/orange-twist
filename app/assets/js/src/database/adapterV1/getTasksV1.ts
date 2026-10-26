@@ -10,10 +10,10 @@ import type {
 } from '../types';
 import { ObjectStoreName } from '../metadata';
 import {
-	getDaysInternal,
+	getAllDaysInternal,
 	getDayTasksInternal,
 	getStatusesInternal,
-	getTasksInternal,
+	getAllTasksInternal,
 } from '../internal';
 
 /**
@@ -36,8 +36,8 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 		allDayTasks,
 		statuses,
 	] = await Promise.all([
-		getTasksInternal(transaction),
-		getDaysInternal(transaction),
+		getAllTasksInternal(transaction),
+		getAllDaysInternal(transaction),
 		getDayTasksInternal(transaction),
 		getStatusesInternal(transaction),
 	]);

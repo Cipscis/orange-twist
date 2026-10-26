@@ -15,19 +15,19 @@ import { getDaysInternal } from './getDaysInternal';
 describe('getDaysInternal', () => {
 	beforeAll(() => insertTestData());
 
-	test('returns all days in chronological order', async () => {
+	test('returns days for the provided IDs in order', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY, 'readonly');
 
-		const days = await getDaysInternal(transaction);
+		const tasks = await getDaysInternal(transaction, [2, 1, -1, 2]);
 
-		expect(days).toEqual([
+		expect(tasks).toEqual([
 			{
-				id: 3,
+				id: 2,
 				year: 2026,
-				month: 1,
-				day: 1,
-				note: 'Test note 3',
+				month: 4,
+				day: 27,
+				note: 'Test note 2',
 			},
 			{
 				id: 1,
@@ -36,6 +36,7 @@ describe('getDaysInternal', () => {
 				day: 26,
 				note: 'Test note 1',
 			},
+			null,
 			{
 				id: 2,
 				year: 2026,
@@ -43,6 +44,6 @@ describe('getDaysInternal', () => {
 				day: 27,
 				note: 'Test note 2',
 			},
-		] satisfies Day[]);
+		] satisfies (Day | null)[]);
 	});
 });
