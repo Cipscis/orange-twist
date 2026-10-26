@@ -5,7 +5,7 @@ import { Task } from '../Task';
 
 export interface TaskListSyncProps {
 	taskIds: readonly number[];
-	setTaskIdOrder: (data: readonly number[]) => Promise<void>;
+	setTaskIdOrder?: (data: readonly number[]) => Promise<void>;
 }
 
 /**
