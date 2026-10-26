@@ -20,7 +20,7 @@ export { addDayTaskInternal } from './addDayTaskInternal';
 export { removeDayTaskInternal } from './removeDayTaskInternal';
 export { updateDayTaskInternal } from './updateDayTaskInternal';
 export { updateDayTaskByDayAndTaskInternal } from './updateDayTaskByDayAndTaskInternal';
-export { getDayTasksInternal } from './getDayTasksInternal';
+export { getAllDayTasksInternal } from './getAllDayTasksInternal';
 export { getDayTasksForDayInternal } from './getDayTasksForDayInternal';
 export { getDayTasksForTaskInternal } from './getDayTasksForTaskInternal';
 export { getAllCanonicalDayTasksInternal } from './getAllCanonicalDayTasksInternal';

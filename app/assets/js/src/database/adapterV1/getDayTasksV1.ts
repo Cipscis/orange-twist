@@ -1,3 +1,5 @@
+import { sortBySortIndex } from 'utils';
+
 import { encodeDayTaskKey, type DayTaskInfo } from 'data/dayTasks';
 
 import { getDatabase, getDayName } from '../utils';
@@ -9,7 +11,7 @@ import type {
 import { ObjectStoreName } from '../metadata';
 import {
 	getDayInternal,
-	getDayTasksInternal,
+	getAllDayTasksInternal,
 	getStatusesInternal,
 } from '../internal';
 
@@ -28,11 +30,11 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 		allDayTasks,
 		statuses,
 	] = await Promise.all([
-		getDayTasksInternal(transaction),
+		getAllDayTasksInternal(transaction),
 		getStatusesInternal(transaction),
 	]);
 	const dayTasksV1 = await Promise.all(
-		allDayTasks.map(
+		sortBySortIndex(allDayTasks).map(
 			(dayTask) => downgradeDayTask(dayTask, statuses, transaction)
 		)
 	);

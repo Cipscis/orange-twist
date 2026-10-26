@@ -11,7 +11,7 @@ import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 
 import { getAllDaysInternal } from './getAllDaysInternal';
-import { getDayTasksInternal } from './getDayTasksInternal';
+import { getAllDayTasksInternal } from './getAllDayTasksInternal';
 
 import { removeDayInternal } from './removeDayInternal';
 
@@ -60,7 +60,7 @@ describe('removeDayInternal', () => {
 	test('removes all day tasks that reference the removed day', async () => {
 		await removeDayInternal(transaction, 1);
 
-		const dayTasks = await getDayTasksInternal(transaction);
+		const dayTasks = await getAllDayTasksInternal(transaction);
 
 		expect(dayTasks).toEqual([]);
 	});
