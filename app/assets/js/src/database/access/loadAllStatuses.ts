@@ -3,7 +3,7 @@ import * as ui from 'ui';
 import type { Status } from '../types';
 
 import { ObjectStoreName } from '../metadata';
-import { getStatusesInternal } from '../internal';
+import { getAllStatusesInternal } from '../internal';
 
 import { requestTransaction } from './requestTransaction';
 
@@ -40,7 +40,7 @@ export async function loadAllStatuses(): Promise<Status[]> {
 async function loadAllStatusesInternal(): Promise<Status[]> {
 	const transaction = await requestTransaction([ObjectStoreName.STATUS], 'readonly');
 
-	const statuses = await getStatusesInternal(transaction);
+	const statuses = await getAllStatusesInternal(transaction);
 
 	return statuses;
 }

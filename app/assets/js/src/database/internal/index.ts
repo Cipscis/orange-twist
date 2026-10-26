@@ -28,7 +28,7 @@ export { getAllCanonicalDayTasksInternal } from './getAllCanonicalDayTasksIntern
 export { getStatusInternal } from './getStatusInternal';
 export { getStatusByAliasInternal } from './getStatusByAliasInternal';
 export { addStatusInternal } from './addStatusInternal';
-export { getStatusesInternal } from './getStatusesInternal';
+export { getAllStatusesInternal } from './getAllStatusesInternal';
 
 export { getTemplateInternal } from './getTemplateInternal';
 export { addTemplateInternal } from './addTemplateInternal';

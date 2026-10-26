@@ -14,7 +14,7 @@ import { ObjectStoreName } from '../metadata';
 import {
 	getAllDaysInternal,
 	getAllDayTasksInternal,
-	getStatusesInternal,
+	getAllStatusesInternal,
 	getAllTasksInternal,
 } from '../internal';
 
@@ -41,7 +41,7 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 		getAllTasksInternal(transaction),
 		getAllDaysInternal(transaction),
 		getAllDayTasksInternal(transaction),
-		getStatusesInternal(transaction),
+		getAllStatusesInternal(transaction),
 	]);
 
 	const daysById = new Map<number, Day>();

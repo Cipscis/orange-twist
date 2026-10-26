@@ -12,7 +12,7 @@ import { ObjectStoreName } from '../metadata';
 import {
 	getDayInternal,
 	getAllDayTasksInternal,
-	getStatusesInternal,
+	getAllStatusesInternal,
 } from '../internal';
 
 /**
@@ -31,7 +31,7 @@ export async function getDayTasksV1(): Promise<readonly [string, DayTaskInfo][]>
 		statuses,
 	] = await Promise.all([
 		getAllDayTasksInternal(transaction),
-		getStatusesInternal(transaction),
+		getAllStatusesInternal(transaction),
 	]);
 	const dayTasksV1 = await Promise.all(
 		sortBySortIndex(allDayTasks).map(
