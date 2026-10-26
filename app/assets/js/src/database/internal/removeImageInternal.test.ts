@@ -9,7 +9,7 @@ import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 
-import { getImagesInternal } from './getImagesInternal';
+import { getAllImagesInternal } from './getAllImagesInternal';
 
 import { removeImageInternal } from './removeImageInternal';
 
@@ -28,7 +28,7 @@ describe('removeImageInternal', () => {
 	test('removes a specified image', async () => {
 		await removeImageInternal(transaction, 'test-hash');
 
-		const images = await getImagesInternal(transaction);
+		const images = await getAllImagesInternal(transaction);
 
 		expect(images).toEqual([]);
 	});

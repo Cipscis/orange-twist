@@ -3,7 +3,7 @@ import { ObjectStoreName } from '../metadata';
 import {
 	addImageInternal,
 	getImageInternal,
-	getImagesInternal,
+	getAllImagesInternal,
 	removeImageInternal,
 	updateImageInternal,
 } from '../internal';
@@ -22,7 +22,7 @@ export async function setImagesV1(
 	const promises: (Promise<unknown>)[] = [];
 
 	const priorImageHashes = new Set(
-		(await getImagesInternal(transaction)).map(({ hash }) => hash)
+		(await getAllImagesInternal(transaction)).map(({ hash }) => hash)
 	);
 	const newImageHashes = new Set<string>();
 

@@ -1,5 +1,5 @@
 import { getDatabase } from '../utils';
-import { getImagesInternal } from '../internal';
+import { getAllImagesInternal } from '../internal';
 import { ObjectStoreName } from '../metadata';
 
 /**
@@ -9,7 +9,7 @@ export async function getImagesV1(): Promise<(readonly [hash: string, image: Blo
 	const db = await getDatabase();
 	const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
 
-	const imagesV1 = await getImagesInternal(transaction);
+	const imagesV1 = await getAllImagesInternal(transaction);
 
 	return imagesV1.map(({ hash, file }) => [hash, file]);
 }
