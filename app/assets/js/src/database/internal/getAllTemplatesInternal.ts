@@ -10,7 +10,7 @@ import type { Template } from '../types';
  *
  * @returns A {@linkcode Promise} that resolves to an array containing all templates, sorted according to their `sortIndex` property.
  */
-export async function getTemplatesInternal(transaction: IDBTransaction): Promise<
+export async function getAllTemplatesInternal(transaction: IDBTransaction): Promise<
 	Template[]
 > {
 	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);

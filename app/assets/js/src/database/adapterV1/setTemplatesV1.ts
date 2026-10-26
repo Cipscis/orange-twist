@@ -5,7 +5,7 @@ import { ObjectStoreName } from '../metadata';
 import {
 	addTemplateInternal,
 	getTemplateInternal,
-	getTemplatesInternal,
+	getAllTemplatesInternal,
 	removeTemplateInternal,
 	updateTemplateInternal,
 } from '../internal';
@@ -24,7 +24,7 @@ export async function setTemplatesV1(
 	const promises: Promise<unknown>[] = [];
 
 	const priorTemplateIds = new Set(
-		(await getTemplatesInternal(transaction)).map(({ id }) => id)
+		(await getAllTemplatesInternal(transaction)).map(({ id }) => id)
 	);
 	const newTemplateIds = new Set<number>();
 

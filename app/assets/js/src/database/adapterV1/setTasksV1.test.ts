@@ -10,7 +10,7 @@ import { getIdbRequestPromise } from 'utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
-import { getDayTasksInternal, getAllTasksInternal } from '../internal';
+import { getAllDayTasksInternal, getAllTasksInternal } from '../internal';
 
 import { setTasksV1 } from './setTasksV1';
 
@@ -157,7 +157,7 @@ describe('setTasksV1', () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
 
-		const dayTasks = await getDayTasksInternal(transaction);
+		const dayTasks = await getAllDayTasksInternal(transaction);
 		expect(dayTasks).toEqual([]);
 	});
 });

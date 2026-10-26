@@ -5,12 +5,12 @@ import {
 	test,
 } from '@jest/globals';
 
-import { getIdbRequestPromise } from 'utils';
+import { getIdbRequestPromise, sortBySortIndex } from 'utils';
 
 import { getDatabase } from '../utils';
 import { insertTestData } from '../test-utils';
 import { ObjectStoreName } from '../metadata';
-import { getAllDaysInternal, getDayTasksInternal } from '../internal';
+import { getAllDaysInternal, getAllDayTasksInternal } from '../internal';
 
 import { setDaysV1 } from './setDaysV1';
 
@@ -91,7 +91,7 @@ describe('setDaysV1', () => {
 		]);
 
 		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
-		const dayTasks = await getDayTasksInternal(readTransaction);
+		const dayTasks = sortBySortIndex(await getAllDayTasksInternal(readTransaction));
 		// IDs don't start at 1 because the database had data entered before it was cleared
 		expect(dayTasks).toEqual([
 			{
@@ -130,7 +130,7 @@ describe('setDaysV1', () => {
 				sortIndex: 1,
 				status: 1,
 			},
-		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
+		] satisfies Awaited<ReturnType<typeof getAllDayTasksInternal>>);
 	});
 
 	test('updates existing days', async () => {
@@ -201,7 +201,7 @@ describe('setDaysV1', () => {
 
 		const db = await getDatabase();
 		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
-		const dayTasks = await getDayTasksInternal(readTransaction);
+		const dayTasks = sortBySortIndex(await getAllDayTasksInternal(readTransaction));
 		expect(dayTasks).toEqual([
 			{
 				id: 3,
@@ -239,7 +239,7 @@ describe('setDaysV1', () => {
 				status: 1,
 				sortIndex: 1,
 			},
-		] satisfies Awaited<ReturnType<typeof getDayTasksInternal>>);
+		] satisfies Awaited<ReturnType<typeof getAllDayTasksInternal>>);
 	});
 
 	test('throws an error if a day is given a non-existent task', async () => {
@@ -284,7 +284,7 @@ describe('setDaysV1', () => {
 
 		const db = await getDatabase();
 		const readTransaction = db.transaction(ObjectStoreName.DAY_TASK, 'readonly');
-		const dayTasks = await getDayTasksInternal(readTransaction);
+		const dayTasks = await getAllDayTasksInternal(readTransaction);
 		expect(dayTasks).toEqual([]);
 	});
 });

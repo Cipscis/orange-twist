@@ -9,16 +9,16 @@ import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
 
-import { getImagesInternal } from './getImagesInternal';
+import { getAllImagesInternal } from './getAllImagesInternal';
 
-describe('getImagesInternal', () => {
+describe('getAllImagesInternal', () => {
 	beforeAll(() => insertTestData());
 
 	test('returns a Promise which resolves to an array of all images', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
 
-		const result = await getImagesInternal(transaction);
+		const result = await getAllImagesInternal(transaction);
 
 		expect(Array.isArray(result)).toBe(true);
 		expect(result.length).toBe(1);

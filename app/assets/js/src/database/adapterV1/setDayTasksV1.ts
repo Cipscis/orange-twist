@@ -1,10 +1,12 @@
+import { sortBySortIndex } from 'utils';
+
 import { decodeDayTaskKey, type DayTaskInfo } from 'data/dayTasks';
 
 import {
 	addDayTaskInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
-	getDayTasksInternal,
+	getAllDayTasksInternal,
 	getStatusByAliasInternal,
 	getTaskInternal,
 	removeDayTaskInternal,
@@ -30,7 +32,7 @@ export async function setDayTasksV1(
 	const promises: (Promise<unknown>)[] = [];
 
 	const priorDayTaskIds = new Set(
-		(await getDayTasksInternal(transaction))
+		sortBySortIndex(await getAllDayTasksInternal(transaction))
 			.map(({ id }) => id)
 	);
 	const newDayTaskIds = new Set<number>();

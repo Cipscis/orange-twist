@@ -10,7 +10,7 @@ import { getIdbRequestPromise } from 'utils';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { getTemplatesInternal } from '../internal';
+import { getAllTemplatesInternal } from '../internal';
 
 import { setTemplatesV1 } from './setTemplatesV1';
 
@@ -40,7 +40,7 @@ describe('setTemplatesV1', () => {
 		const readTransaction = db.transaction([
 			ObjectStoreName.TEMPLATE,
 		], 'readonly');
-		const templates = await getTemplatesInternal(readTransaction);
+		const templates = await getAllTemplatesInternal(readTransaction);
 		// IDs don't start at 0 because the database had data entered before it was cleared
 		expect(templates).toEqual([
 			{
@@ -49,7 +49,7 @@ describe('setTemplatesV1', () => {
 				template: 'New template 0',
 				sortIndex: 1,
 			},
-		] satisfies Awaited<ReturnType<typeof getTemplatesInternal>>);
+		] satisfies Awaited<ReturnType<typeof getAllTemplatesInternal>>);
 	});
 
 	test('updates existing templates', async () => {
@@ -71,7 +71,7 @@ describe('setTemplatesV1', () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TEMPLATE, 'readonly');
 
-		const templates = await getTemplatesInternal(transaction);
+		const templates = await getAllTemplatesInternal(transaction);
 		expect(templates).toEqual([
 			{
 				id: 0,
@@ -85,7 +85,7 @@ describe('setTemplatesV1', () => {
 				template: 'Template 1 updated',
 				sortIndex: 1,
 			},
-		] satisfies Awaited<ReturnType<typeof getTemplatesInternal>>);
+		] satisfies Awaited<ReturnType<typeof getAllTemplatesInternal>>);
 	});
 
 	test('removes removed templates', async () => {
@@ -94,7 +94,7 @@ describe('setTemplatesV1', () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TEMPLATE, 'readonly');
 
-		const templates = await getTemplatesInternal(transaction);
+		const templates = await getAllTemplatesInternal(transaction);
 		expect(templates).toEqual([]);
 	});
 });

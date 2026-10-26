@@ -10,7 +10,7 @@ import { ObjectStoreName } from '../metadata';
  *
  * @returns A {@linkcode Promise} that resolves with an array containing all status objects.
  */
-export async function getStatusesInternal(
+export async function getAllStatusesInternal(
 	transaction: IDBTransaction
 ): Promise<Status[]> {
 	const statusOS = transaction.objectStore(ObjectStoreName.STATUS);

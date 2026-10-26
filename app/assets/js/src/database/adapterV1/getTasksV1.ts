@@ -1,3 +1,5 @@
+import { sortBySortIndex } from 'utils';
+
 import type { TaskInfo } from 'data/tasks';
 
 import { getDatabase, sortDaysChronologically } from '../utils';
@@ -11,8 +13,8 @@ import type {
 import { ObjectStoreName } from '../metadata';
 import {
 	getAllDaysInternal,
-	getDayTasksInternal,
-	getStatusesInternal,
+	getAllDayTasksInternal,
+	getAllStatusesInternal,
 	getAllTasksInternal,
 } from '../internal';
 
@@ -38,8 +40,8 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 	] = await Promise.all([
 		getAllTasksInternal(transaction),
 		getAllDaysInternal(transaction),
-		getDayTasksInternal(transaction),
-		getStatusesInternal(transaction),
+		getAllDayTasksInternal(transaction),
+		getAllStatusesInternal(transaction),
 	]);
 
 	const daysById = new Map<number, Day>();
@@ -48,7 +50,7 @@ export async function getTasksV1(): Promise<readonly [number, TaskInfo][]> {
 	}
 
 	const dayTasksByTaskId = new Map<number, DayTask[]>();
-	for (const dayTask of allDayTasks) {
+	for (const dayTask of sortBySortIndex(allDayTasks)) {
 		const dayTasks = dayTasksByTaskId.getOrInsert(dayTask.task, []);
 		dayTasks.push(dayTask);
 	}

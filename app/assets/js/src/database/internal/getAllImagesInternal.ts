@@ -10,7 +10,7 @@ import type { Image } from '../types';
  *
  * @returns A {@linkcode Promise} that resolves with an array containing all images.
  */
-export async function getImagesInternal(transaction: IDBTransaction): Promise<
+export async function getAllImagesInternal(transaction: IDBTransaction): Promise<
 	Image[]
 > {
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);

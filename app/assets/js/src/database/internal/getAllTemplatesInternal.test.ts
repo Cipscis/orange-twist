@@ -10,16 +10,16 @@ import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
 
-import { getTemplatesInternal } from './getTemplatesInternal';
+import { getAllTemplatesInternal } from './getAllTemplatesInternal';
 
-describe('getTemplatesInternal', () => {
+describe('getAllTemplatesInternal', () => {
 	beforeAll(() => insertTestData());
 
 	test('returns all templates', async () => {
 		const db = await getDatabase();
 		const transaction = db.transaction(ObjectStoreName.TEMPLATE, 'readonly');
 
-		const templates = await getTemplatesInternal(transaction);
+		const templates = await getAllTemplatesInternal(transaction);
 
 		expect(templates).toEqual([
 			{
