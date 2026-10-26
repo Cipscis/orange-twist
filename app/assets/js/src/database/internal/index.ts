@@ -34,7 +34,7 @@ export { getTemplateInternal } from './getTemplateInternal';
 export { addTemplateInternal } from './addTemplateInternal';
 export { updateTemplateInternal } from './updateTemplateInternal';
 export { removeTemplateInternal } from './removeTemplateInternal';
-export { getTemplatesInternal } from './getTemplatesInternal';
+export { getAllTemplatesInternal } from './getAllTemplatesInternal';
 
 export { getImageInternal } from './getImageInternal';
 export { addImageInternal } from './addImageInternal';

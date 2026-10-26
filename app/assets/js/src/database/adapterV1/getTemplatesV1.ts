@@ -2,7 +2,7 @@ import type { TemplateInfo } from 'data/templates';
 
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
-import { getTemplatesInternal } from '../internal';
+import { getAllTemplatesInternal } from '../internal';
 
 /**
  * Retrieve all schema v1 {@linkcode TemplateInfo} information from the database v2.
@@ -15,7 +15,7 @@ export async function getTemplatesV1(): Promise<readonly [number, TemplateInfo][
 		ObjectStoreName.TEMPLATE,
 	], 'readonly');
 
-	const allTemplates = await getTemplatesInternal(transaction);
+	const allTemplates = await getAllTemplatesInternal(transaction);
 
 	for (const template of allTemplates) {
 		const templateV1: TemplateInfo = {

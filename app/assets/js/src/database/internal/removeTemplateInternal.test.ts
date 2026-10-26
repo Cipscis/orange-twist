@@ -10,7 +10,7 @@ import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 
-import { getTemplatesInternal } from './getTemplatesInternal';
+import { getAllTemplatesInternal } from './getAllTemplatesInternal';
 
 import { removeTemplateInternal } from './removeTemplateInternal';
 
@@ -29,7 +29,7 @@ describe('removeTemplateInternal', () => {
 	test('removes a specified template', async () => {
 		await removeTemplateInternal(transaction, 1);
 
-		const templates = await getTemplatesInternal(transaction);
+		const templates = await getAllTemplatesInternal(transaction);
 
 		expect(templates).toEqual([
 			{
