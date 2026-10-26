@@ -111,6 +111,7 @@ describe('useSettableUnfinishedTaskIds', () => {
 				} satisfies AsyncDataState<readonly number[]>);
 			});
 		});
+
 		test('when changing a day task\'s status', async () => {
 
 			const { result } = renderHook(
@@ -141,6 +142,7 @@ describe('useSettableUnfinishedTaskIds', () => {
 				} satisfies AsyncDataState<readonly number[]>);
 			});
 		});
+
 		test('when deleting a day task', async () => {
 			const { result } = renderHook(
 				() => useSettableUnfinishedTaskIds()
@@ -167,10 +169,130 @@ describe('useSettableUnfinishedTaskIds', () => {
 				} satisfies AsyncDataState<readonly number[]>);
 			});
 		});
-		test.todo('when a task is added');
-		test.todo('when an unfinished task\'s sortIndex is updated');
-		test.todo('when an unfinished task is deleted');
+
+		test('when a task is added', async () => {
+			const { result } = renderHook(
+				() => useSettableUnfinishedTaskIds()
+			);
+
+			await waitFor(() => {
+				expect(result.current.getterState).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [3, 2],
+				} satisfies AsyncDataState<readonly number[]>);
+			});
+
+			save([{
+				type: SaveType.TASK_ADD,
+				task: {
+					name: 'New task',
+				},
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.getterState).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [4, 3, 2],
+				} satisfies AsyncDataState<readonly number[]>);
+			});
+		});
+
+		test('when an unfinished task\'s sortIndex is updated', async () => {
+			const { result } = renderHook(
+				() => useSettableUnfinishedTaskIds()
+			);
+
+			await waitFor(() => {
+				expect(result.current.getterState).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [3, 2],
+				} satisfies AsyncDataState<readonly number[]>);
+			});
+
+			save([{
+				type: SaveType.TASK,
+				id: 2,
+				task: { sortIndex: -2 },
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.getterState).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [2, 3],
+				} satisfies AsyncDataState<readonly number[]>);
+			});
+		});
+
+		test('when an unfinished task is deleted', async () => {
+			const { result } = renderHook(
+				() => useSettableUnfinishedTaskIds()
+			);
+
+			await waitFor(() => {
+				expect(result.current.getterState).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [3, 2],
+				} satisfies AsyncDataState<readonly number[]>);
+			});
+
+			save([{
+				type: SaveType.TASK_DELETE,
+				id: 3,
+			}]);
+
+			await waitFor(() => {
+				expect(result.current.getterState).toEqual({
+					type: AsyncDataStateType.SUCCESS,
+					loading: false,
+					data: [2],
+				} satisfies AsyncDataState<readonly number[]>);
+			});
+		});
 	});
 
-	test.todo('can reorder unfinished tasks');
+	test('can set data and provide optimistic results', async () => {
+		const { rerender, result } = renderHook(
+			() => useSettableUnfinishedTaskIds()
+		);
+
+		await waitFor(() => {
+			expect(result.current.getterState).toEqual({
+				type: AsyncDataStateType.SUCCESS,
+				loading: false,
+				data: [3, 2],
+			} satisfies AsyncDataState<readonly number[]>);
+		});
+
+		result.current.setData([2, 3]);
+		rerender();
+
+		// While the set function processes, we have optimistic data
+		expect(result.current.setterState).toEqual({
+			type: AsyncDataStateType.INITIAL,
+			loading: true,
+		});
+		expect(result.current.getterState).toEqual({
+			type: AsyncDataStateType.SUCCESS,
+			loading: false,
+			data: [2, 3],
+		} satisfies AsyncDataState<readonly number[]>);
+
+		// Eventually, the set function completes and we still have data
+		await waitFor(() => {
+			expect(result.current.setterState).toEqual({
+				type: AsyncDataStateType.SUCCESS,
+				loading: false,
+			});
+			expect(result.current.getterState).toEqual({
+				type: AsyncDataStateType.SUCCESS,
+				loading: false,
+				data: [2, 3],
+			} satisfies AsyncDataState<readonly number[]>);
+		});
+	});
 });
