@@ -8,10 +8,8 @@ export function getSanitiser(): Sanitizer {
 		return sanitiser;
 	}
 
-	sanitiser = new Sanitizer();
-	sanitiser.allowElement({
-		name: 'task-link',
-		attributes: ['taskid'],
-	});
+	sanitiser = new Sanitizer({});
+	sanitiser.removeUnsafe();
+
 	return sanitiser;
 }
