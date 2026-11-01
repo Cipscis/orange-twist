@@ -11,11 +11,15 @@ export interface DayTaskListSyncProps {
 /**
  * Renders a re-orderable list of day tasks.
  */
-export function DayTaskListSync(props: DayTaskListSyncProps): JSX.Element {
+export function DayTaskListSync(props: DayTaskListSyncProps): JSX.Element | null {
 	const {
 		dayTaskIds,
 		setDayTaskIdOrder,
 	} = props;
+
+	if (dayTaskIds.length === 0) {
+		return null;
+	}
 
 	return <DragList
 		class="task-list"
