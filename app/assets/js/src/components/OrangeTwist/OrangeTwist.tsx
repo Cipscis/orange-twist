@@ -37,6 +37,7 @@ import {
 	type DefaultsFor,
 	getCurrentDateDayName,
 } from 'utils';
+import { useDevEnhancements } from './useDevEnhancements';
 
 import { type PersistApi, local } from 'persist';
 import {
@@ -247,6 +248,12 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		openCommandPalette,
 		!commandPaletteOpen
 	);
+
+	if (__IS_DEV__) {
+		// This hook is not actually called conditionally, the __IS_DEV__ check is determined at build time
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		useDevEnhancements();
+	}
 
 	return <OrangeTwistContext.Provider
 		value={{

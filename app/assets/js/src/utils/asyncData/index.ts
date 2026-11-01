@@ -1,5 +1,3 @@
-export { extractError } from './extractError';
-
 export {
 	AsyncData,
 	type AsyncDataOptions,
