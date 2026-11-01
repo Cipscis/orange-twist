@@ -5,10 +5,7 @@ import {
 } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import { SaveType, type DayTask } from 'database';
-
-import { fireCommand } from 'registers/commands';
-import { Command } from 'types/Command';
+import type { DayTask } from 'database';
 
 import { Accordion, InlineNote } from 'components/shared';
 import { DayName } from '../../days/DayName';
@@ -32,12 +29,8 @@ export function DayTaskDetailSync(props: DayTaskDetailSyncProps): JSX.Element {
 	} = props;
 
 	const commitSummary = useCallback((summary: string) => {
-		fireCommand(Command.DATA_SAVE, [{
-			type: SaveType.DAY_TASK,
-			id: dayTask.id,
-			dayTask: { summary },
-		}]);
-	}, [dayTask.id]);
+		setDayTask({ summary });
+	}, [setDayTask]);
 
 	return <Accordion
 		class="day js-day"
