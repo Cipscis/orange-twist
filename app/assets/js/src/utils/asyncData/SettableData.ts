@@ -1,4 +1,4 @@
-import { extractError } from './extractError';
+import { extractError } from '../extractError';
 import { AsyncDataStateType } from './AsyncDataStateType';
 import type { SettableAsyncDataState } from './SettableAsyncDataState';
 
