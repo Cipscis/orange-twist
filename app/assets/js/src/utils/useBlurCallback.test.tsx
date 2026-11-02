@@ -19,7 +19,7 @@ describe('useBlurCallback', () => {
 		const spy = jest.fn();
 
 		const ref = createRef<HTMLDivElement>();
-		const wrapper = ({ children }: { children: preact.ComponentChildren; }) => <div ref={ref} tabindex={-1}>{children}</div>;
+		const wrapper = ({ children }: { children?: preact.ComponentChildren; }) => <div ref={ref} tabindex={-1}>{children}</div>;
 
 		renderHook(() => useBlurCallback(
 			ref,
@@ -38,7 +38,7 @@ describe('useBlurCallback', () => {
 		const spy = jest.fn();
 
 		const ref = createRef<HTMLDivElement>();
-		const wrapper = ({ children }: { children: preact.ComponentChildren; }) => <div ref={ref} tabindex={-1}>{children}</div>;
+		const wrapper = ({ children }: { children?: preact.ComponentChildren; }) => <div ref={ref} tabindex={-1}>{children}</div>;
 
 		const { rerender } = renderHook(({ ref, callback, condition }) => useBlurCallback(
 			ref,
