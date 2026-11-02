@@ -61,6 +61,11 @@ export function useBlurCallback(
 					return;
 				}
 
+				// Don't fire the callback if the ref has been wiped
+				if (!ref.current) {
+					return;
+				}
+
 				callback();
 			},
 			{ signal }
