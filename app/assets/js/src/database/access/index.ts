@@ -10,6 +10,7 @@ export { LiveSettableUnfinishedTaskIds } from './LiveSettableUnfinishedTaskIds';
 export { LiveCompletedTaskIds } from './LiveCompletedTaskIds';
 export { SettableLiveTemplate } from './SettableLiveTemplate';
 export { SettableAllTemplateIds } from './SettableAllTemplateIds';
+export { LiveTemplate } from './LiveTemplate';
 
 export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';

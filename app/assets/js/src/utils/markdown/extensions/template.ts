@@ -1,32 +1,5 @@
 import type { TokenizerAndRendererExtension } from 'marked';
 
-import { getTemplateAlias } from 'utils';
-import { getAllTemplateInfo } from 'data';
-
-/**
- * Get the template for a given name, if there is one.
- * Case insensitive.
- *
- * If a template's content is an empty string, a default
- * value will be used.
- */
-function getTemplateByName(templateName: string): string | null {
-	const allTemplateInfo = getAllTemplateInfo();
-	const templateInfo = allTemplateInfo.find(
-		({ name }) => getTemplateAlias(name) === getTemplateAlias(templateName)
-	);
-
-	if (!templateInfo) {
-		return null;
-	}
-
-	if (templateInfo.template.trim() === '') {
-		return '<em>Empty template</em>';
-	}
-
-	return templateInfo.template;
-}
-
 export const template: TokenizerAndRendererExtension = {
 	name: 'template',
 	level: 'inline',
@@ -45,58 +18,30 @@ export const template: TokenizerAndRendererExtension = {
 		}
 
 		const name = match[2];
-		const template = getTemplateByName(name);
-		if (template === null) {
-			return;
-		}
-
 		const args = match[4]?.split('|') ?? [];
-
-		let output = template;
-
-		// Convert all {{{0|default}}} slots into numbers e.g. 0,
-		// for matching with the appropriately indexed arg
-		const slots = (output.match(/\{\{\{\d+(\|.+?)?}}}/g) ?? []).map(
-			(slot) => Number(
-				slot.replace(
-					/\{\{\{(\d+).+/,
-					'$1'
-				)
-			)
-		);
-
-		for (const index of slots) {
-			const arg = args[index];
-
-			const replacePattern = new RegExp(
-				`\\{\\{\\{${index}(\\|(.+?))?}}}`
-			);
-			const match = output.match(replacePattern);
-			if (!match) {
-				continue;
-			}
-
-			const defaultValue = match[2] ?? '';
-			const replaceValue = arg || defaultValue;
-
-			output = output.replace(match[0], replaceValue);
-		}
 
 		const token = {
 			type: 'template',
 			raw: match[0],
+			name,
+			args,
 			tokens: [],
 		};
-
-		this.lexer.inlineTokens(output, tokens);
-
 		return token;
 	},
 	renderer(token) {
-		if (!token.tokens) {
+		if (!(
+			typeof token.name === 'string' &&
+			Array.isArray(token.args)
+		)) {
 			return '';
 		}
 
-		return this.parser.parseInline(token.tokens);
+		const nameAttr = token.name.replace(/"/g, '&quot;');
+		const argsAttr = JSON.stringify(token.args)
+			.replace(/&/g, '&amp;')
+			.replace(/"/g, '&quot;');
+
+		return `<markdown-template name="${nameAttr}" args="${argsAttr}"></markdown-template>`;
 	},
 };
