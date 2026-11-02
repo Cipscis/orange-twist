@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Fixed
 
 * The Help page no longer immediately scrolls down to where the current day is rendered
+* Saving a note with the keyboard will no longer sometimes attempt to save twice
 
 ### Changed
 
