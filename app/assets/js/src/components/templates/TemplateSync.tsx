@@ -5,9 +5,12 @@ import {
 	useRef,
 } from 'preact/hooks';
 
-import type { Template } from 'database';
+import { SaveType, type Template } from 'database';
 
 import { getTemplateAlias } from 'utils/getTemplateAlias';
+
+import { fireCommand } from 'registers/commands';
+import { Command } from 'types/Command';
 
 import * as ui from 'ui';
 import {
@@ -62,10 +65,12 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 
 	const deleteThisTemplate = useCallback(async () => {
 		if (await ui.confirm('Are you sure you want to delete this template?')) {
-			// TODO: Allow deleting a template
-			// deleteTemplate(template.id);
+			fireCommand(Command.DATA_SAVE, [{
+				type: SaveType.TEMPLATE_DELETE,
+				id: template.id,
+			}]);
 		}
-	}, []);
+	}, [template.id]);
 
 	const previewArgs = useMemo(() => {
 		const argsUsed = template.template.match(/{{{\d+(\|[^}]+)?}}}/g);

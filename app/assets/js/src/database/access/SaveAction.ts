@@ -27,6 +27,7 @@ export const SaveType = {
 	DAY_DELETE: 'delete day',
 
 	TEMPLATE: 'template',
+	TEMPLATE_DELETE: 'delete template',
 } as const;
 export type SaveType = EnumTypeOf<typeof SaveType>;
 
@@ -111,6 +112,9 @@ interface SaveActionByType {
 				>
 			>
 		>;
+	};
+	[SaveType.TEMPLATE_DELETE]: {
+		id: number;
 	};
 }
 

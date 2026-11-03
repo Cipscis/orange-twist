@@ -11,6 +11,7 @@ import {
 	removeDayInternal,
 	removeDayTaskInternal,
 	removeTaskInternal,
+	removeTemplateInternal,
 	updateDayInternal,
 	updateDayTaskInternal,
 	updateTaskInternal,
@@ -65,6 +66,8 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			deleteDay(action, transaction);
 		} else if (action.type === SaveType.TEMPLATE) {
 			saveTemplate(action, transaction);
+		} else if (action.type === SaveType.TEMPLATE_DELETE) {
+			deleteTemplate(action, transaction);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}
@@ -438,6 +441,25 @@ async function saveTemplate(
 }
 
 /**
+ * Delete a single template.
+ */
+async function deleteTemplate(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TEMPLATE_DELETE; }
+	>,
+	transaction: IDBTransaction,
+): Promise<void> {
+	await removeTemplateInternal(transaction, action.id);
+
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.DELETE, {
+			type: ChangeEntityType.TEMPLATE,
+			id: action.id,
+		});
+	});
+}
+
+/**
  * For a given set of {@linkcode SaveAction}s, gather the required object stores needed to process them all.
  */
 function gatherTransactionRequirements(
@@ -481,7 +503,10 @@ function gatherTransactionRequirements(
 		} else if (action.type === SaveType.DAY_DELETE) {
 			objectStores.add(ObjectStoreName.DAY);
 			objectStores.add(ObjectStoreName.DAY_TASK);
-		} else if (action.type === SaveType.TEMPLATE) {
+		} else if (
+			action.type === SaveType.TEMPLATE ||
+			action.type === SaveType.TEMPLATE_DELETE
+		) {
 			objectStores.add(ObjectStoreName.TEMPLATE);
 		} else {
 			assertAllUnionMembersHandled(action);
