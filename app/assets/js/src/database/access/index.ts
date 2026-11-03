@@ -21,6 +21,8 @@ export { loadDayTaskIdsForTask } from './loadDayTaskIdsForTask';
 export { loadStatus } from './loadStatus';
 export { loadStatusForTask } from './loadStatusForTask';
 export { loadAllStatuses } from './loadAllStatuses';
+export { loadTemplate } from './loadTemplate';
+
 export {
 	useDay,
 	useSettableDay,

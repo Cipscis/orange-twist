@@ -43,6 +43,8 @@ export {
 	useSettableStatusForTask,
 	loadAllStatuses,
 	useAllStatuses,
+
+	loadTemplate,
 } from './access';
 
 export type {
