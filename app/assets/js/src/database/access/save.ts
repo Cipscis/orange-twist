@@ -6,6 +6,7 @@ import {
 	addDayInternal,
 	addDayTaskInternal,
 	addTaskInternal,
+	addTemplateInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
 	removeDayInternal,
@@ -66,6 +67,8 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			deleteDay(action, transaction);
 		} else if (action.type === SaveType.TEMPLATE) {
 			saveTemplate(action, transaction);
+		} else if (action.type === SaveType.TEMPLATE_ADD) {
+			addTemplate(action, transaction);
 		} else if (action.type === SaveType.TEMPLATE_DELETE) {
 			deleteTemplate(action, transaction);
 		} else {
@@ -441,6 +444,25 @@ async function saveTemplate(
 }
 
 /**
+ * Add a single template.
+ */
+async function addTemplate(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TEMPLATE_ADD; }
+	>,
+	transaction: IDBTransaction,
+): Promise<void> {
+	const id = await addTemplateInternal(transaction, action.template);
+
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.ADD, {
+			type: ChangeEntityType.TEMPLATE,
+			id,
+		});
+	});
+}
+
+/**
  * Delete a single template.
  */
 async function deleteTemplate(
@@ -505,6 +527,7 @@ function gatherTransactionRequirements(
 			objectStores.add(ObjectStoreName.DAY_TASK);
 		} else if (
 			action.type === SaveType.TEMPLATE ||
+			action.type === SaveType.TEMPLATE_ADD ||
 			action.type === SaveType.TEMPLATE_DELETE
 		) {
 			objectStores.add(ObjectStoreName.TEMPLATE);

@@ -1,13 +1,16 @@
 import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
+import { SaveType } from 'database';
+
+import { fireCommand } from 'registers/commands';
+import { Command } from 'types/Command';
+
 import {
 	Button,
 	ButtonVariant,
 	Modal,
 } from '../shared';
-
-import { createTemplate } from 'data';
 
 import { AllTemplatesList } from './AllTemplatesList';
 
@@ -45,7 +48,16 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 		onClose,
 	} = props;
 
-	const addNewTemplate = useCallback(() => createTemplate(), []);
+	const addNewTemplate = useCallback(() => {
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.TEMPLATE_ADD,
+			template: {
+				name: 'New template',
+				template: '',
+				sortIndex: null,
+			},
+		}]);
+	}, []);
 
 	return <Modal
 		class="templates-modal"
