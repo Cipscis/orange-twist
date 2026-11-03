@@ -9,6 +9,7 @@ export { LiveTaskWithStatus } from './LiveTaskWithStatus';
 export { LiveSettableUnfinishedTaskIds } from './LiveSettableUnfinishedTaskIds';
 export { LiveCompletedTaskIds } from './LiveCompletedTaskIds';
 export { SettableLiveTemplate } from './SettableLiveTemplate';
+export { SettableAllTemplateIds } from './SettableAllTemplateIds';
 
 export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';
@@ -23,6 +24,7 @@ export { loadStatus } from './loadStatus';
 export { loadStatusForTask } from './loadStatusForTask';
 export { loadAllStatuses } from './loadAllStatuses';
 export { loadTemplate } from './loadTemplate';
+export { loadAllTemplates } from './loadAllTemplates';
 
 export {
 	useDay,
@@ -46,4 +48,5 @@ export {
 	useAllStatuses,
 
 	useSettableTemplate,
+	useSettableAllTemplateIds,
 } from './hooks';

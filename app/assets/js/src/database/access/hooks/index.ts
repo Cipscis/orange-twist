@@ -19,3 +19,4 @@ export { useSettableStatusForTask } from './useSettableStatusForTask';
 export { useAllStatuses } from './useAllStatuses';
 
 export { useSettableTemplate } from './useSettableTemplate';
+export { useSettableAllTemplateIds } from './useSettableAllTemplateIds';

@@ -1,17 +1,17 @@
 import { h, type JSX } from 'preact';
 
-import { sortBySortIndex } from 'utils';
+import { useSettableAllTemplateIds } from 'database';
 
-import { useAllTemplateInfo } from 'data';
-
-import { TemplatesList } from './TemplatesList';
+import { TemplatesListLoader } from './TemplatesListLoader';
 
 /**
  * Renders a list of all templates, allowing them to be reordered and edited.
  */
 export function AllTemplatesList(): JSX.Element {
-	const allTemplateInfoUnsorted = useAllTemplateInfo();
-	const allTemplateInfo = sortBySortIndex(allTemplateInfoUnsorted);
+	const allTemplateIdsDataState = useSettableAllTemplateIds();
 
-	return <TemplatesList templates={allTemplateInfo} />;
+	return <TemplatesListLoader
+		templateIdsDataState={allTemplateIdsDataState.getterState}
+		setTemplateIdOrder={allTemplateIdsDataState.setData}
+	/>;
 }

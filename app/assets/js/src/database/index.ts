@@ -12,6 +12,7 @@ export {
 	LiveSettableUnfinishedTaskIds,
 	LiveCompletedTaskIds,
 	SettableLiveTemplate,
+	SettableAllTemplateIds,
 
 	loadDay,
 	useDay,
@@ -47,6 +48,8 @@ export {
 
 	loadTemplate,
 	useSettableTemplate,
+	loadAllTemplates,
+	useSettableAllTemplateIds,
 } from './access';
 
 export type {
