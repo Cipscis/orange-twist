@@ -8,6 +8,7 @@ export { LiveStatusForTask } from './LiveStatusForTask';
 export { LiveTaskWithStatus } from './LiveTaskWithStatus';
 export { LiveSettableUnfinishedTaskIds } from './LiveSettableUnfinishedTaskIds';
 export { LiveCompletedTaskIds } from './LiveCompletedTaskIds';
+export { SettableLiveTemplate } from './SettableLiveTemplate';
 
 export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';
@@ -43,4 +44,6 @@ export {
 	useStatus,
 	useSettableStatusForTask,
 	useAllStatuses,
+
+	useSettableTemplate,
 } from './hooks';
