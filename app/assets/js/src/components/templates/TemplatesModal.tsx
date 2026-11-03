@@ -7,11 +7,9 @@ import {
 	Modal,
 } from '../shared';
 
-import { sortBySortIndex } from 'utils';
+import { createTemplate } from 'data';
 
-import { createTemplate, useAllTemplateInfo } from 'data';
-
-import { TemplatesList } from './TemplatesList';
+import { AllTemplatesList } from './AllTemplatesList';
 
 interface TemplatesModalProps {
 	/** The TemplatesModal is only rendered when `open` is `true`. */
@@ -47,9 +45,6 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 		onClose,
 	} = props;
 
-	const allTemplateInfoUnsorted = useAllTemplateInfo();
-	const allTemplateInfo = sortBySortIndex(allTemplateInfoUnsorted);
-
 	const addNewTemplate = useCallback(() => createTemplate(), []);
 
 	return <Modal
@@ -66,6 +61,6 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 			>Add new template</Button>
 		</div>
 
-		<TemplatesList templates={allTemplateInfo} />
+		<AllTemplatesList />
 	</Modal>;
 }
