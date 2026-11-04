@@ -8,6 +8,9 @@ interface TemplatesListProps {
 	setTemplateIdOrder?: (data: readonly number[]) => Promise<void>;
 }
 
+/**
+ * Renders a list of editable templates, optionally allowing them to be reordered.
+ */
 export function TemplatesListSync(props: TemplatesListProps): JSX.Element {
 	const {
 		templateIds,

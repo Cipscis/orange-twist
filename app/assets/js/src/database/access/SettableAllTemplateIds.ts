@@ -1,4 +1,5 @@
 import { AsyncDataStateType, SettableLiveData } from 'utils/asyncData';
+import { sortBySortIndex } from 'utils/sortBySortIndex';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -11,10 +12,9 @@ import {
 import { SaveType } from './SaveAction';
 
 import { loadAllTemplates } from './loadAllTemplates';
-import { sortBySortIndex } from 'utils';
 
 /**
- * Provides live access to a settable template.
+ * Provides live access to a reorderable list of all template's IDs.
  */
 export class SettableAllTemplateIds extends SettableLiveData<readonly number[]> {
 	constructor() {

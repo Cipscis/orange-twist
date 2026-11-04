@@ -38,8 +38,6 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 
 	/**
 	 * Update the name, and save any changes to it.
-	 *
-	 * If there is no template name, delete the template.
 	 */
 	const nameChangeHandler = useCallback((newName: string | null) => {
 		const name = newName ?? '';
