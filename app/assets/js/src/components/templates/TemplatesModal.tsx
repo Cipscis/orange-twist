@@ -53,7 +53,7 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 			type: SaveType.TEMPLATE_ADD,
 			template: {
 				name: 'New template',
-				template: '',
+				definition: '',
 				sortIndex: null,
 			},
 		}]);

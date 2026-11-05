@@ -35,7 +35,7 @@ describe('removeTemplateInternal', () => {
 			{
 				id: 2,
 				name: 'Template 2 name',
-				template: 'Template 2',
+				definition: 'Template 2',
 				sortIndex: 0,
 			},
 		] satisfies Template[]);

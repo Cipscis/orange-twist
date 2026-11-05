@@ -38,7 +38,7 @@ describe('updateTemplateInternal', () => {
 		expect(template).toEqual({
 			id: 1,
 			name: 'Template 1 name updated',
-			template: 'Template 1',
+			definition: 'Template 1',
 			sortIndex: 1,
 		} satisfies Template);
 	});
@@ -46,7 +46,7 @@ describe('updateTemplateInternal', () => {
 	test('throws an error if the template doesn\'t exist', async () => {
 		const promise = updateTemplateInternal(transaction, {
 			id: -1,
-			template: 'Updated template',
+			definition: 'Updated template',
 		});
 
 		await expect(promise).rejects.toBeInstanceOf(Error);

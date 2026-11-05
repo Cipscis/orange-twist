@@ -139,13 +139,13 @@ describe('getDatabase', () => {
 				1: {
 					id: 1,
 					name: 'Template 1 name',
-					template: 'Template 1',
+					definition: 'Template 1',
 					sortIndex: 1,
 				},
 				2: {
 					id: 2,
 					name: 'Template 2 name',
-					template: 'Template 2',
+					definition: 'Template 2',
 					sortIndex: 0,
 				},
 			},

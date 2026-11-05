@@ -46,7 +46,7 @@ describe('setTemplatesV1', () => {
 			{
 				id: 0,
 				name: 'New template 0 name',
-				template: 'New template 0',
+				definition: 'New template 0',
 				sortIndex: 1,
 			},
 		] satisfies Awaited<ReturnType<typeof getAllTemplatesInternal>>);
@@ -76,13 +76,13 @@ describe('setTemplatesV1', () => {
 			{
 				id: 0,
 				name: 'Template 0 name updated',
-				template: 'Template 0 updated',
+				definition: 'Template 0 updated',
 				sortIndex: 0,
 			},
 			{
 				id: 1,
 				name: 'Template 1 name updated',
-				template: 'Template 1 updated',
+				definition: 'Template 1 updated',
 				sortIndex: 1,
 			},
 		] satisfies Awaited<ReturnType<typeof getAllTemplatesInternal>>);

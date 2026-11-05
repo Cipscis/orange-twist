@@ -29,7 +29,7 @@ describe('addTemplateInternal', () => {
 	test('inserts a new template into the database, and returns its ID', async () => {
 		const addResult = await addTemplateInternal(transaction, {
 			name: 'Test template name',
-			template: 'Test template',
+			definition: 'Test template',
 			sortIndex: 0,
 		});
 
@@ -40,7 +40,7 @@ describe('addTemplateInternal', () => {
 		expect(readResult).toEqual({
 			id: 3,
 			name: 'Test template name',
-			template: 'Test template',
+			definition: 'Test template',
 			sortIndex: 0,
 		} satisfies Template);
 	});
@@ -49,7 +49,7 @@ describe('addTemplateInternal', () => {
 		const promise = addTemplateInternal(transaction, {
 			id: 1,
 			name: 'Template 1 name',
-			template: 'Template 1',
+			definition: 'Template 1',
 			sortIndex: 0,
 		});
 

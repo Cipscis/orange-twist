@@ -160,7 +160,7 @@ describe('updateData', () => {
 					{
 						id: 1,
 						name: 'Template 1',
-						template: 'Template 1 template',
+						definition: 'Template 1 template',
 						sortIndex: 1,
 					},
 				],

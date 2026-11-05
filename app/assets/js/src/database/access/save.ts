@@ -426,8 +426,8 @@ async function saveTemplate(
 	if (typeof action.template.name !== 'undefined') {
 		templateToSave.name = action.template.name;
 	}
-	if (typeof action.template.template !== 'undefined') {
-		templateToSave.template = action.template.template;
+	if (typeof action.template.definition !== 'undefined') {
+		templateToSave.definition = action.template.definition;
 	}
 	if (typeof action.template.sortIndex !== 'undefined') {
 		templateToSave.sortIndex = action.template.sortIndex;
