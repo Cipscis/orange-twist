@@ -22,7 +22,7 @@ export async function getTemplatesV1(): Promise<readonly [number, TemplateInfo][
 			id: template.id,
 			name: template.name,
 			sortIndex: template.sortIndex ?? 0,
-			template: template.template,
+			template: template.definition,
 		};
 
 		templatesV1.push(templateV1);
