@@ -6,14 +6,17 @@ import {
 	addDayInternal,
 	addDayTaskInternal,
 	addTaskInternal,
+	addTemplateInternal,
 	getDayByDateInternal,
 	getDayTaskForDayAndTaskInternal,
 	removeDayInternal,
 	removeDayTaskInternal,
 	removeTaskInternal,
+	removeTemplateInternal,
 	updateDayInternal,
 	updateDayTaskInternal,
 	updateTaskInternal,
+	updateTemplateInternal,
 } from '../internal';
 
 import { SaveType, type SaveAction } from './SaveAction';
@@ -62,6 +65,12 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			addDay(action, transaction);
 		} else if (action.type === SaveType.DAY_DELETE) {
 			deleteDay(action, transaction);
+		} else if (action.type === SaveType.TEMPLATE) {
+			saveTemplate(action, transaction);
+		} else if (action.type === SaveType.TEMPLATE_ADD) {
+			addTemplate(action, transaction);
+		} else if (action.type === SaveType.TEMPLATE_DELETE) {
+			deleteTemplate(action, transaction);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}
@@ -402,6 +411,77 @@ async function deleteDay(
 }
 
 /**
+ * Save a single template.
+ */
+async function saveTemplate(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TEMPLATE; }
+	>,
+	transaction: IDBTransaction,
+): Promise<void> {
+	// Protect against extraneous and undefined properties
+	const templateToSave: Parameters<typeof updateTemplateInternal>[1] = {
+		id: action.id,
+	};
+	if (typeof action.template.name !== 'undefined') {
+		templateToSave.name = action.template.name;
+	}
+	if (typeof action.template.template !== 'undefined') {
+		templateToSave.template = action.template.template;
+	}
+	if (typeof action.template.sortIndex !== 'undefined') {
+		templateToSave.sortIndex = action.template.sortIndex;
+	}
+
+	await updateTemplateInternal(transaction, templateToSave);
+
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.CHANGE, {
+			type: ChangeEntityType.TEMPLATE,
+			id: action.id,
+		});
+	});
+}
+
+/**
+ * Add a single template.
+ */
+async function addTemplate(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TEMPLATE_ADD; }
+	>,
+	transaction: IDBTransaction,
+): Promise<void> {
+	const id = await addTemplateInternal(transaction, action.template);
+
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.ADD, {
+			type: ChangeEntityType.TEMPLATE,
+			id,
+		});
+	});
+}
+
+/**
+ * Delete a single template.
+ */
+async function deleteTemplate(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.TEMPLATE_DELETE; }
+	>,
+	transaction: IDBTransaction,
+): Promise<void> {
+	await removeTemplateInternal(transaction, action.id);
+
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.DELETE, {
+			type: ChangeEntityType.TEMPLATE,
+			id: action.id,
+		});
+	});
+}
+
+/**
  * For a given set of {@linkcode SaveAction}s, gather the required object stores needed to process them all.
  */
 function gatherTransactionRequirements(
@@ -445,6 +525,12 @@ function gatherTransactionRequirements(
 		} else if (action.type === SaveType.DAY_DELETE) {
 			objectStores.add(ObjectStoreName.DAY);
 			objectStores.add(ObjectStoreName.DAY_TASK);
+		} else if (
+			action.type === SaveType.TEMPLATE ||
+			action.type === SaveType.TEMPLATE_ADD ||
+			action.type === SaveType.TEMPLATE_DELETE
+		) {
+			objectStores.add(ObjectStoreName.TEMPLATE);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}

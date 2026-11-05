@@ -1,17 +1,18 @@
 import { h, type JSX } from 'preact';
 import { useCallback } from 'preact/hooks';
 
+import { SaveType } from 'database';
+
+import { fireCommand } from 'registers/commands';
+import { Command } from 'types/Command';
+
 import {
 	Button,
 	ButtonVariant,
 	Modal,
 } from '../shared';
 
-import { sortBySortIndex } from 'utils';
-
-import { createTemplate, useAllTemplateInfo } from 'data';
-
-import { TemplatesList } from './TemplatesList';
+import { AllTemplatesList } from './AllTemplatesList';
 
 interface TemplatesModalProps {
 	/** The TemplatesModal is only rendered when `open` is `true`. */
@@ -47,10 +48,16 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 		onClose,
 	} = props;
 
-	const allTemplateInfoUnsorted = useAllTemplateInfo();
-	const allTemplateInfo = sortBySortIndex(allTemplateInfoUnsorted);
-
-	const addNewTemplate = useCallback(() => createTemplate(), []);
+	const addNewTemplate = useCallback(() => {
+		fireCommand(Command.DATA_SAVE, [{
+			type: SaveType.TEMPLATE_ADD,
+			template: {
+				name: 'New template',
+				template: '',
+				sortIndex: null,
+			},
+		}]);
+	}, []);
 
 	return <Modal
 		class="templates-modal"
@@ -66,6 +73,6 @@ export function TemplatesModal(props: TemplatesModalProps): JSX.Element {
 			>Add new template</Button>
 		</div>
 
-		<TemplatesList templates={allTemplateInfo} />
+		<AllTemplatesList />
 	</Modal>;
 }

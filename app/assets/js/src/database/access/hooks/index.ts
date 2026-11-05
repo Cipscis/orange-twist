@@ -17,3 +17,6 @@ export { useCurrentDayTaskForTask } from './useCurrentDayTaskForTask';
 export { useStatus } from './useStatus';
 export { useSettableStatusForTask } from './useSettableStatusForTask';
 export { useAllStatuses } from './useAllStatuses';
+
+export { useSettableTemplate } from './useSettableTemplate';
+export { useSettableAllTemplateIds } from './useSettableAllTemplateIds';

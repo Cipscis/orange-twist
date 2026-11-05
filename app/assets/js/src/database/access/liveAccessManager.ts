@@ -5,6 +5,7 @@ export const ChangeEntityType = {
 	DAY: ObjectStoreName.DAY,
 	TASK: ObjectStoreName.TASK,
 	DAY_TASK: ObjectStoreName.DAY_TASK,
+	TEMPLATE: ObjectStoreName.TEMPLATE,
 } as const satisfies Record<string, ObjectStoreName>;
 export type ChangeEntityType = EnumTypeOf<typeof ChangeEntityType>;
 
@@ -45,6 +46,7 @@ export const eventTargetLookup = {
 	[ChangeEntityType.DAY]: new Map<number | null, EventTarget>(),
 	[ChangeEntityType.TASK]: new Map<number | null, EventTarget>(),
 	[ChangeEntityType.DAY_TASK]: new Map<number | null, EventTarget>(),
+	[ChangeEntityType.TEMPLATE]: new Map<number | null, EventTarget>(),
 };
 
 /**

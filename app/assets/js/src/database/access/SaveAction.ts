@@ -4,6 +4,7 @@ import type {
 	Day,
 	DayTask,
 	Task,
+	Template,
 } from '../types';
 import type { addDayTaskInternal, addTaskInternal } from '../internal';
 
@@ -24,6 +25,10 @@ export const SaveType = {
 	DAY: 'day',
 	DAY_ADD: 'add day',
 	DAY_DELETE: 'delete day',
+
+	TEMPLATE: 'template',
+	TEMPLATE_ADD: 'add template',
+	TEMPLATE_DELETE: 'delete template',
 } as const;
 export type SaveType = EnumTypeOf<typeof SaveType>;
 
@@ -96,6 +101,25 @@ interface SaveActionByType {
 		>;
 	};
 	[SaveType.DAY_DELETE]: {
+		id: number;
+	};
+	[SaveType.TEMPLATE]: {
+		id: number;
+		template: ExpandType<
+			Partial<
+				Omit<
+					Template,
+					'id'
+				>
+			>
+		>;
+	};
+	[SaveType.TEMPLATE_ADD]: {
+		template: ExpandType<
+			Omit<Template, 'id'>
+		>;
+	};
+	[SaveType.TEMPLATE_DELETE]: {
 		id: number;
 	};
 }

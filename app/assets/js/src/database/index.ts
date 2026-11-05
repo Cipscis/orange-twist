@@ -11,6 +11,8 @@ export {
 	LiveTaskWithStatus,
 	LiveSettableUnfinishedTaskIds,
 	LiveCompletedTaskIds,
+	SettableLiveTemplate,
+	SettableAllTemplateIds,
 
 	loadDay,
 	useDay,
@@ -43,6 +45,11 @@ export {
 	useSettableStatusForTask,
 	loadAllStatuses,
 	useAllStatuses,
+
+	loadTemplate,
+	useSettableTemplate,
+	loadAllTemplates,
+	useSettableAllTemplateIds,
 } from './access';
 
 export type {
