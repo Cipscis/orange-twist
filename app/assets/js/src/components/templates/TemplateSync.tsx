@@ -27,6 +27,11 @@ export interface TemplateSyncProps {
 }
 
 /**
+ * Pattern used to find and manipulate arguments in template syntax, e.g. `{{{0}}}`.
+ */
+const argsPattern = /{{{(\d+)(\|[^}]+)?}}}/g;
+
+/**
  * Renders a complete view of a template, allowing its name and template to be changed.
  */
 export function TemplateSync(props: TemplateSyncProps): JSX.Element {
@@ -89,13 +94,13 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 
 	const definition = previewDefinition ?? template.template;
 	const previewArgs = useMemo(() => {
-		const argsUsed = definition.match(/{{{\d+(\|[^}]+)?}}}/g);
+		const argsUsed = definition.match(argsPattern);
 		if (argsUsed === null) {
 			return '';
 		}
 		let highestArg = -Infinity;
 		for (const arg of argsUsed) {
-			const argInner = arg.replace(/{{{(\d+)(\|[^}]+)?}}}/, '$1');
+			const argInner = arg.replace(argsPattern, '$1');
 			const argNum = Number(argInner);
 			if (argNum > highestArg) {
 				highestArg = argNum;
@@ -113,7 +118,7 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 	const previewMdToShowRaw = `{{${getTemplateAlias(template.name)}${previewArgs}}}`;
 	/** Live preview of markdown that is rendered to show how a template looks. Replaces variable notation from the definition (e.g. '{{{0}}}') with an example value (e.g. 'arg0'). */
 	const previewMdToRender = definition
-		.replace(/{{{(\d+)(\|\.*)?}}}/g, 'arg$1');
+		.replace(argsPattern, 'arg$1');
 
 	return <div class="template">
 		<InlineNote
