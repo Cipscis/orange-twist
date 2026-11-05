@@ -3,6 +3,7 @@ import {
 	useCallback,
 	useMemo,
 	useRef,
+	useState,
 } from 'preact/hooks';
 
 import { SaveType, type Template } from 'database';
@@ -36,6 +37,8 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 
 	const definitionRef = useRef<HTMLTextAreaElement>(null);
 
+	const [previewDefinition, setPreviewDefinition] = useState<string | null>(null);
+
 	/**
 	 * Update the name, and save any changes to it.
 	 */
@@ -50,9 +53,23 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 	}, [setTemplate]);
 
 	/**
+	 * Set a preview override as the definition is being edited.
+	 */
+	const definitionInputHandler = useCallback(() => {
+		const textarea = definitionRef.current;
+		if (!textarea) {
+			return;
+		}
+
+		setPreviewDefinition(textarea.value);
+	}, []);
+
+	/**
 	 * Save data when the definition is changed.
 	 */
 	const definitionChangeHandler = useCallback(() => {
+		setPreviewDefinition(null);
+
 		const textarea = definitionRef.current;
 		if (!textarea) {
 			return;
@@ -70,8 +87,9 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 		}
 	}, [template.id]);
 
+	const definition = previewDefinition ?? template.template;
 	const previewArgs = useMemo(() => {
-		const argsUsed = template.template.match(/{{{\d+(\|[^}]+)?}}}/g);
+		const argsUsed = definition.match(/{{{\d+(\|[^}]+)?}}}/g);
 		if (argsUsed === null) {
 			return '';
 		}
@@ -89,9 +107,13 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 
 		const argValues = (new Array(highestArg+1)).fill(0).map((val, i) => `arg${i}`);
 		return `|${argValues.join('|')}`;
-	}, [template.template]);
+	}, [definition]);
 
-	const previewMd = `{{${getTemplateAlias(template.name)}${previewArgs}}}`;
+	/** Live preview of raw markdown needed to use a template. */
+	const previewMdToShowRaw = `{{${getTemplateAlias(template.name)}${previewArgs}}}`;
+	/** Live preview of markdown that is rendered to show how a template looks. Replaces variable notation from the definition (e.g. '{{{0}}}') with an example value (e.g. 'arg0'). */
+	const previewMdToRender = definition
+		.replace(/{{{(\d+)(\|\.*)?}}}/g, 'arg$1');
 
 	return <div class="template">
 		<InlineNote
@@ -113,17 +135,16 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 
 		<textarea
 			class="template__definition"
+			onInput={definitionInputHandler}
 			onChange={definitionChangeHandler}
 			ref={definitionRef}
 		>{template.template}</textarea>
 
-		{/* TODO: Display live preview */}
-		<span class="template__alias">{previewMd}</span>
+		<span class="template__alias">{previewMdToShowRaw}</span>
 
-		{/* TODO: Display live preview */}
 		<Markdown
 			class="template__preview"
-			content={previewMd}
+			content={previewMdToRender}
 		/>
 	</div>;
 }
