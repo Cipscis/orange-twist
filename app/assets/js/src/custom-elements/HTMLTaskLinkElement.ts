@@ -11,6 +11,7 @@ import {
 } from 'database';
 
 import { getSanitiser } from './getSanitiser';
+import { HTMLLiveDataElement } from './HTMLLiveDataElement';
 
 type TaskLinkStateElements = {
 	[AsyncDataStateType.INITIAL]: {
@@ -29,14 +30,11 @@ type TaskLinkStateElements = {
 /**
  * A link to a task that displays a live view of its status and name.
  */
-export class HTMLTaskLinkElement extends HTMLElement {
+export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 	static observedAttributes = ['taskid'];
 
 	// Internal state
 	#lastBuildState: AsyncDataState<[Task, Status]> | null = null;
-
-	// LiveData properties
-	#liveTaskWithStatus: LiveTaskWithStatus | null = null;
 
 	// Internal markup
 	#initialEl: HTMLElement | null = null;
@@ -46,42 +44,29 @@ export class HTMLTaskLinkElement extends HTMLElement {
 	#iconMaskEl: HTMLElement | null = null;
 	#nameEl: HTMLElement | null = null;
 
-	// AbortControllers
-	#connectedAbortController: AbortController | null = null;
-	#taskIdChangeAbortController: AbortController | null = null;
-
 	constructor() {
 		super();
 	}
 
-	connectedCallback(): void {
-		this.#connectedAbortController = new AbortController();
-
-		this.#observe();
-	}
-
-	disconnectedCallback(): void {
-		if (this.#connectedAbortController) {
-			this.#connectedAbortController.abort();
-			this.#connectedAbortController = null;
-		}
-	}
-
-	connectedMoveCallback(): void {
-		// This is present as a no-op just to prevent unnecessary calls to connectedCallback and disconnectedCallback on move
-	}
-
 	attributeChangedCallback(
 		name: string,
-		_oldValue: string | null,
+		oldValue: string | null,
 		newValue: string | null,
 	): void {
+		super.attributeChangedCallback(name, oldValue, newValue);
+
 		if (name !== 'taskid') {
 			return;
 		}
 
 		const taskId = this.#parseTaskId(newValue);
-		this.#setTaskId(taskId);
+
+		if (taskId === null) {
+			this.clearLiveData();
+			return;
+		}
+
+		this.setLiveData(new LiveTaskWithStatus(taskId));
 	}
 
 	/**
@@ -100,64 +85,11 @@ export class HTMLTaskLinkElement extends HTMLElement {
 		return taskId;
 	}
 
-	/**
-	 * Configure the internal `LiveTaskWithStatus` with a given task ID
-	 */
-	#setTaskId(taskId: number | null): void {
-		if (this.#taskIdChangeAbortController) {
-			this.#taskIdChangeAbortController.abort();
-			this.#taskIdChangeAbortController = null;
-		}
+	render(): void {
+		super.render();
 
-		if (taskId === null) {
-			if (this.#liveTaskWithStatus) {
-				this.#liveTaskWithStatus[Symbol.dispose]();
-			}
-			this.#liveTaskWithStatus = null;
-			this.#render();
-			return;
-		}
-
-		this.#taskIdChangeAbortController = new AbortController();
-		this.#liveTaskWithStatus = new LiveTaskWithStatus(taskId);
-		this.#observe();
-	}
-
-	/**
-	 * If our live data exists, and we're connected to the DOM, start observing that live data.
-	 */
-	#observe(): void {
-		if (!(
-			this.#connectedAbortController &&
-			this.#taskIdChangeAbortController &&
-			this.#liveTaskWithStatus
-		)) {
-			return;
-		}
-
-		const signal = AbortSignal.any([
-			this.#connectedAbortController.signal,
-			this.#taskIdChangeAbortController.signal,
-		]);
-
-		const render = () => this.#render();
-		this.#liveTaskWithStatus.addEventListener(
-			'loadstart',
-			render,
-			{ signal },
-		);
-		this.#liveTaskWithStatus.addEventListener(
-			'loadend',
-			render,
-			{ signal },
-		);
-
-		this.#liveTaskWithStatus.observe({ signal });
-	}
-
-	#render(): void {
 		const oldBuildState = this.#lastBuildState;
-		const newBuildState = this.#liveTaskWithStatus?.state ?? {
+		const newBuildState = this.liveData?.state ?? {
 			type: AsyncDataStateType.ERROR,
 			error: new Error('No valid taskid attribute was found'),
 			loading: false,
