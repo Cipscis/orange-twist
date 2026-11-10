@@ -1,6 +1,10 @@
 import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
 import { createElement } from 'utils/createElement';
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import {
+	AsyncDataStateType,
+	type AsyncDataState,
+	HTMLLiveDataElement,
+} from 'utils/asyncData';
 import { renderInline } from 'utils/markdown';
 
 import { getTaskDetailUrl } from 'navigation';
@@ -11,7 +15,6 @@ import {
 } from 'database';
 
 import { getSanitiser } from './getSanitiser';
-import { HTMLLiveDataElement } from './HTMLLiveDataElement';
 
 type TaskLinkStateElements = {
 	[AsyncDataStateType.INITIAL]: {
