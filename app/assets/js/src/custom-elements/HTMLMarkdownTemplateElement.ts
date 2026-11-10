@@ -1,6 +1,7 @@
 import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
 import { AsyncDataStateType } from 'utils/asyncData';
-import { render, renderInline } from 'utils/markdown';
+import { renderInline } from 'utils/markdown';
+import { templateArgsPattern } from 'utils/templateArgsPattern';
 
 import { LiveNamedTemplate, type Template } from 'database';
 
@@ -88,8 +89,7 @@ export class HTMLMarkdownTemplateElement extends HTMLLiveDataElement<Template> {
 
 		// Convert all {{{0|default}}} slots into numbers e.g. 0,
 		// for matching with the appropriately indexed arg
-		// TODO: Reuse the pattern in TemplateSync.tsx
-		const slots = (output.match(/{{{(\d+)(\|[^}]+)?}}}/g) ?? [])
+		const slots = (output.match(templateArgsPattern) ?? [])
 			.map(
 				(slot) => Number(
 					slot.replace(
