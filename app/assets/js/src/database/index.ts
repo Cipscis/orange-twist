@@ -47,6 +47,7 @@ export {
 	useAllStatuses,
 
 	loadTemplate,
+	loadTemplateByName,
 	useSettableTemplate,
 	loadAllTemplates,
 	useSettableAllTemplateIds,

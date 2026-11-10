@@ -25,6 +25,7 @@ export { loadStatus } from './loadStatus';
 export { loadStatusForTask } from './loadStatusForTask';
 export { loadAllStatuses } from './loadAllStatuses';
 export { loadTemplate } from './loadTemplate';
+export { loadTemplateByName } from './loadTemplateByName';
 export { loadAllTemplates } from './loadAllTemplates';
 
 export {
