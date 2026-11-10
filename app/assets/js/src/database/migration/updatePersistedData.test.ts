@@ -89,7 +89,7 @@ describe('updatePersistedData', () => {
 				{
 					id: 1,
 					name: 'Template 1 name',
-					template: 'Template 1',
+					definition: 'Template 1',
 					sortIndex: -1,
 				},
 			],
@@ -186,7 +186,7 @@ describe('updatePersistedData', () => {
 				{
 					id: 1,
 					name: 'Template 1 name',
-					template: 'Template 1',
+					definition: 'Template 1',
 					sortIndex: -1,
 				},
 			],

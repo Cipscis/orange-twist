@@ -80,7 +80,7 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 			return;
 		}
 
-		setTemplate({ template: textarea.value });
+		setTemplate({ definition: textarea.value });
 	}, [setTemplate]);
 
 	const deleteThisTemplate = useCallback(async () => {
@@ -92,7 +92,7 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 		}
 	}, [template.id]);
 
-	const definition = previewDefinition ?? template.template;
+	const definition = previewDefinition ?? template.definition;
 	const previewArgs = useMemo(() => {
 		const argsUsed = definition.match(argsPattern);
 		if (argsUsed === null) {
@@ -143,7 +143,7 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 			onInput={definitionInputHandler}
 			onChange={definitionChangeHandler}
 			ref={definitionRef}
-		>{template.template}</textarea>
+		>{template.definition}</textarea>
 
 		<span class="template__alias">{previewMdToShowRaw}</span>
 

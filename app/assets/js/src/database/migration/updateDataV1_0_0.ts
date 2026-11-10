@@ -153,7 +153,7 @@ function collectTemplateData(
 	return legacyData.data.templates.map(([id, templateInfo]) => ({
 		id,
 		name: templateInfo.name,
-		template: templateInfo.template,
+		definition: templateInfo.template,
 		sortIndex: templateInfo.sortIndex,
 	}));
 }

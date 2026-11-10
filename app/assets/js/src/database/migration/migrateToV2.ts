@@ -28,10 +28,11 @@ export function migrateToV2(db: IDBDatabase): void {
 		autoIncrement: true,
 	});
 	statusOS.createIndex(IndexName.STATUS_ALIAS, 'alias');
-	db.createObjectStore(ObjectStoreName.TEMPLATE, {
+	const templateOS = db.createObjectStore(ObjectStoreName.TEMPLATE, {
 		keyPath: 'id',
 		autoIncrement: true,
 	});
+	templateOS.createIndex(IndexName.TEMPLATE_NAME, 'name');
 	db.createObjectStore(ObjectStoreName.IMAGE, {
 		keyPath: 'hash',
 	});

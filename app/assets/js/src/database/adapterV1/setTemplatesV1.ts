@@ -34,16 +34,24 @@ export async function setTemplatesV1(
 		if (existingTemplate) {
 			// Update existing template
 			promises.push(
-				updateTemplateInternal(transaction, templateInfo)
-					.then((templateId) => newTemplateIds.add(templateId))
+				updateTemplateInternal(transaction, {
+					id: templateInfo.id,
+					name: templateInfo.name,
+					definition: templateInfo.template,
+					sortIndex: templateInfo.sortIndex,
+				}).then((templateId) => newTemplateIds.add(templateId))
 			);
 			continue;
 		}
 
 		// Create a new template
 		promises.push(
-			addTemplateInternal(transaction, templateInfo)
-				.then((templateId) => newTemplateIds.add(templateId))
+			addTemplateInternal(transaction, {
+				id: templateInfo.id,
+				name: templateInfo.name,
+				definition: templateInfo.template,
+				sortIndex: templateInfo.sortIndex,
+			}).then((templateId) => newTemplateIds.add(templateId))
 		);
 	}
 
