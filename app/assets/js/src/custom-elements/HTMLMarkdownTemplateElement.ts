@@ -64,7 +64,7 @@ export class HTMLMarkdownTemplateElement extends HTMLElement {
 }
 
 function reference(template: Template, args: readonly string[]) {
-	let output = template.template;
+	let output = template.definition;
 
 	// Convert all {{{0|default}}} slots into numbers e.g. 0,
 	// for matching with the appropriately indexed arg
