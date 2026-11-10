@@ -6,7 +6,10 @@ exports[`Markdown renders templates ignores unrecognised templates 1`] = `
   data-testid="markdown-content"
 >
   <p>
-    {{no-template}}
+    <markdown-template
+      args="[]"
+      name="no-template"
+    />
   </p>
 </div>
 `;
@@ -17,9 +20,10 @@ exports[`Markdown renders templates renders message for empty templates 1`] = `
   data-testid="markdown-content"
 >
   <p>
-    <em>
-      Empty template
-    </em>
+    <markdown-template
+      args="[]"
+      name="empty"
+    />
   </p>
 </div>
 `;
@@ -30,21 +34,15 @@ exports[`Markdown renders templates renders two templates with arguments on the 
   data-testid="markdown-content"
 >
   <p>
-    <em>
-      arg0
-    </em>
+    <markdown-template
+      args="["arg0","arg1"]"
+      name="args"
+    />
      
-    <em>
-      arg1
-    </em>
-     
-    <em>
-      arg0
-    </em>
-     
-    <em>
-      arg1
-    </em>
+    <markdown-template
+      args="["arg0","arg1"]"
+      name="args"
+    />
   </p>
 </div>
 `;
@@ -55,9 +53,10 @@ exports[`Markdown renders templates with a recognised name 1`] = `
   data-testid="markdown-content"
 >
   <p>
-    <strong>
-      simple
-    </strong>
+    <markdown-template
+      args="[]"
+      name="simple"
+    />
   </p>
 </div>
 `;
@@ -68,11 +67,10 @@ exports[`Markdown renders templates with default argument values 1`] = `
   data-testid="markdown-content"
 >
   <p>
-    <a
-      href="https://www.example.com"
-    >
-      default
-    </a>
+    <markdown-template
+      args="["https://www.example.com"]"
+      name="args-defaults"
+    />
   </p>
 </div>
 `;
@@ -83,13 +81,10 @@ exports[`Markdown renders templates with numbered arguments 1`] = `
   data-testid="markdown-content"
 >
   <p>
-    <em>
-      arg0
-    </em>
-     
-    <em>
-      arg1
-    </em>
+    <markdown-template
+      args="["arg0","arg1"]"
+      name="args"
+    />
   </p>
 </div>
 `;

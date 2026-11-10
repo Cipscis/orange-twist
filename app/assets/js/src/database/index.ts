@@ -11,6 +11,7 @@ export {
 	LiveTaskWithStatus,
 	LiveSettableUnfinishedTaskIds,
 	LiveCompletedTaskIds,
+	LiveNamedTemplate,
 	SettableLiveTemplate,
 	SettableAllTemplateIds,
 
@@ -47,6 +48,7 @@ export {
 	useAllStatuses,
 
 	loadTemplate,
+	loadTemplateByName,
 	useSettableTemplate,
 	loadAllTemplates,
 	useSettableAllTemplateIds,
