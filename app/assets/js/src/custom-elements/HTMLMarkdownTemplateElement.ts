@@ -68,6 +68,7 @@ function reference(template: Template, args: readonly string[]) {
 
 	// Convert all {{{0|default}}} slots into numbers e.g. 0,
 	// for matching with the appropriately indexed arg
+	// TODO: Reuse the pattern in TemplateSync.tsx
 	const slots = (output.match(/\{\{\{\d+(\|.+?)?}}}/g) ?? [])
 		.map(
 			(slot) => Number(
