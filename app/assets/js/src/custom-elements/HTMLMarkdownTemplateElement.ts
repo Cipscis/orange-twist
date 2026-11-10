@@ -1,11 +1,10 @@
 import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
-import { AsyncDataStateType } from 'utils/asyncData';
+import { AsyncDataStateType, HTMLLiveDataElement } from 'utils/asyncData';
 import { renderInline } from 'utils/markdown';
 import { templateArgsPattern } from 'utils/templateArgsPattern';
 
 import { LiveNamedTemplate, type Template } from 'database';
 
-import { HTMLLiveDataElement } from './HTMLLiveDataElement';
 import { getSanitiser } from './getSanitiser';
 
 /**
