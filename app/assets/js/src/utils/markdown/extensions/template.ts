@@ -1,5 +1,7 @@
 import type { TokenizerAndRendererExtension } from 'marked';
 
+import { HTMLMarkdownTemplateElement } from 'custom-elements/HTMLMarkdownTemplateElement';
+
 export const template: TokenizerAndRendererExtension = {
 	name: 'template',
 	level: 'inline',
@@ -30,6 +32,10 @@ export const template: TokenizerAndRendererExtension = {
 		return token;
 	},
 	renderer(token) {
+		if (!customElements.get('markdown-template')) {
+			customElements.define('markdown-template', HTMLMarkdownTemplateElement);
+		}
+
 		if (!(
 			typeof token.name === 'string' &&
 			Array.isArray(token.args)

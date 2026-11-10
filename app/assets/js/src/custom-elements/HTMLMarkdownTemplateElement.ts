@@ -1,100 +1,137 @@
-import type { LiveNamedTemplate, Template } from 'database';
-import type { AsyncDataState } from 'utils/asyncData';
+import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
+import { AsyncDataStateType } from 'utils/asyncData';
+import { render, renderInline } from 'utils/markdown';
 
-import { render } from 'utils/markdown';
+import { LiveNamedTemplate, type Template } from 'database';
+
+import { HTMLLiveDataElement } from './HTMLLiveDataElement';
+import { getSanitiser } from './getSanitiser';
 
 /**
  * A rendered Markdown template.
  */
-export class HTMLMarkdownTemplateElement extends HTMLElement {
+export class HTMLMarkdownTemplateElement extends HTMLLiveDataElement<Template> {
 	static observedAttributes = ['name', 'args'];
 
-	// Internal state
-	#lastBuildState: AsyncDataState<Template> | null = null;
-
-	// LiveData properties
-	// TODO
-	// #liveTaskWithStatus: LiveTaskWithStatus | null = null;
-
-	// Internal markup
-	// TODO
-	// #initialEl: HTMLElement | null = null;
-	// #errorEl: HTMLElement | null = null;
-	// #linkEl: HTMLAnchorElement | null = null;
-	// #iconEl: HTMLElement | null = null;
-	// #iconMaskEl: HTMLElement | null = null;
-	// #nameEl: HTMLElement | null = null;
-
-	// AbortControllers
-	#connectedAbortController: AbortController | null = null;
-	// #taskIdChangeAbortController: AbortController | null = null;
+	#args: readonly string[] = [];
 
 	constructor() {
 		super();
 	}
 
-	connectedCallback(): void {
-		this.#connectedAbortController = new AbortController();
-	}
-
-	disconnectedCallback(): void {
-		if (this.#connectedAbortController) {
-			this.#connectedAbortController.abort();
-			this.#connectedAbortController = null;
-		}
-	}
-
-	connectedMoveCallback(): void {
-		// This is present as a no-op just to prevent unnecessary calls to connectedCallback and disconnectedCallback on move
-	}
-
 	attributeChangedCallback(
 		name: string,
-		_oldValue: string | null,
+		oldValue: string | null,
 		newValue: string | null,
 	): void {
-		// TODO
-		// if (name !== 'taskid') {
-		// 	return;
-		// }
+		super.attributeChangedCallback(name, oldValue, newValue);
 
-		// const taskId = this.#parseTaskId(newValue);
-		// this.#setTaskId(taskId);
-	}
-}
-
-function reference(template: Template, args: readonly string[]) {
-	let output = template.definition;
-
-	// Convert all {{{0|default}}} slots into numbers e.g. 0,
-	// for matching with the appropriately indexed arg
-	// TODO: Reuse the pattern in TemplateSync.tsx
-	const slots = (output.match(/\{\{\{\d+(\|.+?)?}}}/g) ?? [])
-		.map(
-			(slot) => Number(
-				slot.replace(
-					/\{\{\{(\d+).+/,
-					'$1'
-				)
-			)
-		);
-
-	for (const index of slots) {
-		const arg = args[index];
-
-		const replacePattern = new RegExp(
-			`\\{\\{\\{${index}(\\|(.+?))?}}}`
-		);
-		const match = output.match(replacePattern);
-		if (!match) {
-			continue;
+		if (name === 'name') {
+			if (newValue === null) {
+				this.clearLiveData();
+			} else {
+				this.setLiveData(new LiveNamedTemplate(newValue));
+			}
+			return;
 		}
 
-		const defaultValue = match[2] ?? '';
-		const replaceValue = arg || defaultValue;
-
-		output = output.replace(match[0], replaceValue);
+		if (name === 'args') {
+			if (newValue === null) {
+				this.#args = [];
+			} else {
+				try {
+					const args = JSON.parse(newValue);
+					if (
+						Array.isArray(args) &&
+						args.every(
+							(el) => typeof el === 'string'
+						)
+					) {
+						this.#args = args;
+					} else {
+						this.#args = [];
+					}
+				} catch {
+					this.#args = [];
+				}
+			}
+		}
 	}
 
-	return render(output);
+	render(): void {
+		super.render();
+
+		const buildState = this.liveData?.state ?? {
+			type: AsyncDataStateType.ERROR,
+			error: new Error('No valid name attribute was found'),
+			loading: false,
+		};
+
+		// Start by clearing things out
+		if (this.firstChild) {
+			this.removeChild(this.firstChild);
+		}
+
+		if (buildState.type === AsyncDataStateType.INITIAL) {
+			// Do nothing
+		} else if (buildState.type === AsyncDataStateType.SUCCESS) {
+			this.#renderSuccess(buildState.data);
+		} else if (buildState.type === AsyncDataStateType.ERROR) {
+			this.#renderError(buildState.error);
+		} else {
+			assertAllUnionMembersHandled(buildState);
+		}
+	}
+
+	async #renderSuccess(template: Template): Promise<void> {
+		let output = template.definition;
+
+		// Convert all {{{0|default}}} slots into numbers e.g. 0,
+		// for matching with the appropriately indexed arg
+		// TODO: Reuse the pattern in TemplateSync.tsx
+		const slots = (output.match(/{{{(\d+)(\|[^}]+)?}}}/g) ?? [])
+			.map(
+				(slot) => Number(
+					slot.replace(
+						/\{\{\{(\d+).+/,
+						'$1'
+					)
+				)
+			);
+
+		for (const index of slots) {
+			const arg = this.#args[index];
+
+			const replacePattern = new RegExp(
+				`\\{\\{\\{${index}(\\|(.+?))?}}}`
+			);
+			const match = output.match(replacePattern);
+			if (!match) {
+				continue;
+			}
+
+			const defaultValue = match[2] ?? '';
+			const replaceValue = arg || defaultValue;
+
+			output = output.replace(match[0], replaceValue);
+		}
+
+		const renderResult = await renderInline(output);
+
+		if (this.setHTML) {
+			this.setHTML(renderResult, { sanitizer: getSanitiser() });
+		} else {
+			this.setHTMLUnsafe(renderResult);
+		}
+	}
+
+	#renderError(error: Error): void {
+		const message = `<i>{{${error.message}}}</i>`;
+
+		if (this.setHTML) {
+			this.setHTML(message, { sanitizer: getSanitiser() });
+		} else {
+			this.setHTMLUnsafe(message);
+		}
+	}
 }
