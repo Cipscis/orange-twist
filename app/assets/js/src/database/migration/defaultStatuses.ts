@@ -65,7 +65,7 @@ export const defaultStatuses = [
 		name: 'Approved',
 		icon: IconName.APPROVED,
 		colour: 'var(--green)',
-		completed: true,
+		completed: false,
 	},
 	{
 		id: 9,
