@@ -11,6 +11,7 @@ export {
 	LiveTaskWithStatus,
 	LiveSettableUnfinishedTaskIds,
 	LiveCompletedTaskIds,
+	LiveNamedTemplate,
 	SettableLiveTemplate,
 	SettableAllTemplateIds,
 

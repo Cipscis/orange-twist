@@ -7,40 +7,40 @@ import {
 	ChangeType,
 } from './liveAccessManager';
 
-import { loadTemplate } from './loadTemplate';
+import { loadTemplateByName } from './loadTemplateByName';
 
 /**
- * Provides live access to a task and its status, derived from its canonical day task.
+ * Provides live access to a template, specified by its name.
  */
-export class LiveTemplate extends LiveData<Template> {
-	constructor(templateId: number) {
+export class LiveNamedTemplate extends LiveData<Template> {
+	constructor(templateName: string) {
 		super({
 			async getData(_options) {
-				const template = await loadTemplate(templateId);
+				const template = await loadTemplateByName(templateName);
 
 				if (template === null) {
-					throw new Error(`Could not find template with ID ${templateId}`);
+					throw new Error(`Could not find template with name ${templateName}`);
 				}
 
 				return template;
 			},
 			observeState(getDataArg, state, signal) {
 				// Task listeners
-				const changeEntity = {
-					type: ChangeEntityType.TEMPLATE,
-					id: templateId,
-				};
-
 				const getData = () => getDataArg();
 
 				if (state.type === AsyncDataStateType.ERROR) {
 					addChangeListener(
 						ChangeType.ADD,
-						changeEntity,
+						{ type: ChangeEntityType.TEMPLATE },
 						getData,
 						{ signal },
 					);
 				} else if (state.type === AsyncDataStateType.SUCCESS) {
+					const changeEntity = {
+						type: ChangeEntityType.TEMPLATE,
+						id: state.data.id,
+					};
+
 					addChangeListener(
 						ChangeType.CHANGE,
 						changeEntity,

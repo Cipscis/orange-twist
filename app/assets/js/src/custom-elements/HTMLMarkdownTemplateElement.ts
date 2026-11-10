@@ -1,4 +1,4 @@
-import type { Template } from 'database';
+import type { LiveNamedTemplate, Template } from 'database';
 import type { AsyncDataState } from 'utils/asyncData';
 
 import { render } from 'utils/markdown';
