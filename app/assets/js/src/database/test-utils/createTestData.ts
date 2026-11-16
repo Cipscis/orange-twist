@@ -79,12 +79,14 @@ export function createTestData(): DatabaseData {
 			1: {
 				id: 1,
 				name: 'Template 1 name',
+				alias: 'template-1-name',
 				definition: 'Template 1',
 				sortIndex: 1,
 			},
 			2: {
 				id: 2,
 				name: 'Template 2 name',
+				alias: 'template-2-alias',
 				definition: 'Template 2',
 				sortIndex: 0,
 			},

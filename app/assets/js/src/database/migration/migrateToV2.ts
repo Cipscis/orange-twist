@@ -32,7 +32,7 @@ export function migrateToV2(db: IDBDatabase): void {
 		keyPath: 'id',
 		autoIncrement: true,
 	});
-	templateOS.createIndex(IndexName.TEMPLATE_NAME, 'name');
+	templateOS.createIndex(IndexName.TEMPLATE_ALIAS, 'alias');
 	db.createObjectStore(ObjectStoreName.IMAGE, {
 		keyPath: 'hash',
 	});

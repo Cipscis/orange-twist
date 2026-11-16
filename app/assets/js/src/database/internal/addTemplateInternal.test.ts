@@ -40,6 +40,7 @@ describe('addTemplateInternal', () => {
 		expect(readResult).toEqual({
 			id: 3,
 			name: 'Test template name',
+			alias: 'test-template-name',
 			definition: 'Test template',
 			sortIndex: 0,
 		} satisfies Template);

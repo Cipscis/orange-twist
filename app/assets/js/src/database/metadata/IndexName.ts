@@ -7,5 +7,5 @@ export const IndexName = {
 
 	STATUS_ALIAS: 'alias',
 
-	TEMPLATE_NAME: 'name',
+	TEMPLATE_ALIAS: 'alias',
 } as const;

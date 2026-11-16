@@ -71,6 +71,7 @@ describe('fillDatabase', () => {
 				1: {
 					id: 1,
 					name: 'Template',
+					alias: 'template',
 					definition: 'template',
 					sortIndex: null,
 				},
@@ -123,6 +124,7 @@ describe('fillDatabase', () => {
 				1: {
 					id: 1,
 					name: 'Template',
+					alias: 'template',
 					definition: 'template',
 					sortIndex: null,
 				},
