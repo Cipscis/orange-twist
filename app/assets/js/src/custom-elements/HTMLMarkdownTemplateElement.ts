@@ -115,7 +115,7 @@ export class HTMLMarkdownTemplateElement extends HTMLLiveDataElement<Template> {
 			output = output.replace(match[0], replaceValue);
 		}
 
-		const renderResult = await renderInline(output);
+		const renderResult = await renderInline(output, { allowTemplates: false });
 
 		if (this.setHTML) {
 			this.setHTML(renderResult, { sanitizer: getSanitiser() });

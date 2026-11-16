@@ -1,2 +1,2 @@
-export { render } from './render';
-export { renderInline } from './renderInline';
+export { render, type RenderOptions } from './render';
+export { renderInline, type RenderInlineOptions } from './renderInline';
