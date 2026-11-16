@@ -7,8 +7,8 @@ exports[`Markdown renders templates ignores unrecognised templates 1`] = `
 >
   <p>
     <markdown-template
+      alias="no-template"
       args="[]"
-      name="no-template"
     />
   </p>
 </div>
@@ -21,8 +21,8 @@ exports[`Markdown renders templates renders message for empty templates 1`] = `
 >
   <p>
     <markdown-template
+      alias="empty"
       args="[]"
-      name="empty"
     />
   </p>
 </div>
@@ -35,13 +35,13 @@ exports[`Markdown renders templates renders two templates with arguments on the 
 >
   <p>
     <markdown-template
+      alias="args"
       args="["arg0","arg1"]"
-      name="args"
     />
      
     <markdown-template
+      alias="args"
       args="["arg0","arg1"]"
-      name="args"
     />
   </p>
 </div>
@@ -54,8 +54,8 @@ exports[`Markdown renders templates with a recognised name 1`] = `
 >
   <p>
     <markdown-template
+      alias="simple"
       args="[]"
-      name="simple"
     />
   </p>
 </div>
@@ -68,8 +68,8 @@ exports[`Markdown renders templates with default argument values 1`] = `
 >
   <p>
     <markdown-template
+      alias="args-defaults"
       args="["https://www.example.com"]"
-      name="args-defaults"
     />
   </p>
 </div>
@@ -82,8 +82,8 @@ exports[`Markdown renders templates with numbered arguments 1`] = `
 >
   <p>
     <markdown-template
+      alias="args"
       args="["arg0","arg1"]"
-      name="args"
     />
   </p>
 </div>
