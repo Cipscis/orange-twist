@@ -25,7 +25,6 @@ export class LiveAliasedTemplate extends LiveData<Template> {
 				return template;
 			},
 			observeState(getDataArg, state, signal) {
-				// Task listeners
 				const getData = () => getDataArg();
 
 				if (state.type === AsyncDataStateType.ERROR) {
