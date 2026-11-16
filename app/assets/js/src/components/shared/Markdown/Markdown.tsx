@@ -13,7 +13,11 @@ import {
 } from 'preact/hooks';
 
 import { classNames } from 'utils';
-import { render, renderInline } from 'utils/markdown';
+import {
+	render,
+	renderInline,
+	type RenderInlineOptions,
+} from 'utils/markdown';
 
 import { useAllTemplateInfo } from 'data';
 import { consumeAllImageUrlPlaceholders } from 'images';
@@ -65,6 +69,7 @@ interface MarkdownProps extends Preact.HTMLAttributes<HTMLDivElement> {
 	 * @default false
 	 */
 	inline?: boolean;
+	options?: RenderInlineOptions;
 }
 
 export function Markdown(props: MarkdownProps): JSX.Element {
@@ -72,6 +77,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 		content,
 		apiRef,
 		inline,
+		options,
 		...passthroughProps
 	} = props;
 
@@ -117,10 +123,10 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 		(async () => {
 			const renderedContent = await (async () => {
 				if (inline) {
-					return renderInline(content);
+					return renderInline(content, options);
 				}
 
-				return render(content);
+				return render(content, options);
 			})();
 
 			updateRenderedContent(renderedContent);
@@ -136,6 +142,7 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 	}, [
 		content,
 		inline,
+		options,
 		templates,
 		renderSwitch,
 	]);

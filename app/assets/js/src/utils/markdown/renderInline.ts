@@ -1,10 +1,15 @@
 import type { DefaultsFor } from 'utils/DefaultsFor';
 import { render, type RenderOptions } from './render';
 
-export type RenderInlineOptions = Pick<RenderOptions, 'allowTemplates'>;
+export type RenderInlineOptions = Pick<
+	RenderOptions,
+	'allowLessThanSymbol' | 'allowTemplates' | 'allowTaskLinks'
+>;
 
 const defaults = {
+	allowLessThanSymbol: true,
 	allowTemplates: true,
+	allowTaskLinks: false,
 } as const satisfies DefaultsFor<RenderInlineOptions>;
 
 /**
@@ -17,11 +22,9 @@ export async function renderInline(
 	options?: RenderInlineOptions,
 ): Promise<string> {
 	return render(string, {
-		...options,
 		...defaults,
+		...options,
 
 		inline: true,
-		allowLessThanSymbol: true,
-		allowTaskLinks: false,
 	});
 }

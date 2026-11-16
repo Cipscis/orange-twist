@@ -146,6 +146,10 @@ export function TemplateSync(props: TemplateSyncProps): JSX.Element {
 		<Markdown
 			class="template__preview"
 			content={previewMdToRender}
+			inline
+			options={{
+				allowTemplates: false,
+			}}
 		/>
 	</div>;
 }
