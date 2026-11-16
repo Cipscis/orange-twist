@@ -31,7 +31,7 @@ export { addStatusInternal } from './addStatusInternal';
 export { getAllStatusesInternal } from './getAllStatusesInternal';
 
 export { getTemplateInternal } from './getTemplateInternal';
-export { getTemplateByNameInternal } from './getTemplateByNameInternal';
+export { getTemplateByAliasInternal } from './getTemplateByAliasInternal';
 export { addTemplateInternal } from './addTemplateInternal';
 export { updateTemplateInternal } from './updateTemplateInternal';
 export { removeTemplateInternal } from './removeTemplateInternal';

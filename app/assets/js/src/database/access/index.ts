@@ -10,7 +10,7 @@ export { LiveSettableUnfinishedTaskIds } from './LiveSettableUnfinishedTaskIds';
 export { LiveCompletedTaskIds } from './LiveCompletedTaskIds';
 export { SettableLiveTemplate } from './SettableLiveTemplate';
 export { SettableAllTemplateIds } from './SettableAllTemplateIds';
-export { LiveNamedTemplate } from './LiveNamedTemplate';
+export { LiveAliasedTemplate } from './LiveAliasedTemplate';
 
 export { loadDay } from './loadDay';
 export { loadDayByDate } from './loadDayByDate';
@@ -25,7 +25,7 @@ export { loadStatus } from './loadStatus';
 export { loadStatusForTask } from './loadStatusForTask';
 export { loadAllStatuses } from './loadAllStatuses';
 export { loadTemplate } from './loadTemplate';
-export { loadTemplateByName } from './loadTemplateByName';
+export { loadTemplateByAlias } from './loadTemplateByAlias';
 export { loadAllTemplates } from './loadAllTemplates';
 
 export {

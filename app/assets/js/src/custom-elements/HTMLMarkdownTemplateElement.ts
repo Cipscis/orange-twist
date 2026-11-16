@@ -2,8 +2,9 @@ import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled
 import { AsyncDataStateType, HTMLLiveDataElement } from 'utils/asyncData';
 import { renderInline } from 'utils/markdown';
 import { templateArgsPattern } from 'utils/templateArgsPattern';
+import { getTemplateAlias } from 'utils/getTemplateAlias';
 
-import { LiveNamedTemplate, type Template } from 'database';
+import { LiveAliasedTemplate, type Template } from 'database';
 
 import { getSanitiser } from './getSanitiser';
 
@@ -11,7 +12,7 @@ import { getSanitiser } from './getSanitiser';
  * A rendered Markdown template.
  */
 export class HTMLMarkdownTemplateElement extends HTMLLiveDataElement<Template> {
-	static observedAttributes = ['name', 'args'];
+	static observedAttributes = ['alias', 'args'];
 
 	#args: readonly string[] = [];
 
@@ -26,11 +27,12 @@ export class HTMLMarkdownTemplateElement extends HTMLLiveDataElement<Template> {
 	): void {
 		super.attributeChangedCallback(name, oldValue, newValue);
 
-		if (name === 'name') {
+		if (name === 'alias') {
 			if (newValue === null) {
 				this.clearLiveData();
 			} else {
-				this.setLiveData(new LiveNamedTemplate(newValue));
+				const alias = getTemplateAlias(newValue);
+				this.setLiveData(new LiveAliasedTemplate(alias));
 			}
 			return;
 		}

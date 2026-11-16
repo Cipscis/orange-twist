@@ -48,6 +48,6 @@ export const template: TokenizerAndRendererExtension = {
 			.replace(/&/g, '&amp;')
 			.replace(/"/g, '&quot;');
 
-		return `<markdown-template name="${nameAttr}" args="${argsAttr}"></markdown-template>`;
+		return `<markdown-template alias="${nameAttr}" args="${argsAttr}"></markdown-template>`;
 	},
 };

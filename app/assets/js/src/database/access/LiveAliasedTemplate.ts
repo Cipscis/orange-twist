@@ -7,19 +7,19 @@ import {
 	ChangeType,
 } from './liveAccessManager';
 
-import { loadTemplateByName } from './loadTemplateByName';
+import { loadTemplateByAlias } from './loadTemplateByAlias';
 
 /**
- * Provides live access to a template, specified by its name.
+ * Provides live access to a template, specified by its alias.
  */
-export class LiveNamedTemplate extends LiveData<Template> {
-	constructor(templateName: string) {
+export class LiveAliasedTemplate extends LiveData<Template> {
+	constructor(templateAlias: string) {
 		super({
 			async getData(_options) {
-				const template = await loadTemplateByName(templateName);
+				const template = await loadTemplateByAlias(templateAlias);
 
 				if (template === null) {
-					throw new Error(`Could not find template with name ${templateName}`);
+					throw new Error(`Could not find template with alias ${templateAlias}`);
 				}
 
 				return template;

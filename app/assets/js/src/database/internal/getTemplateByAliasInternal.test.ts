@@ -11,9 +11,9 @@ import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
 import { getDatabase } from '../utils';
 
-import { getTemplateByNameInternal } from './getTemplateByNameInternal';
+import { getTemplateByAliasInternal } from './getTemplateByAliasInternal';
 
-describe('getTemplateByNameInternal', () => {
+describe('getTemplateByAliasInternal', () => {
 	let transaction: IDBTransaction;
 
 	beforeAll(() => insertTestData());
@@ -25,19 +25,20 @@ describe('getTemplateByNameInternal', () => {
 		], 'readonly');
 	});
 
-	test('returns a template with the specified template name', async () => {
-		const template = await getTemplateByNameInternal(transaction, 'Template 1 name');
+	test('returns a template with the specified template alias', async () => {
+		const template = await getTemplateByAliasInternal(transaction, 'template-1-name');
 
 		expect(template).toEqual({
 			id: 1,
 			name: 'Template 1 name',
+			alias: 'template-1-name',
 			definition: 'Template 1',
 			sortIndex: 1,
 		} satisfies Template);
 	});
 
-	test('returns null if no template exists by that template name', async () => {
-		const template = await getTemplateByNameInternal(transaction, 'No template exists');
+	test('returns null if no template exists by that template alias', async () => {
+		const template = await getTemplateByAliasInternal(transaction, 'no-template-exists');
 
 		expect(template).toBeNull();
 	});

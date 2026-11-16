@@ -4,25 +4,25 @@ import { IndexName, ObjectStoreName } from '../metadata';
 import type { Template } from '../types';
 
 /**
- * Takes an existing {@linkcode IDBTransaction} and adds a request to get the template with a specified name.
+ * Takes an existing {@linkcode IDBTransaction} and adds a request to get the template with a specified alias.
  *
  * @param transaction An {@linkcode IDBTransaction} with read permission and access to the {@linkcode ObjectStoreName.TEMPLATE} object store.
- * @param templateName The name of the template to retrieve.
+ * @param templateAlias The alias of the template to retrieve.
  *
- * @returns A {@linkcode Promise} that resolves with the retrieved template object, or `null` if no template exists with the specified name.
+ * @returns A {@linkcode Promise} that resolves with the retrieved template object, or `null` if no template exists with the specified alias.
  */
-export async function getTemplateByNameInternal(
+export async function getTemplateByAliasInternal(
 	transaction: IDBTransaction,
-	templateName: string,
+	templateAlias: string,
 ): Promise<
 	| Template
 	| null
 > {
 	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
-	const templateNameIndex = templateOS.index(IndexName.TEMPLATE_NAME);
+	const templateAliasIndex = templateOS.index(IndexName.TEMPLATE_ALIAS);
 
 	// This type assertion is safe because of other controls around what can be inserted into the database
-	const request = templateNameIndex.get(templateName) as IDBRequest<
+	const request = templateAliasIndex.get(templateAlias) as IDBRequest<
 		| Template
 		| undefined
 	>;
