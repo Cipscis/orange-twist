@@ -117,12 +117,10 @@ function processInput(
 	}
 
 	if (!options.allowTemplates) {
-		processedString = processedString.replaceAll('{{', '{&ZeroWidthSpace;{');
+		processedString = processedString
+			// Insert zero-width space to prevent markdown templates
+			.replaceAll('{{', '{&ZeroWidthSpace;{');
 	}
-
-	processedString = processedString
-		// Stupid fucking plugin replaces tabs with spaces
-		.replace(/ {4}/g, '\t');
 
 	return processedString;
 }
@@ -155,8 +153,14 @@ function processOutput(
 	}
 
 	if (!options.allowTemplates) {
-		processedString = processedString.replaceAll('{&ZeroWidthSpace;{', '{{');
+		processedString = processedString
+			// Remove any zero-width spaces used to prevent markdown templates
+			.replaceAll('{&ZeroWidthSpace;{', '{{');
 	}
+
+	processedString = processedString
+		// Stupid fucking plugin replaces tabs with spaces
+		.replace(/ {4}/g, '\t');
 
 	return processedString.trim();
 }
