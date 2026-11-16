@@ -38,6 +38,7 @@ describe('updateTemplateInternal', () => {
 		expect(template).toEqual({
 			id: 1,
 			name: 'Template 1 name updated',
+			alias: 'template-1-name-updated',
 			definition: 'Template 1',
 			sortIndex: 1,
 		} satisfies Template);

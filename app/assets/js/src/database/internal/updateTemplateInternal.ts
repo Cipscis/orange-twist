@@ -1,6 +1,7 @@
 import {
 	getIdbRequestPromise,
 	getIterableCursor,
+	getTemplateAlias,
 	type OptionalExcept,
 } from 'utils';
 
@@ -20,7 +21,7 @@ import type { Template } from '../types';
 export async function updateTemplateInternal(
 	transaction: IDBTransaction,
 	template: OptionalExcept<
-		Template,
+		Omit<Template, 'alias'>,
 		'id'
 	>
 ): Promise<number> {
@@ -32,11 +33,22 @@ export async function updateTemplateInternal(
 		// This type assertion is safe because of other controls around what can be inserted into the database
 		const templateCursorValue = templateCursor.value as Template;
 
+		// Ensure alias remains derived from name
+		const templateToSave = structuredClone(template) as OptionalExcept<
+			Template, 'id'
+		>;
+		if (
+			'name' in templateToSave &&
+			typeof templateToSave.name === 'string'
+		) {
+			templateToSave.alias = getTemplateAlias(templateToSave.name);
+		}
+
 		requests.push(
 			getIdbRequestPromise(
 				templateCursor.update({
 					...templateCursorValue,
-					...template,
+					...templateToSave,
 				})
 			)
 		);

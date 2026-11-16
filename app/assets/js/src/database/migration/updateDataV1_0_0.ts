@@ -1,6 +1,10 @@
 import { decodeDayTaskKey, encodeDayTaskKey } from 'data/dayTasks';
 
-import { copyBlob, getCurrentDateDayName } from 'utils';
+import {
+	copyBlob,
+	getCurrentDateDayName,
+	getTemplateAlias,
+} from 'utils';
 
 import type {
 	LegacyExportData,
@@ -153,6 +157,7 @@ function collectTemplateData(
 	return legacyData.data.templates.map(([id, templateInfo]) => ({
 		id,
 		name: templateInfo.name,
+		alias: getTemplateAlias(templateInfo.name),
 		definition: templateInfo.template,
 		sortIndex: templateInfo.sortIndex,
 	}));

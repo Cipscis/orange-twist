@@ -116,7 +116,7 @@ interface SaveActionByType {
 	};
 	[SaveType.TEMPLATE_ADD]: {
 		template: ExpandType<
-			Omit<Template, 'id'>
+			Omit<Template, 'id' | 'alias'>
 		>;
 	};
 	[SaveType.TEMPLATE_DELETE]: {

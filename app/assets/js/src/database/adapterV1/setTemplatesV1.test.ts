@@ -46,6 +46,7 @@ describe('setTemplatesV1', () => {
 			{
 				id: 0,
 				name: 'New template 0 name',
+				alias: 'new-template-0-name',
 				definition: 'New template 0',
 				sortIndex: 1,
 			},
@@ -76,12 +77,14 @@ describe('setTemplatesV1', () => {
 			{
 				id: 0,
 				name: 'Template 0 name updated',
+				alias: 'template-0-name-updated',
 				definition: 'Template 0 updated',
 				sortIndex: 0,
 			},
 			{
 				id: 1,
 				name: 'Template 1 name updated',
+				alias: 'template-1-name-updated',
 				definition: 'Template 1 updated',
 				sortIndex: 1,
 			},

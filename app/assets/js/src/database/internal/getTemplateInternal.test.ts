@@ -31,6 +31,7 @@ describe('getTemplateInternal', () => {
 		expect(template).toEqual({
 			id: 1,
 			name: 'Template 1 name',
+			alias: 'template-1-name',
 			definition: 'Template 1',
 			sortIndex: 1,
 		} satisfies Template);

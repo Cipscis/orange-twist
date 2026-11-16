@@ -1,4 +1,8 @@
-import { getIdbRequestPromise, type WithOptional } from 'utils';
+import {
+	getIdbRequestPromise,
+	getTemplateAlias,
+	type WithOptional,
+} from 'utils';
 
 import { ObjectStoreName } from '../metadata';
 import type { Template } from '../types';
@@ -18,7 +22,10 @@ import { getTemplateInternal } from './getTemplateInternal';
  */
 export async function addTemplateInternal(
 	transaction: IDBTransaction,
-	template: WithOptional<Template, 'id'>
+	template: WithOptional<
+		Omit<Template, 'alias'>,
+		'id'
+	>
 ): Promise<Template['id']> {
 	const templateOS = transaction.objectStore(ObjectStoreName.TEMPLATE);
 
@@ -29,7 +36,11 @@ export async function addTemplateInternal(
 		}
 	}
 
-	const request = templateOS.add(template);
+	// Ensure alias is derived from name
+	const templateToAdd = structuredClone(template) as WithOptional<Template, 'id'>;
+	templateToAdd.alias = getTemplateAlias(template.name);
+
+	const request = templateOS.add(templateToAdd);
 
 	const result = await getIdbRequestPromise(request);
 	if (!(typeof result === 'number')) {
