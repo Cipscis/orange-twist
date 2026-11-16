@@ -23,7 +23,6 @@ export const adapterV1 = {
 	setTasks: setTasksV1,
 	getTemplates: getTemplatesV1,
 	setTemplates: setTemplatesV1,
-	getImage: getImageV1,
 	setImage: setImageV1,
 	getImages: getImagesV1,
 	setImages: setImagesV1,

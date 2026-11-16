@@ -1,5 +1,6 @@
+import { loadImage } from 'database';
+
 import { createImageHash } from './createImageHash';
-import { getImage } from './getImage';
 
 /**
  * Check if an image has already been persisted. This matching is
@@ -12,6 +13,6 @@ import { getImage } from './getImage';
  */
 export async function hasImage(image: Blob): Promise<boolean> {
 	const hash = await createImageHash(image);
-	const hasImage = Boolean(await getImage(hash));
+	const hasImage = Boolean(await loadImage(hash));
 	return hasImage;
 }
