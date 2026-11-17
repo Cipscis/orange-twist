@@ -1,10 +1,13 @@
-import { assertAllUnionMembersHandled, getCurrentDate } from 'utils';
+import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
+import { getCurrentDate } from 'utils/getCurrentDate';
+import { createImageHash } from 'utils/createImageHash';
 
 import { ObjectStoreName } from '../metadata';
 import { getDayNameParts } from '../utils';
 import {
 	addDayInternal,
 	addDayTaskInternal,
+	addImageInternal,
 	addTaskInternal,
 	addTemplateInternal,
 	getDayByDateInternal,
@@ -33,6 +36,24 @@ import {
 export async function save(actions: readonly SaveAction[]): Promise<void> {
 	if (actions.length === 0) {
 		return;
+	}
+
+	// Any images being added or updated need their hashes generated before requesting a transaction
+	const actionHashes = new WeakMap<SaveAction, string>();
+	const promises: Promise<void>[] = [];
+	for (const action of actions) {
+		if (action.type === SaveType.IMAGE_ADD) {
+			promises.push(
+				createImageHash(action.image.file).then(
+					(hash) => {
+						actionHashes.set(action, hash);
+					}
+				)
+			);
+		}
+	}
+	if (promises.length) {
+		await Promise.all(promises);
 	}
 
 	const objectStores = gatherTransactionRequirements(actions);
@@ -71,6 +92,12 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			addTemplate(action, transaction);
 		} else if (action.type === SaveType.TEMPLATE_DELETE) {
 			deleteTemplate(action, transaction);
+		} else if (action.type === SaveType.IMAGE_ADD) {
+			const hash = actionHashes.get(action);
+			if (typeof hash === 'undefined') {
+				throw new Error(`No hash has been generated for image to be added`);
+			}
+			addImage(action, hash, transaction);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}
@@ -482,6 +509,30 @@ async function deleteTemplate(
 }
 
 /**
+ * Add a single image.
+ */
+async function addImage(
+	action: Extract<
+		SaveAction, { type: typeof SaveType.IMAGE_ADD; }
+	>,
+	hash: string,
+	transaction: IDBTransaction,
+): Promise<void> {
+	const imageToSave = {
+		...action.image,
+		hash,
+	};
+	const id = await addImageInternal(transaction, imageToSave);
+
+	transaction.addEventListener('complete', () => {
+		noticeChange(ChangeType.ADD, {
+			type: ChangeEntityType.IMAGE,
+			id,
+		});
+	});
+}
+
+/**
  * For a given set of {@linkcode SaveAction}s, gather the required object stores needed to process them all.
  */
 function gatherTransactionRequirements(
@@ -531,6 +582,8 @@ function gatherTransactionRequirements(
 			action.type === SaveType.TEMPLATE_DELETE
 		) {
 			objectStores.add(ObjectStoreName.TEMPLATE);
+		} else if (action.type === SaveType.IMAGE_ADD) {
+			objectStores.add(ObjectStoreName.IMAGE);
 		} else {
 			assertAllUnionMembersHandled(action);
 		}

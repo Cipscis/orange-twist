@@ -2,7 +2,7 @@
 import type { loadImage } from 'database';
 
 import { createImageHash } from '../utils/createImageHash';
-import { adapterV1 } from 'database';
+import { save, SaveType } from 'database';
 
 /**
  * Persist an image in IndexedDB, so it can be retrieved later.
@@ -17,7 +17,12 @@ import { adapterV1 } from 'database';
 export async function saveImage(image: Blob): Promise<string> {
 	const hash = await createImageHash(image);
 
-	await adapterV1.setImage(image, hash);
+	await save([{
+		type: SaveType.IMAGE_ADD,
+		image: {
+			file: image,
+		},
+	}]);
 
 	return hash;
 }

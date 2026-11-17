@@ -35,3 +35,4 @@ export async function addImageInternal(
 
 	return result;
 }
+
