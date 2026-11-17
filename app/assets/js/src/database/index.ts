@@ -53,7 +53,7 @@ export {
 	loadAllTemplates,
 	useSettableAllTemplateIds,
 
-	loadImage,
+	loadImageByHash,
 } from './access';
 
 export type {

@@ -32,7 +32,7 @@ export { loadTemplate } from './loadTemplate';
 export { loadTemplateByAlias } from './loadTemplateByAlias';
 export { loadAllTemplates } from './loadAllTemplates';
 
-export { loadImage } from './loadImage';
+export { loadImageByHash } from './loadImageByHash';
 
 export {
 	useDay,

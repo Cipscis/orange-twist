@@ -1,7 +1,7 @@
 // Type-only import to expose symbol for JSDoc
 import type { createImageUrlPlaceholder } from './createImageUrlPlaceholder';
 
-import { loadImage } from 'database';
+import { loadImageByHash } from 'database';
 
 /**
  * A Map for keeping track of object URLs constructed for images.
@@ -22,7 +22,7 @@ export async function consumeImageUrlPlaceholder(hash: string): Promise<string> 
 		return existingUrl;
 	}
 
-	const image = await loadImage(hash);
+	const image = await loadImageByHash(hash);
 	if (!image) {
 		throw new Error(`Could not find an image with the hash ${hash}`);
 	}

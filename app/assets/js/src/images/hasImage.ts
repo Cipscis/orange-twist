@@ -1,6 +1,6 @@
 import { createImageHash } from '../utils/createImageHash';
 
-import { loadImage } from 'database';
+import { loadImageByHash } from 'database';
 
 
 /**
@@ -14,6 +14,6 @@ import { loadImage } from 'database';
  */
 export async function hasImage(image: Blob): Promise<boolean> {
 	const hash = await createImageHash(image);
-	const hasImage = Boolean(await loadImage(hash));
+	const hasImage = Boolean(await loadImageByHash(hash));
 	return hasImage;
 }

@@ -1,5 +1,5 @@
 // Type-only import to expose symbol in JSDoc
-import type { loadImage } from 'database';
+import type { loadImageByHash } from 'database';
 
 import { createImageHash } from '../utils/createImageHash';
 import { save, SaveType } from 'database';
@@ -12,7 +12,7 @@ import { save, SaveType } from 'database';
  * @returns A key that can be used to retrieve the image later.
  * This key is a truncated SHA-256 hash of the image.
  *
- * @see {@linkcode loadImage} For how to retrieve a stored image.
+ * @see {@linkcode loadImageByHash} For how to retrieve a stored image.
  */
 export async function saveImage(image: Blob): Promise<string> {
 	const hash = await createImageHash(image);

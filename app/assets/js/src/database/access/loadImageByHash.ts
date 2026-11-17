@@ -4,9 +4,9 @@ import { getImageByHashInternal } from '../internal';
 import { requestTransaction } from './requestTransaction';
 
 /**
- * Loads data from a single image.
+ * Loads data from a single image by its hash.
  */
-export async function loadImage(hash: string): Promise<Image | null> {
+export async function loadImageByHash(hash: string): Promise<Image | null> {
 	const transaction = await requestTransaction([ObjectStoreName.IMAGE], 'readonly');
 
 	const image = await getImageByHashInternal(transaction, hash);
