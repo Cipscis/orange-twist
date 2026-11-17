@@ -1,6 +1,7 @@
+import { createImageHash } from '../utils/createImageHash';
+
 import { loadImage } from 'database';
 
-import { createImageHash } from './createImageHash';
 
 /**
  * Check if an image has already been persisted. This matching is

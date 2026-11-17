@@ -13,7 +13,7 @@ describe('getImageV1', () => {
 	beforeAll(() => insertTestData());
 
 	test('returns a Promise that resolves to an image v1', async () => {
-		const image = await getImageV1('test-hash');
+		const image = await getImageV1('916f0027');
 
 		expect(image).toBeInstanceOf(Blob);
 	});

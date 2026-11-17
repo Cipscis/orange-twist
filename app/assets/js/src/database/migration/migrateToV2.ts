@@ -33,7 +33,9 @@ export function migrateToV2(db: IDBDatabase): void {
 		autoIncrement: true,
 	});
 	templateOS.createIndex(IndexName.TEMPLATE_ALIAS, 'alias');
-	db.createObjectStore(ObjectStoreName.IMAGE, {
-		keyPath: 'hash',
+	const imageOS = db.createObjectStore(ObjectStoreName.IMAGE, {
+		keyPath: 'id',
+		autoIncrement: true,
 	});
+	imageOS.createIndex(IndexName.IMAGE_HASH, 'hash');
 }

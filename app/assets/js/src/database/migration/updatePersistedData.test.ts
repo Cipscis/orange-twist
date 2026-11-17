@@ -196,7 +196,8 @@ describe('updatePersistedData', () => {
 
 		// Compare JSON serialised strings to get around different Blob instances in JSDOM vs Node
 		expect(JSON.stringify(image, null, '\t')).toEqual(JSON.stringify({
-			'test-hash': {
+			1: {
+				id: 1,
 				hash: 'test-hash',
 				file: imageBlob,
 			},

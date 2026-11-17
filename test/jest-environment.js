@@ -17,6 +17,10 @@ export default class FixedJSDOMEnvironment extends JSDOMEnvironment {
 		this.global.Request = Request;
 		this.global.Response = Response;
 
+		// JSDOM doesn't implement the Web Crypto API
+		// https://github.com/jsdom/jsdom/issues/1612
+		this.global.crypto.subtle = crypto.subtle;
+
 		this.global.Element.prototype.setHTMLUnsafe = function (string) {
 			this.innerHTML = string;
 		};

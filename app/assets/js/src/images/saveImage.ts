@@ -1,7 +1,7 @@
 // Type-only import to expose symbol in JSDoc
 import type { loadImage } from 'database';
 
-import { createImageHash } from './createImageHash';
+import { createImageHash } from '../utils/createImageHash';
 import { adapterV1 } from 'database';
 
 /**

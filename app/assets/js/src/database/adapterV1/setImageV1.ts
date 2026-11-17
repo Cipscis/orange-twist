@@ -2,7 +2,7 @@ import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import {
 	addImageInternal,
-	getImageInternal,
+	getImageByHashInternal,
 	updateImageInternal,
 } from '../internal';
 
@@ -18,12 +18,13 @@ export async function setImageV1(
 		ObjectStoreName.IMAGE,
 	], 'readwrite');
 
-	const existingImage = await getImageInternal(transaction, hash);
+	const existingImage = await getImageByHashInternal(transaction, hash);
 
 	if (existingImage) {
 		await updateImageInternal(transaction, {
-			file,
+			id: existingImage.id,
 			hash,
+			file,
 		});
 	} else {
 		await addImageInternal(transaction, {

@@ -178,7 +178,7 @@ async function collectImageData(
 	}
 
 	await Promise.all(
-		Object.entries(legacyData.images).map(async ([hash, data]) => {
+		Object.entries(legacyData.images).map(async ([hash, data], index) => {
 			const file = await (async () => {
 				if (data instanceof Blob) {
 					return await copyBlob(data);
@@ -195,7 +195,9 @@ async function collectImageData(
 				return imageBlob;
 			})();
 
-			images[hash] = {
+			const id = index + 1; // Convert from 0-based to 1-based index
+			images[id] = {
+				id,
 				hash,
 				file,
 			};

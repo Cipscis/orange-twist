@@ -1,4 +1,4 @@
-import { sha256 } from './sha256';
+import { sha256 } from '../images/sha256';
 
 /**
  * Create a hash used to identify an image.

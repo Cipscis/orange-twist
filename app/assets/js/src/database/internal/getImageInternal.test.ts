@@ -9,6 +9,7 @@ import {
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import { insertTestData } from '../test-utils';
+import type { Image } from '../types';
 
 import { getImageInternal } from './getImageInternal';
 
@@ -22,8 +23,8 @@ describe('getImageInternal', () => {
 		transaction = db.transaction(ObjectStoreName.IMAGE, 'readonly');
 	});
 
-	test('gets an image by its hash', async () => {
-		const image = await getImageInternal(transaction, 'test-hash');
+	test('gets an image by its ID', async () => {
+		const image = await getImageInternal(transaction, 1);
 
 		const {
 			file,
@@ -31,15 +32,16 @@ describe('getImageInternal', () => {
 		} = image!;
 
 		expect(rest).toEqual({
-			hash: 'test-hash',
-		});
+			id: 1,
+			hash: '916f0027',
+		} satisfies Omit<Image, 'file'>);
 
 		expect(file).toBeInstanceOf(Blob);
 		expect(await file.text()).toBe('test data');
 	});
 
-	test('returns null if no image exists for that hash', async () => {
-		const image = await getImageInternal(transaction, 'fake-hash');
+	test('returns null if no image exists for that ID', async () => {
+		const image = await getImageInternal(transaction, -1);
 
 		expect(image).toBeNull();
 	});

@@ -92,8 +92,9 @@ export function createTestData(): DatabaseData {
 			},
 		},
 		[ObjectStoreName.IMAGE]: {
-			'test-hash': {
-				hash: 'test-hash',
+			1: {
+				id: 1,
+				hash: '916f0027',
 				// Working with image Blobs causes problems working with the FileReader, so just use some data that can be read from the Blob directly
 				file: new Blob(['test data'], { type: 'text/plain' }),
 			},

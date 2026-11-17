@@ -26,7 +26,7 @@ describe('removeImageInternal', () => {
 	});
 
 	test('removes a specified image', async () => {
-		await removeImageInternal(transaction, 'test-hash');
+		await removeImageInternal(transaction, 1);
 
 		const images = await getAllImagesInternal(transaction);
 
@@ -34,7 +34,7 @@ describe('removeImageInternal', () => {
 	});
 
 	test('throws an error if the specified image does not exist', async () => {
-		const promise = removeImageInternal(transaction, '');
+		const promise = removeImageInternal(transaction, -1);
 
 		await expect(promise).rejects.toBeInstanceOf(Error);
 	});

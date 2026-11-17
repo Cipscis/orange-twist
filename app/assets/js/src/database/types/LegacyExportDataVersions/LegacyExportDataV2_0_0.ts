@@ -58,14 +58,15 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 			id: z.readonly(z.number()),
 			name: z.string(),
 			/** kebab-case alias derived from name */
-			alias: z.string(),
+			alias: z.readonly(z.string()),
 			definition: z.string(),
 			sortIndex: z.nullable(z.number()),
 		}),
 	),
 	image: z.record(
-		z.string(),
+		z.number(),
 		z.object({
+			id: z.readonly(z.number()),
 			hash: z.readonly(z.string()),
 			file: z.instanceof(Blob),
 		}),

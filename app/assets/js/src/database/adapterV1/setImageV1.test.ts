@@ -30,7 +30,7 @@ describe('setImageV1', () => {
 		// Set image
 		await setImageV1(
 			new Blob(['test data'], { type: 'text/plain' }),
-			'test-hash',
+			'916f0027',
 		);
 
 		const readTransaction = db.transaction(
@@ -40,13 +40,13 @@ describe('setImageV1', () => {
 		const images = await getAllImagesInternal(readTransaction);
 
 		expect(images.length).toBe(1);
-		expect(images[0].hash).toBe('test-hash');
+		expect(images[0].hash).toBe('916f0027');
 	});
 
 	test('updates existing image', async () => {
 		await setImageV1(
 			new Blob([JSON.stringify(null)], { type: 'application/json' }),
-			'test-hash',
+			'916f0027',
 		);
 
 		const db = await getDatabase();

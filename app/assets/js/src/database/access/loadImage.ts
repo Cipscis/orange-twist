@@ -1,6 +1,6 @@
 import type { Image } from '../types';
 import { ObjectStoreName } from '../metadata';
-import { getImageInternal } from '../internal';
+import { getImageByHashInternal } from '../internal';
 import { requestTransaction } from './requestTransaction';
 
 /**
@@ -9,7 +9,7 @@ import { requestTransaction } from './requestTransaction';
 export async function loadImage(hash: string): Promise<Image | null> {
 	const transaction = await requestTransaction([ObjectStoreName.IMAGE], 'readonly');
 
-	const image = await getImageInternal(transaction, hash);
+	const image = await getImageByHashInternal(transaction, hash);
 
 	return image;
 }
