@@ -8,12 +8,12 @@ import {
 
 import { act, renderHook } from '@testing-library/preact';
 
+import { clear } from '../../shared';
 import {
 	type TemplateInfo,
-	clear,
 	useTemplateInfo,
 	setTemplateInfo,
-} from 'data';
+} from '../../templates';
 
 const firstTemplateInfo: Omit<TemplateInfo, 'id'> = {
 	name: 'example template',

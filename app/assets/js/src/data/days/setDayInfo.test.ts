@@ -18,7 +18,7 @@ import { clear } from '../shared';
 import {
 	getDayTaskInfo,
 	setDayTaskInfo,
-} from 'data/dayTasks';
+} from '../dayTasks';
 
 describe('setDayInfo', () => {
 	afterEach(() => {

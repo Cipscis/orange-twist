@@ -5,7 +5,7 @@ import {
 import { useRegister } from 'utils';
 
 import { templatesRegister } from '../templatesRegister';
-import type { TemplateInfo } from 'data';
+import type { TemplateInfo } from '../types';
 
 /**
  * Provides up to date information on all templates.

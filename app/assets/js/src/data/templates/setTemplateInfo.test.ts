@@ -5,12 +5,12 @@ import {
 	test,
 } from '@jest/globals';
 
+import { clear } from '../shared';
 import {
 	type TemplateInfo,
-	clear,
 	getTemplateInfo,
 	setTemplateInfo,
-} from 'data';
+} from '../templates';
 
 describe('setTemplateInfo', () => {
 	afterEach(() => {

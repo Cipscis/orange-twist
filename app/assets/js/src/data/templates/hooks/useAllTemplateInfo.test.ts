@@ -9,11 +9,11 @@ import {
 import { renderHook } from '@testing-library/preact';
 
 import { templatesRegister } from '../templatesRegister';
+import { clear } from '../../shared';
 import {
 	type TemplateInfo,
-	clear,
 	useAllTemplateInfo,
-} from 'data';
+} from '../../templates';
 
 const firstTemplateInfo: Omit<TemplateInfo, 'id'> = {
 	name: 'example template',

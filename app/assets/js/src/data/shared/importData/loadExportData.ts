@@ -5,12 +5,11 @@ import type { PersistApi } from 'persist';
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
 
-import {
-	loadDayTasksRegister,
-	loadDaysRegister,
-	loadTasksRegister,
-	loadTemplatesRegister,
-} from 'data';
+import { loadDayTasksRegister } from '../../dayTasks';
+import { loadDaysRegister } from '../../days';
+import { loadTasksRegister } from '../../tasks';
+import { loadTemplatesRegister } from '../../templates';
+
 import { setAllImages } from 'images';
 
 import { exportDataSchema } from '../types/ExportData';

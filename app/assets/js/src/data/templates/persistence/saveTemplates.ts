@@ -1,7 +1,7 @@
 import type { PersistApi } from 'persist';
 import { saveRegister } from 'utils';
 
-import { StorageKey } from 'data/shared';
+import { StorageKey } from '../../shared';
 import { templatesRegister } from '../templatesRegister';
 
 /**

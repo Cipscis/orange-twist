@@ -9,7 +9,7 @@ import {
 	type TemplateInfo,
 	getTemplateInfo,
 	setTemplateInfo,
-} from 'data';
+} from '../templates';
 
 describe('getTemplateInfo', () => {
 	beforeAll(() => {

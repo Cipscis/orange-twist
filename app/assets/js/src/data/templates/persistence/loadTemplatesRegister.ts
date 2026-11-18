@@ -6,7 +6,7 @@ import {
 	loadRegister,
 } from 'utils';
 
-import { StorageKey, type DataSource } from 'data/shared';
+import { StorageKey, type DataSource } from '../../shared';
 import { templatesRegister } from '../templatesRegister';
 import { updateOldTemplateInfo } from './updateOldTemplateInfo';
 

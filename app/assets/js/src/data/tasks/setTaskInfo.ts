@@ -3,7 +3,7 @@ import type { TaskInfo } from './types';
 import { getCurrentDateDayName } from 'utils';
 
 import { tasksRegister } from './tasksRegister';
-import { getDayTaskInfo, setDayTaskInfo } from 'data/dayTasks';
+import { getDayTaskInfo, setDayTaskInfo } from '../dayTasks';
 import { getDefaultTaskInfo } from './getDefaultTaskInfo';
 
 interface SetTaskInfoOptions {

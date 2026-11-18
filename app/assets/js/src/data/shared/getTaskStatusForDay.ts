@@ -1,10 +1,7 @@
 import type { TaskStatus } from 'types/TaskStatus';
-import {
-	type DayTaskIdentifier,
-	getTaskInfo,
-	getDayTaskInfo,
-} from 'data';
-import { getAllDayTaskInfo } from 'data/dayTasks';
+import { type DayTaskIdentifier, getDayTaskInfo } from '../dayTasks';
+import { getTaskInfo } from '../tasks';
+import { getAllDayTaskInfo } from '../dayTasks';
 
 /**
  * Determines what status a task would have had on a given day,

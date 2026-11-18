@@ -13,25 +13,31 @@ import { Command } from 'types/Command';
 import { addCommandListener, registerCommand } from 'registers/commands';
 
 import { TaskStatus } from 'types/TaskStatus';
+import { clear } from '../clear';
 import {
-	clear,
 	type TaskInfo,
-	type DayInfo,
-	type DayTaskInfo,
-	type TemplateInfo,
 	setTaskInfo,
-	setDayInfo,
-	setDayTaskInfo,
-	setTemplateInfo,
 	getAllTaskInfo,
-	getAllDayInfo,
-	getAllDayTaskInfo,
-	getAllTemplateInfo,
 	saveTasks,
+} from '../../tasks';
+import {
+	type DayInfo,
+	setDayInfo,
+	getAllDayInfo,
 	saveDays,
+} from '../../days';
+import {
+	type DayTaskInfo,
+	setDayTaskInfo,
+	getAllDayTaskInfo,
 	saveDayTasks,
+} from '../../dayTasks';
+import {
+	type TemplateInfo,
+	setTemplateInfo,
+	getAllTemplateInfo,
 	saveTemplates,
-} from 'data';
+} from '../../templates';
 
 import { loadExportData } from './loadExportData';
 

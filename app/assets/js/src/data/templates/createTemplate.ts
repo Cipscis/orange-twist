@@ -1,4 +1,4 @@
-import { setTemplateInfo, type TemplateInfo } from 'data';
+import { setTemplateInfo, type TemplateInfo } from '../templates';
 import { templatesRegister } from './templatesRegister';
 
 /**

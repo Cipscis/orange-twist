@@ -7,12 +7,12 @@ import {
 
 import { ls } from 'persist';
 
+import { clear } from '../../shared';
 import {
 	type TemplateInfo,
-	clear,
 	saveTemplates,
 	setTemplateInfo,
-} from 'data';
+} from '../../templates';
 
 const firstTemplateInfo: Omit<TemplateInfo, 'id'> = {
 	name: 'example template',

@@ -2,7 +2,7 @@ import type { TaskInfo } from './types';
 
 import { tasksRegister } from './tasksRegister';
 import { getDefaultTaskInfo } from './getDefaultTaskInfo';
-import { getTaskInfo } from 'data';
+import { getTaskInfo } from './getTaskInfo';
 
 /**
  * Sets or updates task info for multiple tasks.
