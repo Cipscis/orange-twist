@@ -29,7 +29,8 @@ describe('getAllImagesInternal', () => {
 		}] = result;
 
 		expect(rest).toEqual({
-			hash: 'test-hash',
+			id: 1,
+			hash: '916f0027',
 		});
 
 		expect(file).toBeInstanceOf(Blob);

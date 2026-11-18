@@ -1,6 +1,5 @@
 /**
- * Calculate the SHA-256 hash of a specified Blob, and return it
- * as a hexadecimal string.
+ * Calculate the SHA-256 hash of a specified Blob, and return it as a hexadecimal string.
  */
 export async function sha256(data: Blob): Promise<string> {
 	const dataAsBuffer = await data.arrayBuffer();

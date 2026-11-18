@@ -6,8 +6,6 @@ import { getTasksV1 } from './getTasksV1';
 import { setTasksV1 } from './setTasksV1';
 import { getTemplatesV1 } from './getTemplatesV1';
 import { setTemplatesV1 } from './setTemplatesV1';
-import { getImageV1 } from './getImageV1';
-import { setImageV1 } from './setImageV1';
 import { getImagesV1 } from './getImagesV1';
 import { setImagesV1 } from './setImagesV1';
 
@@ -23,8 +21,6 @@ export const adapterV1 = {
 	setTasks: setTasksV1,
 	getTemplates: getTemplatesV1,
 	setTemplates: setTemplatesV1,
-	getImage: getImageV1,
-	setImage: setImageV1,
 	getImages: getImagesV1,
 	setImages: setImagesV1,
 };

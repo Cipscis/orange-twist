@@ -1,4 +1,3 @@
-export { getImage } from './getImage';
 export { getAllImages } from './getAllImages';
 export { hasImage } from './hasImage';
 export { saveImage } from './saveImage';

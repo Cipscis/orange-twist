@@ -8,4 +8,6 @@ export const IndexName = {
 	STATUS_ALIAS: 'alias',
 
 	TEMPLATE_ALIAS: 'alias',
+
+	IMAGE_HASH: 'hash',
 } as const;

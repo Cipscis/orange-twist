@@ -19,7 +19,7 @@ describe('getImagesV1', () => {
 		expect(result.length).toBe(1);
 
 		const [[hash, blob]] = result;
-		expect(hash).toBe('test-hash');
+		expect(hash).toBe('916f0027');
 		expect(blob).toBeInstanceOf(Blob);
 		expect(await blob.text()).toBe('test data');
 	});

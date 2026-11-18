@@ -6,7 +6,7 @@ import { ObjectStoreName } from '../metadata';
  * Takes an existing {@linkcode IDBTransaction} and adds a request to remove an image.
  *
  * @param transaction An {@linkcode IDBTransaction} with write permission and access to the {@linkcode ObjectStoreName.IMAGE} object store.
- * @param imageHash The hash of the image to delete.
+ * @param id The ID of the image to delete.
  *
  * @returns a {@linkcode Promise} that resolves when the image has been removed.
  *
@@ -14,17 +14,17 @@ import { ObjectStoreName } from '../metadata';
  */
 export async function removeImageInternal(
 	transaction: IDBTransaction,
-	imageHash: string,
+	id: number,
 ): Promise<void> {
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
 
 	const imageCursor = await getIdbRequestPromise(
-		imageOS.openCursor(imageHash)
+		imageOS.openCursor(id)
 	);
 
 	if (!imageCursor) {
 		// No cursor means the image doesn't exist
-		throw new Error(`Cannot delete non-existent image with hash ${imageHash}`);
+		throw new Error(`Cannot delete non-existent image with ID ${id}`);
 	}
 
 	// Remove image

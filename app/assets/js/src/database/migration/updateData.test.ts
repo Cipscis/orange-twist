@@ -166,7 +166,8 @@ describe('updateData', () => {
 					},
 				],
 				image: {
-					'hash 1': {
+					1: {
+						id: 1,
 						hash: 'hash 1',
 						file: image,
 					},

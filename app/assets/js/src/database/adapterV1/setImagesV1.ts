@@ -1,10 +1,12 @@
+import { createImageHash } from 'utils/createImageHash';
+
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 import {
 	addImageInternal,
-	getImageInternal,
+	getImageByHashInternal,
 	getAllImagesInternal,
-	removeImageInternal,
+	removeImageByHashInternal,
 	updateImageInternal,
 } from '../internal';
 
@@ -27,12 +29,13 @@ export async function setImagesV1(
 	const newImageHashes = new Set<string>();
 
 	for (const [hash, file] of images) {
-		const existingImage = await getImageInternal(transaction, hash);
+		const existingImage = await getImageByHashInternal(transaction, hash);
 
 		if (existingImage) {
 			// Update an existing image
 			newImageHashes.add(hash);
 			promises.push(updateImageInternal(transaction, {
+				id: existingImage.id,
 				hash,
 				file,
 			}));
@@ -41,10 +44,10 @@ export async function setImagesV1(
 
 		// Create a new image
 		const addNewImagePromise = addImageInternal(transaction, {
-			hash,
 			file,
+			hash,
 		});
-		addNewImagePromise.then((newImageHash) => newImageHashes.add(newImageHash));
+		createImageHash(file).then((newImageHash) => newImageHashes.add(newImageHash));
 		promises.push(addNewImagePromise);
 	}
 
@@ -55,7 +58,7 @@ export async function setImagesV1(
 	const removedImageHashes = priorImageHashes.difference(newImageHashes);
 
 	for (const imageHash of removedImageHashes) {
-		promises.push(removeImageInternal(
+		promises.push(removeImageByHashInternal(
 			transaction,
 			imageHash,
 		));

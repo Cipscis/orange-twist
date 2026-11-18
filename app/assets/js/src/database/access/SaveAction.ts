@@ -3,6 +3,7 @@ import type { EnumTypeOf, ExpandType } from 'utils';
 import type {
 	Day,
 	DayTask,
+	Image,
 	Task,
 	Template,
 } from '../types';
@@ -29,6 +30,8 @@ export const SaveType = {
 	TEMPLATE: 'template',
 	TEMPLATE_ADD: 'add template',
 	TEMPLATE_DELETE: 'delete template',
+
+	IMAGE_ADD: 'add image',
 } as const;
 export type SaveType = EnumTypeOf<typeof SaveType>;
 
@@ -121,6 +124,11 @@ interface SaveActionByType {
 	};
 	[SaveType.TEMPLATE_DELETE]: {
 		id: number;
+	};
+	[SaveType.IMAGE_ADD]: {
+		image: ExpandType<
+			Omit<Image, 'id' | 'hash'>
+		>;
 	};
 }
 

@@ -38,7 +38,9 @@ export { removeTemplateInternal } from './removeTemplateInternal';
 export { getAllTemplatesInternal } from './getAllTemplatesInternal';
 
 export { getImageInternal } from './getImageInternal';
+export { getImageByHashInternal } from './getImageByHashInternal';
 export { addImageInternal } from './addImageInternal';
 export { updateImageInternal } from './updateImageInternal';
 export { removeImageInternal } from './removeImageInternal';
+export { removeImageByHashInternal } from './removeImageByHashInternal';
 export { getAllImagesInternal } from './getAllImagesInternal';

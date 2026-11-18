@@ -52,6 +52,8 @@ export {
 	useSettableTemplate,
 	loadAllTemplates,
 	useSettableAllTemplateIds,
+
+	loadImageByHash,
 } from './access';
 
 export type {

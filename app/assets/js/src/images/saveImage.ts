@@ -1,8 +1,8 @@
 // Type-only import to expose symbol in JSDoc
-import type { getImage } from './getImage';
+import type { loadImageByHash } from 'database';
 
-import { createImageHash } from './createImageHash';
-import { adapterV1 } from 'database';
+import { createImageHash } from '../utils/createImageHash';
+import { save, SaveType } from 'database';
 
 /**
  * Persist an image in IndexedDB, so it can be retrieved later.
@@ -12,12 +12,17 @@ import { adapterV1 } from 'database';
  * @returns A key that can be used to retrieve the image later.
  * This key is a truncated SHA-256 hash of the image.
  *
- * @see {@linkcode getImage} For how to retrieve a stored image.
+ * @see {@linkcode loadImageByHash} For how to retrieve a stored image.
  */
 export async function saveImage(image: Blob): Promise<string> {
 	const hash = await createImageHash(image);
 
-	await adapterV1.setImage(image, hash);
+	await save([{
+		type: SaveType.IMAGE_ADD,
+		image: {
+			file: image,
+		},
+	}]);
 
 	return hash;
 }

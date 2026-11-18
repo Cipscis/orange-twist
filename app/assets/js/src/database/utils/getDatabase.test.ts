@@ -167,8 +167,9 @@ describe('getDatabase', () => {
 			)
 		);
 		expect(imageDumpWithoutBlobs).toEqual({
-			'test-hash': {
-				hash: 'test-hash',
+			1: {
+				id: 1,
+				hash: '916f0027',
 			},
 		});
 	});

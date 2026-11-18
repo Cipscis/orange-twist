@@ -25,20 +25,22 @@ describe('updateImageInternal', () => {
 
 	test('updates a specified image', async () => {
 		const result = await updateImageInternal(transaction, {
-			hash: 'test-hash',
+			id: 1,
+			hash: '916f0027',
 			file: new Blob([JSON.stringify(null)], { type: 'application/json' }),
 		});
 
 		expect(result).toBeUndefined();
 
-		const updatedImage = await getImageInternal(transaction, 'test-hash');
+		const updatedImage = await getImageInternal(transaction, 1);
 
 		expect(updatedImage?.file.type).toBe('application/json');
 	});
 
 	test('throws an error if the image doesn\'t exist', async () => {
 		await expect(updateImageInternal(transaction, {
-			hash: 'non-existent-hash',
+			id: -1,
+			hash: '916f0027',
 			file: new Blob(['test data'], { type: 'text/plain' }),
 		})).rejects.toBeInstanceOf(Error);
 	});
