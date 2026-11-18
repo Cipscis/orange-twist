@@ -19,7 +19,6 @@ import {
 	type RenderInlineOptions,
 } from 'utils/markdown';
 
-import { useAllTemplateInfo } from 'data';
 import { consumeAllImageUrlPlaceholders } from 'images';
 
 import { getSanitiser } from 'custom-elements/getSanitiser';
@@ -83,9 +82,6 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
 
-	// Re-render whenever a template changes
-	const templates = useAllTemplateInfo();
-
 	const [renderSwitch, setRenderSwitch] = useState(false);
 	/**
 	 * Force the Markdown content to re-render.
@@ -143,7 +139,6 @@ export function Markdown(props: MarkdownProps): JSX.Element {
 		content,
 		inline,
 		options,
-		templates,
 		renderSwitch,
 	]);
 
