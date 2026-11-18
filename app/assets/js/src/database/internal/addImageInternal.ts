@@ -6,6 +6,7 @@ import {
 
 import { ObjectStoreName } from '../metadata';
 import type { DatabaseData, Image } from '../types';
+import { getImageByHashInternal } from './getImageByHashInternal';
 
 
 /**
@@ -25,6 +26,11 @@ export async function addImageInternal(
 	>
 ): Promise<keyof DatabaseData[typeof ObjectStoreName.IMAGE]> {
 	const imageOS = transaction.objectStore(ObjectStoreName.IMAGE);
+
+	const existingImage = await getImageByHashInternal(transaction, image.hash);
+	if (existingImage) {
+		throw new Error(`Cannot add image - image already exists with hash ${image.hash}`);
+	}
 
 	const request = imageOS.add(image);
 

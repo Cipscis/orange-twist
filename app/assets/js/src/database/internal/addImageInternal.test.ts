@@ -37,4 +37,16 @@ describe('addImageInternal', () => {
 
 		expect(image?.file.type).toBe('text/plain');
 	});
+
+	test('throws an error if an image already exists with the specified hash', async () => {
+		const promise = addImageInternal(
+			transaction,
+			{
+				file: new Blob(['Test data'], { type: 'text/plain' }),
+				hash: '916f0027',
+			}
+		);
+
+		await expect(promise).rejects.toBeInstanceOf(Error);
+	});
 });
