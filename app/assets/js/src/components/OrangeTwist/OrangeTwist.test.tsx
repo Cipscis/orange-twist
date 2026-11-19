@@ -24,11 +24,12 @@ import { local, ls } from 'persist';
 import { addCommandListener, fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
 
-import { getDayInfo } from 'data';
 import {
 	insertTestData,
+	loadDayByDate,
 	loadDayTaskForDayAndTask,
 	loadTask,
+	type Day,
 	type DayTask,
 	type Task,
 } from 'database';
@@ -122,12 +123,18 @@ describe('OrangeTwist', () => {
 
 		fireCommand(Command.DAY_ADD_NEW, '2023-11-26');
 
-		await waitFor(() => {
-			expect(getDayInfo('2023-11-26')).toEqual({
-				name: '2023-11-26',
+		await waitFor(async () => {
+			expect(await loadDayByDate({
+				year: 2023,
+				month: 11,
+				day: 26,
+			})).toEqual({
+				id: 1,
+				year: 2023,
+				month: 11,
+				day: 26,
 				note: '',
-				tasks: [],
-			});
+			} satisfies Day);
 		});
 	});
 
