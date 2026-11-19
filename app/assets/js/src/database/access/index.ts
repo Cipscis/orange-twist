@@ -6,6 +6,7 @@ export { ChangeEntityType } from './liveAccessManager';
 export { LiveTask } from './LiveTask';
 export { LiveStatusForTask } from './LiveStatusForTask';
 export { LiveTaskWithStatus } from './LiveTaskWithStatus';
+export { LiveAllTasks } from './LiveAllTasks';
 export { LiveSettableUnfinishedTaskIds } from './LiveSettableUnfinishedTaskIds';
 export { LiveCompletedTaskIds } from './LiveCompletedTaskIds';
 export { SettableLiveTemplate } from './SettableLiveTemplate';

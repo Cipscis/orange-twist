@@ -9,6 +9,7 @@ export {
 	LiveTask,
 	LiveStatusForTask,
 	LiveTaskWithStatus,
+	LiveAllTasks,
 	LiveSettableUnfinishedTaskIds,
 	LiveCompletedTaskIds,
 	LiveAliasedTemplate,
