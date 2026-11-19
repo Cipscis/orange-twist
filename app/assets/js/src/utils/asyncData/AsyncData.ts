@@ -59,6 +59,11 @@ export class AsyncData<T> extends EventTarget {
 		} = Promise.withResolvers<void>();
 
 		signal.addEventListener('abort', () => {
+			if (!this.#state.loading) {
+				// Aborting only makes sense during a loading operation
+				return;
+			}
+
 			// Reset state and fire events synchronously
 			this.#state = {
 				...this.#state,
