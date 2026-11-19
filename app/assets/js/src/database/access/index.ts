@@ -45,6 +45,7 @@ export {
 	useTask,
 	useSettableTask,
 	useSettableUnfinishedTaskIds,
+	useAllTasks,
 	useCompletedTaskIds,
 
 	useDayTaskIdsForDay,

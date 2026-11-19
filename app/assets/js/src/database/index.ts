@@ -29,6 +29,7 @@ export {
 	useTask,
 	useSettableTask,
 	loadAllTasks,
+	useAllTasks,
 	useSettableUnfinishedTaskIds,
 	useCompletedTaskIds,
 
