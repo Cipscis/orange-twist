@@ -18,6 +18,7 @@ export { loadCurrentDay } from './loadCurrentDay';
 export { loadAllDays } from './loadAllDays';
 
 export { loadTask } from './loadTask';
+export { loadAllTasks } from './loadAllTasks';
 
 export { loadDayTask } from './loadDayTask';
 export { loadDayTaskForDayAndTask } from './loadDayTaskForDayAndTask';
