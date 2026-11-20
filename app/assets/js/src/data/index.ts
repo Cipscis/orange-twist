@@ -20,7 +20,6 @@ export {
 
 export {
 	exportData,
-	loadAllRegisters,
 	importData,
 	StorageKey,
 } from './shared';

@@ -2,7 +2,6 @@ import { h, Fragment } from 'preact';
 import { useCallback, useEffect } from 'preact/hooks';
 
 import {
-	loadAllRegisters,
 	saveDays,
 	saveDayTasks,
 	saveTasks,
@@ -101,6 +100,4 @@ async function processSaveActions(persist: PersistApi, saveActions?: readonly Sa
 
 	// Otherwise, process each save action
 	await save(saveActions);
-	// Then refresh the in-memory cache
-	await loadAllRegisters(persist);
 }
