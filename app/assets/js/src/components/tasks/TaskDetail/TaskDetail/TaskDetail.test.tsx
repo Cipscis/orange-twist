@@ -12,7 +12,6 @@ import { cleanup, render } from '@testing-library/preact';
 import '@testing-library/jest-dom/jest-globals';
 
 import { insertTestData } from 'database';
-import { OrangeTwistContext } from 'components/OrangeTwistContext';
 
 import { TaskDetail } from './TaskDetail';
 
@@ -24,13 +23,7 @@ describe('TaskDetail', () => {
 	});
 
 	test('renders the task\'s note', async () => {
-		const { findByText } = render(<OrangeTwistContext.Provider
-			value={{
-				isLoading: false,
-			}}
-		>
-			<TaskDetail taskId={1} />
-		</OrangeTwistContext.Provider>);
+		const { findByText } = render(<TaskDetail taskId={1} />);
 
 		expect(await findByText('Test task 1 note')).toBeInTheDocument();
 	});
@@ -39,13 +32,7 @@ describe('TaskDetail', () => {
 		const {
 			findByText,
 			findByTitle,
-		} = render(<OrangeTwistContext.Provider
-			value={{
-				isLoading: false,
-			}}
-		>
-			<TaskDetail taskId={1} />
-		</OrangeTwistContext.Provider>);
+		} = render(<TaskDetail taskId={1} />);
 
 		const dayNameEl = await findByText('2026-04-26');
 		expect(dayNameEl).toBeInTheDocument();

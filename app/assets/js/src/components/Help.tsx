@@ -5,7 +5,6 @@ import {
 } from 'preact';
 import {
 	useCallback,
-	useContext,
 	useState,
 } from 'preact/hooks';
 
@@ -18,20 +17,15 @@ import { fireCommand } from 'registers/commands';
 
 import {
 	Button,
-	Loader,
 	Note,
 } from 'components/shared';
 import { Day } from 'components/days/Day';
 import { UnfinishedTaskList } from 'components/tasks/TaskList';
 
-import { OrangeTwistContext } from './OrangeTwistContext';
-
 /**
  * Render static content for the Help page.
  */
 export function Help(): JSX.Element {
-	const { isLoading } = useContext(OrangeTwistContext);
-
 	const createToday = useCallback(() => {
 		const todayName = getCurrentDateDayName();
 		fireCommand(Command.DAY_ADD_NEW, todayName);
@@ -111,13 +105,10 @@ export function Help(): JSX.Element {
 				<p>If you want to link to a specific task, you can use a <code>[[taskId]]</code> shortcode, e.g. <code>[[1]]</code> would generate a link to task 1 like this:</p>
 			</div>
 
-			{isLoading
-				? <Loader />
-				: <Note
-					note={taskLinkNote}
-					onNoteChange={setTaskLinkNote}
-				/>
-			}
+			<Note
+				note={taskLinkNote}
+				onNoteChange={setTaskLinkNote}
+			/>
 
 			<div class="content">
 				<h4 id="notes-images">Images</h4>
@@ -148,13 +139,10 @@ export function Help(): JSX.Element {
 
 				<p>Try it out here:</p>
 
-				{isLoading
-					? <Loader />
-					: <Note
-						note={templateNote}
-						onNoteChange={setTemplateNote}
-					/>
-				}
+				<Note
+					note={templateNote}
+					onNoteChange={setTemplateNote}
+				/>
 
 				<p>The supported syntax for templates includes:</p>
 

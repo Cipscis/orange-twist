@@ -15,8 +15,6 @@ import userEvent from '@testing-library/user-event';
 
 import { insertTestData } from 'database';
 
-import { OrangeTwistContext } from 'components/OrangeTwistContext';
-
 import { SettableDayTaskNoteSync } from './SettableDayTaskNoteSync';
 
 describe('SettableDayTaskNoteSync', () => {
@@ -27,19 +25,13 @@ describe('SettableDayTaskNoteSync', () => {
 	});
 
 	test('renders the day task\'s note', async () => {
-		const { findByText } = render(<OrangeTwistContext.Provider
-			value={{
-				isLoading: false,
+		const { findByText } = render(<SettableDayTaskNoteSync
+			dayTask={{
+				id: 1,
+				note: 'Day task note',
 			}}
-		>
-			<SettableDayTaskNoteSync
-				dayTask={{
-					id: 1,
-					note: 'Day task note',
-				}}
-				setDayTask={async () => {}}
-			/>
-		</OrangeTwistContext.Provider>);
+			setDayTask={async () => {}}
+		/>);
 
 		expect(await findByText('Day task note')).toBeInTheDocument();
 	});
@@ -49,19 +41,13 @@ describe('SettableDayTaskNoteSync', () => {
 
 		const spy = jest.fn(async (data) => {});
 
-		const { getAllByRole } = render(<OrangeTwistContext.Provider
-			value={{
-				isLoading: false,
+		const { getAllByRole } = render(<SettableDayTaskNoteSync
+			dayTask={{
+				id: 1,
+				note: 'Day task note',
 			}}
-		>
-			<SettableDayTaskNoteSync
-				dayTask={{
-					id: 1,
-					note: 'Day task note',
-				}}
-				setDayTask={spy}
-			/>
-		</OrangeTwistContext.Provider>);
+			setDayTask={spy}
+		/>);
 
 		const noteEditButton = getAllByRole('button', { name: 'Edit note' })[0];
 		await user.click(noteEditButton);
