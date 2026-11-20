@@ -104,8 +104,4 @@ export async function insertTestData(
 	)) {
 		addImageInternal(transaction, image);
 	}
-
-	// While the work to migrate the UI over to the database v2, some parts still expect to be able to read data from the in-memory `Register` cache. So load this test data into those registers
-	clear();
-	await loadAllRegisters(local);
 }
