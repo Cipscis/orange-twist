@@ -1,6 +1,3 @@
-import { clear, loadAllRegisters } from 'data';
-import { local } from 'persist';
-
 import { clearDatabase } from './clearDatabase';
 
 import type { DatabaseData } from '../types';

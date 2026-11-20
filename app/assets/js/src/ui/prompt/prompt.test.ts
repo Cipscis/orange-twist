@@ -8,7 +8,6 @@ import '@testing-library/jest-dom/jest-globals';
 import userEvent from '@testing-library/user-event';
 import { cleanup, screen } from '@testing-library/preact';
 
-import { clear } from 'data';
 import { insertTestData } from 'database';
 
 import { prompt, PromptType } from './prompt';
@@ -16,7 +15,6 @@ import { prompt, PromptType } from './prompt';
 describe('prompt', () => {
 	afterEach(() => {
 		cleanup();
-		clear();
 	});
 
 	test('returns a Promise', () => {

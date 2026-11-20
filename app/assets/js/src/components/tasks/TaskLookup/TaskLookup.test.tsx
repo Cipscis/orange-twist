@@ -18,15 +18,12 @@ import {
 
 import userEvent from '@testing-library/user-event';
 
-import { clear } from 'data';
 import { insertTestData } from 'database';
 
 import { TaskLookup } from './TaskLookup';
 
 describe('TaskLookup', () => {
 	beforeEach(async () => {
-		clear();
-
 		await insertTestData({
 			task: {
 				1: {

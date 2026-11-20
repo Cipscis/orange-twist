@@ -2,7 +2,6 @@ import { h } from 'preact';
 
 import {
 	afterEach,
-	beforeEach,
 	describe,
 	expect,
 	jest,
@@ -13,15 +12,9 @@ import '@testing-library/jest-dom/jest-globals';
 import { cleanup, render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
-import { clear } from 'data';
-
 import { DayNoteSync } from './DayNoteSync';
 
 describe('DayNoteSync', () => {
-	beforeEach(() => {
-		clear();
-	});
-
 	afterEach(() => {
 		cleanup();
 	});

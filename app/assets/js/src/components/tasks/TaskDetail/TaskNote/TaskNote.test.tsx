@@ -17,8 +17,6 @@ import userEvent from '@testing-library/user-event';
 import { Command } from 'types/Command';
 import { addCommandListener, registerCommand } from 'registers/commands';
 
-import { clear } from 'data';
-
 import { insertTestData, SaveType } from 'database';
 
 import { OrangeTwist } from 'components/OrangeTwist';
@@ -31,7 +29,6 @@ describe('TaskNote', () => {
 	});
 
 	beforeEach(async () => {
-		clear();
 		await insertTestData();
 	});
 

@@ -18,13 +18,11 @@ import {
 import userEvent from '@testing-library/user-event';
 
 import { Markdown } from './Markdown';
-import { clear } from 'data';
 import { insertTestData } from 'database';
 
 describe('Markdown', () => {
 	afterEach(() => {
 		cleanup();
-		clear();
 	});
 
 	test('renders its content, converted to HTML', async () => {
@@ -143,10 +141,6 @@ this is the second line`;
 				},
 			},
 		}));
-
-		afterEach(() => {
-			clear();
-		});
 
 		test('ignores unrecognised templates', async () => {
 			const { getByTestId } = render(
