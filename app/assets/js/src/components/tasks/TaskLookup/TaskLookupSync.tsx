@@ -29,7 +29,6 @@ export function TaskLookupSync(props: TaskLookupSyncProps): JSX.Element {
 		onSelect,
 		filter,
 		exactMatch,
-		className,
 
 		...passthroughProps
 	} = props;

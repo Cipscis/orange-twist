@@ -22,7 +22,7 @@ import type { Task } from '../../types';
 import { useAllTasks } from './useAllTasks';
 
 describe('useAllTasks', () => {
-	beforeEach(async () => insertTestData());
+	beforeEach(() => insertTestData());
 	afterEach(() => cleanup());
 
 	test('provide a AsyncDataResult', () => {
@@ -102,7 +102,7 @@ describe('useAllTasks', () => {
 				} satisfies AsyncDataState<readonly Task[]>);
 			});
 
-			await save([{
+			save([{
 				type: SaveType.TASK,
 				id: 1,
 				task: {

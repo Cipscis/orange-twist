@@ -24,7 +24,7 @@ export function TaskLookupLoader(props: TaskLookupLoaderProps): JSX.Element {
 	if (tasksDataState.type === AsyncDataStateType.INITIAL) {
 		return <select
 			class={props.class ?? 'task-lookup'}
-			// disabled
+			disabled
 		>
 			<option disabled selected>Loading</option>
 		</select>;
