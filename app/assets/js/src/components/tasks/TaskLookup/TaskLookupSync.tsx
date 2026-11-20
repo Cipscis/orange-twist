@@ -1,4 +1,3 @@
-import type Preact from 'preact';
 import {
 	type GenericEventHandler,
 	type JSX,
@@ -12,46 +11,21 @@ import {
 	useRef,
 } from 'preact/hooks';
 
-import { useAllTaskInfo, type TaskInfo } from 'data';
+import type { Task } from 'database';
 
-interface TaskLookupProps extends Omit<
-	Preact.SelectHTMLAttributes<HTMLSelectElement>,
-	'onSelect'
-> {
-	/**
-	 * A callback called when a task is selected.
-	 */
-	onSelect: (this: void, taskId: number) => void;
+import type { TaskLookupProps } from './TaskLookup';
 
-	/**
-	 * An array filter predicate function used to show only a subset of tasks.
-	 *
-	 * @see {@linkcode Array.prototype.filter}
-	 */
-	filter?: (
-		this: void,
-		task: TaskInfo,
-		index: number,
-		array: readonly TaskInfo[],
-	) => boolean;
-
-	/**
-	 * An array find predicate function used to pre-select a task if there is an ideal match.
-	 */
-	exactMatch?: (
-		this: void,
-		task: TaskInfo,
-		index: number,
-		array: readonly TaskInfo[],
-	) => boolean;
+interface TaskLookupSyncProps extends TaskLookupProps {
+	tasks: readonly Task[];
 }
 
 /**
- * A component that renders a menu showing a list of all tasks,
- * providing a callback allowing one to be selected.
+ * Renders a filterable menu showing a list of provided tasks, providing a callback allowing one to be selected.
  */
-export function TaskLookup(props: TaskLookupProps): JSX.Element {
+export function TaskLookupSync(props: TaskLookupSyncProps): JSX.Element {
 	const {
+		tasks,
+
 		onSelect,
 		filter,
 		exactMatch,
@@ -60,26 +34,24 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 		...passthroughProps
 	} = props;
 
-	const allTaskInfo = useAllTaskInfo();
-
 	/**
 	 * Tasks that pass the current filter, if there is one.
 	 */
 	const selectableTaskInfo = useMemo(() => {
 		if (!filter) {
-			return allTaskInfo;
+			return tasks;
 		}
 
-		return allTaskInfo.filter(filter);
-	}, [allTaskInfo, filter]);
+		return tasks.filter(filter);
+	}, [tasks, filter]);
 
 	const exactMatchTaskInfo = useMemo(() => {
 		if (!exactMatch) {
 			return null;
 		}
 
-		return allTaskInfo.find(exactMatch) ?? null;
-	}, [allTaskInfo, exactMatch]);
+		return tasks.find(exactMatch) ?? null;
+	}, [tasks, exactMatch]);
 
 	const selectRef = useRef<HTMLSelectElement>(null);
 	/**
@@ -115,7 +87,7 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 	/**
 	 * Pre-select a task, or clear a pre-selected task if passed `null`.
 	 */
-	const preselectTask = useCallback((task: TaskInfo | null) => {
+	const preselectTask = useCallback((task: Task | null) => {
 		const select = selectRef.current;
 		if (!select) {
 			return;
@@ -153,7 +125,7 @@ export function TaskLookup(props: TaskLookupProps): JSX.Element {
 	return <>
 		<select
 			onChange={onChange}
-			class={className ?? 'task-lookup'}
+			class={props.class ?? 'task-lookup'}
 			ref={selectRef}
 			{...passthroughProps}
 		>

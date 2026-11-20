@@ -14,7 +14,7 @@ import {
 } from 'preact/hooks';
 
 import { assertAllUnionMembersHandled, strMatch } from 'utils';
-import type { TaskInfo } from 'data';
+import type { Task } from 'database';
 
 import {
 	Button,
@@ -110,24 +110,24 @@ export function ModalPrompt<T extends PromptType>(props: ModalPromptProps<T>): J
 	/**
 	 * Filter tasks based on whether or not their name contains the query.
 	 */
-	const applyTaskFilter = useCallback<(taskInfo: TaskInfo) => boolean>((taskInfo) => {
+	const applyTaskFilter = useCallback<(task: Task) => boolean>((task) => {
 		if (taskFilterQuery === null) {
 			return true;
 		}
 
 		// TODO: Upgrade this into a fuzzy search filter
-		return strMatch(taskInfo.name, taskFilterQuery, {
+		return strMatch(task.name, taskFilterQuery, {
 			ignoreCase: true,
 			ignoreDiacritics: true,
 		});
 	}, [taskFilterQuery]);
 
-	const exactMatch = useCallback((taskInfo: TaskInfo) => {
+	const exactMatch = useCallback((task: Task) => {
 		if (taskFilterQuery === null) {
 			return false;
 		}
 
-		return strMatch(taskInfo.name, taskFilterQuery, {
+		return strMatch(task.name, taskFilterQuery, {
 			ignoreCase: true,
 			ignoreDiacritics: true,
 			allowPartial: false,
