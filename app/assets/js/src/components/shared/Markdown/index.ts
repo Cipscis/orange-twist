@@ -1,1 +1,1 @@
-export { Markdown, type MarkdownApi } from './Markdown';
+export { Markdown } from './Markdown';
