@@ -6,11 +6,6 @@ export { getDayTaskInfo } from './getDayTaskInfo';
 export { getAllDayTaskInfo } from './getAllDayTaskInfo';
 
 export {
-	useDayTaskInfo,
-	useAllDayTaskInfo,
-} from './hooks';
-
-export {
 	loadDayTasksRegister,
 	saveDayTasks,
 } from './persistence';

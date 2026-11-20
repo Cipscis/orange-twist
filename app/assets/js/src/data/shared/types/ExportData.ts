@@ -2,10 +2,10 @@ import * as z from 'zod/mini';
 
 import { isZodSchemaType } from 'utils';
 
-import { dayInfoSchema } from 'data/days/types/DayInfo';
-import { taskInfoSchema } from 'data/tasks/types/TaskInfo';
-import { dayTaskInfoSchema } from 'data/dayTasks/types/DayTaskInfo';
-import { templateInfoSchema } from 'data/templates/types/TemplateInfo';
+import { dayInfoSchema } from '../../days/types/DayInfo';
+import { taskInfoSchema } from '../../tasks/types/TaskInfo';
+import { dayTaskInfoSchema } from '../../dayTasks/types/DayTaskInfo';
+import { templateInfoSchema } from '../../templates/types/TemplateInfo';
 import { exportDataLikeSchema } from './ExportDataLike';
 
 /**

@@ -1,12 +1,10 @@
 import type { ExportData } from '../types/ExportData';
 
-import {
-	getAllTaskInfo,
-	getAllDayInfo,
-	encodeDayTaskKey,
-	getAllDayTaskInfo,
-	getAllTemplateInfo,
-} from 'data';
+import { getAllTaskInfo } from '../../tasks';
+import { getAllDayInfo } from '../../days';
+import { encodeDayTaskKey, getAllDayTaskInfo } from '../../dayTasks';
+import { getAllTemplateInfo } from '../../templates';
+
 import { getAllImages, toDataUrl } from 'images';
 
 /**

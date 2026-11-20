@@ -1,7 +1,6 @@
 import {
 	h,
 	type JSX,
-	type RefObject,
 } from 'preact';
 
 import {
@@ -25,21 +24,13 @@ import {
 	useKeyboardShortcut,
 } from 'registers/keyboard-shortcuts';
 
-import { CustomEventName } from 'types/CustomEventName';
-
-import { Markdown, type MarkdownApi } from '../Markdown';
+import { Markdown } from '../Markdown';
 import { IconButton } from '../IconButton';
 
 interface NoteProps {
 	note: string | null;
 	/** A callback called with the updated note when a change is committed. */
 	onNoteChange: (note: string) => void;
-
-	/**
-	 * If a ref object is provided, it will be set to expose
-	 * a {@linkcode MarkdownApi} object.
-	 */
-	markdownApiRef?: RefObject<MarkdownApi>;
 
 	class?: string;
 }
@@ -240,22 +231,6 @@ export function Note(props: NoteProps): JSX.Element {
 		condition: isEditing,
 	});
 
-	// Re-render on data import
-	useEffect(() => {
-		const controller = new AbortController();
-		const { signal } = controller;
-
-		document.addEventListener(
-			CustomEventName.IMPORT_COMPLETE,
-			() => {
-				props.markdownApiRef?.current?.rerender();
-			},
-			{ signal }
-		);
-
-		return () => controller.abort();
-	}, [props.markdownApiRef]);
-
 	return <div class={classNames('note', props.class)}>
 		{isEditing
 			? <textarea
@@ -271,7 +246,6 @@ export function Note(props: NoteProps): JSX.Element {
 					<Markdown
 						content={note}
 						onClick={enterEditingModeOnNoteClick}
-						apiRef={props.markdownApiRef}
 					/>
 				}
 				<IconButton

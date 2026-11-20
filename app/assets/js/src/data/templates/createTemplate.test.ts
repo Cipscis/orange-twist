@@ -6,12 +6,12 @@ import {
 } from '@jest/globals';
 
 import { templatesRegister } from './templatesRegister';
+import { clear } from '../shared';
 import {
 	type TemplateInfo,
-	clear,
 	createTemplate,
 	getTemplateInfo,
-} from 'data';
+} from '../templates';
 
 describe('createTemplate', () => {
 	afterEach(() => {

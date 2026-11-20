@@ -14,7 +14,7 @@ import { clear } from '../shared';
 import { getCurrentDateDayName } from 'utils';
 
 import { createTask } from './createTask';
-import { getDayInfo, setDayInfo } from 'data';
+import { getDayInfo, setDayInfo } from '../days';
 
 describe('createTask', () => {
 	afterEach(() => {

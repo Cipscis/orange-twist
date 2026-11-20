@@ -6,6 +6,7 @@ export { ChangeEntityType } from './liveAccessManager';
 export { LiveTask } from './LiveTask';
 export { LiveStatusForTask } from './LiveStatusForTask';
 export { LiveTaskWithStatus } from './LiveTaskWithStatus';
+export { LiveAllTasks } from './LiveAllTasks';
 export { LiveSettableUnfinishedTaskIds } from './LiveSettableUnfinishedTaskIds';
 export { LiveCompletedTaskIds } from './LiveCompletedTaskIds';
 export { SettableLiveTemplate } from './SettableLiveTemplate';
@@ -18,6 +19,7 @@ export { loadCurrentDay } from './loadCurrentDay';
 export { loadAllDays } from './loadAllDays';
 
 export { loadTask } from './loadTask';
+export { loadAllTasks } from './loadAllTasks';
 
 export { loadDayTask } from './loadDayTask';
 export { loadDayTaskForDayAndTask } from './loadDayTaskForDayAndTask';
@@ -43,6 +45,7 @@ export {
 	useTask,
 	useSettableTask,
 	useSettableUnfinishedTaskIds,
+	useAllTasks,
 	useCompletedTaskIds,
 
 	useDayTaskIdsForDay,

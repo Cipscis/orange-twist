@@ -1,6 +1,3 @@
-// Type-only import to expose symbol to JSDoc
-import type { useRegister } from './useRegister';
-
 import { assertAllUnionMembersHandled } from '../assertAllUnionMembersHandled';
 
 /**
@@ -81,8 +78,6 @@ export type RegisterEventListener<K, V> = {
  * register.set('foo', 1);
  * // > { key: 'foo', value: 1 }
  * ```
- *
- * @see {@linkcode useRegister} for how to observe a `Register` within a Preact context.
  */
 export class Register<K, V> {
 	constructor(iterable?: Iterable<readonly [K, V]> | null) {

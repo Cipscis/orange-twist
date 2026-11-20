@@ -1,4 +1,4 @@
-import type { TemplateInfo } from 'data';
+import type { TemplateInfo } from './types';
 
 /**
  * Determine default template info, used to fill in any blanks.

@@ -6,12 +6,10 @@ import {
 } from '@jest/globals';
 
 import { TaskStatus } from 'types/TaskStatus';
-import {
-	setDayInfo,
-	setDayTaskInfo,
-	setTaskInfo,
-	setTemplateInfo,
-} from 'data';
+import { setDayInfo } from '../../days';
+import { setDayTaskInfo } from '../../dayTasks';
+import { setTaskInfo } from '../../tasks';
+import { setTemplateInfo } from '../../templates';
 
 import { writeExportData } from './writeExportData';
 

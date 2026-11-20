@@ -1,16 +1,9 @@
 import { h, type JSX } from 'preact';
-import {
-	useCallback,
-	useContext,
-	useEffect,
-	useRef,
-} from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 
 import type { Day } from 'database';
 
-import { OrangeTwistContext } from 'components/OrangeTwistContext';
-
-import { Note, type MarkdownApi } from 'components/shared';
+import { Note } from 'components/shared';
 
 interface DayNoteSyncProps {
 	day: Readonly<Pick<
@@ -29,8 +22,6 @@ export function DayNoteSync(props: DayNoteSyncProps): JSX.Element {
 		setDay,
 	} = props;
 
-	const { isLoading } = useContext(OrangeTwistContext);
-
 	const onNoteChange = useCallback(
 		(note: string) => {
 			setDay({ note });
@@ -38,17 +29,8 @@ export function DayNoteSync(props: DayNoteSyncProps): JSX.Element {
 		[setDay]
 	);
 
-	const markdownApiRef = useRef<MarkdownApi | null>(null);
-	// When data is finished loading re-render Markdown
-	useEffect(() => {
-		if (!isLoading) {
-			markdownApiRef.current?.rerender();
-		}
-	}, [isLoading]);
-
 	return <Note
 		note={day.note}
 		onNoteChange={onNoteChange}
-		markdownApiRef={markdownApiRef}
 	/>;
 }

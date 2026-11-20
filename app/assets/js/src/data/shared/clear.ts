@@ -1,7 +1,7 @@
-import { daysRegister } from 'data/days/daysRegister';
-import { tasksRegister } from 'data/tasks/tasksRegister';
-import { dayTasksRegister } from 'data/dayTasks/dayTasksRegister';
-import { templatesRegister } from 'data/templates/templatesRegister';
+import { daysRegister } from '../days/daysRegister';
+import { tasksRegister } from '../tasks/tasksRegister';
+import { dayTasksRegister } from '../dayTasks/dayTasksRegister';
+import { templatesRegister } from '../templates/templatesRegister';
 
 /**
  * Clears all data. Primarily useful for clearing data during testing.

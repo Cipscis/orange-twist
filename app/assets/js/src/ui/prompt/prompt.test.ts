@@ -8,14 +8,13 @@ import '@testing-library/jest-dom/jest-globals';
 import userEvent from '@testing-library/user-event';
 import { cleanup, screen } from '@testing-library/preact';
 
-import { clear, createTask } from 'data';
+import { insertTestData } from 'database';
 
 import { prompt, PromptType } from './prompt';
 
 describe('prompt', () => {
 	afterEach(() => {
 		cleanup();
-		clear();
 	});
 
 	test('returns a Promise', () => {
@@ -64,9 +63,28 @@ describe('prompt', () => {
 		const user = userEvent.setup();
 
 		// Create some dummy tasks
-		createTask({ name: 'Task 1' });
-		createTask({ name: 'Task 2' });
-		createTask({ name: 'Task 3' });
+		await insertTestData({
+			task: {
+				1: {
+					id: 1,
+					name: 'Task one',
+					note: '',
+					sortIndex: null,
+				},
+				2: {
+					id: 2,
+					name: 'Task two',
+					note: '',
+					sortIndex: null,
+				},
+				3: {
+					id: 3,
+					name: 'Task three',
+					note: '',
+					sortIndex: null,
+				},
+			},
+		});
 
 		const promise = prompt('Select a task', { type: PromptType.TASK });
 

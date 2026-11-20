@@ -6,7 +6,7 @@ import {
 	loadRegister,
 } from 'utils';
 
-import { StorageKey, type DataSource } from 'data/shared';
+import { StorageKey, type DataSource } from '../../shared';
 import { tasksRegister } from '../tasksRegister';
 import { updateOldTaskInfo } from '../updateOldTaskInfo';
 

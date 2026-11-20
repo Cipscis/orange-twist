@@ -3,8 +3,8 @@ import { TaskStatus } from 'types/TaskStatus';
 import { dayTasksRegister } from './dayTasksRegister';
 import { encodeDayTaskKey } from './util';
 
-import { getTaskInfo, setTaskInfo } from 'data/tasks';
-import { getDayInfo, setDayInfo } from 'data/days';
+import { getTaskInfo, setTaskInfo } from '../tasks';
+import { getDayInfo, setDayInfo } from '../days';
 import { getAllDayTaskInfo } from './getAllDayTaskInfo';
 
 const defaultDayTaskInfo = {

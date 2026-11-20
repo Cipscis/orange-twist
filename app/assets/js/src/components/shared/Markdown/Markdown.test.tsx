@@ -18,15 +18,11 @@ import {
 import userEvent from '@testing-library/user-event';
 
 import { Markdown } from './Markdown';
-import {
-	clear,
-	setTemplateInfo,
-} from 'data';
+import { insertTestData } from 'database';
 
 describe('Markdown', () => {
 	afterEach(() => {
 		cleanup();
-		clear();
 	});
 
 	test('renders its content, converted to HTML', async () => {
@@ -113,28 +109,38 @@ this is the second line`;
 	});
 
 	describe('renders templates', () => {
-		beforeEach(() => {
-			setTemplateInfo(1, {
-				name: 'simple',
-				template: '**simple**',
-			});
-			setTemplateInfo(2, {
-				name: 'args',
-				template: '*{{{0}}}* *{{{1}}}*',
-			});
-			setTemplateInfo(3, {
-				name: 'args-defaults',
-				template: '<a href="{{{0}}}">{{{1|default}}}</a>',
-			});
-			setTemplateInfo(4, {
-				name: 'empty',
-				template: ' ',
-			});
-		});
-
-		afterEach(() => {
-			clear();
-		});
+		beforeEach(() => insertTestData({
+			template: {
+				1: {
+					id: 1,
+					name: 'simple',
+					alias: 'simple',
+					definition: '**simple**',
+					sortIndex: null,
+				},
+				2: {
+					id: 2,
+					name: 'args',
+					alias: 'args',
+					definition: '*{{{0}}}* *{{{1}}}*',
+					sortIndex: null,
+				},
+				3: {
+					id: 3,
+					name: 'args-defaults',
+					alias: 'args-defaults',
+					definition: '<a href="{{{0}}}">{{{1|default}}}</a>',
+					sortIndex: null,
+				},
+				4: {
+					id: 4,
+					name: 'empty',
+					alias: 'empty',
+					definition: ' ',
+					sortIndex: null,
+				},
+			},
+		}));
 
 		test('ignores unrecognised templates', async () => {
 			const { getByTestId } = render(

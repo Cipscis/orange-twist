@@ -5,12 +5,12 @@ import {
 	test,
 } from '@jest/globals';
 
+import { clear } from '../shared';
 import {
-	clear,
 	deleteTemplate,
 	getTemplateInfo,
 	setTemplateInfo,
-} from 'data';
+} from '../templates';
 
 describe('deleteTemplate', () => {
 	afterEach(() => {

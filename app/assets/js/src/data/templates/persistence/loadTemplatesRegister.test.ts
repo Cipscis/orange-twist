@@ -9,11 +9,11 @@ import {
 import { ls } from 'persist';
 
 import { templatesRegister } from '../templatesRegister';
+import { clear } from '../../shared';
 import {
 	type TemplateInfo,
-	clear,
 	loadTemplatesRegister,
-} from 'data';
+} from '../../templates';
 
 const firstTemplateInfo: Omit<TemplateInfo, 'id'> = {
 	name: 'example template',

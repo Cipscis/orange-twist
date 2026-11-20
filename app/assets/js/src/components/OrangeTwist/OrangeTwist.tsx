@@ -1,5 +1,6 @@
 import {
 	h,
+	Fragment,
 	type ComponentChildren,
 	type JSX,
 } from 'preact';
@@ -21,36 +22,20 @@ import { useCommandKeyboardShortcutShow } from './useCommandKeyboardShortcutShow
 import { useCommandTemplatesEdit } from './useCommandTemplatesEdit';
 
 import {
-	getDayInfo,
-	loadAllRegisters,
-	setDayInfo,
-} from 'data';
-
-import {
 	KeyboardShortcutName,
 	registerKeyboardShortcut,
 	useKeyboardShortcut,
 } from 'registers/keyboard-shortcuts';
 
-import {
-	classNames,
-	type DefaultsFor,
-	getCurrentDateDayName,
-} from 'utils';
+import type { DefaultsFor } from 'utils/DefaultsFor';
 import { useDevEnhancements } from './useDevEnhancements';
 
 import { type PersistApi, local } from 'persist';
-import {
-	onSyncUpdate,
-} from 'sync';
 
-import * as ui from 'ui';
 import {
 	IconButton,
 } from '../shared';
 import { IconName } from 'types/IconName';
-
-import { OrangeTwistContext } from '../OrangeTwistContext';
 
 import { CommandPalette } from '../CommandPalette';
 import { KeyboardShortcutModal } from '../KeyboardShortcutsModal';
@@ -104,41 +89,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		...props,
 	};
 
-	const [isLoading, setIsLoading] = useState(true);
-
-	/**
-	 * Load persisted data into each register.
-	 *
-	 * This function does **not** interact with loading state.
-	 */
-	const loadAllData = useCallback(async () => {
-		await loadAllRegisters(persist);
-
-		// If there's no info for the current day, set up a stub
-		const currentDateDayName = getCurrentDateDayName();
-		if (getDayInfo(currentDateDayName) === null) {
-			setDayInfo(currentDateDayName, {});
-		}
-	}, [persist]);
-
-	// Load persisted data on initial load
-	useEffect(() => {
-		loadAllData()
-			.then(() => setIsLoading(false))
-			.catch((e) => {
-				ui.alert(
-					'Failed to load',
-					{
-						duration: null,
-						dismissible: true,
-					}
-				);
-				console.error(e);
-			});
-	}, [
-		loadAllData,
-	]);
-
 	// Scroll to first open day when initial loading is complete
 	const hasDoneInitialScroll = useRef(false);
 	useEffect(() => {
@@ -176,26 +126,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 
 		return () => controller.abort();
 	}, [scrollToActiveDay]);
-
-	// Load persisted data when serialised data
-	// is updated from another source
-	useEffect(() => {
-		const controller = new AbortController();
-		const { signal } = controller;
-
-		onSyncUpdate(
-			() => {
-				setIsLoading(true);
-				loadAllData()
-					.then(() => setIsLoading(false));
-			},
-			{ signal }
-		);
-
-		return () => controller.abort();
-	}, [
-		loadAllData,
-	]);
 
 	useCommandDataSave({ persist });
 	useCommandDataExport();
@@ -255,11 +185,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		useDevEnhancements();
 	}
 
-	return <OrangeTwistContext.Provider
-		value={{
-			isLoading,
-		}}
-	>
+	return <>
 		{
 			__IS_DEV__ && <span class="dev-ribbon">unreleased</span>
 		}
@@ -270,9 +196,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		/>
 
 		<div
-			class={classNames('orange-twist', {
-				'orange-twist--loading': isLoading,
-			})}
+			class="orange-twist"
 		>
 			<ToolDrawer side={ToolDrawerPlacement.LEFT}>
 				{
@@ -301,7 +225,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 				/>
 			</ToolDrawer>
 
-			{!isLoading && children}
+			{children}
 
 			<Footer />
 		</div>
@@ -314,5 +238,5 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 			open={templatesModalOpen}
 			onClose={closeTemplatesModal}
 		/>
-	</OrangeTwistContext.Provider>;
+	</>;
 }
