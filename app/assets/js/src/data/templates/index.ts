@@ -7,11 +7,6 @@ export { getTemplateInfo } from './getTemplateInfo';
 export { getAllTemplateInfo } from './getAllTemplateInfo';
 
 export {
-	useTemplateInfo,
-	useAllTemplateInfo,
-} from './hooks';
-
-export {
 	loadTemplatesRegister,
 	saveTemplates,
 } from './persistence';
