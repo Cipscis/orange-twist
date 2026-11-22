@@ -4,7 +4,4 @@ export { setDayInfo } from './setDayInfo';
 export { getDayInfo } from './getDayInfo';
 export { getAllDayInfo } from './getAllDayInfo';
 
-export {
-	loadDaysRegister,
-	saveDays,
-} from './persistence';
+export { loadDaysRegister } from './persistence';

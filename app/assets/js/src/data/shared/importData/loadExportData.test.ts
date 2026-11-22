@@ -18,25 +18,21 @@ import {
 	type TaskInfo,
 	setTaskInfo,
 	getAllTaskInfo,
-	saveTasks,
 } from '../../tasks';
 import {
 	type DayInfo,
 	setDayInfo,
 	getAllDayInfo,
-	saveDays,
 } from '../../days';
 import {
 	type DayTaskInfo,
 	setDayTaskInfo,
 	getAllDayTaskInfo,
-	saveDayTasks,
 } from '../../dayTasks';
 import {
 	type TemplateInfo,
 	setTemplateInfo,
 	getAllTemplateInfo,
-	saveTemplates,
 } from '../../templates';
 
 import { loadExportData } from './loadExportData';
@@ -176,11 +172,6 @@ describe('loadExportData', () => {
 		setDayInfo(testDay.name, testDay);
 		setDayTaskInfo(testDayTask, testDayTask);
 		setTemplateInfo(testTemplate.id, testTemplate);
-
-		saveTasks(ls);
-		saveDays(ls);
-		saveDayTasks(ls);
-		saveTemplates(ls);
 
 		setTaskInfo(testTask.id, {
 			// @ts-expect-error Testing invalid data
