@@ -6,8 +6,5 @@ export { deleteTemplate } from './deleteTemplate';
 export { getTemplateInfo } from './getTemplateInfo';
 export { getAllTemplateInfo } from './getAllTemplateInfo';
 
-export {
-	loadTemplatesRegister,
-	saveTemplates,
-} from './persistence';
+export { loadTemplatesRegister } from './persistence';
 

@@ -30,8 +30,6 @@ import {
 import type { DefaultsFor } from 'utils/DefaultsFor';
 import { useDevEnhancements } from './useDevEnhancements';
 
-import { type PersistApi, local } from 'persist';
-
 import {
 	IconButton,
 } from '../shared';
@@ -56,12 +54,6 @@ interface OrangeTwistProps {
 	 * @default false
 	 */
 	scrollToActiveDay?: boolean;
-	/**
-	 * The method that should be used for persisting data.
-	 *
-	 * @default local
-	 */
-	persist?: PersistApi;
 
 	children?: ComponentChildren;
 }
@@ -69,7 +61,6 @@ interface OrangeTwistProps {
 const defaultProps = {
 	backButton: false,
 	scrollToActiveDay: false,
-	persist: local,
 } as const satisfies DefaultsFor<
 	Omit<OrangeTwistProps, 'children'>
 >;
@@ -82,7 +73,6 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 	const {
 		backButton,
 		scrollToActiveDay,
-		persist,
 		children,
 	} = {
 		...defaultProps,
@@ -127,7 +117,7 @@ export function OrangeTwist(props: OrangeTwistProps): JSX.Element {
 		return () => controller.abort();
 	}, [scrollToActiveDay]);
 
-	useCommandDataSave({ persist });
+	useCommandDataSave();
 	useCommandDataExport();
 	useCommandDataImport();
 	useCommandDayAddNew();

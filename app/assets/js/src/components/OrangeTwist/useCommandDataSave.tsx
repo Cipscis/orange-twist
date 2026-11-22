@@ -1,13 +1,6 @@
 import { h, Fragment } from 'preact';
 import { useCallback, useEffect } from 'preact/hooks';
 
-import {
-	saveDays,
-	saveDayTasks,
-	saveTasks,
-	saveTemplates,
-} from 'data';
-
 import { Command } from 'types/Command';
 import { registerCommand, useCommand } from 'registers/commands';
 import {
@@ -17,23 +10,15 @@ import {
 } from 'registers/keyboard-shortcuts';
 
 import { save, type SaveAction } from 'database';
-import type { PersistApi } from 'persist';
 import { syncUpdate } from 'sync';
 
 import * as ui from 'ui';
 import { Loader } from 'components/shared';
 
-export interface UseCommandDataSaveOptions {
-	/**
-	 * A {@linkcode PersistApi} to use when saving data.
-	 */
-	persist: PersistApi;
-}
-
 /**
  * Register the "Save data" command and its keyboard shortcut.
  */
-export function useCommandDataSave({ persist }: UseCommandDataSaveOptions): void {
+export function useCommandDataSave(): void {
 	useEffect(() => {
 		registerCommand(Command.DATA_SAVE, { name: 'Save data' });
 	}, []);
@@ -53,13 +38,21 @@ export function useCommandDataSave({ persist }: UseCommandDataSaveOptions): void
 		async (saveActions?: readonly SaveAction[]) => {
 			const id = 'saving';
 
+			if (
+				typeof saveActions === 'undefined' ||
+				saveActions.length === 0
+			) {
+				ui.alert('Nothing to save');
+				return;
+			}
+
 			ui.alert(<>
 				<span>Saving...</span>
 				<Loader immediate />
 			</>, { id, duration: null });
 
 			try {
-				await processSaveActions(persist, saveActions);
+				await processSaveActions(saveActions);
 				ui.alert('Saved', {
 					duration: 2000,
 					id,
@@ -75,7 +68,7 @@ export function useCommandDataSave({ persist }: UseCommandDataSaveOptions): void
 				console.error(e);
 			}
 		},
-		[persist]
+		[]
 	);
 
 	useCommand(Command.DATA_SAVE, saveData);
@@ -86,18 +79,7 @@ export function useCommandDataSave({ persist }: UseCommandDataSaveOptions): void
 /**
  * Glue logic for handling both legacy "save all" behaviour, and new {@linkcode SaveAction} processing behaviour.
  */
-async function processSaveActions(persist: PersistApi, saveActions?: readonly SaveAction[]): Promise<void> {
-	// For the legacy "save all" action, save each register via the PersistApi
-	if (typeof saveActions === 'undefined') {
-		await Promise.all([
-			saveTasks(persist),
-			saveDays(persist),
-			saveDayTasks(persist),
-			saveTemplates(persist),
-		]);
-		return;
-	}
-
+async function processSaveActions(saveActions: readonly SaveAction[]): Promise<void> {
 	// Otherwise, process each save action
 	await save(saveActions);
 }

@@ -5,7 +5,4 @@ export { setTaskInfo } from './setTaskInfo';
 export { getTaskInfo } from './getTaskInfo';
 export { getAllTaskInfo } from './getAllTaskInfo';
 
-export {
-	loadTasksRegister,
-	saveTasks,
-} from './persistence';
+export { loadTasksRegister } from './persistence';
