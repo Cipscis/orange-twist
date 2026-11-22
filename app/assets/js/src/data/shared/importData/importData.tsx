@@ -1,6 +1,7 @@
 import { h, Fragment } from 'preact';
 
 import { local } from 'persist';
+import { noticeImport } from 'database';
 
 import * as ui from 'ui';
 
@@ -52,6 +53,7 @@ export async function importData(): Promise<void> {
 
 	try {
 		await loadExportData(local, data);
+		noticeImport();
 		ui.alert('Import successful', { id, duration: 2000 });
 	} catch (e) {
 		ui.alert('Failed to reload data after failed import. Please refresh', { id });

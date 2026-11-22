@@ -70,6 +70,20 @@ export function noticeChange<T extends ChangeEntityType>(
 }
 
 /**
+ * Trigger deletion, then addition of every sort of item, since an import means an entirely new set of data.
+ */
+export function noticeImport(): void {
+	for (const type of Object.values(ChangeEntityType)) {
+		for (const changeType of [ChangeType.DELETE, ChangeType.ADD]) {
+			const allChangeTarget = eventTargetLookup[type].get(null);
+			if (allChangeTarget) {
+				allChangeTarget.dispatchEvent(new Event(changeType));
+			}
+		}
+	}
+}
+
+/**
  * Adds a listener for a specified type of change against a particular item or type of item.
  */
 export function addChangeListener<T extends ChangeEntityType>(

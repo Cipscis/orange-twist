@@ -19,7 +19,6 @@ import { dayTasksRegister } from '../../dayTasks/dayTasksRegister';
 import { setAllImages } from 'images';
 
 import { exportDataSchema } from '../types/ExportData';
-import { CustomEventName } from 'types/CustomEventName';
 import { writeExportData } from '../exportData/writeExportData';
 
 /**
@@ -117,9 +116,6 @@ export async function loadExportData(
 		// Then re-throw error so it bubbles up
 		throw e;
 	}
-
-	// Force all notes to re-render once we're all finished
-	document.dispatchEvent(new CustomEvent(CustomEventName.IMPORT_COMPLETE));
 
 	fireCommand(Command.DATA_SAVE);
 }
