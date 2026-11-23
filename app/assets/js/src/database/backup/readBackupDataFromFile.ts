@@ -6,22 +6,23 @@ import {
 	type BackupDataV1_0_0,
 	isBackupDataV1_0_0,
 } from '../types';
-import { tagVersionedDatabaseData } from '../migration';
 
 /**
  * Converts a {@linkcode BackupDataV1_0_0} to a {@linkcode TaggedVersionedDatabaseData} so it can be imported.
  */
 function transformBackupData(exportData: BackupDataV1_0_0): TaggedVersionedDatabaseData {
-	const transformedExportData = {
+	return {
+		schemaVersion: '1.0.0',
 		data: {
-			days: exportData.days,
-			tasks: exportData.tasks,
-			['day-tasks']: exportData['dayTasks'],
-			templates: exportData.templates,
+			data: {
+				days: exportData.days,
+				tasks: exportData.tasks,
+				['day-tasks']: exportData['dayTasks'],
+				templates: exportData.templates,
+			},
+			images: Object.fromEntries(exportData.images ?? []),
 		},
-		images: Object.fromEntries(exportData.images ?? []),
 	};
-	return tagVersionedDatabaseData(transformedExportData);
 }
 
 /**
