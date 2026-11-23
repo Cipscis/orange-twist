@@ -1,6 +1,6 @@
 import type { ObjectStoreName } from '../metadata';
 
-import type { DatabaseDataV2_0_0 } from './VersionedDatabaseDataVersions';
+import type { DatabaseDataV2_0_0 } from './VersionedDatabaseData';
 
 export type DatabaseData = DatabaseDataV2_0_0;
 

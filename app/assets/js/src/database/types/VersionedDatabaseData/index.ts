@@ -1,5 +1,11 @@
 export type { VersionedDatabaseDataByVersion } from './VersionedDatabaseDataByVersion';
 export {
+	type VersionedDatabaseData,
+	isVersionedDatabaseData,
+} from './VersionedDatabaseData';
+export type { TaggedVersionedDatabaseData } from './TaggedVersionedDatabaseData';
+
+export {
 	type DatabaseDataV1_0_0,
 	databaseDataSchemaV1_0_0,
 	isDatabaseDataV1_0_0,

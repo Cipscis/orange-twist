@@ -9,6 +9,10 @@ export type {
 	Image,
 } from './DatabaseData';
 export {
+	isVersionedDatabaseData,
+	type VersionedDatabaseData,
+	type TaggedVersionedDatabaseData,
+
 	isDatabaseDataV1_0_0,
 	isBackupDataV1_0_0,
 	isDatabaseDataV2_0_0,
@@ -17,9 +21,4 @@ export {
 	type DatabaseDataV2_0_0,
 	type LegacyStatusName,
 	type VersionedDatabaseDataByVersion,
-} from './VersionedDatabaseDataVersions';
-export {
-	isVersionedDatabaseData,
-	type VersionedDatabaseData,
 } from './VersionedDatabaseData';
-export type { TaggedVersionedDatabaseData } from './TaggedVersionedDatabaseData';

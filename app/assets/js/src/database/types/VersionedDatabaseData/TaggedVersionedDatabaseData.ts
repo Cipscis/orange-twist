@@ -1,8 +1,7 @@
 import type { VersionedDatabaseData } from './VersionedDatabaseData';
-import type {
-	DatabaseDataV1_0_0,
-	DatabaseDataV2_0_0,
-} from './VersionedDatabaseDataVersions';
+
+import type { DatabaseDataV1_0_0 } from './V1_0_0';
+import type { DatabaseDataV2_0_0 } from './DatabaseDataV2_0_0';
 
 /**
  * A {@linkcode VersionedDatabaseData} tagged with a schema version.
