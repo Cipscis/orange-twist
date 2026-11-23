@@ -4,11 +4,17 @@ import type { PersistApi } from 'persist';
 
 import { Command } from 'types/Command';
 import { fireCommand } from 'registers/commands';
+import { saveRegister } from 'utils/register';
 
+import { StorageKey } from '../StorageKey';
 import { loadDayTasksRegister } from '../../dayTasks';
 import { loadDaysRegister } from '../../days';
 import { loadTasksRegister } from '../../tasks';
 import { loadTemplatesRegister } from '../../templates';
+import { templatesRegister } from '../../templates/templatesRegister';
+import { tasksRegister } from '../../tasks/tasksRegister';
+import { daysRegister } from '../../days/daysRegister';
+import { dayTasksRegister } from '../../dayTasks/dayTasksRegister';
 
 import { setAllImages } from 'images';
 
@@ -75,6 +81,24 @@ export async function loadExportData(
 
 	try {
 		await loadExportDataDirect(persist, data);
+		await Promise.all([
+			saveRegister(tasksRegister, {
+				persist,
+				key: StorageKey.TASKS,
+			}),
+			saveRegister(daysRegister, {
+				persist,
+				key: StorageKey.DAYS,
+			}),
+			saveRegister(dayTasksRegister, {
+				persist,
+				key: StorageKey.DAY_TASKS,
+			}),
+			saveRegister(templatesRegister, {
+				persist,
+				key: StorageKey.TEMPLATES,
+			}),
+		]);
 	} catch (e) {
 		try {
 			// If something went wrong, try to restore the backup
