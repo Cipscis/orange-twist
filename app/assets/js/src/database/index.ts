@@ -69,6 +69,8 @@ export type {
 	Image,
 } from './types';
 
+export { importBackup } from './backup';
+
 export {
 	getDayName,
 	getDayNameParts,
