@@ -1,16 +1,28 @@
 import type { ExportData } from '../types/ExportData';
 
-import { getAllTaskInfo } from '../../tasks';
-import { getAllDayInfo } from '../../days';
-import { encodeDayTaskKey, getAllDayTaskInfo } from '../../dayTasks';
-import { getAllTemplateInfo } from '../../templates';
+import { getAllTaskInfo, loadTasksRegister } from '../../tasks';
+import { getAllDayInfo, loadDaysRegister } from '../../days';
+import {
+	encodeDayTaskKey,
+	getAllDayTaskInfo,
+	loadDayTasksRegister,
+} from '../../dayTasks';
+import { getAllTemplateInfo, loadTemplatesRegister } from '../../templates';
 
 import { getAllImages, toDataUrl } from 'images';
+import { local } from 'persist';
 
 /**
  * Write all data in memory to an ExportData object.
  */
 export async function writeExportData(): Promise<ExportData> {
+	// Nothing else maintains the legacy in-memory cache, so refresh it first in order to read export data from it
+	await Promise.all([
+		loadDaysRegister(local),
+		loadTasksRegister(local),
+		loadDayTasksRegister(local),
+		loadTemplatesRegister(local),
+	]);
 	const data: ExportData = {
 		days: getAllDayInfo().map(
 			(dayInfo) => [dayInfo.name, dayInfo]
