@@ -1,6 +1,5 @@
 import { useEffect } from 'preact/hooks';
 
-// import { importData } from 'data';
 import { importBackup } from 'database';
 
 import { Command } from 'types/Command';
@@ -15,5 +14,4 @@ export function useCommandDataImport(): void {
 	}, []);
 
 	useCommand(Command.DATA_IMPORT, importBackup);
-	// useCommand(Command.DATA_IMPORT, importData);
 }

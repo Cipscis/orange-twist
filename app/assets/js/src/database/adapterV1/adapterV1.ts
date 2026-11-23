@@ -22,5 +22,4 @@ export const adapterV1 = {
 	getTemplates: getTemplatesV1,
 	setTemplates: setTemplatesV1,
 	getImages: getImagesV1,
-	setImages: setImagesV1,
 };

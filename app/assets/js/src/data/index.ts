@@ -5,6 +5,5 @@ export type { TemplateInfo } from './templates';
 
 export {
 	exportData,
-	importData,
 	StorageKey,
 } from './shared';
