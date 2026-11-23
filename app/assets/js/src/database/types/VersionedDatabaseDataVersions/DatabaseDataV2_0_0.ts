@@ -4,7 +4,7 @@ import { isZodSchemaType } from 'utils';
 import { IconName } from 'types/IconName';
 import { TaskStatus } from 'types/TaskStatus';
 
-export const legacyExportDataSchemaV2_0_0 = z.object({
+export const databaseDataSchemaV2_0_0 = z.object({
 	day: z.record(
 		z.number(),
 		z.object({
@@ -73,6 +73,6 @@ export const legacyExportDataSchemaV2_0_0 = z.object({
 	),
 });
 
-export type LegacyExportDataV2_0_0 = z.infer<typeof legacyExportDataSchemaV2_0_0>;
+export type DatabaseDataV2_0_0 = z.infer<typeof databaseDataSchemaV2_0_0>;
 
-export const isLegacyExportDataV2_0_0 = isZodSchemaType(legacyExportDataSchemaV2_0_0);
+export const isDatabaseDataV2_0_0 = isZodSchemaType(databaseDataSchemaV2_0_0);

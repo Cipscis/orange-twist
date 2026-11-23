@@ -1,16 +1,16 @@
 import { chooseFile } from 'utils/chooseFile';
 import { readFileAsString } from 'utils/readFileAsString';
 
-import type { TaggedLegacyExportData } from '../types';
+import type { TaggedVersionedDatabaseData } from '../types';
 // TODO: Tidy up this import
 // TODO: Make and use a general VersionedBackupData type
 import {
 	isLegacyBackupDataV1_0_0,
 	type LegacyBackupDataV1_0_0,
-} from '../types/LegacyExportDataVersions/LegacyExportDataV1_0_0';
-import { tagLegacyExportData } from '../migration';
+} from '../types/VersionedDatabaseDataVersions/DatabaseDataV1_0_0';
+import { tagVersionedDatabaseData } from '../migration';
 
-function transformData(exportData: LegacyBackupDataV1_0_0): TaggedLegacyExportData {
+function transformData(exportData: LegacyBackupDataV1_0_0): TaggedVersionedDatabaseData {
 	const transformedExportData = {
 		data: {
 			days: exportData.days,
@@ -20,13 +20,13 @@ function transformData(exportData: LegacyBackupDataV1_0_0): TaggedLegacyExportDa
 		},
 		images: Object.fromEntries(exportData.images ?? []),
 	};
-	return tagLegacyExportData(transformedExportData);
+	return tagVersionedDatabaseData(transformedExportData);
 }
 
 /**
- * Prompt the user to select a file, then attempt to read its contents and provide a {@linkcode TaggedLegacyExportData}.
+ * Prompt the user to select a file, then attempt to read its contents and provide a {@linkcode TaggedVersionedDatabaseData}.
  */
-export async function readBackupDataFromFile(): Promise<TaggedLegacyExportData | null> {
+export async function readBackupDataFromFile(): Promise<TaggedVersionedDatabaseData | null> {
 	const file = await chooseFile('application/json');
 	if (!file) {
 		return null;

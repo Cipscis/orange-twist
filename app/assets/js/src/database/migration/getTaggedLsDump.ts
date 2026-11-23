@@ -1,12 +1,12 @@
 import { StorageKey } from 'data';
 
 import {
-	isLegacyExportDataV1_0_0,
-	type LegacyExportDataV1_0_0,
-	type TaggedLegacyExportData,
+	isDatabaseDataV1_0_0,
+	type DatabaseDataV1_0_0,
+	type TaggedVersionedDatabaseData,
 } from '../types';
 
-import { tagLegacyExportData } from './tagLegacyExportData';
+import { tagVersionedDatabaseData } from './tagVersionedDatabaseData';
 
 /**
  * Exports data from version 1.4.0 or earlier from localStorage, if it exists.
@@ -14,7 +14,7 @@ import { tagLegacyExportData } from './tagLegacyExportData';
  * @throws Error if invalid JSON is encountered
  * @throws Error if serialised JSON doesn't match expected data shape
  */
-export function getTaggedLsDump(): TaggedLegacyExportData | null {
+export function getTaggedLsDump(): TaggedVersionedDatabaseData | null {
 	const daysJson = localStorage.getItem(StorageKey.DAYS);
 	const tasksJson = localStorage.getItem(StorageKey.TASKS);
 	const dayTasksJson = localStorage.getItem(StorageKey.DAY_TASKS);
@@ -25,7 +25,7 @@ export function getTaggedLsDump(): TaggedLegacyExportData | null {
 
 	const templatesJson = localStorage.getItem(StorageKey.TEMPLATES);
 
-	const dump: LegacyExportDataV1_0_0 = {
+	const dump: DatabaseDataV1_0_0 = {
 		data: {
 			days: [],
 			tasks: [],
@@ -54,10 +54,10 @@ export function getTaggedLsDump(): TaggedLegacyExportData | null {
 		dump.data.templates = templateData as typeof dump.data.templates;
 	}
 
-	if (!isLegacyExportDataV1_0_0(dump)) {
+	if (!isDatabaseDataV1_0_0(dump)) {
 		throw new TypeError('Data persisted in localStorage was of an unknown format');
 	}
 
-	const taggedDump = tagLegacyExportData(dump);
+	const taggedDump = tagVersionedDatabaseData(dump);
 	return taggedDump;
 }

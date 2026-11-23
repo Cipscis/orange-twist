@@ -1,19 +1,19 @@
 import { getDbDump } from 'utils';
 
-import { isLegacyExportData, type TaggedLegacyExportData } from '../types';
+import { isVersionedDatabaseData, type TaggedVersionedDatabaseData } from '../types';
 
-import { tagLegacyExportData } from './tagLegacyExportData';
+import { tagVersionedDatabaseData } from './tagVersionedDatabaseData';
 
 /**
  * Gets a dump of a specified database and tags it with the appropriate schema version.
  *
  * @throws {Error} if the dumped data doesn't match any schema version.
  */
-export async function getTaggedDbDump(dbName: string, dbVersion: number): Promise<TaggedLegacyExportData> {
+export async function getTaggedDbDump(dbName: string, dbVersion: number): Promise<TaggedVersionedDatabaseData> {
 	const dbDump = await getDbDump(dbName, dbVersion);
 
-	if (isLegacyExportData(dbDump)) {
-		const taggedData = tagLegacyExportData(dbDump);
+	if (isVersionedDatabaseData(dbDump)) {
+		const taggedData = tagVersionedDatabaseData(dbDump);
 		return taggedData;
 	} else {
 		throw new Error('Database does not contain valid export data');

@@ -7,8 +7,8 @@ import {
 } from 'utils';
 
 import type {
-	LegacyExportData,
-	LegacyExportDataByVersion,
+	VersionedDatabaseData,
+	VersionedDatabaseDataByVersion,
 	LegacyStatusName,
 } from '../types';
 import { getDayName, getDayNameParts } from '../utils';
@@ -16,11 +16,11 @@ import { getDayName, getDayNameParts } from '../utils';
 import { defaultStatuses } from './defaultStatuses';
 
 /**
- * Update a {@linkcode LegacyExportData} from schema version `1.0.0` to schema version `2.0.0`.
+ * Update a {@linkcode VersionedDatabaseData} from schema version `1.0.0` to schema version `2.0.0`.
  */
 export async function updateDataV1_0_0(
-	legacyData: LegacyExportDataByVersion<'1.0.0'>
-): Promise<LegacyExportDataByVersion<'2.0.0'>> {
+	legacyData: VersionedDatabaseDataByVersion<'1.0.0'>
+): Promise<VersionedDatabaseDataByVersion<'2.0.0'>> {
 	const updatedLegacyData = addMissingDayTasks(legacyData);
 
 	const day = collectDayData(updatedLegacyData);
@@ -30,7 +30,7 @@ export async function updateDataV1_0_0(
 	const template = collectTemplateData(updatedLegacyData);
 	const image = await collectImageData(updatedLegacyData);
 
-	const updatedData: LegacyExportDataByVersion<'2.0.0'> = {
+	const updatedData: VersionedDatabaseDataByVersion<'2.0.0'> = {
 		day,
 		task,
 		day_task,
@@ -48,8 +48,8 @@ export async function updateDataV1_0_0(
  * Days in the legacy data are sorted chronologically before being assigned IDs.
  */
 function collectDayData(
-	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
-): LegacyExportDataByVersion<'2.0.0'>['day'] {
+	legacyData: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>
+): VersionedDatabaseDataByVersion<'2.0.0'>['day'] {
 	return (legacyData.data.days ?? [])
 		.toSorted(
 			([dayNameA], [dayNameB]) => dayNameA.localeCompare(dayNameB)
@@ -71,9 +71,9 @@ function collectDayData(
  * Collect task data suitable for schema version `2.0.0` from schema version `1.0.0` data and already collected status data for schema version `2.0.0`.
  */
 function collectTaskData(
-	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>,
-	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>,
-): LegacyExportDataByVersion<'2.0.0'>['task'] {
+	legacyData: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>,
+	statusData: Readonly<VersionedDatabaseDataByVersion<'2.0.0'>['status']>,
+): VersionedDatabaseDataByVersion<'2.0.0'>['task'] {
 	return (legacyData.data.tasks ?? []).map(([id, taskInfo]) => ({
 		id,
 		name: taskInfo.name,
@@ -88,10 +88,10 @@ function collectTaskData(
  * May insert new day information if day tasks are found for days that don't exist in dayData.
  */
 function collectDayTaskData(
-	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>,
-	dayData: LegacyExportDataByVersion<'2.0.0'>['day'],
-	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>
-): LegacyExportDataByVersion<'2.0.0'>['day_task'] {
+	legacyData: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>,
+	dayData: VersionedDatabaseDataByVersion<'2.0.0'>['day'],
+	statusData: Readonly<VersionedDatabaseDataByVersion<'2.0.0'>['status']>
+): VersionedDatabaseDataByVersion<'2.0.0'>['day_task'] {
 	return (legacyData.data['day-tasks'] ?? []).map(
 		([dayTaskKey, dayTaskInfo], id) => {
 			const { dayName, taskId } = decodeDayTaskKey(dayTaskKey);
@@ -148,8 +148,8 @@ function collectDayTaskData(
  * Collect template data suitable for schema version `2.0.0` from schema version `1.0.0` data.
  */
 function collectTemplateData(
-	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
-): LegacyExportDataByVersion<'2.0.0'>['template'] {
+	legacyData: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>
+): VersionedDatabaseDataByVersion<'2.0.0'>['template'] {
 	if (!legacyData.data.templates) {
 		return [];
 	}
@@ -169,9 +169,9 @@ function collectTemplateData(
  * @throws {Error} if an unsafe URL string is encountered. Only `data:` protocol URLs are permitted.
  */
 async function collectImageData(
-	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
-): Promise<LegacyExportDataByVersion<'2.0.0'>['image']> {
-	const images: LegacyExportDataByVersion<'2.0.0'>['image'] = {};
+	legacyData: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>
+): Promise<VersionedDatabaseDataByVersion<'2.0.0'>['image']> {
+	const images: VersionedDatabaseDataByVersion<'2.0.0'>['image'] = {};
 
 	if (!legacyData.images) {
 		return images;
@@ -214,7 +214,7 @@ async function collectImageData(
  */
 function getDayIdByName(
 	dayName: string,
-	dayData: Readonly<LegacyExportDataByVersion<'2.0.0'>['day']>,
+	dayData: Readonly<VersionedDatabaseDataByVersion<'2.0.0'>['day']>,
 ): number | null {
 	const [yearToMatch, monthToMatch, dayToMatch] = getDayNameParts(dayName);
 
@@ -235,7 +235,7 @@ function getDayIdByName(
  */
 function getStatusIdByName(
 	statusName: LegacyStatusName,
-	statusData: Readonly<LegacyExportDataByVersion<'2.0.0'>['status']>,
+	statusData: Readonly<VersionedDatabaseDataByVersion<'2.0.0'>['status']>,
 ): number {
 	const matchingStatus = Object.values(statusData)
 		.find(({ alias }) => alias === statusName);
@@ -249,8 +249,8 @@ function getStatusIdByName(
  * This function adds any necessary days and day tasks to legacy data before its transformation to schema version 2.0.0.
  */
 function addMissingDayTasks(
-	legacyData: Readonly<LegacyExportDataByVersion<'1.0.0'>>
-): Readonly<LegacyExportDataByVersion<'1.0.0'>> {
+	legacyData: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>
+): Readonly<VersionedDatabaseDataByVersion<'1.0.0'>> {
 	if (!legacyData.data.tasks) {
 		return legacyData;
 	}
@@ -292,7 +292,7 @@ function addMissingDayTasks(
 		(dayToUse.tasks as typeof dayToUse.tasks[number][]).push(taskInfo.id);
 
 		// Create a new day task
-		const newDayTask: LegacyExportDataByVersion<'1.0.0'>['data']['day-tasks'][number][1] = {
+		const newDayTask: VersionedDatabaseDataByVersion<'1.0.0'>['data']['day-tasks'][number][1] = {
 			dayName: dayNameToUse,
 			taskId: taskInfo.id,
 			status: taskInfo.status,
@@ -312,8 +312,8 @@ function addMissingDayTasks(
  * Determine if a specified task has a status mismatch. If it does, and it has day tasks, also return the name of the day associated with the task's final day task.
  */
 function getTaskStatusMismatch(
-	taskInfo: Readonly<LegacyExportDataByVersion<'1.0.0'>['data']['tasks'][number][1]>,
-	dayTasks: Readonly<LegacyExportDataByVersion<'1.0.0'>['data']['day-tasks']>,
+	taskInfo: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>['data']['tasks'][number][1]>,
+	dayTasks: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>['data']['day-tasks']>,
 ): readonly [taskStatusMismatch: boolean, finalDayTaskDayName: string | null] {
 	const unsortedTaskDayTasks = dayTasks.filter(
 		([key]) => {

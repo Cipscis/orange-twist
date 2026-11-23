@@ -81,7 +81,7 @@ const legacyImageSchema = z.union([
 	z.instanceof(Blob),
 ]);
 
-export const legacyExportDataSchemaV1_0_0 = z.object({
+export const databaseDataSchemaV1_0_0 = z.object({
 	data: z.union([
 		z.record(z.string(), z.never()),
 		z.object({
@@ -99,9 +99,9 @@ export const legacyExportDataSchemaV1_0_0 = z.object({
 	),
 });
 
-export type LegacyExportDataV1_0_0 = z.infer<typeof legacyExportDataSchemaV1_0_0>;
+export type DatabaseDataV1_0_0 = z.infer<typeof databaseDataSchemaV1_0_0>;
 
-export const isLegacyExportDataV1_0_0 = isZodSchemaType(legacyExportDataSchemaV1_0_0);
+export const isDatabaseDataV1_0_0 = isZodSchemaType(databaseDataSchemaV1_0_0);
 
 // TODO: Move these to their own file
 const legacyBackupDataSchemaV1_0_0 = z.object({
