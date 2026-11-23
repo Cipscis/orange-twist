@@ -1,16 +1,14 @@
 import { chooseFile } from 'utils/chooseFile';
 import { readFileAsString } from 'utils/readFileAsString';
 
-import type { TaggedVersionedDatabaseData } from '../types';
-// TODO: Tidy up this import
-// TODO: Make and use a general VersionedBackupData type
 import {
-	isLegacyBackupDataV1_0_0,
-	type LegacyBackupDataV1_0_0,
-} from '../types/VersionedDatabaseDataVersions/DatabaseDataV1_0_0';
+	type TaggedVersionedDatabaseData,
+	type BackupDataV1_0_0,
+	isBackupDataV1_0_0,
+} from '../types';
 import { tagVersionedDatabaseData } from '../migration';
 
-function transformData(exportData: LegacyBackupDataV1_0_0): TaggedVersionedDatabaseData {
+function transformData(exportData: BackupDataV1_0_0): TaggedVersionedDatabaseData {
 	const transformedExportData = {
 		data: {
 			days: exportData.days,
@@ -34,7 +32,7 @@ export async function readBackupDataFromFile(): Promise<TaggedVersionedDatabaseD
 
 	const dataString = await readFileAsString(file);
 	const data = JSON.parse(dataString);
-	if (!isLegacyBackupDataV1_0_0(data)) {
+	if (!isBackupDataV1_0_0(data)) {
 		throw new Error('Selected file\'s contents are not shaped like export data');
 	}
 
