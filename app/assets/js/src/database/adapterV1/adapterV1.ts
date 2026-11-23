@@ -14,12 +14,8 @@ import { setImagesV1 } from './setImagesV1';
  */
 export const adapterV1 = {
 	getDays: getDaysV1,
-	setDays: setDaysV1,
 	getDayTasks: getDayTasksV1,
-	setDayTasks: setDayTasksV1,
 	getTasks: getTasksV1,
-	setTasks: setTasksV1,
 	getTemplates: getTemplatesV1,
-	setTemplates: setTemplatesV1,
 	getImages: getImagesV1,
 };
