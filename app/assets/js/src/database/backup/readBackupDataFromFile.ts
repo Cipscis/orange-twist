@@ -8,7 +8,10 @@ import {
 } from '../types';
 import { tagVersionedDatabaseData } from '../migration';
 
-function transformData(exportData: BackupDataV1_0_0): TaggedVersionedDatabaseData {
+/**
+ * Converts a {@linkcode BackupDataV1_0_0} to a {@linkcode TaggedVersionedDatabaseData} so it can be imported.
+ */
+function transformBackupData(exportData: BackupDataV1_0_0): TaggedVersionedDatabaseData {
 	const transformedExportData = {
 		data: {
 			days: exportData.days,
@@ -36,5 +39,5 @@ export async function readBackupDataFromFile(): Promise<TaggedVersionedDatabaseD
 		throw new Error('Selected file\'s contents are not shaped like export data');
 	}
 
-	return transformData(data);
+	return transformBackupData(data);
 }
