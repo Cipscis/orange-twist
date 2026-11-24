@@ -11,10 +11,6 @@ import '@testing-library/jest-dom/jest-globals';
 import { render } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
-import {
-	TaskStatus,
-	TaskStatusName,
-} from 'types/TaskStatus';
 import { createTestData } from 'database';
 
 import { StatusButton } from './StatusButton';
@@ -29,11 +25,11 @@ const statuses = Object.fromEntries(
 describe('StatusButton', () => {
 	test('renders a status\'s name', () => {
 		const { getByTitle } = render(<StatusButton
-			status={statuses[TaskStatus.TODO]}
+			status={statuses.todo}
 			onStatusSelect={() => {}}
 		/>);
 
-		expect(getByTitle(TaskStatusName[TaskStatus.TODO])).toBeInTheDocument();
+		expect(getByTitle('Todo')).toBeInTheDocument();
 	});
 
 	test('calls its onStatusSelect callback with the correct status when clicked', async () => {
@@ -41,13 +37,13 @@ describe('StatusButton', () => {
 		const spy = jest.fn();
 
 		const { getByRole } = render(<StatusButton
-			status={statuses[TaskStatus.COMPLETED]}
+			status={statuses.completed}
 			onStatusSelect={spy}
 		/>);
 
 		expect(spy).not.toHaveBeenCalled();
 
-		const button = getByRole('button', { name: TaskStatusName[TaskStatus.COMPLETED] });
+		const button = getByRole('button', { name: 'Completed' });
 		await user.click(button);
 
 		expect(spy).toHaveBeenCalledTimes(1);
