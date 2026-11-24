@@ -26,12 +26,21 @@ export function useCurrentDay(): AsyncDataState<Day> {
 				const currentDay = await loadCurrentDay();
 				return currentDay;
 			},
-			observeState(getData, state, signal) {
+			observeState(getDataArg, state, signal) {
 				if (state.type === AsyncDataStateType.SUCCESS) {
+					const getData = () => getDataArg();
+					const changeEntity = { type: ChangeEntityType.DAY, id: state.data.id };
+
 					addChangeListener(
 						ChangeType.CHANGE,
-						{ type: ChangeEntityType.DAY, id: state.data.id },
-						() => getData(),
+						changeEntity,
+						getData,
+						{ signal }
+					);
+					addChangeListener(
+						ChangeType.DELETE,
+						changeEntity,
+						getData,
 						{ signal }
 					);
 				}

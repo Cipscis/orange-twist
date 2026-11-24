@@ -1,7 +1,7 @@
 export { save } from './save';
 export { SaveType, type SaveAction } from './SaveAction';
 
-export { ChangeEntityType } from './liveAccessManager';
+export { ChangeEntityType, noticeImport } from './liveAccessManager';
 
 export { LiveTask } from './LiveTask';
 export { LiveStatusForTask } from './LiveStatusForTask';

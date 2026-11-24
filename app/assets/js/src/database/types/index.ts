@@ -9,15 +9,17 @@ export type {
 	Image,
 } from './DatabaseData';
 export {
-	isLegacyExportDataV1_0_0,
-	isLegacyExportDataV2_0_0,
-	type LegacyExportDataV1_0_0,
-	type LegacyExportDataV2_0_0,
+	isVersionedDatabaseData,
+	type VersionedDatabaseData,
+	type TaggedVersionedDatabaseData,
+	type VersionedDatabaseDataByVersion,
+
 	type LegacyStatusName,
-	type LegacyExportDataByVersion,
-} from './LegacyExportDataVersions';
-export {
-	isLegacyExportData,
-	type LegacyExportData,
-} from './LegacyExportData';
-export type { TaggedLegacyExportData } from './TaggedLegacyExportData';
+	isDatabaseDataV1_0_0,
+	isBackupDataV1_0_0,
+	type DatabaseDataV1_0_0,
+	type BackupDataV1_0_0,
+
+	isDatabaseDataV2_0_0,
+	type DatabaseDataV2_0_0,
+} from './VersionedDatabaseData';

@@ -1,8 +1,8 @@
 import type { ObjectStoreName } from '../metadata';
 
-import type { LegacyExportDataV2_0_0 } from './LegacyExportDataVersions';
+import type { DatabaseDataV2_0_0 } from './VersionedDatabaseData';
 
-export type DatabaseData = LegacyExportDataV2_0_0;
+export type DatabaseData = DatabaseDataV2_0_0;
 
 export type Day = DatabaseData[typeof ObjectStoreName.DAY][number];
 export type Task = DatabaseData[typeof ObjectStoreName.TASK][number];

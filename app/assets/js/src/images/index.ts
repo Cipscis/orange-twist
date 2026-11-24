@@ -1,7 +1,6 @@
 export { getAllImages } from './getAllImages';
 export { hasImage } from './hasImage';
 export { saveImage } from './saveImage';
-export { setAllImages } from './setAllImages';
 
 export { createImageUrlPlaceholder } from './createImageUrlPlaceholder';
 export { consumeImageUrlPlaceholder } from './consumeImageUrlPlaceholder';

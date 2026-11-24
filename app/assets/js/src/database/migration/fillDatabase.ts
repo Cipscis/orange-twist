@@ -22,18 +22,23 @@ export async function fillDatabase(
 	] as const satisfies readonly ObjectStoreName[];
 
 	const transaction = db.transaction(objectStoreNames, 'readwrite');
-	const requestPromises: Promise<IDBValidKey>[] = [];
+	const requestPromises: IDBRequest[] = [];
 	for (const objectStoreName of objectStoreNames) {
-		const objectStoreData = data[objectStoreName];
-
 		const objectStore = transaction.objectStore(objectStoreName);
 
+		// Start by clearing the object store
+		requestPromises.push(objectStore.clear());
+
+		// Then, fill the object store with new data
+		const objectStoreData = data[objectStoreName];
 		for (const value of Object.values(objectStoreData)) {
 			requestPromises.push(
-				getIdbRequestPromise(objectStore.put(value))
+				objectStore.put(value)
 			);
 		}
 	}
 
-	await Promise.all(requestPromises);
+	// This type assertion is safe because each object store at least has its clear request
+	const lastRequest = requestPromises.at(-1)!;
+	await getIdbRequestPromise(lastRequest);
 }

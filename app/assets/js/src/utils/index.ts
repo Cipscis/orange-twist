@@ -2,7 +2,6 @@ export { animate } from './animate';
 export {
 	Register,
 	type RegisterKey,
-	saveRegister,
 	loadRegister,
 } from './register';
 

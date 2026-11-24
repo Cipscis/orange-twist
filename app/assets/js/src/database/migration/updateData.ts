@@ -1,6 +1,6 @@
 import { assertAllUnionMembersHandled } from 'utils';
 
-import type { DatabaseData, TaggedLegacyExportData } from '../types';
+import type { DatabaseData, TaggedVersionedDatabaseData } from '../types';
 
 import { createMinimalData } from './createMinimalData';
 import { updateDataV1_0_0 } from './updateDataV1_0_0';
@@ -8,7 +8,7 @@ import { updateDataV1_0_0 } from './updateDataV1_0_0';
 /**
  * Update legacy export data to match the current database schema.
  */
-export async function updateData(legacyData: TaggedLegacyExportData | null): Promise<DatabaseData> {
+export async function updateData(legacyData: TaggedVersionedDatabaseData | null): Promise<DatabaseData> {
 	if (legacyData === null) {
 		const updatedData = createMinimalData();
 		return updatedData;
