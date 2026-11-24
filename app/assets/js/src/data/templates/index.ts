@@ -1,7 +1,0 @@
-export type { TemplateInfo } from './types';
-
-export { createTemplate } from './createTemplate';
-export { setTemplateInfo } from './setTemplateInfo';
-export { deleteTemplate } from './deleteTemplate';
-export { getTemplateInfo } from './getTemplateInfo';
-export { getAllTemplateInfo } from './getAllTemplateInfo';
