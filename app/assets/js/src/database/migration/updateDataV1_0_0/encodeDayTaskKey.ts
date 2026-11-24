@@ -1,9 +1,7 @@
 // Type-only import to expose symbol to JSDoc
 import type { decodeDayTaskKey } from './decodeDayTaskKey';
 
-import type { RegisterKey } from 'utils';
-import type { dayTasksRegister } from '../dayTasksRegister';
-import type { DayTaskIdentifier } from '../types/DayTaskIdentifier';
+import type { DayTaskIdentifier } from './DayTaskIdentifier';
 
 /**
  * Encodes a {@linkcode DayTaskIdentifier} into a
@@ -12,6 +10,6 @@ import type { DayTaskIdentifier } from '../types/DayTaskIdentifier';
  *
  * @see {@linkcode decodeDayTaskKey} for the inverse operation.
  */
-export function encodeDayTaskKey({ dayName, taskId }: DayTaskIdentifier): RegisterKey<typeof dayTasksRegister> {
+export function encodeDayTaskKey({ dayName, taskId }: DayTaskIdentifier): `${string}_${number}` {
 	return `${dayName}_${taskId}`;
 }

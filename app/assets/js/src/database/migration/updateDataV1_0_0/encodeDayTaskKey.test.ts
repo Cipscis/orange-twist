@@ -4,7 +4,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import type { DayTaskIdentifier } from '../types/DayTaskIdentifier';
+import type { DayTaskIdentifier } from './DayTaskIdentifier';
 
 import { decodeDayTaskKey } from './decodeDayTaskKey';
 import { encodeDayTaskKey } from './encodeDayTaskKey';

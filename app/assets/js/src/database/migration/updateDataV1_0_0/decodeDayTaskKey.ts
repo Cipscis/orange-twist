@@ -1,7 +1,7 @@
 // Type-only import to expose symbol to JSDoc
 import type { encodeDayTaskKey } from './encodeDayTaskKey';
 
-import type { DayTaskIdentifier } from '../types/DayTaskIdentifier';
+import type { DayTaskIdentifier } from './DayTaskIdentifier';
 
 /**
  * Decodes a key of the day tasks register into a

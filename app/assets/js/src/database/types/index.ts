@@ -1,3 +1,4 @@
+export { LegacyStorageKey } from './LegacyStorageKey';
 export type {
 	DatabaseData,
 

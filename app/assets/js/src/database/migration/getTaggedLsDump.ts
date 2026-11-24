@@ -1,6 +1,5 @@
-import { StorageKey } from 'data';
-
 import {
+	LegacyStorageKey,
 	isDatabaseDataV1_0_0,
 	type DatabaseDataV1_0_0,
 	type TaggedVersionedDatabaseData,
@@ -15,15 +14,15 @@ import { tagVersionedDatabaseData } from './tagVersionedDatabaseData';
  * @throws Error if serialised JSON doesn't match expected data shape
  */
 export function getTaggedLsDump(): TaggedVersionedDatabaseData | null {
-	const daysJson = localStorage.getItem(StorageKey.DAYS);
-	const tasksJson = localStorage.getItem(StorageKey.TASKS);
-	const dayTasksJson = localStorage.getItem(StorageKey.DAY_TASKS);
+	const daysJson = localStorage.getItem(LegacyStorageKey.DAYS);
+	const tasksJson = localStorage.getItem(LegacyStorageKey.TASKS);
+	const dayTasksJson = localStorage.getItem(LegacyStorageKey.DAY_TASKS);
 
 	if (!(daysJson && tasksJson && dayTasksJson)) {
 		return null;
 	}
 
-	const templatesJson = localStorage.getItem(StorageKey.TEMPLATES);
+	const templatesJson = localStorage.getItem(LegacyStorageKey.TEMPLATES);
 
 	const dump: DatabaseDataV1_0_0 = {
 		data: {

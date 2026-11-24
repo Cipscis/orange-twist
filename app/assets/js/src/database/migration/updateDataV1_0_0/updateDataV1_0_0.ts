@@ -1,4 +1,5 @@
-import { decodeDayTaskKey, encodeDayTaskKey } from 'data/dayTasks';
+import { encodeDayTaskKey } from './encodeDayTaskKey';
+import { decodeDayTaskKey } from './decodeDayTaskKey';
 
 import {
 	copyBlob,
@@ -10,10 +11,10 @@ import type {
 	VersionedDatabaseData,
 	VersionedDatabaseDataByVersion,
 	LegacyStatusName,
-} from '../types';
-import { getDayName, getDayNameParts } from '../utils';
+} from '../../types';
+import { getDayName, getDayNameParts } from '../../utils';
 
-import { defaultStatuses } from './defaultStatuses';
+import { defaultStatuses } from '../defaultStatuses';
 
 /**
  * Update a {@linkcode VersionedDatabaseData} from schema version `1.0.0` to schema version `2.0.0`.

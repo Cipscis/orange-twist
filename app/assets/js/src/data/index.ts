@@ -1,3 +1,0 @@
-export {
-	StorageKey,
-} from './shared';
