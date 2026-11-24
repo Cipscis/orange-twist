@@ -1,1 +1,0 @@
-export { loadTasksRegister } from './loadTasksRegister';

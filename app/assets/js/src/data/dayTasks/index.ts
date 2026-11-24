@@ -5,6 +5,6 @@ export { deleteDayTask } from './deleteDayTask';
 export { getDayTaskInfo } from './getDayTaskInfo';
 export { getAllDayTaskInfo } from './getAllDayTaskInfo';
 
-export { loadDayTasksRegister } from './persistence';
+// export { loadDayTasksRegister } from './persistence';
 
 export { encodeDayTaskKey, decodeDayTaskKey } from './util';
