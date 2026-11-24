@@ -1,4 +1,4 @@
-import { assertAllUnionMembersHandled } from '../assertAllUnionMembersHandled';
+import { assertAllUnionMembersHandled } from './assertAllUnionMembersHandled';
 
 /**
  * A type with keys for each type of event that can be bound on a {@linkcode Register}, and

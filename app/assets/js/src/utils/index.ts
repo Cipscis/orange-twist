@@ -1,8 +1,5 @@
 export { animate } from './animate';
-export {
-	Register,
-	type RegisterKey,
-} from './register';
+export { Register } from './Register';
 
 export {
 	getDbDump,
