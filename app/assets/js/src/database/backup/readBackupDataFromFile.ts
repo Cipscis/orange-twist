@@ -27,6 +27,9 @@ function transformBackupData(exportData: BackupDataV1_0_0): TaggedVersionedDatab
 
 /**
  * Prompt the user to select a file, then attempt to read its contents and provide a {@linkcode TaggedVersionedDatabaseData}.
+ *
+ * @returns Valid backup data if any was found in the selected file, or `null` if no file was selected.
+ * @throws {Error} if a file was selected but no valid backup data was found.
  */
 export async function readBackupDataFromFile(): Promise<TaggedVersionedDatabaseData | null> {
 	const file = await chooseFile('application/json');
@@ -34,11 +37,15 @@ export async function readBackupDataFromFile(): Promise<TaggedVersionedDatabaseD
 		return null;
 	}
 
-	const dataString = await readFileAsString(file);
-	const data = JSON.parse(dataString);
-	if (!isBackupDataV1_0_0(data)) {
-		throw new Error('Selected file\'s contents are not shaped like export data');
-	}
+	try {
+		const dataString = await readFileAsString(file);
+		const data = JSON.parse(dataString);
+		if (!isBackupDataV1_0_0(data)) {
+			throw new Error('Selected file does not contain valid backup data');
+		}
 
-	return transformBackupData(data);
+		return transformBackupData(data);
+	} catch (e) {
+		throw new Error('Selected file does not contain valid backup data');
+	}
 }

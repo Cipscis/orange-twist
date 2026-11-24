@@ -12,13 +12,14 @@ export {
 	isVersionedDatabaseData,
 	type VersionedDatabaseData,
 	type TaggedVersionedDatabaseData,
+	type VersionedDatabaseDataByVersion,
 
+	type LegacyStatusName,
 	isDatabaseDataV1_0_0,
 	isBackupDataV1_0_0,
-	isDatabaseDataV2_0_0,
 	type DatabaseDataV1_0_0,
 	type BackupDataV1_0_0,
+
+	isDatabaseDataV2_0_0,
 	type DatabaseDataV2_0_0,
-	type LegacyStatusName,
-	type VersionedDatabaseDataByVersion,
 } from './VersionedDatabaseData';

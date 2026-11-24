@@ -1,11 +1,13 @@
 import { h, Fragment } from 'preact';
 
-import { noticeImport } from 'database';
+import { extractError } from 'utils/extractError';
+
 
 import * as ui from 'ui';
-
 import { Loader } from 'components/shared';
 
+import type { TaggedVersionedDatabaseData } from '../types';
+import { noticeImport } from '../access';
 import { readBackupDataFromFile } from './readBackupDataFromFile';
 import { saveBackupToDatabase } from './saveBackupToDatabase';
 
@@ -17,7 +19,6 @@ const alertId = 'importing';
  * If an error is encountered, a UI alert will be shown.
  */
 export async function importBackup(): Promise<void> {
-
 	ui.alert(<>
 		<span>Choose import file...</span>
 		<Loader immediate />
@@ -28,7 +29,7 @@ export async function importBackup(): Promise<void> {
 
 	const data = await getTaggedBackupDataFromFile();
 	if (!data) {
-		// No valid import file was selected
+		// No import file was selected
 		return;
 	}
 
@@ -57,6 +58,11 @@ export async function importBackup(): Promise<void> {
 	}
 }
 
+/**
+ * Prompt the user to select a file, and attempt to read a {@linkcode TaggedVersionedDatabaseData} from it. Displays a UI alert if no file was selected, or if no valid backup data was found in the selected file.
+ *
+ * @returns {@linkcode TaggedVersionedDatabaseData} if valid backup data was found in the selected file, or `null` otherwise.
+ */
 async function getTaggedBackupDataFromFile() {
 	try {
 		const data = await readBackupDataFromFile();
@@ -65,7 +71,8 @@ async function getTaggedBackupDataFromFile() {
 		}
 		return data;
 	} catch (e) {
-		ui.alert('Selected file doesn\'t contain valid data', { id: alertId });
+		const error = extractError(e);
+		ui.alert(error.message, { id: alertId });
 		console.error(e);
 		return null;
 	}
