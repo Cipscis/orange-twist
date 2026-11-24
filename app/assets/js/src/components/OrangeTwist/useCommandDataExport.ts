@@ -1,6 +1,6 @@
 import { useEffect } from 'preact/hooks';
 
-import { exportData } from 'data';
+import { exportBackup } from 'database';
 
 import { Command } from 'types/Command';
 import { registerCommand, useCommand } from 'registers/commands';
@@ -13,5 +13,5 @@ export function useCommandDataExport(): void {
 		registerCommand(Command.DATA_EXPORT, { name: 'Export data' });
 	}, []);
 
-	useCommand(Command.DATA_EXPORT, exportData);
+	useCommand(Command.DATA_EXPORT, exportBackup);
 }

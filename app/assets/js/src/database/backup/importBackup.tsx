@@ -8,7 +8,7 @@ import { Loader } from 'components/shared';
 
 import type { TaggedVersionedDatabaseData } from '../types';
 import { noticeImport } from '../access';
-import { readBackupDataFromFile } from './readBackupDataFromFile';
+import { readBackupFromFile } from './readBackupFromFile';
 import { saveBackupToDatabase } from './saveBackupToDatabase';
 
 const alertId = 'importing';
@@ -65,7 +65,7 @@ export async function importBackup(): Promise<void> {
  */
 async function getTaggedBackupDataFromFile() {
 	try {
-		const data = await readBackupDataFromFile();
+		const data = await readBackupFromFile();
 		if (!data) {
 			ui.alert('No file selected', { id: alertId });
 		}
