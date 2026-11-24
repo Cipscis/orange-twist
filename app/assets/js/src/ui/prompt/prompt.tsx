@@ -1,6 +1,6 @@
 import { h, render } from 'preact';
 
-import { getPromiseWithResolver, type EnumTypeOf } from 'utils';
+import type { EnumTypeOf } from 'utils';
 
 import { ModalPrompt } from './ModalPrompt';
 
@@ -38,7 +38,7 @@ export async function prompt<T extends PromptType>(
 	message: string,
 	options: PromptOptions<T>
 ): Promise<PromptReturnType[T] | null> {
-	const [resultPromise, resolve] = getPromiseWithResolver<PromptReturnType[T] | null>();
+	const { promise: resultPromise, resolve } = Promise.withResolvers<PromptReturnType[T] | null>();
 
 	render(<ModalPrompt
 		message={message}

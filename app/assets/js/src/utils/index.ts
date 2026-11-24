@@ -16,7 +16,6 @@ export { escapeRegExpString } from './escapeRegExpString';
 export { getCurrentDate } from './getCurrentDate';
 export { getCurrentDateDayName } from './getCurrentDateDayName';
 export { getDeepActiveElement } from './getDeepActiveElement';
-export { getPromiseWithResolver } from './getPromiseWithResolver';
 export { getTemplateAlias } from './getTemplateAlias';
 export { isValidDateString } from './isValidDateString';
 export { isZodSchemaType } from './isZodSchemaType';
