@@ -25,7 +25,6 @@ describe('getStatusInternal', () => {
 
 		expect(status).toEqual({
 			id: 1,
-			alias: 'todo',
 			name: 'Todo',
 			icon: IconName.TODO,
 			colour: 'var(--blue)',

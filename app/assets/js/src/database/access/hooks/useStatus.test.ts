@@ -45,7 +45,6 @@ describe('useStatus', () => {
 				data: {
 					id: 1,
 					name: 'Todo',
-					alias: 'todo',
 					colour: 'var(--blue)',
 					icon: 'todo',
 					completed: false,
@@ -67,7 +66,6 @@ describe('useStatus', () => {
 				data: {
 					id: 1,
 					name: 'Todo',
-					alias: 'todo',
 					colour: 'var(--blue)',
 					icon: 'todo',
 					completed: false,
@@ -84,7 +82,6 @@ describe('useStatus', () => {
 				data: {
 					id: 2,
 					name: 'In progress',
-					alias: 'in-progress',
 					colour: 'var(--blue)',
 					icon: 'in progress',
 					completed: false,
@@ -99,7 +96,6 @@ describe('useStatus', () => {
 				data: {
 					id: 2,
 					name: 'In progress',
-					alias: 'in-progress',
 					colour: 'var(--blue)',
 					icon: 'in progress',
 					completed: false,

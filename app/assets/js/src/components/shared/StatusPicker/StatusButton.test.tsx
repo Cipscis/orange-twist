@@ -16,16 +16,11 @@ import { createTestData } from 'database';
 import { StatusButton } from './StatusButton';
 
 const testData = createTestData();
-const statuses = Object.fromEntries(
-	Object.values(testData.status).map(
-		(status) => [status.alias, status]
-	)
-);
 
 describe('StatusButton', () => {
 	test('renders a status\'s name', () => {
 		const { getByTitle } = render(<StatusButton
-			status={statuses.todo}
+			status={testData.status[1]}
 			onStatusSelect={() => {}}
 		/>);
 
@@ -37,7 +32,7 @@ describe('StatusButton', () => {
 		const spy = jest.fn();
 
 		const { getByRole } = render(<StatusButton
-			status={statuses.completed}
+			status={testData.status[3]}
 			onStatusSelect={spy}
 		/>);
 

@@ -5,7 +5,6 @@ import type { Status } from '../types';
 export const defaultStatuses = [
 	{
 		id: 1,
-		alias: 'todo',
 		name: 'Todo',
 		icon: IconName.TODO,
 		colour: 'var(--blue)',
@@ -13,7 +12,6 @@ export const defaultStatuses = [
 	},
 	{
 		id: 2,
-		alias: 'in-progress',
 		name: 'In progress',
 		icon: IconName.IN_PROGRESS,
 		colour: 'var(--blue)',
@@ -21,7 +19,6 @@ export const defaultStatuses = [
 	},
 	{
 		id: 3,
-		alias: 'completed',
 		name: 'Completed',
 		icon: IconName.COMPLETED,
 		colour: 'var(--green)',
@@ -29,7 +26,6 @@ export const defaultStatuses = [
 	},
 	{
 		id: 4,
-		alias: 'investigating',
 		name: 'Investigating',
 		icon: IconName.INVESTIGATING,
 		colour: 'var(--blue)',
@@ -37,7 +33,6 @@ export const defaultStatuses = [
 	},
 	{
 		id: 5,
-		alias: 'in-review',
 		name: 'In review',
 		icon: IconName.IN_REVIEW,
 		colour: 'var(--blue)',
@@ -45,7 +40,6 @@ export const defaultStatuses = [
 	},
 	{
 		id: 6,
-		alias: 'ready-to-test',
 		name: 'Testing',
 		icon: IconName.TESTING,
 		colour: 'var(--green)',
@@ -53,7 +47,6 @@ export const defaultStatuses = [
 	},
 	{
 		id: 7,
-		alias: 'paused',
 		name: 'Paused',
 		icon: IconName.PAUSED,
 		colour: 'var(--red)',
@@ -61,7 +54,6 @@ export const defaultStatuses = [
 	},
 	{
 		id: 8,
-		alias: 'approved-to-deploy',
 		name: 'Approved',
 		icon: IconName.APPROVED,
 		colour: 'var(--green)',
@@ -69,7 +61,6 @@ export const defaultStatuses = [
 	},
 	{
 		id: 9,
-		alias: 'will-not-do',
 		name: 'Will not do',
 		icon: IconName.WILL_NOT_DO,
 		colour: 'var(--red)',

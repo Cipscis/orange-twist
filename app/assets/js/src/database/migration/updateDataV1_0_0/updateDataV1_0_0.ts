@@ -7,9 +7,9 @@ import {
 	getTemplateAlias,
 } from 'utils';
 
-import type {
-	VersionedDatabaseData,
-	VersionedDatabaseDataByVersion,
+import {
+	type VersionedDatabaseData,
+	type VersionedDatabaseDataByVersion,
 	LegacyStatusName,
 } from '../../types';
 import { getDayName, getDayNameParts } from '../../utils';
@@ -238,10 +238,28 @@ function getStatusIdByName(
 	statusName: LegacyStatusName,
 	statusData: Readonly<VersionedDatabaseDataByVersion<'2.0.0'>['status']>,
 ): number {
-	const matchingStatus = Object.values(statusData)
-		.find(({ alias }) => alias === statusName);
-
-	return matchingStatus?.id ?? 1;
+	switch (statusName) {
+		case LegacyStatusName.TODO:
+			return 1;
+		case LegacyStatusName.IN_PROGRESS:
+			return 2;
+		case LegacyStatusName.COMPLETED:
+			return 3;
+		case LegacyStatusName.INVESTIGATING:
+			return 4;
+		case LegacyStatusName.IN_REVIEW:
+			return 5;
+		case LegacyStatusName.READY_TO_TEST:
+			return 6;
+		case LegacyStatusName.PAUSED:
+			return 7;
+		case LegacyStatusName.APPROVED_TO_DEPLOY:
+			return 8;
+		case LegacyStatusName.WILL_NOT_DO:
+			return 9;
+		default:
+			return 1;
+	}
 }
 
 /**
