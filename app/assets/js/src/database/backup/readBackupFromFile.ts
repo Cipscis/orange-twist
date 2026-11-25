@@ -7,7 +7,7 @@ import {
 	isBackupDataV1_0_0,
 	isVersionedDatabaseData,
 } from '../types';
-import { tagVersionedDatabaseData } from 'database/migration';
+import { tagVersionedDatabaseData } from '../migration';
 
 /**
  * Converts a {@linkcode BackupDataV1_0_0} to a {@linkcode TaggedVersionedDatabaseData} so it can be imported.
@@ -40,9 +40,12 @@ async function parseBackupData(serialisedData: string): Promise<unknown> {
 
 	const blobs = new Map<string, Blob>();
 	const promises: Promise<void>[] = [];
-	// 1. Find all `data:` URLs and start reading them as Blobs. Throw away the actual parse result
+	// 1. Find all file properties with `data:` URLs and start reading them as Blobs. Throw away the actual parse result
 	JSON.parse(serialisedData, (key, value) => {
-		if (!isDataUrl(value)) {
+		if (!(
+			key === 'file' &&
+			isDataUrl(value)
+		)) {
 			return value as unknown;
 		}
 
@@ -58,7 +61,10 @@ async function parseBackupData(serialisedData: string): Promise<unknown> {
 	await Promise.all(promises);
 	// 2. Parse the data again, synchronously replacing and `data:` URLs with their respective Blobs
 	return JSON.parse(serialisedData, (key, value) => {
-		if (!isDataUrl(value)) {
+		if (!(
+			key === 'file' &&
+			isDataUrl(value)
+		)) {
 			return value as unknown;
 		}
 

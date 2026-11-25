@@ -1,8 +1,9 @@
 import { getCurrentDateDayName } from 'utils/getCurrentDateDayName';
 
+import { toDataUrl } from 'images';
+
 import type { TaggedVersionedDatabaseData } from '../types';
 import { updateData } from '../migration';
-import { toDataUrl } from 'images';
 
 /**
  * Save a {@linkcode TaggedVersionedDatabaseData} to a file.
