@@ -25,5 +25,5 @@ export function tagVersionedDatabaseData(data: Readonly<VersionedDatabaseData>):
 		};
 	}
 
-	throw new Error('Could not determine schema version of LegacyExportData');
+	throw new Error('Could not determine schema version of VersionedDatabaseData');
 }

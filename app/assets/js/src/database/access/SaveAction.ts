@@ -17,8 +17,6 @@ export const SaveType = {
 	TASK_ADD_WITH_DAY: 'add new task to existing day',
 	TASK_DELETE: 'delete task',
 
-	// TODO: Remove this once day tasks can be saved via the day task's ID
-	DAY_TASK_LEGACY: 'day task (legacy)',
 	DAY_TASK: 'day task',
 	DAY_TASK_ADD: 'add day task',
 	DAY_TASK_DELETE: 'delete day task',
@@ -63,16 +61,6 @@ interface SaveActionByType {
 	};
 	[SaveType.TASK_DELETE]: {
 		id: number;
-	};
-	[SaveType.DAY_TASK_LEGACY]: {
-		dayName: string;
-		taskId: number;
-		dayTask: ExpandType<Partial<
-			Omit<
-				DayTask,
-				'id' | 'day' | 'task'
-			>
-		>>;
 	};
 	[SaveType.DAY_TASK]: {
 		id: number;

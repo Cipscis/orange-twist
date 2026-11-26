@@ -20,16 +20,16 @@ import { defaultStatuses } from '../defaultStatuses';
  * Update a {@linkcode VersionedDatabaseData} from schema version `1.0.0` to schema version `2.0.0`.
  */
 export async function updateDataV1_0_0(
-	legacyData: VersionedDatabaseDataByVersion<'1.0.0'>
+	data: VersionedDatabaseDataByVersion<'1.0.0'>
 ): Promise<VersionedDatabaseDataByVersion<'2.0.0'>> {
-	const updatedLegacyData = addMissingDayTasks(legacyData);
+	const dataWithMissingDayTasks = addMissingDayTasks(data);
 
-	const day = collectDayData(updatedLegacyData);
+	const day = collectDayData(dataWithMissingDayTasks);
 	const status = defaultStatuses;
-	const task = collectTaskData(updatedLegacyData, status);
-	const day_task = collectDayTaskData(updatedLegacyData, day, status);
-	const template = collectTemplateData(updatedLegacyData);
-	const image = await collectImageData(updatedLegacyData);
+	const task = collectTaskData(dataWithMissingDayTasks);
+	const day_task = collectDayTaskData(dataWithMissingDayTasks, day, status);
+	const template = collectTemplateData(dataWithMissingDayTasks);
+	const image = await collectImageData(dataWithMissingDayTasks);
 
 	const updatedData: VersionedDatabaseDataByVersion<'2.0.0'> = {
 		day,
@@ -73,7 +73,6 @@ function collectDayData(
  */
 function collectTaskData(
 	legacyData: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>,
-	statusData: Readonly<VersionedDatabaseDataByVersion<'2.0.0'>['status']>,
 ): VersionedDatabaseDataByVersion<'2.0.0'>['task'] {
 	return (legacyData.data.tasks ?? []).map(([id, taskInfo]) => ({
 		id,
