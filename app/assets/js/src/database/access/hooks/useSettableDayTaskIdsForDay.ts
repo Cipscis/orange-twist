@@ -1,8 +1,8 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	SettableLiveData,
 	useSettableLiveData,
 	type UseSettableLiveDataResult,
@@ -20,7 +20,7 @@ import {
 import { SaveType, type SaveAction } from '../SaveAction';
 
 /**
- * Attempts to load a list of all day task IDs for a given day. Provides an {@linkcode AsyncDataState} representing the state of that loading operation, as well as a setter for updating their order.
+ * Attempts to load a list of all day task IDs for a given day. Provides an {@linkcode AsyncActionState} representing the state of that loading operation, as well as a setter for updating their order.
  */
 export function useSettableDayTaskIdsForDay(dayId: number): UseSettableLiveDataResult<readonly number[]> {
 	const settableLiveDayTaskIds = useMemo(() => {
@@ -51,7 +51,7 @@ export function useSettableDayTaskIdsForDay(dayId: number): UseSettableLiveDataR
 				);
 			},
 			observeState(getData, state, signal) {
-				if (state.type === AsyncDataStateType.SUCCESS) {
+				if (state.type === AsyncActionStateType.SUCCESS) {
 					for (const id of state.data) {
 						// TODO: Limit refreshes to when the day task's sortIndex was updated
 						addChangeListener(

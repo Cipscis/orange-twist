@@ -1,20 +1,20 @@
 import type { ExpandType } from '../ExpandType';
-import type { AsyncDataStateType } from './AsyncDataStateType';
+import type { AsyncActionStateType } from './AsyncActionStateType';
 
 type SettableAsyncDataStateMap = {
-	[AsyncDataStateType.INITIAL]: {};
-	[AsyncDataStateType.ERROR]: {
+	[AsyncActionStateType.INITIAL]: {};
+	[AsyncActionStateType.ERROR]: {
 		error: Error;
 	};
-	[AsyncDataStateType.SUCCESS]: {};
+	[AsyncActionStateType.SUCCESS]: {};
 };
 
 export type SettableAsyncDataState = {
-	[S in AsyncDataStateType]: ExpandType<
+	[S in AsyncActionStateType]: ExpandType<
 		{
 			type: S;
 			loading: boolean;
 		} &
 		SettableAsyncDataStateMap[S]
 	>;
-}[AsyncDataStateType];
+}[AsyncActionStateType];

@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -25,15 +25,15 @@ describe('useTask', () => {
 	beforeEach(async () => insertTestData());
 	afterEach(() => cleanup());
 
-	test('provide a AsyncDataResult', () => {
+	test('provide a AsyncActionState', () => {
 		const { result } = renderHook(
 			() => useTask(1)
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<Task>);
+		} satisfies AsyncActionState<Task>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -43,7 +43,7 @@ describe('useTask', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: {
 					id: 1,
@@ -51,7 +51,7 @@ describe('useTask', () => {
 					note: 'Test task 1 note',
 					sortIndex: 1,
 				},
-			} satisfies AsyncDataState<Task>);
+			} satisfies AsyncActionState<Task>);
 		});
 	});
 
@@ -63,7 +63,7 @@ describe('useTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: {
 						id: 1,
@@ -71,7 +71,7 @@ describe('useTask', () => {
 						note: 'Test task 1 note',
 						sortIndex: 1,
 					},
-				} satisfies AsyncDataState<Task>);
+				} satisfies AsyncActionState<Task>);
 			});
 
 			save([{
@@ -86,7 +86,7 @@ describe('useTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: {
 						id: 1,
@@ -94,7 +94,7 @@ describe('useTask', () => {
 						note: 'Test task 1 note updated',
 						sortIndex: 2,
 					},
-				} satisfies AsyncDataState<Task>);
+				} satisfies AsyncActionState<Task>);
 			});
 		});
 
@@ -105,7 +105,7 @@ describe('useTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: {
 						id: 1,
@@ -113,7 +113,7 @@ describe('useTask', () => {
 						note: 'Test task 1 note',
 						sortIndex: 1,
 					},
-				} satisfies AsyncDataState<Task>);
+				} satisfies AsyncActionState<Task>);
 			});
 
 			save([{
@@ -123,10 +123,10 @@ describe('useTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.ERROR,
+					type: AsyncActionStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find task with ID 1'),
-				} satisfies AsyncDataState<Task>);
+				} satisfies AsyncActionState<Task>);
 			});
 		});
 
@@ -137,10 +137,10 @@ describe('useTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.ERROR,
+					type: AsyncActionStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find task with ID 4'),
-				} satisfies AsyncDataState<Task>);
+				} satisfies AsyncActionState<Task>);
 			});
 
 			save([{
@@ -152,7 +152,7 @@ describe('useTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: {
 						id: 4,
@@ -160,7 +160,7 @@ describe('useTask', () => {
 						note: '',
 						sortIndex: -4,
 					},
-				} satisfies AsyncDataState<Task>);
+				} satisfies AsyncActionState<Task>);
 			});
 		});
 	});
@@ -173,7 +173,7 @@ describe('useTask', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: {
 					id: 1,
@@ -181,14 +181,14 @@ describe('useTask', () => {
 					note: 'Test task 1 note',
 					sortIndex: 1,
 				},
-			} satisfies AsyncDataState<Task>);
+			} satisfies AsyncActionState<Task>);
 		});
 
 		rerender(2);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: true,
 				data: {
 					id: 1,
@@ -196,12 +196,12 @@ describe('useTask', () => {
 					note: 'Test task 1 note',
 					sortIndex: 1,
 				},
-			} satisfies AsyncDataState<Task>);
+			} satisfies AsyncActionState<Task>);
 		});
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: {
 					id: 2,
@@ -209,7 +209,7 @@ describe('useTask', () => {
 					note: 'Test task 2 note',
 					sortIndex: 2,
 				},
-			} satisfies AsyncDataState<Task>);
+			} satisfies AsyncActionState<Task>);
 		});
 	});
 
@@ -220,10 +220,10 @@ describe('useTask', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.ERROR,
+				type: AsyncActionStateType.ERROR,
 				error: new Error('Could not find task with ID -1'),
 				loading: false,
-			} satisfies AsyncDataState<Task>);
+			} satisfies AsyncActionState<Task>);
 		});
 	});
 });

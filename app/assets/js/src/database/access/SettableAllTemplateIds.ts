@@ -1,4 +1,4 @@
-import { AsyncDataStateType, SettableLiveData } from 'utils/asyncData';
+import { AsyncActionStateType, SettableLiveData } from 'utils/asyncData';
 import { sortBySortIndex } from 'utils/sortBySortIndex';
 
 import { fireCommand } from 'registers/commands';
@@ -41,7 +41,7 @@ export class SettableAllTemplateIds extends SettableLiveData<readonly number[]> 
 				);
 			},
 			observeState(getData, state, signal) {
-				if (state.type === AsyncDataStateType.SUCCESS) {
+				if (state.type === AsyncActionStateType.SUCCESS) {
 					for (const id of state.data) {
 						// TODO: Limit refreshes to when the template's sortIndex was updated
 						addChangeListener(

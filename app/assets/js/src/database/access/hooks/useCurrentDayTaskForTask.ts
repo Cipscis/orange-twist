@@ -2,8 +2,8 @@ import { useMemo } from 'preact/hooks';
 
 import { getCurrentDate } from 'utils';
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	LiveData,
 	useLiveData,
 } from 'utils/asyncData';
@@ -19,9 +19,9 @@ import {
 } from '../liveAccessManager';
 
 /**
- * Provides an {@linkcode AsyncDataState} that immediately requests the day task for a specified task and the current day.
+ * Provides an {@linkcode AsyncActionState} that immediately requests the day task for a specified task and the current day.
  */
-export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask> {
+export function useCurrentDayTaskForTask(taskId: number): AsyncActionState<DayTask> {
 	const liveCurrentDayTaskForTask = useMemo(() => {
 		const liveCurrentDayTaskForTask = new LiveData({
 			async getData(options) {
@@ -42,7 +42,7 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask
 				return currentDayTask;
 			},
 			observeState(getData, state, signal) {
-				if (state.type === AsyncDataStateType.ERROR) {
+				if (state.type === AsyncActionStateType.ERROR) {
 					// TODO: Limit refreshes to when the day task is for this task
 					addChangeListener(
 						ChangeType.ADD,
@@ -50,7 +50,7 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncDataState<DayTask
 						() => getData(),
 						{ signal },
 					);
-				} else if (state.type === AsyncDataStateType.SUCCESS) {
+				} else if (state.type === AsyncActionStateType.SUCCESS) {
 					const { id } = state.data;
 					addChangeListener(
 						ChangeType.CHANGE,

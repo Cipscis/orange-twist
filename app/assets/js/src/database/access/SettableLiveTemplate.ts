@@ -1,4 +1,4 @@
-import { AsyncDataStateType, SettableLiveData } from 'utils/asyncData';
+import { AsyncActionStateType, SettableLiveData } from 'utils/asyncData';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -42,14 +42,14 @@ export class SettableLiveTemplate extends SettableLiveData<Template> {
 					id: templateId,
 				};
 
-				if (state.type === AsyncDataStateType.ERROR) {
+				if (state.type === AsyncActionStateType.ERROR) {
 					addChangeListener(
 						ChangeType.ADD,
 						changeEntity,
 						() => getData(),
 						{ signal },
 					);
-				} else if (state.type === AsyncDataStateType.SUCCESS) {
+				} else if (state.type === AsyncActionStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.CHANGE,
 						changeEntity,

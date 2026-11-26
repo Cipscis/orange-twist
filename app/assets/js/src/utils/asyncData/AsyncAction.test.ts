@@ -5,27 +5,25 @@ import {
 	test,
 } from '@jest/globals';
 
-import { AsyncDataStateType } from './AsyncDataStateType';
-import type { AsyncDataState } from './AsyncDataState';
+import { AsyncActionStateType } from './AsyncActionStateType';
+import type { AsyncActionState } from './AsyncActionState';
 
-import { AsyncData } from './AsyncData';
+import { AsyncAction } from './AsyncAction';
 
-describe('AsyncData', () => {
+describe('AsyncAction', () => {
 	describe('updates its internal state', () => {
 		test('to an initial data state on creation', () => {
 			const getData = () => Promise.resolve(true);
 
-			const asyncData = new AsyncData({
-				getData,
-			});
+			const action = new AsyncAction(getData);
 
-			expect(asyncData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 
-		test('to a success state when `getData` is called', async () => {
+		test('to a success state when the operation succeeds', async () => {
 			const { promise, resolve } = Promise.withResolvers();
 
 			const getData = jest.fn(() => {
@@ -33,88 +31,82 @@ describe('AsyncData', () => {
 				return Promise.resolve(true);
 			});
 
-			const asyncData = new AsyncData({
-				getData,
-			});
+			const action = new AsyncAction(getData);
 
 			expect(getData).not.toHaveBeenCalled();
-			asyncData.getData();
+			action.start();
 			expect(getData).toHaveBeenCalledTimes(1);
 
-			expect(asyncData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
 			await Promise.race([promise]);
 
-			expect(asyncData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 
-		test('to an error state if loading data throws an error', async () => {
+		test('to an error state when the operation throws an error', async () => {
 			const { promise, resolve } = Promise.withResolvers();
 
-			const asyncData = new AsyncData({
-				getData: () => {
-					resolve(true);
-					return Promise.reject(new Error('Test rejection'));
-				},
+			const action = new AsyncAction(() => {
+				resolve(true);
+				return Promise.reject(new Error('Test rejection'));
 			});
 
 			const error = jest.fn();
 
-			asyncData.addEventListener('error', error);
+			action.addEventListener('error', error);
 
-			asyncData.getData();
+			action.start();
 
 			await Promise.race([promise]);
-			expect(asyncData.state).toEqual({
-				type: AsyncDataStateType.ERROR,
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.ERROR,
 				error: new Error('Test rejection'),
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 
-		test('to its prior state when `getData` is aborted', async () => {
+		test('to its prior state when the operation is aborted', async () => {
 			const { promise, resolve } = Promise.withResolvers<void>();
 
-			const asyncData = new AsyncData({
-				getData(options) {
-					resolve();
-					return Promise.resolve(true);
-				},
+			const action = new AsyncAction(function getData(options) {
+				resolve();
+				return Promise.resolve(true);
 			});
 
 			const controller = new AbortController();
 			const { signal } = controller;
 
-			asyncData.getData({ signal });
+			action.start({ signal });
 
-			expect(asyncData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 
 			controller.abort();
 
-			expect(asyncData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
 			await Promise.race([promise]);
 
 			// State shouldn't have updated after aborting
-			expect(asyncData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 	});
 
@@ -122,13 +114,13 @@ describe('AsyncData', () => {
 		test('a loadstart event on load start', () => {
 			const loadstart = jest.fn();
 
-			const asyncData = new AsyncData({
-				getData: () => Promise.resolve(true),
-			});
-			asyncData.addEventListener('loadstart', loadstart);
+			const action = new AsyncAction(
+				() => Promise.resolve(true),
+			);
+			action.addEventListener('loadstart', loadstart);
 
 			expect(loadstart).not.toHaveBeenCalled();
-			asyncData.getData();
+			action.start();
 			expect(loadstart).toHaveBeenCalledTimes(1);
 		});
 
@@ -136,15 +128,15 @@ describe('AsyncData', () => {
 			const { promise, resolve } = Promise.withResolvers();
 			const load = jest.fn();
 
-			const asyncData = new AsyncData({
-				getData: () => {
+			const action = new AsyncAction(
+				() => {
 					resolve(true);
 					return Promise.resolve(true);
 				},
-			});
-			asyncData.addEventListener('load', load);
+			);
+			action.addEventListener('load', load);
 
-			asyncData.getData();
+			action.start();
 
 			expect(load).not.toHaveBeenCalled();
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -156,15 +148,15 @@ describe('AsyncData', () => {
 			const { promise, resolve } = Promise.withResolvers();
 			const error = jest.fn();
 
-			const asyncData = new AsyncData({
-				getData: () => {
+			const action = new AsyncAction(
+				() => {
 					resolve(true);
 					return Promise.reject(new Error('Test rejection'));
 				},
-			});
-			asyncData.addEventListener('error', error);
+			);
+			action.addEventListener('error', error);
 
-			asyncData.getData();
+			action.start();
 
 			expect(error).not.toHaveBeenCalled();
 			await Promise.race([promise]);
@@ -174,17 +166,17 @@ describe('AsyncData', () => {
 		test('an abort event on abort', () => {
 			const abort = jest.fn();
 
-			const asyncData = new AsyncData({
-				getData(options) {
+			const action = new AsyncAction(
+				function getData(options) {
 					return Promise.resolve(true);
 				},
-			});
-			asyncData.addEventListener('abort', abort);
+			);
+			action.addEventListener('abort', abort);
 
 			const controller = new AbortController();
 			const { signal } = controller;
 
-			asyncData.getData({ signal });
+			action.start({ signal });
 
 			expect(abort).not.toHaveBeenCalled();
 			controller.abort();
@@ -196,15 +188,15 @@ describe('AsyncData', () => {
 				const { promise, resolve } = Promise.withResolvers();
 				const loadend = jest.fn();
 
-				const asyncData = new AsyncData({
-					getData: () => {
+				const action = new AsyncAction(
+					() => {
 						resolve(true);
 						return Promise.resolve(true);
 					},
-				});
-				asyncData.addEventListener('loadend', loadend);
+				);
+				action.addEventListener('loadend', loadend);
 
-				asyncData.getData();
+				action.start();
 
 				expect(loadend).not.toHaveBeenCalled();
 				// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -216,15 +208,15 @@ describe('AsyncData', () => {
 				const { promise, resolve } = Promise.withResolvers();
 				const loadend = jest.fn();
 
-				const asyncData = new AsyncData({
-					getData: () => {
+				const action = new AsyncAction(
+					() => {
 						resolve(true);
 						return Promise.reject(new Error('Test rejection'));
 					},
-				});
-				asyncData.addEventListener('loadend', loadend);
+				);
+				action.addEventListener('loadend', loadend);
 
-				asyncData.getData();
+				action.start();
 
 				expect(loadend).not.toHaveBeenCalled();
 				await Promise.race([promise]);
@@ -234,17 +226,17 @@ describe('AsyncData', () => {
 			test('when load is aborted', () => {
 				const loadend = jest.fn();
 
-				const asyncData = new AsyncData({
-					getData(options) {
+				const action = new AsyncAction(
+					function getData(options) {
 						return Promise.resolve(true);
 					},
-				});
-				asyncData.addEventListener('loadend', loadend);
+				);
+				action.addEventListener('loadend', loadend);
 
 				const controller = new AbortController();
 				const { signal } = controller;
 
-				asyncData.getData({ signal });
+				action.start({ signal });
 
 				expect(loadend).not.toHaveBeenCalled();
 				controller.abort();

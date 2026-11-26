@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType } from 'utils/asyncData';
+import { AsyncActionStateType } from 'utils/asyncData';
 
 import type { useSettableTask } from 'database';
 
@@ -23,11 +23,11 @@ export function TaskLoader(props: TaskLoaderProps): JSX.Element {
 		taskDataState,
 	} = props;
 
-	if (taskDataState.getterState.type === AsyncDataStateType.INITIAL) {
+	if (taskDataState.getterState.type === AsyncActionStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (taskDataState.getterState.type === AsyncDataStateType.ERROR) {
+	if (taskDataState.getterState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={taskDataState.getterState.error.message}

@@ -1,8 +1,7 @@
 export {
-	AsyncData,
-	type AsyncDataOptions,
-	type GetAsyncDataOptions,
-} from './AsyncData';
+	AsyncAction,
+	type AsyncActionFnOptions,
+} from './AsyncAction';
 export {
 	LiveData,
 	type LiveDataOptions,
@@ -24,8 +23,8 @@ export {
 	type UseSettableLiveDataResult,
 } from './hooks';
 
-export { AsyncDataStateType } from './AsyncDataStateType';
-export type { AsyncDataState } from './AsyncDataState';
+export { AsyncActionStateType } from './AsyncActionStateType';
+export type { AsyncActionState } from './AsyncActionState';
 export type { SettableAsyncDataState } from './SettableAsyncDataState';
 
 export { HTMLLiveDataElement } from './HTMLLiveDataElement';

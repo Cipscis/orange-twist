@@ -1,4 +1,4 @@
-import { AsyncDataStateType, LiveData } from 'utils/asyncData';
+import { AsyncActionStateType, LiveData } from 'utils/asyncData';
 
 import type { Status } from '../types';
 
@@ -41,7 +41,7 @@ export class LiveStatusForTask extends LiveData<Status> {
 
 				const getData = () => getDataArg();
 
-				if (state.type === AsyncDataStateType.SUCCESS) {
+				if (state.type === AsyncActionStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.ADD,
 						changeEntity,

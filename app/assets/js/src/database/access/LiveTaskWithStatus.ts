@@ -1,4 +1,4 @@
-import { AsyncDataStateType, LiveData } from 'utils/asyncData';
+import { AsyncActionStateType, LiveData } from 'utils/asyncData';
 
 import type { Status, Task } from '../types';
 import {
@@ -47,14 +47,14 @@ export class LiveTaskWithStatus extends LiveData<[Task, Status]> {
 
 				const getData = () => getDataArg();
 
-				if (state.type === AsyncDataStateType.ERROR) {
+				if (state.type === AsyncActionStateType.ERROR) {
 					addChangeListener(
 						ChangeType.ADD,
 						taskChangeEntity,
 						getData,
 						{ signal },
 					);
-				} else if (state.type === AsyncDataStateType.SUCCESS) {
+				} else if (state.type === AsyncActionStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.CHANGE,
 						taskChangeEntity,
@@ -76,7 +76,7 @@ export class LiveTaskWithStatus extends LiveData<[Task, Status]> {
 					type: ChangeEntityType.DAY_TASK,
 				};
 
-				if (state.type === AsyncDataStateType.SUCCESS) {
+				if (state.type === AsyncActionStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.ADD,
 						dayTaskChangeEntity,

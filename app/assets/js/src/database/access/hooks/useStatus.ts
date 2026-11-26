@@ -1,7 +1,7 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	type AsyncDataState,
+	type AsyncActionState,
 	LiveData,
 	useLiveData,
 } from 'utils/asyncData';
@@ -10,9 +10,9 @@ import type { Status } from '../../types';
 import { loadStatus } from '../loadStatus';
 
 /**
- * Attempts to load a specified status immediately. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load a specified status immediately. Provides an {@linkcode AsyncActionState} representing the state of that loading operation.
  */
-export function useStatus(statusId: number): AsyncDataState<Status> {
+export function useStatus(statusId: number): AsyncActionState<Status> {
 	const liveStatus = useMemo(() => {
 		const liveStatus = new LiveData({
 			async getData(_options) {

@@ -1,8 +1,8 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	LiveData,
 	useLiveData,
 } from 'utils/asyncData';
@@ -17,9 +17,9 @@ import {
 } from '../liveAccessManager';
 
 /**
- * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides an {@linkcode AsyncActionState} representing the state of that loading operation.
  */
-export function useDay(dayId: number): AsyncDataState<Day> {
+export function useDay(dayId: number): AsyncActionState<Day> {
 	const liveDay = useMemo(() => {
 		const liveDay = new LiveData({
 			async getData(options) {
@@ -37,14 +37,14 @@ export function useDay(dayId: number): AsyncDataState<Day> {
 					id: dayId,
 				};
 
-				if (state.type === AsyncDataStateType.ERROR) {
+				if (state.type === AsyncActionStateType.ERROR) {
 					addChangeListener(
 						ChangeType.ADD,
 						changeEntity,
 						() => getData(),
 						{ signal },
 					);
-				} else if (state.type === AsyncDataStateType.SUCCESS) {
+				} else if (state.type === AsyncActionStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.CHANGE,
 						changeEntity,

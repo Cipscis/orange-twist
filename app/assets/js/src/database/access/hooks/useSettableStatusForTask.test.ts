@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -40,11 +40,11 @@ describe('useSettableStatusForTask', () => {
 		);
 
 		expect(result.current.getterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<number>);
+		} satisfies AsyncActionState<number>);
 		expect(result.current.setterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: false,
 		});
 	});
@@ -56,10 +56,10 @@ describe('useSettableStatusForTask', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: 2,
-			} satisfies AsyncDataState<number>);
+			} satisfies AsyncActionState<number>);
 		});
 	});
 
@@ -71,10 +71,10 @@ describe('useSettableStatusForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: 2,
-				} satisfies AsyncDataState<number>);
+				} satisfies AsyncActionState<number>);
 			});
 
 			save([{
@@ -87,10 +87,10 @@ describe('useSettableStatusForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: 3,
-				} satisfies AsyncDataState<number>);
+				} satisfies AsyncActionState<number>);
 			});
 		});
 
@@ -101,10 +101,10 @@ describe('useSettableStatusForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: 2,
-				} satisfies AsyncDataState<number>);
+				} satisfies AsyncActionState<number>);
 			});
 
 			save([{
@@ -114,10 +114,10 @@ describe('useSettableStatusForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: 1,
-				} satisfies AsyncDataState<number>);
+				} satisfies AsyncActionState<number>);
 			});
 		});
 
@@ -128,10 +128,10 @@ describe('useSettableStatusForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: 2,
-				} satisfies AsyncDataState<number>);
+				} satisfies AsyncActionState<number>);
 			});
 
 			await save([{
@@ -145,10 +145,10 @@ describe('useSettableStatusForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: 3,
-				} satisfies AsyncDataState<number>);
+				} satisfies AsyncActionState<number>);
 			});
 		});
 	});
@@ -161,28 +161,28 @@ describe('useSettableStatusForTask', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: 2,
-			} satisfies AsyncDataState<number>);
+			} satisfies AsyncActionState<number>);
 		});
 
 		rerender(3);
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: true,
 				data: 2,
-			} satisfies AsyncDataState<number>);
+			} satisfies AsyncActionState<number>);
 		});
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: 1,
-			} satisfies AsyncDataState<number>);
+			} satisfies AsyncActionState<number>);
 		});
 	});
 
@@ -194,10 +194,10 @@ describe('useSettableStatusForTask', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: 2,
-			} satisfies AsyncDataState<number>);
+			} satisfies AsyncActionState<number>);
 		});
 
 		result.current.setData(3);
@@ -205,26 +205,26 @@ describe('useSettableStatusForTask', () => {
 
 		// While the set function processes, we have optimistic data
 		expect(result.current.setterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
 		});
 		expect(result.current.getterState).toEqual({
-			type: AsyncDataStateType.SUCCESS,
+			type: AsyncActionStateType.SUCCESS,
 			loading: false,
 			data: 3,
-		} satisfies AsyncDataState<number>);
+		} satisfies AsyncActionState<number>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 			});
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: 3,
-			} satisfies AsyncDataState<number>);
+			} satisfies AsyncActionState<number>);
 		});
 	});
 
@@ -235,10 +235,10 @@ describe('useSettableStatusForTask', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.ERROR,
+				type: AsyncActionStateType.ERROR,
 				error: new Error('Could not find task with ID -1'),
 				loading: false,
-			} satisfies AsyncDataState<number>);
+			} satisfies AsyncActionState<number>);
 		});
 	});
 });

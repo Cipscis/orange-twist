@@ -12,7 +12,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -47,15 +47,15 @@ describe('useCurrentDay', () => {
 		cleanup();
 	});
 
-	test('provide an AsyncDataResult', () => {
+	test('provide an AsyncActionState', () => {
 		const { result } = renderHook(
 			() => useCurrentDay()
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<Day>);
+		} satisfies AsyncActionState<Day>);
 	});
 
 	test('when current day exists, fetches it on initial render', async () => {
@@ -65,7 +65,7 @@ describe('useCurrentDay', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: {
 					id: 1,
@@ -74,7 +74,7 @@ describe('useCurrentDay', () => {
 					day: 29,
 					note: 'Test day note',
 				},
-			} satisfies AsyncDataState<Day>);
+			} satisfies AsyncActionState<Day>);
 		});
 	});
 
@@ -89,7 +89,7 @@ describe('useCurrentDay', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: {
 					id: 4,
@@ -98,7 +98,7 @@ describe('useCurrentDay', () => {
 					day: 30,
 					note: '',
 				},
-			} satisfies AsyncDataState<Day>);
+			} satisfies AsyncActionState<Day>);
 		});
 	});
 
@@ -109,7 +109,7 @@ describe('useCurrentDay', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: {
 					id: 1,
@@ -118,7 +118,7 @@ describe('useCurrentDay', () => {
 					day: 29,
 					note: 'Test day note',
 				},
-			} satisfies AsyncDataState<Day>);
+			} satisfies AsyncActionState<Day>);
 		});
 
 		save([{
@@ -131,7 +131,7 @@ describe('useCurrentDay', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: {
 					id: 1,
@@ -140,7 +140,7 @@ describe('useCurrentDay', () => {
 					day: 29,
 					note: 'Updated day note',
 				},
-			} satisfies AsyncDataState<Day>);
+			} satisfies AsyncActionState<Day>);
 		});
 	});
 });

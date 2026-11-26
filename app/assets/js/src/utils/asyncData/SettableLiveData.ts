@@ -1,5 +1,5 @@
-import { AsyncDataStateType } from './AsyncDataStateType';
-import type { AsyncDataState } from './AsyncDataState';
+import { AsyncActionStateType } from './AsyncActionStateType';
+import type { AsyncActionState } from './AsyncActionState';
 
 import {
 	LiveData,
@@ -31,11 +31,11 @@ export class SettableLiveData<T> {
 	#liveData: LiveData<T>;
 	#settableData: SettableData<T>;
 
-	get #liveDataStateProxy(): AsyncDataState<T> {
+	get #liveDataStateProxy(): AsyncActionState<T> {
 		if (
 			this.#optimistic &&
 			typeof this.#optimisticDataOverride !== 'undefined' &&
-			this.#liveData.state.type === AsyncDataStateType.SUCCESS
+			this.#liveData.state.type === AsyncActionStateType.SUCCESS
 		) {
 			if (Array.isArray(this.#optimisticDataOverride)) {
 				return {

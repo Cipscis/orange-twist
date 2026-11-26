@@ -1,8 +1,8 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	LiveData,
 	useLiveData,
 } from 'utils/asyncData';
@@ -15,9 +15,9 @@ import {
 import { loadAllDays } from '../loadAllDays';
 
 /**
- * Attempts to load the IDs of all days immediately, sorted chronologically. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load the IDs of all days immediately, sorted chronologically. Provides an {@linkcode AsyncActionState} representing the state of that loading operation.
  */
-export function useAllDayIds(): AsyncDataState<readonly number[]> {
+export function useAllDayIds(): AsyncActionState<readonly number[]> {
 	const liveAllDayIds = useMemo(() => {
 		const liveAllDayIds = new LiveData({
 			async getData(_options) {
@@ -34,7 +34,7 @@ export function useAllDayIds(): AsyncDataState<readonly number[]> {
 				);
 			},
 			observeState(getData, state, signal) {
-				if (state.type === AsyncDataStateType.SUCCESS) {
+				if (state.type === AsyncActionStateType.SUCCESS) {
 					for (const id of state.data) {
 						addChangeListener(
 							ChangeType.DELETE,

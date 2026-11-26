@@ -1,8 +1,8 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	LiveData,
 	useLiveData,
 } from 'utils/asyncData';
@@ -17,9 +17,9 @@ import {
 } from '../liveAccessManager';
 
 /**
- * Provides an {@linkcode AsyncDataState} that immediately requests the current day. If it doesn't already exist, then it will be constructed.
+ * Provides an {@linkcode AsyncActionState} that immediately requests the current day. If it doesn't already exist, then it will be constructed.
  */
-export function useCurrentDay(): AsyncDataState<Day> {
+export function useCurrentDay(): AsyncActionState<Day> {
 	const liveCurrentDay = useMemo(() => {
 		const liveCurrentDay = new LiveData({
 			async getData(_options) {
@@ -27,7 +27,7 @@ export function useCurrentDay(): AsyncDataState<Day> {
 				return currentDay;
 			},
 			observeState(getDataArg, state, signal) {
-				if (state.type === AsyncDataStateType.SUCCESS) {
+				if (state.type === AsyncActionStateType.SUCCESS) {
 					const getData = () => getDataArg();
 					const changeEntity = { type: ChangeEntityType.DAY, id: state.data.id };
 

@@ -4,11 +4,11 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import type { AsyncDataState } from '../AsyncDataState';
+import type { AsyncActionState } from '../AsyncActionState';
 import type { LiveData } from '../LiveData';
 
 /**
- * Provides a live {@linkcode AsyncDataState}.
+ * Provides a live {@linkcode AsyncActionState}.
  *
  * @example
  * ```ts
@@ -22,7 +22,7 @@ import type { LiveData } from '../LiveData';
  * const state = useLiveData(liveData);
  * ```
  */
-export function useLiveData<T>(liveData: LiveData<T>): AsyncDataState<T> {
+export function useLiveData<T>(liveData: LiveData<T>): AsyncActionState<T> {
 	const [state, setState] = useState(liveData.state);
 
 	// Construct temporary hybrid state if liveData is updated

@@ -1,7 +1,7 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
+	AsyncActionStateType,
 	SettableLiveData,
 	useSettableLiveData,
 	type UseSettableLiveDataResult,
@@ -46,7 +46,7 @@ export function useSettableStatusForTask(taskId: number): UseSettableLiveDataRes
 					type: ChangeEntityType.DAY_TASK,
 				};
 
-				if (state.type === AsyncDataStateType.SUCCESS) {
+				if (state.type === AsyncActionStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.ADD,
 						changeEntity,

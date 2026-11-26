@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
 
 import { insertTestData } from '../../test-utils';
 
@@ -24,15 +24,15 @@ describe('useAllDayIds', () => {
 	beforeEach(async () => insertTestData());
 	afterEach(() => cleanup());
 
-	test('provide an AsyncDataResult', () => {
+	test('provide an AsyncActionState', () => {
 		const { result } = renderHook(
 			() => useAllDayIds()
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<number[]>);
+		} satisfies AsyncActionState<number[]>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -42,10 +42,10 @@ describe('useAllDayIds', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: [3, 1, 2],
-			} satisfies AsyncDataState<number[]>);
+			} satisfies AsyncActionState<number[]>);
 		});
 	});
 
@@ -57,10 +57,10 @@ describe('useAllDayIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [3, 1, 2],
-				} satisfies AsyncDataState<number[]>);
+				} satisfies AsyncActionState<number[]>);
 			});
 
 			save([{
@@ -75,10 +75,10 @@ describe('useAllDayIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [3, 1, 2, 4],
-				} satisfies AsyncDataState<number[]>);
+				} satisfies AsyncActionState<number[]>);
 			});
 		});
 		test('when deleting a day', async () => {
@@ -88,10 +88,10 @@ describe('useAllDayIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [3, 1, 2],
-				} satisfies AsyncDataState<number[]>);
+				} satisfies AsyncActionState<number[]>);
 			});
 
 			save([{
@@ -101,10 +101,10 @@ describe('useAllDayIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [3, 2],
-				} satisfies AsyncDataState<number[]>);
+				} satisfies AsyncActionState<number[]>);
 			});
 		});
 	});

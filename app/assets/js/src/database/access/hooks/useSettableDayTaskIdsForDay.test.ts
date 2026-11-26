@@ -12,8 +12,8 @@ import {
 } from '@testing-library/preact';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	type SettableAsyncDataState,
 } from 'utils/asyncData';
 
@@ -34,11 +34,11 @@ describe('useSettableDayTaskIdsForDay', () => {
 		);
 
 		expect(result.current.getterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<readonly number[]>);
+		} satisfies AsyncActionState<readonly number[]>);
 		expect(result.current.setterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: false,
 		} satisfies SettableAsyncDataState);
 	});
@@ -50,10 +50,10 @@ describe('useSettableDayTaskIdsForDay', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: [2, 1],
-			} satisfies AsyncDataState<readonly number[]>);
+			} satisfies AsyncActionState<readonly number[]>);
 		});
 	});
 
@@ -65,10 +65,10 @@ describe('useSettableDayTaskIdsForDay', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [2, 1],
-				} satisfies AsyncDataState<readonly number[]>);
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 
 			save([{
@@ -81,10 +81,10 @@ describe('useSettableDayTaskIdsForDay', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [3, 2, 1],
-				} satisfies AsyncDataState<readonly number[]>);
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
 		test('when updating a day task sort index', async () => {
@@ -94,10 +94,10 @@ describe('useSettableDayTaskIdsForDay', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [2, 1],
-				} satisfies AsyncDataState<readonly number[]>);
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 
 			save([{
@@ -110,10 +110,10 @@ describe('useSettableDayTaskIdsForDay', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [1, 2],
-				} satisfies AsyncDataState<readonly number[]>);
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
 		test('when deleting a day task', async () => {
@@ -123,10 +123,10 @@ describe('useSettableDayTaskIdsForDay', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [2, 1],
-				} satisfies AsyncDataState<readonly number[]>);
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 
 			save([{
@@ -136,10 +136,10 @@ describe('useSettableDayTaskIdsForDay', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: [2],
-				} satisfies AsyncDataState<readonly number[]>);
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
 	});
@@ -152,10 +152,10 @@ describe('useSettableDayTaskIdsForDay', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: [2, 1],
-			} satisfies AsyncDataState<readonly number[]>);
+			} satisfies AsyncActionState<readonly number[]>);
 		});
 
 		result.current.setData([1, 2]);
@@ -163,26 +163,26 @@ describe('useSettableDayTaskIdsForDay', () => {
 
 		// While the set function processes, we have optimistic data
 		expect(result.current.setterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
 		});
 		expect(result.current.getterState).toEqual({
-			type: AsyncDataStateType.SUCCESS,
+			type: AsyncActionStateType.SUCCESS,
 			loading: false,
 			data: [1, 2],
-		} satisfies AsyncDataState<readonly number[]>);
+		} satisfies AsyncActionState<readonly number[]>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 			});
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: [1, 2],
-			} satisfies AsyncDataState<readonly number[]>);
+			} satisfies AsyncActionState<readonly number[]>);
 		});
 	});
 });

@@ -1,7 +1,7 @@
 import { type JSX, h } from 'preact';
 
 import type { Task } from 'database';
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
 
 import { Notice, NoticeVariant } from 'components/shared';
 
@@ -9,7 +9,7 @@ import type { TaskLookupProps } from './TaskLookup';
 import { TaskLookupSync } from './TaskLookupSync';
 
 interface TaskLookupLoaderProps extends TaskLookupProps {
-	tasksDataState: AsyncDataState<readonly Task[]>;
+	tasksDataState: AsyncActionState<readonly Task[]>;
 }
 
 /**
@@ -21,7 +21,7 @@ export function TaskLookupLoader(props: TaskLookupLoaderProps): JSX.Element {
 		...passthroughProps
 	} = props;
 
-	if (tasksDataState.type === AsyncDataStateType.INITIAL) {
+	if (tasksDataState.type === AsyncActionStateType.INITIAL) {
 		return <select
 			class={props.class ?? 'task-lookup'}
 			disabled
@@ -30,7 +30,7 @@ export function TaskLookupLoader(props: TaskLookupLoaderProps): JSX.Element {
 		</select>;
 	}
 
-	if (tasksDataState.type === AsyncDataStateType.ERROR) {
+	if (tasksDataState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={tasksDataState.error.message}

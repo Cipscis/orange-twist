@@ -1,5 +1,5 @@
 import { extractError } from '../extractError';
-import { AsyncDataStateType } from './AsyncDataStateType';
+import { AsyncActionStateType } from './AsyncActionStateType';
 import type { SettableAsyncDataState } from './SettableAsyncDataState';
 
 /**
@@ -30,7 +30,7 @@ export interface SettableDataOptions<T> {
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SettableData<T> extends EventTarget {
 	#state: SettableAsyncDataState = {
-		type: AsyncDataStateType.INITIAL,
+		type: AsyncActionStateType.INITIAL,
 		loading: false,
 	};
 	/**
@@ -81,13 +81,13 @@ export class SettableData<T> extends EventTarget {
 				return;
 			}
 			this.#state = {
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 			};
 			this.dispatchEvent(new ProgressEvent('load'));
 		} catch (e) {
 			this.#state = {
-				type: AsyncDataStateType.ERROR,
+				type: AsyncActionStateType.ERROR,
 				error: extractError(e),
 				loading: false,
 			};
@@ -124,11 +124,11 @@ export class SettableData<T> extends EventTarget {
 }
 
 interface SettableDataEventMap {
-	loadstart: [ProgressEvent, AsyncDataStateType];
-	loadend: [ProgressEvent, AsyncDataStateType];
-	load: [ProgressEvent, typeof AsyncDataStateType.SUCCESS];
-	error: [ProgressEvent, typeof AsyncDataStateType.ERROR];
-	abort: [ProgressEvent, AsyncDataStateType];
+	loadstart: [ProgressEvent, AsyncActionStateType];
+	loadend: [ProgressEvent, AsyncActionStateType];
+	load: [ProgressEvent, typeof AsyncActionStateType.SUCCESS];
+	error: [ProgressEvent, typeof AsyncActionStateType.ERROR];
+	abort: [ProgressEvent, AsyncActionStateType];
 }
 
 // Use declaration merging to give hints about event listeners

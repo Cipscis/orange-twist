@@ -1,7 +1,7 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	type AsyncDataState,
+	type AsyncActionState,
 	useLiveData,
 } from 'utils/asyncData';
 
@@ -10,9 +10,9 @@ import type { Task } from '../../types';
 import { LiveTask } from '../LiveTask';
 
 /**
- * Attempts to load a specified task immediately, and reloads it if it is changed in the database. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load a specified task immediately, and reloads it if it is changed in the database. Provides an {@linkcode AsyncActionState} representing the state of that loading operation.
  */
-export function useTask(taskId: number): AsyncDataState<Task> {
+export function useTask(taskId: number): AsyncActionState<Task> {
 	const liveTask = useMemo(() => {
 		const liveTask = new LiveTask(taskId);
 		liveTask.observe();

@@ -1,4 +1,4 @@
-import { AsyncDataStateType, LiveData } from 'utils/asyncData';
+import { AsyncActionStateType, LiveData } from 'utils/asyncData';
 
 import type { Template } from '../types';
 import {
@@ -27,14 +27,14 @@ export class LiveAliasedTemplate extends LiveData<Template> {
 			observeState(getDataArg, state, signal) {
 				const getData = () => getDataArg();
 
-				if (state.type === AsyncDataStateType.ERROR) {
+				if (state.type === AsyncActionStateType.ERROR) {
 					addChangeListener(
 						ChangeType.ADD,
 						{ type: ChangeEntityType.TEMPLATE },
 						getData,
 						{ signal },
 					);
-				} else if (state.type === AsyncDataStateType.SUCCESS) {
+				} else if (state.type === AsyncActionStateType.SUCCESS) {
 					const changeEntity = {
 						type: ChangeEntityType.TEMPLATE,
 						id: state.data.id,

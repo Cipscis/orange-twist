@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
 
 import type { Status } from '../../types';
 import { insertTestData } from '../../test-utils';
@@ -23,15 +23,15 @@ describe('useAllStatuses', () => {
 	beforeEach(async () => insertTestData());
 	afterEach(() => cleanup());
 
-	test('provide an AsyncDataResult', () => {
+	test('provide an AsyncActionState', () => {
 		const { result } = renderHook(
 			() => useAllStatuses()
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<readonly Status[]>);
+		} satisfies AsyncActionState<readonly Status[]>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -41,10 +41,10 @@ describe('useAllStatuses', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: defaultStatuses,
-			} satisfies AsyncDataState<readonly Status[]>);
+			} satisfies AsyncActionState<readonly Status[]>);
 		});
 	});
 
@@ -55,10 +55,10 @@ describe('useAllStatuses', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: defaultStatuses,
-			} satisfies AsyncDataState<readonly Status[]>);
+			} satisfies AsyncActionState<readonly Status[]>);
 		});
 
 		const { result: result2 } = renderHook(
@@ -66,9 +66,9 @@ describe('useAllStatuses', () => {
 		);
 
 		expect(result2.current).toEqual({
-			type: AsyncDataStateType.SUCCESS,
+			type: AsyncActionStateType.SUCCESS,
 			loading: false,
 			data: defaultStatuses,
-		} satisfies AsyncDataState<readonly Status[]>);
+		} satisfies AsyncActionState<readonly Status[]>);
 	});
 });

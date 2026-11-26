@@ -5,7 +5,7 @@ import {
 } from 'preact/hooks';
 
 import {
-	type AsyncDataState,
+	type AsyncActionState,
 	LiveData,
 } from 'utils/asyncData';
 
@@ -21,9 +21,9 @@ let statuses: readonly Status[] | null = null;
 let liveStatusesGlobal: LiveData<readonly Status[]> | null = null;
 
 /**
- * Attempts to load all statuses immediately. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load all statuses immediately. Provides an {@linkcode AsyncActionState} representing the state of that loading operation.
  */
-export function useAllStatuses(): AsyncDataState<readonly Status[]> {
+export function useAllStatuses(): AsyncActionState<readonly Status[]> {
 	const liveStatuses = useMemo(() => {
 		if (liveStatusesGlobal !== null) {
 			return liveStatusesGlobal;

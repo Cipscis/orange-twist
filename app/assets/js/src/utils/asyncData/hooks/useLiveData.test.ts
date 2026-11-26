@@ -6,8 +6,8 @@ import {
 import { renderHook, waitFor } from '@testing-library/preact';
 import { useMemo } from 'preact/hooks';
 
-import { AsyncDataStateType } from '../AsyncDataStateType';
-import type { AsyncDataState } from '../AsyncDataState';
+import { AsyncActionStateType } from '../AsyncActionStateType';
+import type { AsyncActionState } from '../AsyncActionState';
 
 import {
 	LiveData,
@@ -45,16 +45,16 @@ describe('useLiveData', () => {
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<boolean>);
+		} satisfies AsyncActionState<boolean>);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 
 		value = false;
@@ -69,18 +69,18 @@ describe('useLiveData', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: true,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 	});
 
@@ -110,9 +110,9 @@ describe('useLiveData', () => {
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<boolean>);
+		} satisfies AsyncActionState<boolean>);
 
 		expect(cleanupSignal!.aborted).toBe(false);
 
@@ -143,16 +143,16 @@ describe('useLiveData', () => {
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<boolean>);
+		} satisfies AsyncActionState<boolean>);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 
 		rerender({
@@ -164,18 +164,18 @@ describe('useLiveData', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: true,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+			} satisfies AsyncActionState<boolean>);
 		});
 	});
 });

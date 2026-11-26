@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType } from 'utils/asyncData';
+import { AsyncActionStateType } from 'utils/asyncData';
 
 import type { useSettableTask } from 'database';
 
@@ -23,14 +23,14 @@ export function TaskNoteLoader(props: TaskNoteLoaderProps): JSX.Element {
 	} = props;
 
 	// Don't display a loading state while setting or re-retrieving data
-	const isLoading = taskDataState.getterState.type === AsyncDataStateType.INITIAL;
+	const isLoading = taskDataState.getterState.type === AsyncActionStateType.INITIAL;
 
 	if (isLoading) {
 		return <Loader />;
 	}
 
 	if (
-		taskDataState.getterState.type === AsyncDataStateType.SUCCESS &&
+		taskDataState.getterState.type === AsyncActionStateType.SUCCESS &&
 		taskDataState.getterState.data
 	) {
 		return <TaskNoteSync

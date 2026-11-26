@@ -19,12 +19,12 @@ export function StatusPicker(props: StatusPickerProps): JSX.Element | null {
 		status,
 	} = props;
 
-	const statusesAsyncDataState = useAllStatuses();
-	const statusAsyncDataState = useStatus(status);
+	const statusesAsyncState = useAllStatuses();
+	const statusAsyncState = useStatus(status);
 
 	return <StatusPickerLoader
 		{...props}
-		statusAsyncDataState={statusAsyncDataState}
-		statusesAsyncDataState={statusesAsyncDataState}
+		statusAsyncState={statusAsyncState}
+		statusesAsyncState={statusesAsyncState}
 	/>;
 }

@@ -5,7 +5,7 @@ import {
 	test,
 } from '@jest/globals';
 
-import { AsyncDataStateType } from './AsyncDataStateType';
+import { AsyncActionStateType } from './AsyncActionStateType';
 import type { SettableAsyncDataState } from './SettableAsyncDataState';
 
 import { SettableData } from './SettableData';
@@ -20,7 +20,7 @@ describe('SettableData', () => {
 			});
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 		});
@@ -36,14 +36,14 @@ describe('SettableData', () => {
 			});
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: true,
 			} satisfies SettableAsyncDataState);
 
@@ -51,7 +51,7 @@ describe('SettableData', () => {
 			await Promise.race([promise]);
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 		});
@@ -67,14 +67,14 @@ describe('SettableData', () => {
 			});
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: true,
 			} satisfies SettableAsyncDataState);
 
@@ -82,7 +82,7 @@ describe('SettableData', () => {
 			await Promise.race([promise]);
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.ERROR,
+				type: AsyncActionStateType.ERROR,
 				error: new Error('Test error'),
 				loading: false,
 			} satisfies SettableAsyncDataState);
@@ -104,21 +104,21 @@ describe('SettableData', () => {
 			await Promise.race([promise]);
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: true,
 			} satisfies SettableAsyncDataState);
 
 			settableData.abort();
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 		});
@@ -136,7 +136,7 @@ describe('SettableData', () => {
 			settableData.addEventListener('loadstart', loadstart);
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 
@@ -158,14 +158,14 @@ describe('SettableData', () => {
 			settableData.addEventListener('load', load);
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: true,
 			} satisfies SettableAsyncDataState);
 
@@ -175,7 +175,7 @@ describe('SettableData', () => {
 			expect(load).toHaveBeenCalledTimes(1);
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 		});
@@ -193,14 +193,14 @@ describe('SettableData', () => {
 			settableData.addEventListener('error', error);
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: false,
 			} satisfies SettableAsyncDataState);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: true,
 			} satisfies SettableAsyncDataState);
 
@@ -210,7 +210,7 @@ describe('SettableData', () => {
 			expect(error).toHaveBeenCalledTimes(1);
 
 			expect(settableData.state).toEqual({
-				type: AsyncDataStateType.ERROR,
+				type: AsyncActionStateType.ERROR,
 				error: new Error('Test error'),
 				loading: false,
 			} satisfies SettableAsyncDataState);
@@ -247,14 +247,14 @@ describe('SettableData', () => {
 				settableData.addEventListener('loadend', loadend);
 
 				expect(settableData.state).toEqual({
-					type: AsyncDataStateType.INITIAL,
+					type: AsyncActionStateType.INITIAL,
 					loading: false,
 				} satisfies SettableAsyncDataState);
 
 				settableData.setData({});
 
 				expect(settableData.state).toEqual({
-					type: AsyncDataStateType.INITIAL,
+					type: AsyncActionStateType.INITIAL,
 					loading: true,
 				} satisfies SettableAsyncDataState);
 
@@ -264,7 +264,7 @@ describe('SettableData', () => {
 				expect(loadend).toHaveBeenCalledTimes(1);
 
 				expect(settableData.state).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 				} satisfies SettableAsyncDataState);
 			});
@@ -282,14 +282,14 @@ describe('SettableData', () => {
 				settableData.addEventListener('loadend', loadend);
 
 				expect(settableData.state).toEqual({
-					type: AsyncDataStateType.INITIAL,
+					type: AsyncActionStateType.INITIAL,
 					loading: false,
 				} satisfies SettableAsyncDataState);
 
 				settableData.setData({});
 
 				expect(settableData.state).toEqual({
-					type: AsyncDataStateType.INITIAL,
+					type: AsyncActionStateType.INITIAL,
 					loading: true,
 				} satisfies SettableAsyncDataState);
 
@@ -299,7 +299,7 @@ describe('SettableData', () => {
 				expect(loadend).toHaveBeenCalledTimes(1);
 
 				expect(settableData.state).toEqual({
-					type: AsyncDataStateType.ERROR,
+					type: AsyncActionStateType.ERROR,
 					error: new Error('Test error'),
 					loading: false,
 				} satisfies SettableAsyncDataState);

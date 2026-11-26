@@ -5,8 +5,8 @@ import {
 	test,
 } from '@jest/globals';
 
-import { AsyncDataStateType } from './AsyncDataStateType';
-import type { AsyncDataState } from './AsyncDataState';
+import { AsyncActionStateType } from './AsyncActionStateType';
+import type { AsyncActionState } from './AsyncActionState';
 
 import { LiveData } from './LiveData';
 
@@ -28,18 +28,18 @@ describe('LiveData', () => {
 		expect(getData).toHaveBeenCalledTimes(1);
 
 		expect(liveData.state).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<boolean>);
+		} satisfies AsyncActionState<boolean>);
 
 		// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
 		await Promise.race([promise]);
 
 		expect(liveData.state).toEqual({
-			type: AsyncDataStateType.SUCCESS,
+			type: AsyncActionStateType.SUCCESS,
 			data: true,
 			loading: false,
-		} satisfies AsyncDataState<boolean>);
+		} satisfies AsyncActionState<boolean>);
 	});
 
 	test('when `observe` is called, calls `observe` function provided as an option', () => {

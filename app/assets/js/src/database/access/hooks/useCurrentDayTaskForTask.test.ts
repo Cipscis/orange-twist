@@ -12,7 +12,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -58,15 +58,15 @@ describe('useCurrentDayTaskForTask', () => {
 		cleanup();
 	});
 
-	test('provide an AsyncDataResult', () => {
+	test('provide an AsyncActionState', () => {
 		const { result } = renderHook(
 			() => useCurrentDayTaskForTask(1)
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<DayTask>);
+		} satisfies AsyncActionState<DayTask>);
 	});
 
 	test('when a current day task exists, fetches it on initial render', async () => {
@@ -76,7 +76,7 @@ describe('useCurrentDayTaskForTask', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				loading: false,
 				data: {
 					id: 1,
@@ -87,7 +87,7 @@ describe('useCurrentDayTaskForTask', () => {
 					status: 1,
 					sortIndex: null,
 				},
-			} satisfies AsyncDataState<DayTask>);
+			} satisfies AsyncActionState<DayTask>);
 		});
 	});
 
@@ -104,10 +104,10 @@ describe('useCurrentDayTaskForTask', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.ERROR,
+				type: AsyncActionStateType.ERROR,
 				loading: false,
 				error: new Error('Could not find current day task for task 1'),
-			} satisfies AsyncDataState<DayTask>);
+			} satisfies AsyncActionState<DayTask>);
 		});
 	});
 
@@ -125,10 +125,10 @@ describe('useCurrentDayTaskForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.ERROR,
+					type: AsyncActionStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find current day task for task 1'),
-				} satisfies AsyncDataState<DayTask>);
+				} satisfies AsyncActionState<DayTask>);
 			});
 
 			await save([{
@@ -145,7 +145,7 @@ describe('useCurrentDayTaskForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: {
 						id: 3,
@@ -156,7 +156,7 @@ describe('useCurrentDayTaskForTask', () => {
 						status: 2,
 						sortIndex: 1,
 					},
-				} satisfies AsyncDataState<DayTask>);
+				} satisfies AsyncActionState<DayTask>);
 			});
 		});
 
@@ -178,7 +178,7 @@ describe('useCurrentDayTaskForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: {
 						id: 1,
@@ -189,7 +189,7 @@ describe('useCurrentDayTaskForTask', () => {
 						status: 2,
 						sortIndex: 1,
 					},
-				} satisfies AsyncDataState<DayTask>);
+				} satisfies AsyncActionState<DayTask>);
 			});
 		});
 
@@ -200,7 +200,7 @@ describe('useCurrentDayTaskForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
+					type: AsyncActionStateType.SUCCESS,
 					loading: false,
 					data: {
 						id: 1,
@@ -211,7 +211,7 @@ describe('useCurrentDayTaskForTask', () => {
 						status: 1,
 						sortIndex: null,
 					},
-				} satisfies AsyncDataState<DayTask>);
+				} satisfies AsyncActionState<DayTask>);
 			});
 
 			await save([{
@@ -221,10 +221,10 @@ describe('useCurrentDayTaskForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.ERROR,
+					type: AsyncActionStateType.ERROR,
 					loading: false,
 					error: new Error('Could not find current day task for task 1'),
-				} satisfies AsyncDataState<DayTask>);
+				} satisfies AsyncActionState<DayTask>);
 			});
 		});
 	});

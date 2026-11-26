@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
 import type { Day } from 'database';
 
 import { Loader } from 'components/shared';
@@ -8,8 +8,8 @@ import { Loader } from 'components/shared';
 import { AllDaysSync } from './AllDaysSync';
 
 export interface AllDaysLoaderProps {
-	dayIdsDataState: AsyncDataState<readonly number[]>;
-	currentDayDataState: AsyncDataState<Day>;
+	dayIdsDataState: AsyncActionState<readonly number[]>;
+	currentDayDataState: AsyncActionState<Day>;
 }
 
 /**
@@ -26,14 +26,14 @@ export function AllDaysLoader(
 	return <section class="orange-twist__section">
 		{
 			(
-				dayIdsDataState.type === AsyncDataStateType.INITIAL ||
-				currentDayDataState.type === AsyncDataStateType.INITIAL
+				dayIdsDataState.type === AsyncActionStateType.INITIAL ||
+				currentDayDataState.type === AsyncActionStateType.INITIAL
 			) &&
 			<Loader />
 		}
 		{
-			dayIdsDataState.type === AsyncDataStateType.SUCCESS &&
-			currentDayDataState.type === AsyncDataStateType.SUCCESS &&
+			dayIdsDataState.type === AsyncActionStateType.SUCCESS &&
+			currentDayDataState.type === AsyncActionStateType.SUCCESS &&
 			<AllDaysSync
 				dayIds={dayIdsDataState.data}
 				currentDay={currentDayDataState.data}
