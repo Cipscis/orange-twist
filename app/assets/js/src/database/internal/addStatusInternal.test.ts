@@ -26,7 +26,6 @@ describe('addStatusInternal', () => {
 		], 'readwrite');
 
 		const writeResult = await addStatusInternal(writeTransaction, {
-			alias: 'will-not-do',
 			name: 'Will not do',
 			icon: IconName.WILL_NOT_DO,
 			colour: 'var(--red)',
@@ -43,7 +42,6 @@ describe('addStatusInternal', () => {
 
 		expect(readResult).toEqual({
 			id: 10,
-			alias: 'will-not-do',
 			name: 'Will not do',
 			icon: IconName.WILL_NOT_DO,
 			colour: 'var(--red)',
@@ -61,7 +59,6 @@ describe('addStatusInternal', () => {
 		// Add a task first
 		await addStatusInternal(transaction, {
 			id: 10,
-			alias: 'will-not-do',
 			name: 'Will not do',
 			icon: IconName.WILL_NOT_DO,
 			colour: 'var(--red)',
@@ -72,7 +69,6 @@ describe('addStatusInternal', () => {
 		await expect(
 			() => addStatusInternal(transaction, {
 				id: 10,
-				alias: 'will-not-do',
 				name: 'Will not do',
 				icon: IconName.WILL_NOT_DO,
 				colour: 'var(--red)',

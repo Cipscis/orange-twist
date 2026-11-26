@@ -5,7 +5,7 @@ export {
 } from './VersionedDatabaseData';
 export type { TaggedVersionedDatabaseData } from './TaggedVersionedDatabaseData';
 
-export type { LegacyStatusName } from './V1_0_0/LegacyStatusName';
+export { LegacyStatusName } from './V1_0_0/LegacyStatusName';
 export {
 	type DatabaseDataV1_0_0,
 	databaseDataSchemaV1_0_0,

@@ -1,1 +1,0 @@
-export { loadDayTasksRegister } from './loadDayTasksRegister';

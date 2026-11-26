@@ -1,9 +1,5 @@
 export { animate } from './animate';
-export {
-	Register,
-	type RegisterKey,
-	loadRegister,
-} from './register';
+export { Register } from './Register';
 
 export {
 	getDbDump,
@@ -20,7 +16,6 @@ export { escapeRegExpString } from './escapeRegExpString';
 export { getCurrentDate } from './getCurrentDate';
 export { getCurrentDateDayName } from './getCurrentDateDayName';
 export { getDeepActiveElement } from './getDeepActiveElement';
-export { getPromiseWithResolver } from './getPromiseWithResolver';
 export { getTemplateAlias } from './getTemplateAlias';
 export { isValidDateString } from './isValidDateString';
 export { isZodSchemaType } from './isZodSchemaType';

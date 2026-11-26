@@ -17,12 +17,6 @@ import { createTestData } from 'database';
 import { StatusPickerSync } from './StatusPickerSync';
 
 const testData = createTestData();
-const statuses = Object.values(testData.status);
-const statusMap = new Map(
-	statuses.map(
-		(status) => [status.alias, status]
-	)
-);
 
 describe('StatusPickerSync', () => {
 	afterEach(() => {
@@ -31,8 +25,8 @@ describe('StatusPickerSync', () => {
 
 	test('renders the status it\'s provided', () => {
 		const { getByRole, rerender } = render(<StatusPickerSync
-			status={statusMap.get('ready-to-test')!}
-			statuses={statuses}
+			status={testData.status[6]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -41,8 +35,8 @@ describe('StatusPickerSync', () => {
 		expect(getByRole('button', { name: 'Testing (click to edit)' })).toBeInTheDocument();
 
 		rerender(<StatusPickerSync
-			status={statusMap.get('completed')!}
-			statuses={statuses}
+			status={testData.status[3]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -55,8 +49,8 @@ describe('StatusPickerSync', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPickerSync
-			status={statusMap.get('todo')!}
-			statuses={statuses}
+			status={testData.status[1]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -76,8 +70,8 @@ describe('StatusPickerSync', () => {
 		const spy = jest.fn();
 
 		const { getByRole } = render(<StatusPickerSync
-			status={statusMap.get('todo')!}
-			statuses={statuses}
+			status={testData.status[1]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={spy}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -98,8 +92,8 @@ describe('StatusPickerSync', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPickerSync
-			status={statusMap.get('todo')!}
-			statuses={statuses}
+			status={testData.status[1]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -121,8 +115,8 @@ describe('StatusPickerSync', () => {
 		const spy = jest.fn();
 
 		const { getByRole } = render(<StatusPickerSync
-			status={statusMap.get('todo')!}
-			statuses={statuses}
+			status={testData.status[1]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={jest.fn()}
 			onDelete={spy}
 			deleteButtonTitle="Delete"
@@ -142,8 +136,8 @@ describe('StatusPickerSync', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPickerSync
-			status={statusMap.get('todo')!}
-			statuses={statuses}
+			status={testData.status[1]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -164,8 +158,8 @@ describe('StatusPickerSync', () => {
 		const user = userEvent.setup();
 
 		const { getByRole } = render(<StatusPickerSync
-			status={statusMap.get('todo')!}
-			statuses={statuses}
+			status={testData.status[1]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Custom title"
@@ -182,8 +176,8 @@ describe('StatusPickerSync', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPickerSync
-			status={statusMap.get('todo')!}
-			statuses={statuses}
+			status={testData.status[1]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"
@@ -204,8 +198,8 @@ describe('StatusPickerSync', () => {
 		const user = userEvent.setup();
 
 		const { getByRole, queryByRole } = render(<StatusPickerSync
-			status={statusMap.get('todo')!}
-			statuses={statuses}
+			status={testData.status[1]}
+			statuses={Object.values(testData.status)}
 			onStatusSelect={jest.fn()}
 			onDelete={jest.fn()}
 			deleteButtonTitle="Delete"

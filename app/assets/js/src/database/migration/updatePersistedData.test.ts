@@ -5,8 +5,10 @@ import {
 	test,
 } from '@jest/globals';
 
-import { StorageKey } from 'data/shared';
-import type { DatabaseData } from '../types';
+import {
+	type DatabaseData,
+	LegacyStorageKey,
+} from '../types';
 import { ObjectStoreName } from '../metadata';
 import { defaultStatuses } from './defaultStatuses';
 
@@ -122,10 +124,10 @@ describe('updatePersistedData', () => {
 				const dataOS = transaction.objectStore(ObjectStoreName.DATA);
 				const imageOS = transaction.objectStore(ObjectStoreName.IMAGES);
 
-				dataOS.put([['2026-05-17', {'name': '2026-05-17', 'note': 'Day 1 note', 'tasks': [1, 2]}]], StorageKey.DAYS);
-				dataOS.put([[1, {'id': 1, 'name': 'Test task 1', 'status': 'todo', 'note': 'Test task 1 note', 'sortIndex': -1}], [2, {'id': 2, 'name': 'Test task 2', 'status': 'in-progress', 'note': 'Test task 2 note', 'sortIndex': -2}]], StorageKey.TASKS);
-				dataOS.put([['2026-05-17_1', {'dayName': '2026-05-17', 'taskId': 1, 'status': 'todo', 'note': 'Day task for task 1 day 1 note', 'summary': 'Day task for task 1 day 1 summary'}], ['2026-05-17_2', {'dayName': '2026-05-17', 'taskId': 2, 'status': 'in-progress', 'note': 'Day task for task 2 day 1 note', 'summary': 'Day task for task 2 day 1 summary'}]], StorageKey.DAY_TASKS);
-				dataOS.put([[1, {'id': 1, 'name': 'Template 1 name', 'template': 'Template 1', 'sortIndex': -1}]], StorageKey.TEMPLATES);
+				dataOS.put([['2026-05-17', {'name': '2026-05-17', 'note': 'Day 1 note', 'tasks': [1, 2]}]], LegacyStorageKey.DAYS);
+				dataOS.put([[1, {'id': 1, 'name': 'Test task 1', 'status': 'todo', 'note': 'Test task 1 note', 'sortIndex': -1}], [2, {'id': 2, 'name': 'Test task 2', 'status': 'in-progress', 'note': 'Test task 2 note', 'sortIndex': -2}]], LegacyStorageKey.TASKS);
+				dataOS.put([['2026-05-17_1', {'dayName': '2026-05-17', 'taskId': 1, 'status': 'todo', 'note': 'Day task for task 1 day 1 note', 'summary': 'Day task for task 1 day 1 summary'}], ['2026-05-17_2', {'dayName': '2026-05-17', 'taskId': 2, 'status': 'in-progress', 'note': 'Day task for task 2 day 1 note', 'summary': 'Day task for task 2 day 1 summary'}]], LegacyStorageKey.DAY_TASKS);
+				dataOS.put([[1, {'id': 1, 'name': 'Template 1 name', 'template': 'Template 1', 'sortIndex': -1}]], LegacyStorageKey.TEMPLATES);
 
 				imageOS.put(testImageDataUrl, 'test-hash');
 

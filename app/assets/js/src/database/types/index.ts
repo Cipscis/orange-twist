@@ -1,3 +1,4 @@
+export { LegacyStorageKey } from './LegacyStorageKey';
 export type {
 	DatabaseData,
 
@@ -14,7 +15,7 @@ export {
 	type TaggedVersionedDatabaseData,
 	type VersionedDatabaseDataByVersion,
 
-	type LegacyStatusName,
+	LegacyStatusName,
 	isDatabaseDataV1_0_0,
 	isBackupDataV1_0_0,
 	type DatabaseDataV1_0_0,

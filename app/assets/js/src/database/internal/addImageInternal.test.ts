@@ -8,7 +8,7 @@ import {
 import { getDatabase } from '../utils';
 import { ObjectStoreName } from '../metadata';
 
-import { getImageInternal } from './getImageInternal';
+import { getImageByHashInternal } from './getImageByHashInternal';
 
 import { addImageInternal } from './addImageInternal';
 
@@ -33,7 +33,7 @@ describe('addImageInternal', () => {
 
 		expect(imageId).toBe(1);
 
-		const image = await getImageInternal(transaction, 1);
+		const image = await getImageByHashInternal(transaction, '916f0027');
 
 		expect(image?.file.type).toBe('text/plain');
 	});

@@ -60,7 +60,6 @@ describe('fillDatabase', () => {
 			[ObjectStoreName.STATUS]: {
 				1: {
 					id: 1,
-					alias: 'todo',
 					name: 'Todo',
 					icon: IconName.TODO,
 					colour: 'var(--blue)',
@@ -113,7 +112,6 @@ describe('fillDatabase', () => {
 			[ObjectStoreName.STATUS]: {
 				1: {
 					id: 1,
-					alias: 'todo',
 					name: 'Todo',
 					icon: IconName.TODO,
 					colour: 'var(--blue)',

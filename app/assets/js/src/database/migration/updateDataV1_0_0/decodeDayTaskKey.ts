@@ -1,0 +1,23 @@
+// Type-only import to expose symbol to JSDoc
+import type { encodeDayTaskKey } from './encodeDayTaskKey';
+
+import type { DayTaskIdentifier } from './DayTaskIdentifier';
+
+/**
+ * Decodes a key of the day tasks register into a
+ * {@linkcode DayTaskIdentifier}
+ *
+ * @see {@linkcode encodeDayTaskKey} for the inverse operation.
+ */
+export function decodeDayTaskKey(key: string): DayTaskIdentifier {
+	const [dayName, taskId] = key.split('_');
+
+	if (!(dayName && taskId)) {
+		throw new Error(`Invalid day task key ${key}`);
+	}
+
+	return {
+		dayName,
+		taskId: Number(taskId),
+	};
+}
