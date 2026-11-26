@@ -10,7 +10,7 @@ export interface AsyncActionFnOptions {
 	signal: AbortSignal;
 }
 
-export interface AsyncActionFn<T, A extends readonly unknown[] = []> {
+export interface AsyncActionFn<T, A extends unknown[] = []> {
 	(options: AsyncActionFnOptions, ...args: A): Promise<T>;
 }
 
@@ -21,7 +21,7 @@ export interface AsyncActionFn<T, A extends readonly unknown[] = []> {
  */
 // This class is intentionally modified with declaration merging to make event binding easier
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class AsyncAction<T, A extends readonly unknown[] = []> extends EventTarget {
+export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 	#state: AsyncActionState<T> = {
 		type: AsyncActionStateType.INITIAL,
 		loading: false,
@@ -117,7 +117,7 @@ interface AsyncActionEventMap {
 }
 
 // Use declaration merging to give hints about event listeners
-export interface AsyncAction<T, A extends readonly unknown[] = []> {
+export interface AsyncAction<T, A extends unknown[] = []> {
 	addEventListener<
 		K extends keyof AsyncActionEventMap
 	>(
