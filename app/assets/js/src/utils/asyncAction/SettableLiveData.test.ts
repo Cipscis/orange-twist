@@ -36,7 +36,7 @@ describe('SettableLiveData', () => {
 				observe(getData, _signal) {
 					setPromise.then(() => getData());
 				},
-				setData(newData, _signal) {
+				setData(_options, newData) {
 					data = {
 						...data,
 						...newData,
@@ -141,7 +141,7 @@ describe('SettableLiveData', () => {
 				observe(getData, _signal) {
 					setPromise.then(() => getData());
 				},
-				setData(newData, _signal) {
+				setData(_options, newData) {
 					data = newData;
 					setResolve();
 					return Promise.resolve();
@@ -231,7 +231,7 @@ describe('SettableLiveData', () => {
 				observe(getData, _signal) {
 					setPromise.then(() => getData());
 				},
-				setData(newData, _signal) {
+				setData(_options, newData) {
 					data = Array.from(newData);
 					setResolve();
 					return Promise.resolve();
@@ -323,7 +323,7 @@ describe('SettableLiveData', () => {
 				loadResolve();
 				return Promise.resolve(data);
 			},
-			setData(_data, _signal) {
+			setData(_options, _data) {
 				setResolve();
 				return Promise.reject(new Error('Test set error'));
 			},

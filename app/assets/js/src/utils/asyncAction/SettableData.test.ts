@@ -14,7 +14,7 @@ describe('SettableData', () => {
 	describe('updates its internal state', () => {
 		test('to an initial state on creation', () => {
 			const settableData = new SettableData({
-				setData(_data, _signal) {
+				setData(_options, _data) {
 					return Promise.resolve();
 				},
 			});
@@ -29,7 +29,7 @@ describe('SettableData', () => {
 			const { promise, resolve } = Promise.withResolvers<void>();
 
 			const settableData = new SettableData({
-				setData(_data, _signal) {
+				setData(_options, _data) {
 					resolve();
 					return Promise.resolve();
 				},
@@ -61,7 +61,7 @@ describe('SettableData', () => {
 			const { promise, resolve } = Promise.withResolvers<void>();
 
 			const settableData = new SettableData({
-				setData(_data, _signal) {
+				setData(_options, _data) {
 					resolve();
 					return Promise.reject(new Error('Test error'));
 				},
@@ -93,7 +93,7 @@ describe('SettableData', () => {
 			const { promise, resolve } = Promise.withResolvers<void>();
 
 			const settableData = new SettableData({
-				setData(_data, _signal) {
+				setData(_options, _data) {
 					resolve();
 					return Promise.resolve();
 				},
@@ -133,7 +133,7 @@ describe('SettableData', () => {
 			const loadstart = jest.fn();
 
 			const settableData = new SettableData({
-				setData(_data, _signal) {
+				setData(_options, _data) {
 					return Promise.resolve();
 				},
 			});
@@ -154,7 +154,7 @@ describe('SettableData', () => {
 			const load = jest.fn();
 
 			const settableData = new SettableData({
-				setData(_data, _signal) {
+				setData(_options, _data) {
 					resolve();
 					return Promise.resolve();
 				},
@@ -190,7 +190,7 @@ describe('SettableData', () => {
 			const error = jest.fn();
 
 			const settableData = new SettableData({
-				setData(_data, _signal) {
+				setData(_options, _data) {
 					resolve();
 					return Promise.reject(new Error('Test error'));
 				},
@@ -225,7 +225,7 @@ describe('SettableData', () => {
 			const abort = jest.fn();
 
 			const settableData = new SettableData({
-				setData(_data, _signal) {
+				setData(_options, _data) {
 					return Promise.resolve();
 				},
 			});
@@ -244,7 +244,7 @@ describe('SettableData', () => {
 				const loadend = jest.fn();
 
 				const settableData = new SettableData({
-					setData(_data, _signal) {
+					setData(_options, _data) {
 						resolve();
 						return Promise.resolve();
 					},
@@ -280,7 +280,7 @@ describe('SettableData', () => {
 				const loadend = jest.fn();
 
 				const settableData = new SettableData({
-					setData(_data, _signal) {
+					setData(_options, _data) {
 						resolve();
 						return Promise.reject(new Error('Test error'));
 					},
@@ -315,7 +315,7 @@ describe('SettableData', () => {
 				const loadend = jest.fn();
 
 				const settableData = new SettableData({
-					setData(_data, _signal) {
+					setData(_options, _data) {
 						return Promise.resolve();
 					},
 				});
@@ -345,7 +345,7 @@ describe('SettableData', () => {
 			let signal: AbortSignal | null = null;
 
 			const settableData = new SettableData({
-				setData(_data, setDataSignal) {
+				setData({ signal: setDataSignal }, _data) {
 					if (!signal) {
 						signal = setDataSignal;
 					}
@@ -364,7 +364,7 @@ describe('SettableData', () => {
 			let signal: AbortSignal | null = null;
 
 			const settableData = new SettableData({
-				setData(_data, setDataSignal) {
+				setData({ signal: setDataSignal }, _data) {
 					if (!signal) {
 						signal = setDataSignal;
 					}
@@ -383,7 +383,7 @@ describe('SettableData', () => {
 			let signal: AbortSignal | null = null;
 
 			const settableData = new SettableData({
-				setData(_data, setDataSignal) {
+				setData({ signal: setDataSignal }, _data) {
 					if (!signal) {
 						signal = setDataSignal;
 					}

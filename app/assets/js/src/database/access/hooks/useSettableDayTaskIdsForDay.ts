@@ -29,7 +29,7 @@ export function useSettableDayTaskIdsForDay(dayId: number): UseSettableLiveDataR
 			getData(_options) {
 				return loadDayTaskIdsForDay(dayId);
 			},
-			setData(data, _signal) {
+			setData(_options, data) {
 				// Assumes `data` has the same length and contents as the actual data, so is just a re-render
 				const saveActions: readonly Extract<
 					SaveAction, { type: typeof SaveType.DAY_TASK; }

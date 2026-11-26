@@ -25,7 +25,7 @@ export class SettableAllTemplateIds extends SettableLiveData<readonly number[]> 
 
 				return sortBySortIndex(templates).map(({ id }) => id);
 			},
-			async setData(templateIds, _signal) {
+			async setData(_options, templateIds) {
 				await fireCommand(Command.DATA_SAVE, templateIds.map((id, sortIndex) => ({
 					type: SaveType.TEMPLATE,
 					id,

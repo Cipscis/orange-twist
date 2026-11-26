@@ -29,7 +29,7 @@ export class SettableLiveTemplate extends SettableLiveData<Template> {
 
 				return template;
 			},
-			async setData(template, _signal) {
+			async setData(_options, template) {
 				await fireCommand(Command.DATA_SAVE, [{
 					type: SaveType.TEMPLATE,
 					id: templateId,

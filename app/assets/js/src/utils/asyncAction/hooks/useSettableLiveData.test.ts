@@ -27,7 +27,7 @@ describe('useSettableLiveData', () => {
 			getData(_options) {
 				return Promise.resolve(value);
 			},
-			setData(data, _signal) {
+			setData(_options, data) {
 				value = data;
 				return Promise.resolve();
 			},

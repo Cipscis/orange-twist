@@ -36,7 +36,7 @@ export function useSettableDay(dayId: number): UseSettableLiveDataResult<Day> {
 
 				return day;
 			},
-			async setData(day, _signal) {
+			async setData(_options, day) {
 				await fireCommand(Command.DATA_SAVE, [{
 					type: SaveType.DAY,
 					id: dayId,

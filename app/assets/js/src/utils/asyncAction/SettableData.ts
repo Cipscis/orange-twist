@@ -1,6 +1,7 @@
 import { extractError } from '../extractError';
 import { AsyncActionStateType } from './AsyncActionStateType';
 import type { AsyncActionState } from './AsyncActionState';
+import { AsyncAction, type AsyncActionFnOptions } from './AsyncAction';
 
 /**
  * This utility type constructs a stripped down type that can be used for setting data via partial update.
@@ -18,8 +19,8 @@ export interface SettableDataOptions<T> {
 	 * Takes an {@linkcode AbortSignal} to allow requests to be aborted.
 	 */
 	setData: (
+		options: AsyncActionFnOptions,
 		data: SettablePartial<T>,
-		signal: AbortSignal,
 	) => Promise<void>;
 }
 
@@ -28,7 +29,7 @@ export interface SettableDataOptions<T> {
  */
 // This class is intentionally modified with declaration merging to make event binding easier
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class SettableData<T> extends EventTarget {
+export class SettableData<T> extends AsyncAction<void, [SettablePartial<T>]> {
 	#state: AsyncActionState<void> = {
 		type: AsyncActionStateType.INITIAL,
 		loading: false,
@@ -46,7 +47,7 @@ export class SettableData<T> extends EventTarget {
 	constructor(
 		options: SettableDataOptions<T>
 	) {
-		super();
+		super(options.setData);
 
 		this.#setData = options.setData;
 	}
@@ -60,7 +61,7 @@ export class SettableData<T> extends EventTarget {
 		this.#abortController = new AbortController();
 		const { signal } = this.#abortController;
 
-		const setDataPromise = this.#setData(data, signal);
+		const setDataPromise = this.#setData({ signal }, data);
 		const {
 			promise: abortPromise,
 			resolve: abortResolve,

@@ -36,7 +36,7 @@ export function useSettableTask(taskId: number): UseSettableLiveDataResult<Task>
 
 				return task;
 			},
-			async setData(task, _signal) {
+			async setData(_options, task) {
 
 				await fireCommand(Command.DATA_SAVE, [{
 					type: SaveType.TASK,

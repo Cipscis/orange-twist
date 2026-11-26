@@ -34,7 +34,7 @@ export function useSettableStatusForTask(taskId: number): UseSettableLiveDataRes
 
 				return status;
 			},
-			async setData(status, _signal) {
+			async setData(_options, status) {
 				await fireCommand(Command.DATA_SAVE, [{
 					type: SaveType.TASK_STATUS,
 					id: taskId,

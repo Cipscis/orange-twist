@@ -29,7 +29,7 @@ export class LiveSettableUnfinishedTaskIds extends SettableLiveData<readonly num
 
 				return taskIds;
 			},
-			setData(data, _signal) {
+			setData(_options, data) {
 				return fireCommand(Command.DATA_SAVE, data.map(
 					(id, sortIndex) => ({
 						type: SaveType.TASK,

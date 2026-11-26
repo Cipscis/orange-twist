@@ -98,9 +98,9 @@ export class SettableLiveData<T> {
 
 		this.#settableData = new SettableData({
 			...options,
-			setData(data, signal) {
+			setData({ signal }, data) {
 				self.#optimisticDataOverride = data;
-				const setPromise = options.setData(data, signal);
+				const setPromise = options.setData({ signal }, data);
 				setPromise.catch(() => {
 					// If something goes wrong when setting data, revert to last loaded data
 					self.#optimisticDataOverride = undefined;
