@@ -6,7 +6,7 @@ import {
 } from '@jest/globals';
 
 import { AsyncActionStateType } from './AsyncActionStateType';
-import type { SettableAsyncDataState } from './SettableAsyncDataState';
+import type { AsyncActionState } from './AsyncActionState';
 
 import { SettableData } from './SettableData';
 
@@ -22,7 +22,7 @@ describe('SettableData', () => {
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 		});
 
 		test('to a success state when `setData` is called successfully', async () => {
@@ -38,22 +38,23 @@ describe('SettableData', () => {
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
 			await Promise.race([promise]);
 
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 		});
 
 		test('to an error state when `setData` is called and throws an error', async () => {
@@ -69,14 +70,14 @@ describe('SettableData', () => {
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
 			await Promise.race([promise]);
@@ -85,7 +86,7 @@ describe('SettableData', () => {
 				type: AsyncActionStateType.ERROR,
 				error: new Error('Test error'),
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 		});
 
 		test('to its prior state when `setData` is aborted', async () => {
@@ -105,22 +106,25 @@ describe('SettableData', () => {
 
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			settableData.abort();
 
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 		});
 	});
 
@@ -138,7 +142,7 @@ describe('SettableData', () => {
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			expect(loadstart).not.toHaveBeenCalled();
 			settableData.setData({});
@@ -160,14 +164,14 @@ describe('SettableData', () => {
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			expect(load).not.toHaveBeenCalled();
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -176,8 +180,9 @@ describe('SettableData', () => {
 
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 		});
 
 		test('an error event on set failure', async () => {
@@ -195,14 +200,14 @@ describe('SettableData', () => {
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			settableData.setData({});
 
 			expect(settableData.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			expect(error).not.toHaveBeenCalled();
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -213,7 +218,7 @@ describe('SettableData', () => {
 				type: AsyncActionStateType.ERROR,
 				error: new Error('Test error'),
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 		});
 
 		test('an abort event on abort', () => {
@@ -249,14 +254,14 @@ describe('SettableData', () => {
 				expect(settableData.state).toEqual({
 					type: AsyncActionStateType.INITIAL,
 					loading: false,
-				} satisfies SettableAsyncDataState);
+				} satisfies AsyncActionState<void>);
 
 				settableData.setData({});
 
 				expect(settableData.state).toEqual({
 					type: AsyncActionStateType.INITIAL,
 					loading: true,
-				} satisfies SettableAsyncDataState);
+				} satisfies AsyncActionState<void>);
 
 				expect(loadend).not.toHaveBeenCalled();
 				// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -265,8 +270,9 @@ describe('SettableData', () => {
 
 				expect(settableData.state).toEqual({
 					type: AsyncActionStateType.SUCCESS,
+					data: undefined,
 					loading: false,
-				} satisfies SettableAsyncDataState);
+				} satisfies AsyncActionState<void>);
 			});
 
 			test('when set fails', async () => {
@@ -284,14 +290,14 @@ describe('SettableData', () => {
 				expect(settableData.state).toEqual({
 					type: AsyncActionStateType.INITIAL,
 					loading: false,
-				} satisfies SettableAsyncDataState);
+				} satisfies AsyncActionState<void>);
 
 				settableData.setData({});
 
 				expect(settableData.state).toEqual({
 					type: AsyncActionStateType.INITIAL,
 					loading: true,
-				} satisfies SettableAsyncDataState);
+				} satisfies AsyncActionState<void>);
 
 				expect(loadend).not.toHaveBeenCalled();
 				// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -302,7 +308,7 @@ describe('SettableData', () => {
 					type: AsyncActionStateType.ERROR,
 					error: new Error('Test error'),
 					loading: false,
-				} satisfies SettableAsyncDataState);
+				} satisfies AsyncActionState<void>);
 			});
 
 			test('when set is aborted', () => {

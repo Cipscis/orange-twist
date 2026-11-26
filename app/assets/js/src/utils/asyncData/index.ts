@@ -25,6 +25,5 @@ export {
 
 export { AsyncActionStateType } from './AsyncActionStateType';
 export type { AsyncActionState } from './AsyncActionState';
-export type { SettableAsyncDataState } from './SettableAsyncDataState';
 
 export { HTMLLiveDataElement } from './HTMLLiveDataElement';

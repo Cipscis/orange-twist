@@ -6,7 +6,6 @@ import {
 
 import { AsyncActionStateType } from './AsyncActionStateType';
 import type { AsyncActionState } from './AsyncActionState';
-import type { SettableAsyncDataState } from './SettableAsyncDataState';
 
 import { SettableLiveData } from './SettableLiveData';
 
@@ -90,7 +89,7 @@ describe('SettableLiveData', () => {
 			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			await Promise.race([setPromise]);
 
@@ -186,7 +185,7 @@ describe('SettableLiveData', () => {
 			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			await Promise.race([setPromise]);
 
@@ -276,7 +275,7 @@ describe('SettableLiveData', () => {
 			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 
 			await Promise.race([setPromise]);
 
@@ -365,7 +364,7 @@ describe('SettableLiveData', () => {
 		expect(settableLiveData.setter.state).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies SettableAsyncDataState);
+		} satisfies AsyncActionState<void>);
 
 		await Promise.race([setPromise]);
 

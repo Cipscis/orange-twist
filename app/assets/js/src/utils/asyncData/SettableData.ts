@@ -1,6 +1,6 @@
 import { extractError } from '../extractError';
 import { AsyncActionStateType } from './AsyncActionStateType';
-import type { SettableAsyncDataState } from './SettableAsyncDataState';
+import type { AsyncActionState } from './AsyncActionState';
 
 /**
  * This utility type constructs a stripped down type that can be used for setting data via partial update.
@@ -29,14 +29,14 @@ export interface SettableDataOptions<T> {
 // This class is intentionally modified with declaration merging to make event binding easier
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class SettableData<T> extends EventTarget {
-	#state: SettableAsyncDataState = {
+	#state: AsyncActionState<void> = {
 		type: AsyncActionStateType.INITIAL,
 		loading: false,
 	};
 	/**
-	 * A {@linkcode SettableAsyncDataState} representing the current state of any operation setting data.
+	 * A {@linkcode AsyncActionState<void>} representing the current state of any operation setting data.
 	 */
-	get state(): SettableAsyncDataState {
+	get state(): AsyncActionState<void> {
 		return this.#state;
 	}
 	#abortController: AbortController | null = null;
@@ -82,6 +82,7 @@ export class SettableData<T> extends EventTarget {
 			}
 			this.#state = {
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
 			};
 			this.dispatchEvent(new ProgressEvent('load'));

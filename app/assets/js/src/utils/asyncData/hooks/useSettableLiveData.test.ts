@@ -13,7 +13,6 @@ import {
 	SettableLiveData,
 	type SettableLiveDataOptions,
 } from '../SettableLiveData';
-import type { SettableAsyncDataState } from '../SettableAsyncDataState';
 
 import { useSettableLiveData } from './useSettableLiveData';
 
@@ -69,7 +68,7 @@ describe('useSettableLiveData', () => {
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: false,
-		} satisfies SettableAsyncDataState);
+		} satisfies AsyncActionState<void>);
 
 		// Save data and check loading save state and optimistic loading state
 		const savePromise = result.current.setData(false);
@@ -79,7 +78,7 @@ describe('useSettableLiveData', () => {
 			expect(result.current.setterState).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
 				data: false,
@@ -92,8 +91,9 @@ describe('useSettableLiveData', () => {
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+			} satisfies AsyncActionState<void>);
 		});
 
 		// Trigger reload and check reloading with optimistic data

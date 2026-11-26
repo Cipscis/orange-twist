@@ -14,7 +14,6 @@ import {
 import {
 	AsyncActionStateType,
 	type AsyncActionState,
-	type SettableAsyncDataState,
 } from 'utils/asyncData';
 
 import { insertTestData } from '../../test-utils';
@@ -40,7 +39,7 @@ describe('useSettableDayTaskIdsForDay', () => {
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: false,
-		} satisfies SettableAsyncDataState);
+		} satisfies AsyncActionState<void>);
 	});
 
 	test('fetches data on initial render', async () => {
