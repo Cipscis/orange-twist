@@ -1,7 +1,7 @@
 import { h, type JSX } from 'preact';
 
 import type { Status } from 'database';
-import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import { Loader } from 'components/shared';
 

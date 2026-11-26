@@ -9,7 +9,7 @@ import {
 } from 'preact/hooks';
 
 import { getCurrentDateDayName } from 'utils';
-import { AsyncActionStateType } from 'utils/asyncData';
+import { AsyncActionStateType } from 'utils/asyncAction';
 import { useCurrentDay } from 'database';
 
 import { Command } from 'types/Command';

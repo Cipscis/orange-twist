@@ -1,4 +1,4 @@
-import { AsyncActionStateType, SettableLiveData } from 'utils/asyncData';
+import { AsyncActionStateType, SettableLiveData } from 'utils/asyncAction';
 import { sortBySortIndex } from 'utils/sortBySortIndex';
 
 import { fireCommand } from 'registers/commands';

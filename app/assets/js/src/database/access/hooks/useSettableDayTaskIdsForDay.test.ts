@@ -14,7 +14,7 @@ import {
 import {
 	AsyncActionStateType,
 	type AsyncActionState,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import { insertTestData } from '../../test-utils';
 

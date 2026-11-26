@@ -5,7 +5,7 @@ import {
 	SettableLiveData,
 	useSettableLiveData,
 	type UseSettableLiveDataResult,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';

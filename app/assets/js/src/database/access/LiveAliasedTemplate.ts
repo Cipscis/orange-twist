@@ -1,4 +1,4 @@
-import { AsyncActionStateType, LiveData } from 'utils/asyncData';
+import { AsyncActionStateType, LiveData } from 'utils/asyncAction';
 
 import type { Template } from '../types';
 import {

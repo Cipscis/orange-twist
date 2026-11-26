@@ -3,7 +3,7 @@ import { useMemo } from 'preact/hooks';
 import {
 	type AsyncActionState,
 	useLiveData,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import type { Task } from '../../types';
 

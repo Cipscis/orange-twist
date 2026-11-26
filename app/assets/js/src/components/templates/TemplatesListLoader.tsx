@@ -3,7 +3,7 @@ import { h, type JSX } from 'preact';
 import {
 	AsyncActionStateType,
 	type AsyncActionState,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import {
 	Loader,

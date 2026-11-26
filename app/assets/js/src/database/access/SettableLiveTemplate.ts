@@ -1,4 +1,4 @@
-import { AsyncActionStateType, SettableLiveData } from 'utils/asyncData';
+import { AsyncActionStateType, SettableLiveData } from 'utils/asyncAction';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';

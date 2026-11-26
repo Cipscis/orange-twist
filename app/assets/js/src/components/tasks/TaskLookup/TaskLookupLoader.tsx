@@ -1,7 +1,7 @@
 import { type JSX, h } from 'preact';
 
 import type { Task } from 'database';
-import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import { Notice, NoticeVariant } from 'components/shared';
 

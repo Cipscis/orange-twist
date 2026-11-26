@@ -6,7 +6,7 @@ import {
 	type AsyncActionState,
 	LiveData,
 	useLiveData,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import type { DayTask } from '../../types';
 

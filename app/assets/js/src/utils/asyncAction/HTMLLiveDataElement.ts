@@ -1,4 +1,4 @@
-import type { LiveData } from 'utils/asyncData';
+import type { LiveData } from 'utils/asyncAction';
 
 /**
  * A generic class to be extended by custom HTML elements driven by {@linkcode LiveData}.

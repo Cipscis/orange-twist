@@ -7,7 +7,7 @@ import {
 import {
 	type AsyncActionState,
 	LiveData,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import type { Status } from '../../types';
 import { loadAllStatuses } from '../loadAllStatuses';

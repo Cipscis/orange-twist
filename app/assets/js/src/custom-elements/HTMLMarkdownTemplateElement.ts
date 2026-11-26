@@ -1,5 +1,5 @@
 import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
-import { AsyncActionStateType, HTMLLiveDataElement } from 'utils/asyncData';
+import { AsyncActionStateType, HTMLLiveDataElement } from 'utils/asyncAction';
 import { renderInline } from 'utils/markdown';
 import { templateArgsPattern } from 'utils/templateArgsPattern';
 import { getTemplateAlias } from 'utils/getTemplateAlias';

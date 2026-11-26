@@ -5,7 +5,7 @@ import {
 	type AsyncActionState,
 	LiveData,
 	useLiveData,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import { loadDayTaskIdsForDay } from '../loadDayTaskIdsForDay';
 import {

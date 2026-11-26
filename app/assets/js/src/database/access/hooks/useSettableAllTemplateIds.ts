@@ -3,7 +3,7 @@ import { useMemo } from 'preact/hooks';
 import {
 	useSettableLiveData,
 	type UseSettableLiveDataResult,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import { SettableAllTemplateIds } from '../SettableAllTemplateIds';
 

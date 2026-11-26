@@ -1,4 +1,4 @@
-import { LiveData } from 'utils/asyncData';
+import { LiveData } from 'utils/asyncAction';
 
 import { loadAllStatuses } from './loadAllStatuses';
 import { loadTaskIdsForStatuses, TaskSortingMethod } from './loadTaskIdsForStatuses';

@@ -3,7 +3,7 @@ import { useMemo } from 'preact/hooks';
 import {
 	useLiveData,
 	type AsyncActionState,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import { LiveCompletedTaskIds } from '../LiveCompletedTaskIds';
 

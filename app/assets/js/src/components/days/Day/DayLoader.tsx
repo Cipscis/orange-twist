@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncActionStateType } from 'utils/asyncData';
+import { AsyncActionStateType } from 'utils/asyncAction';
 import type { useSettableDay } from 'database';
 
 import {

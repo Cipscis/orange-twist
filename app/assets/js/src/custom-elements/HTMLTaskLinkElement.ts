@@ -4,7 +4,7 @@ import {
 	AsyncActionStateType,
 	type AsyncActionState,
 	HTMLLiveDataElement,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 import { renderInline } from 'utils/markdown';
 
 import { getTaskDetailUrl } from 'navigation';
