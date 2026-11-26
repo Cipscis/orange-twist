@@ -72,8 +72,6 @@ export async function save(actions: readonly SaveAction[]): Promise<void> {
 			addNewTaskToDay(action, transaction);
 		} else if (action.type === SaveType.TASK_DELETE) {
 			deleteTask(action, transaction);
-		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
-			saveDayTaskLegacy(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK) {
 			saveDayTask(action, transaction);
 		} else if (action.type === SaveType.DAY_TASK_ADD) {
@@ -310,38 +308,6 @@ async function saveDayTask(
 }
 
 /**
- * Save the note of a single day task, referenced by its day name and task ID instead of its ID.
- */
-async function saveDayTaskLegacy(
-	action: Extract<
-		SaveAction, { type: typeof SaveType.DAY_TASK_LEGACY; }
-	>,
-	transaction: IDBTransaction
-): Promise<void> {
-	const { dayName, taskId } = action;
-
-	const [year, month, day] = getDayNameParts(dayName);
-
-	const dayInfo = await getDayByDateInternal(transaction, { year, month, day });
-	if (!dayInfo) {
-		throw new Error(`Could not save day task - unable to find associated day ${JSON.stringify({ year, month, day })}`);
-	}
-	const dayTask = await getDayTaskForDayAndTaskInternal(transaction, {
-		day: dayInfo.id,
-		task: taskId,
-	});
-	if (!dayTask) {
-		throw new Error(`Could not save day task - unable to find day task for day ${JSON.stringify({ year, month, day })} and task ${taskId}`);
-	}
-
-	saveDayTask({
-		type: SaveType.DAY_TASK,
-		id: dayTask.id,
-		dayTask: action.dayTask,
-	}, transaction);
-}
-
-/**
  * Adds a single day task.
  */
 async function addDayTask(
@@ -552,10 +518,6 @@ function gatherTransactionRequirements(
 		} else if (action.type === SaveType.DAY_TASK) {
 			objectStores.add(ObjectStoreName.DAY_TASK);
 			objectStores.add(ObjectStoreName.STATUS);
-		} else if (action.type === SaveType.DAY_TASK_LEGACY) {
-			objectStores.add(ObjectStoreName.DAY_TASK);
-			objectStores.add(ObjectStoreName.STATUS);
-			objectStores.add(ObjectStoreName.DAY);
 		} else if (
 			action.type === SaveType.DAY_TASK_ADD ||
 			action.type === SaveType.TASK_ADD_WITH_DAY ||

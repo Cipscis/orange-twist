@@ -52,7 +52,7 @@ export function useCommandDataSave(): void {
 			</>, { id, duration: null });
 
 			try {
-				await processSaveActions(saveActions);
+				await save(saveActions);
 				ui.alert('Saved', {
 					duration: 2000,
 					id,
@@ -74,12 +74,4 @@ export function useCommandDataSave(): void {
 	useCommand(Command.DATA_SAVE, saveData);
 
 	useKeyboardShortcut(KeyboardShortcutName.DATA_SAVE, Command.DATA_SAVE);
-}
-
-/**
- * Glue logic for handling both legacy "save all" behaviour, and new {@linkcode SaveAction} processing behaviour.
- */
-async function processSaveActions(saveActions: readonly SaveAction[]): Promise<void> {
-	// Otherwise, process each save action
-	await save(saveActions);
 }
