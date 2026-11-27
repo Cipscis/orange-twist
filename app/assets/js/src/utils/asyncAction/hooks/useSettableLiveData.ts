@@ -5,8 +5,7 @@ import {
 } from 'preact/hooks';
 
 import type { AsyncActionState } from '../AsyncActionState';
-import type { SettableLiveData } from '../SettableLiveData';
-import type { SettablePartial } from '../SettableData';
+import type { SettableLiveData, SettablePartial } from '../SettableLiveData';
 
 export interface UseSettableLiveDataResult<T> {
 	getterState: AsyncActionState<T>;

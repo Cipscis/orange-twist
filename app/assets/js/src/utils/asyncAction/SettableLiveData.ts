@@ -1,6 +1,10 @@
 import { AsyncActionStateType } from './AsyncActionStateType';
 import type { AsyncActionState } from './AsyncActionState';
-import type { AsyncActionFn } from './AsyncAction';
+import {
+	AsyncAction,
+	type AsyncActionFn,
+	type AsyncActionFnOptions,
+} from './AsyncAction';
 
 import {
 	LiveData,
@@ -8,17 +12,29 @@ import {
 	type LiveDataObserveOptions,
 } from './LiveData';
 
-import {
-	SettableData,
-	type SettableDataOptions,
-	type SettablePartial,
-} from './SettableData';
+/**
+ * This utility type constructs a stripped down type that can be used for setting data via partial update.
+ *
+ * For literals or array data, the complete value is required.
+ */
+export type SettablePartial<T> = T extends readonly unknown[]
+	? T
+	: Partial<T>;
 
-export interface SettableLiveDataOptions<T> extends LiveDataOptions<T>, SettableDataOptions<T> {
+export interface SettableLiveDataOptions<T> extends LiveDataOptions<T> {
 	/**
 	 * A function that retrieves the data being watched.
 	 */
 	getData: AsyncActionFn<T>;
+	/**
+	 * A function that sets data via partial update.
+	 *
+	 * Takes an {@linkcode AbortSignal} to allow requests to be aborted.
+	 */
+	setData: (
+		options: AsyncActionFnOptions,
+		data: SettablePartial<T>,
+	) => Promise<void>;
 	/**
 	 * If set, provide an "optimistic" value after calling {@linkcode SettableAsyncDataResult.setData setData}. This allows the new value to be displayed immediately during the gap between setting it and retrieving it again.
 	 *
@@ -34,7 +50,7 @@ export class SettableLiveData<T> {
 	#optimistic: boolean;
 
 	#liveData: LiveData<T>;
-	#settableData: SettableData<T>;
+	#settableData: AsyncAction<void, [SettablePartial<T>]>;
 
 	get #liveDataStateProxy(): AsyncActionState<T> {
 		if (
@@ -73,7 +89,7 @@ export class SettableLiveData<T> {
 		Pick<LiveData<T>, 'addEventListener' | 'removeEventListener' | 'state'>
 	>;
 	readonly setter: Readonly<
-		Pick<SettableData<T>, 'addEventListener' | 'removeEventListener' | 'state'>
+		Pick<AsyncAction<void, [SettablePartial<T>]>, 'addEventListener' | 'removeEventListener' | 'state'>
 	>;
 
 	constructor(options: SettableLiveDataOptions<T>) {
@@ -104,18 +120,15 @@ export class SettableLiveData<T> {
 			},
 		};
 
-		this.#settableData = new SettableData({
-			...options,
-			setData({ signal }, data) {
-				self.#optimisticDataOverride = data;
-				const setPromise = options.setData({ signal }, data);
-				setPromise.catch(() => {
-					// If something goes wrong when setting data, revert to last loaded data
-					self.#optimisticDataOverride = undefined;
-				});
+		this.#settableData = new AsyncAction(function setData({ signal }, data) {
+			self.#optimisticDataOverride = data;
+			const setPromise = options.setData({ signal }, data);
+			setPromise.catch(() => {
+				// If something goes wrong when setting data, revert to last loaded data
+				self.#optimisticDataOverride = undefined;
+			});
 
-				return setPromise;
-			},
+			return setPromise;
 		});
 		this.setter = {
 			addEventListener: this.#settableData.addEventListener.bind(this.#settableData),
@@ -142,7 +155,7 @@ export class SettableLiveData<T> {
 
 	/** Set the data via partial update. */
 	setData(data: SettablePartial<T>): Promise<void> {
-		return this.#settableData.setData(data);
+		return this.#settableData.start(undefined, data);
 	}
 
 	/** Abort any in-flight request to set data. */

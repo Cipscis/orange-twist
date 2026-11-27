@@ -8,11 +8,6 @@ export {
 	type LiveDataObserveOptions,
 } from './LiveData';
 export {
-	SettableData,
-	type SettableDataOptions,
-	type SettablePartial,
-} from './SettableData';
-export {
 	SettableLiveData,
 	type SettableLiveDataOptions,
 } from './SettableLiveData';
