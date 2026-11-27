@@ -21,31 +21,33 @@ import {
  */
 export function useCurrentDay(): AsyncActionState<Day> {
 	const liveCurrentDay = useMemo(() => {
-		const liveCurrentDay = new LiveData({
-			async getData(_options) {
+		const liveCurrentDay = new LiveData(
+			async function getData(_options) {
 				const currentDay = await loadCurrentDay();
 				return currentDay;
 			},
-			observeState(getDataArg, state, signal) {
-				if (state.type === AsyncActionStateType.SUCCESS) {
-					const getData = () => getDataArg();
-					const changeEntity = { type: ChangeEntityType.DAY, id: state.data.id };
+			{
+				observeState(getDataArg, state, signal) {
+					if (state.type === AsyncActionStateType.SUCCESS) {
+						const getData = () => getDataArg();
+						const changeEntity = { type: ChangeEntityType.DAY, id: state.data.id };
 
-					addChangeListener(
-						ChangeType.CHANGE,
-						changeEntity,
-						getData,
-						{ signal }
-					);
-					addChangeListener(
-						ChangeType.DELETE,
-						changeEntity,
-						getData,
-						{ signal }
-					);
-				}
-			},
-		});
+						addChangeListener(
+							ChangeType.CHANGE,
+							changeEntity,
+							getData,
+							{ signal }
+						);
+						addChangeListener(
+							ChangeType.DELETE,
+							changeEntity,
+							getData,
+							{ signal }
+						);
+					}
+				},
+			}
+		);
 		liveCurrentDay.observe();
 		return liveCurrentDay;
 	}, []);

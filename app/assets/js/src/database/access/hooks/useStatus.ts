@@ -14,8 +14,8 @@ import { loadStatus } from '../loadStatus';
  */
 export function useStatus(statusId: number): AsyncActionState<Status> {
 	const liveStatus = useMemo(() => {
-		const liveStatus = new LiveData({
-			async getData(_options) {
+		const liveStatus = new LiveData(
+			async function getData(_options) {
 				const status = await loadStatus(statusId);
 
 				if (status === null) {
@@ -25,7 +25,7 @@ export function useStatus(statusId: number): AsyncActionState<Status> {
 				return status;
 			},
 			// No need to re-fetch status data, because it never changes
-		});
+		);
 		liveStatus.observe();
 		return liveStatus;
 	}, [statusId]);

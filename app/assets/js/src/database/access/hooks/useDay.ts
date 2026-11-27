@@ -21,8 +21,8 @@ import {
  */
 export function useDay(dayId: number): AsyncActionState<Day> {
 	const liveDay = useMemo(() => {
-		const liveDay = new LiveData({
-			async getData(options) {
+		const liveDay = new LiveData(
+			async function getData(options) {
 				const day = await loadDay(dayId);
 
 				if (day === null) {
@@ -31,36 +31,38 @@ export function useDay(dayId: number): AsyncActionState<Day> {
 
 				return day;
 			},
-			observeState(getData, state, signal) {
-				const changeEntity = {
-					type: ChangeEntityType.DAY,
-					id: dayId,
-				};
+			{
+				observeState(getData, state, signal) {
+					const changeEntity = {
+						type: ChangeEntityType.DAY,
+						id: dayId,
+					};
 
-				if (state.type === AsyncActionStateType.ERROR) {
-					addChangeListener(
-						ChangeType.ADD,
-						changeEntity,
-						() => getData(),
-						{ signal },
-					);
-				} else if (state.type === AsyncActionStateType.SUCCESS) {
-					addChangeListener(
-						ChangeType.CHANGE,
-						changeEntity,
-						() => getData(),
-						{ signal },
-					);
+					if (state.type === AsyncActionStateType.ERROR) {
+						addChangeListener(
+							ChangeType.ADD,
+							changeEntity,
+							() => getData(),
+							{ signal },
+						);
+					} else if (state.type === AsyncActionStateType.SUCCESS) {
+						addChangeListener(
+							ChangeType.CHANGE,
+							changeEntity,
+							() => getData(),
+							{ signal },
+						);
 
-					addChangeListener(
-						ChangeType.DELETE,
-						changeEntity,
-						() => getData(),
-						{ signal },
-					);
-				}
-			},
-		});
+						addChangeListener(
+							ChangeType.DELETE,
+							changeEntity,
+							() => getData(),
+							{ signal },
+						);
+					}
+				},
+			}
+		);
 		liveDay.observe();
 		return liveDay;
 	}, [dayId]);

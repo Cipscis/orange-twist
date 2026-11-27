@@ -16,8 +16,8 @@ import { loadStatus } from './loadStatus';
  */
 export class LiveTaskWithStatus extends LiveData<[Task, Status]> {
 	constructor(taskId: number) {
-		super({
-			async getData(_options) {
+		super(
+			async function getData(_options) {
 				const taskPromise = loadTask(taskId);
 				const statusId = await loadStatusForTask(taskId);
 
@@ -38,67 +38,69 @@ export class LiveTaskWithStatus extends LiveData<[Task, Status]> {
 
 				return [task, status];
 			},
-			observeState(getDataArg, state, signal) {
+			{
+				observeState(getDataArg, state, signal) {
 				// Task listeners
-				const taskChangeEntity = {
-					type: ChangeEntityType.TASK,
-					id: taskId,
-				};
+					const taskChangeEntity = {
+						type: ChangeEntityType.TASK,
+						id: taskId,
+					};
 
-				const getData = () => getDataArg();
+					const getData = () => getDataArg();
 
-				if (state.type === AsyncActionStateType.ERROR) {
-					addChangeListener(
-						ChangeType.ADD,
-						taskChangeEntity,
-						getData,
-						{ signal },
-					);
-				} else if (state.type === AsyncActionStateType.SUCCESS) {
-					addChangeListener(
-						ChangeType.CHANGE,
-						taskChangeEntity,
-						getData,
-						{ signal },
-					);
+					if (state.type === AsyncActionStateType.ERROR) {
+						addChangeListener(
+							ChangeType.ADD,
+							taskChangeEntity,
+							getData,
+							{ signal },
+						);
+					} else if (state.type === AsyncActionStateType.SUCCESS) {
+						addChangeListener(
+							ChangeType.CHANGE,
+							taskChangeEntity,
+							getData,
+							{ signal },
+						);
 
-					addChangeListener(
-						ChangeType.DELETE,
-						taskChangeEntity,
-						getData,
-						{ signal },
-					);
-				}
+						addChangeListener(
+							ChangeType.DELETE,
+							taskChangeEntity,
+							getData,
+							{ signal },
+						);
+					}
 
-				// Day task listeners for task status
-				// TODO: Only care about day tasks for this task
-				const dayTaskChangeEntity = {
-					type: ChangeEntityType.DAY_TASK,
-				};
+					// Day task listeners for task status
+					// TODO: Only care about day tasks for this task
+					const dayTaskChangeEntity = {
+						type: ChangeEntityType.DAY_TASK,
+					};
 
-				if (state.type === AsyncActionStateType.SUCCESS) {
-					addChangeListener(
-						ChangeType.ADD,
-						dayTaskChangeEntity,
-						getData,
-						{ signal },
-					);
+					if (state.type === AsyncActionStateType.SUCCESS) {
+						addChangeListener(
+							ChangeType.ADD,
+							dayTaskChangeEntity,
+							getData,
+							{ signal },
+						);
 
-					addChangeListener(
-						ChangeType.CHANGE,
-						dayTaskChangeEntity,
-						getData,
-						{ signal },
-					);
+						addChangeListener(
+							ChangeType.CHANGE,
+							dayTaskChangeEntity,
+							getData,
+							{ signal },
+						);
 
-					addChangeListener(
-						ChangeType.DELETE,
-						dayTaskChangeEntity,
-						getData,
-						{ signal },
-					);
-				}
-			},
-		});
+						addChangeListener(
+							ChangeType.DELETE,
+							dayTaskChangeEntity,
+							getData,
+							{ signal },
+						);
+					}
+				},
+			}
+		);
 	}
 }

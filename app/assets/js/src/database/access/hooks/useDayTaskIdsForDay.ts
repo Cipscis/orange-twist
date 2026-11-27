@@ -19,40 +19,42 @@ import {
  */
 export function useDayTaskIdsForDay(dayId: number): AsyncActionState<readonly number[]> {
 	const liveDayTaskIds = useMemo(() => {
-		const liveDayTaskIds = new LiveData({
-			getData(_options) {
+		const liveDayTaskIds = new LiveData(
+			function getData(_options) {
 				return loadDayTaskIdsForDay(dayId);
 			},
-			observe(getData, signal) {
+			{
+				observe(getData, signal) {
 				// TODO: Limit refreshes to when the day task is for this day
-				addChangeListener(
-					ChangeType.ADD,
-					{ type: ChangeEntityType.DAY_TASK },
-					() => getData(),
-					{ signal },
-				);
-			},
-			observeState(getData, state, signal) {
-				if (state.type === AsyncActionStateType.SUCCESS) {
-					for (const id of state.data) {
+					addChangeListener(
+						ChangeType.ADD,
+						{ type: ChangeEntityType.DAY_TASK },
+						() => getData(),
+						{ signal },
+					);
+				},
+				observeState(getData, state, signal) {
+					if (state.type === AsyncActionStateType.SUCCESS) {
+						for (const id of state.data) {
 						// TODO: Limit refreshes to when the day task's sortIndex was updated
-						addChangeListener(
-							ChangeType.CHANGE,
-							{ type: ChangeEntityType.DAY_TASK, id },
-							() => getData(),
-							{ signal },
-						);
+							addChangeListener(
+								ChangeType.CHANGE,
+								{ type: ChangeEntityType.DAY_TASK, id },
+								() => getData(),
+								{ signal },
+							);
 
-						addChangeListener(
-							ChangeType.DELETE,
-							{ type: ChangeEntityType.DAY_TASK, id },
-							() => getData(),
-							{ signal },
-						);
+							addChangeListener(
+								ChangeType.DELETE,
+								{ type: ChangeEntityType.DAY_TASK, id },
+								() => getData(),
+								{ signal },
+							);
+						}
 					}
-				}
-			},
-		});
+				},
+			}
+		);
 		liveDayTaskIds.observe();
 		return liveDayTaskIds;
 	}, [dayId]);

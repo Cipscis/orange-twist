@@ -29,15 +29,15 @@ export function useAllStatuses(): AsyncActionState<readonly Status[]> {
 			return liveStatusesGlobal;
 		}
 
-		liveStatusesGlobal = new LiveData({
-			async getData(_options) {
+		liveStatusesGlobal = new LiveData(
+			async function getData(_options) {
 				if (statuses === null) {
 					statuses = await loadAllStatuses();
 				}
 				return statuses;
 			},
 			// No need to re-fetch status data, because it never changes
-		});
+		);
 		liveStatusesGlobal.observe();
 		return liveStatusesGlobal;
 	}, []);

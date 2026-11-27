@@ -10,10 +10,6 @@ import {
 
 export interface LiveDataOptions<T, A extends unknown[] = []> {
 	/**
-	 * A function that retrieves the data being watched.
-	 */
-	getData: AsyncActionFn<T, A>;
-	/**
 	 * A function that sets up the necessary event listeners to re-fetch the data.
 	 *
 	 * An {@linkcode AbortSignal} is provided so that it can be used to define any necessary cleanup.
@@ -51,7 +47,7 @@ export interface LiveDataObserveOptions {
 /**
  * A representation of asynchronously loaded data that can be updated live.
  *
- * To load data and begin live observation, call the {@linkcode LiveData.observe observe} method. To stop live observation, call the {@linkcode LiveData.unobserve unobserve} method.
+ * To load data and begin live observation, call the {@linkcode LiveData.["observe"] observe} method. To stop live observation, call the {@linkcode LiveData["unobserve"] unobserve} method.
  */
 export class LiveData<T, A extends unknown[] = []> extends AsyncAction<T, A> {
 	#unobserveController: AbortController | null = null;
@@ -61,14 +57,18 @@ export class LiveData<T, A extends unknown[] = []> extends AsyncAction<T, A> {
 	#observeState: Required<LiveDataOptions<T, A>>['observeState'] | null = null;
 
 	constructor(
-		options: LiveDataOptions<T, A>,
+		/**
+		 * A function that retrieves the data being watched.
+		 */
+		fn: AsyncActionFn<T, A>,
+		options?: LiveDataOptions<T, A>,
 	) {
-		super(options.getData);
+		super(fn);
 
-		if (options.observe) {
+		if (options?.observe) {
 			this.#observe = options.observe;
 		}
-		if (options.observeState) {
+		if (options?.observeState) {
 			this.#observeState = options.observeState;
 		}
 	}

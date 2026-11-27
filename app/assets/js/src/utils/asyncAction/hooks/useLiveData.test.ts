@@ -9,10 +9,7 @@ import { useMemo } from 'preact/hooks';
 import { AsyncActionStateType } from '../AsyncActionStateType';
 import type { AsyncActionState } from '../AsyncActionState';
 
-import {
-	LiveData,
-	type LiveDataOptions,
-} from '../LiveData';
+import { LiveData } from '../LiveData';
 
 import { useLiveData } from './useLiveData';
 
@@ -22,22 +19,26 @@ describe('useLiveData', () => {
 
 		let value = true;
 
-		const initialProps: LiveDataOptions<boolean> = {
-			getData(_options) {
+		const initialProps: ConstructorParameters<
+			typeof LiveData<boolean>
+		> = [
+			(_options) => {
 				return Promise.resolve(value);
 			},
-			observe(getData, _signal) {
-				promise.then(() => getData());
+			{
+				observe(getData, _signal) {
+					promise.then(() => getData());
+				},
 			},
-		};
+		];
 
 		const { rerender, result } = renderHook(
-			(options) => {
+			([fn, options]) => {
 				const liveData = useMemo(() => {
-					const liveData = new LiveData(options);
+					const liveData = new LiveData(fn, options);
 					liveData.observe();
 					return liveData;
-				}, [options]);
+				}, [fn, options]);
 
 				return useLiveData(liveData);
 			},
@@ -87,22 +88,26 @@ describe('useLiveData', () => {
 	test('ensures liveData gets unobserved on unmount', () => {
 		let cleanupSignal: AbortSignal;
 
-		const initialProps: LiveDataOptions<boolean> = {
-			getData(_options) {
+		const initialProps: ConstructorParameters<
+			typeof LiveData<boolean>
+		> = [
+			(_options) => {
 				return Promise.resolve(true);
 			},
-			observe(_getData, signal) {
-				cleanupSignal = signal;
+			{
+				observe(_getData, signal) {
+					cleanupSignal = signal;
+				},
 			},
-		};
+		];
 
 		const { result, unmount } = renderHook(
-			(options) => {
+			([fn, options]) => {
 				const liveData = useMemo(() => {
-					const liveData = new LiveData(options);
+					const liveData = new LiveData(fn, options);
 					liveData.observe();
 					return liveData;
-				}, [options]);
+				}, [fn, options]);
 
 				return useLiveData(liveData);
 			},
@@ -122,20 +127,24 @@ describe('useLiveData', () => {
 	});
 
 	test('constructs temporary hybrid state if a different LiveData is passed in', async () => {
-		const initialProps: LiveDataOptions<boolean> = {
-			getData(_options) {
+		const initialProps: ConstructorParameters<
+			typeof LiveData<boolean>
+		> = [
+			(_options) => {
 				return Promise.resolve(true);
 			},
-			observe() {},
-		};
+			{
+				observe() {},
+			},
+		];
 
 		const { rerender, result } = renderHook(
-			(options) => {
+			([fn, options]) => {
 				const liveData = useMemo(() => {
-					const liveData = new LiveData(options);
+					const liveData = new LiveData(fn, options);
 					liveData.observe();
 					return liveData;
-				}, [options]);
+				}, [fn, options]);
 
 				return useLiveData(liveData);
 			},
@@ -155,12 +164,14 @@ describe('useLiveData', () => {
 			} satisfies AsyncActionState<boolean>);
 		});
 
-		rerender({
-			getData(_options) {
+		rerender([
+			(_options) => {
 				return Promise.resolve(false);
 			},
-			observe() {},
-		});
+			{
+				observe() {},
+			},
+		]);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({

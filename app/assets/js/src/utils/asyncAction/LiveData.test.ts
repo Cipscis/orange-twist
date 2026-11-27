@@ -19,9 +19,7 @@ describe('LiveData', () => {
 			return Promise.resolve(true);
 		});
 
-		const liveData = new LiveData({
-			getData,
-		});
+		const liveData = new LiveData(getData);
 
 		expect(getData).not.toHaveBeenCalled();
 		liveData.observe();
@@ -46,10 +44,7 @@ describe('LiveData', () => {
 		const getData = () => Promise.resolve(true);
 		const observe = jest.fn();
 
-		const liveData = new LiveData({
-			getData,
-			observe,
-		});
+		const liveData = new LiveData(getData, { observe });
 
 		expect(observe).not.toHaveBeenCalled();
 		liveData.observe();
@@ -68,10 +63,7 @@ describe('LiveData', () => {
 		};
 		const observeState = jest.fn();
 
-		const liveData = new LiveData({
-			getData,
-			observeState,
-		});
+		const liveData = new LiveData(getData, { observeState });
 
 		expect(observeState).not.toHaveBeenCalled();
 		liveData.observe();
@@ -105,16 +97,18 @@ describe('LiveData', () => {
 		});
 
 		let unobserveStateSignal: AbortSignal | null = null;
-		const liveData = new LiveData({
-			getData: () => {
+		const liveData = new LiveData(
+			() => {
 				loadResolve();
 				return Promise.resolve(value);
 			},
-			observe: (getData) => {
-				changePromise.then(() => getData());
+			{
+				observe: (getData) => {
+					changePromise.then(() => getData());
+				},
+				observeState,
 			},
-			observeState,
-		});
+		);
 
 		// Load data initially
 		liveData.observe();
@@ -168,13 +162,15 @@ describe('LiveData', () => {
 		});
 
 		let unobserveStateSignal: AbortSignal | null = null;
-		const liveData = new LiveData({
-			getData: () => {
+		const liveData = new LiveData(
+			() => {
 				loadResolve();
 				return Promise.resolve(true);
 			},
-			observeState,
-		});
+			{
+				observeState,
+			},
+		);
 
 		// Load data initially
 		liveData.observe();
@@ -198,12 +194,12 @@ describe('LiveData', () => {
 		test('for the initial `getData` call', () => {
 			let abortSignal: AbortSignal | null = null;
 
-			const liveData = new LiveData({
-				getData(options) {
+			const liveData = new LiveData(
+				(options) => {
 					abortSignal = options.signal;
 					return Promise.resolve(true);
 				},
-			});
+			);
 
 			liveData.observe();
 
@@ -224,8 +220,8 @@ describe('LiveData', () => {
 				resolve: reloadResolve,
 			} = Promise.withResolvers<void>();
 
-			const liveData = new LiveData({
-				getData(options) {
+			const liveData = new LiveData(
+				(options) => {
 					if (initialCall) {
 						initialCall = false;
 					} else {
@@ -234,10 +230,12 @@ describe('LiveData', () => {
 					initialLoadResolve();
 					return Promise.resolve(true);
 				},
-				observe(getData, signal) {
-					reloadPromise.then(() => getData());
+				{
+					observe(getData, _signal) {
+						reloadPromise.then(() => getData());
+					},
 				},
-			});
+			);
 
 			liveData.observe();
 
@@ -268,8 +266,8 @@ describe('LiveData', () => {
 				resolve: reloadResolve,
 			} = Promise.withResolvers<void>();
 
-			const liveData = new LiveData({
-				getData(options) {
+			const liveData = new LiveData(
+				(options) => {
 					if (initialCall) {
 						initialCall = false;
 					} else {
@@ -278,10 +276,12 @@ describe('LiveData', () => {
 					initialLoadResolve();
 					return Promise.resolve(true);
 				},
-				observeState(getData, state, signal) {
-					reloadPromise.then(() => getData());
+				{
+					observeState(getData, _state, _signal) {
+						reloadPromise.then(() => getData());
+					},
 				},
-			});
+			);
 
 			liveData.observe();
 
@@ -306,12 +306,14 @@ describe('LiveData', () => {
 		test('when `unobserve` is called', () => {
 			const abort = jest.fn();
 
-			const liveData = new LiveData({
-				getData: () => Promise.resolve(true),
-				observe: (_getData, signal) => {
-					signal.addEventListener('abort', abort);
+			const liveData = new LiveData(
+				() => Promise.resolve(true),
+				{
+					observe: (_getData, signal) => {
+						signal.addEventListener('abort', abort);
+					},
 				},
-			});
+			);
 
 			const loadend = jest.fn();
 
@@ -327,12 +329,14 @@ describe('LiveData', () => {
 		test('when disposed', () => {
 			const abort = jest.fn();
 
-			const liveData = new LiveData({
-				getData: () => Promise.resolve(true),
-				observe: (_getData, signal) => {
-					signal.addEventListener('abort', abort);
+			const liveData = new LiveData(
+				() => Promise.resolve(true),
+				{
+					observe: (_getData, signal) => {
+						signal.addEventListener('abort', abort);
+					},
 				},
-			});
+			);
 
 			const loadend = jest.fn();
 

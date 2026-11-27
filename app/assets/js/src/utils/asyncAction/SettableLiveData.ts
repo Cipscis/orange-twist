@@ -1,5 +1,6 @@
 import { AsyncActionStateType } from './AsyncActionStateType';
 import type { AsyncActionState } from './AsyncActionState';
+import type { AsyncActionFn } from './AsyncAction';
 
 import {
 	LiveData,
@@ -14,6 +15,10 @@ import {
 } from './SettableData';
 
 export interface SettableLiveDataOptions<T> extends LiveDataOptions<T>, SettableDataOptions<T> {
+	/**
+	 * A function that retrieves the data being watched.
+	 */
+	getData: AsyncActionFn<T>;
 	/**
 	 * If set, provide an "optimistic" value after calling {@linkcode SettableAsyncDataResult.setData setData}. This allows the new value to be displayed immediately during the gap between setting it and retrieving it again.
 	 *
@@ -76,18 +81,21 @@ export class SettableLiveData<T> {
 
 		this.#optimistic = options.optimistic ?? false;
 
-		this.#liveData = new LiveData({
-			...options,
-			observeState(getData, state, signal) {
-				if (self.#optimistic) {
-					self.#optimisticDataOverride = undefined;
-				}
+		this.#liveData = new LiveData(
+			options.getData,
+			{
+				...options,
+				observeState(getData, state, signal) {
+					if (self.#optimistic) {
+						self.#optimisticDataOverride = undefined;
+					}
 
-				if (options.observeState) {
-					options.observeState(getData, state, signal);
-				}
+					if (options.observeState) {
+						options.observeState(getData, state, signal);
+					}
+				},
 			},
-		});
+		);
 		this.getter = {
 			addEventListener: this.#liveData.addEventListener.bind(this.#liveData),
 			removeEventListener: this.#liveData.removeEventListener.bind(this.#liveData),

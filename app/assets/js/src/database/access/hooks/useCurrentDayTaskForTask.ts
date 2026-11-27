@@ -23,8 +23,8 @@ import {
  */
 export function useCurrentDayTaskForTask(taskId: number): AsyncActionState<DayTask> {
 	const liveCurrentDayTaskForTask = useMemo(() => {
-		const liveCurrentDayTaskForTask = new LiveData({
-			async getData(options) {
+		const liveCurrentDayTaskForTask = new LiveData(
+			async function getData(options) {
 				const currentDate = getCurrentDate();
 				const currentDay = await loadDayByDate(currentDate);
 				if (!currentDay) {
@@ -41,33 +41,35 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncActionState<DayTa
 
 				return currentDayTask;
 			},
-			observeState(getData, state, signal) {
-				if (state.type === AsyncActionStateType.ERROR) {
+			{
+				observeState(getData, state, signal) {
+					if (state.type === AsyncActionStateType.ERROR) {
 					// TODO: Limit refreshes to when the day task is for this task
-					addChangeListener(
-						ChangeType.ADD,
-						{ type: ChangeEntityType.DAY_TASK },
-						() => getData(),
-						{ signal },
-					);
-				} else if (state.type === AsyncActionStateType.SUCCESS) {
-					const { id } = state.data;
-					addChangeListener(
-						ChangeType.CHANGE,
-						{ type: ChangeEntityType.DAY_TASK, id },
-						() => getData(),
-						{ signal },
-					);
+						addChangeListener(
+							ChangeType.ADD,
+							{ type: ChangeEntityType.DAY_TASK },
+							() => getData(),
+							{ signal },
+						);
+					} else if (state.type === AsyncActionStateType.SUCCESS) {
+						const { id } = state.data;
+						addChangeListener(
+							ChangeType.CHANGE,
+							{ type: ChangeEntityType.DAY_TASK, id },
+							() => getData(),
+							{ signal },
+						);
 
-					addChangeListener(
-						ChangeType.DELETE,
-						{ type: ChangeEntityType.DAY_TASK, id },
-						() => getData(),
-						{ signal },
-					);
-				}
-			},
-		});
+						addChangeListener(
+							ChangeType.DELETE,
+							{ type: ChangeEntityType.DAY_TASK, id },
+							() => getData(),
+							{ signal },
+						);
+					}
+				},
+			}
+		);
 		liveCurrentDayTaskForTask.observe();
 		return liveCurrentDayTaskForTask;
 	}, [taskId]);
