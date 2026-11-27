@@ -63,6 +63,7 @@ describe('useSettableUnfinishedTaskIds', () => {
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<readonly number[]>);
 	});
 
@@ -74,8 +75,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: [3, 2],
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<readonly number[]>);
 		});
 	});
@@ -89,8 +91,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -106,8 +109,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 1, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -121,8 +125,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -137,8 +142,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 1, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -151,8 +157,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -164,8 +171,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 1, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -178,8 +186,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -193,8 +202,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [4, 3, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -207,8 +217,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -221,8 +232,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 3],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -235,8 +247,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -248,8 +261,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -263,8 +277,9 @@ describe('useSettableUnfinishedTaskIds', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: [3, 2],
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<readonly number[]>);
 		});
 
@@ -275,11 +290,13 @@ describe('useSettableUnfinishedTaskIds', () => {
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		});
+			progress: null,
+		} satisfies AsyncActionState<void>);
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.SUCCESS,
-			loading: false,
 			data: [2, 3],
+			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<readonly number[]>);
 
 		// Eventually, the set function completes and we still have data
@@ -287,10 +304,12 @@ describe('useSettableUnfinishedTaskIds', () => {
 			expect(result.current.setterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
 				loading: false,
+				progress: null,
 			});
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
 				loading: false,
+				progress: null,
 				data: [2, 3],
 			} satisfies AsyncActionState<readonly number[]>);
 		});

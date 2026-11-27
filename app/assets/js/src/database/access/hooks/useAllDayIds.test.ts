@@ -32,6 +32,7 @@ describe('useAllDayIds', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<number[]>);
 	});
 
@@ -43,8 +44,9 @@ describe('useAllDayIds', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: [3, 1, 2],
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<number[]>);
 		});
 	});
@@ -58,8 +60,9 @@ describe('useAllDayIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 1, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number[]>);
 			});
 
@@ -76,8 +79,9 @@ describe('useAllDayIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 1, 2, 4],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number[]>);
 			});
 		});
@@ -89,8 +93,9 @@ describe('useAllDayIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 1, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number[]>);
 			});
 
@@ -102,8 +107,9 @@ describe('useAllDayIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number[]>);
 			});
 		});

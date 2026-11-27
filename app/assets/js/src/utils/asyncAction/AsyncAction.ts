@@ -45,6 +45,7 @@ export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 		this.#state = {
 			type: AsyncActionStateType.INITIAL,
 			loading: false,
+			progress: null,
 		};
 
 		this.#abortController = null;
@@ -106,6 +107,7 @@ export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 					// This type assertion is safe because if `signal.aborted` is `false` that means `getDataPromise` resolved first
 					data: data as T,
 					loading: false,
+					progress: null,
 				};
 				this.dispatchEvent(new ProgressEvent('load'));
 			}
@@ -114,6 +116,7 @@ export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 				type: AsyncActionStateType.ERROR,
 				error: extractError(e),
 				loading: false,
+				progress: null,
 			};
 			this.dispatchEvent(new ProgressEvent('error'));
 		} finally {

@@ -33,11 +33,13 @@ describe('useSettableDayTask', () => {
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<DayTask>);
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: false,
-		});
+			progress: null,
+		} satisfies AsyncActionState<void>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -48,7 +50,6 @@ describe('useSettableDayTask', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 1,
 					day: 1,
@@ -58,6 +59,8 @@ describe('useSettableDayTask', () => {
 					note: 'Note for task 1 day 1',
 					sortIndex: 1,
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<DayTask>);
 		});
 	});
@@ -71,7 +74,6 @@ describe('useSettableDayTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: {
 						id: 1,
 						day: 1,
@@ -81,6 +83,8 @@ describe('useSettableDayTask', () => {
 						note: 'Note for task 1 day 1',
 						sortIndex: 1,
 					},
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 
@@ -96,7 +100,6 @@ describe('useSettableDayTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: {
 						id: 1,
 						day: 1,
@@ -106,6 +109,8 @@ describe('useSettableDayTask', () => {
 						note: 'Test day task 1 note updated',
 						sortIndex: 2,
 					},
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 		});
@@ -118,7 +123,6 @@ describe('useSettableDayTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: {
 						id: 1,
 						day: 1,
@@ -128,6 +132,8 @@ describe('useSettableDayTask', () => {
 						note: 'Note for task 1 day 1',
 						sortIndex: 1,
 					},
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 
@@ -139,8 +145,9 @@ describe('useSettableDayTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.ERROR,
-					loading: false,
 					error: new Error('Could not find day task with ID 1'),
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 		});
@@ -153,8 +160,9 @@ describe('useSettableDayTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.ERROR,
-					loading: false,
 					error: new Error('Could not find day task with ID 3'),
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 
@@ -169,7 +177,6 @@ describe('useSettableDayTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: {
 						id: 3,
 						day: 3,
@@ -179,6 +186,8 @@ describe('useSettableDayTask', () => {
 						status: 1,
 						sortIndex: -3,
 					},
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 		});
@@ -193,7 +202,6 @@ describe('useSettableDayTask', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 1,
 					day: 1,
@@ -203,6 +211,8 @@ describe('useSettableDayTask', () => {
 					note: 'Note for task 1 day 1',
 					sortIndex: 1,
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<DayTask>);
 		});
 
@@ -211,7 +221,6 @@ describe('useSettableDayTask', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: true,
 				data: {
 					id: 1,
 					day: 1,
@@ -221,13 +230,14 @@ describe('useSettableDayTask', () => {
 					note: 'Note for task 1 day 1',
 					sortIndex: 1,
 				},
+				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<DayTask>);
 		});
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 2,
 					day: 1,
@@ -237,6 +247,8 @@ describe('useSettableDayTask', () => {
 					note: 'Note for task 2 day 1',
 					sortIndex: 0,
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<DayTask>);
 		});
 	});
@@ -250,7 +262,6 @@ describe('useSettableDayTask', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 1,
 					day: 1,
@@ -260,6 +271,8 @@ describe('useSettableDayTask', () => {
 					note: 'Note for task 1 day 1',
 					sortIndex: 1,
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<DayTask>);
 		});
 
@@ -270,10 +283,10 @@ describe('useSettableDayTask', () => {
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		});
+			progress: null,
+		} satisfies AsyncActionState<void>);
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.SUCCESS,
-			loading: false,
 			data: {
 				id: 1,
 				day: 1,
@@ -283,17 +296,20 @@ describe('useSettableDayTask', () => {
 				note: 'Test day task 1 note updated',
 				sortIndex: 1,
 			},
+			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<DayTask>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			});
+				progress: null,
+			} satisfies AsyncActionState<void>);
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 1,
 					day: 1,
@@ -303,6 +319,8 @@ describe('useSettableDayTask', () => {
 					note: 'Test day task 1 note updated',
 					sortIndex: 1,
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<DayTask>);
 		});
 	});
@@ -317,6 +335,7 @@ describe('useSettableDayTask', () => {
 				type: AsyncActionStateType.ERROR,
 				error: new Error('Could not find day task with ID -1'),
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<DayTask>);
 		});
 	});

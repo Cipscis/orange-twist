@@ -32,6 +32,7 @@ describe('useDayTaskIdsForDay', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<readonly number[]>);
 	});
 
@@ -43,8 +44,9 @@ describe('useDayTaskIdsForDay', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: [2, 1],
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<readonly number[]>);
 		});
 	});
@@ -58,8 +60,9 @@ describe('useDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 1],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -74,8 +77,9 @@ describe('useDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 2, 1],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -87,8 +91,9 @@ describe('useDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 1],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -103,8 +108,9 @@ describe('useDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [1, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -116,8 +122,9 @@ describe('useDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 1],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -129,8 +136,9 @@ describe('useDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});

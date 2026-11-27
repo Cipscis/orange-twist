@@ -42,11 +42,13 @@ describe('useSettableStatusForTask', () => {
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<number>);
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: false,
-		});
+			progress: null,
+		} satisfies AsyncActionState<void>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -57,8 +59,9 @@ describe('useSettableStatusForTask', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: 2,
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<number>);
 		});
 	});
@@ -72,8 +75,9 @@ describe('useSettableStatusForTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: 2,
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number>);
 			});
 
@@ -88,8 +92,9 @@ describe('useSettableStatusForTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: 3,
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number>);
 			});
 		});
@@ -102,8 +107,9 @@ describe('useSettableStatusForTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: 2,
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number>);
 			});
 
@@ -115,8 +121,9 @@ describe('useSettableStatusForTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: 1,
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number>);
 			});
 		});
@@ -129,8 +136,9 @@ describe('useSettableStatusForTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: 2,
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number>);
 			});
 
@@ -146,8 +154,9 @@ describe('useSettableStatusForTask', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: 3,
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<number>);
 			});
 		});
@@ -162,8 +171,9 @@ describe('useSettableStatusForTask', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: 2,
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<number>);
 		});
 
@@ -172,16 +182,18 @@ describe('useSettableStatusForTask', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: true,
 				data: 2,
+				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<number>);
 		});
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: 1,
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<number>);
 		});
 	});
@@ -195,8 +207,9 @@ describe('useSettableStatusForTask', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: 2,
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<number>);
 		});
 
@@ -207,23 +220,28 @@ describe('useSettableStatusForTask', () => {
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		});
+			progress: null,
+		} satisfies AsyncActionState<void>);
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.SUCCESS,
-			loading: false,
 			data: 3,
+			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<number>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			});
+				progress: null,
+			} satisfies AsyncActionState<void>);
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: 3,
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<number>);
 		});
 	});
@@ -238,6 +256,7 @@ describe('useSettableStatusForTask', () => {
 				type: AsyncActionStateType.ERROR,
 				error: new Error('Could not find task with ID -1'),
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<number>);
 		});
 	});

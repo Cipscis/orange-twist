@@ -19,6 +19,7 @@ export type AsyncActionState<T> = {
 		{
 			readonly type: S;
 			readonly loading: boolean;
+			readonly progress: number | null;
 		} &
 		AsyncActionStateMap<T>[S]
 	>;

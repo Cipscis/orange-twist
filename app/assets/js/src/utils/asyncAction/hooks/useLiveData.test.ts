@@ -48,6 +48,7 @@ describe('useLiveData', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<boolean>);
 
 		await waitFor(() => {
@@ -55,6 +56,7 @@ describe('useLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -73,6 +75,7 @@ describe('useLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -81,6 +84,7 @@ describe('useLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 	});
@@ -117,6 +121,7 @@ describe('useLiveData', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<boolean>);
 
 		expect(cleanupSignal!.aborted).toBe(false);
@@ -154,6 +159,7 @@ describe('useLiveData', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<boolean>);
 
 		await waitFor(() => {
@@ -161,6 +167,7 @@ describe('useLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -178,6 +185,7 @@ describe('useLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -186,6 +194,7 @@ describe('useLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 	});

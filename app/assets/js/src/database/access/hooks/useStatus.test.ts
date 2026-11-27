@@ -30,6 +30,7 @@ describe('useStatus', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<Status>);
 	});
 
@@ -41,7 +42,6 @@ describe('useStatus', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 1,
 					name: 'Todo',
@@ -49,6 +49,8 @@ describe('useStatus', () => {
 					icon: 'todo',
 					completed: false,
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<Status>);
 		});
 	});
@@ -62,7 +64,7 @@ describe('useStatus', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
+				progress: null,
 				data: {
 					id: 1,
 					name: 'Todo',
@@ -70,6 +72,7 @@ describe('useStatus', () => {
 					icon: 'todo',
 					completed: false,
 				},
+				loading: false,
 			} satisfies AsyncActionState<Status>);
 		});
 
@@ -78,7 +81,6 @@ describe('useStatus', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 2,
 					name: 'In progress',
@@ -86,13 +88,14 @@ describe('useStatus', () => {
 					icon: 'in progress',
 					completed: false,
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<Status>);
 		});
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 2,
 					name: 'In progress',
@@ -100,6 +103,8 @@ describe('useStatus', () => {
 					icon: 'in progress',
 					completed: false,
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<Status>);
 		});
 	});
@@ -114,6 +119,7 @@ describe('useStatus', () => {
 				type: AsyncActionStateType.ERROR,
 				error: new Error('Could not find status with ID -1'),
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<Status>);
 		});
 	});

@@ -53,6 +53,7 @@ describe('useSettableLiveData', () => {
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<boolean>);
 
 		// Check initial loading success
@@ -61,6 +62,7 @@ describe('useSettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -68,6 +70,7 @@ describe('useSettableLiveData', () => {
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<void>);
 
 		// Save data and check loading save state and optimistic loading state
@@ -78,11 +81,13 @@ describe('useSettableLiveData', () => {
 			expect(result.current.setterState).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<void>);
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -93,6 +98,7 @@ describe('useSettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: undefined,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<void>);
 		});
 
@@ -110,6 +116,7 @@ describe('useSettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -119,6 +126,7 @@ describe('useSettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 	});
@@ -155,6 +163,7 @@ describe('useSettableLiveData', () => {
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<boolean>);
 
 		expect(cleanupSignal!.aborted).toBe(false);
@@ -192,6 +201,7 @@ describe('useSettableLiveData', () => {
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<boolean>);
 
 		await waitFor(() => {
@@ -199,6 +209,7 @@ describe('useSettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -218,6 +229,7 @@ describe('useSettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -226,6 +238,7 @@ describe('useSettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 	});

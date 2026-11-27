@@ -31,6 +31,7 @@ describe('useAllStatuses', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<readonly Status[]>);
 	});
 
@@ -42,8 +43,9 @@ describe('useAllStatuses', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: defaultStatuses,
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<readonly Status[]>);
 		});
 	});
@@ -56,8 +58,9 @@ describe('useAllStatuses', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: defaultStatuses,
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<readonly Status[]>);
 		});
 
@@ -67,8 +70,9 @@ describe('useAllStatuses', () => {
 
 		expect(result2.current).toEqual({
 			type: AsyncActionStateType.SUCCESS,
-			loading: false,
 			data: defaultStatuses,
+			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<readonly Status[]>);
 	});
 });

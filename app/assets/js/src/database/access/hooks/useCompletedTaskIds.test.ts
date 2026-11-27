@@ -63,6 +63,7 @@ describe('useCompletedTaskIds', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<readonly number[]>);
 	});
 
@@ -74,8 +75,9 @@ describe('useCompletedTaskIds', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: [2, 3],
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<readonly number[]>);
 		});
 	});
@@ -89,8 +91,9 @@ describe('useCompletedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 3],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -106,8 +109,9 @@ describe('useCompletedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [1, 2, 3],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -121,8 +125,9 @@ describe('useCompletedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 3],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -137,8 +142,9 @@ describe('useCompletedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 3, 1],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -151,8 +157,9 @@ describe('useCompletedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 3],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -164,8 +171,9 @@ describe('useCompletedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -178,8 +186,9 @@ describe('useCompletedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 3],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -191,8 +200,9 @@ describe('useCompletedTaskIds', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});

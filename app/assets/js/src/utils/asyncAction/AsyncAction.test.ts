@@ -20,6 +20,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -40,6 +41,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -49,6 +51,7 @@ describe('AsyncAction', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -71,6 +74,7 @@ describe('AsyncAction', () => {
 				type: AsyncActionStateType.ERROR,
 				error: new Error('Test rejection'),
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -90,6 +94,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 
 			controller.abort();
@@ -97,6 +102,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -106,6 +112,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 	});
@@ -133,6 +140,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -155,6 +163,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -177,6 +186,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 	});
@@ -200,6 +210,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -209,6 +220,7 @@ describe('AsyncAction', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 
 			expect(abort).not.toHaveBeenCalled();
@@ -219,6 +231,7 @@ describe('AsyncAction', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -237,6 +250,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -246,6 +260,7 @@ describe('AsyncAction', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 
 			expect(abort).not.toHaveBeenCalled();
@@ -256,6 +271,7 @@ describe('AsyncAction', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 
@@ -274,6 +290,7 @@ describe('AsyncAction', () => {
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 
 			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -283,6 +300,7 @@ describe('AsyncAction', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 
 			expect(abort).not.toHaveBeenCalled();
@@ -293,6 +311,7 @@ describe('AsyncAction', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<boolean>);
 		});
 	});

@@ -28,6 +28,7 @@ describe('LiveData', () => {
 		expect(liveData.state).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<boolean>);
 
 		// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
@@ -37,6 +38,7 @@ describe('LiveData', () => {
 			type: AsyncActionStateType.SUCCESS,
 			data: true,
 			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<boolean>);
 	});
 

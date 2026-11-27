@@ -55,6 +55,7 @@ describe('useCurrentDay', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<Day>);
 	});
 
@@ -66,7 +67,6 @@ describe('useCurrentDay', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 1,
 					year: 2026,
@@ -74,6 +74,8 @@ describe('useCurrentDay', () => {
 					day: 29,
 					note: 'Test day note',
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<Day>);
 		});
 	});
@@ -90,7 +92,6 @@ describe('useCurrentDay', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 4,
 					year: 2026,
@@ -98,6 +99,8 @@ describe('useCurrentDay', () => {
 					day: 30,
 					note: '',
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<Day>);
 		});
 	});
@@ -110,7 +113,6 @@ describe('useCurrentDay', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 1,
 					year: 2026,
@@ -118,6 +120,8 @@ describe('useCurrentDay', () => {
 					day: 29,
 					note: 'Test day note',
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<Day>);
 		});
 
@@ -132,7 +136,6 @@ describe('useCurrentDay', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 1,
 					year: 2026,
@@ -140,6 +143,8 @@ describe('useCurrentDay', () => {
 					day: 29,
 					note: 'Updated day note',
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<Day>);
 		});
 	});

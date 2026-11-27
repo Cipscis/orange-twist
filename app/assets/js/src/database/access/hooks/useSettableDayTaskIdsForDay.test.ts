@@ -35,10 +35,12 @@ describe('useSettableDayTaskIdsForDay', () => {
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<readonly number[]>);
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<void>);
 	});
 
@@ -50,8 +52,9 @@ describe('useSettableDayTaskIdsForDay', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: [2, 1],
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<readonly number[]>);
 		});
 	});
@@ -65,8 +68,9 @@ describe('useSettableDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 1],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -81,8 +85,9 @@ describe('useSettableDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [3, 2, 1],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -94,8 +99,9 @@ describe('useSettableDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 1],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -110,8 +116,9 @@ describe('useSettableDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [1, 2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -123,8 +130,9 @@ describe('useSettableDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2, 1],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 
@@ -136,8 +144,9 @@ describe('useSettableDayTaskIdsForDay', () => {
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: [2],
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
@@ -152,8 +161,9 @@ describe('useSettableDayTaskIdsForDay', () => {
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: [2, 1],
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<readonly number[]>);
 		});
 
@@ -164,23 +174,28 @@ describe('useSettableDayTaskIdsForDay', () => {
 		expect(result.current.setterState).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		});
+			progress: null,
+		} satisfies AsyncActionState<void>);
 		expect(result.current.getterState).toEqual({
 			type: AsyncActionStateType.SUCCESS,
-			loading: false,
 			data: [1, 2],
+			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<readonly number[]>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			});
+				progress: null,
+			} satisfies AsyncActionState<void>);
 			expect(result.current.getterState).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: [1, 2],
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<readonly number[]>);
 		});
 	});

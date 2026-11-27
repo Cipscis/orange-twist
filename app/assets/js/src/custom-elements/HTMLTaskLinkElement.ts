@@ -96,6 +96,7 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 			type: AsyncActionStateType.ERROR,
 			error: new Error('No valid taskid attribute was found'),
 			loading: false,
+			progress: null,
 		};
 
 		this.#lastBuildState = newBuildState;

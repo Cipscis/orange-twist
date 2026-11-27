@@ -66,6 +66,7 @@ describe('useCurrentDayTaskForTask', () => {
 		expect(result.current).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<DayTask>);
 	});
 
@@ -77,7 +78,6 @@ describe('useCurrentDayTaskForTask', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.SUCCESS,
-				loading: false,
 				data: {
 					id: 1,
 					day: 1,
@@ -87,6 +87,8 @@ describe('useCurrentDayTaskForTask', () => {
 					status: 1,
 					sortIndex: null,
 				},
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<DayTask>);
 		});
 	});
@@ -105,8 +107,9 @@ describe('useCurrentDayTaskForTask', () => {
 		await waitFor(() => {
 			expect(result.current).toEqual({
 				type: AsyncActionStateType.ERROR,
-				loading: false,
 				error: new Error('Could not find current day task for task 1'),
+				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<DayTask>);
 		});
 	});
@@ -126,8 +129,9 @@ describe('useCurrentDayTaskForTask', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.ERROR,
-					loading: false,
 					error: new Error('Could not find current day task for task 1'),
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 
@@ -146,7 +150,6 @@ describe('useCurrentDayTaskForTask', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: {
 						id: 3,
 						day: 1,
@@ -156,6 +159,8 @@ describe('useCurrentDayTaskForTask', () => {
 						status: 2,
 						sortIndex: 1,
 					},
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 		});
@@ -179,7 +184,6 @@ describe('useCurrentDayTaskForTask', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: {
 						id: 1,
 						day: 1,
@@ -189,6 +193,8 @@ describe('useCurrentDayTaskForTask', () => {
 						status: 2,
 						sortIndex: 1,
 					},
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 		});
@@ -201,7 +207,6 @@ describe('useCurrentDayTaskForTask', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.SUCCESS,
-					loading: false,
 					data: {
 						id: 1,
 						day: 1,
@@ -211,6 +216,8 @@ describe('useCurrentDayTaskForTask', () => {
 						status: 1,
 						sortIndex: null,
 					},
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 
@@ -222,8 +229,9 @@ describe('useCurrentDayTaskForTask', () => {
 			await waitFor(() => {
 				expect(result.current).toEqual({
 					type: AsyncActionStateType.ERROR,
-					loading: false,
 					error: new Error('Could not find current day task for task 1'),
+					loading: false,
+					progress: null,
 				} satisfies AsyncActionState<DayTask>);
 			});
 		});

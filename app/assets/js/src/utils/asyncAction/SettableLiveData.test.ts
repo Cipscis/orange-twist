@@ -52,6 +52,7 @@ describe('SettableLiveData', () => {
 			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			await Promise.race([loadPromise]);
@@ -69,6 +70,7 @@ describe('SettableLiveData', () => {
 					bar: 'a',
 				},
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			// Set data and check optimistic state
@@ -84,19 +86,23 @@ describe('SettableLiveData', () => {
 					bar: 'a',
 				},
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<void>);
 
 			await Promise.race([setPromise]);
 
 			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			});
+				progress: null,
+			} satisfies AsyncActionState<void>);
 
 			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
@@ -105,6 +111,7 @@ describe('SettableLiveData', () => {
 					bar: 'a',
 				},
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			// Check the reload succeeds and still displays the updated state
@@ -117,6 +124,7 @@ describe('SettableLiveData', () => {
 					bar: 'a',
 				},
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 		});
 		test('for literal types', async () => {
@@ -154,6 +162,7 @@ describe('SettableLiveData', () => {
 			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			await Promise.race([loadPromise]);
@@ -168,6 +177,7 @@ describe('SettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: 3,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			// Set data and check optimistic state
@@ -180,24 +190,29 @@ describe('SettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: 4,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<void>);
 
 			await Promise.race([setPromise]);
 
 			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			});
+				progress: null,
+			} satisfies AsyncActionState<void>);
 
 			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
 				data: 4,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			// Check the reload succeeds and still displays the updated state
@@ -207,6 +222,7 @@ describe('SettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: 4,
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 		});
 		test('for array types', async () => {
@@ -244,6 +260,7 @@ describe('SettableLiveData', () => {
 			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			await Promise.race([loadPromise]);
@@ -258,6 +275,7 @@ describe('SettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: [1, 2, 3],
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			// Set data and check optimistic state
@@ -270,24 +288,29 @@ describe('SettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: [1, 4, 3, 2],
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<void>);
 
 			await Promise.race([setPromise]);
 
 			expect(settableLiveData.setter.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			});
+				progress: null,
+			} satisfies AsyncActionState<void>);
 
 			expect(settableLiveData.getter.state).toEqual({
 				type: AsyncActionStateType.SUCCESS,
 				data: [1, 4, 3, 2],
 				loading: true,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 
 			// Check the reload succeeds and still displays the updated state
@@ -297,6 +320,7 @@ describe('SettableLiveData', () => {
 				type: AsyncActionStateType.SUCCESS,
 				data: [1, 4, 3, 2],
 				loading: false,
+				progress: null,
 			} satisfies AsyncActionState<typeof data>);
 		});
 	});
@@ -335,6 +359,7 @@ describe('SettableLiveData', () => {
 		expect(settableLiveData.getter.state).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<typeof data>);
 
 		await Promise.race([loadPromise]);
@@ -347,6 +372,7 @@ describe('SettableLiveData', () => {
 				bar: 'a',
 			},
 			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<typeof data>);
 
 		// Set data and check optimistic state reverts on error
@@ -359,11 +385,13 @@ describe('SettableLiveData', () => {
 				bar: 'a',
 			},
 			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<typeof data>);
 
 		expect(settableLiveData.setter.state).toEqual({
 			type: AsyncActionStateType.INITIAL,
 			loading: true,
+			progress: null,
 		} satisfies AsyncActionState<void>);
 
 		await Promise.race([setPromise]);
@@ -372,7 +400,8 @@ describe('SettableLiveData', () => {
 			type: AsyncActionStateType.ERROR,
 			error: new Error('Test set error'),
 			loading: false,
-		});
+			progress: null,
+		} satisfies AsyncActionState<void>);
 
 		expect(settableLiveData.getter.state).toEqual({
 			type: AsyncActionStateType.SUCCESS,
@@ -381,6 +410,7 @@ describe('SettableLiveData', () => {
 				bar: 'a',
 			},
 			loading: false,
+			progress: null,
 		} satisfies AsyncActionState<typeof data>);
 	});
 });
