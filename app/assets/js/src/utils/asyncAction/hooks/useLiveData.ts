@@ -22,7 +22,7 @@ import type { LiveData } from '../LiveData';
  * const state = useLiveData(liveData);
  * ```
  */
-export function useLiveData<T, A extends unknown[] = []>(liveData: LiveData<T, A>): AsyncActionState<T> {
+export function useLiveData<T>(liveData: LiveData<T>): AsyncActionState<T> {
 	const [state, setState] = useState(liveData.state);
 
 	// Construct temporary hybrid state if liveData is updated

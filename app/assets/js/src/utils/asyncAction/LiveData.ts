@@ -8,14 +8,14 @@ import {
 	type AsyncActionFnOptions,
 } from './AsyncAction';
 
-export interface LiveDataOptions<T, A extends unknown[] = []> {
+export interface LiveDataOptions<T> {
 	/**
 	 * A function that sets up the necessary event listeners to re-fetch the data.
 	 *
 	 * An {@linkcode AbortSignal} is provided so that it can be used to define any necessary cleanup.
 	 */
 	observe?: (
-		getData: (options?: AsyncActionFnOptions, ...args: A) => void,
+		getData: (options?: AsyncActionFnOptions) => void,
 		signal: AbortSignal,
 	) => void;
 	/**
@@ -24,7 +24,7 @@ export interface LiveDataOptions<T, A extends unknown[] = []> {
 	 * An {@linkcode AbortSignal} is provided so that it can be used to define any necessary cleanup.
 	 */
 	observeState?: (
-		getData: (options?: AsyncActionFnOptions, ...args: A) => void,
+		getData: (options?: AsyncActionFnOptions) => void,
 		state: Extract<
 			AsyncActionState<T>,
 			{
@@ -49,19 +49,19 @@ export interface LiveDataObserveOptions {
  *
  * To load data and begin live observation, call the {@linkcode LiveData.["observe"] observe} method. To stop live observation, call the {@linkcode LiveData["unobserve"] unobserve} method.
  */
-export class LiveData<T, A extends unknown[] = []> extends AsyncAction<T, A> {
+export class LiveData<T> extends AsyncAction<T, []> {
 	#unobserveController: AbortController | null = null;
 	#unobserveStateController: AbortController | null = null;
 
-	#observe: Required<LiveDataOptions<T, A>>['observe'] | null = null;
-	#observeState: Required<LiveDataOptions<T, A>>['observeState'] | null = null;
+	#observe: Required<LiveDataOptions<T>>['observe'] | null = null;
+	#observeState: Required<LiveDataOptions<T>>['observeState'] | null = null;
 
 	constructor(
 		/**
 		 * A function that retrieves the data being watched.
 		 */
-		fn: AsyncActionFn<T, A>,
-		options?: LiveDataOptions<T, A>,
+		fn: AsyncActionFn<T, []>,
+		options?: LiveDataOptions<T>,
 	) {
 		super(fn);
 
@@ -76,7 +76,7 @@ export class LiveData<T, A extends unknown[] = []> extends AsyncAction<T, A> {
 	/**
 	 * Load the data, and begin watching for changes.
 	 */
-	observe(options?: LiveDataObserveOptions, ...args: A): void {
+	observe(options?: LiveDataObserveOptions): void {
 		if (this.#unobserveController) {
 			// Already observing
 			return;
@@ -94,9 +94,9 @@ export class LiveData<T, A extends unknown[] = []> extends AsyncAction<T, A> {
 		 */
 		const observeCleanupSignal = AbortSignal.any(signals);
 
-		this.start({ signal: observeCleanupSignal }, ...args);
+		this.start({ signal: observeCleanupSignal });
 		if (this.#observe) {
-			const internalGetData = (options?: AsyncActionFnOptions, ...args: A) => {
+			const internalGetData = (options?: AsyncActionFnOptions) => {
 				const signals = [observeCleanupSignal];
 				if (options) {
 					signals.push(options.signal);
@@ -109,7 +109,7 @@ export class LiveData<T, A extends unknown[] = []> extends AsyncAction<T, A> {
 				 * - An {@linkcode AbortSignal} passed to a `getData()` call within `observe()` is aborted
 				 */
 				const abortGetDataSignal = AbortSignal.any(signals);
-				return this.start({ signal: abortGetDataSignal }, ...args);
+				return this.start({ signal: abortGetDataSignal });
 			};
 
 			this.#observe(
@@ -139,8 +139,8 @@ export class LiveData<T, A extends unknown[] = []> extends AsyncAction<T, A> {
 	/**
 	 * Handle loading the data, updating the internal {@linkcode AsyncActionState}, and firing the relevant `'loadstart'`, `'load'`, `'error'`, and `'loadend'` {@linkcode ProgressEvent}s.
 	 */
-	async start(getDataOptions: AsyncActionFnOptions, ...args: A): Promise<void> {
-		await super.start(getDataOptions, ...args);
+	async start(getDataOptions: AsyncActionFnOptions): Promise<void> {
+		await super.start(getDataOptions);
 
 		if (
 			getDataOptions.signal.aborted ||
