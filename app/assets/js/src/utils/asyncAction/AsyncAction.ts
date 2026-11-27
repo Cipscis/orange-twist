@@ -22,16 +22,15 @@ export interface AsyncActionFn<T, A extends unknown[] = []> {
 // This class is intentionally modified with declaration merging to make event binding easier
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
-	#state: AsyncActionState<T> = {
-		type: AsyncActionStateType.INITIAL,
-		loading: false,
-	};
+	#state: AsyncActionState<T>;
 	/**
 	 * An {@linkcode AsyncActionState} representing the current loading state of the represented data, which is updated automatically when in observing mode.
 	 */
 	get state(): AsyncActionState<T> {
 		return this.#state;
 	}
+
+	#abortController: AbortController | null;
 
 	#start: AsyncActionFn<T, A>;
 
@@ -43,14 +42,29 @@ export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 	) {
 		super();
 
+		this.#state = {
+			type: AsyncActionStateType.INITIAL,
+			loading: false,
+		};
+
+		this.#abortController = null;
+
 		this.#start = fn;
 	}
 
 	/**
 	 * Handle loading the data, updating the internal {@linkcode AsyncActionState}, and firing the relevant `'loadstart'`, `'load'`, `'error'`, and `'loadend'` {@linkcode ProgressEvent}s.
 	 */
-	async start(asyncActionFnOptions?: AsyncActionFnOptions, ...args: A): Promise<void> {
-		const signal = asyncActionFnOptions?.signal ?? AbortSignal.any([]);
+	async start(options?: AsyncActionFnOptions, ...args: A): Promise<void> {
+		this.abort();
+
+		this.#abortController = new AbortController();
+
+		const signals = [this.#abortController.signal];
+		if (options?.signal) {
+			signals.push(options.signal);
+		}
+		const signal = AbortSignal.any(signals);
 
 		const startPromise = this.#start({ signal }, ...args);
 		const {
@@ -103,8 +117,23 @@ export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 			};
 			this.dispatchEvent(new ProgressEvent('error'));
 		} finally {
+			this.#abortController = null;
 			this.dispatchEvent(new ProgressEvent('loadend'));
 		}
+	}
+
+	abort(): void {
+		if (!this.#abortController) {
+			// No action is in progress, so there's nothing to abort
+			return;
+		}
+
+		this.#abortController.abort();
+		this.#abortController = null;
+	}
+
+	[Symbol.dispose](): void {
+		this.abort();
 	}
 }
 

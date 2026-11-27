@@ -110,6 +110,193 @@ describe('AsyncAction', () => {
 		});
 	});
 
+	describe('aborts in-flight actions', () => {
+		test('when the AbortSignal passed to start is aborted', () => {
+			const abort = jest.fn();
+
+			const action = new AsyncAction(
+				function getData() {
+					return Promise.resolve(true);
+				},
+			);
+			action.addEventListener('abort', abort);
+
+			const controller = new AbortController();
+			const { signal } = controller;
+
+			action.start({ signal });
+
+			expect(abort).not.toHaveBeenCalled();
+			controller.abort();
+			expect(abort).toHaveBeenCalledTimes(1);
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
+				loading: false,
+			} satisfies AsyncActionState<boolean>);
+		});
+
+		test('when the abort() method is called', () => {
+			const abort = jest.fn();
+
+			const action = new AsyncAction(
+				function getData() {
+					return Promise.resolve(true);
+				},
+			);
+			action.addEventListener('abort', abort);
+
+			action.start();
+
+			expect(abort).not.toHaveBeenCalled();
+			action.abort();
+			expect(abort).toHaveBeenCalledTimes(1);
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
+				loading: false,
+			} satisfies AsyncActionState<boolean>);
+		});
+
+		test('when the [Symbol.dispose]() method is called', () => {
+			const abort = jest.fn();
+
+			const action = new AsyncAction(
+				function getData() {
+					return Promise.resolve(true);
+				},
+			);
+			action.addEventListener('abort', abort);
+
+			action.start();
+
+			expect(abort).not.toHaveBeenCalled();
+			action[Symbol.dispose]();
+			expect(abort).toHaveBeenCalledTimes(1);
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
+				loading: false,
+			} satisfies AsyncActionState<boolean>);
+		});
+	});
+
+	describe('aborts nothing when no action is in progress', () => {
+		test('when the AbortSignal passed to start is aborted', async () => {
+			const { promise, resolve } = Promise.withResolvers();
+			const abort = jest.fn();
+
+			const action = new AsyncAction(() => {
+				resolve(true);
+				return Promise.resolve(true);
+			});
+			action.addEventListener('abort', abort);
+
+			const controller = new AbortController();
+			const { signal } = controller;
+
+			action.start({ signal });
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
+				loading: true,
+			} satisfies AsyncActionState<boolean>);
+
+			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
+			await Promise.race([promise]);
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.SUCCESS,
+				data: true,
+				loading: false,
+			} satisfies AsyncActionState<boolean>);
+
+			expect(abort).not.toHaveBeenCalled();
+			controller.abort();
+			expect(abort).not.toHaveBeenCalled();
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.SUCCESS,
+				data: true,
+				loading: false,
+			} satisfies AsyncActionState<boolean>);
+		});
+
+		test('when the abort() method is called', async () => {
+			const { promise, resolve } = Promise.withResolvers();
+			const abort = jest.fn();
+
+			const action = new AsyncAction(() => {
+				resolve(true);
+				return Promise.resolve(true);
+			});
+			action.addEventListener('abort', abort);
+
+			action.start();
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
+				loading: true,
+			} satisfies AsyncActionState<boolean>);
+
+			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
+			await Promise.race([promise]);
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.SUCCESS,
+				data: true,
+				loading: false,
+			} satisfies AsyncActionState<boolean>);
+
+			expect(abort).not.toHaveBeenCalled();
+			action.abort();
+			expect(abort).not.toHaveBeenCalled();
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.SUCCESS,
+				data: true,
+				loading: false,
+			} satisfies AsyncActionState<boolean>);
+		});
+
+		test('when the [Symbol.dispose]() method is called', async () => {
+			const { promise, resolve } = Promise.withResolvers();
+			const abort = jest.fn();
+
+			const action = new AsyncAction(() => {
+				resolve(true);
+				return Promise.resolve(true);
+			});
+			action.addEventListener('abort', abort);
+
+			action.start();
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
+				loading: true,
+			} satisfies AsyncActionState<boolean>);
+
+			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
+			await Promise.race([promise]);
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.SUCCESS,
+				data: true,
+				loading: false,
+			} satisfies AsyncActionState<boolean>);
+
+			expect(abort).not.toHaveBeenCalled();
+			action[Symbol.dispose]();
+			expect(abort).not.toHaveBeenCalled();
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.SUCCESS,
+				data: true,
+				loading: false,
+			} satisfies AsyncActionState<boolean>);
+		});
+	});
+
 	describe('reports events', () => {
 		test('a loadstart event on load start', () => {
 			const loadstart = jest.fn();
@@ -167,7 +354,7 @@ describe('AsyncAction', () => {
 			const abort = jest.fn();
 
 			const action = new AsyncAction(
-				function getData(options) {
+				function getData() {
 					return Promise.resolve(true);
 				},
 			);
