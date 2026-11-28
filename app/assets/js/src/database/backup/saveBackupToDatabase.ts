@@ -1,3 +1,5 @@
+import { measureAsync } from 'dev/profiling';
+
 import type { TaggedVersionedDatabaseData } from '../types';
 import { getDatabase } from '../utils';
 import { fillDatabase, updateData } from '../migration';
@@ -13,5 +15,8 @@ export async function saveBackupToDatabase(
 		getDatabase(),
 	]);
 
-	return fillDatabase(db, updatedData);
+	await measureAsync(
+		'fill database',
+		() => fillDatabase(db, updatedData),
+	);
 }

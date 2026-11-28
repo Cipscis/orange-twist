@@ -7,6 +7,8 @@ import {
 	getTemplateAlias,
 } from 'utils';
 
+import { measureAsync, measureSync } from 'dev/profiling';
+
 import {
 	type VersionedDatabaseData,
 	type VersionedDatabaseDataByVersion,
@@ -22,14 +24,31 @@ import { defaultStatuses } from '../defaultStatuses';
 export async function updateDataV1_0_0(
 	data: VersionedDatabaseDataByVersion<'1.0.0'>
 ): Promise<VersionedDatabaseDataByVersion<'2.0.0'>> {
-	const dataWithMissingDayTasks = addMissingDayTasks(data);
-
-	const day = collectDayData(dataWithMissingDayTasks);
+	const dataWithMissingDayTasks = await measureAsync(
+		'add missing day tasks',
+		() => addMissingDayTasks(data, reportProgress),
+	);
+	const day = measureSync(
+		'collect day data',
+		() => collectDayData(dataWithMissingDayTasks),
+	);
 	const status = defaultStatuses;
-	const task = collectTaskData(dataWithMissingDayTasks);
-	const day_task = collectDayTaskData(dataWithMissingDayTasks, day, status);
-	const template = collectTemplateData(dataWithMissingDayTasks);
-	const image = await collectImageData(dataWithMissingDayTasks);
+	const task = measureSync(
+		'collect task data',
+		() => collectTaskData(dataWithMissingDayTasks),
+	);
+	const day_task = measureSync(
+		'collect day task data',
+		() => collectDayTaskData(dataWithMissingDayTasks, day, status),
+	);
+	const template = measureSync(
+		'collect template data',
+		() => collectTemplateData(dataWithMissingDayTasks),
+	);
+	const image = await measureAsync(
+		'collect image data',
+		() => collectImageData(dataWithMissingDayTasks),
+	);
 
 	const updatedData: VersionedDatabaseDataByVersion<'2.0.0'> = {
 		day,
