@@ -1,10 +1,10 @@
 import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
 import { createElement } from 'utils/createElement';
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	HTMLLiveDataElement,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 import { renderInline } from 'utils/markdown';
 
 import { getTaskDetailUrl } from 'navigation';
@@ -17,13 +17,13 @@ import {
 import { getSanitiser } from './getSanitiser';
 
 type TaskLinkStateElements = {
-	[AsyncDataStateType.INITIAL]: {
+	[AsyncActionStateType.INITIAL]: {
 		initialEl: HTMLElement;
 	};
-	[AsyncDataStateType.ERROR]: {
+	[AsyncActionStateType.ERROR]: {
 		errorEl: HTMLElement;
 	};
-	[AsyncDataStateType.SUCCESS]: {
+	[AsyncActionStateType.SUCCESS]: {
 		iconEl: HTMLElement;
 		linkEl: HTMLAnchorElement;
 		nameEl: HTMLElement;
@@ -37,7 +37,7 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 	static observedAttributes = ['taskid'];
 
 	// Internal state
-	#lastBuildState: AsyncDataState<[Task, Status]> | null = null;
+	#lastBuildState: AsyncActionState<[Task, Status]> | null = null;
 
 	// Internal markup
 	#initialEl: HTMLElement | null = null;
@@ -93,20 +93,21 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 
 		const oldBuildState = this.#lastBuildState;
 		const newBuildState = this.liveData?.state ?? {
-			type: AsyncDataStateType.ERROR,
+			type: AsyncActionStateType.ERROR,
 			error: new Error('No valid taskid attribute was found'),
 			loading: false,
+			progress: null,
 		};
 
 		this.#lastBuildState = newBuildState;
 
-		if (newBuildState.type === AsyncDataStateType.INITIAL) {
+		if (newBuildState.type === AsyncActionStateType.INITIAL) {
 			const elements = this.#buildInitialMarkup(oldBuildState);
 			this.#applyInitialContent(elements, oldBuildState, newBuildState);
-		} else if (newBuildState.type === AsyncDataStateType.ERROR) {
+		} else if (newBuildState.type === AsyncActionStateType.ERROR) {
 			const elements = this.#buildErrorMarkup(oldBuildState);
 			this.#applyErrorContent(elements, oldBuildState, newBuildState);
-		} else if (newBuildState.type === AsyncDataStateType.SUCCESS) {
+		} else if (newBuildState.type === AsyncActionStateType.SUCCESS) {
 			const elements = this.#buildSuccessMarkup(oldBuildState);
 			this.#applySuccessContent(elements, oldBuildState, newBuildState);
 		} else {
@@ -115,9 +116,9 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 	}
 
 	#buildInitialMarkup(
-		oldBuildState: AsyncDataState<[Task, Status]> | null,
-	): TaskLinkStateElements[typeof AsyncDataStateType.INITIAL] {
-		if (oldBuildState?.type === AsyncDataStateType.INITIAL) {
+		oldBuildState: AsyncActionState<[Task, Status]> | null,
+	): TaskLinkStateElements[typeof AsyncActionStateType.INITIAL] {
+		if (oldBuildState?.type === AsyncActionStateType.INITIAL) {
 			// If we're already in error state, just provide existing elements
 			if (this.#initialEl) {
 				return {
@@ -141,22 +142,22 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 	}
 
 	#applyInitialContent(
-		_elements: TaskLinkStateElements[typeof AsyncDataStateType.INITIAL],
-		_oldBuildState: AsyncDataState<[Task, Status]> | null,
+		_elements: TaskLinkStateElements[typeof AsyncActionStateType.INITIAL],
+		_oldBuildState: AsyncActionState<[Task, Status]> | null,
 		_newBuildState: Extract<
-			AsyncDataState<[Task, Status]>,
-			{ type: typeof AsyncDataStateType.INITIAL; }
+			AsyncActionState<[Task, Status]>,
+			{ type: typeof AsyncActionStateType.INITIAL; }
 		> | null,
 	): void {
 		// No initial content necessary
 	}
 
 	#buildErrorMarkup(
-		oldBuildState: AsyncDataState<[Task, Status]> | null,
+		oldBuildState: AsyncActionState<[Task, Status]> | null,
 	): {
 		errorEl: HTMLElement;
 	} {
-		if (oldBuildState?.type === AsyncDataStateType.ERROR) {
+		if (oldBuildState?.type === AsyncActionStateType.ERROR) {
 			// If we're already in error state, just provide existing elements
 			if (this.#errorEl) {
 				return {
@@ -181,15 +182,15 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 	}
 
 	#applyErrorContent(
-		elements: TaskLinkStateElements[typeof AsyncDataStateType.ERROR],
-		oldBuildState: AsyncDataState<[Task, Status]> | null,
+		elements: TaskLinkStateElements[typeof AsyncActionStateType.ERROR],
+		oldBuildState: AsyncActionState<[Task, Status]> | null,
 		newBuildState: Extract<
-			AsyncDataState<[Task, Status]>,
-			{ type: typeof AsyncDataStateType.ERROR; }
+			AsyncActionState<[Task, Status]>,
+			{ type: typeof AsyncActionStateType.ERROR; }
 		>
 	) {
 		if (!(
-			oldBuildState?.type === AsyncDataStateType.ERROR &&
+			oldBuildState?.type === AsyncActionStateType.ERROR &&
 			newBuildState.error.message === oldBuildState.error.message
 		)) {
 			elements.errorEl.textContent = newBuildState.error.message;
@@ -197,9 +198,9 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 	}
 
 	#buildSuccessMarkup(
-		oldBuildState: AsyncDataState<[Task, Status]> | null,
-	): TaskLinkStateElements[typeof AsyncDataStateType.SUCCESS] {
-		if (oldBuildState?.type === AsyncDataStateType.SUCCESS) {
+		oldBuildState: AsyncActionState<[Task, Status]> | null,
+	): TaskLinkStateElements[typeof AsyncActionStateType.SUCCESS] {
+		if (oldBuildState?.type === AsyncActionStateType.SUCCESS) {
 			// If we're already in success state, just provide existing elements
 			if (
 				this.#iconEl &&
@@ -244,11 +245,11 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 	}
 
 	#applySuccessContent(
-		elements: TaskLinkStateElements[typeof AsyncDataStateType.SUCCESS],
-		oldBuildState: AsyncDataState<[Task, Status]> | null,
+		elements: TaskLinkStateElements[typeof AsyncActionStateType.SUCCESS],
+		oldBuildState: AsyncActionState<[Task, Status]> | null,
 		newBuildState: Extract<
-			AsyncDataState<[Task, Status]>,
-			{ type: typeof AsyncDataStateType.SUCCESS; }
+			AsyncActionState<[Task, Status]>,
+			{ type: typeof AsyncActionStateType.SUCCESS; }
 		>
 	): void {
 		const [task, status] = newBuildState.data;
@@ -260,7 +261,7 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 
 		// Icon
 		if (!(
-			oldBuildState?.type === AsyncDataStateType.SUCCESS &&
+			oldBuildState?.type === AsyncActionStateType.SUCCESS &&
 			oldBuildState.data[1].colour === status.colour &&
 			oldBuildState.data[1].icon === status.icon &&
 			oldBuildState.data[1].name === status.name
@@ -272,7 +273,7 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 
 		// Link
 		if (!(
-			oldBuildState?.type === AsyncDataStateType.SUCCESS &&
+			oldBuildState?.type === AsyncActionStateType.SUCCESS &&
 			oldBuildState.data[0].id === task.id
 		)) {
 			linkEl.href = getTaskDetailUrl(task.id);
@@ -280,7 +281,7 @@ export class HTMLTaskLinkElement extends HTMLLiveDataElement<[Task, Status]> {
 
 		// Name
 		if (!(
-			oldBuildState?.type === AsyncDataStateType.SUCCESS &&
+			oldBuildState?.type === AsyncActionStateType.SUCCESS &&
 			oldBuildState.data[0].name === task.name
 		)) {
 			renderInline(task.name).then((taskName) => {

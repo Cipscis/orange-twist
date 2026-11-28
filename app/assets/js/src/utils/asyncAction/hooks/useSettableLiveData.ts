@@ -4,14 +4,12 @@ import {
 	useState,
 } from 'preact/hooks';
 
-import type { AsyncDataState } from '../AsyncDataState';
-import type { SettableAsyncDataState } from '../SettableAsyncDataState';
-import type { SettableLiveData } from '../SettableLiveData';
-import type { SettablePartial } from '../SettableData';
+import type { AsyncActionState } from '../AsyncActionState';
+import type { SettableLiveData, SettablePartial } from '../SettableLiveData';
 
 export interface UseSettableLiveDataResult<T> {
-	getterState: AsyncDataState<T>;
-	setterState: SettableAsyncDataState;
+	getterState: AsyncActionState<T>;
+	setterState: AsyncActionState<void>;
 	setData: (data: SettablePartial<T>) => Promise<void>;
 }
 

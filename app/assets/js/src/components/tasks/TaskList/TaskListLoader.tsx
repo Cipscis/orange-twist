@@ -1,9 +1,9 @@
 import { h, type JSX } from 'preact';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
-} from 'utils/asyncData';
+	AsyncActionStateType,
+	type AsyncActionState,
+} from 'utils/asyncAction';
 
 import {
 	Loader,
@@ -13,7 +13,7 @@ import {
 import { TaskListSync } from './TaskListSync';
 
 export interface TaskListLoaderProps {
-	taskIdsDataState: AsyncDataState<readonly number[]>;
+	taskIdsDataState: AsyncActionState<readonly number[]>;
 	setTaskIdOrder?: (data: readonly number[]) => Promise<void>;
 }
 
@@ -26,11 +26,11 @@ export function TaskListLoader(props: TaskListLoaderProps): JSX.Element {
 		setTaskIdOrder,
 	} = props;
 
-	if (taskIdsDataState.type === AsyncDataStateType.INITIAL) {
+	if (taskIdsDataState.type === AsyncActionStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (taskIdsDataState.type === AsyncDataStateType.ERROR) {
+	if (taskIdsDataState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={taskIdsDataState.error.message}

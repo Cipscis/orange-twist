@@ -1,9 +1,9 @@
 import { h, type JSX } from 'preact';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
-} from 'utils/asyncData';
+	AsyncActionStateType,
+	type AsyncActionState,
+} from 'utils/asyncAction';
 
 import {
 	Loader,
@@ -13,7 +13,7 @@ import {
 import { TemplatesListSync } from './TemplatesListSync';
 
 export interface TemplateListLoaderProps {
-	templateIdsDataState: AsyncDataState<readonly number[]>;
+	templateIdsDataState: AsyncActionState<readonly number[]>;
 	setTemplateIdOrder?: (data: readonly number[]) => Promise<void>;
 }
 
@@ -26,11 +26,11 @@ export function TemplatesListLoader(props: TemplateListLoaderProps): JSX.Element
 		setTemplateIdOrder,
 	} = props;
 
-	if (templateIdsDataState.type === AsyncDataStateType.INITIAL) {
+	if (templateIdsDataState.type === AsyncActionStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (templateIdsDataState.type === AsyncDataStateType.ERROR) {
+	if (templateIdsDataState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={templateIdsDataState.error.message}

@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import { insertTestData } from '../../test-utils';
 import { ObjectStoreName } from '../../metadata';
@@ -55,15 +55,16 @@ describe('useCompletedTaskIds', () => {
 	}));
 	afterEach(() => cleanup());
 
-	test('provide an AsyncDataResult', () => {
+	test('provide an AsyncActionState', () => {
 		const { result } = renderHook(
 			() => useCompletedTaskIds()
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<readonly number[]>);
+			progress: null,
+		} satisfies AsyncActionState<readonly number[]>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -73,10 +74,11 @@ describe('useCompletedTaskIds', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: [2, 3],
-			} satisfies AsyncDataState<readonly number[]>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<readonly number[]>);
 		});
 	});
 
@@ -88,10 +90,11 @@ describe('useCompletedTaskIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [2, 3],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 
 			save([{
@@ -105,10 +108,11 @@ describe('useCompletedTaskIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [1, 2, 3],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
 
@@ -120,10 +124,11 @@ describe('useCompletedTaskIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [2, 3],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 
 			save([{
@@ -136,10 +141,11 @@ describe('useCompletedTaskIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [2, 3, 1],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
 
@@ -150,10 +156,11 @@ describe('useCompletedTaskIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [2, 3],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 
 			save([{
@@ -163,10 +170,11 @@ describe('useCompletedTaskIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [2],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
 
@@ -177,10 +185,11 @@ describe('useCompletedTaskIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [2, 3],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 
 			save([{
@@ -190,10 +199,11 @@ describe('useCompletedTaskIds', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [2],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
 	});

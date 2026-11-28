@@ -1,4 +1,4 @@
-import { LiveData } from 'utils/asyncData';
+import { LiveData } from 'utils/asyncAction';
 
 import type { Task } from '../types';
 import { loadAllTasks } from './loadAllTasks';
@@ -13,21 +13,23 @@ import {
  */
 export class LiveAllTasks extends LiveData<readonly Task[]> {
 	constructor() {
-		super({
-			async getData(_options) {
+		super(
+			async function getData(_options) {
 				const tasks = await loadAllTasks();
 
 				return tasks;
 			},
-			observe(getDataArg, signal) {
-				const getData = () => getDataArg();
+			{
+				observe(getDataArg, signal) {
+					const getData = () => getDataArg();
 
-				const changeEntity = { type: ChangeEntityType.TASK };
+					const changeEntity = { type: ChangeEntityType.TASK };
 
-				addChangeListener(ChangeType.ADD, changeEntity, getData, { signal });
-				addChangeListener(ChangeType.CHANGE, changeEntity, getData, { signal });
-				addChangeListener(ChangeType.DELETE, changeEntity, getData, { signal });
-			},
-		});
+					addChangeListener(ChangeType.ADD, changeEntity, getData, { signal });
+					addChangeListener(ChangeType.CHANGE, changeEntity, getData, { signal });
+					addChangeListener(ChangeType.DELETE, changeEntity, getData, { signal });
+				},
+			}
+		);
 	}
 }

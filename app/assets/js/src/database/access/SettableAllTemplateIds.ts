@@ -1,4 +1,4 @@
-import { AsyncDataStateType, SettableLiveData } from 'utils/asyncData';
+import { AsyncActionStateType, SettableLiveData } from 'utils/asyncAction';
 import { sortBySortIndex } from 'utils/sortBySortIndex';
 
 import { fireCommand } from 'registers/commands';
@@ -25,7 +25,7 @@ export class SettableAllTemplateIds extends SettableLiveData<readonly number[]> 
 
 				return sortBySortIndex(templates).map(({ id }) => id);
 			},
-			async setData(templateIds, _signal) {
+			async setData(_options, templateIds) {
 				await fireCommand(Command.DATA_SAVE, templateIds.map((id, sortIndex) => ({
 					type: SaveType.TEMPLATE,
 					id,
@@ -41,7 +41,7 @@ export class SettableAllTemplateIds extends SettableLiveData<readonly number[]> 
 				);
 			},
 			observeState(getData, state, signal) {
-				if (state.type === AsyncDataStateType.SUCCESS) {
+				if (state.type === AsyncActionStateType.SUCCESS) {
 					for (const id of state.data) {
 						// TODO: Limit refreshes to when the template's sortIndex was updated
 						addChangeListener(

@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import { insertTestData } from '../../test-utils';
 import type { Status } from '../../types';
@@ -22,15 +22,16 @@ describe('useStatus', () => {
 	beforeEach(async () => insertTestData());
 	afterEach(() => cleanup());
 
-	test('provide an AsyncDataResult', () => {
+	test('provide an AsyncActionState', () => {
 		const { result } = renderHook(
 			() => useStatus(1)
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<Status>);
+			progress: null,
+		} satisfies AsyncActionState<Status>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -40,8 +41,7 @@ describe('useStatus', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: {
 					id: 1,
 					name: 'Todo',
@@ -49,7 +49,9 @@ describe('useStatus', () => {
 					icon: 'todo',
 					completed: false,
 				},
-			} satisfies AsyncDataState<Status>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<Status>);
 		});
 	});
 
@@ -61,8 +63,8 @@ describe('useStatus', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
+				progress: null,
 				data: {
 					id: 1,
 					name: 'Todo',
@@ -70,15 +72,15 @@ describe('useStatus', () => {
 					icon: 'todo',
 					completed: false,
 				},
-			} satisfies AsyncDataState<Status>);
+				loading: false,
+			} satisfies AsyncActionState<Status>);
 		});
 
 		rerender(2);
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: {
 					id: 2,
 					name: 'In progress',
@@ -86,13 +88,14 @@ describe('useStatus', () => {
 					icon: 'in progress',
 					completed: false,
 				},
-			} satisfies AsyncDataState<Status>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<Status>);
 		});
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: {
 					id: 2,
 					name: 'In progress',
@@ -100,7 +103,9 @@ describe('useStatus', () => {
 					icon: 'in progress',
 					completed: false,
 				},
-			} satisfies AsyncDataState<Status>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<Status>);
 		});
 	});
 
@@ -111,10 +116,11 @@ describe('useStatus', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.ERROR,
+				type: AsyncActionStateType.ERROR,
 				error: new Error('Could not find status with ID -1'),
 				loading: false,
-			} satisfies AsyncDataState<Status>);
+				progress: null,
+			} satisfies AsyncActionState<Status>);
 		});
 	});
 });

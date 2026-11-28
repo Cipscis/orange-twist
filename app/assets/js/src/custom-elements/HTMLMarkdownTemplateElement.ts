@@ -1,5 +1,5 @@
 import { assertAllUnionMembersHandled } from 'utils/assertAllUnionMembersHandled';
-import { AsyncDataStateType, HTMLLiveDataElement } from 'utils/asyncData';
+import { AsyncActionStateType, HTMLLiveDataElement } from 'utils/asyncAction';
 import { renderInline } from 'utils/markdown';
 import { templateArgsPattern } from 'utils/templateArgsPattern';
 import { getTemplateAlias } from 'utils/getTemplateAlias';
@@ -64,7 +64,7 @@ export class HTMLMarkdownTemplateElement extends HTMLLiveDataElement<Template> {
 		super.render();
 
 		const buildState = this.liveData?.state ?? {
-			type: AsyncDataStateType.ERROR,
+			type: AsyncActionStateType.ERROR,
 			error: new Error('No valid name attribute was found'),
 			loading: false,
 		};
@@ -74,11 +74,11 @@ export class HTMLMarkdownTemplateElement extends HTMLLiveDataElement<Template> {
 			this.removeChild(this.firstChild);
 		}
 
-		if (buildState.type === AsyncDataStateType.INITIAL) {
+		if (buildState.type === AsyncActionStateType.INITIAL) {
 			// Do nothing
-		} else if (buildState.type === AsyncDataStateType.SUCCESS) {
+		} else if (buildState.type === AsyncActionStateType.SUCCESS) {
 			this.#renderSuccess(buildState.data);
-		} else if (buildState.type === AsyncDataStateType.ERROR) {
+		} else if (buildState.type === AsyncActionStateType.ERROR) {
 			this.#renderError(buildState.error);
 		} else {
 			assertAllUnionMembersHandled(buildState);

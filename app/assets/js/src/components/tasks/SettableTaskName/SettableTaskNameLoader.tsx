@@ -4,7 +4,7 @@ import {
 	type JSX,
 } from 'preact';
 
-import { AsyncDataStateType } from 'utils/asyncData';
+import { AsyncActionStateType } from 'utils/asyncAction';
 import type { useSettableTask } from 'database';
 
 import {
@@ -37,12 +37,12 @@ export const SettableTaskNameLoader = (props: SettableTaskNameLoaderProps): JSX.
 
 	return <>
 		{
-			getterState.type === AsyncDataStateType.INITIAL &&
+			getterState.type === AsyncActionStateType.INITIAL &&
 			<Loader />
 		}
 
 		{
-			getterState.type === AsyncDataStateType.SUCCESS &&
+			getterState.type === AsyncActionStateType.SUCCESS &&
 			getterState.data &&
 			<SettableTaskNameSync
 				task={getterState.data}
@@ -52,9 +52,9 @@ export const SettableTaskNameLoader = (props: SettableTaskNameLoaderProps): JSX.
 
 		{
 			!(
-				getterState.type === AsyncDataStateType.INITIAL ||
+				getterState.type === AsyncActionStateType.INITIAL ||
 				(
-					getterState.type === AsyncDataStateType.SUCCESS &&
+					getterState.type === AsyncActionStateType.SUCCESS &&
 					getterState.data
 				)
 			) && <Notice

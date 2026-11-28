@@ -1,4 +1,4 @@
-import { AsyncDataStateType, LiveData } from 'utils/asyncData';
+import { AsyncActionStateType, LiveData } from 'utils/asyncAction';
 
 import type { Template } from '../types';
 import {
@@ -14,8 +14,8 @@ import { loadTemplateByAlias } from './loadTemplateByAlias';
  */
 export class LiveAliasedTemplate extends LiveData<Template> {
 	constructor(templateAlias: string) {
-		super({
-			async getData(_options) {
+		super(
+			async function getData(_options) {
 				const template = await loadTemplateByAlias(templateAlias);
 
 				if (template === null) {
@@ -24,37 +24,39 @@ export class LiveAliasedTemplate extends LiveData<Template> {
 
 				return template;
 			},
-			observeState(getDataArg, state, signal) {
-				const getData = () => getDataArg();
+			{
+				observeState(getDataArg, state, signal) {
+					const getData = () => getDataArg();
 
-				if (state.type === AsyncDataStateType.ERROR) {
-					addChangeListener(
-						ChangeType.ADD,
-						{ type: ChangeEntityType.TEMPLATE },
-						getData,
-						{ signal },
-					);
-				} else if (state.type === AsyncDataStateType.SUCCESS) {
-					const changeEntity = {
-						type: ChangeEntityType.TEMPLATE,
-						id: state.data.id,
-					};
+					if (state.type === AsyncActionStateType.ERROR) {
+						addChangeListener(
+							ChangeType.ADD,
+							{ type: ChangeEntityType.TEMPLATE },
+							getData,
+							{ signal },
+						);
+					} else if (state.type === AsyncActionStateType.SUCCESS) {
+						const changeEntity = {
+							type: ChangeEntityType.TEMPLATE,
+							id: state.data.id,
+						};
 
-					addChangeListener(
-						ChangeType.CHANGE,
-						changeEntity,
-						getData,
-						{ signal },
-					);
+						addChangeListener(
+							ChangeType.CHANGE,
+							changeEntity,
+							getData,
+							{ signal },
+						);
 
-					addChangeListener(
-						ChangeType.DELETE,
-						changeEntity,
-						getData,
-						{ signal },
-					);
-				}
-			},
-		});
+						addChangeListener(
+							ChangeType.DELETE,
+							changeEntity,
+							getData,
+							{ signal },
+						);
+					}
+				},
+			}
+		);
 	}
 }

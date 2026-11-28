@@ -1,4 +1,4 @@
-import { AsyncDataStateType, LiveData } from 'utils/asyncData';
+import { AsyncActionStateType, LiveData } from 'utils/asyncAction';
 
 import type { Status } from '../types';
 
@@ -15,8 +15,8 @@ import { loadStatus } from './loadStatus';
  */
 export class LiveStatusForTask extends LiveData<Status> {
 	constructor(taskId: number) {
-		super({
-			async getData(_options) {
+		super(
+			async function getData(_options) {
 				const statusId = await loadStatusForTask(taskId);
 
 				if (statusId === null) {
@@ -31,39 +31,41 @@ export class LiveStatusForTask extends LiveData<Status> {
 
 				return status;
 			},
-			observeState(getDataArg, state, signal) {
+			{
+				observeState(getDataArg, state, signal) {
 				// Don't need to watch for status changes as they never change
 
-				// TODO: Only care about day tasks for this task
-				const changeEntity = {
-					type: ChangeEntityType.DAY_TASK,
-				};
+					// TODO: Only care about day tasks for this task
+					const changeEntity = {
+						type: ChangeEntityType.DAY_TASK,
+					};
 
-				const getData = () => getDataArg();
+					const getData = () => getDataArg();
 
-				if (state.type === AsyncDataStateType.SUCCESS) {
-					addChangeListener(
-						ChangeType.ADD,
-						changeEntity,
-						getData,
-						{ signal },
-					);
+					if (state.type === AsyncActionStateType.SUCCESS) {
+						addChangeListener(
+							ChangeType.ADD,
+							changeEntity,
+							getData,
+							{ signal },
+						);
 
-					addChangeListener(
-						ChangeType.CHANGE,
-						changeEntity,
-						getData,
-						{ signal },
-					);
+						addChangeListener(
+							ChangeType.CHANGE,
+							changeEntity,
+							getData,
+							{ signal },
+						);
 
-					addChangeListener(
-						ChangeType.DELETE,
-						changeEntity,
-						getData,
-						{ signal },
-					);
-				}
-			},
-		});
+						addChangeListener(
+							ChangeType.DELETE,
+							changeEntity,
+							getData,
+							{ signal },
+						);
+					}
+				},
+			}
+		);
 	}
 }

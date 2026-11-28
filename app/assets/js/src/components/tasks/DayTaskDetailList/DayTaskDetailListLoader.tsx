@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import type { DayTask } from 'database';
 
@@ -12,8 +12,8 @@ import {
 import { DayTaskDetailListSync } from './DayTaskDetailListSync';
 
 export interface DayTaskDetailListLoaderProps {
-	dayTaskIdsDataState: AsyncDataState<readonly number[]>;
-	currentDayTaskDataState: AsyncDataState<DayTask>;
+	dayTaskIdsDataState: AsyncActionState<readonly number[]>;
+	currentDayTaskDataState: AsyncActionState<DayTask>;
 }
 
 /**
@@ -26,20 +26,20 @@ export function DayTaskDetailListLoader(props: DayTaskDetailListLoaderProps): JS
 	} = props;
 
 	if (
-		dayTaskIdsDataState.type === AsyncDataStateType.INITIAL ||
-		currentDayTaskDataState.type === AsyncDataStateType.INITIAL
+		dayTaskIdsDataState.type === AsyncActionStateType.INITIAL ||
+		currentDayTaskDataState.type === AsyncActionStateType.INITIAL
 	) {
 		return <Loader />;
 	}
 
-	if (dayTaskIdsDataState.type === AsyncDataStateType.ERROR) {
+	if (dayTaskIdsDataState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={dayTaskIdsDataState.error.message}
 		/>;
 	}
 
-	const currentDayTaskId = currentDayTaskDataState.type === AsyncDataStateType.SUCCESS
+	const currentDayTaskId = currentDayTaskDataState.type === AsyncActionStateType.SUCCESS
 		? currentDayTaskDataState.data.id
 		: undefined;
 

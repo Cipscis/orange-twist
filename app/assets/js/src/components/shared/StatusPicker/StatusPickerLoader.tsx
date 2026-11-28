@@ -1,7 +1,7 @@
 import { h, type JSX } from 'preact';
 
 import type { Status } from 'database';
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import { Loader } from 'components/shared';
 
@@ -11,8 +11,8 @@ import {
 } from './StatusPickerSync';
 
 export interface StatusPickerLoaderProps extends Omit<StatusPickerSyncProps, 'status' | 'statuses'> {
-	statusAsyncDataState: AsyncDataState<Status>;
-	statusesAsyncDataState: AsyncDataState<readonly Status[]>;
+	statusAsyncState: AsyncActionState<Status>;
+	statusesAsyncState: AsyncActionState<readonly Status[]>;
 }
 
 /**
@@ -20,30 +20,30 @@ export interface StatusPickerLoaderProps extends Omit<StatusPickerSyncProps, 'st
  */
 export function StatusPickerLoader(props: StatusPickerLoaderProps): JSX.Element | null {
 	const {
-		statusAsyncDataState,
-		statusesAsyncDataState,
+		statusAsyncState,
+		statusesAsyncState,
 	} = props;
 
 	if (
-		statusAsyncDataState.type === AsyncDataStateType.INITIAL ||
-		statusesAsyncDataState.type === AsyncDataStateType.INITIAL
+		statusAsyncState.type === AsyncActionStateType.INITIAL ||
+		statusesAsyncState.type === AsyncActionStateType.INITIAL
 	) {
 		return <Loader class="icon-button--loader" />;
 	}
 
-	if (statusAsyncDataState.type === AsyncDataStateType.ERROR) {
+	if (statusAsyncState.type === AsyncActionStateType.ERROR) {
 		// TODO: Handle this error state somehow
 		return null;
 	}
 
-	if (statusesAsyncDataState.type === AsyncDataStateType.ERROR) {
+	if (statusesAsyncState.type === AsyncActionStateType.ERROR) {
 		// Rely on `useAllStatuses` displaying an alert if status loading failed
 		return null;
 	}
 
 	return <StatusPickerSync
 		{...props}
-		status={statusAsyncDataState.data}
-		statuses={statusesAsyncDataState.data}
+		status={statusAsyncState.data}
+		statuses={statusesAsyncState.data}
 	/>;
 }

@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import type {
 	Task,
@@ -15,7 +15,7 @@ import {
 import { TaskStatusPickerSync } from './TaskStatusPickerSync';
 
 export interface TaskStatusPickerLoaderProps {
-	taskDataState: AsyncDataState<Task>;
+	taskDataState: AsyncActionState<Task>;
 	taskStatusDataState: ReturnType<typeof useSettableStatusForTask>;
 	deleteTask: () => Promise<void>;
 }
@@ -31,18 +31,18 @@ export function TaskStatusPickerLoader(props: TaskStatusPickerLoaderProps): JSX.
 	} = props;
 
 	if (
-		taskDataState.type === AsyncDataStateType.INITIAL ||
-		taskStatusDataState.getterState.type === AsyncDataStateType.INITIAL
+		taskDataState.type === AsyncActionStateType.INITIAL ||
+		taskStatusDataState.getterState.type === AsyncActionStateType.INITIAL
 	) {
 		return <Loader />;
 	}
 
-	if (taskDataState.type === AsyncDataStateType.ERROR) {
+	if (taskDataState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={taskDataState.error.message}
 		/>;
-	} else if (taskStatusDataState.getterState.type === AsyncDataStateType.ERROR) {
+	} else if (taskStatusDataState.getterState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={taskStatusDataState.getterState.error.message}

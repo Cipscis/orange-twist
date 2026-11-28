@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 import type { Day } from 'database';
 
 import {
@@ -12,7 +12,7 @@ import {
 import { DayNameSync } from './DayNameSync';
 
 export interface DayNameLoaderProps {
-	dayDataState: AsyncDataState<Day>;
+	dayDataState: AsyncActionState<Day>;
 }
 
 /**
@@ -25,11 +25,11 @@ export function DayNameLoader(
 		dayDataState: dayDataState,
 	} = props;
 
-	if (dayDataState.type === AsyncDataStateType.INITIAL) {
+	if (dayDataState.type === AsyncActionStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (dayDataState.type === AsyncDataStateType.ERROR) {
+	if (dayDataState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={dayDataState.error.message}

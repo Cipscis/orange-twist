@@ -1,11 +1,11 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
+	AsyncActionStateType,
 	SettableLiveData,
 	useSettableLiveData,
 	type UseSettableLiveDataResult,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -36,7 +36,7 @@ export function useSettableDay(dayId: number): UseSettableLiveDataResult<Day> {
 
 				return day;
 			},
-			async setData(day, _signal) {
+			async setData(_options, day) {
 				await fireCommand(Command.DATA_SAVE, [{
 					type: SaveType.DAY,
 					id: dayId,
@@ -49,14 +49,14 @@ export function useSettableDay(dayId: number): UseSettableLiveDataResult<Day> {
 					id: dayId,
 				};
 
-				if (settableDay.getter.state.type === AsyncDataStateType.ERROR) {
+				if (settableDay.getter.state.type === AsyncActionStateType.ERROR) {
 					addChangeListener(
 						ChangeType.ADD,
 						changeEntity,
 						() => getData(),
 						{ signal },
 					);
-				} else if (settableDay.getter.state.type === AsyncDataStateType.SUCCESS) {
+				} else if (settableDay.getter.state.type === AsyncActionStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.CHANGE,
 						changeEntity,

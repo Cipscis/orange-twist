@@ -1,8 +1,8 @@
 import type { EnumTypeOf } from '../EnumTypeOf';
 
-export const AsyncDataStateType = {
+export const AsyncActionStateType = {
 	INITIAL: 'initial',
 	ERROR: 'error',
 	SUCCESS: 'success',
 } as const;
-export type AsyncDataStateType = EnumTypeOf<typeof AsyncDataStateType>;
+export type AsyncActionStateType = EnumTypeOf<typeof AsyncActionStateType>;

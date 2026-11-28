@@ -1,11 +1,11 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	LiveData,
 	useLiveData,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import {
 	addChangeListener,
@@ -15,37 +15,39 @@ import {
 import { loadAllDays } from '../loadAllDays';
 
 /**
- * Attempts to load the IDs of all days immediately, sorted chronologically. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load the IDs of all days immediately, sorted chronologically. Provides an {@linkcode AsyncActionState} representing the state of that loading operation.
  */
-export function useAllDayIds(): AsyncDataState<readonly number[]> {
+export function useAllDayIds(): AsyncActionState<readonly number[]> {
 	const liveAllDayIds = useMemo(() => {
-		const liveAllDayIds = new LiveData({
-			async getData(_options) {
+		const liveAllDayIds = new LiveData(
+			async function getData(_options) {
 				const allDays = await loadAllDays();
 				const allDayIds = allDays.map(({ id }) => id);
 				return allDayIds;
 			},
-			observe(getData, signal) {
-				addChangeListener(
-					ChangeType.ADD,
-					{ type: ChangeEntityType.DAY },
-					() => getData(),
-					{ signal },
-				);
-			},
-			observeState(getData, state, signal) {
-				if (state.type === AsyncDataStateType.SUCCESS) {
-					for (const id of state.data) {
-						addChangeListener(
-							ChangeType.DELETE,
-							{ type: ChangeEntityType.DAY, id },
-							() => getData(),
-							{ signal },
-						);
+			{
+				observe(getData, signal) {
+					addChangeListener(
+						ChangeType.ADD,
+						{ type: ChangeEntityType.DAY },
+						() => getData(),
+						{ signal },
+					);
+				},
+				observeState(getData, state, signal) {
+					if (state.type === AsyncActionStateType.SUCCESS) {
+						for (const id of state.data) {
+							addChangeListener(
+								ChangeType.DELETE,
+								{ type: ChangeEntityType.DAY, id },
+								() => getData(),
+								{ signal },
+							);
+						}
 					}
-				}
-			},
-		});
+				},
+			}
+		);
 		liveAllDayIds.observe();
 		return liveAllDayIds;
 	}, []);

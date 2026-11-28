@@ -1,9 +1,9 @@
 import { h, type JSX } from 'preact';
 
 import {
-	AsyncDataStateType,
+	AsyncActionStateType,
 	type UseSettableLiveDataResult,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import {
 	Loader,
@@ -24,11 +24,11 @@ export function DayTaskListLoader(props: DayTaskListLoaderProps): JSX.Element {
 		dayTaskIdsDataState,
 	} = props;
 
-	if (dayTaskIdsDataState.getterState.type === AsyncDataStateType.INITIAL) {
+	if (dayTaskIdsDataState.getterState.type === AsyncActionStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (dayTaskIdsDataState.getterState.type === AsyncDataStateType.ERROR) {
+	if (dayTaskIdsDataState.getterState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={dayTaskIdsDataState.getterState.error.message}

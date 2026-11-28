@@ -9,7 +9,7 @@ import {
 } from 'preact/hooks';
 
 import { getCurrentDateDayName } from 'utils';
-import { AsyncDataStateType } from 'utils/asyncData';
+import { AsyncActionStateType } from 'utils/asyncAction';
 import { useCurrentDay } from 'database';
 
 import { Command } from 'types/Command';
@@ -61,7 +61,7 @@ export function Help(): JSX.Element {
 			</div>
 
 			{
-				todayDataState.type === AsyncDataStateType.SUCCESS && (todayDataState.data
+				todayDataState.type === AsyncActionStateType.SUCCESS && (todayDataState.data
 					? (<Day
 						day={todayDataState.data.id}
 						open

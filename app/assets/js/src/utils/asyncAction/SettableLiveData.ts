@@ -1,5 +1,10 @@
-import { AsyncDataStateType } from './AsyncDataStateType';
-import type { AsyncDataState } from './AsyncDataState';
+import { AsyncActionStateType } from './AsyncActionStateType';
+import type { AsyncActionState } from './AsyncActionState';
+import {
+	AsyncAction,
+	type AsyncActionFn,
+	type AsyncActionFnOptions,
+} from './AsyncAction';
 
 import {
 	LiveData,
@@ -7,15 +12,31 @@ import {
 	type LiveDataObserveOptions,
 } from './LiveData';
 
-import {
-	SettableData,
-	type SettableDataOptions,
-	type SettablePartial,
-} from './SettableData';
+/**
+ * This utility type constructs a stripped down type that can be used for setting data via partial update.
+ *
+ * For literals or array data, the complete value is required.
+ */
+export type SettablePartial<T> = T extends readonly unknown[]
+	? T
+	: Partial<T>;
 
-export interface SettableLiveDataOptions<T> extends LiveDataOptions<T>, SettableDataOptions<T> {
+export interface SettableLiveDataOptions<T> extends LiveDataOptions<T> {
 	/**
-	 * If set, provide an "optimistic" value after calling {@linkcode SettableAsyncDataResult.setData setData}. This allows the new value to be displayed immediately during the gap between setting it and retrieving it again.
+	 * A function that retrieves the data being watched.
+	 */
+	getData: AsyncActionFn<T>;
+	/**
+	 * A function that sets data via partial update.
+	 *
+	 * Takes an {@linkcode AbortSignal} to allow requests to be aborted.
+	 */
+	setData: (
+		options: AsyncActionFnOptions,
+		data: SettablePartial<T>,
+	) => Promise<void>;
+	/**
+	 * If set, provide an "optimistic" value after calling {@linkcode SettableLiveDataOptions.setData setData}. This allows the new value to be displayed immediately during the gap between setting it and retrieving it again.
 	 *
 	 * @default false
 	 */
@@ -29,13 +50,13 @@ export class SettableLiveData<T> {
 	#optimistic: boolean;
 
 	#liveData: LiveData<T>;
-	#settableData: SettableData<T>;
+	#settableData: AsyncAction<void, [SettablePartial<T>]>;
 
-	get #liveDataStateProxy(): AsyncDataState<T> {
+	get #liveDataStateProxy(): AsyncActionState<T> {
 		if (
 			this.#optimistic &&
 			typeof this.#optimisticDataOverride !== 'undefined' &&
-			this.#liveData.state.type === AsyncDataStateType.SUCCESS
+			this.#liveData.state.type === AsyncActionStateType.SUCCESS
 		) {
 			if (Array.isArray(this.#optimisticDataOverride)) {
 				return {
@@ -68,7 +89,7 @@ export class SettableLiveData<T> {
 		Pick<LiveData<T>, 'addEventListener' | 'removeEventListener' | 'state'>
 	>;
 	readonly setter: Readonly<
-		Pick<SettableData<T>, 'addEventListener' | 'removeEventListener' | 'state'>
+		Pick<AsyncAction<void, [SettablePartial<T>]>, 'addEventListener' | 'removeEventListener' | 'state'>
 	>;
 
 	constructor(options: SettableLiveDataOptions<T>) {
@@ -76,18 +97,21 @@ export class SettableLiveData<T> {
 
 		this.#optimistic = options.optimistic ?? false;
 
-		this.#liveData = new LiveData({
-			...options,
-			observeState(getData, state, signal) {
-				if (self.#optimistic) {
-					self.#optimisticDataOverride = undefined;
-				}
+		this.#liveData = new LiveData(
+			options.getData,
+			{
+				...options,
+				observeState(getData, state, signal) {
+					if (self.#optimistic) {
+						self.#optimisticDataOverride = undefined;
+					}
 
-				if (options.observeState) {
-					options.observeState(getData, state, signal);
-				}
+					if (options.observeState) {
+						options.observeState(getData, state, signal);
+					}
+				},
 			},
-		});
+		);
 		this.getter = {
 			addEventListener: this.#liveData.addEventListener.bind(this.#liveData),
 			removeEventListener: this.#liveData.removeEventListener.bind(this.#liveData),
@@ -96,18 +120,15 @@ export class SettableLiveData<T> {
 			},
 		};
 
-		this.#settableData = new SettableData({
-			...options,
-			setData(data, signal) {
-				self.#optimisticDataOverride = data;
-				const setPromise = options.setData(data, signal);
-				setPromise.catch(() => {
-					// If something goes wrong when setting data, revert to last loaded data
-					self.#optimisticDataOverride = undefined;
-				});
+		this.#settableData = new AsyncAction(function setData(setDataOptions, data) {
+			self.#optimisticDataOverride = data;
+			const setPromise = options.setData(setDataOptions, data);
+			setPromise.catch(() => {
+				// If something goes wrong when setting data, revert to last loaded data
+				self.#optimisticDataOverride = undefined;
+			});
 
-				return setPromise;
-			},
+			return setPromise;
 		});
 		this.setter = {
 			addEventListener: this.#settableData.addEventListener.bind(this.#settableData),
@@ -134,7 +155,7 @@ export class SettableLiveData<T> {
 
 	/** Set the data via partial update. */
 	setData(data: SettablePartial<T>): Promise<void> {
-		return this.#settableData.setData(data);
+		return this.#settableData.start(undefined, data);
 	}
 
 	/** Abort any in-flight request to set data. */

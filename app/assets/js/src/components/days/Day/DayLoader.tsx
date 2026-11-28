@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType } from 'utils/asyncData';
+import { AsyncActionStateType } from 'utils/asyncAction';
 import type { useSettableDay } from 'database';
 
 import {
@@ -25,11 +25,11 @@ export function DayLoader(
 		dayDataState: dayDataState,
 	} = props;
 
-	if (dayDataState.getterState.type === AsyncDataStateType.INITIAL) {
+	if (dayDataState.getterState.type === AsyncActionStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (dayDataState.getterState.type === AsyncDataStateType.ERROR) {
+	if (dayDataState.getterState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={dayDataState.getterState.error.message}

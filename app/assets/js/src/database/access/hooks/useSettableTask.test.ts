@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -31,13 +31,15 @@ describe('useSettableTask', () => {
 		);
 
 		expect(result.current.getterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<Task>);
+			progress: null,
+		} satisfies AsyncActionState<Task>);
 		expect(result.current.setterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: false,
-		});
+			progress: null,
+		} satisfies AsyncActionState<void>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -47,15 +49,16 @@ describe('useSettableTask', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: {
 					id: 1,
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
 				},
-			} satisfies AsyncDataState<Task>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<Task>);
 		});
 	});
 
@@ -67,15 +70,16 @@ describe('useSettableTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: {
 						id: 1,
 						name: 'Test task 1',
 						note: 'Test task 1 note',
 						sortIndex: 1,
 					},
-				} satisfies AsyncDataState<Task>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<Task>);
 			});
 
 			save([{
@@ -90,15 +94,16 @@ describe('useSettableTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: {
 						id: 1,
 						name: 'Test task 1 updated',
 						note: 'Test task 1 note updated',
 						sortIndex: 2,
 					},
-				} satisfies AsyncDataState<Task>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<Task>);
 			});
 		});
 
@@ -109,15 +114,16 @@ describe('useSettableTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: {
 						id: 1,
 						name: 'Test task 1',
 						note: 'Test task 1 note',
 						sortIndex: 1,
 					},
-				} satisfies AsyncDataState<Task>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<Task>);
 			});
 
 			save([{
@@ -127,10 +133,11 @@ describe('useSettableTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.ERROR,
-					loading: false,
+					type: AsyncActionStateType.ERROR,
 					error: new Error('Could not find task with ID 1'),
-				} satisfies AsyncDataState<Task>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<Task>);
 			});
 		});
 
@@ -141,10 +148,11 @@ describe('useSettableTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.ERROR,
-					loading: false,
+					type: AsyncActionStateType.ERROR,
 					error: new Error('Could not find task with ID 4'),
-				} satisfies AsyncDataState<Task>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<Task>);
 			});
 
 			save([{
@@ -156,15 +164,16 @@ describe('useSettableTask', () => {
 
 			await waitFor(() => {
 				expect(result.current.getterState).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: {
 						id: 4,
 						name: 'New task',
 						note: '',
 						sortIndex: -4,
 					},
-				} satisfies AsyncDataState<Task>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<Task>);
 			});
 		});
 	});
@@ -177,43 +186,46 @@ describe('useSettableTask', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: {
 					id: 1,
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
 				},
-			} satisfies AsyncDataState<Task>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<Task>);
 		});
 
 		rerender(2);
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: true,
+				type: AsyncActionStateType.SUCCESS,
 				data: {
 					id: 1,
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
 				},
-			} satisfies AsyncDataState<Task>);
+				loading: true,
+				progress: null,
+			} satisfies AsyncActionState<Task>);
 		});
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: {
 					id: 2,
 					name: 'Test task 2',
 					note: 'Test task 2 note',
 					sortIndex: 2,
 				},
-			} satisfies AsyncDataState<Task>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<Task>);
 		});
 	});
 
@@ -225,15 +237,16 @@ describe('useSettableTask', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: {
 					id: 1,
 					name: 'Test task 1',
 					note: 'Test task 1 note',
 					sortIndex: 1,
 				},
-			} satisfies AsyncDataState<Task>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<Task>);
 		});
 
 		result.current.setData({ note: 'Test task 1 note updated' });
@@ -241,36 +254,41 @@ describe('useSettableTask', () => {
 
 		// While the set function processes, we have optimistic data
 		expect(result.current.setterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		});
+			progress: null,
+		} satisfies AsyncActionState<void>);
 		expect(result.current.getterState).toEqual({
-			type: AsyncDataStateType.SUCCESS,
-			loading: false,
+			type: AsyncActionStateType.SUCCESS,
 			data: {
 				id: 1,
 				name: 'Test task 1',
 				note: 'Test task 1 note updated',
 				sortIndex: 1,
 			},
-		} satisfies AsyncDataState<Task>);
+			loading: false,
+			progress: null,
+		} satisfies AsyncActionState<Task>);
 
 		// Eventually, the set function completes and we still have data
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			});
+				progress: null,
+			} satisfies AsyncActionState<void>);
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: {
 					id: 1,
 					name: 'Test task 1',
 					note: 'Test task 1 note updated',
 					sortIndex: 1,
 				},
-			} satisfies AsyncDataState<Task>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<Task>);
 		});
 	});
 
@@ -281,10 +299,11 @@ describe('useSettableTask', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.ERROR,
+				type: AsyncActionStateType.ERROR,
 				error: new Error('Could not find task with ID -1'),
 				loading: false,
-			} satisfies AsyncDataState<Task>);
+				progress: null,
+			} satisfies AsyncActionState<Task>);
 		});
 	});
 });

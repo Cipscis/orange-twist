@@ -6,14 +6,13 @@ import {
 import { renderHook, waitFor } from '@testing-library/preact';
 import { useMemo } from 'preact/hooks';
 
-import { AsyncDataStateType } from '../AsyncDataStateType';
-import type { AsyncDataState } from '../AsyncDataState';
+import { AsyncActionStateType } from '../AsyncActionStateType';
+import type { AsyncActionState } from '../AsyncActionState';
 
 import {
 	SettableLiveData,
 	type SettableLiveDataOptions,
 } from '../SettableLiveData';
-import type { SettableAsyncDataState } from '../SettableAsyncDataState';
 
 import { useSettableLiveData } from './useSettableLiveData';
 
@@ -28,7 +27,7 @@ describe('useSettableLiveData', () => {
 			getData(_options) {
 				return Promise.resolve(value);
 			},
-			setData(data, _signal) {
+			setData(_options, data) {
 				value = data;
 				return Promise.resolve();
 			},
@@ -52,24 +51,27 @@ describe('useSettableLiveData', () => {
 
 		// Check initial loading state
 		expect(result.current.getterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<boolean>);
+			progress: null,
+		} satisfies AsyncActionState<boolean>);
 
 		// Check initial loading success
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+				progress: null,
+			} satisfies AsyncActionState<boolean>);
 		});
 
 		// Check initial save state
 		expect(result.current.setterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: false,
-		} satisfies SettableAsyncDataState);
+			progress: null,
+		} satisfies AsyncActionState<void>);
 
 		// Save data and check loading save state and optimistic loading state
 		const savePromise = result.current.setData(false);
@@ -77,23 +79,27 @@ describe('useSettableLiveData', () => {
 		rerender(initialProps);
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
-				type: AsyncDataStateType.INITIAL,
+				type: AsyncActionStateType.INITIAL,
 				loading: true,
-			} satisfies SettableAsyncDataState);
+				progress: null,
+			} satisfies AsyncActionState<void>);
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+				progress: null,
+			} satisfies AsyncActionState<boolean>);
 		});
 
 		// Wait for save to complete and check save success
 		await savePromise;
 		await waitFor(() => {
 			expect(result.current.setterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
+				data: undefined,
 				loading: false,
-			} satisfies SettableAsyncDataState);
+				progress: null,
+			} satisfies AsyncActionState<void>);
 		});
 
 		// Trigger reload and check reloading with optimistic data
@@ -107,19 +113,21 @@ describe('useSettableLiveData', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: true,
-			} satisfies AsyncDataState<boolean>);
+				progress: null,
+			} satisfies AsyncActionState<boolean>);
 		});
 
 		// Check reload success
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+				progress: null,
+			} satisfies AsyncActionState<boolean>);
 		});
 	});
 
@@ -153,9 +161,10 @@ describe('useSettableLiveData', () => {
 		);
 
 		expect(result.current.getterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<boolean>);
+			progress: null,
+		} satisfies AsyncActionState<boolean>);
 
 		expect(cleanupSignal!.aborted).toBe(false);
 
@@ -190,16 +199,18 @@ describe('useSettableLiveData', () => {
 		);
 
 		expect(result.current.getterState).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<boolean>);
+			progress: null,
+		} satisfies AsyncActionState<boolean>);
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+				progress: null,
+			} satisfies AsyncActionState<boolean>);
 		});
 
 		rerender({
@@ -215,18 +226,20 @@ describe('useSettableLiveData', () => {
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: true,
 				loading: true,
-			} satisfies AsyncDataState<boolean>);
+				progress: null,
+			} satisfies AsyncActionState<boolean>);
 		});
 
 		await waitFor(() => {
 			expect(result.current.getterState).toEqual({
-				type: AsyncDataStateType.SUCCESS,
+				type: AsyncActionStateType.SUCCESS,
 				data: false,
 				loading: false,
-			} satisfies AsyncDataState<boolean>);
+				progress: null,
+			} satisfies AsyncActionState<boolean>);
 		});
 	});
 });

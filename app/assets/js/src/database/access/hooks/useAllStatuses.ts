@@ -5,9 +5,9 @@ import {
 } from 'preact/hooks';
 
 import {
-	type AsyncDataState,
+	type AsyncActionState,
 	LiveData,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import type { Status } from '../../types';
 import { loadAllStatuses } from '../loadAllStatuses';
@@ -21,23 +21,23 @@ let statuses: readonly Status[] | null = null;
 let liveStatusesGlobal: LiveData<readonly Status[]> | null = null;
 
 /**
- * Attempts to load all statuses immediately. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load all statuses immediately. Provides an {@linkcode AsyncActionState} representing the state of that loading operation.
  */
-export function useAllStatuses(): AsyncDataState<readonly Status[]> {
+export function useAllStatuses(): AsyncActionState<readonly Status[]> {
 	const liveStatuses = useMemo(() => {
 		if (liveStatusesGlobal !== null) {
 			return liveStatusesGlobal;
 		}
 
-		liveStatusesGlobal = new LiveData({
-			async getData(_options) {
+		liveStatusesGlobal = new LiveData(
+			async function getData(_options) {
 				if (statuses === null) {
 					statuses = await loadAllStatuses();
 				}
 				return statuses;
 			},
 			// No need to re-fetch status data, because it never changes
-		});
+		);
 		liveStatusesGlobal.observe();
 		return liveStatusesGlobal;
 	}, []);

@@ -1,6 +1,6 @@
 import { h, type JSX } from 'preact';
 
-import { AsyncDataStateType } from 'utils/asyncData';
+import { AsyncActionStateType } from 'utils/asyncAction';
 
 import type { useSettableDayTask } from 'database';
 
@@ -23,11 +23,11 @@ export function DayTaskStatusPickerLoader(props: DayTaskStatusPickerLoaderProps)
 		dayTaskDataState,
 	} = props;
 
-	if (dayTaskDataState.getterState.type === AsyncDataStateType.INITIAL) {
+	if (dayTaskDataState.getterState.type === AsyncActionStateType.INITIAL) {
 		return <Loader />;
 	}
 
-	if (dayTaskDataState.getterState.type === AsyncDataStateType.ERROR) {
+	if (dayTaskDataState.getterState.type === AsyncActionStateType.ERROR) {
 		return <Notice
 			variant={NoticeVariant.ERROR}
 			message={dayTaskDataState.getterState.error.message}

@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import { insertTestData } from '../../test-utils';
 
@@ -45,15 +45,16 @@ describe('useDayTaskIdsForTask', () => {
 	}));
 	afterEach(() => cleanup());
 
-	test('provide an AsyncDataResult', () => {
+	test('provide an AsyncActionState', () => {
 		const { result } = renderHook(
 			() => useDayTaskIdsForTask(1)
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<readonly number[]>);
+			progress: null,
+		} satisfies AsyncActionState<readonly number[]>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -63,10 +64,11 @@ describe('useDayTaskIdsForTask', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: [1, 2],
-			} satisfies AsyncDataState<readonly number[]>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<readonly number[]>);
 		});
 	});
 
@@ -78,10 +80,11 @@ describe('useDayTaskIdsForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [1, 2],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 
 			save([{
@@ -94,10 +97,11 @@ describe('useDayTaskIdsForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [1, 2],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
 		test('when deleting a day task', async () => {
@@ -107,10 +111,11 @@ describe('useDayTaskIdsForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [1, 2],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 
 			save([{
@@ -120,10 +125,11 @@ describe('useDayTaskIdsForTask', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [2],
-				} satisfies AsyncDataState<readonly number[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly number[]>);
 			});
 		});
 	});

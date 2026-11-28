@@ -1,11 +1,11 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
+	AsyncActionStateType,
 	SettableLiveData,
 	useSettableLiveData,
 	type UseSettableLiveDataResult,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import { fireCommand } from 'registers/commands';
 import { Command } from 'types/Command';
@@ -36,7 +36,7 @@ export function useSettableTask(taskId: number): UseSettableLiveDataResult<Task>
 
 				return task;
 			},
-			async setData(task, _signal) {
+			async setData(_options, task) {
 
 				await fireCommand(Command.DATA_SAVE, [{
 					type: SaveType.TASK,
@@ -50,14 +50,14 @@ export function useSettableTask(taskId: number): UseSettableLiveDataResult<Task>
 					id: taskId,
 				};
 
-				if (state.type === AsyncDataStateType.ERROR) {
+				if (state.type === AsyncActionStateType.ERROR) {
 					addChangeListener(
 						ChangeType.ADD,
 						changeEntity,
 						() => getData(),
 						{ signal },
 					);
-				} else if (state.type === AsyncDataStateType.SUCCESS) {
+				} else if (state.type === AsyncActionStateType.SUCCESS) {
 					addChangeListener(
 						ChangeType.CHANGE,
 						changeEntity,

@@ -11,7 +11,7 @@ import {
 	waitFor,
 } from '@testing-library/preact';
 
-import { AsyncDataStateType, type AsyncDataState } from 'utils/asyncData';
+import { AsyncActionStateType, type AsyncActionState } from 'utils/asyncAction';
 
 import { save } from '../save';
 import { SaveType } from '../SaveAction';
@@ -25,15 +25,16 @@ describe('useAllTasks', () => {
 	beforeEach(() => insertTestData());
 	afterEach(() => cleanup());
 
-	test('provide a AsyncDataResult', () => {
+	test('provide a AsyncActionState', () => {
 		const { result } = renderHook(
 			() => useAllTasks()
 		);
 
 		expect(result.current).toEqual({
-			type: AsyncDataStateType.INITIAL,
+			type: AsyncActionStateType.INITIAL,
 			loading: true,
-		} satisfies AsyncDataState<readonly Task[]>);
+			progress: null,
+		} satisfies AsyncActionState<readonly Task[]>);
 	});
 
 	test('fetches data on initial render', async () => {
@@ -43,8 +44,7 @@ describe('useAllTasks', () => {
 
 		await waitFor(() => {
 			expect(result.current).toEqual({
-				type: AsyncDataStateType.SUCCESS,
-				loading: false,
+				type: AsyncActionStateType.SUCCESS,
 				data: [
 					{
 						id: 3,
@@ -65,7 +65,9 @@ describe('useAllTasks', () => {
 						sortIndex: 2,
 					},
 				],
-			} satisfies AsyncDataState<readonly Task[]>);
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<readonly Task[]>);
 		});
 	});
 
@@ -77,8 +79,7 @@ describe('useAllTasks', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [
 						{
 							id: 3,
@@ -99,7 +100,9 @@ describe('useAllTasks', () => {
 							sortIndex: 2,
 						},
 					],
-				} satisfies AsyncDataState<readonly Task[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly Task[]>);
 			});
 
 			save([{
@@ -114,8 +117,7 @@ describe('useAllTasks', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [
 						{
 							id: 3,
@@ -136,7 +138,9 @@ describe('useAllTasks', () => {
 							sortIndex: 2,
 						},
 					],
-				} satisfies AsyncDataState<readonly Task[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly Task[]>);
 			});
 		});
 
@@ -147,8 +151,7 @@ describe('useAllTasks', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [
 						{
 							id: 3,
@@ -169,7 +172,9 @@ describe('useAllTasks', () => {
 							sortIndex: 2,
 						},
 					],
-				} satisfies AsyncDataState<readonly Task[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly Task[]>);
 			});
 
 			save([{
@@ -179,8 +184,7 @@ describe('useAllTasks', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [
 						{
 							id: 3,
@@ -195,7 +199,9 @@ describe('useAllTasks', () => {
 							sortIndex: 2,
 						},
 					],
-				} satisfies AsyncDataState<readonly Task[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly Task[]>);
 			});
 		});
 
@@ -206,8 +212,7 @@ describe('useAllTasks', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [
 						{
 							id: 3,
@@ -228,7 +233,9 @@ describe('useAllTasks', () => {
 							sortIndex: 2,
 						},
 					],
-				} satisfies AsyncDataState<readonly Task[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly Task[]>);
 			});
 
 			save([{
@@ -240,8 +247,7 @@ describe('useAllTasks', () => {
 
 			await waitFor(() => {
 				expect(result.current).toEqual({
-					type: AsyncDataStateType.SUCCESS,
-					loading: false,
+					type: AsyncActionStateType.SUCCESS,
 					data: [
 						{
 							id: 4,
@@ -268,7 +274,9 @@ describe('useAllTasks', () => {
 							sortIndex: 2,
 						},
 					],
-				} satisfies AsyncDataState<readonly Task[]>);
+					loading: false,
+					progress: null,
+				} satisfies AsyncActionState<readonly Task[]>);
 			});
 		});
 	});

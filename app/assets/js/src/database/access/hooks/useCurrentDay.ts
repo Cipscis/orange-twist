@@ -1,11 +1,11 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	LiveData,
 	useLiveData,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import type { Day } from '../../types';
 
@@ -17,35 +17,37 @@ import {
 } from '../liveAccessManager';
 
 /**
- * Provides an {@linkcode AsyncDataState} that immediately requests the current day. If it doesn't already exist, then it will be constructed.
+ * Provides an {@linkcode AsyncActionState} that immediately requests the current day. If it doesn't already exist, then it will be constructed.
  */
-export function useCurrentDay(): AsyncDataState<Day> {
+export function useCurrentDay(): AsyncActionState<Day> {
 	const liveCurrentDay = useMemo(() => {
-		const liveCurrentDay = new LiveData({
-			async getData(_options) {
+		const liveCurrentDay = new LiveData(
+			async function getData(_options) {
 				const currentDay = await loadCurrentDay();
 				return currentDay;
 			},
-			observeState(getDataArg, state, signal) {
-				if (state.type === AsyncDataStateType.SUCCESS) {
-					const getData = () => getDataArg();
-					const changeEntity = { type: ChangeEntityType.DAY, id: state.data.id };
+			{
+				observeState(getDataArg, state, signal) {
+					if (state.type === AsyncActionStateType.SUCCESS) {
+						const getData = () => getDataArg();
+						const changeEntity = { type: ChangeEntityType.DAY, id: state.data.id };
 
-					addChangeListener(
-						ChangeType.CHANGE,
-						changeEntity,
-						getData,
-						{ signal }
-					);
-					addChangeListener(
-						ChangeType.DELETE,
-						changeEntity,
-						getData,
-						{ signal }
-					);
-				}
-			},
-		});
+						addChangeListener(
+							ChangeType.CHANGE,
+							changeEntity,
+							getData,
+							{ signal }
+						);
+						addChangeListener(
+							ChangeType.DELETE,
+							changeEntity,
+							getData,
+							{ signal }
+						);
+					}
+				},
+			}
+		);
 		liveCurrentDay.observe();
 		return liveCurrentDay;
 	}, []);

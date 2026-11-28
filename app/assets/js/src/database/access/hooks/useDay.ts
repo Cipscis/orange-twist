@@ -1,11 +1,11 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	AsyncDataStateType,
-	type AsyncDataState,
+	AsyncActionStateType,
+	type AsyncActionState,
 	LiveData,
 	useLiveData,
-} from 'utils/asyncData';
+} from 'utils/asyncAction';
 
 import type { Day } from '../../types';
 
@@ -17,12 +17,12 @@ import {
 } from '../liveAccessManager';
 
 /**
- * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides an {@linkcode AsyncDataState} representing the state of that loading operation.
+ * Attempts to load a specified day immediately, and reloads it if it is changed in the database. Provides an {@linkcode AsyncActionState} representing the state of that loading operation.
  */
-export function useDay(dayId: number): AsyncDataState<Day> {
+export function useDay(dayId: number): AsyncActionState<Day> {
 	const liveDay = useMemo(() => {
-		const liveDay = new LiveData({
-			async getData(options) {
+		const liveDay = new LiveData(
+			async function getData(options) {
 				const day = await loadDay(dayId);
 
 				if (day === null) {
@@ -31,36 +31,38 @@ export function useDay(dayId: number): AsyncDataState<Day> {
 
 				return day;
 			},
-			observeState(getData, state, signal) {
-				const changeEntity = {
-					type: ChangeEntityType.DAY,
-					id: dayId,
-				};
+			{
+				observeState(getData, state, signal) {
+					const changeEntity = {
+						type: ChangeEntityType.DAY,
+						id: dayId,
+					};
 
-				if (state.type === AsyncDataStateType.ERROR) {
-					addChangeListener(
-						ChangeType.ADD,
-						changeEntity,
-						() => getData(),
-						{ signal },
-					);
-				} else if (state.type === AsyncDataStateType.SUCCESS) {
-					addChangeListener(
-						ChangeType.CHANGE,
-						changeEntity,
-						() => getData(),
-						{ signal },
-					);
+					if (state.type === AsyncActionStateType.ERROR) {
+						addChangeListener(
+							ChangeType.ADD,
+							changeEntity,
+							() => getData(),
+							{ signal },
+						);
+					} else if (state.type === AsyncActionStateType.SUCCESS) {
+						addChangeListener(
+							ChangeType.CHANGE,
+							changeEntity,
+							() => getData(),
+							{ signal },
+						);
 
-					addChangeListener(
-						ChangeType.DELETE,
-						changeEntity,
-						() => getData(),
-						{ signal },
-					);
-				}
-			},
-		});
+						addChangeListener(
+							ChangeType.DELETE,
+							changeEntity,
+							() => getData(),
+							{ signal },
+						);
+					}
+				},
+			}
+		);
 		liveDay.observe();
 		return liveDay;
 	}, [dayId]);
