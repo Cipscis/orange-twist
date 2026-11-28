@@ -3,16 +3,31 @@ import { extractError } from '../extractError';
 import { AsyncActionStateType } from './AsyncActionStateType';
 import type { AsyncActionState } from './AsyncActionState';
 
+export interface AsyncActionProgressOptions extends Pick<
+	ProgressEventInit, 'lengthComputable' | 'loaded' | 'total'
+> {
+	loaded: number;
+}
+
 export interface AsyncActionFnOptions {
 	/**
 	 * An `AbortSignal`. If it is aborted, the asynchronous operation should also be aborted.
 	 */
 	signal: AbortSignal;
+
+	/**
+	 * A function for reporting progress to the `AsyncActionState` while an action is in progress.
+	 *
+	 * The `loaded` value is used for reporting progress. If `total` is also present, then `loaded/total` will be reported instead.
+	 */
+	reportProgress: (options: number | AsyncActionProgressOptions) => void;
 }
 
 export interface AsyncActionFn<T, A extends unknown[] = []> {
 	(options: AsyncActionFnOptions, ...args: A): Promise<T>;
 }
+
+export interface AsyncActionStartOptions extends Omit<AsyncActionFnOptions, 'reportProgress'> {}
 
 /**
  * A representation of an asynchronously operation.
@@ -53,10 +68,35 @@ export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 		this.#start = fn;
 	}
 
+	#reportProgress(options: number | AsyncActionProgressOptions): void {
+		if (!this.#abortController) {
+			// No action is in progress
+			return;
+		}
+
+		const [progress, eventInit] = (() => {
+			if (typeof options === 'number') {
+				return [options, { loaded: options }];
+			}
+
+			let progress = options.loaded;
+			if (typeof options.total === 'number') {
+				progress = progress / options.total;
+			}
+			return [progress, options];
+		})();
+
+		this.#state = {
+			...this.#state,
+			progress,
+		};
+		this.dispatchEvent(new ProgressEvent('progress', eventInit));
+	}
+
 	/**
 	 * Handle loading the data, updating the internal {@linkcode AsyncActionState}, and firing the relevant `'loadstart'`, `'load'`, `'error'`, and `'loadend'` {@linkcode ProgressEvent}s.
 	 */
-	async start(options?: AsyncActionFnOptions, ...args: A): Promise<void> {
+	async start(options?: AsyncActionStartOptions, ...args: A): Promise<void> {
 		this.abort();
 
 		this.#abortController = new AbortController();
@@ -67,7 +107,10 @@ export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 		}
 		const signal = AbortSignal.any(signals);
 
-		const startPromise = this.#start({ signal }, ...args);
+		const startPromise = this.#start({
+			signal,
+			reportProgress: this.#reportProgress.bind(this),
+		}, ...args);
 		const {
 			promise: abortPromise,
 			resolve: abortResolve,
@@ -83,6 +126,7 @@ export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 			this.#state = {
 				...this.#state,
 				loading: false,
+				progress: null,
 			};
 			this.dispatchEvent(new ProgressEvent('abort'));
 			this.dispatchEvent(new ProgressEvent('loadend'));

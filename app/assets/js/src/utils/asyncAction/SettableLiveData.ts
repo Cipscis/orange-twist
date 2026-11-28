@@ -36,7 +36,7 @@ export interface SettableLiveDataOptions<T> extends LiveDataOptions<T> {
 		data: SettablePartial<T>,
 	) => Promise<void>;
 	/**
-	 * If set, provide an "optimistic" value after calling {@linkcode SettableAsyncDataResult.setData setData}. This allows the new value to be displayed immediately during the gap between setting it and retrieving it again.
+	 * If set, provide an "optimistic" value after calling {@linkcode SettableLiveDataOptions.setData setData}. This allows the new value to be displayed immediately during the gap between setting it and retrieving it again.
 	 *
 	 * @default false
 	 */
@@ -120,9 +120,9 @@ export class SettableLiveData<T> {
 			},
 		};
 
-		this.#settableData = new AsyncAction(function setData({ signal }, data) {
+		this.#settableData = new AsyncAction(function setData(setDataOptions, data) {
 			self.#optimisticDataOverride = data;
-			const setPromise = options.setData({ signal }, data);
+			const setPromise = options.setData(setDataOptions, data);
 			setPromise.catch(() => {
 				// If something goes wrong when setting data, revert to last loaded data
 				self.#optimisticDataOverride = undefined;

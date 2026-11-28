@@ -8,7 +8,7 @@ import {
 import { AsyncActionStateType } from './AsyncActionStateType';
 import type { AsyncActionState } from './AsyncActionState';
 
-import { AsyncAction } from './AsyncAction';
+import { AsyncAction, type AsyncActionProgressOptions } from './AsyncAction';
 
 describe('AsyncAction', () => {
 	describe('updates its internal state', () => {
@@ -81,7 +81,7 @@ describe('AsyncAction', () => {
 		test('to its prior state when the operation is aborted', async () => {
 			const { promise, resolve } = Promise.withResolvers<void>();
 
-			const action = new AsyncAction(function getData(options) {
+			const action = new AsyncAction(function getData() {
 				resolve();
 				return Promise.resolve(true);
 			});
@@ -111,6 +111,75 @@ describe('AsyncAction', () => {
 			// State shouldn't have updated after aborting
 			expect(action.state).toEqual({
 				type: AsyncActionStateType.INITIAL,
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<boolean>);
+		});
+
+		test('to report progress while in progress', async () => {
+			const { promise: loadPromise, resolve: loadResolve } = Promise.withResolvers();
+			const { promise: progressAPromise, resolve: progressAResolve } = Promise.withResolvers<void>();
+			const { promise: progressBPromise, resolve: progressBResolve } = Promise.withResolvers<void>();
+
+			let reportProgress: (options: number | AsyncActionProgressOptions) => void;
+
+			const action = new AsyncAction((options) => {
+				reportProgress = options.reportProgress;
+
+				// Use all three ways of calculating progress
+				reportProgress(0);
+				setTimeout(() => {
+					reportProgress({ loaded: 0.1 });
+					progressAResolve();
+				}, 20);
+				setTimeout(() => {
+					reportProgress({ loaded: 50, total: 100 });
+					progressBResolve();
+				}, 40);
+				setTimeout(() => loadResolve(true), 100);
+				return loadPromise;
+			});
+
+			action.start();
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
+				loading: true,
+				progress: 0,
+			} satisfies AsyncActionState<boolean>);
+
+			await progressAPromise;
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
+				loading: true,
+				progress: 0.1,
+			} satisfies AsyncActionState<boolean>);
+
+			await progressBPromise;
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.INITIAL,
+				loading: true,
+				progress: 0.5,
+			} satisfies AsyncActionState<boolean>);
+
+			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
+			await Promise.race([loadPromise]);
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.SUCCESS,
+				data: true,
+				loading: false,
+				progress: null,
+			} satisfies AsyncActionState<boolean>);
+
+			// Reporting progress while nothing is in progress does nothing
+			reportProgress!(1);
+
+			expect(action.state).toEqual({
+				type: AsyncActionStateType.SUCCESS,
+				data: true,
 				loading: false,
 				progress: null,
 			} satisfies AsyncActionState<boolean>);
@@ -329,6 +398,8 @@ describe('AsyncAction', () => {
 			action.start();
 			expect(loadstart).toHaveBeenCalledTimes(1);
 		});
+
+		test.todo('a progress event when progress is reported');
 
 		test('a load event on load complete', async () => {
 			const { promise, resolve } = Promise.withResolvers();

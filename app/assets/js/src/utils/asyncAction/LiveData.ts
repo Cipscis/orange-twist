@@ -6,6 +6,7 @@ import {
 	AsyncAction,
 	type AsyncActionFn,
 	type AsyncActionFnOptions,
+	type AsyncActionStartOptions,
 } from './AsyncAction';
 
 export interface LiveDataOptions<T> {
@@ -139,7 +140,7 @@ export class LiveData<T> extends AsyncAction<T, []> {
 	/**
 	 * Handle loading the data, updating the internal {@linkcode AsyncActionState}, and firing the relevant `'loadstart'`, `'load'`, `'error'`, and `'loadend'` {@linkcode ProgressEvent}s.
 	 */
-	async start(getDataOptions: AsyncActionFnOptions): Promise<void> {
+	async start(getDataOptions: AsyncActionStartOptions): Promise<void> {
 		await super.start(getDataOptions);
 
 		if (
