@@ -25,8 +25,8 @@ export async function saveBackupToDatabase(
 	};
 
 	const [updatedData, db] = await Promise.all([
-		updateData(data, reportProgress),
-		getDatabase(),
+		measureAsync('update data', () => updateData(data, reportUpdateProgress)),
+		measureAsync('get database', () => getDatabase()),
 	]);
 
 	await measureAsync(
