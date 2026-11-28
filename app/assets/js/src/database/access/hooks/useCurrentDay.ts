@@ -4,7 +4,7 @@ import {
 	AsyncActionStateType,
 	type AsyncActionState,
 	LiveData,
-	useLiveData,
+	useAsyncAction,
 } from 'utils/asyncAction';
 
 import type { Day } from '../../types';
@@ -52,5 +52,5 @@ export function useCurrentDay(): AsyncActionState<Day> {
 		return liveCurrentDay;
 	}, []);
 
-	return useLiveData(liveCurrentDay);
+	return useAsyncAction(liveCurrentDay);
 }

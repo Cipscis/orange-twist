@@ -42,7 +42,7 @@ export function useAllStatuses(): AsyncActionState<readonly Status[]> {
 		return liveStatusesGlobal;
 	}, []);
 
-	// Replicate most of useLiveData, but without cleanup since the same LiveData is reused across components so shouldn't be aborted etc.
+	// Replicate most of useAsyncAction, but without cleanup since the same LiveData is reused across components so shouldn't be aborted etc.
 	const [state, setState] = useState(liveStatuses.state);
 
 	// Add necessary event listeners to update state

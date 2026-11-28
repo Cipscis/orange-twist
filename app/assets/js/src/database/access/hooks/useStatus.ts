@@ -3,7 +3,7 @@ import { useMemo } from 'preact/hooks';
 import {
 	type AsyncActionState,
 	LiveData,
-	useLiveData,
+	useAsyncAction,
 } from 'utils/asyncAction';
 
 import type { Status } from '../../types';
@@ -30,5 +30,5 @@ export function useStatus(statusId: number): AsyncActionState<Status> {
 		return liveStatus;
 	}, [statusId]);
 
-	return useLiveData(liveStatus);
+	return useAsyncAction(liveStatus);
 }

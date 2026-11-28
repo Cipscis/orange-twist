@@ -13,7 +13,7 @@ export {
 } from './SettableLiveData';
 
 export {
-	useLiveData,
+	useAsyncAction,
 	useSettableLiveData,
 	type UseSettableLiveDataResult,
 } from './hooks';

@@ -5,7 +5,7 @@ import {
 	AsyncActionStateType,
 	type AsyncActionState,
 	LiveData,
-	useLiveData,
+	useAsyncAction,
 } from 'utils/asyncAction';
 
 import type { DayTask } from '../../types';
@@ -74,5 +74,5 @@ export function useCurrentDayTaskForTask(taskId: number): AsyncActionState<DayTa
 		return liveCurrentDayTaskForTask;
 	}, [taskId]);
 
-	return useLiveData(liveCurrentDayTaskForTask);
+	return useAsyncAction(liveCurrentDayTaskForTask);
 }

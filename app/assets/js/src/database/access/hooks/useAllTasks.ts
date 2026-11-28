@@ -2,7 +2,7 @@ import { useMemo } from 'preact/hooks';
 
 import {
 	type AsyncActionState,
-	useLiveData,
+	useAsyncAction,
 } from 'utils/asyncAction';
 
 import type { Task } from '../../types';
@@ -19,5 +19,5 @@ export function useAllTasks(): AsyncActionState<readonly Task[]> {
 		return liveAllTasks;
 	}, []);
 
-	return useLiveData(liveAllTasks);
+	return useAsyncAction(liveAllTasks);
 }
