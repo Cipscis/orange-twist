@@ -399,7 +399,56 @@ describe('AsyncAction', () => {
 			expect(loadstart).toHaveBeenCalledTimes(1);
 		});
 
-		test.todo('a progress event when progress is reported');
+		test('a progress event when progress is reported', async () => {
+			const { promise: loadPromise, resolve: loadResolve } = Promise.withResolvers();
+			const { promise: progressAPromise, resolve: progressAResolve } = Promise.withResolvers<void>();
+			const { promise: progressBPromise, resolve: progressBResolve } = Promise.withResolvers<void>();
+
+			let reportProgress: (options: number | AsyncActionProgressOptions) => void;
+			const spy = jest.fn((e: ProgressEvent) => {});
+
+			const action = new AsyncAction((options) => {
+				reportProgress = options.reportProgress;
+
+				// Use all three ways of calculating progress
+				reportProgress(0);
+				setTimeout(() => {
+					reportProgress({ loaded: 0.1 });
+					progressAResolve();
+				}, 20);
+				setTimeout(() => {
+					reportProgress({ loaded: 50, total: 100, lengthComputable: true });
+					progressBResolve();
+				}, 40);
+				setTimeout(() => loadResolve(true), 100);
+				return loadPromise;
+			});
+			action.addEventListener('progress', spy);
+
+			expect(spy).not.toHaveBeenCalled();
+			action.start();
+			expect(spy).toHaveBeenCalledWith(
+				new ProgressEvent('progress', { loaded: 0 })
+			);
+
+			await progressAPromise;
+			expect(spy).toHaveBeenCalledWith(
+				new ProgressEvent('progress', { loaded: 0.1 })
+			);
+
+			await progressBPromise;
+			expect(spy).toHaveBeenCalledWith(
+				new ProgressEvent('progress', { loaded: 50, total: 100, lengthComputable: true })
+			);
+
+			// Use Promise.race to mirror internal use (involves two microtask queues to resolve)
+			await Promise.race([loadPromise]);
+
+			// Reporting progress while nothing is in progress does nothing
+			reportProgress!(1);
+
+			expect(spy).toHaveBeenCalledTimes(3);
+		});
 
 		test('a load event on load complete', async () => {
 			const { promise, resolve } = Promise.withResolvers();

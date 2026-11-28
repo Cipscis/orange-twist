@@ -186,6 +186,7 @@ export class AsyncAction<T, A extends unknown[] = []> extends EventTarget {
 
 interface AsyncActionEventMap {
 	loadstart: [ProgressEvent, AsyncActionStateType];
+	progress: [ProgressEvent, AsyncActionStateType];
 	loadend: [ProgressEvent, AsyncActionStateType];
 	load: [ProgressEvent, typeof AsyncActionStateType.SUCCESS];
 	error: [ProgressEvent, typeof AsyncActionStateType.ERROR];
