@@ -1,3 +1,5 @@
+import { nextFrame } from 'utils/nextFrame';
+
 import { measureAsync } from 'dev/profiling';
 
 import type { TaggedVersionedDatabaseData } from '../types';
@@ -8,10 +10,14 @@ import { fillDatabase, updateData } from '../migration';
  * Save a {@linkcode TaggedVersionedDatabaseData} to the database, overwriting any prior data.
  */
 export async function saveBackupToDatabase(
-	data: TaggedVersionedDatabaseData
+	data: TaggedVersionedDatabaseData,
+	reportProgress: (progress: number) => void,
 ): Promise<void> {
+	reportProgress?.(0);
+	await nextFrame();
+
 	const [updatedData, db] = await Promise.all([
-		updateData(data),
+		updateData(data, reportProgress),
 		getDatabase(),
 	]);
 
