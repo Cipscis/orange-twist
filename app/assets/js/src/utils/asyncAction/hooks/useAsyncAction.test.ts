@@ -11,9 +11,9 @@ import type { AsyncActionState } from '../AsyncActionState';
 
 import { LiveData } from '../LiveData';
 
-import { useLiveData } from './useLiveData';
+import { useAsyncAction } from './useAsyncAction';
 
-describe('useLiveData', () => {
+describe('useAsyncAction', () => {
 	test('updates state on load start and end', async () => {
 		const { promise, resolve } = Promise.withResolvers<void>();
 
@@ -26,7 +26,7 @@ describe('useLiveData', () => {
 				return Promise.resolve(value);
 			},
 			{
-				observe(getData, _signal) {
+				observe(getData) {
 					promise.then(() => getData());
 				},
 			},
@@ -40,7 +40,7 @@ describe('useLiveData', () => {
 					return liveData;
 				}, [fn, options]);
 
-				return useLiveData(liveData);
+				return useAsyncAction(liveData);
 			},
 			{ initialProps },
 		);
@@ -89,7 +89,7 @@ describe('useLiveData', () => {
 		});
 	});
 
-	test('ensures liveData gets unobserved on unmount', () => {
+	test('ensures cleanup is done on unmount', () => {
 		let cleanupSignal: AbortSignal;
 
 		const initialProps: ConstructorParameters<
@@ -113,7 +113,7 @@ describe('useLiveData', () => {
 					return liveData;
 				}, [fn, options]);
 
-				return useLiveData(liveData);
+				return useAsyncAction(liveData);
 			},
 			{ initialProps },
 		);
@@ -151,7 +151,7 @@ describe('useLiveData', () => {
 					return liveData;
 				}, [fn, options]);
 
-				return useLiveData(liveData);
+				return useAsyncAction(liveData);
 			},
 			{ initialProps },
 		);
@@ -172,7 +172,7 @@ describe('useLiveData', () => {
 		});
 
 		rerender([
-			(_options) => {
+			() => {
 				return Promise.resolve(false);
 			},
 			{

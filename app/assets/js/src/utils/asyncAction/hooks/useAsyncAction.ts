@@ -5,7 +5,7 @@ import {
 } from 'preact/hooks';
 
 import type { AsyncActionState } from '../AsyncActionState';
-import type { LiveData } from '../LiveData';
+import type { AsyncAction } from '../AsyncAction';
 
 /**
  * Provides a live {@linkcode AsyncActionState}.
@@ -19,44 +19,50 @@ import type { LiveData } from '../LiveData';
  *     return liveData;
  * }, [options]);
  *
- * const state = useLiveData(liveData);
+ * const state = useAsyncAction(liveData);
  * ```
  */
-export function useLiveData<T>(liveData: LiveData<T>): AsyncActionState<T> {
-	const [state, setState] = useState(liveData.state);
+export function useAsyncAction<T, A extends unknown[] = []>(action: AsyncAction<T, A>): AsyncActionState<T> {
+	const [state, setState] = useState(action.state);
 
 	// Construct temporary hybrid state if liveData is updated
 	useLayoutEffect(() => {
 		setState((state) => ({
 			...state,
-			loading: liveData.state.loading,
+			loading: action.state.loading,
 		}));
-	}, [liveData]);
+	}, [action]);
 
 	// Add necessary event listeners to update state
 	useEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		liveData.addEventListener(
+		action.addEventListener(
 			'loadstart',
-			() => setState(liveData.state),
+			() => setState(action.state),
 			{ signal },
 		);
 
-		liveData.addEventListener(
+		action.addEventListener(
+			'progress',
+			() => setState(action.state),
+			{ signal },
+		);
+
+		action.addEventListener(
 			'loadend',
-			() => setState(liveData.state),
+			() => setState(action.state),
 			{ signal },
 		);
 
 		return () => controller.abort();
-	}, [liveData]);
+	}, [action]);
 
 	// Ensure LiveData stops observing when no longer used/when the component is unmounted
 	useEffect(() => {
-		return () => liveData[Symbol.dispose]();
-	}, [liveData]);
+		return () => action[Symbol.dispose]();
+	}, [action]);
 
 	return state;
 }

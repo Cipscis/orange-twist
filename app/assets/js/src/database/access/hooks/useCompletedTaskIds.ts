@@ -1,7 +1,7 @@
 import { useMemo } from 'preact/hooks';
 
 import {
-	useLiveData,
+	useAsyncAction,
 	type AsyncActionState,
 } from 'utils/asyncAction';
 
@@ -18,5 +18,5 @@ export function useCompletedTaskIds(): AsyncActionState<readonly number[]> {
 		return liveDayTaskIds;
 	}, []);
 
-	return useLiveData(liveCompletedTaskIds);
+	return useAsyncAction(liveCompletedTaskIds);
 }

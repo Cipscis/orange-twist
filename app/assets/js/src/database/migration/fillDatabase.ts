@@ -11,6 +11,7 @@ import type { DatabaseData } from '../types';
 export async function fillDatabase(
 	db: IDBDatabase,
 	data: DatabaseData,
+	reportProgress?: (progress: number) => void,
 ): Promise<void> {
 	const objectStoreNames = [
 		ObjectStoreName.DAY,
@@ -22,23 +23,31 @@ export async function fillDatabase(
 	] as const satisfies readonly ObjectStoreName[];
 
 	const transaction = db.transaction(objectStoreNames, 'readwrite');
-	const requestPromises: IDBRequest[] = [];
+	const requests: IDBRequest[] = [];
 	for (const objectStoreName of objectStoreNames) {
 		const objectStore = transaction.objectStore(objectStoreName);
 
 		// Start by clearing the object store
-		requestPromises.push(objectStore.clear());
+		requests.push(objectStore.clear());
 
 		// Then, fill the object store with new data
 		const objectStoreData = data[objectStoreName];
 		for (const value of Object.values(objectStoreData)) {
-			requestPromises.push(
+			requests.push(
 				objectStore.put(value)
 			);
 		}
 	}
 
+	if (reportProgress) {
+		const chunkSize = Math.floor(requests.length / 100);
+		for (let i = 0; i < requests.length; i += chunkSize) {
+			await getIdbRequestPromise(requests[i]);
+			reportProgress(i / requests.length);
+		}
+	}
+
 	// This type assertion is safe because each object store at least has its clear request
-	const lastRequest = requestPromises.at(-1)!;
+	const lastRequest = requests.at(-1)!;
 	await getIdbRequestPromise(lastRequest);
 }

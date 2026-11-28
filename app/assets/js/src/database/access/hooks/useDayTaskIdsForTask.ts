@@ -4,7 +4,7 @@ import {
 	AsyncActionStateType,
 	type AsyncActionState,
 	LiveData,
-	useLiveData,
+	useAsyncAction,
 } from 'utils/asyncAction';
 
 import { loadDayTaskIdsForTask } from '../loadDayTaskIdsForTask';
@@ -58,5 +58,5 @@ export function useDayTaskIdsForTask(taskId: number): AsyncActionState<readonly 
 		return liveDayTaskIds;
 	}, [taskId]);
 
-	return useLiveData(liveDayTaskIds);
+	return useAsyncAction(liveDayTaskIds);
 }

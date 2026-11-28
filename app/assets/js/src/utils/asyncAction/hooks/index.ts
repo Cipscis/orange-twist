@@ -1,4 +1,4 @@
-export { useLiveData } from './useLiveData';
+export { useAsyncAction } from './useAsyncAction';
 export {
 	useSettableLiveData,
 	type UseSettableLiveDataResult,

@@ -109,8 +109,25 @@ function mockCSS() {
 	window.CSS.supports = () => true;
 }
 
+/**
+ * jsdom hasn't implemented the Performance API, so replace it with stubs to prevent errors in tests.
+ */
+function mockPerformanceApi() {
+	const noop = () => {};
+
+	window.performance = {
+		// @ts-expect-error Noop for JSDOM tests
+		mark: noop,
+		// @ts-expect-error Noop for JSDOM tests
+		measure: noop,
+		clearMarks: noop,
+		clearMeasures: noop,
+	};
+}
+
 mockBroadcastChannelApi();
 mockCSS();
+mockPerformanceApi();
 
 configMocks({
 	afterEach,

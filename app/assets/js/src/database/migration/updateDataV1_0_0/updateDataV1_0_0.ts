@@ -1,11 +1,11 @@
-import { encodeDayTaskKey } from './encodeDayTaskKey';
-import { decodeDayTaskKey } from './decodeDayTaskKey';
-
 import {
 	copyBlob,
 	getCurrentDateDayName,
 	getTemplateAlias,
 } from 'utils';
+import { nextFrame } from 'utils/nextFrame';
+
+import { measureAsync, measureSync } from 'dev/profiling';
 
 import {
 	type VersionedDatabaseData,
@@ -16,20 +16,41 @@ import { getDayName, getDayNameParts } from '../../utils';
 
 import { defaultStatuses } from '../defaultStatuses';
 
+import { encodeDayTaskKey } from './encodeDayTaskKey';
+import { decodeDayTaskKey } from './decodeDayTaskKey';
+
 /**
  * Update a {@linkcode VersionedDatabaseData} from schema version `1.0.0` to schema version `2.0.0`.
  */
 export async function updateDataV1_0_0(
-	data: VersionedDatabaseDataByVersion<'1.0.0'>
+	data: VersionedDatabaseDataByVersion<'1.0.0'>,
+	reportProgress?: (progress: number) => void,
 ): Promise<VersionedDatabaseDataByVersion<'2.0.0'>> {
-	const dataWithMissingDayTasks = addMissingDayTasks(data);
-
-	const day = collectDayData(dataWithMissingDayTasks);
+	const dataWithMissingDayTasks = await measureAsync(
+		'add missing day tasks',
+		() => addMissingDayTasks(data, reportProgress),
+	);
+	const day = measureSync(
+		'collect day data',
+		() => collectDayData(dataWithMissingDayTasks),
+	);
 	const status = defaultStatuses;
-	const task = collectTaskData(dataWithMissingDayTasks);
-	const day_task = collectDayTaskData(dataWithMissingDayTasks, day, status);
-	const template = collectTemplateData(dataWithMissingDayTasks);
-	const image = await collectImageData(dataWithMissingDayTasks);
+	const task = measureSync(
+		'collect task data',
+		() => collectTaskData(dataWithMissingDayTasks),
+	);
+	const day_task = measureSync(
+		'collect day task data',
+		() => collectDayTaskData(dataWithMissingDayTasks, day, status),
+	);
+	const template = measureSync(
+		'collect template data',
+		() => collectTemplateData(dataWithMissingDayTasks),
+	);
+	const image = await measureAsync(
+		'collect image data',
+		() => collectImageData(dataWithMissingDayTasks),
+	);
 
 	const updatedData: VersionedDatabaseDataByVersion<'2.0.0'> = {
 		day,
@@ -266,16 +287,34 @@ function getStatusIdByName(
  *
  * This function adds any necessary days and day tasks to legacy data before its transformation to schema version 2.0.0.
  */
-function addMissingDayTasks(
-	legacyData: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>
-): Readonly<VersionedDatabaseDataByVersion<'1.0.0'>> {
+async function addMissingDayTasks(
+	legacyData: Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>,
+	reportProgress?: (progress: number) => void,
+): Promise<Readonly<VersionedDatabaseDataByVersion<'1.0.0'>>> {
 	if (!legacyData.data.tasks) {
 		return legacyData;
 	}
 
 	const updatedLegacyData = structuredClone(legacyData);
 
-	for (const [, taskInfo] of legacyData.data.tasks) {
+	let progress = 0;
+	let lastFrameUpdate = performance.now();
+	const targetFrameRate = 60;
+	const targetDt = 1_000 / targetFrameRate;
+
+	for (const [index, [, taskInfo]] of legacyData.data.tasks.entries()) {
+		const now = performance.now();
+		const dt = now - lastFrameUpdate;
+		if (
+			reportProgress &&
+			dt > (targetDt)
+		) {
+			progress = index / legacyData.data.tasks.length;
+			reportProgress(progress);
+			await nextFrame();
+			lastFrameUpdate = performance.now();
+		}
+
 		// First, determine if there is a task status mismatch and, if so, what the day name of the task's final day task is
 		const [taskStatusMismatch, finalDayTaskDayName] = getTaskStatusMismatch(
 			taskInfo,
@@ -321,6 +360,11 @@ function addMissingDayTasks(
 			encodeDayTaskKey(newDayTask),
 			newDayTask,
 		]);
+	}
+
+	if (reportProgress) {
+		reportProgress(1);
+		await nextFrame();
 	}
 
 	return updatedLegacyData;

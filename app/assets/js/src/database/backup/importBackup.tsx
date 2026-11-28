@@ -1,10 +1,13 @@
 import { h, Fragment } from 'preact';
 
 import { extractError } from 'utils/extractError';
+import { nextFrame } from 'utils/nextFrame';
+import { AsyncAction } from 'utils/asyncAction';
 
+import { measureAsync } from 'dev/profiling';
 
 import * as ui from 'ui';
-import { Loader } from 'components/shared';
+import { ActionProgress, Loader } from 'components/shared';
 
 import type { TaggedVersionedDatabaseData } from '../types';
 import { noticeImport } from '../access';
@@ -33,16 +36,29 @@ export async function importBackup(): Promise<void> {
 		return;
 	}
 
+	const importBackupAction = new AsyncAction(async (
+		options,
+		data: TaggedVersionedDatabaseData,
+	) => {
+		await measureAsync(
+			'save backup to database',
+			() => saveBackupToDatabase(data, options.reportProgress),
+		);
+	});
+
 	ui.alert(<>
 		<span>Importing...</span>
-		<Loader immediate />
+		<ActionProgress action={importBackupAction} />
 	</>, {
 		id: alertId,
 		duration: null,
 	});
 
+	// Wait for a frame to allow the toast to update
+	await nextFrame();
+
 	try {
-		await saveBackupToDatabase(data);
+		await importBackupAction.start(undefined, data);
 		noticeImport();
 		ui.alert('Import successful', {
 			id: alertId,
