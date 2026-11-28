@@ -16,6 +16,14 @@ export async function saveBackupToDatabase(
 	reportProgress?.(0);
 	await nextFrame();
 
+	// TODO: How can I organise this better?
+	const reportUpdateProgress = (updateProgress: number): void => {
+		reportProgress(updateProgress / 2);
+	};
+	const reportFillProgress = (fillProgress: number): void => {
+		reportProgress(0.5 + fillProgress / 2);
+	};
+
 	const [updatedData, db] = await Promise.all([
 		updateData(data, reportProgress),
 		getDatabase(),
@@ -23,6 +31,6 @@ export async function saveBackupToDatabase(
 
 	await measureAsync(
 		'fill database',
-		() => fillDatabase(db, updatedData),
+		() => fillDatabase(db, updatedData, reportFillProgress),
 	);
 }
